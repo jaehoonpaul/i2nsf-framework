@@ -1,0 +1,80 @@
+
+Updating multi-value CDB operational data atomically
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates using CDB for storage of operational data,
+with update of a complete XML structure for interface status in one
+write operation. This ensures that the status information shown for a
+given interface is always internally consistent.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+What the example does
+~~~~~~~~~~~~~~~~~~~~~
+
+The 'ifstatus' agent collects interface status from the Linux /proc file
+system every 10 seconds, and updates the CDB operational data store for
+configured interfaces. It would be possible for the agent to query the
+CDB configuration data store to find out which interfaces are actually
+present in the config before each update, but in this case a simpler
+approach is to just attempt the update: Since the 'status' data
+container is a child element of the dynamic 'interface' config element,
+CDB will reject the write attempt if the specific instance of the
+'interface' element does not exist.
+
+The loopback interface is pre-configured via a CDB init file, and we can
+see status for that as well as for additional, manually configured,
+interfaces in the CLI, or by doing a NETCONF <get> rpc - see below.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD and the ifstatus agent by
+    typing
+
+        $ make all start
+
+    The ifstatus agent will be running in the foreground.
+
+ 2. In another window, look at the interface status for the loopback
+    interface in the CLI by typing
+
+        $ make cli
+        > show status
+
+ 3. Configure another physically existing interface via the CLI and look
+    at the status of both by typing (continuing in the above CLI
+    session)
+
+       (J) > configure
+       (J) % set interfaces interface eth0 address 1.2.3.4 prefix-length 24
+       (J) % commit
+           (wait at least 10 seconds)
+       (J) % run show status 
+       (J) % exit
+       (J) > exit
+
+       (C) # config
+       (C) # interfaces interface eth0 address 1.2.4.5 prefix-length 24
+       (C) # commit
+           (wait at least 10 seconds)
+       (C) # top
+       (C) # do show status
+       (C) # exit
+       (C) # exit
+
+  4. Look at the interface status via a NETCONF <get> rpc by typing
+
+        $ make query
+

@@ -1,0 +1,1592 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module _confd.dp</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="_confd.html"><font color="#ffffff">_confd</font></a>.dp</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Low&nbsp;level&nbsp;callback&nbsp;module&nbsp;for&nbsp;connecting&nbsp;data&nbsp;providers&nbsp;to&nbsp;ConfD.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;the&nbsp;ConfD&nbsp;Data&nbsp;Provider<br>
+API.&nbsp;The&nbsp;purpose&nbsp;of&nbsp;this&nbsp;API&nbsp;is&nbsp;to&nbsp;provide&nbsp;callback&nbsp;hooks&nbsp;so&nbsp;that<br>
+user-written&nbsp;data&nbsp;providers&nbsp;can&nbsp;provide&nbsp;data&nbsp;stored&nbsp;externally&nbsp;to&nbsp;ConfD.<br>
+ConfD&nbsp;needs&nbsp;this&nbsp;information&nbsp;in&nbsp;order&nbsp;to&nbsp;drive&nbsp;its&nbsp;northbound&nbsp;agents.<br>
+&nbsp;<br>
+The&nbsp;module&nbsp;is&nbsp;also&nbsp;used&nbsp;to&nbsp;populate&nbsp;items&nbsp;in&nbsp;the&nbsp;data&nbsp;model&nbsp;which&nbsp;are&nbsp;not<br>
+data&nbsp;or&nbsp;configuration&nbsp;items,&nbsp;such&nbsp;as&nbsp;statistics&nbsp;items&nbsp;from&nbsp;the&nbsp;device.<br>
+&nbsp;<br>
+The&nbsp;module&nbsp;consists&nbsp;of&nbsp;a&nbsp;number&nbsp;of&nbsp;API&nbsp;functions&nbsp;whose&nbsp;purpose&nbsp;is&nbsp;to<br>
+install&nbsp;different&nbsp;callback&nbsp;functions&nbsp;at&nbsp;different&nbsp;points&nbsp;in&nbsp;the&nbsp;data&nbsp;model<br>
+tree&nbsp;which&nbsp;is&nbsp;the&nbsp;representation&nbsp;of&nbsp;the&nbsp;device&nbsp;configuration.&nbsp;Read&nbsp;more<br>
+about&nbsp;callpoints&nbsp;in&nbsp;tailf_yang_extensions(5).&nbsp;Read&nbsp;more&nbsp;about&nbsp;how&nbsp;to&nbsp;use<br>
+the&nbsp;module&nbsp;in&nbsp;the&nbsp;User&nbsp;Guide&nbsp;chapters&nbsp;on&nbsp;Operational&nbsp;data&nbsp;and&nbsp;External<br>
+data.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_dp(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="_confd.dp.html#AuthCtxRef">AuthCtxRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.dp.html#AuthorizationCtxRef">AuthorizationCtxRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.dp.html#DaemonCtxRef">DaemonCtxRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.dp.html#DbCtxRef">DbCtxRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.dp.html#NotificationCtxRef">NotificationCtxRef</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AuthCtxRef">class <strong>AuthCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_auth_ctx.<br>
+&nbsp;<br>
+Available&nbsp;attributes:<br>
+uinfo&nbsp;--&nbsp;the&nbsp;user&nbsp;info&nbsp;(UserInfo)<br>
+method&nbsp;--&nbsp;the&nbsp;method&nbsp;(string)<br>
+success&nbsp;--&nbsp;success&nbsp;or&nbsp;failure&nbsp;(bool)<br>
+groups&nbsp;--&nbsp;authorization&nbsp;groups&nbsp;if&nbsp;success&nbsp;is&nbsp;True&nbsp;(list&nbsp;of&nbsp;strings)<br>
+logno&nbsp;--&nbsp;log&nbsp;number&nbsp;if&nbsp;success&nbsp;is&nbsp;False&nbsp;(int)<br>
+reason&nbsp;--&nbsp;error&nbsp;reason&nbsp;if&nbsp;success&nbsp;is&nbsp;False&nbsp;(string)<br>
+&nbsp;<br>
+<a href="#AuthCtxRef">AuthCtxRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AuthCtxRef-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthCtxRef-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="AuthCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="AuthCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="AuthCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#AuthCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AuthorizationCtxRef">class <strong>AuthorizationCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_authorization_ctx.<br>
+&nbsp;<br>
+Available&nbsp;attributes:<br>
+uinfo&nbsp;--&nbsp;the&nbsp;user&nbsp;info&nbsp;(UserInfo)&nbsp;or&nbsp;None<br>
+groups&nbsp;--&nbsp;authorization&nbsp;groups&nbsp;(list&nbsp;of&nbsp;strings)&nbsp;or&nbsp;None<br>
+&nbsp;<br>
+<a href="#AuthorizationCtxRef">AuthorizationCtxRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AuthorizationCtxRef-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationCtxRef-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="AuthorizationCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="AuthorizationCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="AuthorizationCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#AuthorizationCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DaemonCtxRef">class <strong>DaemonCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>struct&nbsp;confd_daemon_ctx&nbsp;references&nbsp;<a href="__builtin__.html#object">object</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="DaemonCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#DaemonCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="DaemonCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#DaemonCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="DaemonCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#DaemonCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#DaemonCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DbCtxRef">class <strong>DbCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_db_ctx.<br>
+&nbsp;<br>
+<a href="#DbCtxRef">DbCtxRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="DbCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#DbCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#DbCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#DbCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-did"><strong>did</strong></a>(...)</dt><dd><tt><a href="#DbCtxRef-did">did</a>()&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-dx"><strong>dx</strong></a>(...)</dt><dd><tt><a href="#DbCtxRef-dx">dx</a>()&nbsp;-&gt;&nbsp;<a href="#DaemonCtxRef">DaemonCtxRef</a></tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-lastop"><strong>lastop</strong></a>(...)</dt><dd><tt><a href="#DbCtxRef-lastop">lastop</a>()&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-qref"><strong>qref</strong></a>(...)</dt><dd><tt><a href="#DbCtxRef-qref">qref</a>()&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+
+<dl><dt><a name="DbCtxRef-uinfo"><strong>uinfo</strong></a>(...)</dt><dd><tt><a href="#DbCtxRef-uinfo">uinfo</a>()&nbsp;-&gt;&nbsp;UserInfo</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#DbCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NotificationCtxRef">class <strong>NotificationCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_notification_ctx.<br>
+&nbsp;<br>
+Available&nbsp;attributes:<br>
+name&nbsp;--&nbsp;stream&nbsp;name&nbsp;or&nbsp;snmp&nbsp;notify&nbsp;name&nbsp;(string&nbsp;or&nbsp;None)<br>
+ctx_name&nbsp;--&nbsp;for&nbsp;snmp&nbsp;only&nbsp;(string&nbsp;or&nbsp;None)<br>
+fd&nbsp;--&nbsp;worker&nbsp;socket&nbsp;(int)<br>
+dx&nbsp;--&nbsp;the&nbsp;daemon&nbsp;context&nbsp;(<a href="#DaemonCtxRef">DaemonCtxRef</a>)<br>
+&nbsp;<br>
+<a href="#NotificationCtxRef">NotificationCtxRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="NotificationCtxRef-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationCtxRef-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="NotificationCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="NotificationCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="NotificationCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#NotificationCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-aaa_reload"><strong>aaa_reload</strong></a>(...)</dt><dd><tt><a href="#-aaa_reload">aaa_reload</a>(tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;the&nbsp;ConfD&nbsp;AAA&nbsp;tree&nbsp;is&nbsp;populated&nbsp;by&nbsp;an&nbsp;external&nbsp;data&nbsp;provider&nbsp;(see&nbsp;the<br>
+AAA&nbsp;chapter&nbsp;in&nbsp;the&nbsp;User&nbsp;Guide),&nbsp;this&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;by&nbsp;the&nbsp;data<br>
+provider&nbsp;to&nbsp;notify&nbsp;ConfD&nbsp;when&nbsp;there&nbsp;is&nbsp;a&nbsp;change&nbsp;to&nbsp;the&nbsp;AAA&nbsp;data.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-access_reply_result"><strong>access_reply_result</strong></a>(...)</dt><dd><tt><a href="#-access_reply_result">access_reply_result</a>(actx,&nbsp;result)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;callbacks&nbsp;must&nbsp;call&nbsp;this&nbsp;function&nbsp;to&nbsp;report&nbsp;the&nbsp;result&nbsp;of&nbsp;the&nbsp;access<br>
+check&nbsp;to&nbsp;ConfD,&nbsp;and&nbsp;should&nbsp;normally&nbsp;return&nbsp;CONFD_OK.&nbsp;If&nbsp;any&nbsp;other&nbsp;value&nbsp;is<br>
+returned,&nbsp;it&nbsp;will&nbsp;cause&nbsp;the&nbsp;access&nbsp;check&nbsp;to&nbsp;be&nbsp;rejected.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+actx&nbsp;--&nbsp;the&nbsp;authorization&nbsp;context<br>
+result&nbsp;--&nbsp;the&nbsp;result&nbsp;(ACCESS_RESULT_xxx)</tt></dd></dl>
+ <dl><dt><a name="-action_delayed_reply_error"><strong>action_delayed_reply_error</strong></a>(...)</dt><dd><tt><a href="#-action_delayed_reply_error">action_delayed_reply_error</a>(uinfo,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;we&nbsp;use&nbsp;the&nbsp;CONFD_DELAYED_RESPONSE&nbsp;as&nbsp;a&nbsp;return&nbsp;value&nbsp;from&nbsp;the&nbsp;action<br>
+callback,&nbsp;we&nbsp;must&nbsp;later&nbsp;asynchronously&nbsp;reply.&nbsp;This&nbsp;function&nbsp;is&nbsp;used&nbsp;to<br>
+reply&nbsp;with&nbsp;error.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-action_delayed_reply_ok"><strong>action_delayed_reply_ok</strong></a>(...)</dt><dd><tt><a href="#-action_delayed_reply_ok">action_delayed_reply_ok</a>(uinfo)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;we&nbsp;use&nbsp;the&nbsp;CONFD_DELAYED_RESPONSE&nbsp;as&nbsp;a&nbsp;return&nbsp;value&nbsp;from&nbsp;the&nbsp;action<br>
+callback,&nbsp;we&nbsp;must&nbsp;later&nbsp;asynchronously&nbsp;reply.&nbsp;This&nbsp;function&nbsp;is&nbsp;used&nbsp;to<br>
+reply&nbsp;with&nbsp;success.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-action_reply_command"><strong>action_reply_command</strong></a>(...)</dt><dd><tt><a href="#-action_reply_command">action_reply_command</a>(uinfo,&nbsp;values)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;CLI&nbsp;callback&nbsp;command&nbsp;should&nbsp;return&nbsp;data,&nbsp;it&nbsp;must&nbsp;invoke&nbsp;this&nbsp;function<br>
+in&nbsp;response&nbsp;to&nbsp;the&nbsp;cb_command()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-action_reply_completion"><strong>action_reply_completion</strong></a>(...)</dt><dd><tt><a href="#-action_reply_completion">action_reply_completion</a>(uinfo,&nbsp;values)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;normally&nbsp;be&nbsp;called&nbsp;in&nbsp;response&nbsp;to&nbsp;the&nbsp;cb_completion()<br>
+callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;3-tuples&nbsp;or&nbsp;None&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;values&nbsp;argument&nbsp;must&nbsp;be&nbsp;None&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;3-tuples&nbsp;where&nbsp;each&nbsp;tuple&nbsp;is<br>
+built&nbsp;up&nbsp;like:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(type::int,&nbsp;value::string,&nbsp;extra::string)<br>
+&nbsp;<br>
+The&nbsp;third&nbsp;item&nbsp;of&nbsp;the&nbsp;tuple&nbsp;(extra)&nbsp;may&nbsp;be&nbsp;set&nbsp;to&nbsp;None.</tt></dd></dl>
+ <dl><dt><a name="-action_reply_range_enum"><strong>action_reply_range_enum</strong></a>(...)</dt><dd><tt><a href="#-action_reply_range_enum">action_reply_range_enum</a>(uinfo,&nbsp;values,&nbsp;keysize)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;called&nbsp;in&nbsp;response&nbsp;to&nbsp;the&nbsp;cb_completion()&nbsp;callback<br>
+when&nbsp;it&nbsp;is&nbsp;invoked&nbsp;via&nbsp;a&nbsp;tailf:cli-custom-range-enumerator&nbsp;statement&nbsp;in&nbsp;the<br>
+data&nbsp;model.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;keys&nbsp;as&nbsp;strings&nbsp;or&nbsp;None<br>
+keysize&nbsp;--&nbsp;number&nbsp;of&nbsp;keys&nbsp;for&nbsp;the&nbsp;list&nbsp;in&nbsp;the&nbsp;data&nbsp;model<br>
+&nbsp;<br>
+The&nbsp;values&nbsp;argument&nbsp;is&nbsp;a&nbsp;flat&nbsp;list&nbsp;of&nbsp;keys.&nbsp;If&nbsp;the&nbsp;list&nbsp;in&nbsp;the&nbsp;data&nbsp;model<br>
+specifies&nbsp;multiple&nbsp;keys&nbsp;this&nbsp;list&nbsp;is&nbsp;still&nbsp;flat.&nbsp;The&nbsp;keysize&nbsp;argument<br>
+tells&nbsp;us&nbsp;how&nbsp;many&nbsp;keys&nbsp;to&nbsp;use&nbsp;for&nbsp;each&nbsp;list&nbsp;element.&nbsp;So&nbsp;the&nbsp;size&nbsp;of&nbsp;values<br>
+should&nbsp;be&nbsp;a&nbsp;multiple&nbsp;of&nbsp;keysize.</tt></dd></dl>
+ <dl><dt><a name="-action_reply_rewrite"><strong>action_reply_rewrite</strong></a>(...)</dt><dd><tt><a href="#-action_reply_rewrite">action_reply_rewrite</a>(uinfo,&nbsp;values,&nbsp;unhides)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;called&nbsp;instead&nbsp;of&nbsp;<a href="#-action_reply_command">action_reply_command</a>()&nbsp;as&nbsp;a<br>
+response&nbsp;to&nbsp;a&nbsp;show&nbsp;path&nbsp;rewrite&nbsp;callback&nbsp;invocation.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None<br>
+unhides&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-action_reply_rewrite2"><strong>action_reply_rewrite2</strong></a>(...)</dt><dd><tt><a href="#-action_reply_rewrite2">action_reply_rewrite2</a>(uinfo,&nbsp;values,&nbsp;unhides,&nbsp;selects)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;called&nbsp;instead&nbsp;of&nbsp;<a href="#-action_reply_command">action_reply_command</a>()&nbsp;as&nbsp;a<br>
+response&nbsp;to&nbsp;a&nbsp;show&nbsp;path&nbsp;rewrite&nbsp;callback&nbsp;invocation.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None<br>
+unhides&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None<br>
+selects&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-action_reply_values"><strong>action_reply_values</strong></a>(...)</dt><dd><tt><a href="#-action_reply_values">action_reply_values</a>(uinfo,&nbsp;values)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;action&nbsp;definition&nbsp;specifies&nbsp;that&nbsp;the&nbsp;action&nbsp;should&nbsp;return&nbsp;data,&nbsp;it<br>
+must&nbsp;invoke&nbsp;this&nbsp;function&nbsp;in&nbsp;response&nbsp;to&nbsp;the&nbsp;cb_action()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-action_set_fd"><strong>action_set_fd</strong></a>(...)</dt><dd><tt><a href="#-action_set_fd">action_set_fd</a>(uinfo,&nbsp;sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Associate&nbsp;a&nbsp;worker&nbsp;socket&nbsp;with&nbsp;the&nbsp;action.&nbsp;This&nbsp;function&nbsp;must&nbsp;be&nbsp;called&nbsp;in<br>
+the&nbsp;action&nbsp;cb_init()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;worker&nbsp;socket<br>
+&nbsp;<br>
+A&nbsp;typical&nbsp;implementation&nbsp;of&nbsp;an&nbsp;action&nbsp;cb_init()&nbsp;callback&nbsp;looks&nbsp;like:<br>
+&nbsp;<br>
+class&nbsp;ActionCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;__init__(self,&nbsp;workersock):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.<strong>workersock</strong>&nbsp;=&nbsp;workersock<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_init(self,&nbsp;uinfo):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-action_set_fd">action_set_fd</a>(uinfo,&nbsp;self.<strong>workersock</strong>)</tt></dd></dl>
+ <dl><dt><a name="-action_set_timeout"><strong>action_set_timeout</strong></a>(...)</dt><dd><tt><a href="#-action_set_timeout">action_set_timeout</a>(uinfo,&nbsp;timeout_secs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Some&nbsp;action&nbsp;callbacks&nbsp;may&nbsp;require&nbsp;a&nbsp;significantly&nbsp;longer&nbsp;execution&nbsp;time<br>
+than&nbsp;others,&nbsp;and&nbsp;this&nbsp;time&nbsp;may&nbsp;not&nbsp;even&nbsp;be&nbsp;possible&nbsp;to&nbsp;determine&nbsp;statically<br>
+(e.g.&nbsp;a&nbsp;file&nbsp;download).&nbsp;In&nbsp;such&nbsp;cases&nbsp;the&nbsp;/confdConfig/capi/queryTimeout<br>
+setting&nbsp;in&nbsp;confd.conf&nbsp;may&nbsp;be&nbsp;insufficient,&nbsp;and&nbsp;this&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to<br>
+extend&nbsp;(or&nbsp;shorten)&nbsp;the&nbsp;timeout&nbsp;for&nbsp;the&nbsp;current&nbsp;callback&nbsp;invocation.&nbsp;The<br>
+timeout&nbsp;is&nbsp;given&nbsp;in&nbsp;seconds&nbsp;from&nbsp;the&nbsp;point&nbsp;in&nbsp;time&nbsp;when&nbsp;the&nbsp;function&nbsp;is<br>
+called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+timeout_secs&nbsp;--&nbsp;timeout&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-action_seterr"><strong>action_seterr</strong></a>(...)</dt><dd><tt><a href="#-action_seterr">action_seterr</a>(uinfo,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;action&nbsp;callback&nbsp;encounters&nbsp;fatal&nbsp;problems&nbsp;that&nbsp;can&nbsp;not&nbsp;be&nbsp;expressed&nbsp;via<br>
+the&nbsp;reply&nbsp;function,&nbsp;it&nbsp;may&nbsp;call&nbsp;this&nbsp;function&nbsp;with&nbsp;an&nbsp;appropriate&nbsp;message<br>
+and&nbsp;return&nbsp;CONFD_ERR&nbsp;instead&nbsp;of&nbsp;CONFD_OK.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-action_seterr_extended"><strong>action_seterr_extended</strong></a>(...)</dt><dd><tt><a href="#-action_seterr_extended">action_seterr_extended</a>(uninfo,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;more&nbsp;structured&nbsp;error&nbsp;information<br>
+from&nbsp;an&nbsp;action&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-action_seterr_extended_info"><strong>action_seterr_extended_info</strong></a>(...)</dt><dd><tt><a href="#-action_seterr_extended_info">action_seterr_extended_info</a>(uinfo,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_info,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;structured&nbsp;error&nbsp;information&nbsp;in&nbsp;the<br>
+same&nbsp;way&nbsp;as&nbsp;<a href="#-action_seterr_extended">action_seterr_extended</a>(),&nbsp;and&nbsp;additionally&nbsp;provide&nbsp;contents&nbsp;for<br>
+the&nbsp;NETCONF&nbsp;&lt;error-info&gt;&nbsp;element.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+error_info&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-auth_seterr"><strong>auth_seterr</strong></a>(...)</dt><dd><tt><a href="#-auth_seterr">auth_seterr</a>(actx,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;application&nbsp;to&nbsp;set&nbsp;an&nbsp;error&nbsp;string.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;a&nbsp;text&nbsp;message&nbsp;when&nbsp;the&nbsp;callback<br>
+returns&nbsp;CONFD_ERR.&nbsp;If&nbsp;used&nbsp;when&nbsp;rejecting&nbsp;a&nbsp;successful&nbsp;authentication,&nbsp;the<br>
+message&nbsp;will&nbsp;be&nbsp;logged&nbsp;in&nbsp;ConfD's&nbsp;audit&nbsp;log&nbsp;(otherwise&nbsp;a&nbsp;generic&nbsp;"rejected<br>
+by&nbsp;application&nbsp;callback"&nbsp;message&nbsp;is&nbsp;logged).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+actx&nbsp;--&nbsp;the&nbsp;auth&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-authorization_set_timeout"><strong>authorization_set_timeout</strong></a>(...)</dt><dd><tt><a href="#-authorization_set_timeout">authorization_set_timeout</a>(actx,&nbsp;timeout_secs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;authorization&nbsp;callbacks&nbsp;are&nbsp;invoked&nbsp;on&nbsp;the&nbsp;daemon&nbsp;control&nbsp;socket,&nbsp;and<br>
+as&nbsp;such&nbsp;are&nbsp;expected&nbsp;to&nbsp;complete&nbsp;quickly.&nbsp;However&nbsp;in&nbsp;case&nbsp;they&nbsp;send&nbsp;requests<br>
+to&nbsp;a&nbsp;remote&nbsp;server,&nbsp;and&nbsp;such&nbsp;a&nbsp;request&nbsp;needs&nbsp;to&nbsp;be&nbsp;retried,&nbsp;this&nbsp;function<br>
+can&nbsp;be&nbsp;used&nbsp;to&nbsp;extend&nbsp;the&nbsp;timeout&nbsp;for&nbsp;the&nbsp;current&nbsp;callback&nbsp;invocation.&nbsp;The<br>
+timeout&nbsp;is&nbsp;given&nbsp;in&nbsp;seconds&nbsp;from&nbsp;the&nbsp;point&nbsp;in&nbsp;time&nbsp;when&nbsp;the&nbsp;function&nbsp;is<br>
+called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+actx&nbsp;--&nbsp;the&nbsp;authorization&nbsp;context<br>
+timeout_secs&nbsp;--&nbsp;timeout&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-connect"><strong>connect</strong></a>(...)</dt><dd><tt><a href="#-connect">connect</a>(dx,&nbsp;sock,&nbsp;type,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Connects&nbsp;to&nbsp;the&nbsp;ConfD&nbsp;daemon.&nbsp;The&nbsp;socket&nbsp;instance&nbsp;provided&nbsp;via&nbsp;the&nbsp;'sock'<br>
+argument&nbsp;must&nbsp;be&nbsp;kept&nbsp;alive&nbsp;during&nbsp;the&nbsp;lifetime&nbsp;of&nbsp;the&nbsp;daemon&nbsp;context.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+type&nbsp;--&nbsp;the&nbsp;socket&nbsp;type&nbsp;(CONTROL_SOCKET&nbsp;or&nbsp;WORKER_SOCKET)<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional).</tt></dd></dl>
+ <dl><dt><a name="-data_reply_attrs"><strong>data_reply_attrs</strong></a>(...)</dt><dd><tt><a href="#-data_reply_attrs">data_reply_attrs</a>(tctx,&nbsp;attrs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;cb_get_attrs()&nbsp;callback&nbsp;to&nbsp;return&nbsp;the<br>
+requested&nbsp;attribute&nbsp;values.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+attrs&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.AttrValue&nbsp;instances</tt></dd></dl>
+ <dl><dt><a name="-data_reply_found"><strong>data_reply_found</strong></a>(...)</dt><dd><tt><a href="#-data_reply_found">data_reply_found</a>(tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;cb_exists_optional()&nbsp;callback&nbsp;to&nbsp;indicate&nbsp;to<br>
+ConfD&nbsp;that&nbsp;a&nbsp;node&nbsp;does&nbsp;exist.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-data_reply_next_key"><strong>data_reply_next_key</strong></a>(...)</dt><dd><tt><a href="#-data_reply_next_key">data_reply_next_key</a>(tctx,&nbsp;keys,&nbsp;next)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;cb_get_next()&nbsp;and&nbsp;cb_find_next()&nbsp;callbacks&nbsp;to<br>
+return&nbsp;the&nbsp;next&nbsp;key.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+keys&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;keys&nbsp;of&nbsp;_lib.Value&nbsp;for&nbsp;a&nbsp;list&nbsp;item&nbsp;(se&nbsp;below)<br>
+next&nbsp;--&nbsp;int&nbsp;value&nbsp;passed&nbsp;to&nbsp;the&nbsp;next&nbsp;invocation&nbsp;of&nbsp;cb_get_next()&nbsp;callback<br>
+&nbsp;<br>
+A&nbsp;list&nbsp;may&nbsp;have&nbsp;mutiple&nbsp;key&nbsp;leafs&nbsp;specified&nbsp;in&nbsp;the&nbsp;data&nbsp;model.&nbsp;This&nbsp;is&nbsp;why<br>
+the&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;list.</tt></dd></dl>
+ <dl><dt><a name="-data_reply_next_object_array"><strong>data_reply_next_object_array</strong></a>(...)</dt><dd><tt><a href="#-data_reply_next_object_array">data_reply_next_object_array</a>(tctx,&nbsp;v,&nbsp;next)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;optional&nbsp;cb_get_next_object()&nbsp;and<br>
+cb_find_next_object()&nbsp;callbacks&nbsp;to&nbsp;return&nbsp;an&nbsp;entire&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;including&nbsp;its&nbsp;keys.<br>
+It&nbsp;combines&nbsp;the&nbsp;functions&nbsp;of&nbsp;<a href="#-data_reply_next_key">data_reply_next_key</a>()&nbsp;and<br>
+<a href="#-data_reply_value_array">data_reply_value_array</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+v&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.Value&nbsp;instances<br>
+next&nbsp;--&nbsp;int&nbsp;value&nbsp;passed&nbsp;to&nbsp;the&nbsp;next&nbsp;invocation&nbsp;of&nbsp;cb_get_next()&nbsp;callback</tt></dd></dl>
+ <dl><dt><a name="-data_reply_next_object_arrays"><strong>data_reply_next_object_arrays</strong></a>(...)</dt><dd><tt><a href="#-data_reply_next_object_arrays">data_reply_next_object_arrays</a>(tctx,&nbsp;objs,&nbsp;timeout_millisecs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;optional&nbsp;cb_get_next_object()&nbsp;and<br>
+cb_find_next_object()&nbsp;callbacks&nbsp;to&nbsp;return&nbsp;multiple&nbsp;objects&nbsp;including&nbsp;their<br>
+keys,&nbsp;in&nbsp;_lib.Value&nbsp;form.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+objs&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;tuples&nbsp;or&nbsp;None&nbsp;(see&nbsp;below)<br>
+timeout_millisecs&nbsp;--&nbsp;timeout&nbsp;value&nbsp;for&nbsp;ConfD's&nbsp;caching&nbsp;of&nbsp;returned&nbsp;data<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;of&nbsp;argument&nbsp;objs&nbsp;is&nbsp;list(tuple(list(_lib.Value),&nbsp;long)),&nbsp;or<br>
+None&nbsp;to&nbsp;indicate&nbsp;end&nbsp;of&nbsp;list.&nbsp;Another&nbsp;way&nbsp;to&nbsp;indicate&nbsp;end&nbsp;of&nbsp;list&nbsp;is&nbsp;to<br>
+include&nbsp;None&nbsp;as&nbsp;the&nbsp;first&nbsp;item&nbsp;in&nbsp;the&nbsp;2-tuple&nbsp;last&nbsp;in&nbsp;the&nbsp;list.<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;V&nbsp;=&nbsp;_lib.Value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;objs&nbsp;=&nbsp;[<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;[&nbsp;V(1),&nbsp;V(2)&nbsp;],&nbsp;next1&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;[&nbsp;V(3),&nbsp;V(4)&nbsp;],&nbsp;next2&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;None,&nbsp;-1&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</tt></dd></dl>
+ <dl><dt><a name="-data_reply_next_object_tag_value_array"><strong>data_reply_next_object_tag_value_array</strong></a>(...)</dt><dd><tt><a href="#-data_reply_next_object_tag_value_array">data_reply_next_object_tag_value_array</a>(tctx,&nbsp;tvs,&nbsp;next)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;optional&nbsp;cb_get_next_object()&nbsp;and<br>
+cb_find_next_object()&nbsp;callbacks&nbsp;to&nbsp;return&nbsp;an&nbsp;entire&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;including&nbsp;its&nbsp;keys<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+tvs&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances&nbsp;or&nbsp;None<br>
+next&nbsp;--&nbsp;int&nbsp;value&nbsp;passed&nbsp;to&nbsp;the&nbsp;next&nbsp;invocation&nbsp;of&nbsp;cb_get_next_object()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;callback</tt></dd></dl>
+ <dl><dt><a name="-data_reply_next_object_tag_value_arrays"><strong>data_reply_next_object_tag_value_arrays</strong></a>(...)</dt><dd><tt><a href="#-data_reply_next_object_tag_value_arrays">data_reply_next_object_tag_value_arrays</a>(tctx,&nbsp;objs,&nbsp;timeout_millisecs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;optional&nbsp;cb_get_next_object()&nbsp;and<br>
+cb_find_next_object()&nbsp;callbacks&nbsp;to&nbsp;return&nbsp;multiple&nbsp;objects&nbsp;including&nbsp;their<br>
+keys.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+objs&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;tuples&nbsp;or&nbsp;None&nbsp;(see&nbsp;below)<br>
+timeout_millisecs&nbsp;--&nbsp;timeout&nbsp;value&nbsp;for&nbsp;ConfD's&nbsp;caching&nbsp;of&nbsp;returned&nbsp;data<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;of&nbsp;argument&nbsp;objs&nbsp;is&nbsp;list(tuple(list(_lib.TagValue),&nbsp;long))&nbsp;or<br>
+None&nbsp;to&nbsp;indicate&nbsp;end&nbsp;of&nbsp;list.&nbsp;Another&nbsp;way&nbsp;to&nbsp;indicate&nbsp;end&nbsp;of&nbsp;list&nbsp;is&nbsp;to<br>
+include&nbsp;None&nbsp;as&nbsp;the&nbsp;first&nbsp;item&nbsp;in&nbsp;the&nbsp;2-tuple&nbsp;last&nbsp;in&nbsp;the&nbsp;list.<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;objs&nbsp;=&nbsp;[<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;[&nbsp;tagval1,&nbsp;tagval2&nbsp;],&nbsp;next1&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;[&nbsp;tagval3,&nbsp;tagval4,&nbsp;tagval5&nbsp;],&nbsp;next2&nbsp;),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;None,&nbsp;-1&nbsp;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</tt></dd></dl>
+ <dl><dt><a name="-data_reply_not_found"><strong>data_reply_not_found</strong></a>(...)</dt><dd><tt><a href="#-data_reply_not_found">data_reply_not_found</a>(tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;cb_get_elem()&nbsp;and&nbsp;cb_exists_optional()<br>
+callbacks&nbsp;to&nbsp;indicate&nbsp;to&nbsp;ConfD&nbsp;that&nbsp;a&nbsp;list&nbsp;entry&nbsp;or&nbsp;node&nbsp;does&nbsp;not&nbsp;exist.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-data_reply_tag_value_array"><strong>data_reply_tag_value_array</strong></a>(...)</dt><dd><tt><a href="#-data_reply_tag_value_array">data_reply_tag_value_array</a>(tctx,&nbsp;tvs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;to&nbsp;return&nbsp;an&nbsp;array&nbsp;of&nbsp;values,&nbsp;corresponding&nbsp;to&nbsp;a<br>
+complete&nbsp;list&nbsp;entry,&nbsp;to&nbsp;ConfD.&nbsp;It&nbsp;can&nbsp;be&nbsp;used&nbsp;by&nbsp;the&nbsp;optional<br>
+cb_get_object()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+tvs&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-data_reply_value"><strong>data_reply_value</strong></a>(...)</dt><dd><tt><a href="#-data_reply_value">data_reply_value</a>(tctx,&nbsp;v)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;to&nbsp;return&nbsp;a&nbsp;single&nbsp;data&nbsp;item&nbsp;to&nbsp;ConfD.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+v&nbsp;--&nbsp;a&nbsp;_lib.Value&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-data_reply_value_array"><strong>data_reply_value_array</strong></a>(...)</dt><dd><tt><a href="#-data_reply_value_array">data_reply_value_array</a>(tctx,&nbsp;vs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;to&nbsp;return&nbsp;an&nbsp;array&nbsp;of&nbsp;values,&nbsp;corresponding&nbsp;to&nbsp;a<br>
+complete&nbsp;list&nbsp;entry,&nbsp;to&nbsp;ConfD.&nbsp;It&nbsp;can&nbsp;be&nbsp;used&nbsp;by&nbsp;the&nbsp;optional<br>
+cb_get_object()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+vs&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.Value&nbsp;instances</tt></dd></dl>
+ <dl><dt><a name="-data_set_timeout"><strong>data_set_timeout</strong></a>(...)</dt><dd><tt><a href="#-data_set_timeout">data_set_timeout</a>(tctx,&nbsp;timeout_secs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+A&nbsp;data&nbsp;callback&nbsp;should&nbsp;normally&nbsp;complete&nbsp;quickly,&nbsp;since&nbsp;e.g.&nbsp;the<br>
+execution&nbsp;of&nbsp;a&nbsp;'show'&nbsp;command&nbsp;in&nbsp;the&nbsp;CLI&nbsp;may&nbsp;require&nbsp;many&nbsp;data&nbsp;callback<br>
+invocations.&nbsp;In&nbsp;some&nbsp;rare&nbsp;cases&nbsp;it&nbsp;may&nbsp;still&nbsp;be&nbsp;necessary&nbsp;for&nbsp;a&nbsp;data<br>
+callback&nbsp;to&nbsp;have&nbsp;a&nbsp;longer&nbsp;execution&nbsp;time,&nbsp;and&nbsp;then&nbsp;this&nbsp;function&nbsp;can&nbsp;be<br>
+used&nbsp;to&nbsp;extend&nbsp;(or&nbsp;shorten)&nbsp;the&nbsp;timeout&nbsp;for&nbsp;the&nbsp;current&nbsp;callback&nbsp;invocation.<br>
+The&nbsp;timeout&nbsp;is&nbsp;given&nbsp;in&nbsp;seconds&nbsp;from&nbsp;the&nbsp;point&nbsp;in&nbsp;time&nbsp;when&nbsp;the&nbsp;function&nbsp;is<br>
+called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+timeout_secs&nbsp;--&nbsp;timeout&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-db_set_timeout"><strong>db_set_timeout</strong></a>(...)</dt><dd><tt><a href="#-db_set_timeout">db_set_timeout</a>(dbx,&nbsp;timeout_secs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Some&nbsp;of&nbsp;the&nbsp;DB&nbsp;callbacks&nbsp;registered&nbsp;via&nbsp;<a href="#-register_db_cb">register_db_cb</a>(),&nbsp;e.g.<br>
+cb_copy_running_to_startup(),&nbsp;may&nbsp;require&nbsp;a&nbsp;longer&nbsp;execution&nbsp;time&nbsp;than<br>
+others.&nbsp;This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;extend&nbsp;the&nbsp;timeout&nbsp;for&nbsp;the&nbsp;current<br>
+callback&nbsp;invocation.&nbsp;The&nbsp;timeout&nbsp;is&nbsp;given&nbsp;in&nbsp;seconds&nbsp;from&nbsp;the&nbsp;point&nbsp;in<br>
+time&nbsp;when&nbsp;the&nbsp;function&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dbx&nbsp;--&nbsp;a&nbsp;db&nbsp;context&nbsp;of&nbsp;_dp.<a href="#DbCtxRef">DbCtxRef</a><br>
+timeout_secs&nbsp;--&nbsp;timeout&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-db_seterr"><strong>db_seterr</strong></a>(...)</dt><dd><tt><a href="#-db_seterr">db_seterr</a>(dbx,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;application&nbsp;to&nbsp;set&nbsp;an&nbsp;error&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dbx&nbsp;--&nbsp;a&nbsp;db&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-db_seterr_extended"><strong>db_seterr_extended</strong></a>(...)</dt><dd><tt><a href="#-db_seterr_extended">db_seterr_extended</a>(dbx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;more&nbsp;structured&nbsp;error&nbsp;information<br>
+from&nbsp;a&nbsp;db&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dbx&nbsp;--&nbsp;a&nbsp;db&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-db_seterr_extended_info"><strong>db_seterr_extended_info</strong></a>(...)</dt><dd><tt><a href="#-db_seterr_extended_info">db_seterr_extended_info</a>(dbx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_info,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;structured&nbsp;error&nbsp;information&nbsp;in&nbsp;the<br>
+same&nbsp;way&nbsp;as&nbsp;<a href="#-db_seterr_extended">db_seterr_extended</a>(),&nbsp;and&nbsp;additionally&nbsp;provide&nbsp;contents&nbsp;for<br>
+the&nbsp;NETCONF&nbsp;&lt;error-info&gt;&nbsp;element.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dbx&nbsp;--&nbsp;a&nbsp;db&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+error_info&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-delayed_reply_error"><strong>delayed_reply_error</strong></a>(...)</dt><dd><tt><a href="#-delayed_reply_error">delayed_reply_error</a>(tctx,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;used&nbsp;to&nbsp;return&nbsp;an&nbsp;error&nbsp;when&nbsp;tha&nbsp;actual&nbsp;callback<br>
+returned&nbsp;CONFD_DELAYED_RESPONSE.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-delayed_reply_ok"><strong>delayed_reply_ok</strong></a>(...)</dt><dd><tt><a href="#-delayed_reply_ok">delayed_reply_ok</a>(tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;used&nbsp;to&nbsp;return&nbsp;the&nbsp;equivalent&nbsp;of&nbsp;CONFD_OK&nbsp;when&nbsp;the<br>
+actual&nbsp;callback&nbsp;returned&nbsp;CONFD_DELAYED_RESPONSE.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-delayed_reply_validation_warn"><strong>delayed_reply_validation_warn</strong></a>(...)</dt><dd><tt><a href="#-delayed_reply_validation_warn">delayed_reply_validation_warn</a>(tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;used&nbsp;to&nbsp;return&nbsp;the&nbsp;equivalent&nbsp;of&nbsp;CONFD_VALIDATION_WARN<br>
+when&nbsp;the&nbsp;cb_validate()&nbsp;callback&nbsp;returned&nbsp;CONFD_DELAYED_RESPONSE.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-error_seterr"><strong>error_seterr</strong></a>(...)</dt><dd><tt><a href="#-error_seterr">error_seterr</a>(uinfo,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;called&nbsp;by&nbsp;format_error()&nbsp;(above)&nbsp;to&nbsp;provide&nbsp;a<br>
+&nbsp;replacement&nbsp;for&nbsp;the&nbsp;default&nbsp;error&nbsp;message.&nbsp;If&nbsp;format_error()&nbsp;is&nbsp;called<br>
+&nbsp;without&nbsp;calling&nbsp;<a href="#-error_seterr">error_seterr</a>()&nbsp;the&nbsp;default&nbsp;message&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+uinfo&nbsp;--&nbsp;a&nbsp;user&nbsp;info&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;string&nbsp;describing&nbsp;the&nbsp;error</tt></dd></dl>
+ <dl><dt><a name="-fd_ready"><strong>fd_ready</strong></a>(...)</dt><dd><tt><a href="#-fd_ready">fd_ready</a>(dx,&nbsp;sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;database&nbsp;application&nbsp;owns&nbsp;all&nbsp;data&nbsp;provider&nbsp;sockets&nbsp;to&nbsp;ConfD&nbsp;and&nbsp;is<br>
+responsible&nbsp;for&nbsp;the&nbsp;polling&nbsp;of&nbsp;these&nbsp;sockets.&nbsp;When&nbsp;one&nbsp;of&nbsp;the&nbsp;ConfD<br>
+sockets&nbsp;has&nbsp;I/O&nbsp;ready&nbsp;to&nbsp;read,&nbsp;the&nbsp;application&nbsp;must&nbsp;invoke&nbsp;<a href="#-fd_ready">fd_ready</a>()&nbsp;on<br>
+the&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+sock&nbsp;--&nbsp;the&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-init_daemon"><strong>init_daemon</strong></a>(...)</dt><dd><tt><a href="#-init_daemon">init_daemon</a>(name)&nbsp;-&gt;&nbsp;_dp.<a href="#DaemonCtxRef">DaemonCtxRef</a><br>
+&nbsp;<br>
+Initializes&nbsp;and&nbsp;returns&nbsp;a&nbsp;new&nbsp;daemon&nbsp;context.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+name&nbsp;--&nbsp;a&nbsp;string&nbsp;used&nbsp;to&nbsp;uniquely&nbsp;identify&nbsp;the&nbsp;daemon</tt></dd></dl>
+ <dl><dt><a name="-install_crypto_keys"><strong>install_crypto_keys</strong></a>(...)</dt><dd><tt><a href="#-install_crypto_keys">install_crypto_keys</a>(dtx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+It&nbsp;is&nbsp;possible&nbsp;to&nbsp;define&nbsp;DES3&nbsp;and&nbsp;AES&nbsp;keys&nbsp;inside&nbsp;confd.conf.&nbsp;These&nbsp;keys<br>
+are&nbsp;used&nbsp;by&nbsp;ConfD&nbsp;to&nbsp;encrypt&nbsp;data&nbsp;which&nbsp;is&nbsp;entered&nbsp;into&nbsp;the&nbsp;system&nbsp;which<br>
+has&nbsp;either&nbsp;of&nbsp;the&nbsp;two&nbsp;builtin&nbsp;types&nbsp;tailf:des3-cbc-encrypted-string&nbsp;or<br>
+tailf:aes-cfb-128-encrypted-string.<br>
+This&nbsp;function&nbsp;will&nbsp;copy&nbsp;those&nbsp;keys&nbsp;from&nbsp;ConfD&nbsp;(which&nbsp;reads&nbsp;confd.conf)&nbsp;into<br>
+memory&nbsp;in&nbsp;the&nbsp;library.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;called&nbsp;before&nbsp;<a href="#-register_done">register_done</a>()&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dtx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;wich&nbsp;is&nbsp;connected&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-connect">connect</a>()</tt></dd></dl>
+ <dl><dt><a name="-notification_flush"><strong>notification_flush</strong></a>(...)</dt><dd><tt><a href="#-notification_flush">notification_flush</a>(nctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Notifications&nbsp;are&nbsp;sent&nbsp;asynchronously,&nbsp;i.e.&nbsp;normally&nbsp;without&nbsp;blocking&nbsp;the<br>
+caller&nbsp;of&nbsp;the&nbsp;send&nbsp;functions&nbsp;described&nbsp;above.&nbsp;This&nbsp;means&nbsp;that&nbsp;in&nbsp;some&nbsp;cases<br>
+ConfD's&nbsp;sending&nbsp;of&nbsp;the&nbsp;notifications&nbsp;on&nbsp;the&nbsp;northbound&nbsp;interfaces&nbsp;may&nbsp;lag<br>
+behind&nbsp;the&nbsp;send&nbsp;calls.&nbsp;This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;&nbsp;to&nbsp;make&nbsp;sure&nbsp;that&nbsp;the<br>
+notifications&nbsp;have&nbsp;actually&nbsp;been&nbsp;sent&nbsp;out.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()</tt></dd></dl>
+ <dl><dt><a name="-notification_replay_complete"><strong>notification_replay_complete</strong></a>(...)</dt><dd><tt><a href="#-notification_replay_complete">notification_replay_complete</a>(nctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;application&nbsp;calls&nbsp;this&nbsp;function&nbsp;to&nbsp;notify&nbsp;ConfD&nbsp;that&nbsp;the&nbsp;replay&nbsp;is<br>
+complete<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()</tt></dd></dl>
+ <dl><dt><a name="-notification_replay_failed"><strong>notification_replay_failed</strong></a>(...)</dt><dd><tt><a href="#-notification_replay_failed">notification_replay_failed</a>(nctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+In&nbsp;case&nbsp;the&nbsp;application&nbsp;fails&nbsp;to&nbsp;complete&nbsp;the&nbsp;replay&nbsp;as&nbsp;requested&nbsp;(e.g.&nbsp;the<br>
+log&nbsp;gets&nbsp;overwritten&nbsp;while&nbsp;the&nbsp;replay&nbsp;is&nbsp;in&nbsp;progress),&nbsp;the&nbsp;application<br>
+should&nbsp;call&nbsp;this&nbsp;function&nbsp;instead&nbsp;of&nbsp;<a href="#-notification_replay_complete">notification_replay_complete</a>().&nbsp;An<br>
+error&nbsp;message&nbsp;describing&nbsp;the&nbsp;reason&nbsp;for&nbsp;the&nbsp;failure&nbsp;can&nbsp;be&nbsp;supplied&nbsp;by<br>
+first&nbsp;calling&nbsp;<a href="#-notification_seterr">notification_seterr</a>()&nbsp;or&nbsp;<a href="#-notification_seterr_extended">notification_seterr_extended</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()</tt></dd></dl>
+ <dl><dt><a name="-notification_reply_log_times"><strong>notification_reply_log_times</strong></a>(...)</dt><dd><tt><a href="#-notification_reply_log_times">notification_reply_log_times</a>(nctx,&nbsp;creation,&nbsp;aged)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Reply&nbsp;function&nbsp;for&nbsp;use&nbsp;in&nbsp;the&nbsp;cb_get_log_times()&nbsp;callback&nbsp;invocation.&nbsp;If&nbsp;no<br>
+notifications&nbsp;have&nbsp;been&nbsp;aged&nbsp;out&nbsp;of&nbsp;the&nbsp;log,&nbsp;give&nbsp;None&nbsp;for&nbsp;the&nbsp;aged&nbsp;argument.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+creation&nbsp;--&nbsp;a&nbsp;_lib.DateTime&nbsp;instance<br>
+aged&nbsp;--&nbsp;a&nbsp;_lib.DateTime&nbsp;instance&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-notification_send"><strong>notification_send</strong></a>(...)</dt><dd><tt><a href="#-notification_send">notification_send</a>(nctx,&nbsp;time,&nbsp;values)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;called&nbsp;by&nbsp;the&nbsp;application&nbsp;to&nbsp;send&nbsp;a&nbsp;notification,&nbsp;whether<br>
+"live"&nbsp;or&nbsp;replay.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+time&nbsp;--&nbsp;a&nbsp;_lib.DateTime&nbsp;instance<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-notification_send_snmp"><strong>notification_send_snmp</strong></a>(...)</dt><dd><tt><a href="#-notification_send_snmp">notification_send_snmp</a>(nctx,&nbsp;notification,&nbsp;varbinds)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Sends&nbsp;the&nbsp;SNMP&nbsp;notification&nbsp;specified&nbsp;by&nbsp;'notification',&nbsp;without&nbsp;requesting<br>
+inform-request&nbsp;delivery&nbsp;information.&nbsp;This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;calling<br>
+<a href="#-notification_send_snmp_inform">notification_send_snmp_inform</a>()&nbsp;with&nbsp;None&nbsp;as&nbsp;the&nbsp;cb_id&nbsp;argument.&nbsp;I.e.&nbsp;if<br>
+the&nbsp;common&nbsp;arguments&nbsp;are&nbsp;the&nbsp;same,&nbsp;the&nbsp;two&nbsp;functions&nbsp;will&nbsp;send&nbsp;the&nbsp;exact<br>
+same&nbsp;set&nbsp;of&nbsp;traps&nbsp;and&nbsp;inform-requests.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_snmp_notification">register_snmp_notification</a>()<br>
+notification&nbsp;--&nbsp;the&nbsp;notification&nbsp;string<br>
+varbinds&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.SnmpVarbind&nbsp;instances&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-notification_send_snmp_inform"><strong>notification_send_snmp_inform</strong></a>(...)</dt><dd><tt><a href="#-notification_send_snmp_inform">notification_send_snmp_inform</a>(nctx,&nbsp;notification,&nbsp;varbinds,&nbsp;cb_id,&nbsp;ref)&nbsp;-&gt;None<br>
+&nbsp;<br>
+Sends&nbsp;the&nbsp;SNMP&nbsp;notification&nbsp;specified&nbsp;by&nbsp;notification.&nbsp;If&nbsp;cb_id&nbsp;is&nbsp;not&nbsp;None<br>
+the&nbsp;callbacks&nbsp;registered&nbsp;for&nbsp;cb_id&nbsp;will&nbsp;be&nbsp;invoked&nbsp;with&nbsp;the&nbsp;ref&nbsp;argument.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_snmp_notification">register_snmp_notification</a>()<br>
+notification&nbsp;--&nbsp;the&nbsp;notification&nbsp;string<br>
+varbinds&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.SnmpVarbind&nbsp;instances&nbsp;or&nbsp;None<br>
+cb_id&nbsp;--&nbsp;callback&nbsp;id<br>
+ref&nbsp;--&nbsp;argument&nbsp;send&nbsp;to&nbsp;callbacks</tt></dd></dl>
+ <dl><dt><a name="-notification_set_fd"><strong>notification_set_fd</strong></a>(...)</dt><dd><tt><a href="#-notification_set_fd">notification_set_fd</a>(nctx,&nbsp;sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;may&nbsp;optionally&nbsp;be&nbsp;called&nbsp;by&nbsp;the&nbsp;cb_replay()&nbsp;callback&nbsp;to<br>
+request&nbsp;that&nbsp;the&nbsp;worker&nbsp;socket&nbsp;given&nbsp;by&nbsp;'sock'&nbsp;should&nbsp;be&nbsp;used&nbsp;for&nbsp;the<br>
+replay.&nbsp;Otherwise&nbsp;the&nbsp;socket&nbsp;specified&nbsp;in&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;worker&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-notification_set_snmp_notify_name"><strong>notification_set_snmp_notify_name</strong></a>(...)</dt><dd><tt><a href="#-notification_set_snmp_notify_name">notification_set_snmp_notify_name</a>(nctx,&nbsp;notify_name)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;change&nbsp;the&nbsp;snmpNotifyName&nbsp;(notify_name)&nbsp;for<br>
+the&nbsp;nctx&nbsp;context.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_snmp_notification">register_snmp_notification</a>()<br>
+notify_name&nbsp;--&nbsp;the&nbsp;snmpNotifyName</tt></dd></dl>
+ <dl><dt><a name="-notification_set_snmp_src_addr"><strong>notification_set_snmp_src_addr</strong></a>(...)</dt><dd><tt><a href="#-notification_set_snmp_src_addr">notification_set_snmp_src_addr</a>(nctx,&nbsp;family,&nbsp;src_addr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+By&nbsp;default,&nbsp;the&nbsp;source&nbsp;address&nbsp;for&nbsp;the&nbsp;SNMP&nbsp;notifications&nbsp;that&nbsp;are&nbsp;sent&nbsp;by<br>
+the&nbsp;above&nbsp;functions&nbsp;is&nbsp;chosen&nbsp;by&nbsp;the&nbsp;IP&nbsp;stack&nbsp;of&nbsp;the&nbsp;OS.&nbsp;This&nbsp;function&nbsp;may<br>
+be&nbsp;used&nbsp;to&nbsp;select&nbsp;a&nbsp;specific&nbsp;source&nbsp;address,&nbsp;given&nbsp;by&nbsp;src_addr,&nbsp;for&nbsp;the<br>
+SNMP&nbsp;notifications&nbsp;subsequently&nbsp;sent&nbsp;using&nbsp;the&nbsp;nctx&nbsp;context.&nbsp;The&nbsp;default<br>
+can&nbsp;be&nbsp;restored&nbsp;by&nbsp;calling&nbsp;the&nbsp;function&nbsp;with&nbsp;family&nbsp;set&nbsp;to&nbsp;AF_UNSPEC.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_snmp_notification">register_snmp_notification</a>()<br>
+family&nbsp;--&nbsp;AF_INET,&nbsp;AF_INET6&nbsp;or&nbsp;AF_UNSPEC<br>
+src_addr&nbsp;--&nbsp;the&nbsp;source&nbsp;address&nbsp;in&nbsp;string&nbsp;format</tt></dd></dl>
+ <dl><dt><a name="-notification_seterr"><strong>notification_seterr</strong></a>(...)</dt><dd><tt><a href="#-notification_seterr">notification_seterr</a>(nctx,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+In&nbsp;some&nbsp;cases&nbsp;the&nbsp;callbacks&nbsp;may&nbsp;be&nbsp;unable&nbsp;to&nbsp;carry&nbsp;out&nbsp;the&nbsp;requested<br>
+actions,&nbsp;e.g.&nbsp;the&nbsp;capacity&nbsp;for&nbsp;simultaneous&nbsp;replays&nbsp;might&nbsp;be&nbsp;exceeded,&nbsp;and<br>
+they&nbsp;can&nbsp;then&nbsp;return&nbsp;CONFD_ERR.&nbsp;This&nbsp;function&nbsp;allows&nbsp;the&nbsp;callback&nbsp;to<br>
+associate&nbsp;an&nbsp;error&nbsp;message&nbsp;with&nbsp;the&nbsp;failure.&nbsp;It&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;to&nbsp;supply<br>
+an&nbsp;error&nbsp;message&nbsp;before&nbsp;calling&nbsp;<a href="#-notification_replay_failed">notification_replay_failed</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-notification_seterr_extended"><strong>notification_seterr_extended</strong></a>(...)</dt><dd><tt><a href="#-notification_seterr_extended">notification_seterr_extended</a>(nctx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;errstr)&nbsp;-&gt;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;more&nbsp;structured&nbsp;error&nbsp;information<br>
+from&nbsp;a&nbsp;notification&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-notification_seterr_extended_info"><strong>notification_seterr_extended_info</strong></a>(...)</dt><dd><tt><a href="#-notification_seterr_extended_info">notification_seterr_extended_info</a>(nctx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_info,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;structured&nbsp;error&nbsp;information&nbsp;in&nbsp;the<br>
+same&nbsp;way&nbsp;as&nbsp;<a href="#-notification_seterr_extended">notification_seterr_extended</a>(),&nbsp;and&nbsp;additionally&nbsp;provide<br>
+contents&nbsp;for&nbsp;the&nbsp;NETCONF&nbsp;&lt;error-info&gt;&nbsp;element.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nctx&nbsp;--&nbsp;notification&nbsp;context&nbsp;returned&nbsp;from&nbsp;<a href="#-register_notification_stream">register_notification_stream</a>()<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+error_info&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-register_action_cbs"><strong>register_action_cbs</strong></a>(...)</dt><dd><tt><a href="#-register_action_cbs">register_action_cbs</a>(dx,&nbsp;actionpoint,&nbsp;acb)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;registers&nbsp;up&nbsp;to&nbsp;five&nbsp;callback&nbsp;functions,&nbsp;two&nbsp;of&nbsp;which&nbsp;will<br>
+be&nbsp;called&nbsp;in&nbsp;sequence&nbsp;when&nbsp;an&nbsp;action&nbsp;is&nbsp;invoked.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+actionpoint&nbsp;--&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;action&nbsp;point<br>
+vcb&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;acb&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;callback&nbsp;methods.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;ActionCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_init(self,&nbsp;uinfo):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_abort(self,&nbsp;uinfo):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_action(self,&nbsp;uinfo,&nbsp;name,&nbsp;kp,&nbsp;params):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_command(self,&nbsp;uinfo,&nbsp;path,&nbsp;argv):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_completion(self,&nbsp;uinfo,&nbsp;cli_style,&nbsp;token,&nbsp;completion_char,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;kp,&nbsp;cmdpath,&nbsp;cmdparam_id,&nbsp;simpleType,&nbsp;extra):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;acb&nbsp;=&nbsp;ActionCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_action_cbs">register_action_cbs</a>(dx,&nbsp;'actionpoint-1',&nbsp;acb)<br>
+&nbsp;<br>
+Notes&nbsp;about&nbsp;some&nbsp;of&nbsp;the&nbsp;callbacks:<br>
+&nbsp;<br>
+cb_action()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;params&nbsp;argument&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances.<br>
+&nbsp;<br>
+cb_command()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;argv&nbsp;argument&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+ <dl><dt><a name="-register_auth_cb"><strong>register_auth_cb</strong></a>(...)</dt><dd><tt><a href="#-register_auth_cb">register_auth_cb</a>(dx,&nbsp;acb)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Registers&nbsp;the&nbsp;authentication&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+abc&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;AuthCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_auth(self,&nbsp;actx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;acb&nbsp;=&nbsp;AuthCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_auth_cb">register_auth_cb</a>(dx,&nbsp;acb)</tt></dd></dl>
+ <dl><dt><a name="-register_authorization_cb"><strong>register_authorization_cb</strong></a>(...)</dt><dd><tt><a href="#-register_authorization_cb">register_authorization_cb</a>(dx,&nbsp;acb,&nbsp;cmd_filter,&nbsp;data_filter)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+abc&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+cmd_filter&nbsp;--&nbsp;set&nbsp;to&nbsp;0&nbsp;for&nbsp;no&nbsp;filtering<br>
+data_filter&nbsp;--&nbsp;set&nbsp;to&nbsp;0&nbsp;for&nbsp;no&nbsp;filtering<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;AuthorizationCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_chk_cmd_access(self,&nbsp;actx,&nbsp;cmdtokens,&nbsp;cmdop):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_chk_data_access(self,&nbsp;actx,&nbsp;hashed_ns,&nbsp;hkp,&nbsp;dataop,&nbsp;how):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;acb&nbsp;=&nbsp;AuthCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_authorization_cb">register_authorization_cb</a>(dx,&nbsp;acb)</tt></dd></dl>
+ <dl><dt><a name="-register_data_cb"><strong>register_data_cb</strong></a>(...)</dt><dd><tt><a href="#-register_data_cb">register_data_cb</a>(dx,&nbsp;callpoint,&nbsp;data)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Registers&nbsp;data&nbsp;manipulation&nbsp;callback&nbsp;functions.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+callpoint&nbsp;--&nbsp;name&nbsp;of&nbsp;a&nbsp;tailf:callpoint&nbsp;in&nbsp;the&nbsp;data&nbsp;model<br>
+data&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;data&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;callback&nbsp;methods.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;DataCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_exists_optional(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_elem(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_next(self,&nbsp;tctx,&nbsp;kp,&nbsp;next):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_set_elem(self,&nbsp;tctx,&nbsp;kp,&nbsp;newval):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_create(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_remove(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_find_next(self,&nbsp;tctx,&nbsp;kp,&nbsp;type,&nbsp;keys):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_num_instances(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_object(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_next_object(self,&nbsp;tctx,&nbsp;kp,&nbsp;next):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_find_next_object(self,&nbsp;tctx,&nbsp;kp,&nbsp;type,&nbsp;keys):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_case(self,&nbsp;tctx,&nbsp;kp,&nbsp;choice):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_set_case(self,&nbsp;tctx,&nbsp;kp,&nbsp;choice,&nbsp;caseval):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_attrs(self,&nbsp;tctx,&nbsp;kp,&nbsp;attrs):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_set_attr(self,&nbsp;tctx,&nbsp;kp,&nbsp;attr,&nbsp;v):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_move_after(self,&nbsp;tctx,&nbsp;kp,&nbsp;prevkeys):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_write_all(self,&nbsp;tctx,&nbsp;kp):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dcb&nbsp;=&nbsp;DataCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_data_cb">register_data_cb</a>(dx,&nbsp;'example-callpoint-1',&nbsp;dcb)</tt></dd></dl>
+ <dl><dt><a name="-register_db_cb"><strong>register_db_cb</strong></a>(...)</dt><dd><tt><a href="#-register_db_cb">register_db_cb</a>(dx,&nbsp;dbcbs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;callback&nbsp;functions&nbsp;which&nbsp;span&nbsp;over&nbsp;several<br>
+ConfD&nbsp;transactions.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+dbcbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;dbcbs&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;callback&nbsp;methods.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;DbCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_commit(self,&nbsp;dbx,&nbsp;timeout):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_confirming_commit(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_reset(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_chk_not_modified(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_rollback_running(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_candidate_validate(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_add_checkpoint_running(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_del_checkpoint_running(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_activate_checkpoint_running(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_copy_running_to_startup(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_running_chk_not_modified(self,&nbsp;dbx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_lock(self,&nbsp;dbx,&nbsp;dbname):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_unlock(self,&nbsp;dbx,&nbsp;dbname):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_lock_partial(self,&nbsp;dbx,&nbsp;dbname,&nbsp;lockid,&nbsp;paths):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_ulock_partial(self,&nbsp;dbx,&nbsp;dbname,&nbsp;lockid):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_delete_confid(self,&nbsp;dbx,&nbsp;dbname):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dbcbs&nbsp;=&nbsp;DbCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_db_cb">register_db_cb</a>(dx,&nbsp;dbcbs)</tt></dd></dl>
+ <dl><dt><a name="-register_done"><strong>register_done</strong></a>(...)</dt><dd><tt><a href="#-register_done">register_done</a>(dx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;we&nbsp;have&nbsp;registered&nbsp;all&nbsp;the&nbsp;callbacks&nbsp;for&nbsp;a&nbsp;daemon&nbsp;(including&nbsp;the&nbsp;other<br>
+types&nbsp;described&nbsp;below&nbsp;if&nbsp;we&nbsp;have&nbsp;them),&nbsp;we&nbsp;must&nbsp;call&nbsp;this&nbsp;function&nbsp;to<br>
+synchronize&nbsp;with&nbsp;ConfD.&nbsp;No&nbsp;callbacks&nbsp;will&nbsp;be&nbsp;invoked&nbsp;until&nbsp;it&nbsp;has&nbsp;been<br>
+called,&nbsp;and&nbsp;after&nbsp;the&nbsp;call,&nbsp;no&nbsp;further&nbsp;registrations&nbsp;are&nbsp;allowed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()</tt></dd></dl>
+ <dl><dt><a name="-register_error_cb"><strong>register_error_cb</strong></a>(...)</dt><dd><tt><a href="#-register_error_cb">register_error_cb</a>(dx,&nbsp;errortypes,&nbsp;ecbs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;funciton&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;register&nbsp;error&nbsp;callbacks&nbsp;that&nbsp;are<br>
+invoked&nbsp;for&nbsp;internally&nbsp;generated&nbsp;errors.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+errortypes&nbsp;--&nbsp;logical&nbsp;OR&nbsp;of&nbsp;the&nbsp;error&nbsp;types&nbsp;that&nbsp;the&nbsp;ecbs&nbsp;should&nbsp;handle<br>
+ecbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;ErrorCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_format_error(self,&nbsp;uinfo,&nbsp;errinfo_dict,&nbsp;default_msg):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-error_seterr">error_seterr</a>(uinfo,&nbsp;default_msg)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ecbs&nbsp;=&nbsp;ErrorCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_error_cb">register_error_cb</a>(ctx,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp.ERRTYPE_BAD_VALUE&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp.ERRTYPE_MISC,&nbsp;ecbs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_done">register_done</a>(ctx)</tt></dd></dl>
+ <dl><dt><a name="-register_notification_snmp_inform_cb"><strong>register_notification_snmp_inform_cb</strong></a>(...)</dt><dd><tt><a href="#-register_notification_snmp_inform_cb">register_notification_snmp_inform_cb</a>(dx,&nbsp;cb_id,&nbsp;cbs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;we&nbsp;want&nbsp;to&nbsp;receive&nbsp;information&nbsp;about&nbsp;the&nbsp;delivery&nbsp;of&nbsp;SNMP<br>
+inform-requests,&nbsp;we&nbsp;must&nbsp;register&nbsp;two&nbsp;callbacks&nbsp;for&nbsp;this.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+cb_id&nbsp;--&nbsp;the&nbsp;callback&nbsp;identifier<br>
+cbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;NotifySnmpCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_targets(self,&nbsp;nctx,&nbsp;ref,&nbsp;targets):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_result(self,&nbsp;nctx,&nbsp;ref,&nbsp;target,&nbsp;got_response):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cbs&nbsp;=&nbsp;NotifySnmpCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_notification_snmp_inform_cb">register_notification_snmp_inform_cb</a>(dx,&nbsp;'callback-id-1',&nbsp;cbs)</tt></dd></dl>
+ <dl><dt><a name="-register_notification_stream"><strong>register_notification_stream</strong></a>(...)</dt><dd><tt><a href="#-register_notification_stream">register_notification_stream</a>(dx,&nbsp;ncbs,&nbsp;sock,&nbsp;streamname)&nbsp;-&gt;&nbsp;_dp.<a href="#NotificationCtxRef">NotificationCtxRef</a><br>
+&nbsp;<br>
+This&nbsp;function&nbsp;registers&nbsp;the&nbsp;notification&nbsp;stream&nbsp;and&nbsp;optionally&nbsp;two&nbsp;callback<br>
+functions&nbsp;used&nbsp;for&nbsp;the&nbsp;replay&nbsp;functionality.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;notification&nbsp;context&nbsp;must&nbsp;be&nbsp;used&nbsp;by&nbsp;the&nbsp;application&nbsp;for&nbsp;the<br>
+sending&nbsp;of&nbsp;live&nbsp;notifications&nbsp;via&nbsp;<a href="#-notification_send">notification_send</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+ncbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;worker&nbsp;socket<br>
+streamname&nbsp;--&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;notification&nbsp;stream<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;NotificationCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_get_log_times(self,&nbsp;nctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_replay(self,&nbsp;nctx,&nbsp;start,&nbsp;stop):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ncbs&nbsp;=&nbsp;NotificationCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;livectx&nbsp;=&nbsp;dp.<a href="#-register_notification_stream">register_notification_stream</a>(dx,&nbsp;ncbs,&nbsp;workersock,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'streamname')</tt></dd></dl>
+ <dl><dt><a name="-register_notification_sub_snmp_cb"><strong>register_notification_sub_snmp_cb</strong></a>(...)</dt><dd><tt><a href="#-register_notification_sub_snmp_cb">register_notification_sub_snmp_cb</a>(dx,&nbsp;sub_id,&nbsp;cbs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Registers&nbsp;a&nbsp;callback&nbsp;function&nbsp;to&nbsp;be&nbsp;called&nbsp;when&nbsp;an&nbsp;SNMP&nbsp;notification&nbsp;is<br>
+received&nbsp;by&nbsp;the&nbsp;SNMP&nbsp;gateway.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+sub_id&nbsp;--&nbsp;the&nbsp;subscription&nbsp;id&nbsp;for&nbsp;the&nbsp;notifications<br>
+cbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;NotifySubSnmpCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_recv(self,&nbsp;nctx,&nbsp;notification,&nbsp;varbinds,&nbsp;src_addr,&nbsp;port):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cbs&nbsp;=&nbsp;NotifySubSnmpCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_notification_sub_snmp_cb">register_notification_sub_snmp_cb</a>(dx,&nbsp;'sub-id-1',&nbsp;cbs)</tt></dd></dl>
+ <dl><dt><a name="-register_range_action_cbs"><strong>register_range_action_cbs</strong></a>(...)</dt><dd><tt><a href="#-register_range_action_cbs">register_range_action_cbs</a>(dx,&nbsp;actionpoint,&nbsp;acb,&nbsp;lower,&nbsp;upper,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;<a href="#-register_action_cbs">register_action_cbs</a>()&nbsp;which&nbsp;registers&nbsp;action&nbsp;callbacks&nbsp;for&nbsp;a<br>
+range&nbsp;of&nbsp;key&nbsp;values.&nbsp;The&nbsp;lower,&nbsp;upper,&nbsp;and&nbsp;path&nbsp;arguments&nbsp;are&nbsp;the&nbsp;same&nbsp;as<br>
+for&nbsp;<a href="#-register_range_data_cb">register_range_data_cb</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+actionpoint&nbsp;--&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;action&nbsp;point<br>
+data&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;<a href="#-register_action_cbs">register_action_cbs</a>())<br>
+lower&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+upper&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+path&nbsp;--&nbsp;path&nbsp;for&nbsp;the&nbsp;list&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-register_range_data_cb"><strong>register_range_data_cb</strong></a>(...)</dt><dd><tt><a href="#-register_range_data_cb">register_range_data_cb</a>(dx,&nbsp;callpoint,&nbsp;data,&nbsp;lower,&nbsp;upper,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;variant&nbsp;of&nbsp;<a href="#-register_data_cb">register_data_cb</a>()&nbsp;which&nbsp;registers&nbsp;a&nbsp;set&nbsp;of&nbsp;callbacks<br>
+for&nbsp;a&nbsp;range&nbsp;of&nbsp;list&nbsp;entries.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+callpoint&nbsp;--&nbsp;name&nbsp;of&nbsp;a&nbsp;tailf:callpoint&nbsp;in&nbsp;the&nbsp;data&nbsp;model<br>
+data&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;<a href="#-register_data_cb">register_data_cb</a>())<br>
+lower&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+upper&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+path&nbsp;--&nbsp;path&nbsp;for&nbsp;the&nbsp;list&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-register_range_valpoint_cb"><strong>register_range_valpoint_cb</strong></a>(...)</dt><dd><tt><a href="#-register_range_valpoint_cb">register_range_valpoint_cb</a>(dx,&nbsp;valpoint,&nbsp;vcb,&nbsp;lower,&nbsp;upper,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;<a href="#-register_valpoint_cb">register_valpoint_cb</a>()&nbsp;which&nbsp;registers&nbsp;a&nbsp;validation&nbsp;function<br>
+for&nbsp;a&nbsp;range&nbsp;of&nbsp;key&nbsp;values.&nbsp;The&nbsp;lower,&nbsp;upper&nbsp;and&nbsp;path&nbsp;arguments&nbsp;are&nbsp;the&nbsp;same<br>
+as&nbsp;for&nbsp;<a href="#-register_range_data_cb">register_range_data_cb</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+valpoint&nbsp;--&nbsp;name&nbsp;of&nbsp;a&nbsp;validation&nbsp;point<br>
+data&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;<a href="#-register_valpoint_cb">register_valpoint_cb</a>())<br>
+lower&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+upper&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's&nbsp;or&nbsp;None<br>
+path&nbsp;--&nbsp;path&nbsp;for&nbsp;the&nbsp;list&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-register_snmp_notification"><strong>register_snmp_notification</strong></a>(...)</dt><dd><tt><a href="#-register_snmp_notification">register_snmp_notification</a>(dx,&nbsp;sock,&nbsp;notify_name,&nbsp;ctx_name)&nbsp;-&gt;_dp.<a href="#NotificationCtxRef">NotificationCtxRef</a><br>
+&nbsp;<br>
+SNMP&nbsp;notifications&nbsp;can&nbsp;also&nbsp;be&nbsp;sent&nbsp;via&nbsp;the&nbsp;notification&nbsp;framework,&nbsp;however<br>
+most&nbsp;aspects&nbsp;of&nbsp;the&nbsp;stream&nbsp;concept&nbsp;do&nbsp;not&nbsp;apply&nbsp;for&nbsp;SNMP.&nbsp;This&nbsp;function&nbsp;is<br>
+used&nbsp;to&nbsp;register&nbsp;a&nbsp;worker&nbsp;socket,&nbsp;the&nbsp;snmpNotifyName&nbsp;(notify_name),&nbsp;and<br>
+SNMP&nbsp;context&nbsp;(ctx_name)&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;the&nbsp;notifications.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;worker&nbsp;socket<br>
+notify_name&nbsp;--&nbsp;the&nbsp;snmpNotifyName<br>
+ctx_name&nbsp;--&nbsp;the&nbsp;SNMP&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-register_trans_cb"><strong>register_trans_cb</strong></a>(...)</dt><dd><tt><a href="#-register_trans_cb">register_trans_cb</a>(dx,&nbsp;trans)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Registers&nbsp;transaction&nbsp;callback&nbsp;functions.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+trans&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;trans&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;callback&nbsp;methods.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;TransCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_init(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_trans_lock(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_trans_unlock(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_write_start(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_prepare(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_abort(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_commit(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_finish(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_interrupt(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tcb&nbsp;=&nbsp;TransCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_trans_cb">register_trans_cb</a>(dx,&nbsp;tcb)</tt></dd></dl>
+ <dl><dt><a name="-register_trans_validate_cb"><strong>register_trans_validate_cb</strong></a>(...)</dt><dd><tt><a href="#-register_trans_validate_cb">register_trans_validate_cb</a>(dx,&nbsp;vcbs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;installs&nbsp;two&nbsp;callback&nbsp;functions&nbsp;for&nbsp;the&nbsp;daemon&nbsp;context.&nbsp;One<br>
+function&nbsp;that&nbsp;gets&nbsp;called&nbsp;when&nbsp;the&nbsp;validation&nbsp;phase&nbsp;starts&nbsp;in&nbsp;a&nbsp;transaction<br>
+and&nbsp;one&nbsp;when&nbsp;the&nbsp;validation&nbsp;phase&nbsp;stops&nbsp;in&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+vcbs&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;vcbs&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;callback&nbsp;methods.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;TransValidateCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_init(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_stop(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vcbs&nbsp;=&nbsp;TransValidateCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_trans_validate_cb">register_trans_validate_cb</a>(dx,&nbsp;vcbs)</tt></dd></dl>
+ <dl><dt><a name="-register_usess_cb"><strong>register_usess_cb</strong></a>(...)</dt><dd><tt><a href="#-register_usess_cb">register_usess_cb</a>(dx,&nbsp;ucb)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;register&nbsp;information&nbsp;callbacks&nbsp;that&nbsp;are<br>
+invoked&nbsp;for&nbsp;user&nbsp;session&nbsp;start&nbsp;and&nbsp;stop.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+ucb&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;UserSessionCallbacks(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_start(self,&nbsp;dx,&nbsp;uinfo):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_stop(self,&nbsp;dx,&nbsp;uinfo):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ucb&nbsp;=&nbsp;UserSessionCallbacks()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_usess_cb">register_usess_cb</a>(dx,&nbsp;acb)</tt></dd></dl>
+ <dl><dt><a name="-register_valpoint_cb"><strong>register_valpoint_cb</strong></a>(...)</dt><dd><tt><a href="#-register_valpoint_cb">register_valpoint_cb</a>(dx,&nbsp;valpoint,&nbsp;vcb)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+We&nbsp;must&nbsp;also&nbsp;install&nbsp;an&nbsp;actual&nbsp;validation&nbsp;function&nbsp;for&nbsp;each&nbsp;validation<br>
+point,&nbsp;i.e.&nbsp;for&nbsp;each&nbsp;tailf:validate&nbsp;statement&nbsp;in&nbsp;the&nbsp;YANG&nbsp;data&nbsp;model.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+valpoint&nbsp;--&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;validation&nbsp;point<br>
+vcb&nbsp;--&nbsp;the&nbsp;callback&nbsp;instance&nbsp;(see&nbsp;below)<br>
+&nbsp;<br>
+The&nbsp;vcb&nbsp;argument&nbsp;should&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;a&nbsp;class&nbsp;with&nbsp;a&nbsp;callback&nbsp;method.<br>
+E.g.:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;ValpointCallback(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_validate(self,&nbsp;tctx,&nbsp;kp,&nbsp;newval):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vcb&nbsp;=&nbsp;ValpointCallback()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-register_valpoint_cb">register_valpoint_cb</a>(dx,&nbsp;'valpoint-1',&nbsp;vcb)</tt></dd></dl>
+ <dl><dt><a name="-release_daemon"><strong>release_daemon</strong></a>(...)</dt><dd><tt><a href="#-release_daemon">release_daemon</a>(dx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Releases&nbsp;all&nbsp;memory&nbsp;that&nbsp;has&nbsp;been&nbsp;allocated&nbsp;by&nbsp;<a href="#-init_daemon">init_daemon</a>()&nbsp;and&nbsp;other<br>
+functions&nbsp;for&nbsp;the&nbsp;daemon&nbsp;context.&nbsp;The&nbsp;control&nbsp;socket&nbsp;as&nbsp;well&nbsp;as&nbsp;all&nbsp;the<br>
+worker&nbsp;sockets&nbsp;must&nbsp;be&nbsp;closed&nbsp;by&nbsp;the&nbsp;application&nbsp;(before&nbsp;or&nbsp;after<br>
+<a href="#-release_daemon">release_daemon</a>()&nbsp;has&nbsp;been&nbsp;called).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()</tt></dd></dl>
+ <dl><dt><a name="-set_daemon_flags"><strong>set_daemon_flags</strong></a>(...)</dt><dd><tt><a href="#-set_daemon_flags">set_daemon_flags</a>(dx,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Modifies&nbsp;the&nbsp;API&nbsp;behaviour&nbsp;according&nbsp;to&nbsp;the&nbsp;flags&nbsp;ORed&nbsp;into&nbsp;the&nbsp;flags<br>
+argument.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+dx&nbsp;--&nbsp;a&nbsp;daemon&nbsp;context&nbsp;acquired&nbsp;through&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#-init_daemon">init_daemon</a>()<br>
+flags&nbsp;--&nbsp;the&nbsp;flags&nbsp;to&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-trans_set_fd"><strong>trans_set_fd</strong></a>(...)</dt><dd><tt><a href="#-trans_set_fd">trans_set_fd</a>(tctx,&nbsp;sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Associate&nbsp;a&nbsp;worker&nbsp;socket&nbsp;with&nbsp;the&nbsp;transaction,&nbsp;or&nbsp;validation&nbsp;phase.&nbsp;This<br>
+function&nbsp;must&nbsp;be&nbsp;called&nbsp;in&nbsp;the&nbsp;transaction&nbsp;and&nbsp;validation&nbsp;cb_init()<br>
+callbacks.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;worker&nbsp;socket<br>
+&nbsp;<br>
+A&nbsp;minimal&nbsp;implementation&nbsp;of&nbsp;a&nbsp;transaction&nbsp;cb_init()&nbsp;callback&nbsp;looks&nbsp;like:<br>
+&nbsp;<br>
+class&nbsp;TransCb(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;__init__(self,&nbsp;workersock):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.<strong>workersock</strong>&nbsp;=&nbsp;workersock<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_init(self,&nbsp;tctx):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dp.<a href="#-trans_set_fd">trans_set_fd</a>(tctx,&nbsp;self.<strong>workersock</strong>)</tt></dd></dl>
+ <dl><dt><a name="-trans_seterr"><strong>trans_seterr</strong></a>(...)</dt><dd><tt><a href="#-trans_seterr">trans_seterr</a>(tctx,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;used&nbsp;by&nbsp;the&nbsp;application&nbsp;to&nbsp;set&nbsp;an&nbsp;error&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-trans_seterr_extended"><strong>trans_seterr_extended</strong></a>(...)</dt><dd><tt><a href="#-trans_seterr_extended">trans_seterr_extended</a>(tctx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;more&nbsp;structured&nbsp;error&nbsp;information<br>
+from&nbsp;a&nbsp;transaction&nbsp;or&nbsp;data&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-trans_seterr_extended_info"><strong>trans_seterr_extended_info</strong></a>(...)</dt><dd><tt><a href="#-trans_seterr_extended_info">trans_seterr_extended_info</a>(tctx,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;error_info,&nbsp;errstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;provide&nbsp;structured&nbsp;error&nbsp;information&nbsp;in&nbsp;the<br>
+same&nbsp;way&nbsp;as&nbsp;<a href="#-trans_seterr_extended">trans_seterr_extended</a>(),&nbsp;and&nbsp;additionally&nbsp;provide&nbsp;contents&nbsp;for<br>
+the&nbsp;NETCONF&nbsp;&lt;error-info&gt;&nbsp;element.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context<br>
+code&nbsp;--&nbsp;an&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;namespace&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0<br>
+apptag_tag&nbsp;--&nbsp;either&nbsp;0&nbsp;or&nbsp;the&nbsp;hash&nbsp;value&nbsp;for&nbsp;a&nbsp;data&nbsp;model&nbsp;node<br>
+error_info&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;_lib.TagValue&nbsp;instances<br>
+errstr&nbsp;--&nbsp;an&nbsp;error&nbsp;message&nbsp;string</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCESS_CHK_FINAL</strong> = 512<br>
+<strong>ACCESS_CHK_INTERMEDIATE</strong> = 256<br>
+<strong>ACCESS_OP_CREATE</strong> = 4<br>
+<strong>ACCESS_OP_DELETE</strong> = 16<br>
+<strong>ACCESS_OP_EXECUTE</strong> = 2<br>
+<strong>ACCESS_OP_READ</strong> = 1<br>
+<strong>ACCESS_OP_UPDATE</strong> = 8<br>
+<strong>ACCESS_OP_WRITE</strong> = 32<br>
+<strong>ACCESS_RESULT_ACCEPT</strong> = 0<br>
+<strong>ACCESS_RESULT_CONTINUE</strong> = 2<br>
+<strong>ACCESS_RESULT_DEFAULT</strong> = 3<br>
+<strong>ACCESS_RESULT_REJECT</strong> = 1<br>
+<strong>BAD_VALUE_BAD_KEY_TAG</strong> = 32<br>
+<strong>BAD_VALUE_BAD_LEXICAL</strong> = 19<br>
+<strong>BAD_VALUE_BAD_TAG</strong> = 21<br>
+<strong>BAD_VALUE_BAD_VALUE</strong> = 20<br>
+<strong>BAD_VALUE_CUSTOM_FACET_ERROR_MESSAGE</strong> = 16<br>
+<strong>BAD_VALUE_ENUMERATION</strong> = 11<br>
+<strong>BAD_VALUE_FRACTION_DIGITS</strong> = 3<br>
+<strong>BAD_VALUE_INVALID_FACET</strong> = 18<br>
+<strong>BAD_VALUE_INVALID_REGEX</strong> = 9<br>
+<strong>BAD_VALUE_INVALID_TYPE_NAME</strong> = 23<br>
+<strong>BAD_VALUE_INVALID_XPATH</strong> = 34<br>
+<strong>BAD_VALUE_LENGTH</strong> = 15<br>
+<strong>BAD_VALUE_MAX_EXCLUSIVE</strong> = 5<br>
+<strong>BAD_VALUE_MAX_INCLUSIVE</strong> = 6<br>
+<strong>BAD_VALUE_MAX_LENGTH</strong> = 14<br>
+<strong>BAD_VALUE_MIN_EXCLUSIVE</strong> = 7<br>
+<strong>BAD_VALUE_MIN_INCLUSIVE</strong> = 8<br>
+<strong>BAD_VALUE_MIN_LENGTH</strong> = 13<br>
+<strong>BAD_VALUE_MISSING_NAMESPACE</strong> = 27<br>
+<strong>BAD_VALUE_NOT_RESTRICTED_XPATH</strong> = 35<br>
+<strong>BAD_VALUE_NO_DEFAULT_NAMESPACE</strong> = 24<br>
+<strong>BAD_VALUE_PATTERN</strong> = 12<br>
+<strong>BAD_VALUE_POP_TOO_FAR</strong> = 31<br>
+<strong>BAD_VALUE_RANGE</strong> = 29<br>
+<strong>BAD_VALUE_STRING_FUN</strong> = 1<br>
+<strong>BAD_VALUE_SYMLINK_BAD_KEY_REFERENCE</strong> = 33<br>
+<strong>BAD_VALUE_TOTAL_DIGITS</strong> = 4<br>
+<strong>BAD_VALUE_UNIQUELIST</strong> = 10<br>
+<strong>BAD_VALUE_UNKNOWN_BIT_LABEL</strong> = 22<br>
+<strong>BAD_VALUE_UNKNOWN_NAMESPACE</strong> = 26<br>
+<strong>BAD_VALUE_UNKNOWN_NAMESPACE_PREFIX</strong> = 25<br>
+<strong>BAD_VALUE_USER_ERROR</strong> = 17<br>
+<strong>BAD_VALUE_VALUE2VALUE_FUN</strong> = 28<br>
+<strong>BAD_VALUE_WRONG_DECIMAL64_FRACTION_DIGITS</strong> = 2<br>
+<strong>BAD_VALUE_WRONG_NUMBER_IDENTIFIERS</strong> = 30<br>
+<strong>BAD_VALUE_XPATH_ERROR</strong> = 36<br>
+<strong>CLI_ACTION_NOT_FOUND</strong> = 13<br>
+<strong>CLI_AMBIGUOUS_COMMAND</strong> = 63<br>
+<strong>CLI_BAD_ACTION_RESPONSE</strong> = 16<br>
+<strong>CLI_BAD_LEAF_VALUE</strong> = 6<br>
+<strong>CLI_COMMAND_ABORTED</strong> = 2<br>
+<strong>CLI_COMMAND_ERROR</strong> = 1<br>
+<strong>CLI_COMMAND_FAILED</strong> = 3<br>
+<strong>CLI_CONFIRMED_NOT_SUPPORTED</strong> = 39<br>
+<strong>CLI_COPY_CONFIG_FAILED</strong> = 32<br>
+<strong>CLI_COPY_FAILED</strong> = 31<br>
+<strong>CLI_COPY_PATH_IDENTICAL</strong> = 33<br>
+<strong>CLI_CREATE_PATH</strong> = 23<br>
+<strong>CLI_CUSTOM_ERROR</strong> = 4<br>
+<strong>CLI_DELETE_ALL_FAILED</strong> = 10<br>
+<strong>CLI_DELETE_ERROR</strong> = 12<br>
+<strong>CLI_DELETE_FAILED</strong> = 11<br>
+<strong>CLI_ELEMENT_DOES_NOT_EXIST</strong> = 66<br>
+<strong>CLI_ELEMENT_NOT_FOUND</strong> = 14<br>
+<strong>CLI_ELEM_NOT_WRITABLE</strong> = 7<br>
+<strong>CLI_EXPECTED_BOL</strong> = 56<br>
+<strong>CLI_EXPECTED_EOL</strong> = 57<br>
+<strong>CLI_FAILED_COPY_RUNNING</strong> = 38<br>
+<strong>CLI_FAILED_CREATE_CONTEXT</strong> = 37<br>
+<strong>CLI_FAILED_OPEN_STARTUP</strong> = 41<br>
+<strong>CLI_FAILED_OPEN_STARTUP_CONFIG</strong> = 42<br>
+<strong>CLI_FAILED_TERM_REDIRECT</strong> = 49<br>
+<strong>CLI_ILLEGAL_DIRECTORY_NAME</strong> = 52<br>
+<strong>CLI_ILLEGAL_FILENAME</strong> = 53<br>
+<strong>CLI_INCOMPLETE_CMD_PATH</strong> = 67<br>
+<strong>CLI_INCOMPLETE_COMMAND</strong> = 9<br>
+<strong>CLI_INCOMPLETE_PATH</strong> = 8<br>
+<strong>CLI_INCOMPLETE_PATTERN</strong> = 64<br>
+<strong>CLI_INVALID_PARAMETER</strong> = 54<br>
+<strong>CLI_INVALID_PASSWORD</strong> = 21<br>
+<strong>CLI_INVALID_PATH</strong> = 58<br>
+<strong>CLI_INVALID_ROLLBACK_NR</strong> = 15<br>
+<strong>CLI_INVALID_SELECT</strong> = 59<br>
+<strong>CLI_MESSAGE_TOO_LARGE</strong> = 48<br>
+<strong>CLI_MISSING_ACTION_PARAM</strong> = 17<br>
+<strong>CLI_MISSING_ACTION_PARAM_VALUE</strong> = 18<br>
+<strong>CLI_MISSING_ARGUMENT</strong> = 69<br>
+<strong>CLI_MISSING_DISPLAY_GROUP</strong> = 55<br>
+<strong>CLI_MISSING_ELEMENT</strong> = 65<br>
+<strong>CLI_MISSING_VALUE</strong> = 68<br>
+<strong>CLI_MOVE_FAILED</strong> = 30<br>
+<strong>CLI_MUST_BE_AN_INTEGER</strong> = 70<br>
+<strong>CLI_MUST_BE_INTEGER</strong> = 43<br>
+<strong>CLI_MUST_BE_TRUE_OR_FALSE</strong> = 71<br>
+<strong>CLI_NOT_ALLOWED</strong> = 5<br>
+<strong>CLI_NOT_A_DIRECTORY</strong> = 50<br>
+<strong>CLI_NOT_A_FILE</strong> = 51<br>
+<strong>CLI_NOT_FOUND</strong> = 28<br>
+<strong>CLI_NOT_SUPPORTED</strong> = 34<br>
+<strong>CLI_NOT_WRITABLE</strong> = 27<br>
+<strong>CLI_NO_SUCH_ELEMENT</strong> = 45<br>
+<strong>CLI_NO_SUCH_SESSION</strong> = 44<br>
+<strong>CLI_NO_SUCH_USER</strong> = 47<br>
+<strong>CLI_ON_LINE</strong> = 25<br>
+<strong>CLI_ON_LINE_DESC</strong> = 26<br>
+<strong>CLI_OPEN_FILE</strong> = 20<br>
+<strong>CLI_READ_ERROR</strong> = 19<br>
+<strong>CLI_REALLOCATE</strong> = 24<br>
+<strong>CLI_SENSITIVE_DATA</strong> = 73<br>
+<strong>CLI_SET_FAILED</strong> = 29<br>
+<strong>CLI_START_REPLAY_FAILED</strong> = 72<br>
+<strong>CLI_TARGET_EXISTS</strong> = 35<br>
+<strong>CLI_UNKNOWN_ARGUMENT</strong> = 61<br>
+<strong>CLI_UNKNOWN_COMMAND</strong> = 62<br>
+<strong>CLI_UNKNOWN_ELEMENT</strong> = 60<br>
+<strong>CLI_UNKNOWN_HIDEGROUP</strong> = 22<br>
+<strong>CLI_UNKNOWN_MODE</strong> = 36<br>
+<strong>CLI_WILDCARD_NOT_ALLOWED</strong> = 46<br>
+<strong>CLI_WRITE_CONFIG_FAILED</strong> = 40<br>
+<strong>COMPLETION</strong> = 0<br>
+<strong>COMPLETION_DEFAULT</strong> = 3<br>
+<strong>COMPLETION_DESC</strong> = 2<br>
+<strong>COMPLETION_INFO</strong> = 1<br>
+<strong>CONTROL_SOCKET</strong> = 0<br>
+<strong>C_CREATE</strong> = 2<br>
+<strong>C_MOVE_AFTER</strong> = 6<br>
+<strong>C_REMOVE</strong> = 3<br>
+<strong>C_SET_ATTR</strong> = 5<br>
+<strong>C_SET_CASE</strong> = 4<br>
+<strong>C_SET_ELEM</strong> = 1<br>
+<strong>DAEMON_FLAG_BULK_GET_CONTAINER</strong> = 128<br>
+<strong>DAEMON_FLAG_LEAF_LIST_AS_LEAF</strong> = 32<br>
+<strong>DAEMON_FLAG_NO_DEFAULTS</strong> = 4<br>
+<strong>DAEMON_FLAG_PREFER_BULK_GET</strong> = 64<br>
+<strong>DAEMON_FLAG_REG_DONE</strong> = 65536<br>
+<strong>DAEMON_FLAG_REG_REPLACE_DISCONNECT</strong> = 16<br>
+<strong>DAEMON_FLAG_SEND_IKP</strong> = 1<br>
+<strong>DAEMON_FLAG_STRINGSONLY</strong> = 2<br>
+<strong>ERRTYPE_BAD_VALUE</strong> = 2<br>
+<strong>ERRTYPE_CLI</strong> = 4<br>
+<strong>ERRTYPE_MISC</strong> = 8<br>
+<strong>ERRTYPE_NCS</strong> = 32<br>
+<strong>ERRTYPE_OPERATION</strong> = 16<br>
+<strong>ERRTYPE_VALIDATION</strong> = 1<br>
+<strong>MISC_ACCESS_DENIED</strong> = 5<br>
+<strong>MISC_APPLICATION</strong> = 19<br>
+<strong>MISC_APPLICATION_INTERNAL</strong> = 20<br>
+<strong>MISC_BAD_PERSIST_ID</strong> = 16<br>
+<strong>MISC_CANDIDATE_ABORT_BAD_USID</strong> = 17<br>
+<strong>MISC_CDB_OPER_UNAVAILABLE</strong> = 37<br>
+<strong>MISC_DATA_MISSING</strong> = 44<br>
+<strong>MISC_EXTERNAL</strong> = 22<br>
+<strong>MISC_EXTERNAL_TIMEOUT</strong> = 45<br>
+<strong>MISC_FILE_ACCESS_PATH</strong> = 33<br>
+<strong>MISC_FILE_BAD_PATH</strong> = 34<br>
+<strong>MISC_FILE_BAD_VALUE</strong> = 35<br>
+<strong>MISC_FILE_CORRUPT</strong> = 52<br>
+<strong>MISC_FILE_CREATE_PATH</strong> = 29<br>
+<strong>MISC_FILE_DELETE_PATH</strong> = 32<br>
+<strong>MISC_FILE_EOF</strong> = 36<br>
+<strong>MISC_FILE_MOVE_PATH</strong> = 30<br>
+<strong>MISC_FILE_OPEN_ERROR</strong> = 27<br>
+<strong>MISC_FILE_SET_PATH</strong> = 31<br>
+<strong>MISC_FILE_SYNTAX_ERROR</strong> = 28<br>
+<strong>MISC_FILE_SYNTAX_ERROR_1</strong> = 26<br>
+<strong>MISC_INCONSISTENT_VALUE</strong> = 7<br>
+<strong>MISC_INDEXED_VIEW_LIST_HOLE</strong> = 46<br>
+<strong>MISC_INDEXED_VIEW_LIST_TOO_BIG</strong> = 18<br>
+<strong>MISC_INTERNAL</strong> = 21<br>
+<strong>MISC_INTERRUPT</strong> = 10<br>
+<strong>MISC_IN_USE</strong> = 3<br>
+<strong>MISC_LOCKED_BY</strong> = 4<br>
+<strong>MISC_MISSING_INSTANCE</strong> = 8<br>
+<strong>MISC_NODE_IS_READONLY</strong> = 13<br>
+<strong>MISC_NODE_WAS_READONLY</strong> = 14<br>
+<strong>MISC_NOT_IMPLEMENTED</strong> = 43<br>
+<strong>MISC_NO_SUCH_FILE</strong> = 2<br>
+<strong>MISC_OPERATION_NOT_SUPPORTED</strong> = 38<br>
+<strong>MISC_PROTO_USAGE</strong> = 23<br>
+<strong>MISC_RESOURCE_DENIED</strong> = 6<br>
+<strong>MISC_ROLLBACK_DISABLED</strong> = 1<br>
+<strong>MISC_SNMP_BAD_INDEX</strong> = 42<br>
+<strong>MISC_SNMP_BAD_VALUE</strong> = 41<br>
+<strong>MISC_SNMP_ERROR</strong> = 39<br>
+<strong>MISC_SNMP_TIMEOUT</strong> = 40<br>
+<strong>MISC_SUBAGENT_DOWN</strong> = 24<br>
+<strong>MISC_SUBAGENT_ERROR</strong> = 25<br>
+<strong>MISC_TOO_MANY_SESSIONS</strong> = 11<br>
+<strong>MISC_TOO_MANY_TRANSACTIONS</strong> = 12<br>
+<strong>MISC_UPGRADE_IN_PROGRESS</strong> = 15<br>
+<strong>MISC_WHEN_FAILED</strong> = 9<br>
+<strong>MISC_XPATH_COMPILE</strong> = 51<br>
+<strong>NCS_BAD_CAPAS</strong> = 14<br>
+<strong>NCS_CLI_LOAD</strong> = 19<br>
+<strong>NCS_COMMIT_QUEUED</strong> = 21<br>
+<strong>NCS_COMMIT_QUEUE_HAS_OVERLAPPING</strong> = 98<br>
+<strong>NCS_COMMIT_QUEUE_HAS_SENTINEL</strong> = 89<br>
+<strong>NCS_CONNECTION_CLOSED</strong> = 10<br>
+<strong>NCS_CONNECTION_REFUSED</strong> = 5<br>
+<strong>NCS_CONNECTION_TIMEOUT</strong> = 8<br>
+<strong>NCS_CQ_BLOCK_OTHERS</strong> = 22<br>
+<strong>NCS_CQ_REMOTE_NOT_ENABLED</strong> = 23<br>
+<strong>NCS_DEV_AUTH_FAILED</strong> = 1<br>
+<strong>NCS_DEV_IN_USE</strong> = 95<br>
+<strong>NCS_HOST_LOOKUP</strong> = 12<br>
+<strong>NCS_LOCKED</strong> = 3<br>
+<strong>NCS_LSA_NOT_ENABLED</strong> = 20<br>
+<strong>NCS_NCS_ACTION_NO_TRANSCTION</strong> = 81<br>
+<strong>NCS_NCS_ALREADY_EXISTS</strong> = 96<br>
+<strong>NCS_NCS_CLUSTER_AUTH_FAILED</strong> = 88<br>
+<strong>NCS_NCS_DEV_ERROR</strong> = 83<br>
+<strong>NCS_NCS_DUPLICATE_TEMPLATE</strong> = 24<br>
+<strong>NCS_NCS_ERROR</strong> = 82<br>
+<strong>NCS_NCS_ERROR_IKP</strong> = 84<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_COPY_TREE_CROSS_NS</strong> = 43<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_EOF_XML</strong> = 47<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_INVALID_PI_SYNTAX</strong> = 33<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_INVALID_VALUE_XML</strong> = 44<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_MISSING_ELEMENT_XML</strong> = 31<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_MULTIPLE_ELEMENTS_XML</strong> = 52<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_MULTIPLE_KEY_LEAFS_XML</strong> = 91<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_MULTIPLE_SP_XML</strong> = 49<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_TRAILING_XML</strong> = 46<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNCLOSED_PI</strong> = 35<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNEXPECTED_PI</strong> = 36<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNKNOWN_ATTRIBUTE_XML</strong> = 45<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNKNOWN_ELEMENT_XML</strong> = 50<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNKNOWN_NS_XML</strong> = 51<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNKNOWN_PI</strong> = 32<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNKNOWN_SP_XML</strong> = 48<br>
+<strong>NCS_NCS_LOAD_TEMPLATE_UNMATCHED_PI</strong> = 34<br>
+<strong>NCS_NCS_MISSING_CLUSTER_AUTH</strong> = 87<br>
+<strong>NCS_NCS_MISSING_VARIABLES</strong> = 66<br>
+<strong>NCS_NCS_NED_MULTI_ERROR</strong> = 90<br>
+<strong>NCS_NCS_NO_CAPABILITIES</strong> = 78<br>
+<strong>NCS_NCS_NO_DIFF</strong> = 85<br>
+<strong>NCS_NCS_NO_FORWARD_DIFF</strong> = 86<br>
+<strong>NCS_NCS_NO_NAMESPACE</strong> = 79<br>
+<strong>NCS_NCS_NO_SP_TEMPLATE</strong> = 62<br>
+<strong>NCS_NCS_NO_TEMPLATE</strong> = 61<br>
+<strong>NCS_NCS_NO_TEMPLATE_XML</strong> = 25<br>
+<strong>NCS_NCS_NO_WRITE_TRANSACTION</strong> = 80<br>
+<strong>NCS_NCS_OPERATION_LOCKED</strong> = 97<br>
+<strong>NCS_NCS_SERVICE_CONFLICT</strong> = 92<br>
+<strong>NCS_NCS_TEMPLATE_CONTEXT_NODE_NOEXISTS</strong> = 37<br>
+<strong>NCS_NCS_TEMPLATE_COPY_TREE_BAD_OP</strong> = 41<br>
+<strong>NCS_NCS_TEMPLATE_FOREACH</strong> = 65<br>
+<strong>NCS_NCS_TEMPLATE_FOREACH_XML</strong> = 30<br>
+<strong>NCS_NCS_TEMPLATE_GUARD_LENGTH</strong> = 73<br>
+<strong>NCS_NCS_TEMPLATE_GUARD_LENGTH_XML</strong> = 58<br>
+<strong>NCS_NCS_TEMPLATE_INSERT</strong> = 69<br>
+<strong>NCS_NCS_TEMPLATE_INSERT_XML</strong> = 54<br>
+<strong>NCS_NCS_TEMPLATE_LONE_GUARD</strong> = 71<br>
+<strong>NCS_NCS_TEMPLATE_LONE_GUARD_XML</strong> = 56<br>
+<strong>NCS_NCS_TEMPLATE_LOOP_PREVENTION</strong> = 42<br>
+<strong>NCS_NCS_TEMPLATE_MISSING_VALUE</strong> = 70<br>
+<strong>NCS_NCS_TEMPLATE_MISSING_VALUE_XML</strong> = 55<br>
+<strong>NCS_NCS_TEMPLATE_MOVE</strong> = 74<br>
+<strong>NCS_NCS_TEMPLATE_MOVE_XML</strong> = 59<br>
+<strong>NCS_NCS_TEMPLATE_MULTIPLE_CONTEXT_NODES</strong> = 39<br>
+<strong>NCS_NCS_TEMPLATE_NOT_CREATED</strong> = 94<br>
+<strong>NCS_NCS_TEMPLATE_NOT_CREATED_XML</strong> = 93<br>
+<strong>NCS_NCS_TEMPLATE_ORDERED_LIST</strong> = 68<br>
+<strong>NCS_NCS_TEMPLATE_ORDERED_LIST_XML</strong> = 53<br>
+<strong>NCS_NCS_TEMPLATE_ROOT_LEAF_LIST</strong> = 40<br>
+<strong>NCS_NCS_TEMPLATE_SAVED_CONTEXT_NOEXISTS</strong> = 38<br>
+<strong>NCS_NCS_TEMPLATE_STR2VAL</strong> = 75<br>
+<strong>NCS_NCS_TEMPLATE_STR2VAL_XML</strong> = 60<br>
+<strong>NCS_NCS_TEMPLATE_VALUE_LENGTH</strong> = 72<br>
+<strong>NCS_NCS_TEMPLATE_VALUE_LENGTH_XML</strong> = 57<br>
+<strong>NCS_NCS_TEMPLATE_WHEN</strong> = 64<br>
+<strong>NCS_NCS_TEMPLATE_WHEN_KEY_XML</strong> = 29<br>
+<strong>NCS_NCS_TEMPLATE_WHEN_XML</strong> = 28<br>
+<strong>NCS_NCS_XPATH</strong> = 67<br>
+<strong>NCS_NCS_XPATH_COMPILE</strong> = 63<br>
+<strong>NCS_NCS_XPATH_COMPILE_XML</strong> = 26<br>
+<strong>NCS_NCS_XPATH_VARBIND</strong> = 77<br>
+<strong>NCS_NCS_XPATH_XML</strong> = 27<br>
+<strong>NCS_NED_EXTERNAL_ERROR</strong> = 6<br>
+<strong>NCS_NED_INTERNAL_ERROR</strong> = 7<br>
+<strong>NCS_NED_OUT_OF_SYNC</strong> = 18<br>
+<strong>NCS_NONED</strong> = 15<br>
+<strong>NCS_NO_EXISTS</strong> = 2<br>
+<strong>NCS_NO_TEMPLATE</strong> = 76<br>
+<strong>NCS_NO_YANG_MODULES</strong> = 16<br>
+<strong>NCS_NS_SUPPORT</strong> = 13<br>
+<strong>NCS_REVDROP</strong> = 17<br>
+<strong>NCS_RPC_ERROR</strong> = 9<br>
+<strong>NCS_SERVICE_CREATE</strong> = 0<br>
+<strong>NCS_SERVICE_DELETE</strong> = 2<br>
+<strong>NCS_SERVICE_UPDATE</strong> = 1<br>
+<strong>NCS_SOUTH_BOUND_LOCKED</strong> = 4<br>
+<strong>NCS_XML_PARSE</strong> = 11<br>
+<strong>WORKER_SOCKET</strong> = 1</td></tr></table>
+</body></html>

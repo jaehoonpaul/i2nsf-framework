@@ -1,0 +1,3448 @@
+'\" t
+.\"     Title: confd_lib_lib
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_LIB_LIB" "3" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_lib_lib \- common library functions for applications connecting to ConfD
+.SH "SYNOPSIS"
+.sp
+.ft B
+.nf
+#include <confd_lib\&.h>
+      
+.fi
+.ft
+.nr wf \w'void\ confd_init('
+.nr wm 0
+.nr wp \w'const\ char\ *name,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'FILE\ *estream,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ enum\ confd_debug_level\ debug);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_init("
+.br
+.BI "const\ char\ *" "name" ", FILE\ *" "estream" ", const\ enum\ confd_debug_level\ " "debug" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_init(const\ char\ *" "name" ", FILE\ *" "estream" ", const\ enum\ confd_debug_level\ " "debug" ");" \}
+.nr wf \w'int\ confd_set_debug('
+.nr wm 0
+.nr wp \w'enum\ confd_debug_level\ debug,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'FILE\ *estream);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_set_debug("
+.br
+.BI "enum\ confd_debug_level\ " "debug" ", FILE\ *" "estream" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_set_debug(enum\ confd_debug_level\ " "debug" ", FILE\ *" "estream" ");" \}
+.nr wf \w'void\ confd_fatal('
+.nr wm 0
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_fatal("
+.br
+.BI "const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_fatal(const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.nr wf \w'int\ confd_load_schemas('
+.nr wm 0
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_load_schemas("
+.br
+.BI "const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_load_schemas(const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ");" \}
+.nr wf \w'int\ confd_load_schemas_list('
+.nr wm 0
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ u_int32_t\ *nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ int\ *nsflags,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ num_ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_load_schemas_list("
+.br
+.BI "const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "flags" ", const\ u_int32_t\ *" "nshash" ", const\ int\ *" "nsflags" ", int\ " "num_ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_load_schemas_list(const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "flags" ", const\ u_int32_t\ *" "nshash" ", const\ int\ *" "nsflags" ", int\ " "num_ns" ");" \}
+.nr wf \w'int\ confd_mmap_schemas_setup('
+.nr wm 0
+.nr wp \w'void\ *addr,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'size_t\ size,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *filename,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_mmap_schemas_setup("
+.br
+.BI "void\ *" "addr" ", size_t\ " "size" ", const\ char\ *" "filename" ", int\ " "flags" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_mmap_schemas_setup(void\ *" "addr" ", size_t\ " "size" ", const\ char\ *" "filename" ", int\ " "flags" ");" \}
+.nr wf \w'int\ confd_mmap_schemas('
+.nr wm 0
+.nr wp \w'const\ char\ *filename);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_mmap_schemas("
+.br
+.BI "const\ char\ *" "filename" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_mmap_schemas(const\ char\ *" "filename" ");" \}
+.nr wf \w'void\ confd_free_schemas('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_schemas("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_schemas(" "void" ");" \}
+.nr wf \w'int\ confd_svcmp('
+.nr wm 0
+.nr wp \w'const\ char\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_svcmp("
+.br
+.BI "const\ char\ *" "s" ", const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_svcmp(const\ char\ *" "s" ", const\ confd_value_t\ *" "v" ");" \}
+.nr wf \w'int\ confd_pp_value('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_value("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_value(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ");" \}
+.nr wf \w'int\ confd_ns_pp_value('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ns_pp_value("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ", int\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ns_pp_value(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ", int\ " "ns" ");" \}
+.nr wf \w'int\ confd_pp_kpath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_kpath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_kpath(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.nr wf \w'int\ confd_pp_kpath_len('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_kpath_len("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_kpath_len(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.nr wf \w'char\ *confd_xmltag2str('
+.nr wm 0
+.nr wp \w'u_int32_t\ ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ xmltag);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_xmltag2str("
+.br
+.BI "u_int32_t\ " "ns" ", u_int32_t\ " "xmltag" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_xmltag2str(u_int32_t\ " "ns" ", u_int32_t\ " "xmltag" ");" \}
+.nr wf \w'int\ confd_xpath_pp_kpath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_xpath_pp_kpath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", u_int32_t\ " "ns" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_xpath_pp_kpath(char\ *" "buf" ", int\ " "bufsiz" ", u_int32_t\ " "ns" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.nr wf \w'int\ confd_format_keypath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_format_keypath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_format_keypath(char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.nr wf \w'int\ confd_vformat_keypath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'va_list\ ap);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_vformat_keypath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", va_list\ " "ap" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_vformat_keypath(char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", va_list\ " "ap" ");" \}
+.nr wf \w'int\ confd_get_nslist('
+.nr wm 0
+.nr wp \w'struct\ confd_nsinfo\ **listp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_nslist("
+.br
+.BI "struct\ confd_nsinfo\ **" "listp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_nslist(struct\ confd_nsinfo\ **" "listp" ");" \}
+.nr wf \w'char\ *confd_ns2prefix('
+.nr wm 0
+.nr wp \w'u_int32_t\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_ns2prefix("
+.br
+.BI "u_int32_t\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_ns2prefix(u_int32_t\ " "ns" ");" \}
+.nr wf \w'char\ *confd_hash2str('
+.nr wm 0
+.nr wp \w'u_int32_t\ hash);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_hash2str("
+.br
+.BI "u_int32_t\ " "hash" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_hash2str(u_int32_t\ " "hash" ");" \}
+.nr wf \w'u_int32_t\ confd_str2hash('
+.nr wm 0
+.nr wp \w'const\ char\ *str);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "u_int32_t confd_str2hash("
+.br
+.BI "const\ char\ *" "str" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "u_int32_t confd_str2hash(const\ char\ *" "str" ");" \}
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_root('
+.nr wm 0
+.nr wp \w'int\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_root("
+.br
+.BI "int\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_root(int\ " "ns" ");" \}
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_node('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_node("
+.br
+.BI "const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_node(const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_node_child('
+.nr wm 0
+.nr wp \w'const\ struct\ confd_cs_node\ *parent,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ xml_tag\ xmltag);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_node_child("
+.br
+.BI "const\ struct\ confd_cs_node\ *" "parent" ", struct\ xml_tag\ " "xmltag" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_node_child(const\ struct\ confd_cs_node\ *" "parent" ", struct\ xml_tag\ " "xmltag" ");" \}
+.nr wf \w'struct\ confd_cs_node\ *confd_cs_node_cd('
+.nr wm 0
+.nr wp \w'const\ struct\ confd_cs_node\ *start,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_cs_node_cd("
+.br
+.BI "const\ struct\ confd_cs_node\ *" "start" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_cs_node_cd(const\ struct\ confd_cs_node\ *" "start" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.nr wf \w'int\ confd_max_object_size('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *object);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_max_object_size("
+.br
+.BI "struct\ confd_cs_node\ *" "object" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_max_object_size(struct\ confd_cs_node\ *" "object" ");" \}
+.nr wf \w'struct\ confd_cs_node\ *confd_next_object_node('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *object,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_cs_node\ *cur,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *value);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_next_object_node("
+.br
+.BI "struct\ confd_cs_node\ *" "object" ", struct\ confd_cs_node\ *" "cur" ", confd_value_t\ *" "value" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_next_object_node(struct\ confd_cs_node\ *" "object" ", struct\ confd_cs_node\ *" "cur" ", confd_value_t\ *" "value" ");" \}
+.nr wf \w'struct\ confd_type\ *confd_find_ns_type('
+.nr wm 0
+.nr wp \w'u_int32_t\ nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *name);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_type *confd_find_ns_type("
+.br
+.BI "u_int32_t\ " "nshash" ", const\ char\ *" "name" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_type *confd_find_ns_type(u_int32_t\ " "nshash" ", const\ char\ *" "name" ");" \}
+.nr wf \w'struct\ confd_type\ *confd_get_leaf_list_type('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *node);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_type *confd_get_leaf_list_type("
+.br
+.BI "struct\ confd_cs_node\ *" "node" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_type *confd_get_leaf_list_type(struct\ confd_cs_node\ *" "node" ");" \}
+.nr wf \w'int\ confd_val2str('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *val,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_val2str("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ", char\ *" "buf" ", int\ " "bufsiz" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_val2str(struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ", char\ *" "buf" ", int\ " "bufsiz" ");" \}
+.nr wf \w'int\ confd_str2val('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *str,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *val);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_str2val("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ char\ *" "str" ", confd_value_t\ *" "val" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_str2val(struct\ confd_type\ *" "type" ", const\ char\ *" "str" ", confd_value_t\ *" "val" ");" \}
+.nr wf \w'char\ *confd_val2str_ptr('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *val);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_val2str_ptr("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_val2str_ptr(struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ");" \}
+.nr wf \w'int\ confd_get_decimal64_fraction_digits('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_decimal64_fraction_digits("
+.br
+.BI "struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_decimal64_fraction_digits(struct\ confd_type\ *" "type" ");" \}
+.nr wf \w'int\ confd_get_bitbig_size('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_bitbig_size("
+.br
+.BI "struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_bitbig_size(struct\ confd_type\ *" "type" ");" \}
+.nr wf \w'int\ confd_hkp_tagmatch('
+.nr wm 0
+.nr wp \w'struct\ xml_tag\ tags[],'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ tagslen,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_hkp_tagmatch("
+.br
+.BI "struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_hkp_tagmatch(struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.nr wf \w'int\ confd_hkp_prefix_tagmatch('
+.nr wm 0
+.nr wp \w'struct\ xml_tag\ tags[],'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ tagslen,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_hkp_prefix_tagmatch("
+.br
+.BI "struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_hkp_prefix_tagmatch(struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.nr wf \w'int\ confd_val_eq('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v1,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v2);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_val_eq("
+.br
+.BI "const\ confd_value_t\ *" "v1" ", const\ confd_value_t\ *" "v2" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_val_eq(const\ confd_value_t\ *" "v1" ", const\ confd_value_t\ *" "v2" ");" \}
+.nr wf \w'void\ confd_free_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_value(confd_value_t\ *" "v" ");" \}
+.nr wf \w'confd_value_t\ *confd_value_dup_to('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *newv);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_value_t *confd_value_dup_to("
+.br
+.BI "const\ confd_value_t\ *" "v" ", confd_value_t\ *" "newv" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_value_t *confd_value_dup_to(const\ confd_value_t\ *" "v" ", confd_value_t\ *" "newv" ");" \}
+.nr wf \w'void\ confd_free_dup_to_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_dup_to_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_dup_to_value(confd_value_t\ *" "v" ");" \}
+.nr wf \w'confd_value_t\ *confd_value_dup('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_value_t *confd_value_dup("
+.br
+.BI "const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_value_t *confd_value_dup(const\ confd_value_t\ *" "v" ");" \}
+.nr wf \w'void\ confd_free_dup_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_dup_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_dup_value(confd_value_t\ *" "v" ");" \}
+.nr wf \w'confd_hkeypath_t\ *confd_hkeypath_dup('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *src);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_hkeypath_t *confd_hkeypath_dup("
+.br
+.BI "const\ confd_hkeypath_t\ *" "src" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_hkeypath_t *confd_hkeypath_dup(const\ confd_hkeypath_t\ *" "src" ");" \}
+.nr wf \w'confd_hkeypath_t\ *confd_hkeypath_dup_len('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *src,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_hkeypath_t *confd_hkeypath_dup_len("
+.br
+.BI "const\ confd_hkeypath_t\ *" "src" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_hkeypath_t *confd_hkeypath_dup_len(const\ confd_hkeypath_t\ *" "src" ", int\ " "len" ");" \}
+.nr wf \w'void\ confd_free_hkeypath('
+.nr wm 0
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_hkeypath("
+.br
+.BI "confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_hkeypath(confd_hkeypath_t\ *" "hkp" ");" \}
+.nr wf \w'void\ confd_free_authorization_info('
+.nr wm 0
+.nr wp \w'struct\ confd_authorization_info\ *ainfo);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_authorization_info("
+.br
+.BI "struct\ confd_authorization_info\ *" "ainfo" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_authorization_info(struct\ confd_authorization_info\ *" "ainfo" ");" \}
+.nr wf \w'char\ *confd_lasterr('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_lasterr("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_lasterr(" "void" ");" \}
+.nr wf \w'char\ *confd_strerror('
+.nr wm 0
+.nr wp \w'int\ code);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_strerror("
+.br
+.BI "int\ " "code" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_strerror(int\ " "code" ");" \}
+.nr wf \w'struct\ xml_tag\ *confd_last_error_apptag('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct xml_tag *confd_last_error_apptag("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct xml_tag *confd_last_error_apptag(" "void" ");" \}
+.nr wf \w'int\ confd_register_ns_type('
+.nr wm 0
+.nr wp \w'u_int32_t\ nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *name,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_ns_type("
+.br
+.BI "u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_ns_type(u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.nr wf \w'int\ confd_register_node_type('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *node,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_node_type("
+.br
+.BI "struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_node_type(struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.nr wf \w'int\ confd_type_cb_init('
+.nr wm 0
+.nr wp \w'struct\ confd_type_cbs\ **cbs);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_type_cb_init("
+.br
+.BI "struct\ confd_type_cbs\ **" "cbs" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_type_cb_init(struct\ confd_type_cbs\ **" "cbs" ");" \}
+.nr wf \w'int\ confd_decrypt('
+.nr wm 0
+.nr wp \w'const\ char\ *ciphertext,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'char\ *output);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_decrypt("
+.br
+.BI "const\ char\ *" "ciphertext" ", int\ " "len" ", char\ *" "output" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_decrypt(const\ char\ *" "ciphertext" ", int\ " "len" ", char\ *" "output" ");" \}
+.nr wf \w'int\ confd_stream_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ id,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_stream_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "id" ", int\ " "flags" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_stream_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "id" ", int\ " "flags" ");" \}
+.nr wf \w'int\ confd_deserialize('
+.nr wm 0
+.nr wp \w'struct\ confd_deserializable\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ *buf);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_deserialize("
+.br
+.BI "struct\ confd_deserializable\ *" "s" ", unsigned\ char\ *" "buf" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_deserialize(struct\ confd_deserializable\ *" "s" ", unsigned\ char\ *" "buf" ");" \}
+.nr wf \w'int\ confd_serialize('
+.nr wm 0
+.nr wp \w'struct\ confd_serializable\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ *bytes_written,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ **allocated);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_serialize("
+.br
+.BI "struct\ confd_serializable\ *" "s" ", unsigned\ char\ *" "buf" ", int\ " "bufsz" ", int\ *" "bytes_written" ", unsigned\ char\ **" "allocated" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_serialize(struct\ confd_serializable\ *" "s" ", unsigned\ char\ *" "buf" ", int\ " "bufsz" ", int\ *" "bytes_written" ", unsigned\ char\ **" "allocated" ");" \}
+.nr wf \w'void\ confd_deserialized_free('
+.nr wm 0
+.nr wp \w'struct\ confd_deserializable\ *s);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_deserialized_free("
+.br
+.BI "struct\ confd_deserializable\ *" "s" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_deserialized_free(struct\ confd_deserializable\ *" "s" ");" \}
+.SH "LIBRARY"
+.PP
+ConfD Library, (libconfd,
+\fB\-lconfd\fR)
+.SH "DESCRIPTION"
+.PP
+The
+libconfd
+shared library is used to connect to ConfD\&. This manual page describes functions and data structures that are not specific to any one of the APIs that are described in the other confd_lib_xxx(3) manual pages\&.
+.SH "FUNCTIONS"
+.nr wf \w'void\ confd_init('
+.nr wm 0
+.nr wp \w'const\ char\ *name,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'FILE\ *estream,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ enum\ confd_debug_level\ debug);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_init("
+.br
+.BI "const\ char\ *" "name" ", FILE\ *" "estream" ", const\ enum\ confd_debug_level\ " "debug" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_init(const\ char\ *" "name" ", FILE\ *" "estream" ", const\ enum\ confd_debug_level\ " "debug" ");" \}
+.PP
+Initializes the ConfD library\&. Must be called before any other ConfD API functions are called\&.
+.PP
+The
+\fIdebug\fR
+parameter is used to control the debug level\&. The following levels are available:
+.PP
+\fBCONFD_SILENT\fR
+.RS 4
+No printouts whatsoever are produced by the library\&.
+.RE
+.PP
+\fBCONFD_DEBUG\fR
+.RS 4
+Various printouts will occur for various error conditions\&. This is a decent value to have as default\&. If syslog is enabled for the library, these printouts will be logged at syslog level
+\fBLOG_ERR\fR, except for errors where
+\fIconfd_errno\fR
+is
+\fBCONFD_ERR_INTERNAL\fR, which are logged at syslog level
+\fBLOG_CRIT\fR\&.
+.RE
+.PP
+\fBCONFD_TRACE\fR
+.RS 4
+The execution of callback functions and CDB/MAAPI API calls will be traced\&. This is very verbose and very useful during debugging\&. If syslog is enabled for the library, these printouts will be logged at syslog level
+\fBLOG_DEBUG\fR\&.
+.RE
+.PP
+\fBCONFD_PROTO_TRACE\fR
+.RS 4
+The low\-level protocol exchange between the application and ConfD will be traced\&. This is even more verbose than
+\fBCONFD_TRACE\fR, and normally only of interest to Tail\-f support\&. These printouts will not be logged via syslog, i\&.e\&. a non\-NULL value for the
+\fIestream\fR
+parameter must be provided\&.
+.RE
+.PP
+The
+\fIestream\fR
+parameter is used by all printouts from the library\&. The
+\fIname\fR
+parameter is typically included in most of the debug printouts\&. If the
+\fIestream\fR
+parameter is NULL, no printouts to a file will occur\&. Independent of the
+\fIestream\fR
+parameter, syslog can be enabled for the library by setting the global variable
+\fIconfd_lib_use_syslog\fR
+to
+\fB1\fR\&. See
+\m[blue]\fBSYSLOG AND DEBUG\fR\m[]
+in this man page\&.
+.nr wf \w'int\ confd_set_debug('
+.nr wm 0
+.nr wp \w'enum\ confd_debug_level\ debug,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'FILE\ *estream);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_set_debug("
+.br
+.BI "enum\ confd_debug_level\ " "debug" ", FILE\ *" "estream" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_set_debug(enum\ confd_debug_level\ " "debug" ", FILE\ *" "estream" ");" \}
+.PP
+This function can be used to change the
+\fIestream\fR
+and
+\fIdebug\fR
+parameters for the library\&.
+.nr wf \w'int\ confd_load_schemas('
+.nr wm 0
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_load_schemas("
+.br
+.BI "const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_load_schemas(const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ");" \}
+.PP
+Utility function that uses
+\fBmaapi_load_schemas()\fR
+(see
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]) to load schema information from ConfD\&. This function connects to ConfD and loads all the schema information in ConfD for all loaded "fxs" files into the library\&. This is necessary in order to get proper printouts of e\&.g\&. confd_hkeypaths which otherwise just contains arrays of integers\&. This function should typically always be called when we initialize the library\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_load_schemas_list('
+.nr wm 0
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ u_int32_t\ *nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ int\ *nsflags,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ num_ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_load_schemas_list("
+.br
+.BI "const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "flags" ", const\ u_int32_t\ *" "nshash" ", const\ int\ *" "nsflags" ", int\ " "num_ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_load_schemas_list(const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "flags" ", const\ u_int32_t\ *" "nshash" ", const\ int\ *" "nsflags" ", int\ " "num_ns" ");" \}
+.PP
+Utility function that uses
+\fBmaapi_load_schemas_list()\fR
+to load a subset of the schema information from ConfD\&. See the description of
+\fBmaapi_load_schemas_list()\fR
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+for the details of how to use the
+\fIflags\fR,
+\fInshash\fR,
+\fInsflags\fR, and
+\fInum_ns\fR
+parameters\&.
+.nr wf \w'int\ confd_mmap_schemas_setup('
+.nr wm 0
+.nr wp \w'void\ *addr,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'size_t\ size,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *filename,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_mmap_schemas_setup("
+.br
+.BI "void\ *" "addr" ", size_t\ " "size" ", const\ char\ *" "filename" ", int\ " "flags" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_mmap_schemas_setup(void\ *" "addr" ", size_t\ " "size" ", const\ char\ *" "filename" ", int\ " "flags" ");" \}
+.PP
+This function sets up for a subsequent call of one of the schema\-loading functions (\fBconfd_load_schemas()\fR
+etc) to load the schema information into a shared memory segment instead of into the process\*(Aq heap\&. See the section
+\m[blue]\fBUsing shared memory for schema information\fR\m[]
+in the Advanced Topics chapter in the User Guide for usage discussion\&. The
+\fIaddr\fR
+and (potentially)
+\fIsize\fR
+arguments are passed to
+\fBmmap(2)\fR, and
+\fIfilename\fR
+specifies the pathname of a file to use as backing store\&. The
+\fIflags\fR
+parameter can be given as
+\fBCONFD_MMAP_SCHEMAS_KEEP_SIZE\fR
+to request that the shared memory segment should be exactly the size given by the (non\-zero)
+\fIsize\fR
+argument \- if this size is insufficient to hold the schema information, the schema\-loading function will fail\&.
+.nr wf \w'int\ confd_mmap_schemas('
+.nr wm 0
+.nr wp \w'const\ char\ *filename);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_mmap_schemas("
+.br
+.BI "const\ char\ *" "filename" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_mmap_schemas(const\ char\ *" "filename" ");" \}
+.PP
+Map a shared memory segment, previously created by
+\fBconfd_mmap_schemas_setup()\fR
+and subsequent schema loading, into the current process\*(Aq address space, and make it ready for use\&. The
+\fIfilename\fR
+argument specifies the pathname of the file that is used as backing store\&. See also
+/confdConfig/enableSharedMemorySchema in \m[blue]\fBconfd\&.conf(5)\fR\m[]
+and
+\fBmaapi_get_schema_file_path()\fR
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.nr wf \w'void\ confd_free_schemas('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_schemas("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_schemas(" "void" ");" \}
+.PP
+Free or unmap the memory allocated or mapped by schema loading, undoing the result of loading \- i\&.e\&. schema information will no longer be available\&. There is normally no need to call this function, since the memory will be automatically freed/unmapped if a new schema loading is done, or when the process terminates, but it may be useful in some cases\&.
+.nr wf \w'int\ confd_svcmp('
+.nr wm 0
+.nr wp \w'const\ char\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_svcmp("
+.br
+.BI "const\ char\ *" "s" ", const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_svcmp(const\ char\ *" "s" ", const\ confd_value_t\ *" "v" ");" \}
+.PP
+Utility function with similar semantics to
+\fBstrcmp()\fR
+which compares a
+\fBconfd_value_t\fR
+to a
+\fBchar*\fR\&.
+.nr wf \w'int\ confd_pp_value('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_value("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_value(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ");" \}
+.PP
+Utility function which pretty prints up to
+\fIbufsiz\fR
+characters into
+\fIbuf\fR, giving a string representation of the value
+\fIv\fR\&. Since only the "primitive" type as defined by the
+\fBenum confd_vtype\fR
+is available,
+\fBconfd_pp_value()\fR
+can not produce a true string representation in all cases, see the list below\&. If this is a problem, use
+\fBconfd_val2str()\fR
+instead\&.
+.PP
+\fBC_ENUM_VALUE\fR
+.RS 4
+The value is printed as "enum<N>", where N is the integer value\&.
+.RE
+.PP
+\fBC_BIT32\fR
+.RS 4
+The value is printed as "bits<X>", where X is an unsigned integer in hexadecimal format\&.
+.RE
+.PP
+\fBC_BIT64\fR
+.RS 4
+The value is printed as "bits<X>", where X is an unsigned integer in hexadecimal format\&.
+.RE
+.PP
+\fBC_BITBIG\fR
+.RS 4
+The value is printed as "bits<X>", where X is an unsigned integer (possibly very large) in hexadecimal format\&.
+.RE
+.PP
+\fBC_BINARY\fR
+.RS 4
+The string representation for
+\fBxs:hexBinary\fR
+is used, i\&.e\&. a sequence of hexadecimal characters\&.
+.RE
+.PP
+\fBC_DECIMAL64\fR
+.RS 4
+If the value of the
+\fIfraction_digits\fR
+element is within the possible range (1\&.\&.18), it is assumed to be correct for the type and used for the string representation\&. Otherwise the value is printed as "invalid64<N>", where N is the value of the
+\fIvalue\fR
+element\&.
+.RE
+.PP
+\fBC_XMLTAG\fR
+.RS 4
+The string representation is printed if schema information has been loaded into the library\&. Otherwise the value is printed as "tag<N>", where N is the integer value\&.
+.RE
+.PP
+\fBC_IDENTITYREF\fR
+.RS 4
+The string representation is printed if schema information has been loaded into the library\&. Otherwise the value is printed as "idref<N>", where N is the integer value\&.
+.RE
+.PP
+All the
+pp
+pretty print functions, i\&.e\&.
+\fBconfd_pp_value()\fR\fBconfd_ns_pp_value()\fR,
+\fBconfd_pp_kpath()\fR
+and
+\fBconfd_xpath_pp_kpath()\fR, as well as the
+\fBconfd_format_keypath()\fR
+and
+\fBconfd_val2str()\fR
+functions, return the number of characters printed (not including the trailing NUL used to end output to strings) if there is enough space\&.
+.PP
+The formatting functions do not write more than
+\fIbufsiz\fR
+bytes (including the trailing NUL)\&. If the output was truncated due to this limit then the return value is the number of characters (not including the trailing NUL) which would have been written to the final string if enough space had been available\&. Thus, a return value of
+\fIbufsiz\fR
+or more means that the output was truncated\&.
+.PP
+Except for
+\fBconfd_val2str()\fR, these functions will never return CONFD_ERR or any other negative value\&.
+.nr wf \w'int\ confd_ns_pp_value('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ns_pp_value("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ", int\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ns_pp_value(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_value_t\ *" "v" ", int\ " "ns" ");" \}
+.PP
+This function is deprecated, but will remain for backward compatibility\&. It just calls
+\fBconfd_pp_value()\fR
+\- use
+\fBconfd_pp_value()\fR
+directly, or
+\fBconfd_val2str()\fR
+(see below), instead\&.
+.nr wf \w'int\ confd_pp_kpath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_kpath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_kpath(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.PP
+Utility function which pretty prints up to
+\fIbufsiz\fR
+characters into
+\fIbuf\fR, giving a string representation of the path
+\fIhkeypath\fR\&. This will use the ConfD curly brace notation, i\&.e\&.
+"/servers/server{www}/ip"\&. Requires that schema information is available to the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&. Same return value as
+\fBconfd_pp_value()\fR\&.
+.nr wf \w'int\ confd_pp_kpath_len('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_pp_kpath_len("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_pp_kpath_len(char\ *" "buf" ", int\ " "bufsiz" ", const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.PP
+A variant of
+\fBconfd_pp_kpath()\fR
+that prints only the first
+\fIlen\fR
+elements of
+\fIhkeypath\fR\&.
+.nr wf \w'int\ confd_format_keypath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_format_keypath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_format_keypath(char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.PP
+Several of the functions in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+and
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]
+take a variable number of arguments which are then, similar to printf, used to generate the path passed to ConfD \- see the
+\m[blue]\fBPATHS\fR\m[]
+section of confd_lib_cdb(3)\&. This function takes the same arguments, but only formats the path as a string, writing at most
+\fIbufsiz\fR
+characters into
+\fIbuf\fR\&. If the path is absolute and schema information is available to the library, key values referenced by a "%x" modifier will be printed according to their specific type, i\&.e\&. effectively using
+\fBconfd_val2str()\fR, otherwise
+\fBconfd_pp_value()\fR
+is used\&. Same return value as
+\fBconfd_pp_value()\fR\&.
+.nr wf \w'int\ confd_vformat_keypath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'va_list\ ap);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_vformat_keypath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", va_list\ " "ap" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_vformat_keypath(char\ *" "buf" ", int\ " "bufsiz" ", const\ char\ *" "fmt" ", va_list\ " "ap" ");" \}
+.PP
+Does the same as
+\fBconfd_format_keypath()\fR, but takes a single va_list argument instead of a variable number of arguments \- i\&.e\&. similar to vprintf\&. Same return value as
+\fBconfd_pp_value()\fR\&.
+.nr wf \w'char\ *confd_xmltag2str('
+.nr wm 0
+.nr wp \w'u_int32_t\ ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ xmltag);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_xmltag2str("
+.br
+.BI "u_int32_t\ " "ns" ", u_int32_t\ " "xmltag" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_xmltag2str(u_int32_t\ " "ns" ", u_int32_t\ " "xmltag" ");" \}
+.PP
+This function is deprecated, but will remain for backward compatibility\&. It just calls
+\fBconfd_hash2str()\fR
+\- use
+\fBconfd_hash2str()\fR
+directly instead, see below\&.
+.nr wf \w'int\ confd_xpath_pp_kpath('
+.nr wm 0
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_xpath_pp_kpath("
+.br
+.BI "char\ *" "buf" ", int\ " "bufsiz" ", u_int32_t\ " "ns" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_xpath_pp_kpath(char\ *" "buf" ", int\ " "bufsiz" ", u_int32_t\ " "ns" ", const\ confd_hkeypath_t\ *" "hkeypath" ");" \}
+.PP
+Similar to
+\fBconfd_pp_kpath()\fR
+except that the path is formatted as an XPath path, i\&.e\&.
+"/servers:servers/server[name="www"]/ip"\&. This function can also take the namespace integer as an argument\&. If
+\fB0\fR
+is passed as
+\fIns\fR, the namespace is derived from the hkeypath\&. Requires that schema information is available to the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&. Same return value as
+\fBconfd_pp_value()\fR\&.
+.nr wf \w'int\ confd_get_nslist('
+.nr wm 0
+.nr wp \w'struct\ confd_nsinfo\ **listp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_nslist("
+.br
+.BI "struct\ confd_nsinfo\ **" "listp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_nslist(struct\ confd_nsinfo\ **" "listp" ");" \}
+.PP
+Provides a list of the namespaces known to the library as an array of
+\fBstruct confd_nsinfo\fR
+structures:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_nsinfo {
+    const char *uri;
+    const char *prefix;
+    u_int32_t hash;
+    const char *revision;
+    const char *module;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+A pointer to the array is stored in
+\fI*listp\fR, and the function returns the number of elements in the array\&. The
+\fImodule\fR
+element in
+\fBstruct confd_nsinfo\fR
+will give the module name for namespaces defined by YANG modules, otherwise it is NULL\&. The
+\fIrevision\fR
+element will give the revision for YANG modules that have a
+revision
+statement, otherwise it is NULL\&.
+.nr wf \w'char\ *confd_ns2prefix('
+.nr wm 0
+.nr wp \w'u_int32_t\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_ns2prefix("
+.br
+.BI "u_int32_t\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_ns2prefix(u_int32_t\ " "ns" ");" \}
+.PP
+Returns a NUL\-terminated string giving the namespace prefix for the namespace
+\fIns\fR, if the namespace is known to the library \- otherwise it returns NULL\&.
+.nr wf \w'char\ *confd_hash2str('
+.nr wm 0
+.nr wp \w'u_int32_t\ hash);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_hash2str("
+.br
+.BI "u_int32_t\ " "hash" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_hash2str(u_int32_t\ " "hash" ");" \}
+.PP
+Returns a NUL\-terminated string representing the node name given by
+\fIhash\fR, or NULL if the hash value is not found\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]
+\- otherwise it always returns NULL\&.
+.nr wf \w'u_int32_t\ confd_str2hash('
+.nr wm 0
+.nr wp \w'const\ char\ *str);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "u_int32_t confd_str2hash("
+.br
+.BI "const\ char\ *" "str" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "u_int32_t confd_str2hash(const\ char\ *" "str" ");" \}
+.PP
+Returns the hash value representing the node name given by
+\fIstr\fR, or 0 if the string is not found\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]
+\- otherwise it always returns 0\&.
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_root('
+.nr wm 0
+.nr wp \w'int\ ns);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_root("
+.br
+.BI "int\ " "ns" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_root(int\ " "ns" ");" \}
+.PP
+When schema information is available to the library, this function returns the root of the tree representaton of the namespace given by
+\fIns\fR, i\&.e\&. a pointer to the
+\fBstruct confd_cs_node\fR
+for the (first) toplevel node\&. For namespaces that are augmented into other namespaces such that they do not have a toplevel node, this function returns NULL \- the nodes of such a namespace are found below the
+augment
+target node(s) in other tree(s)\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_node('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *hkeypath,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_node("
+.br
+.BI "const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_node(const\ confd_hkeypath_t\ *" "hkeypath" ", int\ " "len" ");" \}
+.PP
+Utility function which finds the
+\fBstruct confd_cs_node\fR
+corresponding to the
+\fIlen\fR
+first elements of the hashed keypath\&. To make the search consider the full keypath, pass the
+\fIlen\fR
+element from the
+\fBconfd_hkeypath_t\fR
+structure (i\&.e\&.
+mykeypath\->len)\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'struct\ confd_cs_node\ *confd_find_cs_node_child('
+.nr wm 0
+.nr wp \w'const\ struct\ confd_cs_node\ *parent,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ xml_tag\ xmltag);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_find_cs_node_child("
+.br
+.BI "const\ struct\ confd_cs_node\ *" "parent" ", struct\ xml_tag\ " "xmltag" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_find_cs_node_child(const\ struct\ confd_cs_node\ *" "parent" ", struct\ xml_tag\ " "xmltag" ");" \}
+.PP
+Utility function which finds the
+\fBstruct confd_cs_node\fR
+corresponding to the child node given as
+\fIxmltag\fR\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'struct\ confd_cs_node\ *confd_cs_node_cd('
+.nr wm 0
+.nr wp \w'const\ struct\ confd_cs_node\ *start,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_cs_node_cd("
+.br
+.BI "const\ struct\ confd_cs_node\ *" "start" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_cs_node_cd(const\ struct\ confd_cs_node\ *" "start" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.PP
+Utility function which finds the resulting
+\fBstruct confd_cs_node\fR
+given an (optional) starting node and a (relative or absolute) string keypath\&. I\&.e\&. this function navigates the tree in a manner corresponding to
+\fBcdb_cd()\fR/\fBmaapi_cd()\fR\&. Note however that the
+\fBconfd_cs_node\fR
+tree does not have a node corresponding to "/"\&. It is possible to pass
+\fIstart\fR
+as
+\fBNULL\fR, in which case the path must be absolute (i\&.e\&. start with a "/")\&.
+.PP
+Since the key values are not relevant for the tree navigation, the key elements can be omitted, i\&.e\&. a "tagpath" can be used \- if present, key elements are ignored, whether given in the {\&.\&.\&.} form or the CDB\-only [N] form\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.PP
+If the path can not be found,
+\fBNULL\fR
+is returned,
+\fIconfd_errno\fR
+is set to
+\fBCONFD_ERR_BADPATH\fR, and
+\fBconfd_lasterr()\fR
+can be used to retrieve a string that describes the reason for the failure\&.
+.nr wf \w'int\ confd_max_object_size('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *object);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_max_object_size("
+.br
+.BI "struct\ confd_cs_node\ *" "object" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_max_object_size(struct\ confd_cs_node\ *" "object" ");" \}
+.PP
+Utility function which returns the maximum size (i\&.e\&. the needed length of the
+\fBconfd_value_t\fR
+array) for an "object" retrieved by
+\fBcdb_get_object()\fR,
+\fBmaapi_get_object()\fR, and corresponding multi\-object functions\&. The
+\fIobject\fR
+parameter is a pointer to the list or container
+\fBconfd_cs_node\fR
+node for which we want to find the maximum size\&. See the description of
+\fBcdb_get_object()\fR
+in
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]
+for usage examples\&.
+.nr wf \w'struct\ confd_cs_node\ *confd_next_object_node('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *object,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_cs_node\ *cur,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *value);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_cs_node *confd_next_object_node("
+.br
+.BI "struct\ confd_cs_node\ *" "object" ", struct\ confd_cs_node\ *" "cur" ", confd_value_t\ *" "value" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_cs_node *confd_next_object_node(struct\ confd_cs_node\ *" "object" ", struct\ confd_cs_node\ *" "cur" ", confd_value_t\ *" "value" ");" \}
+.PP
+Utility function to allow navigation of the
+\fBconfd_cs_node\fR
+schema tree in parallel with the
+\fBconfd_value_t\fR
+array populated by
+\fBcdb_get_object()\fR,
+\fBmaapi_get_object()\fR, and corresponding multi\-object functions\&. The
+\fIobject\fR
+parameter is a pointer to the list or container node as for
+\fBconfd_max_object_size()\fR, the
+\fIcur\fR
+parameter is a pointer to the
+\fBconfd_cs_node\fR
+node for the current value, and the
+\fIvalue\fR
+parameter is a pointer to the current value in the array\&. The function returns a pointer to the
+\fBconfd_cs_node\fR
+node for the next value in the array, or NULL when the complete object has been traversed\&. In the initial call for a given traversal, we must pass
+object\->children
+for the
+\fIcur\fR
+parameter \- this always points to the
+\fBconfd_cs_node\fR
+node for the first value in the array\&. See the description of
+\fBcdb_get_object()\fR
+in
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]
+for usage examples\&.
+.nr wf \w'struct\ confd_type\ *confd_find_ns_type('
+.nr wm 0
+.nr wp \w'u_int32_t\ nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *name);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_type *confd_find_ns_type("
+.br
+.BI "u_int32_t\ " "nshash" ", const\ char\ *" "name" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_type *confd_find_ns_type(u_int32_t\ " "nshash" ", const\ char\ *" "name" ");" \}
+.PP
+Returns a pointer to a type definition for the type named
+\fIname\fR, which is defined in the namespace identified by
+\fInshash\fR, or NULL if the type could not be found\&. If
+\fInshash\fR
+is 0, the type name will be looked up among the ConfD built\-in types (i\&.e\&. the YANG built\-in types, the types defined in the YANG "tailf\-common" module, and the types defined in the "confd" and "xs" namespaces)\&. The type definition pointer can be used with the
+\fBconfd_val2str()\fR
+and
+\fBconfd_str2val()\fR
+functions, see below\&. If
+\fInshash\fR
+is not 0, the function requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]
+\- otherwise it returns NULL\&.
+.nr wf \w'struct\ confd_type\ *confd_get_leaf_list_type('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *node);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct confd_type *confd_get_leaf_list_type("
+.br
+.BI "struct\ confd_cs_node\ *" "node" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct confd_type *confd_get_leaf_list_type(struct\ confd_cs_node\ *" "node" ");" \}
+.PP
+For a leaf\-list node, the
+\fItype\fR
+field in the
+\fBstruct confd_cs_node_info\fR
+(see
+\m[blue]\fBconfd_types(3)\fR\m[]) identifies a "list type" for the leaf\-list "itself"\&. This function takes a pointer to the
+\fBstruct confd_cs_node\fR
+for a leaf\-list node as argument, and returns the type of the elements in the leaf\-list, i\&.e\&. corresponding to the
+type
+substatement for the leaf\-list in the YANG module\&. If called for a node that is not a leaf\-list, it returns NULL and sets
+\fIconfd_errno\fR
+to
+\fBCONFD_ERR_PROTOUSAGE\fR\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]
+\- otherwise it returns NULL and sets
+\fIconfd_errno\fR
+to
+\fBCONFD_ERR_UNAVAILABLE\fR\&.
+.nr wf \w'int\ confd_val2str('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *val,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsiz);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_val2str("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ", char\ *" "buf" ", int\ " "bufsiz" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_val2str(struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ", char\ *" "buf" ", int\ " "bufsiz" ");" \}
+.PP
+Prints the string representation of
+\fIval\fR
+into
+\fIbuf\fR, which has the length
+\fIbufsiz\fR, using type information from the data model\&. Returns the length of the string as described for
+\fBconfd_pp_value()\fR, or CONFD_ERR if the value could not be converted (e\&.g\&. wrong type)\&. The
+\fItype\fR
+pointer can be obtained either from the
+\fBstruct confd_cs_node\fR
+corresponding to the leaf that
+\fIval\fR
+pertains to, or via the
+\fBconfd_find_ns_type()\fR
+function above\&. The
+\fBstruct confd_cs_node\fR
+can in turn be obtained by various combinations of the functions that operate on the
+\fBconfd_cs_node\fR
+trees (see above), or by user\-defined functions for navigating those trees\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_str2val('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *str,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *val);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_str2val("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ char\ *" "str" ", confd_value_t\ *" "val" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_str2val(struct\ confd_type\ *" "type" ", const\ char\ *" "str" ", confd_value_t\ *" "val" ");" \}
+.PP
+Stores the value corresponding to the NUL\-terminated string
+\fIstr\fR
+in
+\fIval\fR, using type information from the data model\&. Returns CONFD_OK, or CONFD_ERR if the string could not be converted\&. See
+\fBconfd_val2str()\fR
+for a description of the
+\fItype\fR
+argument\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+When the resulting value is of one of the C_BUF, C_BINARY, C_LIST, C_OBJECTREF, C_OID, C_QNAME, C_HEXSTR, or C_BITBIG
+\fBconfd_value_t\fR
+types, the library has allocated memory to hold the value\&. It is up to the user of this function to free the memory using
+\fBconfd_free_value()\fR\&.
+.sp .5v
+.RE
+.nr wf \w'char\ *confd_val2str_ptr('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *val);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_val2str_ptr("
+.br
+.BI "struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_val2str_ptr(struct\ confd_type\ *" "type" ", const\ confd_value_t\ *" "val" ");" \}
+.PP
+A variant of
+\fBconfd_val2str()\fR
+that can be used only when the string representation is a constant, i\&.e\&. C_ENUM_VALUE values\&. In this case it returns a pointer to the string, otherwise NULL\&. See
+\fBconfd_val2str()\fR
+for a description of the
+\fItype\fR
+argument\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_get_decimal64_fraction_digits('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_decimal64_fraction_digits("
+.br
+.BI "struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_decimal64_fraction_digits(struct\ confd_type\ *" "type" ");" \}
+.PP
+Utility function to obtain the value of the argument to the
+fraction\-digits
+statement for a YANG
+\fBdecimal64\fR
+type\&. This is useful when we want to create a
+\fBconfd_value_t\fR
+for such a type, since the
+\fIvalue\fR
+element must be scaled according to the fraction\-digits value\&. The function returns the fraction\-digits value, or 0 if the
+\fItype\fR
+argument does not refer to a
+\fBdecimal64\fR
+type\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_get_bitbig_size('
+.nr wm 0
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_get_bitbig_size("
+.br
+.BI "struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_get_bitbig_size(struct\ confd_type\ *" "type" ");" \}
+.PP
+Utility function to obtain the maximum size needed for the byte array for the C_BITBIG
+\fBconfd_value_t\fR
+representation used when a YANG
+\fBbits\fR
+type has a highest bit position above 63\&. This is useful when we want to create a
+\fBconfd_value_t\fR
+for such a type, since an array of this size can hold the values for all the bits defined for the type\&. Applications may however provide a confd_value_t with a shorter (but not longer) array to ConfD\&. The file generated by
+\fBconfdc \-\-emit\-h\fR
+also includes a
+#define
+symbol for this size\&. The function returns 0 if the
+\fItype\fR
+argument does not refer to a
+\fBbits\fR
+type with a highest bit position above 63\&. Requires that schema information has been loaded from the ConfD daemon into the library, see
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_hkp_tagmatch('
+.nr wm 0
+.nr wp \w'struct\ xml_tag\ tags[],'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ tagslen,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_hkp_tagmatch("
+.br
+.BI "struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_hkp_tagmatch(struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.PP
+When checking the hkeypaths that get passed into each iteration in e\&.g\&.
+\fBcdb_diff_iterate()\fR
+we can either explicitly check the paths, or use this function to do the job\&. The
+\fItags\fR
+array (typically statically initialized) specifies a tagpath to match against the hkeypath\&. See
+\fBcdb_diff_match()\fR\&. The function returns one of these values:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#define CONFD_HKP_MATCH_NONE 0
+#define CONFD_HKP_MATCH_TAGS (1 << 0)
+#define CONFD_HKP_MATCH_HKP  (1 << 1)
+#define CONFD_HKP_MATCH_FULL (CONFD_HKP_MATCH_TAGS|CONFD_HKP_MATCH_HKP)
+
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBCONFD_HKP_MATCH_TAGS\fR
+means that the whole tagpath was matched by the hkeypath, and
+\fBCONFD_HKP_MATCH_HKP\fR
+means that the whole hkeypath was matched by the tagpath\&.
+.nr wf \w'int\ confd_hkp_prefix_tagmatch('
+.nr wm 0
+.nr wp \w'struct\ xml_tag\ tags[],'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ tagslen,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_hkp_prefix_tagmatch("
+.br
+.BI "struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_hkp_prefix_tagmatch(struct\ xml_tag\ " "tags[]" ", int\ " "tagslen" ", confd_hkeypath_t\ *" "hkp" ");" \}
+.PP
+A simplified version of
+\fBconfd_hkp_tagmatch()\fR
+\- it returns 1 if the tagpath matches a prefix of the hkeypath, i\&.e\&. it is equivalent to calling
+\fBconfd_hkp_tagmatch()\fR
+and checking if the return value includes
+\fBCONFD_HKP_MATCH_TAGS\fR\&.
+.nr wf \w'int\ confd_val_eq('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v1,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ confd_value_t\ *v2);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_val_eq("
+.br
+.BI "const\ confd_value_t\ *" "v1" ", const\ confd_value_t\ *" "v2" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_val_eq(const\ confd_value_t\ *" "v1" ", const\ confd_value_t\ *" "v2" ");" \}
+.PP
+Utility function which compares two values\&. Returns positive value if equal, 0 otherwise\&.
+.nr wf \w'void\ confd_fatal('
+.nr wm 0
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_fatal("
+.br
+.BI "const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_fatal(const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.PP
+Utility function which formats a string, prints it to stderr and exits with exit code 1\&.
+.nr wf \w'void\ confd_free_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_value(confd_value_t\ *" "v" ");" \}
+.PP
+When we retrieve values via the CDB or MAAPI interfaces, or convert strings to values via
+\fBconfd_str2val()\fR, and these values are of either of the types C_BUF, C_BINARY, C_QNAME, C_OBJECTREF, C_OID, C_LIST, C_HEXSTR, or C_BITBIG, the library has allocated memory to hold the values\&. This memory must be freed by the application when it is done with the value\&. This function frees memory for all
+\fBconfd_value_t\fR
+types\&. Note that this function does not free the structure itself, only possible internal pointers inside the struct\&. Typically we use
+\fBconfd_value_t\fR
+variables as automatic variables allocated on the stack\&. If the held value is of fixed size, e\&.g\&. integers, xmltags etc, the
+\fBconfd_free_value()\fR
+function does nothing\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+Memory for values received as parameters to callback functions is always managed by the library \- the application must
+\fInot\fR
+call
+\fBconfd_free_value()\fR
+for those (on the other hand values of the types listed above that are received as parameters to a callback function must be copied if they are to persist beyond the callback invocation)\&.
+.sp .5v
+.RE
+.nr wf \w'confd_value_t\ *confd_value_dup_to('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *newv);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_value_t *confd_value_dup_to("
+.br
+.BI "const\ confd_value_t\ *" "v" ", confd_value_t\ *" "newv" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_value_t *confd_value_dup_to(const\ confd_value_t\ *" "v" ", confd_value_t\ *" "newv" ");" \}
+.PP
+This function copies the contents of
+\fI*v\fR
+to
+\fI*newv\fR, allocating memory for the actual value for the types that need it\&. It returns
+\fInewv\fR, or NULL if allocation failed\&. The allocated memory (if any) can be freed with
+\fBconfd_free_dup_to_value()\fR\&.
+.nr wf \w'void\ confd_free_dup_to_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_dup_to_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_dup_to_value(confd_value_t\ *" "v" ");" \}
+.PP
+Frees memory allocated by
+\fBconfd_value_dup_to()\fR\&. Note this is not the same as
+\fBconfd_free_value()\fR, since
+\fBconfd_value_dup_to()\fR
+also allocates memory for values of type C_STR \- such values are not freed by
+\fBconfd_free_value()\fR\&.
+.nr wf \w'confd_value_t\ *confd_value_dup('
+.nr wm 0
+.nr wp \w'const\ confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_value_t *confd_value_dup("
+.br
+.BI "const\ confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_value_t *confd_value_dup(const\ confd_value_t\ *" "v" ");" \}
+.PP
+This function allocates memory and duplicates
+\fI*v\fR, i\&.e\&. a
+\fBconfd_value_t\fR
+struct is always allocated, memory for the actual value is also allocated for the types that need it\&. Returns a pointer to the new
+\fBconfd_value_t\fR, or NULL if allocation failed\&. The allocated memory can be freed with
+\fBconfd_free_dup_value()\fR\&.
+.nr wf \w'void\ confd_free_dup_value('
+.nr wm 0
+.nr wp \w'confd_value_t\ *v);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_dup_value("
+.br
+.BI "confd_value_t\ *" "v" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_dup_value(confd_value_t\ *" "v" ");" \}
+.PP
+Frees memory allocated by
+\fBconfd_value_dup()\fR\&. Note this is not the same as
+\fBconfd_free_value()\fR, since
+\fBconfd_value_dup()\fR
+also allocates the actual
+\fBconfd_value_t\fR
+struct, and allocates memory for values of type C_STR \- such values are not freed by
+\fBconfd_free_value()\fR\&.
+.nr wf \w'confd_hkeypath_t\ *confd_hkeypath_dup('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *src);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_hkeypath_t *confd_hkeypath_dup("
+.br
+.BI "const\ confd_hkeypath_t\ *" "src" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_hkeypath_t *confd_hkeypath_dup(const\ confd_hkeypath_t\ *" "src" ");" \}
+.PP
+This function allocates memory and duplicates a
+\fBconfd_hkeypath_t\fR\&.
+.nr wf \w'confd_hkeypath_t\ *confd_hkeypath_dup_len('
+.nr wm 0
+.nr wp \w'const\ confd_hkeypath_t\ *src,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "confd_hkeypath_t *confd_hkeypath_dup_len("
+.br
+.BI "const\ confd_hkeypath_t\ *" "src" ", int\ " "len" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "confd_hkeypath_t *confd_hkeypath_dup_len(const\ confd_hkeypath_t\ *" "src" ", int\ " "len" ");" \}
+.PP
+Like
+\fBconfd_hkeypath_dup()\fR, but duplicates only the first
+\fIlen\fR
+elements of the
+\fBconfd_hkeypath_t\fR\&. I\&.e\&. the elements are shifted such that
+\fIv[0][0]\fR
+still refers to the last element\&.
+.nr wf \w'void\ confd_free_hkeypath('
+.nr wm 0
+.nr wp \w'confd_hkeypath_t\ *hkp);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_hkeypath("
+.br
+.BI "confd_hkeypath_t\ *" "hkp" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_hkeypath(confd_hkeypath_t\ *" "hkp" ");" \}
+.PP
+This function will free memory allocated by e\&.g\&.
+\fBconfd_hkeypath_dup()\fR\&.
+.nr wf \w'void\ confd_free_authorization_info('
+.nr wm 0
+.nr wp \w'struct\ confd_authorization_info\ *ainfo);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_authorization_info("
+.br
+.BI "struct\ confd_authorization_info\ *" "ainfo" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_authorization_info(struct\ confd_authorization_info\ *" "ainfo" ");" \}
+.PP
+This function will free memory allocated by
+\fBmaapi_get_authorization_info()\fR\&.
+.nr wf \w'int\ confd_decrypt('
+.nr wm 0
+.nr wp \w'const\ char\ *ciphertext,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ len,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'char\ *output);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_decrypt("
+.br
+.BI "const\ char\ *" "ciphertext" ", int\ " "len" ", char\ *" "output" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_decrypt(const\ char\ *" "ciphertext" ", int\ " "len" ", char\ *" "output" ");" \}
+.PP
+When data is read over the CDB interface, the MAAPI interface or received in event notifications, the data for the two builtin types
+\fBtailf:des3\-cbc\-encrypted\-string\fR
+or
+\fBtailf:aes\-cfb\-128\-encrypted\-string\fR
+is encrypted\&.
+.PP
+This function decrypts
+\fIlen\fR
+bytes of data from
+\fIciphertext\fR
+and writes the clear text to the
+\fIoutput\fR
+pointer\&. The
+\fIoutput\fR
+pointer must point to an area that is at least
+\fIlen\fR
+bytes long\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+One of the functions
+\fBconfd_install_crypto_keys()\fR
+and
+\fBmaapi_install_crypto_keys()\fR
+must have been called before
+\fBconfd_decrypt()\fR
+can be used\&.
+.sp .5v
+.RE
+.SH "USER-DEFINED TYPES"
+.PP
+It is possible to define new types, i\&.e\&. mappings between a textual representation and a
+\fBconfd_value_t\fR
+representation that are not pre\-defined in the ConfD daemon\&. Read more about this in the
+\m[blue]\fBconfd_types(3)\fR\m[]
+manual page\&.
+.nr wf \w'int\ confd_type_cb_init('
+.nr wm 0
+.nr wp \w'struct\ confd_type_cbs\ **cbs);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_type_cb_init("
+.br
+.BI "struct\ confd_type_cbs\ **" "cbs" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_type_cb_init(struct\ confd_type_cbs\ **" "cbs" ");" \}
+.PP
+This is the prototype for the function that a shared object implementing one or more user\-defined types must provide\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_register_ns_type('
+.nr wm 0
+.nr wp \w'u_int32_t\ nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *name,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_ns_type("
+.br
+.BI "u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_ns_type(u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.PP
+This function can be used to register a user\-defined type with the libconfd library, to make it possible for
+\fBconfd_str2val()\fR
+and
+\fBconfd_val2str()\fR
+to provide local string<\->value translation in the application\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.nr wf \w'int\ confd_register_node_type('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *node,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_node_type("
+.br
+.BI "struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_node_type(struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.PP
+This function provides an alternate way to register a user\-defined type with the libconfd library, in particular when the user\-defined type is specified "inline" in a
+leaf
+or
+leaf\-list
+statement\&. See
+\m[blue]\fBconfd_types(3)\fR\m[]\&.
+.SH "CONFD STREAMS"
+.PP
+Some functions in the ConfD lib stream data\&. Either from ConfD to the application of from the application to ConfD\&. The individual functions that use this feature will explicitly indicate that the data is passed over a
+stream socket\&.
+.nr wf \w'int\ confd_stream_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ id,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ flags);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_stream_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "id" ", int\ " "flags" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_stream_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "id" ", int\ " "flags" ");" \}
+.PP
+Connects a stream socket to ConfD\&. The
+\fIid\fR
+and the
+\fIflags\fR
+take different values depending on the usage scenario\&. This is indicated for each individual function that makes use of a stream socket\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+If this call fails (i\&.e\&. does not return CONFD_OK), the socket descriptor must be closed and a new socket created before the call is re\-attempted\&.
+.sp .5v
+.RE
+.SH "MARSHALLING"
+.PP
+In various distributed scenarios we may want to send confd_lib datatypes over the network\&. We have support to marshall and unmarshall some key datatypes\&.
+.nr wf \w'int\ confd_serialize('
+.nr wm 0
+.nr wp \w'struct\ confd_serializable\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ *buf,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ bufsz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ *bytes_written,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ **allocated);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_serialize("
+.br
+.BI "struct\ confd_serializable\ *" "s" ", unsigned\ char\ *" "buf" ", int\ " "bufsz" ", int\ *" "bytes_written" ", unsigned\ char\ **" "allocated" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_serialize(struct\ confd_serializable\ *" "s" ", unsigned\ char\ *" "buf" ", int\ " "bufsz" ", int\ *" "bytes_written" ", unsigned\ char\ **" "allocated" ");" \}
+.PP
+This function takes a
+\fBconfd_serializable\fR
+struct as parameter\&. We have:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum confd_serializable_type {
+    CONFD_SERIAL_NONE      = 0,
+    CONFD_SERIAL_VALUE_T   = 1,
+    CONFD_SERIAL_HKEYPATH  = 2,
+    CONFD_SERIAL_TAG_VALUE = 3
+};
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_serializable {
+    enum confd_serializable_type type;
+    union {
+        confd_value_t *value;
+        confd_hkeypath_t *hkp;
+        confd_tag_value_t *tval;
+    } u;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The structure must be populated with a valid type and also a value to be serialized\&. The serialized data will be written into the provided buffer\&. If the size of the buffer is insufficient, the function returns the required size as a positive integer\&. If the provided buffer is NULL, the function will allocate a buffer and it is the responsibility of the caller to free the buffer\&. The optionally allocated buffer is then returned in the output char ** parameter
+\fIallocated\fR\&. The function returns 0 on success and \-1 on failures\&.
+.nr wf \w'int\ confd_deserialize('
+.nr wm 0
+.nr wp \w'struct\ confd_deserializable\ *s,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'unsigned\ char\ *buf);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_deserialize("
+.br
+.BI "struct\ confd_deserializable\ *" "s" ", unsigned\ char\ *" "buf" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_deserialize(struct\ confd_deserializable\ *" "s" ", unsigned\ char\ *" "buf" ");" \}
+.PP
+This function takes a
+\fBconfd_deserializable\fR
+struct as parameter\&. We have:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_deserializable {
+    enum confd_serializable_type type;
+    union {
+        confd_value_t value;
+        confd_hkeypath_t hkp;
+        confd_tag_value_t tval;
+    } u;
+    void *internal;  // internal structure containing memory
+                     // for the above datatypes to point _into_
+                     // freed by a call to confd_deserialize_free()
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+This function is the reverse of
+\fBconfd_serialize()\fR\&. It populates the provided
+\fBconfd_deserializable\fR
+structure with a type indicator and a reproduced value of the correct type\&. The structure contains allocated memory that must subsequently be freed with
+\fBconfd_deserialiaze()\fR\&.
+.nr wf \w'void\ confd_deserialized_free('
+.nr wm 0
+.nr wp \w'struct\ confd_deserializable\ *s);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_deserialized_free("
+.br
+.BI "struct\ confd_deserializable\ *" "s" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_deserialized_free(struct\ confd_deserializable\ *" "s" ");" \}
+.PP
+A populated
+\fBconfd_deserializable\fR
+struct contains allocated memory that must be freed\&. This function traverses a
+\fBconfd_deserializable\fR
+struct as populated by the
+\fBconfd_deserialize()\fR
+function and frees all allocated memory\&.
+.SH "EXTENDED ERROR REPORTING"
+.PP
+The data provider callback functions described in
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+can pass error information back to ConfD either as a simple string using
+\fBconfd_xxx_seterr()\fR, or in a more structured/detailed form using the corresponding
+\fBconfd_xxx_seterr_extended()\fR
+function\&. This form is also used when a CDB subscriber wishes to abort the current transaction with
+\fBcdb_sub_abort_trans()\fR, see
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]\&. There is also a set of
+\fBconfd_xxx_seterr_extended_info()\fR
+functions and a
+\fBcdb_sub_abort_trans_info()\fR
+function, that can alternatively be used if we want to provide contents for the NETCONF <error\-info> element\&. The description below uses the functions for transaction callbacks as an example, but the other functions follow the same pattern:
+.nr wf \w'void\ confd_trans_seterr_extended('
+.nr wm 0
+.nr wp \w'struct\ confd_trans_ctx\ *tctx,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'enum\ confd_errcode\ code,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ apptag_ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ apptag_tag,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_trans_seterr_extended("
+.br
+.BI "struct\ confd_trans_ctx\ *" "tctx" ", enum\ confd_errcode\ " "code" ", u_int32_t\ " "apptag_ns" ", u_int32_t\ " "apptag_tag" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_trans_seterr_extended(struct\ confd_trans_ctx\ *" "tctx" ", enum\ confd_errcode\ " "code" ", u_int32_t\ " "apptag_ns" ", u_int32_t\ " "apptag_tag" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.PP
+The function can be used also after a data provider callback has returned CONFD_DELAYED_RESPONSE, but in that case it must be followed by a call of
+\fBconfd_delayed_reply_error()\fR
+(see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]) with NULL for the
+\fIerrstr\fR
+pointer\&.
+.PP
+One of the following values can be given for the
+\fIcode\fR
+argument:
+.PP
+\fBCONFD_ERRCODE_IN_USE\fR
+.RS 4
+Locking a data store was not possible because it was already locked\&.
+.RE
+.PP
+\fBCONFD_ERRCODE_RESOURCE_DENIED\fR
+.RS 4
+General resource unavailability, e\&.g\&. insufficient memory to carry out an operation\&.
+.RE
+.PP
+\fBCONFD_ERRCODE_INCONSISTENT_VALUE\fR
+.RS 4
+A request parameter had an unacceptable/invalid value
+.RE
+.PP
+\fBCONFD_ERRCODE_ACCESS_DENIED\fR
+.RS 4
+The request could not be fulfilled because authorization did not allow it\&. (No additional error information will be reported by the northbound agent, to avoid any security breach\&.)
+.RE
+.PP
+\fBCONFD_ERRCODE_APPLICATION\fR
+.RS 4
+Unspecified error\&.
+.RE
+.PP
+\fBCONFD_ERRCODE_APPLICATION_INTERNAL\fR
+.RS 4
+As CONFD_ERRCODE_APPLICATION, but the additional error information is only for logging/debugging, and should not be reported by northbound agents\&.
+.RE
+.PP
+\fBCONFD_ERRCODE_DATA_MISSING\fR
+.RS 4
+A request could not be completed because the relevant data model content does not exist\&.
+.RE
+.PP
+\fBCONFD_ERRCODE_INTERRUPT\fR
+.RS 4
+Processing of a request was terminated due to user interrupt \- see the description of the
+\fBinterrupt()\fR
+transaction callback in
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&.
+.RE
+.PP
+There is currently limited support for specifying one of a set of fixed error tags via
+\fIapptag_ns\fR
+and
+\fIapptag_tag\fR:
+\fIapptag_ns\fR
+should be 0, and
+\fIapptag_tag\fR
+can be either 0 or the hash value for a data model node\&.
+.PP
+The
+\fIfmt\fR
+and remaining arguments can specify an arbitrary string as for
+\fBconfd_trans_seterr()\fR, but when used with one of the
+\fIcode\fR
+values that has a specific meaning, it should only be given if it has some additional information \- e\&.g\&. passing "In use" with CONFD_ERRCODE_IN_USE is not meaningful, and will typically result in duplicated information being reported by the northbound agent\&. If there is no additional information, just pass an empty string ("") for
+\fIfmt\fR\&.
+.PP
+A call of confd_trans_seterr(tctx, "string") is equivalent to confd_trans_seterr_extended(tctx, CONFD_ERRCODE_APPLICATION, 0, 0, "string")\&.
+.PP
+When the extended error reporting is used, the northbound agents will, where possible, use the extended error information to give protocol\-specific error reports to the managers, as described in the following tables\&. (The CONFD_ERRCODE_INTERRUPT code does not have a mapping here, since these interfaces do not provide the possibility to interrupt a transaction\&.)
+.PP
+For SNMP, the
+\fIcode\fR
+argument is mapped to SNMP ErrorStatus
+.TS
+tab(:);
+lB lB.
+T{
+\fIcode\fR
+T}:T{
+SNMP ErrorStatus
+T}
+.T&
+l l
+l l
+l l
+l l
+l l
+l l
+l l.
+T{
+\fBCONFD_ERRCODE_IN_USE\fR
+T}:T{
+\fBresourceUnavailable\fR
+T}
+T{
+\fBCONFD_ERRCODE_RESOURCE_DENIED\fR
+T}:T{
+\fBresourceUnavailable\fR
+T}
+T{
+\fBCONFD_ERRCODE_INCONSISTENT_VALUE\fR
+T}:T{
+\fBinconsistentValue\fR
+T}
+T{
+\fBCONFD_ERRCODE_ACCESS_DENIED\fR
+T}:T{
+\fBnoAccess\fR
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION\fR
+T}:T{
+\fBgenErr\fR
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION_INTERNAL\fR
+T}:T{
+\fBgenErr\fR
+T}
+T{
+\fBCONFD_ERRCODE_DATA_MISSING\fR
+T}:T{
+\fBinconsistentValue\fR
+T}
+.TE
+.PP
+For NETCONF the
+\fIcode\fR
+argument is mapped to <error\-tag>:
+.TS
+tab(:);
+lB lB.
+T{
+\fIcode\fR
+T}:T{
+NETCONF error\-tag
+T}
+.T&
+l l
+l l
+l l
+l l
+l l
+l l
+l l.
+T{
+\fBCONFD_ERRCODE_IN_USE\fR
+T}:T{
+in\-use
+T}
+T{
+\fBCONFD_ERRCODE_RESOURCE_DENIED\fR
+T}:T{
+resource\-denied
+T}
+T{
+\fBCONFD_ERRCODE_INCONSISTENT_VALUE\fR
+T}:T{
+invalid\-value
+T}
+T{
+\fBCONFD_ERRCODE_ACCESS_DENIED\fR
+T}:T{
+access\-denied
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION_\fR
+T}:T{
+operation\-failed
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION_INTERNAL\fR
+T}:T{
+operation\-failed
+T}
+T{
+\fBCONFD_ERRCODE_DATA_MISSING\fR
+T}:T{
+data\-missing
+T}
+.TE
+.PP
+The tag specified by
+\fIapptag_ns\fR/\fIapptag_tag\fR
+will be reported as <error\-app\-tag>\&.
+.PP
+For MAAPI the
+\fIcode\fR
+argument is mapped to
+\fIconfd_errno\fR:
+.TS
+tab(:);
+lB lB.
+T{
+\fIcode\fR
+T}:T{
+\fIconfd_errno\fR
+T}
+.T&
+l l
+l l
+l l
+l l
+l l
+l l
+l l.
+T{
+\fBCONFD_ERRCODE_IN_USE\fR
+T}:T{
+\fBCONFD_ERR_INUSE\fR
+T}
+T{
+\fBCONFD_ERRCODE_RESOURCE_DENIED\fR
+T}:T{
+\fBCONFD_ERR_RESOURCE_DENIED\fR
+T}
+T{
+\fBCONFD_ERRCODE_INCONSISTENT_VALUE\fR
+T}:T{
+\fBCONFD_ERR_INCONSISTENT_VALUE\fR
+T}
+T{
+\fBCONFD_ERRCODE_ACCESS_DENIED\fR
+T}:T{
+\fBCONFD_ERR_ACCESS_DENIED\fR
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION\fR
+T}:T{
+\fBCONFD_ERR_EXTERNAL\fR
+T}
+T{
+\fBCONFD_ERRCODE_APPLICATION_INTERNAL\fR
+T}:T{
+\fBCONFD_ERR_APPLICATION_INTERNAL\fR
+T}
+T{
+\fBCONFD_ERRCODE_DATA_MISSING\fR
+T}:T{
+\fBCONFD_ERR_DATA_MISSING\fR
+T}
+.TE
+.PP
+The tag (if any) can be retrieved by calling
+.nr wf \w'struct\ xml_tag\ *confd_last_error_apptag('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "struct xml_tag *confd_last_error_apptag("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "struct xml_tag *confd_last_error_apptag(" "void" ");" \}
+.PP
+If no tag was provided by the callback (e\&.g\&. plain
+\fBconfd_trans_seterr()\fR
+was used, or the error did not originate from a data provider callback at all), this function returns a pointer to a
+\fBstruct xml_tag\fR
+with both the
+\fIns\fR
+and the
+\fItag\fR
+element set to 0\&.
+.PP
+In the CLI and Web UI a text string is produced through some combination of the
+\fIcode\fR
+and the string given by
+\fIfmt, \&.\&.\&.\fR\&.
+.nr wf \w'int\ confd_trans_seterr_extended_info('
+.nr wm 0
+.nr wp \w'struct\ confd_trans_ctx\ *tctx,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'enum\ confd_errcode\ code,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ apptag_ns,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'u_int32_t\ apptag_tag,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_tag_value_t\ *error_info,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ n,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *fmt,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'\&.\&.\&.);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_trans_seterr_extended_info("
+.br
+.BI "struct\ confd_trans_ctx\ *" "tctx" ", enum\ confd_errcode\ " "code" ", u_int32_t\ " "apptag_ns" ", u_int32_t\ " "apptag_tag" ", confd_tag_value_t\ *" "error_info" ", int\ " "n" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_trans_seterr_extended_info(struct\ confd_trans_ctx\ *" "tctx" ", enum\ confd_errcode\ " "code" ", u_int32_t\ " "apptag_ns" ", u_int32_t\ " "apptag_tag" ", confd_tag_value_t\ *" "error_info" ", int\ " "n" ", const\ char\ *" "fmt" ", \&.\&.\&.);" \}
+.PP
+This function can be used to provide structured error information in the same way as
+\fBconfd_trans_seterr_extended()\fR, and additionally provide contents for the NETCONF <error\-info> element\&. The
+\fIerror_info\fR
+argument is an array of length
+\fIn\fR, populated as described for the Tagged Value Array format in the
+\m[blue]\fBXML STRUCTURES\fR\m[]
+section of the
+\m[blue]\fBconfd_types(3)\fR\m[]
+manual page\&. The
+\fIerror_info\fR
+information is discarded for other northbound agents than NETCONF\&.
+.PP
+The
+tailf:error\-info
+statement (see
+\m[blue]\fBtailf_yang_extensions(5)\fR\m[]) must have been used in one or more YANG modules to declare the data nodes for <error\-info>\&. As an example, we could have this
+error\-info
+declaration:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+module mod {
+  namespace "http://tail\-f\&.com/test/mod";
+  prefix mod;
+
+  import tailf\-common {
+    prefix tailf;
+  }
+
+  \&.\&.\&.
+
+  tailf:error\-info {
+    leaf severity {
+      type enumeration {
+        enum info;
+        enum error;
+        enum critical;
+      }
+    }
+    container detail {
+      leaf class {
+        type uint8;
+      }
+      leaf code {
+        type uint8;
+      }
+    }
+  }
+
+  \&.\&.\&.
+
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+A call of
+\fBconfd_trans_seterr_extended_info()\fR
+to populate the <error\-info> could then look like this:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_tag_value_t error_info[10];
+int i = 0;
+
+CONFD_SET_TAG_ENUM_VALUE(&error_info[i],
+                         mod_severity, mod_error);
+CONFD_SET_TAG_NS(&error_info[i], mod__ns);          i++;
+CONFD_SET_TAG_XMLBEGIN(&error_info[i],
+                       mod_detail, mod__ns);        i++;
+CONFD_SET_TAG_UINT8(&error_info[i], mod_class, 42); i++;
+CONFD_SET_TAG_UINT8(&error_info[i], mod_code, 17);  i++;
+CONFD_SET_TAG_XMLEND(&error_info[i],
+                     mod_detail, mod__ns);          i++;
+OK(confd_trans_seterr_extended_info(tctx, CONFD_ERRCODE_APPLICATION,
+                                    0, 0, error_info, i,
+                                    "Operation failed"));
+.fi
+.if n \{\
+.RE
+.\}
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+The toplevel elements in the
+\fBconfd_tag_value_t\fR
+array
+\fImust\fR
+have the
+\fIns\fR
+element of the
+\fBstruct xml_tag\fR
+set\&. The
+\fBCONFD_SET_TAG_XMLBEGIN()\fR
+macro will set this element, but for toplevel leaf elements the
+\fBCONFD_SET_TAG_NS()\fR
+macro needs to be used, as shown above\&.
+.sp .5v
+.RE
+.PP
+The <error\-info> section resulting from the above would look like this:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    <error\-info>
+      \&.\&.\&.
+      <severity xmlns="http://tail\-f\&.com/test/mod">error</severity>
+      <detail xmlns="http://tail\-f\&.com/test/mod">
+        <class>42</class>
+        <code>17</code>
+      </detail>
+    </error\-info>
+.fi
+.if n \{\
+.RE
+.\}
+.SH "ERRORS"
+.PP
+All functions in
+libconfd
+signal errors through the return of the #defined CONFD_ERR \- which has the value \-1 \- or alternatively CONFD_EOF (\-2) which means that ConfD closed its end of the socket\&.
+.PP
+Data provider callbacks (see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]) can also signal errors by returning CONFD_ERR from the callback\&. This can be done for all different kinds of callbacks\&. It is possible to to provide additional error information from one of these callbacks by using one of the functions:
+.PP
+\fBconfd_trans_seterr(), confd_trans_seterr_extended(), confd_trans_seterr_extended_info()\fR
+.RS 4
+For transaction callbacks
+.RE
+.PP
+\fBconfd_db_seterr(), confd_db_seterr_extended(), confd_db_seterr_extended_info()\fR
+.RS 4
+For db callbacks
+.RE
+.PP
+\fBconfd_action_seterr(), confd_action_seterr_extended(), confd_action_seterr_extended_info()\fR
+.RS 4
+For action callbacks
+.RE
+.PP
+\fBconfd_notification_seterr(), confd_notification_seterr_extended(), confd_notification_seterr_extended_info()\fR
+.RS 4
+For notification callbacks
+.RE
+.PP
+CDB two phase subscribers (see
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]) can also provide error information when
+\fBcdb_read_subscription_socket2()\fR
+has returned with type set to
+\fBCDB_SUB_PREPARE\fR, using one of the functions
+\fBcdb_sub_abort_trans()\fR
+and
+\fBcdb_sub_abort_trans_info()\fR\&.
+.PP
+Whenever CONFD_ERR is returned from any API function in
+libconfd
+it is possible to obtain additional information on the error through the symbol
+\fIconfd_errno\fR\&. Additionally there may be an error text associated with the error\&. A call to the function
+.nr wf \w'char\ *confd_lasterr('
+.nr wm 0
+.nr wp \w'void);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_lasterr("
+.br
+.BI "" "void" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_lasterr(" "void" ");" \}
+.PP
+returns a string which contains additional textual information on the error\&. Furthermore, the function
+.nr wf \w'char\ *confd_strerror('
+.nr wm 0
+.nr wp \w'int\ code);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "char *confd_strerror("
+.br
+.BI "int\ " "code" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "char *confd_strerror(int\ " "code" ");" \}
+.PP
+returns a string which describes a particular error code\&. When one of the The following error codes are available:
+.PP
+\fBCONFD_ERR_NOEXISTS\fR (1)
+.RS 4
+Typically we tried to read a value through CDB or MAAPI which does not exist\&.
+.RE
+.PP
+\fBCONFD_ERR_ALREADY_EXISTS\fR (2)
+.RS 4
+We tried to create something which already exists\&.
+.RE
+.PP
+\fBCONFD_ERR_ACCESS_DENIED\fR (3)
+.RS 4
+Access to an object was denied due to AAA authorization rules\&.
+.RE
+.PP
+\fBCONFD_ERR_NOT_WRITABLE\fR (4)
+.RS 4
+We tried to write an object which is not writable\&.
+.RE
+.PP
+\fBCONFD_ERR_BADTYPE\fR (5)
+.RS 4
+We tried to create or write an object which is specified to have another type (see
+\m[blue]\fBconfd_types(3)\fR\m[]) than the one we provided\&.
+.RE
+.PP
+\fBCONFD_ERR_NOTCREATABLE\fR (6)
+.RS 4
+We tried to create an object which is not possible to create\&.
+.RE
+.PP
+\fBCONFD_ERR_NOTDELETABLE\fR (7)
+.RS 4
+We tried to delete an object which is not possible to delete\&.
+.RE
+.PP
+\fBCONFD_ERR_BADPATH\fR (8)
+.RS 4
+We provided a bad path in any of the printf style functions which take a variable number of arguments\&.
+.RE
+.PP
+\fBCONFD_ERR_NOSTACK\fR (9)
+.RS 4
+We tried to pop without a preceding push\&.
+.RE
+.PP
+\fBCONFD_ERR_LOCKED\fR (10)
+.RS 4
+We tried to lock something which is already locked\&.
+.RE
+.PP
+\fBCONFD_ERR_INUSE\fR (11)
+.RS 4
+We tried to commit while someone else holds a lock\&.
+.RE
+.PP
+\fBCONFD_ERR_NOTSET\fR (12)
+.RS 4
+A mandatory leaf does not have a value, either because it has been deleted, or not set after a create\&.
+.RE
+.PP
+\fBCONFD_ERR_NON_UNIQUE\fR (13)
+.RS 4
+A group of leafs specified with the
+unique
+statement are not unique\&.
+.RE
+.PP
+\fBCONFD_ERR_BAD_KEYREF\fR (14)
+.RS 4
+Dangling pointer\&.
+.RE
+.PP
+\fBCONFD_ERR_TOO_FEW_ELEMS\fR (15)
+.RS 4
+A
+min\-elements
+violation\&. A node has fewer elements or entries than specified with
+min\-elements\&.
+.RE
+.PP
+\fBCONFD_ERR_TOO_MANY_ELEMS\fR (16)
+.RS 4
+A
+max\-elements
+violation\&. A node has fewer elements or entries than specified with
+max\-elements\&.
+.RE
+.PP
+\fBCONFD_ERR_BADSTATE\fR (17)
+.RS 4
+Some function, such as the MAAPI commit functions that require several functions to be called in a specific order, was called out of order\&.
+.RE
+.PP
+\fBCONFD_ERR_INTERNAL\fR (18)
+.RS 4
+An internal error\&. This normally indicates a bug in ConfD or libconfd (if nothing else the lack of a better error code), please report it to Tail\-f support\&.
+.RE
+.PP
+\fBCONFD_ERR_EXTERNAL\fR (19)
+.RS 4
+All errors that originate in user code\&.
+.RE
+.PP
+\fBCONFD_ERR_MALLOC\fR (20)
+.RS 4
+Failed to allocate memory\&.
+.RE
+.PP
+\fBCONFD_ERR_PROTOUSAGE\fR (21)
+.RS 4
+Usage of API functions or callbacks was wrong\&. It typically means that we invoke a function when we shouldn\*(Aqt\&. For example if we invoke the
+\fBconfd_data_reply_next_key()\fR
+in a
+\fBget_elem()\fR
+callback we get this error\&.
+.RE
+.PP
+\fBCONFD_ERR_NOSESSION\fR (22)
+.RS 4
+A session must be established prior to executing the function\&.
+.RE
+.PP
+\fBCONFD_ERR_TOOMANYTRANS\fR (23)
+.RS 4
+A new MAAPI transaction was rejected since the transaction limit threshold was reached\&.
+.RE
+.PP
+\fBCONFD_ERR_OS\fR (24)
+.RS 4
+An error occurred in a call to some operating system function, such as
+\fBwrite()\fR\&. The proper errno from libc should then be read and used as failure indicator\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_CONNECT\fR (25)
+.RS 4
+Failed to connect to a remote HA node\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_CLOSED\fR (26)
+.RS 4
+A remote HA node closed its connection to us, or there was a timeout waiting for a sync response from the master during a call of
+\fBconfd_ha_beslave()\fR\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_BADFXS\fR (27)
+.RS 4
+A remote HA node had a different set of fxs files compared to us\&. It could also be that the set is the same, but the version of some fxs file is different\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_BADTOKEN\fR (28)
+.RS 4
+A remote HA node has a different token than us\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_BADNAME\fR (29)
+.RS 4
+A remote ha node has a different name than the name we think it has\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_BIND\fR (30)
+.RS 4
+Failed to bind the ha socket for incoming HA connects\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_NOTICK\fR (31)
+.RS 4
+A remote HA node failed to produce the interval live ticks\&.
+.RE
+.PP
+\fBCONFD_ERR_VALIDATION_WARNING\fR (32)
+.RS 4
+\fBmaapi_validate()\fR
+returned warnings\&.
+.RE
+.PP
+\fBCONFD_ERR_SUBAGENT_DOWN\fR (33)
+.RS 4
+An operation towards a mounted NETCONF subagent failed due to the subagent not being up\&.
+.RE
+.PP
+\fBCONFD_ERR_LIB_NOT_INITIALIZED\fR (34)
+.RS 4
+The confd library has not been properly initialized by a call to
+\fBconfd_init()\fR\&.
+.RE
+.PP
+\fBCONFD_ERR_TOO_MANY_SESSIONS\fR (35)
+.RS 4
+Maximum number of sessions reached\&.
+.RE
+.PP
+\fBCONFD_ERR_BAD_CONFIG\fR (36)
+.RS 4
+An error in a configuration\&.
+.RE
+.PP
+\fBCONFD_ERR_RESOURCE_DENIED\fR (37)
+.RS 4
+A data provider callback returned CONFD_ERRCODE_RESOURCE_DENIED (see EXTENDED ERROR REPORTING above)\&.
+.RE
+.PP
+\fBCONFD_ERR_INCONSISTENT_VALUE\fR (38)
+.RS 4
+A data provider callback returned CONFD_ERRCODE_INCONSISTENT_VALUE (see EXTENDED ERROR REPORTING above)\&.
+.RE
+.PP
+\fBCONFD_ERR_APPLICATION_INTERNAL\fR (39)
+.RS 4
+A data provider callback returned CONFD_ERRCODE_APPLICATION_INTERNAL (see EXTENDED ERROR REPORTING above)\&.
+.RE
+.PP
+\fBCONFD_ERR_UNSET_CHOICE\fR (40)
+.RS 4
+No
+case
+has been selected for a mandatory
+choice
+statement\&.
+.RE
+.PP
+\fBCONFD_ERR_MUST_FAILED\fR (41)
+.RS 4
+A
+must
+constraint is not satisfied\&.
+.RE
+.PP
+\fBCONFD_ERR_MISSING_INSTANCE\fR (42)
+.RS 4
+The value of an
+instance\-identifier
+leaf with
+require\-instance true
+does not specify an existing instance\&.
+.RE
+.PP
+\fBCONFD_ERR_INVALID_INSTANCE\fR (43)
+.RS 4
+The value of an
+instance\-identifier
+leaf does not conform to the specified path filters\&.
+.RE
+.PP
+\fBCONFD_ERR_UNAVAILABLE\fR (44)
+.RS 4
+We tried to use some unavailable functionality, e\&.g\&. get/set attributes on an operational data element\&.
+.RE
+.PP
+\fBCONFD_ERR_EOF\fR (45)
+.RS 4
+This value is used when a function returns CONFD_EOF\&. Thus it is not strictly necessary to check whether the return value is CONFD_ERR or CONFD_EOF \- if the function should return CONFD_OK on success, but the return value is something else, the reason can always be found via confd_errno\&.
+.RE
+.PP
+\fBCONFD_ERR_NOTMOVABLE\fR (46)
+.RS 4
+We tried to move an object which is not possible to move\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_WITH_UPGRADE\fR (47)
+.RS 4
+We tried to perform an in\-service data model upgrade on a HA node that was either a master or a slave, or we tried to make the node a HA master or slave while an in\-service data model upgrade was in progress\&.
+.RE
+.PP
+\fBCONFD_ERR_TIMEOUT\fR (48)
+.RS 4
+An operation did not complete within the specified timeout\&.
+.RE
+.PP
+\fBCONFD_ERR_ABORTED\fR (49)
+.RS 4
+An operation was aborted\&.
+.RE
+.PP
+\fBCONFD_ERR_XPATH\fR (50)
+.RS 4
+Compilation or evaluation of an XPath expression failed\&.
+.RE
+.PP
+\fBCONFD_ERR_NOT_IMPLEMENTED\fR (51)
+.RS 4
+A request was made for an operation that wasn\*(Aqt implemented\&. This will typically occur if an application uses a version of
+libconfd
+that is more recent than the version of the ConfD daemon, and a CDB or MAAPI function is used that is only implemented in the library version\&.
+.RE
+.PP
+\fBCONFD_ERR_HA_BADVSN\fR (52)
+.RS 4
+A remote HA node had an incompatible protocol version\&.
+.RE
+.PP
+\fBCONFD_ERR_POLICY_FAILED\fR (53)
+.RS 4
+A user\-defined policy expression evaluated to false\&.
+.RE
+.PP
+\fBCONFD_ERR_POLICY_COMPILATION_FAILED\fR (54)
+.RS 4
+A user\-defined policy XPath expression could not be compiled\&.
+.RE
+.PP
+\fBCONFD_ERR_POLICY_EVALUATION_FAILED\fR (55)
+.RS 4
+A user\-defined policy expression failed XPath evaluation\&.
+.RE
+.PP
+\fBNCS_ERR_CONNECTION_REFUSED\fR (56)
+.RS 4
+NCS failed to connect to a device\&.
+.RE
+.PP
+\fBCONFD_ERR_START_FAILED\fR (57)
+.RS 4
+ConfD daemon failed to proceed to next start\-phase\&.
+.RE
+.PP
+\fBCONFD_ERR_DATA_MISSING\fR (58)
+.RS 4
+A data provider callback returned CONFD_ERRCODE_DATA_MISSING (see EXTENDED ERROR REPORTING above)\&.
+.RE
+.PP
+\fBCONFD_ERR_CLI_CMD\fR (59)
+.RS 4
+Execution of a CLI command failed\&.
+.RE
+.PP
+\fBCONFD_ERR_UPGRADE_IN_PROGRESS\fR (60)
+.RS 4
+A request was made for an operation that is not allowed when in\-service data model upgrade is in progress\&.
+.RE
+.PP
+\fBCONFD_ERR_NOTRANS\fR (61)
+.RS 4
+An invalid transaction handle was passed to a MAAPI function \- i\&.e\&. the handle did not refer to a transaction that was either started on, or attached to, the MAAPI socket\&.
+.RE
+.PP
+\fBNCS_ERR_SERVICE_CONFLICT\fR (62)
+.RS 4
+An NCS service invocation running outside the transaction lock modified data that was also modified by a service invocation in another transaction\&.
+.RE
+.SH "MISCELLANEOUS"
+.PP
+The library will always set the default signal handler for SIGPIPE to be SIG_IGN\&. All libconfd APIs are socket based and the library must be able to detect failed write operations in a controlled manner\&.
+.PP
+The include file
+confd_lib\&.h
+includes
+assert\&.h
+and uses assert macros in the specialized
+\fBCONFD_GET_XXX()\fR
+macros\&. If the behavior of assert is not wanted in a production environment, we can define NDEBUG before including
+confd_lib\&.h
+(or
+confd\&.h), see assert(3)\&. Alternatively we can define a
+\fBCONFD_ASSERT()\fR
+macro before including
+confd_lib\&.h\&. The assert macros are invoked via
+\fBCONFD_ASSERT()\fR, which is defined by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#ifndef CONFD_ASSERT
+#define CONFD_ASSERT(E) assert(E)
+#endif
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+I\&.e\&. by defining a different version of
+\fBCONFD_ASSERT()\fR, we can get our own error handler invoked instead of assert(3), for example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+void log_error(char *file, int line, char *expr);
+
+#define CONFD_ASSERT(E) \e
+            ((E) ? (void)0 : log_error(__FILE__, __LINE__, #E))
+
+#include <confd_lib\&.h>
+    
+.fi
+.if n \{\
+.RE
+.\}
+.SH "SYSLOG AND DEBUG"
+.PP
+When developing applications with
+libconfd
+we always need to indicate to the library which verbosity level should be used by the library\&. There are three different levels to choose from: CONFD_SILENT where the library never writes anything, never, CONFD_DEBUG where the library reports all errors and finally CONFD_TRACE where the library traces the execution and invocations of all the various callback functions\&.
+.PP
+There are two different destinations for all library printouts\&. When we call
+\fBconfd_init()\fR, we always need to supply a
+\fBFILE*\fR
+stream which should be used for all printouts\&. This parameter can be set to NULL if we never want any
+\fBFILE*\fR
+printouts to occur\&.
+.PP
+The second destination is syslog, i\&.e\&. the library will syslog if told to\&. This is controlled by the global integer variable
+\fIconfd_lib_use_syslog\fR\&. If we set this variable to
+\fB1\fR,
+libconfd
+will syslog all output\&. If we set it to
+\fB0\fR
+the library will not syslog\&. It is the responsibility of the application to (optionally) call
+\fBopenlog()\fR
+before initializing the ConfD library\&. The default value is
+\fB0\fR\&.
+.PP
+There also exists a hook point at which a library user can install their own printer\&. This done by assigning to a global variable
+\fIconfd_user_log_hook\fR, as in:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+void mylogger(int syslogprio, const char *fmt, va_list ap) {
+    char buf[BUFSIZ];
+    sprintf(buf, "MYLOG:(%d) ", syslogprio); strcat(buf, fmt);
+    vfprintf(stderr, buf, ap);
+}
+
+confd_user_log_hook = mylogger;
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIsyslogprio\fR
+is LOG_ERR or LOG_CRIT for error messages, and LOG_DEBUG for trace messages, see the description of
+\fBconfd_init()\fR\&.
+.PP
+Thus a good combination of values in a target environment is to set the
+\fBFILE*\fR
+handle to NULL and
+\fIconfd_lib_use_syslog\fR
+to
+\fB1\fR\&. This way we do not get the overhead of file logging and at the same time get all errors reported to syslog\&.
+.SH "SEE ALSO"
+.PP
+\fBconfd\fR(5)
+\- ConfD daemon configuration file format
+.PP
+The ConfD User Guide
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

@@ -1,0 +1,42 @@
+#
+# Copyright 2009 Tail-f Systems AB
+#
+
+# Uncomment or pass on command line to build with external IPC support
+#SUPPORT_EXTERNAL_IPC = yes
+
+CONFD_DIR ?= /usr/local
+
+LIBCONFD  = -L$(CONFD_DIR)/lib -lconfd
+CFLAGS   += -Wall -g -I../ipc_drv -I$(CONFD_DIR)/include
+
+ifeq ($(shell uname -s),QNX)
+LDFLAGS    = -lsocket
+else
+LDFLAGS    = -lpthread
+endif
+
+ifeq ($(shell uname -s),SunOS)
+CC         = gcc
+LDFLAGS    = -lpthread -lsocket -lnsl
+endif
+
+ifeq ($(SUPPORT_EXTERNAL_IPC), yes)
+CFLAGS    += -DEXTERNAL_IPC
+ifeq ($(shell uname -s),Linux)
+LDFLAGS   += -ldl
+endif
+endif
+
+all: confd_cmd confd_load
+
+confd_cmd: confd_cmd.c
+	$(CC) -o $@ $< $(CFLAGS) $(LIBCONFD) $(LDFLAGS) -lm
+
+confd_load: confd_load.c
+	$(CC) -o $@ $< $(CFLAGS) $(LIBCONFD) $(LDFLAGS) -lm
+
+clean:
+	rm -f *.o a.out core confd_cmd confd_load
+	rm -rf *.dSYM
+

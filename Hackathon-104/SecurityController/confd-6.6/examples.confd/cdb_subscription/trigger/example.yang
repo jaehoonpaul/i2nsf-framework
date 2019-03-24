@@ -1,0 +1,83 @@
+module example {
+  namespace "http://tail-f.com/ns/test/example";
+  prefix example;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  typedef interfaceName {
+    type string {
+      length "min .. 30";
+      pattern "[A-Za-z][^/:.]*";
+    }
+  }
+  typedef prefixLengthIPv4 {
+    type int32 {
+      range "0 .. 32";
+    }
+  }
+  typedef interfaceSpeed {
+    type enumeration {
+      enum 10;
+      enum 100;
+      enum 1000;
+    }
+  }
+  typedef interfaceDuplex {
+    type enumeration {
+      enum half;
+      enum full;
+    }
+  }
+  typedef mtuSize {
+    type int32 {
+      range "68 .. 1500";
+    }
+  }
+
+  container sys {
+    list ifc {
+      key name;
+      max-elements 64;
+      leaf name {
+        type interfaceName;
+      }
+      leaf description {
+        type string;
+      }
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+      container hw {
+        leaf speed {
+          type interfaceSpeed;
+        }
+        leaf duplex {
+          type interfaceDuplex;
+        }
+        leaf mtu {
+          type mtuSize;
+        }
+        leaf mac {
+          type string;
+        }
+      }
+      list ip {
+        key address;
+        max-elements 1024;
+        leaf address {
+          type inet:ipv4-address;
+        }
+        leaf prefix-length {
+          type prefixLengthIPv4;
+          mandatory true;
+        }
+        leaf broadcast {
+          type inet:ipv4-address;
+        }
+      }
+    }
+  }
+}

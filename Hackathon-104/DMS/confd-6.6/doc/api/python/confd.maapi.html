@@ -1,0 +1,599 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module confd.maapi</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="confd.html"><font color="#ffffff">confd</font></a>.maapi</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/maapi.py">/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/maapi.py</a></font></td></tr></table>
+    <p><tt>MAAPI&nbsp;high&nbsp;level&nbsp;module.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;defines&nbsp;a&nbsp;high&nbsp;level&nbsp;interface&nbsp;to&nbsp;the&nbsp;low-level&nbsp;maapi&nbsp;functions.<br>
+&nbsp;<br>
+The&nbsp;'<a href="#Maapi">Maapi</a>'&nbsp;class&nbsp;encapsulates&nbsp;a&nbsp;MAAPI&nbsp;connection&nbsp;which&nbsp;upon&nbsp;constructing,<br>
+sets&nbsp;up&nbsp;a&nbsp;connection&nbsp;towards&nbsp;ConfD/NCS.&nbsp;An&nbsp;example&nbsp;of&nbsp;setting&nbsp;up&nbsp;a&nbsp;transaction<br>
+and&nbsp;manipulating&nbsp;data:<br>
+&nbsp;<br>
+import&nbsp;ncs<br>
+&nbsp;<br>
+m&nbsp;=&nbsp;ncs.maapi.<a href="#Maapi">Maapi</a>()<br>
+m.start_user_session('admin',&nbsp;'test_context')<br>
+t&nbsp;=&nbsp;m.start_write_trans()<br>
+t.get_elem('/model/data{one}/str')<br>
+t.set_elem('testing',&nbsp;'/model/data{one}/str')<br>
+t.apply()<br>
+&nbsp;<br>
+Another&nbsp;way&nbsp;is&nbsp;to&nbsp;use&nbsp;context&nbsp;managers,&nbsp;which&nbsp;will&nbsp;handle&nbsp;all&nbsp;cleanup<br>
+related&nbsp;to&nbsp;transactions,&nbsp;user&nbsp;sessions&nbsp;and&nbsp;socket&nbsp;connections:<br>
+&nbsp;<br>
+with&nbsp;ncs.maapi.<a href="#Maapi">Maapi</a>()&nbsp;as&nbsp;m:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;ncs.maapi.<a href="#Session">Session</a>(m,&nbsp;'admin',&nbsp;'test_context'):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;m.start_write_trans()&nbsp;as&nbsp;t:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.get_elem('/model/data{one}/str')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.set_elem('testing',&nbsp;'/model/data{one}/str')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.apply()<br>
+&nbsp;<br>
+Finally,&nbsp;a&nbsp;really&nbsp;compact&nbsp;way&nbsp;of&nbsp;doing&nbsp;this:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;ncs.maapi.<a href="#-single_write_trans">single_write_trans</a>('admin',&nbsp;'test_context')&nbsp;as&nbsp;t:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.get_elem('/model/data{one}/str')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.set_elem('testing',&nbsp;'/model/data{one}/str')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.apply()</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="_confd.html">_confd</a><br>
+<a href="contextlib.html">contextlib</a><br>
+</td><td width="25%" valign=top><a href="socket.html">socket</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="confd.tm.html">confd.tm</a><br>
+</td><td width="25%" valign=top><a href="traceback.html">traceback</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="confd.maapi.html#Key">Key</a>
+</font></dt><dt><font face="helvetica, arial"><a href="confd.maapi.html#Maapi">Maapi</a>
+</font></dt><dt><font face="helvetica, arial"><a href="confd.maapi.html#Session">Session</a>
+</font></dt><dt><font face="helvetica, arial"><a href="confd.maapi.html#Transaction">Transaction</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Key">class <strong>Key</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Key">Key</a>&nbsp;string&nbsp;encapsulation&nbsp;and&nbsp;helper.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Key-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt><dd><tt>Get&nbsp;key&nbsp;at&nbsp;index&nbsp;'key'.</tt></dd></dl>
+
+<dl><dt><a name="Key-__init__"><strong>__init__</strong></a>(self, key, enum_cs_nodes<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;a&nbsp;key.<br>
+&nbsp;<br>
+'key'&nbsp;may&nbsp;be&nbsp;a&nbsp;string&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="Key-__iter__"><strong>__iter__</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;key&nbsp;iterator&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="Key-__len__"><strong>__len__</strong></a>(self)</dt><dd><tt>Get&nbsp;number&nbsp;of&nbsp;keys.</tt></dd></dl>
+
+<dl><dt><a name="Key-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Get&nbsp;internal&nbsp;representation.</tt></dd></dl>
+
+<dl><dt><a name="Key-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Get&nbsp;string&nbsp;representation.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Maapi">class <strong>Maapi</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;encapsulating&nbsp;a&nbsp;MAAPI&nbsp;connection.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Maapi-__dir__"><strong>__dir__</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;methods&nbsp;in&nbsp;<a href="#Maapi">Maapi</a>.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-__enter__"><strong>__enter__</strong></a>(self)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-__exit__"><strong>__exit__</strong></a>(self, exc_type, exc_value, tb)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Python&nbsp;magic&nbsp;method.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;will&nbsp;be&nbsp;called&nbsp;whenever&nbsp;an&nbsp;attribute&nbsp;not&nbsp;present&nbsp;here<br>
+is&nbsp;accessed.&nbsp;It&nbsp;will&nbsp;try&nbsp;to&nbsp;find&nbsp;a&nbsp;corresponding&nbsp;attribute&nbsp;in&nbsp;the<br>
+low-level&nbsp;maapi&nbsp;module&nbsp;which&nbsp;takes&nbsp;a&nbsp;maapi&nbsp;socket&nbsp;as&nbsp;the&nbsp;first<br>
+arument&nbsp;and&nbsp;forward&nbsp;the&nbsp;call&nbsp;there.<br>
+&nbsp;<br>
+Example&nbsp;(pseudo&nbsp;code):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;ncs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;high-level&nbsp;module<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;_ncs&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;low-level&nbsp;module<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;maapi&nbsp;=&nbsp;ncs.maapi.<a href="#Maapi">Maapi</a>()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Now,&nbsp;these&nbsp;two&nbsp;calls&nbsp;are&nbsp;equal:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;maapi.install_crypto_keys()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;_ncs.maapi.install_crypto_keys(maapi.msock)</tt></dd></dl>
+
+<dl><dt><a name="Maapi-__init__"><strong>__init__</strong></a>(self, ip<font color="#909090">='127.0.0.1'</font>, port<font color="#909090">=4565</font>, path<font color="#909090">=None</font>, load_schemas<font color="#909090">=True</font>, msock<font color="#909090">=None</font>)</dt><dd><tt>Setting&nbsp;up&nbsp;a&nbsp;MAAPI&nbsp;socket.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Get&nbsp;internal&nbsp;representation.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-apply_template"><strong>apply_template</strong></a>(*args, **kwargs)</dt><dd><tt>Apply&nbsp;a&nbsp;template.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-attach"><strong>attach</strong></a>(self, ctx_or_th, hashed_ns<font color="#909090">=0</font>, usid<font color="#909090">=0</font>)</dt><dd><tt>Attach&nbsp;to&nbsp;an&nbsp;existing&nbsp;transaction.<br>
+&nbsp;<br>
+'ctx_or_th'&nbsp;may&nbsp;be&nbsp;either&nbsp;a&nbsp;TransCtxRef&nbsp;or&nbsp;a&nbsp;transaction&nbsp;handle.<br>
+The&nbsp;'hashed_ns'&nbsp;argument&nbsp;is&nbsp;basically&nbsp;just&nbsp;there&nbsp;to&nbsp;save&nbsp;a&nbsp;call&nbsp;to<br>
+set_namespace().&nbsp;'usid'&nbsp;is&nbsp;only&nbsp;used&nbsp;if&nbsp;'ctx_or_th'&nbsp;is&nbsp;a&nbsp;transaction<br>
+handle&nbsp;and&nbsp;if&nbsp;set&nbsp;to&nbsp;0&nbsp;the&nbsp;user&nbsp;session&nbsp;id&nbsp;that&nbsp;is&nbsp;the&nbsp;owner&nbsp;of&nbsp;the<br>
+transaction&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;<a href="#Transaction">Transaction</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-attach_init"><strong>attach_init</strong></a>(self)</dt><dd><tt>Attach&nbsp;to&nbsp;phase0&nbsp;for&nbsp;CDB&nbsp;initialization&nbsp;and&nbsp;upgrade.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-authenticate"><strong>authenticate</strong></a>(self, user, password, n, src_addr<font color="#909090">=None</font>, src_port<font color="#909090">=None</font>, context<font color="#909090">=None</font>, prot<font color="#909090">=None</font>)</dt><dd><tt>Authenticate&nbsp;a&nbsp;user&nbsp;using&nbsp;the&nbsp;AAA&nbsp;configuration.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-cursor"><strong>cursor</strong></a>(self, th, path, enum_cs_nodes<font color="#909090">=None</font>, want_values<font color="#909090">=False</font>)</dt><dd><tt>Get&nbsp;an&nbsp;iterable&nbsp;list&nbsp;cursor.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-destroy_cursor"><strong>destroy_cursor</strong></a>(self, mc)</dt><dd><tt>Destroy&nbsp;cursor.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-detach"><strong>detach</strong></a>(self, ctx_or_th)</dt><dd><tt>Detach&nbsp;the&nbsp;underlying&nbsp;MAAPI&nbsp;socket.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-do_display"><strong>do_display</strong></a>(self, th, path)</dt><dd><tt>Do&nbsp;display.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;data&nbsp;model&nbsp;uses&nbsp;the&nbsp;YANG&nbsp;when&nbsp;or&nbsp;tailf:display-when<br>
+statement,&nbsp;this&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;determine&nbsp;if&nbsp;the&nbsp;item<br>
+given&nbsp;by&nbsp;the&nbsp;path&nbsp;should&nbsp;be&nbsp;displayed&nbsp;or&nbsp;not.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-exists"><strong>exists</strong></a>(self, th, path)</dt><dd><tt>Check&nbsp;if&nbsp;path&nbsp;exists.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-find_next"><strong>find_next</strong></a>(self, mc, type, inkeys)</dt><dd><tt>Find&nbsp;next.<br>
+&nbsp;<br>
+Update&nbsp;the&nbsp;cursor&nbsp;'mc'&nbsp;with&nbsp;the&nbsp;key(s)&nbsp;for&nbsp;the&nbsp;list&nbsp;entry&nbsp;designated<br>
+by&nbsp;the&nbsp;'type'&nbsp;and&nbsp;'inkeys'&nbsp;arguments.&nbsp;This&nbsp;function&nbsp;may&nbsp;be&nbsp;used&nbsp;to<br>
+start&nbsp;a&nbsp;traversal&nbsp;from&nbsp;an&nbsp;arbitrary&nbsp;entry&nbsp;in&nbsp;a&nbsp;list.&nbsp;Keys&nbsp;for<br>
+subsequent&nbsp;entries&nbsp;may&nbsp;be&nbsp;retrieved&nbsp;with&nbsp;the&nbsp;<a href="#Maapi-get_next">get_next</a>()&nbsp;function.<br>
+When&nbsp;no&nbsp;more&nbsp;keys&nbsp;are&nbsp;found,&nbsp;False&nbsp;is&nbsp;returned.<br>
+&nbsp;<br>
+The&nbsp;strategy&nbsp;to&nbsp;use&nbsp;is&nbsp;defined&nbsp;by&nbsp;'type':<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FIND_NEXT&nbsp;-&nbsp;The&nbsp;keys&nbsp;for&nbsp;the&nbsp;first&nbsp;list&nbsp;entry&nbsp;after&nbsp;the&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indicated&nbsp;by&nbsp;the&nbsp;'inkeys'&nbsp;argument.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FIND_SAME_OR_NEXT&nbsp;-&nbsp;If&nbsp;the&nbsp;values&nbsp;in&nbsp;the&nbsp;'inkeys'&nbsp;array&nbsp;completely<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifies&nbsp;an&nbsp;actual&nbsp;existing&nbsp;list&nbsp;entry,&nbsp;the&nbsp;keys&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;entry&nbsp;are&nbsp;requested.&nbsp;Otherwise&nbsp;the&nbsp;same&nbsp;logic&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;FIND_NEXT&nbsp;above.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-get_next"><strong>get_next</strong></a>(self, mc)</dt><dd><tt>Iterate&nbsp;and&nbsp;get&nbsp;the&nbsp;keys&nbsp;for&nbsp;the&nbsp;next&nbsp;entry&nbsp;in&nbsp;a&nbsp;list.<br>
+&nbsp;<br>
+When&nbsp;no&nbsp;more&nbsp;keys&nbsp;are&nbsp;found,&nbsp;False&nbsp;is&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-get_objects"><strong>get_objects</strong></a>(self, mc, n, nobj)</dt><dd><tt>Get&nbsp;objects.<br>
+&nbsp;<br>
+Read&nbsp;at&nbsp;most&nbsp;n&nbsp;values&nbsp;from&nbsp;each&nbsp;nobj&nbsp;lists&nbsp;starting&nbsp;at&nbsp;cursor&nbsp;mc.<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-get_running_db_status"><strong>get_running_db_status</strong></a>(self)</dt><dd><tt>Get&nbsp;running&nbsp;db&nbsp;status.<br>
+&nbsp;<br>
+Gets&nbsp;the&nbsp;status&nbsp;of&nbsp;the&nbsp;running&nbsp;db.&nbsp;Returns&nbsp;True&nbsp;if&nbsp;consistent&nbsp;and<br>
+False&nbsp;otherwise.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-load_schemas"><strong>load_schemas</strong></a>(self, use_maapi_socket<font color="#909090">=False</font>)</dt><dd><tt>Load&nbsp;the&nbsp;schemas&nbsp;to&nbsp;Python&nbsp;(using&nbsp;shared&nbsp;memory&nbsp;if&nbsp;enabled).<br>
+&nbsp;<br>
+If&nbsp;'use_maapi_socket'&nbsp;is&nbsp;set&nbsp;to&nbsp;True,&nbsp;the&nbsp;schmeas&nbsp;are&nbsp;loaded&nbsp;through<br>
+the&nbsp;NSO&nbsp;daemon&nbsp;via&nbsp;a&nbsp;MAAPI&nbsp;socket.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-query_free_result"><strong>query_free_result</strong></a>(self, qrs)</dt><dd><tt>Deallocate&nbsp;QueryResult&nbsp;memory.<br>
+&nbsp;<br>
+Deallocated&nbsp;memory&nbsp;inside&nbsp;the&nbsp;QueryResult&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;'qrs'&nbsp;returned&nbsp;from<br>
+query_result().&nbsp;It&nbsp;is&nbsp;not&nbsp;necessary&nbsp;to&nbsp;call&nbsp;this&nbsp;method&nbsp;as&nbsp;deallocation<br>
+will&nbsp;be&nbsp;done&nbsp;when&nbsp;the&nbsp;Python&nbsp;library&nbsp;garbage&nbsp;collects&nbsp;the&nbsp;QueryResult<br>
+<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-safe_create"><strong>safe_create</strong></a>(self, th, path)</dt><dd><tt>Safe&nbsp;version&nbsp;of&nbsp;create.<br>
+&nbsp;<br>
+Create&nbsp;a&nbsp;new&nbsp;list&nbsp;entry,&nbsp;a&nbsp;presence&nbsp;container,&nbsp;or&nbsp;a&nbsp;leaf&nbsp;of<br>
+type&nbsp;empty&nbsp;in&nbsp;the&nbsp;data&nbsp;tree&nbsp;-&nbsp;if&nbsp;it&nbsp;doesn't&nbsp;already&nbsp;exist.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-safe_delete"><strong>safe_delete</strong></a>(self, th, path)</dt><dd><tt>Safe&nbsp;version&nbsp;of&nbsp;delete.<br>
+&nbsp;<br>
+Delete&nbsp;an&nbsp;existing&nbsp;list&nbsp;entry,&nbsp;a&nbsp;presence&nbsp;container,&nbsp;or&nbsp;an<br>
+optional&nbsp;leaf&nbsp;and&nbsp;all&nbsp;its&nbsp;children&nbsp;(if&nbsp;any)&nbsp;from&nbsp;the&nbsp;data<br>
+tree.&nbsp;If&nbsp;it&nbsp;exists.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-safe_get_elem"><strong>safe_get_elem</strong></a>(self, th, path)</dt><dd><tt>Safe&nbsp;version&nbsp;of&nbsp;get_elem.<br>
+&nbsp;<br>
+Read&nbsp;the&nbsp;element&nbsp;at&nbsp;'path',&nbsp;returns&nbsp;'None'&nbsp;if&nbsp;it&nbsp;doesn't<br>
+exist.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-safe_get_object"><strong>safe_get_object</strong></a>(self, th, n, path)</dt><dd><tt>Safe&nbsp;version&nbsp;of&nbsp;get_object.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;reads&nbsp;at&nbsp;most&nbsp;'n'&nbsp;values&nbsp;from&nbsp;the&nbsp;list&nbsp;entry&nbsp;or<br>
+container&nbsp;specified&nbsp;by&nbsp;the&nbsp;'path'.&nbsp;Returns&nbsp;'None'&nbsp;the&nbsp;path&nbsp;is<br>
+empty.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-set_elem"><strong>set_elem</strong></a>(self, th, value, path)</dt><dd><tt>Set&nbsp;the&nbsp;node&nbsp;at&nbsp;'path'&nbsp;to&nbsp;'value'.<br>
+&nbsp;<br>
+If&nbsp;'value'&nbsp;is&nbsp;not&nbsp;of&nbsp;type&nbsp;Value&nbsp;it&nbsp;will&nbsp;be&nbsp;converted&nbsp;to&nbsp;a&nbsp;string<br>
+before&nbsp;calling&nbsp;set_elem2()&nbsp;under&nbsp;the&nbsp;hood.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_apply_template"><strong>shared_apply_template</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;<a href="#Maapi-apply_template">apply_template</a>().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_copy_tree"><strong>shared_copy_tree</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;copy_tree().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_create"><strong>shared_create</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;create().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_insert"><strong>shared_insert</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;insert().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_set_elem"><strong>shared_set_elem</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;<a href="#Maapi-set_elem">set_elem</a>().<br>
+&nbsp;<br>
+If&nbsp;'value'&nbsp;is&nbsp;not&nbsp;of&nbsp;type&nbsp;Value&nbsp;it&nbsp;will&nbsp;be&nbsp;converted&nbsp;to&nbsp;a&nbsp;string<br>
+before&nbsp;calling&nbsp;shared_set_elem2()&nbsp;under&nbsp;the&nbsp;hood.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-shared_set_values"><strong>shared_set_values</strong></a>(*args, **kwargs)</dt><dd><tt>FASTMAP&nbsp;version&nbsp;of&nbsp;set_values().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-start_read_trans"><strong>start_read_trans</strong></a>(self, db<font color="#909090">=2</font>, usid<font color="#909090">=0</font>, flags<font color="#909090">=0</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Start&nbsp;a&nbsp;read&nbsp;transaction.<br>
+&nbsp;<br>
+For&nbsp;details&nbsp;see&nbsp;<a href="#Maapi-start_trans">start_trans</a>().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-start_trans"><strong>start_trans</strong></a>(self, rw, db<font color="#909090">=2</font>, usid<font color="#909090">=0</font>, flags<font color="#909090">=0</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Start&nbsp;a&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;'db'.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;starts&nbsp;a&nbsp;new&nbsp;a&nbsp;new&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;given<br>
+data&nbsp;store.<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;<a href="#Transaction">Transaction</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-start_trans_in_trans"><strong>start_trans_in_trans</strong></a>(self, th, readwrite, usid<font color="#909090">=0</font>)</dt><dd><tt>Start&nbsp;a&nbsp;new&nbsp;transaction&nbsp;within&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;start&nbsp;a&nbsp;transaction&nbsp;with&nbsp;another<br>
+transaction&nbsp;as&nbsp;backend,&nbsp;instead&nbsp;of&nbsp;an&nbsp;actual&nbsp;data&nbsp;store.&nbsp;This&nbsp;can&nbsp;be<br>
+useful&nbsp;if&nbsp;we&nbsp;want&nbsp;to&nbsp;make&nbsp;a&nbsp;set&nbsp;of&nbsp;related&nbsp;changes,&nbsp;and&nbsp;then&nbsp;either<br>
+apply&nbsp;or&nbsp;discard&nbsp;them&nbsp;all&nbsp;based&nbsp;on&nbsp;some&nbsp;criterion,&nbsp;while&nbsp;other&nbsp;changes<br>
+remain&nbsp;unaffected.&nbsp;The&nbsp;thandle&nbsp;identifies&nbsp;the&nbsp;backend&nbsp;transaction&nbsp;to<br>
+use.&nbsp;If&nbsp;'usid'&nbsp;is&nbsp;0,&nbsp;the&nbsp;transaction&nbsp;will&nbsp;be&nbsp;started&nbsp;within&nbsp;the&nbsp;user<br>
+session&nbsp;associated&nbsp;with&nbsp;the&nbsp;MAAPI&nbsp;socket,&nbsp;otherwise&nbsp;it&nbsp;will&nbsp;be&nbsp;started<br>
+within&nbsp;the&nbsp;user&nbsp;session&nbsp;given&nbsp;by&nbsp;usid.&nbsp;If&nbsp;we&nbsp;call&nbsp;apply()&nbsp;on&nbsp;this<br>
+"transaction&nbsp;in&nbsp;a&nbsp;transaction"&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;the&nbsp;changes&nbsp;(if&nbsp;any)&nbsp;will&nbsp;be<br>
+applied&nbsp;to&nbsp;the&nbsp;backend&nbsp;transaction.&nbsp;To&nbsp;discard&nbsp;the&nbsp;changes,&nbsp;call<br>
+finish()&nbsp;without&nbsp;calling&nbsp;apply()&nbsp;first.<br>
+&nbsp;<br>
+A&nbsp;new&nbsp;<a href="#Transaction">Transaction</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-start_user_session"><strong>start_user_session</strong></a>(self, user, context, groups<font color="#909090">=[]</font>, src_ip<font color="#909090">='127.0.0.1'</font>, src_port<font color="#909090">=0</font>, proto<font color="#909090">=1</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Start&nbsp;a&nbsp;new&nbsp;user&nbsp;session.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;gives&nbsp;some&nbsp;resonable&nbsp;defaults.</tt></dd></dl>
+
+<dl><dt><a name="Maapi-start_write_trans"><strong>start_write_trans</strong></a>(self, db<font color="#909090">=2</font>, usid<font color="#909090">=0</font>, flags<font color="#909090">=0</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Start&nbsp;a&nbsp;write&nbsp;transaction.<br>
+&nbsp;<br>
+For&nbsp;details&nbsp;see&nbsp;<a href="#Maapi-start_trans">start_trans</a>().</tt></dd></dl>
+
+<dl><dt><a name="Maapi-write_service_log_entry"><strong>write_service_log_entry</strong></a>(*args, **kwargs)</dt><dd><tt>Write&nbsp;service&nbsp;log&nbsp;entries.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;write&nbsp;service&nbsp;log&nbsp;entries&nbsp;from<br>
+FASTMAP&nbsp;code.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Session">class <strong>Session</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Encapsulate&nbsp;a&nbsp;MAAPI&nbsp;user&nbsp;session.<br>
+&nbsp;<br>
+Context&nbsp;manager&nbsp;for&nbsp;user&nbsp;sessions.&nbsp;This&nbsp;class&nbsp;makes&nbsp;is&nbsp;easy&nbsp;to&nbsp;use<br>
+a&nbsp;single&nbsp;<a href="#Maapi">Maapi</a>&nbsp;connection&nbsp;and&nbsp;switch&nbsp;user&nbsp;session&nbsp;along&nbsp;the&nbsp;way.<br>
+&nbsp;<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#Maapi">Maapi</a>()&nbsp;as&nbsp;m:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;user,&nbsp;context,&nbsp;device&nbsp;in&nbsp;devlist:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#Session">Session</a>(m,&nbsp;user,&nbsp;context):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;m.start_write_trans()&nbsp;as&nbsp;t:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;do&nbsp;something&nbsp;using&nbsp;the&nbsp;correct&nbsp;user&nbsp;session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.apply()<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Session-__enter__"><strong>__enter__</strong></a>(self)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Session-__exit__"><strong>__exit__</strong></a>(self, exc_type, exc_value, tb)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Session-__init__"><strong>__init__</strong></a>(self, maapi, user, context, groups<font color="#909090">=[]</font>, src_ip<font color="#909090">='127.0.0.1'</font>, src_port<font color="#909090">=0</font>, proto<font color="#909090">=1</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#Session">Session</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+'maapi'&nbsp;should&nbsp;be&nbsp;a&nbsp;<a href="#Maapi">Maapi</a>&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;For&nbsp;all&nbsp;other&nbsp;arguments&nbsp;see<br>
+<a href="#Maapi">Maapi</a>.start_user_session().</tt></dd></dl>
+
+<dl><dt><a name="Session-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;user&nbsp;session.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Transaction">class <strong>Transaction</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;that&nbsp;corresponds&nbsp;to&nbsp;a&nbsp;single&nbsp;MAAPI&nbsp;transaction.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Transaction-__dir__"><strong>__dir__</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;available&nbsp;methods&nbsp;in&nbsp;<a href="#Transaction">Transaction</a>.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-__enter__"><strong>__enter__</strong></a>(self)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-__exit__"><strong>__exit__</strong></a>(self, exc_type, exc_value, tb)</dt><dd><tt>Python&nbsp;magic&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-__getattr__"><strong>__getattr__</strong></a>(self, name)</dt><dd><tt>Python&nbsp;magic&nbsp;method.<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;will&nbsp;be&nbsp;called&nbsp;whenever&nbsp;an&nbsp;attribute&nbsp;not&nbsp;present&nbsp;here<br>
+is&nbsp;accessed.&nbsp;It&nbsp;will&nbsp;try&nbsp;to&nbsp;find&nbsp;a&nbsp;corresponding&nbsp;attribute&nbsp;in&nbsp;the&nbsp;<a href="#Maapi">Maapi</a><br>
+<a href="__builtin__.html#object">object</a>&nbsp;which&nbsp;takes&nbsp;a&nbsp;transaction&nbsp;handle&nbsp;as&nbsp;the&nbsp;second&nbsp;argument&nbsp;and<br>
+forward&nbsp;the&nbsp;call&nbsp;there.<br>
+&nbsp;<br>
+Example&nbsp;(pseudo&nbsp;code):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;ncs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;high-level&nbsp;module<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;_ncs&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;low-level&nbsp;module<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;maapi&nbsp;=&nbsp;ncs.maapi.<a href="#Maapi">Maapi</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trans&nbsp;=&nbsp;maapi.start_read_trans()<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Now,&nbsp;these&nbsp;three&nbsp;calls&nbsp;are&nbsp;equal:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;trans.get_elem('/path/to/leaf')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;maapi.get_elem(trans.th,&nbsp;'/path/to/leaf')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;_ncs.maapi.get_elem(maapi.msock,&nbsp;trans.th,&nbsp;'/path/to/leaf')</tt></dd></dl>
+
+<dl><dt><a name="Transaction-__init__"><strong>__init__</strong></a>(self, maapi, th<font color="#909090">=None</font>, rw<font color="#909090">=None</font>, db<font color="#909090">=2</font>, vendor<font color="#909090">=None</font>, product<font color="#909090">=None</font>, version<font color="#909090">=None</font>, client_id<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#Transaction">Transaction</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+When&nbsp;created&nbsp;one&nbsp;may&nbsp;access&nbsp;the&nbsp;maapi&nbsp;and&nbsp;th&nbsp;arguments&nbsp;like&nbsp;this:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trans&nbsp;=&nbsp;<a href="#Transaction">Transaction</a>(mymaapi,&nbsp;th=myth)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trans.maapi&nbsp;#&nbsp;the&nbsp;<a href="#Maapi">Maapi</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;trans.th&nbsp;#&nbsp;the&nbsp;transaction&nbsp;handle<br>
+&nbsp;<br>
+An&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;is&nbsp;also&nbsp;a&nbsp;context&nbsp;manager:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;<a href="#Transaction">Transaction</a>(mymaapi,&nbsp;th=myth)&nbsp;as&nbsp;trans:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;do&nbsp;something&nbsp;here...<br>
+&nbsp;<br>
+When&nbsp;exiting&nbsp;the&nbsp;with&nbsp;statement,&nbsp;<a href="#Transaction-finish">finish</a>()&nbsp;will&nbsp;be&nbsp;called.<br>
+&nbsp;<br>
+If&nbsp;'th'&nbsp;is&nbsp;left&nbsp;out&nbsp;(or&nbsp;None)&nbsp;a&nbsp;new&nbsp;transaction&nbsp;is&nbsp;started&nbsp;using<br>
+the&nbsp;'db'&nbsp;and&nbsp;'rw'&nbsp;arguments,&nbsp;otherwise&nbsp;'db'&nbsp;and&nbsp;'rw'&nbsp;are&nbsp;ignored.<br>
+&nbsp;<br>
+Arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;maapi&nbsp;--&nbsp;a&nbsp;<a href="#Maapi">Maapi</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;th&nbsp;--&nbsp;a&nbsp;transaction&nbsp;handle&nbsp;or&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;db&nbsp;--&nbsp;database<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rw&nbsp;--&nbsp;mode&nbsp;(READ&nbsp;or&nbsp;READ_WRITE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vendor&nbsp;--&nbsp;lock&nbsp;error&nbsp;information&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;product&nbsp;--&nbsp;lock&nbsp;error&nbsp;information&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;--&nbsp;lock&nbsp;error&nbsp;information&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;client_id&nbsp;--&nbsp;lock&nbsp;error&nbsp;information&nbsp;(optional)</tt></dd></dl>
+
+<dl><dt><a name="Transaction-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Get&nbsp;internal&nbsp;representation.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-abort"><strong>abort</strong></a>(self)</dt><dd><tt>Abort&nbsp;the&nbsp;transaction.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-apply"><strong>apply</strong></a>(self, keep_open<font color="#909090">=True</font>, flags<font color="#909090">=0</font>)</dt><dd><tt>Apply&nbsp;the&nbsp;transaction.<br>
+&nbsp;<br>
+Validates,&nbsp;prepares&nbsp;and&nbsp;eventually&nbsp;commits&nbsp;or&nbsp;aborts&nbsp;the<br>
+transaction.&nbsp;If&nbsp;the&nbsp;validation&nbsp;fails&nbsp;and&nbsp;the&nbsp;'keep_open'<br>
+argument&nbsp;is&nbsp;set&nbsp;to&nbsp;True&nbsp;(default),&nbsp;the&nbsp;transaction&nbsp;is&nbsp;left<br>
+open&nbsp;and&nbsp;the&nbsp;developer&nbsp;can&nbsp;react&nbsp;upon&nbsp;the&nbsp;validation&nbsp;errors.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-apply_with_result"><strong>apply_with_result</strong></a>(*args, **kwargs)</dt><dd><tt>Apply&nbsp;the&nbsp;transaction&nbsp;and&nbsp;return&nbsp;the&nbsp;result.<br>
+&nbsp;<br>
+Validates,&nbsp;prepares&nbsp;and&nbsp;eventually&nbsp;commits&nbsp;or&nbsp;aborts&nbsp;the<br>
+transaction.&nbsp;If&nbsp;the&nbsp;validation&nbsp;fails&nbsp;and&nbsp;the&nbsp;'keep_open'<br>
+argument&nbsp;is&nbsp;set&nbsp;to&nbsp;True&nbsp;(default),&nbsp;the&nbsp;transaction&nbsp;is&nbsp;left<br>
+open&nbsp;and&nbsp;the&nbsp;developer&nbsp;can&nbsp;react&nbsp;upon&nbsp;the&nbsp;validation&nbsp;errors.<br>
+&nbsp;<br>
+The&nbsp;'flags'&nbsp;argument&nbsp;represent&nbsp;commit&nbsp;parameters&nbsp;that&nbsp;are<br>
+bitwise&nbsp;ORed&nbsp;together.<br>
+&nbsp;<br>
+The&nbsp;'tag'&nbsp;argument&nbsp;is&nbsp;a&nbsp;user&nbsp;defined&nbsp;opaque&nbsp;tag&nbsp;attached&nbsp;to<br>
+the&nbsp;resulting&nbsp;queue&nbsp;item&nbsp;if&nbsp;using&nbsp;the&nbsp;COMMIT_NCS_COMMIT_QUEUE_ASYNC<br>
+or&nbsp;COMMIT_NCS_COMMIT_QUEUE_SYNC&nbsp;flag.&nbsp;The&nbsp;tag&nbsp;is&nbsp;present&nbsp;in&nbsp;all<br>
+notifications&nbsp;and&nbsp;events&nbsp;sent&nbsp;referencing&nbsp;the&nbsp;queue&nbsp;item.<br>
+&nbsp;<br>
+The&nbsp;'timeout'&nbsp;argument&nbsp;is&nbsp;in&nbsp;seconds.&nbsp;-1&nbsp;means&nbsp;infinity.<br>
+Only&nbsp;applicable&nbsp;if&nbsp;the&nbsp;COMMIT_NCS_COMMIT_QUEUE_SYNC&nbsp;flag<br>
+was&nbsp;set.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;configuration&nbsp;change&nbsp;for&nbsp;the&nbsp;participating&nbsp;devices&nbsp;has<br>
+been&nbsp;placed&nbsp;in&nbsp;the&nbsp;commit&nbsp;queue&nbsp;or&nbsp;the&nbsp;transaction&nbsp;is&nbsp;a&nbsp;dry-run<br>
+the&nbsp;result&nbsp;will&nbsp;be&nbsp;an&nbsp;array&nbsp;of&nbsp;TagValue&nbsp;objects.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-commit"><strong>commit</strong></a>(self)</dt><dd><tt>Commit&nbsp;the&nbsp;transaction.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-finish"><strong>finish</strong></a>(self)</dt><dd><tt>Finish&nbsp;the&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;will&nbsp;finish&nbsp;the&nbsp;transaction.&nbsp;If&nbsp;the&nbsp;transaction&nbsp;is&nbsp;implemented<br>
+by&nbsp;an&nbsp;external&nbsp;database,&nbsp;this&nbsp;will&nbsp;invoke&nbsp;the&nbsp;<a href="#Transaction-finish">finish</a>()&nbsp;callback.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-prepare"><strong>prepare</strong></a>(self, flags<font color="#909090">=0</font>)</dt><dd><tt>Prepare&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;called&nbsp;as&nbsp;first&nbsp;part&nbsp;of&nbsp;two-phase&nbsp;commit.&nbsp;After<br>
+this&nbsp;function&nbsp;has&nbsp;been&nbsp;called,&nbsp;<a href="#Transaction-commit">commit</a>()&nbsp;or&nbsp;<a href="#Transaction-abort">abort</a>()&nbsp;must&nbsp;be&nbsp;called.<br>
+&nbsp;<br>
+It&nbsp;will&nbsp;invoke&nbsp;the&nbsp;prepare&nbsp;callback&nbsp;in&nbsp;all&nbsp;participants&nbsp;in&nbsp;the<br>
+transaction.&nbsp;If&nbsp;all&nbsp;participants&nbsp;reply&nbsp;with&nbsp;OK,&nbsp;the&nbsp;second&nbsp;phase&nbsp;of<br>
+the&nbsp;two-phase&nbsp;commit&nbsp;procedure&nbsp;is&nbsp;commenced.</tt></dd></dl>
+
+<dl><dt><a name="Transaction-validate"><strong>validate</strong></a>(self, unlock, forcevalidation<font color="#909090">=False</font>)</dt><dd><tt>Validate&nbsp;the&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;validates&nbsp;all&nbsp;data&nbsp;written&nbsp;in&nbsp;the&nbsp;transaction.&nbsp;This<br>
+includes&nbsp;all&nbsp;data&nbsp;model&nbsp;constraints&nbsp;and&nbsp;all&nbsp;defined&nbsp;semantic<br>
+validation,&nbsp;i.e.&nbsp;user&nbsp;programs&nbsp;that&nbsp;have&nbsp;registered&nbsp;functions&nbsp;under<br>
+validation&nbsp;points.<br>
+&nbsp;<br>
+If&nbsp;'unlock'&nbsp;is&nbsp;True,&nbsp;the&nbsp;transaction&nbsp;is&nbsp;open&nbsp;for&nbsp;further&nbsp;editing&nbsp;even<br>
+if&nbsp;validation&nbsp;succeeds.&nbsp;If&nbsp;'unlock'&nbsp;is&nbsp;False&nbsp;and&nbsp;the&nbsp;function&nbsp;succeeds<br>
+next&nbsp;function&nbsp;to&nbsp;be&nbsp;called&nbsp;MUST&nbsp;be&nbsp;<a href="#Transaction-prepare">prepare</a>()&nbsp;or&nbsp;<a href="#Transaction-finish">finish</a>().<br>
+&nbsp;<br>
+'unlock&nbsp;=&nbsp;True'&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;implement&nbsp;a&nbsp;'validate'&nbsp;command&nbsp;which<br>
+can&nbsp;be&nbsp;given&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;an&nbsp;editing&nbsp;session.&nbsp;The&nbsp;first&nbsp;thing&nbsp;that<br>
+happens&nbsp;is&nbsp;that&nbsp;a&nbsp;lock&nbsp;is&nbsp;set.&nbsp;If&nbsp;'unlock'&nbsp;==&nbsp;False,&nbsp;the&nbsp;lock&nbsp;is<br>
+released&nbsp;on&nbsp;success.&nbsp;The&nbsp;lock&nbsp;is&nbsp;always&nbsp;released&nbsp;on&nbsp;failure.<br>
+&nbsp;<br>
+The&nbsp;'forcevalidation'&nbsp;argument&nbsp;should&nbsp;normally&nbsp;be&nbsp;False.&nbsp;It&nbsp;has&nbsp;no<br>
+effect&nbsp;for&nbsp;a&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;running&nbsp;or&nbsp;startup&nbsp;data&nbsp;stores,<br>
+validation&nbsp;is&nbsp;always&nbsp;performed.&nbsp;For&nbsp;a&nbsp;transaction&nbsp;towards&nbsp;the<br>
+candidate&nbsp;data&nbsp;store,&nbsp;validation&nbsp;will&nbsp;not&nbsp;be&nbsp;done&nbsp;unless<br>
+'forcevalidation'&nbsp;is&nbsp;True.&nbsp;Avoiding&nbsp;this&nbsp;validation&nbsp;is&nbsp;preferable&nbsp;if<br>
+we&nbsp;are&nbsp;going&nbsp;to&nbsp;commit&nbsp;the&nbsp;candidate&nbsp;to&nbsp;running,&nbsp;since&nbsp;otherwise&nbsp;the<br>
+validation&nbsp;will&nbsp;be&nbsp;done&nbsp;twice.&nbsp;However&nbsp;if&nbsp;we&nbsp;are&nbsp;implementing&nbsp;a<br>
+'validate'&nbsp;command,&nbsp;we&nbsp;should&nbsp;give&nbsp;a&nbsp;True&nbsp;value&nbsp;for&nbsp;'forcevalidation'.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-StringIO"><strong>StringIO</strong></a>(...)</dt><dd><tt><a href="#-StringIO">StringIO</a>([s])&nbsp;--&nbsp;Return&nbsp;a&nbsp;StringIO-like&nbsp;stream&nbsp;for&nbsp;reading&nbsp;or&nbsp;writing</tt></dd></dl>
+ <dl><dt><a name="-connect"><strong>connect</strong></a>(ip<font color="#909090">='127.0.0.1'</font>, port<font color="#909090">=4565</font>, path<font color="#909090">=None</font>)</dt><dd><tt>Convenience&nbsp;function&nbsp;for&nbsp;connecting&nbsp;to&nbsp;ConfD/NCS.<br>
+&nbsp;<br>
+The&nbsp;'ip'&nbsp;and&nbsp;'port'&nbsp;arguments&nbsp;are&nbsp;ignored&nbsp;if&nbsp;path&nbsp;is&nbsp;specified.</tt></dd></dl>
+ <dl><dt><a name="-single_read_trans"><strong>single_read_trans</strong></a>(*args, **kwds)</dt><dd><tt>Context&nbsp;manager&nbsp;for&nbsp;a&nbsp;single&nbsp;READ&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;connects&nbsp;to&nbsp;ConfD/NCS,&nbsp;starts&nbsp;a&nbsp;user&nbsp;session&nbsp;and&nbsp;finally<br>
+starts&nbsp;a&nbsp;new&nbsp;READ&nbsp;transaction.<br>
+&nbsp;<br>
+Signature:<br>
+def&nbsp;<a href="#-single_read_trans">single_read_trans</a>(user,&nbsp;context,&nbsp;groups=[],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db=RUNNING,&nbsp;ip='127.0.0.1',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port=&lt;CONFD-OR-NCS-PORT&gt;,&nbsp;path=None,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;src_ip='127.0.0.1',&nbsp;src_port=0,&nbsp;proto=PROTO_TCP,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vendor=None,&nbsp;product=None,&nbsp;version=None,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client_id=_mk_client_id()):<br>
+&nbsp;<br>
+For&nbsp;argument&nbsp;db&nbsp;see&nbsp;<a href="#Maapi">Maapi</a>.start_trans().&nbsp;For&nbsp;arguments&nbsp;user,<br>
+context,&nbsp;groups,&nbsp;src_ip,&nbsp;src_port,&nbsp;proto,&nbsp;vendor,&nbsp;product,&nbsp;version&nbsp;and<br>
+client_id&nbsp;see&nbsp;<a href="#Maapi">Maapi</a>.start_user_session().<br>
+For&nbsp;arguments&nbsp;ip,&nbsp;port&nbsp;and&nbsp;path&nbsp;see&nbsp;<a href="#-connect">connect</a>().</tt></dd></dl>
+ <dl><dt><a name="-single_write_trans"><strong>single_write_trans</strong></a>(*args, **kwds)</dt><dd><tt>Context&nbsp;manager&nbsp;for&nbsp;a&nbsp;single&nbsp;READ/WRITE&nbsp;transaction.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;connects&nbsp;to&nbsp;ConfD/NCS,&nbsp;starts&nbsp;a&nbsp;user&nbsp;session&nbsp;and&nbsp;finally<br>
+starts&nbsp;a&nbsp;new&nbsp;READ/WRITE&nbsp;transaction.<br>
+&nbsp;<br>
+Signature:<br>
+def&nbsp;<a href="#-single_write_trans">single_write_trans</a>(user,&nbsp;context,&nbsp;groups=[],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db=RUNNING,&nbsp;ip='127.0.0.1',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port=&lt;CONFD-OR-NCS-PORT&gt;,&nbsp;path=None,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;src_ip='127.0.0.1',&nbsp;src_port=0,&nbsp;proto=PROTO_TCP,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vendor=None,&nbsp;product=None,&nbsp;version=None,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client_id=_mk_client_id()):<br>
+&nbsp;<br>
+For&nbsp;argument&nbsp;db&nbsp;see&nbsp;<a href="#Maapi">Maapi</a>.start_trans().&nbsp;For&nbsp;arguments&nbsp;user,<br>
+context,&nbsp;groups,&nbsp;src_ip,&nbsp;src_port,&nbsp;proto,&nbsp;vendor,&nbsp;product,&nbsp;version&nbsp;and<br>
+client_id&nbsp;see&nbsp;<a href="#Maapi">Maapi</a>.start_user_session().<br>
+For&nbsp;arguments&nbsp;ip,&nbsp;port&nbsp;and&nbsp;path&nbsp;see&nbsp;<a href="#-connect">connect</a>().</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>CMD_NO_AAA</strong> = 4<br>
+<strong>CMD_NO_FULLPATH</strong> = 1<br>
+<strong>CMD_NO_HIDDEN</strong> = 2<br>
+<strong>CONFIG_AUTOCOMMIT</strong> = 8192<br>
+<strong>CONFIG_C</strong> = 4<br>
+<strong>CONFIG_CONTINUE_ON_ERROR</strong> = 16384<br>
+<strong>CONFIG_C_IOS</strong> = 32<br>
+<strong>CONFIG_HIDE_ALL</strong> = 2048<br>
+<strong>CONFIG_J</strong> = 2<br>
+<strong>CONFIG_JSON</strong> = 131072<br>
+<strong>CONFIG_MERGE</strong> = 64<br>
+<strong>CONFIG_NO_PARENTS</strong> = 524288<br>
+<strong>CONFIG_OPER_ONLY</strong> = 1048576<br>
+<strong>CONFIG_REPLACE</strong> = 1024<br>
+<strong>CONFIG_SHOW_DEFAULTS</strong> = 16<br>
+<strong>CONFIG_SUPPRESS_ERRORS</strong> = 32768<br>
+<strong>CONFIG_UNHIDE_ALL</strong> = 4096<br>
+<strong>CONFIG_WITH_DEFAULTS</strong> = 8<br>
+<strong>CONFIG_WITH_OPER</strong> = 128<br>
+<strong>CONFIG_WITH_SERVICE_META</strong> = 262144<br>
+<strong>CONFIG_XML</strong> = 1<br>
+<strong>CONFIG_XML_LOAD_LAX</strong> = 65536<br>
+<strong>CONFIG_XML_PRETTY</strong> = 512<br>
+<strong>CONFIG_XPATH</strong> = 256<br>
+<strong>C_SNMP_COL_ROW</strong> = 3<br>
+<strong>C_SNMP_OID</strong> = 2<br>
+<strong>C_SNMP_VARIABLE</strong> = 1<br>
+<strong>DEL_ALL</strong> = 2<br>
+<strong>DEL_EXPORTED</strong> = 3<br>
+<strong>DEL_SAFE</strong> = 1<br>
+<strong>ECHO</strong> = 1<br>
+<strong>FLAG_CONFIG_CACHE_ONLY</strong> = 32<br>
+<strong>FLAG_CONFIG_ONLY</strong> = 4<br>
+<strong>FLAG_DELAYED_WHEN</strong> = 64<br>
+<strong>FLAG_DELETE</strong> = 2<br>
+<strong>FLAG_EMIT_PARENTS</strong> = 1<br>
+<strong>FLAG_HIDE_INACTIVE</strong> = 8<br>
+<strong>FLAG_HINT_BULK</strong> = 1<br>
+<strong>FLAG_NON_RECURSIVE</strong> = 4<br>
+<strong>FLAG_NO_CONFIG_CACHE</strong> = 16<br>
+<strong>FLAG_NO_DEFAULTS</strong> = 2<br>
+<strong>MOVE_AFTER</strong> = 3<br>
+<strong>MOVE_BEFORE</strong> = 2<br>
+<strong>MOVE_FIRST</strong> = 1<br>
+<strong>MOVE_LAST</strong> = 4<br>
+<strong>NOECHO</strong> = 0<br>
+<strong>PRODUCT</strong> = 'ConfD'<br>
+<strong>SHARED_NO_BACKPOINTER</strong> = 1<br>
+<strong>UPGRADE_KILL_ON_TIMEOUT</strong> = 1<br>
+<strong>absolute_import</strong> = _Feature((2, 5, 0, 'alpha', 1), (3, 0, 0, 'alpha', 0), 16384)</td></tr></table>
+</body></html>

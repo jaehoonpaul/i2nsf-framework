@@ -1,0 +1,10 @@
+<interfaces xmlns="http://tail-f.com/ns/test/notif"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <interface>
+    <ifIndex>11</ifIndex>
+    <desc>Interface eth0</desc>
+  </interface>
+  <interface nc:operation="delete">
+    <ifIndex>12</ifIndex>
+  </interface>
+</interfaces>

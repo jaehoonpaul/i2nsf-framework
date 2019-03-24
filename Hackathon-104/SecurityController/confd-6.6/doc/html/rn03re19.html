@@ -1,0 +1,919 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>tailf_yang_cli_extensions</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn03.html" title="ConfD man-pages, Volume 5"><link rel="prev" href="rn03re18.html" title="mib_annotations"><link rel="next" href="rn03re20.html" title="tailf_yang_extensions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">tailf_yang_cli_extensions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn03re18.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 5</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn03re20.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.5.tailf_yang_cli_extensions"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.5.tailf_yang_cli_extensions.name"></a><h2>Name</h2><p>tailf_yang_cli extensions &#8212; Tail-f YANG CLI extensions</p></div><div class="refsynopsisdiv"><a name="tailf-cli-extensions.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tailf:cli-add-mode</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-allow-join-with-key</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-allow-join-with-value</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-allow-key-abbreviation</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-allow-range</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-allow-wildcard</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-autowizard</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-boolean-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-break-sequence-commands</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-case-insensitive</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-case-sensitive</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-column-align</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-column-stats</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-column-width</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-compact-stats</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-compact-syntax</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-completion-actionpoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-configure-mode</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-custom-error</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-custom-range</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-custom-range-actionpoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-custom-range-enumerator</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-delayed-auto-commit</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-delete-container-on-delete</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-delete-when-empty</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-after</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-before</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-create-after</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-create-before</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-delete-after</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-delete-before</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-dependency</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-modify-after</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-modify-before</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-set-after</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-diff-set-before</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-disabled-info</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-disallow-value</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-display-empty-config</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-display-separated</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-drop-node-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-embed-no-on-delete</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-enforce-table</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-exit-command</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-explicit-exit</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-expose-key-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-expose-ns-prefix</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-flat-list-syntax</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-flatten-container</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-full-command</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-full-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-full-show-path</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-hide-in-submode</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-ignore-modified</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-incomplete-command</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-incomplete-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-incomplete-show-path</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-instance-info-leafs</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-key-format</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-list-syntax</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-min-column-width</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-mode-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-mode-name-actionpoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-mount-point</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-multi-line-prompt</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-multi-value</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-multi-word-key</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-no-key-completion</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-no-keyword</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-no-match-completion</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-no-name-on-delete</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-no-value-on-delete</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-only-in-autowizard</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-oper-info</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-operational-mode</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-optional-in-sequence</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-prefix-key</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-preformatted</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-range-delimiters</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-range-list-syntax</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-recursive-delete</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-remove-before-change</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-replace-all</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-reset-container</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-run-template</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-run-template-enter</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-run-template-footer</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-run-template-legend</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-sequence-commands</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-config</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-long-obu-diffs</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-obu-comments</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-order-tag</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-order-taglist</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-template</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-template-enter</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-template-footer</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-template-legend</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-show-with-default</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-strict-leafref</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-key-abbreviation</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-key-sort</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-list-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-mode</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-quotes</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-range</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-shortenabled</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-show-conf-path</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-show-match</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-show-path</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-silent-no</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-table</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-validation-warning-prompt</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-warning</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-suppress-wildcard</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-table-footer</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-table-legend</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-trim-default</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cli-value-display-template</code> </p></div></div><div class="refsect1"><a name="man.5.tailf_yang_xli_extensions.description"></a><h2>DESCRIPTION</h2><p>
+      This manpage describes all the Tail-f CLI extension statements.
+    </p><p>
+      The YANG source file
+      <code class="filename">$CONFD_DIR/src/confd/yang/tailf-cli-extensions.yang</code>
+      
+      gives the exact YANG syntax for all Tail-f YANG CLI extension
+      statements - using the YANG language itself.
+    </p><p>
+      Most of the concepts implemented by the extensions listed below
+      are described in the User Guide.
+    </p></div><div class="refsect1"><a name="tailf-cli-extensions.yang_statements"></a><h2>YANG STATEMENTS</h2><div class="refsect2"><a name="d5e43674"></a><h3>tailf:cli-add-mode</h3><p>Creates a mode of the container.</p><p>Can be used in config nodes only.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-add-mode</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43687"></a><h3>tailf:cli-allow-join-with-key</h3><p>Indicates that the list name may be written together
+with the first key, without requiring a whitespace
+in between, ie allowing both
+     interface ethernet1/1
+and
+     interface ethernet 1/1</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-allow-join-with-key</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-display-joined</em></span> Specifies that the joined version should be used when displaying
+the configuration in C- and I- mode.</p></div><div class="refsect2"><a name="d5e43699"></a><h3>tailf:cli-allow-join-with-value</h3><p>Indicates that the leaf name may be written together
+with the value, without requiring a whitespace
+in between, ie allowing both
+     interface ethernet1/1
+and
+     interface ethernet 1/1</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-allow-join-with-value</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-display-joined</em></span> Specifies that the joined version should be used when displaying
+the configuration in C- and I- mode.</p></div><div class="refsect2"><a name="d5e43711"></a><h3>tailf:cli-allow-key-abbreviation</h3><p>Key values can be abbreviated.</p><p>In the J-style CLI this is relevant when using the commands
+'delete' and 'edit'.</p><p>In the I- and C-style CLIs this is relevant when using the
+commands 'no', 'show configuration' and for commands to enter
+submodes.</p><p>See also /confdConfig/cli/allowAbbrevKeys in confd.conf(5).</p><p>
+                The <span class="emphasis"><em>cli-allow-key-abbreviation</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43722"></a><h3>tailf:cli-allow-range</h3><p>Means that the non-integer key should allow range expressions.</p><p>Can be used in key leafs only.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-allow-range</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43732"></a><h3>tailf:cli-allow-wildcard</h3><p>Means that the list allows wildcard expressions in the 'show' pattern.</p><p>See also /confdConfig/cli/allowWildcard in confd.conf(5).</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-allow-wildcard</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43742"></a><h3>tailf:cli-autowizard</h3><p>Specifies that the autowizard should include this leaf even
+if the leaf is optional.</p><p>One use case is when implementing pre-configuration of devices.
+A config false node can be defined for showing if the
+configuration is active or not (preconfigured).</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-autowizard</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43752"></a><h3>tailf:cli-boolean-no</h3><p>Specifies that a leaf of type boolean should be displayed as
+'&lt;leafname&gt;' if set to true, and 'no &lt;leafname&gt;' if set to
+false.</p><p>Cannot be used in conjunction with tailf:cli-hide-in-submode
+or tailf:cli-compact-syntax.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-boolean-no</em></span> statement can be used in: <span class="emphasis"><em>typedef</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-reversed</em></span> Specified that true should be displayed as 'no &lt;name&gt;' and
+false as 'name'.</p><p>Used in I- and C-style CLIs.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43769"></a><h3>tailf:cli-break-sequence-commands</h3><p>Specifies that previous cli-sequence-command declaration should
+stop at this point. Only applicable when a cli-sequence-command
+declaration has been used in the parent container.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-break-sequence-commands</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43784"></a><h3>tailf:cli-case-insensitive</h3><p>Specifies that node is case-insensitive.  If applied to a container or
+a list, any nodes below will also be case-insensitive.</p><p>Node names are discovered without care of the case. Also affect
+matching of key values in lists. However it doesn't affect the
+storing of a leaf value. E.g. a modification of a leaf value from
+upper case to lower case is still considered a modification of
+data.</p><p>Note that this will override any case-insensitivity settings
+configured in confd.conf</p><p>
+                The <span class="emphasis"><em>cli-case-insensitive</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, and <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e43794"></a><h3>tailf:cli-case-sensitive</h3><p>Specifies that this node is case-sensitive.
+If applied to a container or a list, any nodes below will
+also be case-sensitive.</p><p>This negates the cli-case-insensitive extension (see below).</p><p>Note that this will override any case-sensitivity settings
+configured in confd.conf</p><p>
+                The <span class="emphasis"><em>cli-case-sensitive</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, and <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e43804"></a><h3>tailf:cli-column-align <span class="emphasis"><em>value</em></span></h3><p>Specifies the alignment of the data in the column in the
+auto-rendered tables.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-column-align</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43815"></a><h3>tailf:cli-column-stats</h3><p>Display leafs in the container as columns, i.e., do not repeat
+the name of the container on each line, but instead indent each
+leaf under the container.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-column-stats</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p></div><div class="refsect2"><a name="d5e43824"></a><h3>tailf:cli-column-width <span class="emphasis"><em>value</em></span></h3><p>Set a fixed width for the column in the auto-rendered tables.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-column-width</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43835"></a><h3>tailf:cli-compact-stats</h3><p>Instructs the CLI engine to use the compact representation for this
+node.  The compact representation means that all leaf elements
+are shown on a single line.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-compact-stats</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-wrap</em></span> If present, the line will be wrapped at screen width.</p><p><span class="emphasis"><em>tailf:cli-width</em></span> Specifies a fixed terminal width to use before wrapping line. It is
+only used when tailf:cli-wrap is present.  If a width is not
+specified the line is wrapped when the terminal width is
+reached.</p><p><span class="emphasis"><em>tailf:cli-delimiter</em></span> Specifies a string to print between the leaf name and its value
+when displaying leaf values.</p><p><span class="emphasis"><em>tailf:cli-prettify</em></span> If present, dashes (-) and underscores (_) in leaf names are replaced
+with spaces.</p><p><span class="emphasis"><em>tailf:cli-spacer</em></span> Specifies a string to print between the nodes.</p></div><div class="refsect2"><a name="d5e43856"></a><h3>tailf:cli-compact-syntax</h3><p>Instructs the CLI engine to use the compact representation for this
+node in the 'show running-configuration' command.  The compact
+representation means that all leaf elements are shown on a
+single line.</p><p>Cannot be used in conjunction with tailf:cli-boolean-no.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-compact-syntax</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43870"></a><h3>tailf:cli-completion-actionpoint <span class="emphasis"><em>value</em></span></h3><p>Specifies that completion for the leaf values is done through a
+callback function.</p><p>The argument is the name of an actionpoint, which must be
+implemented by custom code.  In the actionpoint, the completion()
+callback function will be invoked.  See confd_lib_dp(3) for details.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-completion-actionpoint</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-completion-id</em></span> Specifies a string which is passed to the callback when invoked.
+This makes it possible to use the same callback at several
+locations and still keep track of which point it is invoked
+from.</p></div><div class="refsect2"><a name="d5e43885"></a><h3>tailf:cli-configure-mode</h3><p>An action or rpc with this attribute will be available in
+configure mode, but not in operational mode.</p><p>The default is that the action or rpc is available in both
+configure and operational mode.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-configure-mode</em></span> statement can be used in: <span class="emphasis"><em>tailf:action</em></span> and <span class="emphasis"><em>rpc</em></span>.</p></div><div class="refsect2"><a name="d5e43894"></a><h3>tailf:cli-custom-error <span class="emphasis"><em>text</em></span></h3><p>This statement specifies a custom error message to be displayed
+when the user enters an invalid value.</p><p>
+                The <span class="emphasis"><em>cli-custom-error</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43903"></a><h3>tailf:cli-custom-range</h3><p>Specifies that the key should support ranges.  A type matching the
+range expression must be supplied.</p><p>Can be used in key leafs only.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-custom-range</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-range-type</em></span> This statement contains the name of a derived type, possibly
+with a prefix.  If no prefix is given, the type must be defined in
+the local module.  For example:</p><p> cli-range-type p:my-range-type;</p><p>All range expressions must match this type, and a valid key
+value must not match this type.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43920"></a><h3>tailf:cli-custom-range-actionpoint <span class="emphasis"><em>value</em></span></h3><p>Specifies that the list supports range expressions and that a custom
+function will be invoked to determine if an instance belong in
+the range or not. At least one key element needs a
+cli-custom-range statement.</p><p>The argument is the name of an actionpoint, which must be
+implemented by custom code.  In the actionpoint, the
+completion() callback function will be invoked.  See
+confd_lib_dp(3) for details.</p><p>When a range expression value which matches the type is given in
+the CLI, the CLI engine will invoke the callback with each
+existing list entry instance.  If the callback returns CONFD_OK,
+it matches the range expression, and if it returns CONFD_ERR, it
+doesn't match.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-custom-range-actionpoint</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-completion-id</em></span> Specifies a string which is passed to the callback when invoked.
+This makes it possible to use the same callback at several
+locations and still keep track of which point it is invoked
+from.</p><p><span class="emphasis"><em>tailf:cli-allow-caching</em></span> Allow caching of the evaluation results between different parent paths.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43939"></a><h3>tailf:cli-custom-range-enumerator <span class="emphasis"><em>value</em></span></h3><p>Specifies a callback to invoke to get an array of
+instances matching a regular expression. This is used
+when instances should be allowed to be created using
+a range expression in set.</p><p>The callback is not used for delete or show operations.</p><p>The callback is allowed to return a superset of all matching
+instances since the instances will be filtered using the
+range expression afterwards.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-custom-range-enumerator</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-completion-id</em></span> Specifies a string which is passed to the callback when invoked.
+This makes it possible to use the same callback at several
+locations and still keep track of which point it is invoked
+from.</p><p><span class="emphasis"><em>tailf:cli-allow-caching</em></span> Allow caching of the evaluation results between different parent paths.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e43958"></a><h3>tailf:cli-delayed-auto-commit</h3><p>Enables transactions while in a specific submode (or submode of that
+mode).  The modifications performed in that mode will not take effect
+until the user exits that submode.</p><p>Can be used in config nodes only.  If used in a container, the
+container must also have a tailf:cli-add-mode statement, and if
+used in a list, the list must not also have a
+tailf:cli-suppress-mode statement.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-delayed-auto-commit</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43969"></a><h3>tailf:cli-delete-container-on-delete</h3><p>Specifies that the parent container should be deleted when
+.      this leaf is deleted.</p><p>
+                The <span class="emphasis"><em>cli-delete-container-on-delete</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e43977"></a><h3>tailf:cli-delete-when-empty</h3><p>Instructs the CLI engine to delete the list when the last list
+instance is deleted'. Requires that cli-suppress-mode is set.</p><p>The behavior is recursive. If all optional leafs in a list
+instance are deleted the list instance itself is deleted. If
+that list instance happens to be the last list instance in a
+list it is also deleted. And so on. Used in I- and C-style
+CLIs.</p><p>
+                The <span class="emphasis"><em>cli-delete-when-empty</em></span> statement can be used in: <span class="emphasis"><em>list</em></span> and <span class="emphasis"><em>container</em></span>.</p></div><div class="refsect2"><a name="d5e43985"></a><h3>tailf:cli-diff-after <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any changes made to this node
+after any changes made to the target node(s).</p><p>Thus, the dependency will trigger when any changes
+(created, modified or deleted) has been made to this node
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-after</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44012"></a><h3>tailf:cli-diff-before <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any changes made to this node
+before any changes made to the target node(s).</p><p>Thus, the dependency will trigger when any changes
+(created, modified or deleted) has been made to this node
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-before</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44039"></a><h3>tailf:cli-diff-create-after <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any create operations made on this node
+after any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been created
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-create-after</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44066"></a><h3>tailf:cli-diff-create-before <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any create operations made on this node
+before any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been created
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-create-before</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44093"></a><h3>tailf:cli-diff-delete-after <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any delete operations made on this node
+after any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been deleted
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-delete-after</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44120"></a><h3>tailf:cli-diff-delete-before <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any delete operations made on this node
+before any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been deleted
+while any changes (created, modified or deleted) has been made
+to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-delete-before</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44147"></a><h3>tailf:cli-diff-dependency <span class="emphasis"><em>path</em></span></h3><p>Tells the 'show configuration' command, and the diff generator
+that this node depends on another node. When removing the node
+with this declaration, it should be removed before the node
+it depends on is removed, ie the declaration controlls the ordering
+of the commands in the 'show configuration' output.</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-dependency</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-trigger-on-set</em></span> Specify that the dependency should trigger on set/modify of
+       the target path, but deletion of the target will trigger the
+       current node to be placed in front of the target.</p><p>       The annotation can be used to get the diff behavior where
+       one leaf is first deleted before the other leaf is set.
+       For example, having the data model below:</p><p>        container X {
+          leaf A {
+            tailf:cli-diff-dependency "../B" {
+              tailf:cli-trigger-on-set;
+            }
+            type empty;
+          }
+          leaf B {
+            tailf:cli-diff-dependency "../A"  {
+              tailf:cli-trigger-on-set;
+            }
+            type empty;
+          }
+        }</p><p>       produces the following diffs when setting one leaf
+       and deleting the other</p><p>         no X A
+         X B</p><p>       and</p><p>         no X B
+         X A</p><p>       this can also be done with list instances, for example</p><p>         list a {
+           key id;</p><p>           leaf id {
+             tailf:cli-diff-dependency "/c[id=current()/../id]" {
+               tailf:cli-trigger-on-set;
+             }
+             type string;
+           }
+         }</p><p>         list c {
+           key id;
+           leaf id {
+             tailf:cli-diff-dependency "/a[id=current()/../id]" {
+               tailf:cli-trigger-on-set;
+             }
+             type string;
+           }
+         }</p><p>       we get</p><p>         no a foo
+         c foo
+         !</p><p>       and</p><p>         no c foo
+         a foo
+         !</p><p>       In the above case if we have the same id in list "a" and "c"
+       and we delete the instance in one list, and add it in the other,
+       then the deletion will always preceed the create.
+      </p><p><span class="emphasis"><em>tailf:cli-trigger-on-delete</em></span> This annotation can be used togeter with tailf:cli-trigger-on-set
+to also get the behavior that when deleting the target display
+changes to this node first. For exmaple:</p><p> container settings {
+   tailf:cli-add-mode;</p><p>   leaf opmode {
+     tailf:cli-no-value-on-delete;</p><p>     type enumeration {
+       enum nat;
+       enum transparent;
+     }
+   }</p><p>   leaf manageip {
+     when "../opmode = 'transparent'";
+     mandatory true;
+     tailf:cli-no-value-on-delete;
+     tailf:cli-diff-dependency '../opmode' {
+       tailf:cli-trigger-on-set;
+       tailf:cli-trigger-on-delete;
+     }</p><p>     type string;
+   }
+ }</p><p>What we are trying to achieve here is that if manageip is
+deleted, it should be displayed before opmode, but if we
+configure both opmode and manageip, we should display opmode
+first, ie get the diffs:</p><p>settings
+ opmode   transparent
+ manageip 1.1.1.1
+!</p><p>and</p><p>settings
+ no manageip
+ opmode nat
+!</p><p>and</p><p>settings
+ no manageip
+ no opmode
+!</p><p>The cli-trigger-on-set annotation will cause the 'no manageip'
+command to be displayed before setting opmode. The
+tailf:cli-trigger-on-delete will cause 'no manageip' to be
+placed before 'no opmode' when both are deleted.</p><p>In the first diff where both are created, opmode will come first
+due to the diff-dependency setting, regardless of the
+cli-trigger-on-delete and cli-trigger-on-set.
+</p><p><span class="emphasis"><em>tailf:cli-trigger-on-all</em></span> Specify that the dependency should always trigger. It is the
+same as placing one element before another in the data model.
+For example, given the data model:</p><p>container X {
+  leaf A {
+    tailf:cli-diff-dependency '../B' {
+      tailf:cli-trigger-on-all;
+    }
+    type empty;
+  }
+  leaf B {
+    type empty;
+  }
+}</p><p>We get the diffs</p><p>  X B
+  X A</p><p>and</p><p>  no X B
+  no X A
+</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44204"></a><h3>tailf:cli-diff-modify-after <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any modify operations made on this node
+after any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been modified
+(not created or deleted) while any changes (created, modified or deleted)
+has been made to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-modify-after</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44231"></a><h3>tailf:cli-diff-modify-before <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any modify operations made on this node
+before any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been modified
+(not created or deleted) while any changes (created, modified or deleted)
+has been made to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-modify-before</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44258"></a><h3>tailf:cli-diff-set-after <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any set operations (created or modified) made on this node
+after any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been set
+(created or modified) while any changes (created, modified or deleted)
+has been made to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-set-after</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44285"></a><h3>tailf:cli-diff-set-before <span class="emphasis"><em>path</em></span></h3><p>When displaying C-style configuration diffs,
+display any set operations (created or modified) made on this node
+before any changes made to the target node(s).</p><p>Thus, the dependency will trigger when this node has been set
+(created or modified) while any changes (created, modified or deleted)
+has been made to the target node(s).</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-diff-set-before</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:cli-when-target-set</em></span> Specify that the dependency should trigger when the target node(s)
+has been set (created or modified).
+Note; using this sub-statement is equivalent with using
+both tailf:cli-when-target-create and tailf:cli-when-target-modify</p><p><span class="emphasis"><em>tailf:cli-when-target-create</em></span> Specify that the dependency should trigger when the target node(s)
+has been created</p><p><span class="emphasis"><em>tailf:cli-when-target-modify</em></span> Specify that the dependency should trigger when the target node(s)
+has been modified (not created or deleted)</p><p><span class="emphasis"><em>tailf:cli-when-target-delete</em></span> Specify that the dependency should trigger when the target node(s)
+has been deleted</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44312"></a><h3>tailf:cli-disabled-info <span class="emphasis"><em>value</em></span></h3><p>Specifies an info string that will be used as a descriptive text for the
+value 'disable' (false) of boolean-typed leafs when the confd.conf(5)
+setting /confdConfig/cli/useShortEnabled is set to 'true'.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-disabled-info</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44322"></a><h3>tailf:cli-disallow-value <span class="emphasis"><em>value</em></span></h3><p>Specifies that a pattern for invalid values.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-disallow-value</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p></div><div class="refsect2"><a name="d5e44333"></a><h3>tailf:cli-display-empty-config</h3><p>Specifies that the node will be included when doing a 'show
+stats', even if it is a non-config node, provided
+that the list contains at least one non-config node.</p><p>Used in J-style CLI.</p><p>
+                The <span class="emphasis"><em>cli-display-empty-config</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44342"></a><h3>tailf:cli-display-separated</h3><p>Tells CLI engine to display this container as a separate
+line item even when it has children. Only applies to
+presence containers.</p><p>Applicable for optional containers in the C- and I- style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-display-separated</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44351"></a><h3>tailf:cli-drop-node-name</h3><p>Specifies that the name of a node is not present in the CLI.</p><p>If tailf:cli-drop-node-name is given on a child to a list node,
+we recommend that you also use tailf:cli-suppress-mode on that
+list node, otherwise the CLI will be very confusing.</p><p>For example, consider this data model, from the tailf-aaa module:</p><div class="informalexample"><pre class="programlisting">list alias {
+ key name;
+ leaf name {
+   type string;
+ }
+ leaf expansion {
+   type string;
+   mandatory true;
+   tailf:cli-drop-node-name;
+ }
+}</pre></div><p>If you type 'alias foo' in the CLI, you would end up in the
+'alias' submode.  But since the expansion is dropped, you would
+end up specifying the expansion value without typing any command.</p><p>If, on the other hand, the 'alias' list had a
+tailf:cli-suppress-mode statement, you would set an expansion
+'bar' by typing 'alias foo bar'.</p><p>tailf:cli-drop-node-name cannot be used inside tailf:action.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-drop-node-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44373"></a><h3>tailf:cli-embed-no-on-delete</h3><p>Embed no in front of the element name insead of at the
+beginning of the line.</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-embed-no-on-delete</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44385"></a><h3>tailf:cli-enforce-table</h3><p>Forces the generation of a table for a list element node regardless of
+whether the table will be too wide or not.  This applies to the
+tables generated by the auto-rendred show commands for non-config data.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-enforce-table</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44394"></a><h3>tailf:cli-exit-command <span class="emphasis"><em>value</em></span></h3><p>Tells the CLI to add an explicit exit-from-submode command.
+The tailf:info substatement can be used for adding a custom
+info text for the command.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-exit-command</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:info</em></span> </p></div><div class="refsect2"><a name="d5e44408"></a><h3>tailf:cli-explicit-exit</h3><p>Tells the CLI to add an explicit exit command when displaying
+the configuration. It will not be added if cli-exit-command
+is defined as well. The annotation is inherited by all
+sub-modes.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-explicit-exit</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p></div><div class="refsect2"><a name="d5e44418"></a><h3>tailf:cli-expose-key-name</h3><p>Force the user to enter the name of the key and display the
+key name when displaying the running-configuration.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-expose-key-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44427"></a><h3>tailf:cli-expose-ns-prefix</h3><p>When used force the CLI to display namespace prefix of all children.</p><p>
+                The <span class="emphasis"><em>cli-expose-ns-prefix</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44436"></a><h3>tailf:cli-flat-list-syntax</h3><p>Specifies that elements in a leaf-list should be entered without
+surrounding brackets. Also, multiple elements can be added to a list
+or deleted from a list.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-flat-list-syntax</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span> and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-replace-all</em></span> </p></div><div class="refsect2"><a name="d5e44447"></a><h3>tailf:cli-flatten-container</h3><p>Allows the CLI to exit the container and continue to input
+from the parent container when all leaves in the current
+container has been set.</p><p>Can be used in config nodes only.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-flatten-container</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44458"></a><h3>tailf:cli-full-command</h3><p>Specifies that an auto-rendered command should be considered complete,
+ie, no additional leaves or containers can be entered on the same
+command line.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-full-command</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44473"></a><h3>tailf:cli-full-no</h3><p>Specifies that an auto-rendered 'no'-command should be considered
+complete, ie, no additional leaves or containers can be entered on
+the same command line.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-full-no</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44485"></a><h3>tailf:cli-full-show-path</h3><p>Specifies that a path to the show command is considered complete, i.e.,
+no more elements can be added to the path.  It can also be used to
+specify a maximum number of keys to be given for lists.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-full-show-path</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-max-keys</em></span> Specifies the maximum number of allowed keys for the show command.</p></div><div class="refsect2"><a name="d5e44500"></a><h3>tailf:cli-hide-in-submode</h3><p>Hide leaf when submode has been entered. Mostly useful when
+leaf has to be entered in order to enter a submode. Also works
+for flattened containers.</p><p>Cannot be used in conjunction with tailf:cli-boolean-no.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-hide-in-submode</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44514"></a><h3>tailf:cli-ignore-modified</h3><p>Tells the cdb_cli_diff_iterate system call to not generate
+a CLI string when this container is modified. The string will
+instead be generated for the modified sub-element.</p><p>Applies to C-style and I-style</p><p>
+                The <span class="emphasis"><em>cli-ignore-modified</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44526"></a><h3>tailf:cli-incomplete-command</h3><p>Specifies that an auto-rendered command should be considered
+incomplete.  Can be used to prevent &lt;cr&gt; from appearing in
+the completion list for optional internal nodes, for example, or
+to ensure that the user enters all leaf values in a container
+(if used in combination with cli-sequence-commands).</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-incomplete-command</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44540"></a><h3>tailf:cli-incomplete-no</h3><p>Specifies that an auto-rendered 'no'-command should not be considered
+complete, ie, additional leaves or containers must be entered on the same
+command line.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-incomplete-no</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44552"></a><h3>tailf:cli-incomplete-show-path</h3><p>Specifies that a path to the show command is considered incomplete,
+i.e., it needs more elements added to the path.  It can also be used
+to specify a minimum number of keys to be given for lists.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-incomplete-show-path</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-min-keys</em></span> Specifies the minimum number of required keys for the show command.</p></div><div class="refsect2"><a name="d5e44567"></a><h3>tailf:cli-instance-info-leafs <span class="emphasis"><em>value</em></span></h3><p>This statement is used to specifiy how list entries are displayed
+when doing completion in the CLI.  By default, a list entry is
+displayed by listing its key values, and the value of a leaf
+called 'description', if such a leaf exists in the list entry.</p><p>The 'cli-instance-info-leafs' statement takes as its argument a
+space separated string of leaf names.  When a list entry is
+displayed, the values of these leafs are concatenated with a
+space character as separator and shown to the user.</p><p>For example, when asked to specify an interface the CLI will
+display a list of possible interface instances, say 1 2 3 4.  If
+the cli-instance-info-leafs property is set to 'description' then
+the CLI might show:</p><p> Possible completions:
+   1 - internet
+   2 - lab
+   3 - dmz
+   4 - wlan</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-instance-info-leafs</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44580"></a><h3>tailf:cli-key-format <span class="emphasis"><em>value</em></span></h3><p>The format string is used when parsing a key value and when
+generating a key value for an existing configuration. The key
+items are numbered from 1-N and the format string should
+indicate how they are related by using $(X) (where X is the
+key number). For example:</p><p>tailf:cli-key-format '$(1)-$(2)' means that the first key
+item is concatenated with the second key item by a '-'.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-key-format</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44591"></a><h3>tailf:cli-list-syntax</h3><p>Specifies that each entry in a leaf-list should be displayed as
+a separate element.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-list-syntax</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-multi-word</em></span> Specifies that a multi-word value may be entered without quotes.</p></div><div class="refsect2"><a name="d5e44603"></a><h3>tailf:cli-min-column-width <span class="emphasis"><em>value</em></span></h3><p>Set a minimum width for the column in the auto-rendered tables.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-min-column-width</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44614"></a><h3>tailf:cli-mode-name <span class="emphasis"><em>value</em></span></h3><p>Specifies a custom mode name, instead of the default which is the
+name of the list or container node.</p><p>Can be used in config nodes only.  If used in a container, the
+container must also have a tailf:cli-add-mode statement, and if
+used in a list, the list must not also have a
+tailf:cli-suppress-mode statement.</p><p>Variables for the list keys in the current mode are available.
+For examples, 'config-foo-xx$(name)' (privided the key leaf
+is called 'name').</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-mode-name</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44630"></a><h3>tailf:cli-mode-name-actionpoint <span class="emphasis"><em>value</em></span></h3><p>Specifies that a custom function will be invoked to find out the mode
+name, instead of using the default with is the name of the list
+or container node.</p><p>The argument is the name of an actionpoint, which must be
+implemented by custom code.  In the actionpoint, the command()
+callback function will be invoked, and it must return a string
+with the mode name.  See confd_lib_dp(3) for details.</p><p>Can be used in config nodes only.  If used in a container, the
+container must also have a tailf:cli-add-mode statement, and if
+used in a list, the list must not also have a
+tailf:cli-suppress-mode statement.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-mode-name-actionpoint</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44645"></a><h3>tailf:cli-mount-point <span class="emphasis"><em>value</em></span></h3><p>By default actions are mounted under the 'request'
+command in the J-style CLI and at the top-level in
+the I- and C-style CLIs. This annotation allowes
+the action to be mounted under other top level commands</p><p>
+                The <span class="emphasis"><em>cli-mount-point</em></span> statement can be used in: <span class="emphasis"><em>tailf:action</em></span> and <span class="emphasis"><em>rpc</em></span>.</p></div><div class="refsect2"><a name="d5e44653"></a><h3>tailf:cli-multi-line-prompt</h3><p>Tells the CLI to automatically enter multi-line mode when prompting
+the user for a value to this leaf.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-multi-line-prompt</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44662"></a><h3>tailf:cli-multi-value</h3><p>Specifies that all remaining tokens on the command line
+should be considered a value for this leaf. This prevents
+the need for quoting values containing spaces, but also
+prevents multiple leaves from being set on the same command
+line once a multi-value leaf has been given on a line.</p><p>If the tailf:cli-max-words substatements is used then
+additional leaves may be entered.</p><p>Note: This extension isn't applicable in actions</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-multi-value</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-max-words</em></span> Specifies the maximum number of allowed words for the key or value.</p></div><div class="refsect2"><a name="d5e44676"></a><h3>tailf:cli-multi-word-key</h3><p>Specifies that the key should allow multiple tokens for the
+value. Proper type restrictions needs to be used to limit
+the range of the leaf value.</p><p>Can be used in key leafs only.</p><p>Note: This extension isn't applicable in actions</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-multi-word-key</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-max-words</em></span> Specifies the maximum number of allowed words for the key or value.</p></div><div class="refsect2"><a name="d5e44690"></a><h3>tailf:cli-no-key-completion</h3><p>Specifies that the CLI engine should not perform completion for key
+leafs in the list. This is to avoid querying the data provider
+for all existing keys.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-no-key-completion</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44699"></a><h3>tailf:cli-no-keyword</h3><p>Specifies that the name of a node is not present in the CLI.</p><p>
+Note that is must be used with some care, just
+like tailf:cli-drop-node-name. The resulting data model must still
+be possible to parse deterministically.
+For example, consider the data model</p><div class="informalexample"><pre class="programlisting">container interfaces {
+   list traffic {
+       tailf:cli-no-keyword;
+       key id;
+       leaf id { type string; }
+       leaf mtu { type uint16; }
+   }
+   list management {
+       tailf:cli-no-keyword;
+       key id;
+       leaf id { type string; }
+       leaf mtu { type uint16; }
+   }
+}</pre></div><p>In this case it is impossible to determine if the config</p><div class="informalexample"><pre class="programlisting">interfaces {
+   eth0 {
+      mtu 1400;
+    }
+}</pre></div><p>Means that there should be an traffic interface instance named
+'eth0' or a management interface instance maned 'eth0'. If, on
+the other hand, a restriction on the type was used, for example</p><div class="informalexample"><pre class="programlisting">container interfaces {
+   list traffic {
+       tailf:cli-no-keyword;
+       key id;
+       leaf id { type string; pattern 'eth.*'; }
+       leaf mtu { type uint16; }
+   }
+   list management {
+       tailf:cli-no-keyword;
+       key id;
+       leaf id { type string; pattern 'lo.*';}
+       leaf mtu { type uint16; }
+   }
+}</pre></div><p>then the problem would disappear.</p><p>Used in the J-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-no-keyword</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44721"></a><h3>tailf:cli-no-match-completion</h3><p>Specifies that the CLI engine should not provide match completion
+for the key leafs in the list.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-no-match-completion</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44730"></a><h3>tailf:cli-no-name-on-delete</h3><p>When displaying the deleted version of this element do not
+include the name.</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-no-name-on-delete</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44742"></a><h3>tailf:cli-no-value-on-delete</h3><p>When displaying the deleted version of this leaf do not
+include the old value.</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-no-value-on-delete</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44752"></a><h3>tailf:cli-only-in-autowizard</h3><p>Force leaf values to be entered in the autowizard. This
+is intended to prevent users from entering passwords and
+other sensitive information in plain text.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-only-in-autowizard</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e44759"></a><h3>tailf:cli-oper-info <span class="emphasis"><em>text</em></span></h3><p>This statement works exactly as tailf:info, with the exception
+that it is used when displaying the element info in the context
+of stats.</p><p>Both tailf:info and tailf:cli-oper-info can be present at the same
+time.</p><p>
+                The <span class="emphasis"><em>cli-oper-info</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>identity</em></span>, <span class="emphasis"><em>tailf:action</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44775"></a><h3>tailf:cli-operational-mode</h3><p>An action or rpc with this attribute will be available in
+operational mode, but not in configure mode.</p><p>The default is that the action or rpc is available in both
+configure and operational mode.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-operational-mode</em></span> statement can be used in: <span class="emphasis"><em>tailf:action</em></span> and <span class="emphasis"><em>rpc</em></span>.</p></div><div class="refsect2"><a name="d5e44784"></a><h3>tailf:cli-optional-in-sequence</h3><p>Specifies that this element is optional in the sequence. If it
+is set it must be set in the right sequence but may be skipped.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-optional-in-sequence</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44799"></a><h3>tailf:cli-prefix-key</h3><p>This leaf has to be given as a prefix before entering the actual
+list keys. Very backwards but a construct that exists in some
+Cisco CLIs.</p><p>The construct can be used also for leaf-lists but only when
+then tailf:cli-range-list-syntax is also used.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-prefix-key</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>leaf-list</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-before-key</em></span> Specifies before which key the prefix element should be inserted.
+The first key has number 1.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44815"></a><h3>tailf:cli-preformatted</h3><p>Suppresses quoting of non-config elements when displaying them.
+Newlines will be preserved in strings etc.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-preformatted</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44824"></a><h3>tailf:cli-range-delimiters <span class="emphasis"><em>value</em></span></h3><p>Allows for custom delimiters to be defined for range expressions.
+By default only / is considered a delimiter, ie when processing
+a key like 1/2/3 then each of 1, 2 and 3 will be matched separately
+agains range expressions, ie given the expression 1-3/5-6/7,8
+1 will be matched with 1-3, 2 with 5-6, and 3 with 7,8. If, for
+example, the delimiters value is set to '/.' then both '/' and
+'.' will be considered delimiters and an key such as 1/2/3.4 will
+consist of the enteties 1,2,3,4, all matched separately.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-range-delimiters</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44834"></a><h3>tailf:cli-range-list-syntax</h3><p>Specifies that elements in a leaf-list or a list should be entered
+without surrounding brackets and presented as ranges.  The
+element in the list should be separated by a comma.  For
+example:</p><p> vlan 1,3,10-20,30,32,300-310</p><p>When this statement is used for lists, the list must have a
+single key.  The elements are be presented as ranges as above.</p><p>The type of the list key, or the leaf-list, must be integer based.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-range-list-syntax</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44846"></a><h3>tailf:cli-recursive-delete</h3><p>When generating configuration diffs delete all contents
+of a container or list before deleting the node.</p><p>Applies to C-style</p><p>
+                The <span class="emphasis"><em>cli-recursive-delete</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44856"></a><h3>tailf:cli-remove-before-change</h3><p>Instructs the CLI engine to generate a no-commnd before
+modifying an existing instance. It only applies when
+generating diffs, eg 'show configuration' in C-style.</p><p>
+                The <span class="emphasis"><em>cli-remove-before-change</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44866"></a><h3>tailf:cli-replace-all</h3><p>Specifies that the new leaf-list value(s) should replace the old,
+as opposed to be added to the old leaf-list.</p><p>
+                The <span class="emphasis"><em>cli-replace-all</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:cli-flat-list-syntax</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44874"></a><h3>tailf:cli-reset-container</h3><p>Specifies that all sibling leaves in the container should be
+reset when this element is set.</p><p>When used on a container its content is cleared when set.</p><p>
+                The <span class="emphasis"><em>cli-reset-container</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44885"></a><h3>tailf:cli-run-template <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be used by the 'show running-config'
+command in operational mode.  It is primarily intended for displaying
+config data but non-config data may be included in the template
+as well.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-run-template</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44897"></a><h3>tailf:cli-run-template-enter <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed before each list entry is
+printed.</p><p>When used on a container it only has effect when the container
+also has a tailf:cli-add-mode, and when tailf:cli-show-no isn't
+used on the container.</p><p>See the defintion of cli-template-string for more info.</p><p>The variable .reenter is set to 'true' when the 'show configuration'
+command is executed and the list or container isn't created. This
+allow, for example, to display</p><p>   create foo</p><p>when an instance is created</p><p>   edit foo</p><p>when something inside the instance is modified.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-run-template-enter</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44918"></a><h3>tailf:cli-run-template-footer <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed after all list entries are
+printed.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-run-template-footer</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44929"></a><h3>tailf:cli-run-template-legend <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed before all list entries are
+printed.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-run-template-legend</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e44940"></a><h3>tailf:cli-sequence-commands</h3><p>Specifies that an auto-rendered command should only accept arguments
+in the same order as they are specified in the YANG model.
+This, in combination with tailf:cli-drop-node-name, can be used
+to create CLI commands for setting multiple leafs in a container
+without having to specify the leaf names.</p><p>In almost all cases this annotation should be accompanied by the
+tailf:cli-compact-syntax annotation. Otherwise the output from
+'show running-config' will not be correct, and the sequence
+'save xx' 'load override xx' will not work.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-sequence-commands</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-reset-siblings</em></span> Specifies that all sibling leaves in the sequence should be reset
+whenever the first leaf in the sequence is set.</p><p><span class="emphasis"><em>tailf:cli-reset-all-siblings</em></span> Specifies that all sibling leaves in the container should be reset
+whenever the first leaf in the sequence is set.</p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44958"></a><h3>tailf:cli-show-config</h3><p>Specifies that the node will be included when doing a 'show
+running-configuration', even if it is a non-config node.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-config</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p></div><div class="refsect2"><a name="d5e44970"></a><h3>tailf:cli-show-long-obu-diffs</h3><p>Instructs the CLI engine to not generate 'insert' comments
+when displaying configuration changes of ordered-by user
+lists, but instead explicitly remove old instances with 'no'
+and then add the instances following a newly inserted instance.
+Should not be used together with tailf:cli-show-obu-comments</p><p>
+                The <span class="emphasis"><em>cli-show-long-obu-diffs</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p><p><span class="emphasis"><em>tailf:cli-reset-full</em></span> Indicates that the list should be fully printed out on change.</p></div><div class="refsect2"><a name="d5e44983"></a><h3>tailf:cli-show-no</h3><p>Specifies that an optional leaf node or presence container
+should be displayed as 'no &lt;name&gt;' when it does not exist.
+For example, if a leaf 'shutdown' has this property and
+does not exist, 'no shutdown' is displayed.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-no</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>refine</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>container</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e44998"></a><h3>tailf:cli-show-obu-comments</h3><p>Enforces the CLI engine to generate 'insert' comments
+when displaying configuration changes of ordered-by user
+lists. Should not be used together with tailf:cli-show-long-obu-diffs</p><p>
+                The <span class="emphasis"><em>cli-show-obu-comments</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e45009"></a><h3>tailf:cli-show-order-tag <span class="emphasis"><em>value</em></span></h3><p>Specifies a custom display order for nodes with the
+tailf:cli-show-order-tag attribute. Nodes will be displayed
+in the order indicated by a cli-show-order-taglist attribute in
+a parent node.</p><p>The scope of a tag reaches until a new taglist is encountered.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-order-tag</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e45026"></a><h3>tailf:cli-show-order-taglist <span class="emphasis"><em>value</em></span></h3><p>Specifies a custom display order for nodes with the
+tailf:cli-show-order-tag attribute. Nodes will be displayed
+in the order indicated in the list. Nodes without a tag will
+be displayed after all nodes with a tag have been displayed.</p><p>The scope of a taglist is until a new taglist is encountered.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-order-taglist</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45038"></a><h3>tailf:cli-show-template <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be used by the 'show' command in
+operational mode.  It is primarily intended for displaying
+non-config data but config data may be included in the template
+as well.</p><p>See the defintion of cli-template-string for more info.</p><p>Some restrictions includes not applying templates on a leaf that
+is the key in a list. It is recommended to use the template
+directly on the list to format the whole list instead.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-template</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-auto-legend</em></span> Specifies that the legend should be automatically rendered if not already displayed. Useful when using templates for rendering tables.</p></div><div class="refsect2"><a name="d5e45056"></a><h3>tailf:cli-show-template-enter <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed before each list entry is
+printed.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-template-enter</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45067"></a><h3>tailf:cli-show-template-footer <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed after all list entries are
+printed.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-template-footer</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45078"></a><h3>tailf:cli-show-template-legend <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed before all list entries are
+printed.</p><p>See the defintion of cli-template-string for more info.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-template-legend</em></span> statement can be used in: <span class="emphasis"><em>list</em></span> and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45088"></a><h3>tailf:cli-show-with-default</h3><p>This leaf will be displayed even when it has its default value.
+Note that this will somewhat result in a slightly different behaviour
+when you save a config and then load it again. With this setting
+in place a leaf that has not been configured will be configured
+after the load.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-show-with-default</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>tailf:symlink</em></span>.</p></div><div class="refsect2"><a name="d5e45097"></a><h3>tailf:cli-strict-leafref</h3><p>Specifies that the leaf should only be allowed to be assigned
+references to existing instances when the command is executed.
+Without this annotation the requirement is that the instance
+exists on commit time.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-strict-leafref</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45107"></a><h3>tailf:cli-suppress-key-abbreviation</h3><p>Key values cannot be abbreviated.  The user must always give
+complete values for keys.</p><p>In the J-style CLI this is relevant when using the commands
+'delete' and 'edit'.</p><p>In the I- and C-style CLIs this is relevant when using the
+commands 'no', 'show configuration' and for commands to enter
+submodes.</p><p>See also /confdConfig/cli/allowAbbrevKeys in confd.conf(5).</p><p>
+                The <span class="emphasis"><em>cli-suppress-key-abbreviation</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45118"></a><h3>tailf:cli-suppress-key-sort</h3><p>Instructs the CLI engine to not sort the keys in alphabetical order
+when presenting them to the user during TAB completion.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-key-sort</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45127"></a><h3>tailf:cli-suppress-list-no</h3><p>Specifies that the CLI should not accept deletion of the entire list
+or leaf-list. Only specific instances should be deletable not the
+entire list in one command. ie, 'no foo &lt;instance&gt;' should be allowed
+but not 'no foo'.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-list-no</em></span> statement can be used in: <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45137"></a><h3>tailf:cli-suppress-mode</h3><p>Instructs the CLI engine to not make a mode of the list node.</p><p>Can be used in config nodes only.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-mode</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e45150"></a><h3>tailf:cli-suppress-no</h3><p>Specifies that the CLI should not auto-render 'no' commands for
+this element. An element with this annotation will not appear in the
+completion list to the 'no' command.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-no</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45162"></a><h3>tailf:cli-suppress-quotes</h3><p>Specifies that configuration data for a leaf should never be wrapped
+with quotes. All internal data will be escaped to make sure it
+can be presented correctly.</p><p>Can't be used for keys.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-quotes</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e45170"></a><h3>tailf:cli-suppress-range</h3><p>Means that the integer key should not allow range expressions.</p><p>Can be used in key leafs only.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-range</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:cli-suppress-warning</em></span> </p></div><div class="refsect2"><a name="d5e45183"></a><h3>tailf:cli-suppress-shortenabled</h3><p>Suppresses the confd.conf(5) setting /confdConfig/cli/useShortEnabled.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-shortenabled</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45192"></a><h3>tailf:cli-suppress-show-conf-path</h3><p>Specifies that the show running-config command cannot be invoked with
+the path, ie the path is suppressed when auto-rendering show running-
+config commands for config='true' data.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-show-conf-path</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45204"></a><h3>tailf:cli-suppress-show-match</h3><p>Specifies that a specific completion match (i.e., a filter match that
+appear at list nodes as an alternative to specifying a single
+instance) to the show command should not be available.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-show-match</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45216"></a><h3>tailf:cli-suppress-show-path</h3><p>Specifies that the show command cannot be invoked with the path,
+ie the path is suppressed when auto-rendering show commands for
+config='false' data.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-show-path</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45228"></a><h3>tailf:cli-suppress-silent-no <span class="emphasis"><em>value</em></span></h3><p>Specifies that the confd.cnof directive cSilentNo should be
+suppressed for a leaf and that a custom error message should
+be displayed when the user attempts to delete a non-existing
+element.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-silent-no</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45241"></a><h3>tailf:cli-suppress-table</h3><p>Instructs the CLI engine to not print the list as a table in
+the 'show' command.</p><p>Can be used in non-config nodes only.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-table</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45251"></a><h3>tailf:cli-suppress-validation-warning-prompt</h3><p>Instructs the CLI engine to not prompt the user whether to proceed
+or not if a warning is generated for this node.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-validation-warning-prompt</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45263"></a><h3>tailf:cli-suppress-warning <span class="emphasis"><em>value</em></span></h3><p>Avoid involving specific CLI-extension related YANG statements in
+warnings related to certain yanger error codes. For a list of
+yanger error codes do 'yanger -e'.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-warning</em></span> statement can be used in: <span class="emphasis"><em>tailf:cli-run-template-enter</em></span>, <span class="emphasis"><em>tailf:cli-sequence-commands</em></span>, <span class="emphasis"><em>tailf:cli-hide-in-submode</em></span>, <span class="emphasis"><em>tailf:cli-boolean-no</em></span>, <span class="emphasis"><em>tailf:cli-compact-syntax</em></span>, <span class="emphasis"><em>tailf:cli-break-sequence-commands</em></span>, <span class="emphasis"><em>tailf:cli-show-long-obu-diffs</em></span>, <span class="emphasis"><em>tailf:cli-show-obu-comments</em></span>, <span class="emphasis"><em>tailf:cli-suppress-range</em></span>, <span class="emphasis"><em>tailf:cli-suppress-mode</em></span>, <span class="emphasis"><em>tailf:cli-custom-range</em></span>, <span class="emphasis"><em>tailf:cli-custom-range-actionpoint</em></span>, <span class="emphasis"><em>tailf:cli-custom-range-enumerator</em></span>, <span class="emphasis"><em>tailf:cli-drop-node-name</em></span>, <span class="emphasis"><em>tailf:cli-add-mode</em></span>, <span class="emphasis"><em>tailf:cli-mode-name</em></span>, <span class="emphasis"><em>tailf:cli-incomplete-command</em></span>, <span class="emphasis"><em>tailf:cli-full-command</em></span>, <span class="emphasis"><em>tailf:cli-mode-name-actionpoint</em></span>, <span class="emphasis"><em>tailf:cli-optional-in-sequence</em></span>, <span class="emphasis"><em>tailf:cli-prefix-key</em></span>, <span class="emphasis"><em>tailf:cli-show-no</em></span>, <span class="emphasis"><em>tailf:cli-show-order-tag</em></span>, <span class="emphasis"><em>tailf:cli-diff-dependency</em></span>, and <span class="emphasis"><em>container</em></span>.</p></div><div class="refsect2"><a name="d5e45295"></a><h3>tailf:cli-suppress-wildcard</h3><p>Means that the list does not allow wildcard expressions in the 'show'
+pattern.</p><p>See also /confdConfig/cli/allowWildcard in confd.conf(5).</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-suppress-wildcard</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45305"></a><h3>tailf:cli-table-footer <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed after all list entries are
+printed.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-table-footer</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45315"></a><h3>tailf:cli-table-legend <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be printed before all list entries are
+printed.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-table-legend</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45325"></a><h3>tailf:cli-trim-default</h3><p>Do not display value if it is same as default.</p><p>Used in I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-trim-default</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45334"></a><h3>tailf:cli-value-display-template <span class="emphasis"><em>value</em></span></h3><p>Specifies a template string to be used when formating the
+value of a leaf for display. Note that other leaves cannot
+be referenced from a display template of one leaf. The only
+value accessible is the leaf's own value, accessed through
+$(.).</p><p>See the defintion of cli-template-string for more info.</p><p>Used in J-, I- and C-style CLIs.</p><p>
+                The <span class="emphasis"><em>cli-value-display-template</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div></div><div class="refsect1"><a name="tailf-cli-extensions.yang_types"></a><h2>YANG TYPES</h2><div class="refsect2"><a name="d5e45347"></a><h3>cli-template-string</h3><p>A template is a text string which is expanded by the CLI engine,
+and then displayed to the user.</p><p>The template may contain a mix of text and expandable entries.
+Expandable entries all start with $( and end with a matching ).
+Parentheses and dollar signs need to be quoted in plain text.</p><p>(Disclaimer: tailf:cli-template-string will not respect
+all CLI YANG extensions existing from expandable entries.
+For instance, tailf:cli-no-name-on-delete will have no
+effect when the value of a node with this extension is
+fetched as a result of expanding CLI templates.)</p><p>The template is expanded as follows:</p><p>A parameter is either a relative or absolute path to a leaf
+element (eg /foo/bar, foo/bar), or one of the builtin variables:
+.selected, .entered, .legend_shown, .user, .groups, .ip,
+.display_groups, .path, .ipath or .licounter. In addition the
+variables .spath and  .ispath are available when a command
+is executed from a show path.</p><p>.selected</p><p>    The .selected variable contains the list of selected paths
+    to be shown. The show template can inspect this element to
+    determine if a given element should be displayed or
+    not. For example:</p><p>        $(.selected~=hwaddr?HW Address)</p><p>.entered</p><p>    The .entered variable is true if the "entered" text has
+    been displayed (either the auto generated text or a
+    showTemplateEnter). This is useful when having a non-table
+    template where each instance should have a text.</p><p>        $(.entered?:host $(name))</p><p>.legend_shown</p><p>    The .legend_shown variable is true if the "legend" text has
+    been displayed (either the auto generated table header or
+    a showTemplateLegend). This is useful to inspect when
+    displaying a table row. If the user enteres the path to a
+    specific instance the builtin table header will not be
+    displayed and the showTemplateLegend will not be invoked
+    and it may be useful to render the legend specifically
+    for this instance.</p><p>        $(.legend_shown!=true?Address         Interface)</p><p>.user</p><p>    The .user variable contains the name of the current
+    user. This can be used for differentiating the content
+    displayed for a specific user, or in paths. For exapmle:</p><div class="informalexample"><pre class="programlisting">        $(user{$(.user)}/settings)</pre></div><p>.groups</p><p>    The .groups variable contains the a list of groups that the
+    user belongs to.</p><p>.display_groups</p><p>    The .display_groups variable contains a list of selected
+    display groups. This can be used to display different
+    content depending on the selected display group. For
+    example:</p><p>        $(.display_groups~=details?details...)</p><p>.ip</p><p>    The .ip variable contains the ip address that the user
+    connected from.</p><p>.path</p><p>    The .path variable contains the path to the entry,
+    formated in CLI style.</p><p>.ipath</p><p>    The .ipath variable contains the path to the entry,
+    formated in template style.</p><p>.spath</p><p>    The .spath variable contains the show path,
+    formated in CLI style.</p><p>.ispath</p><p>    The .ispath variable contains the show path,
+    formated in template style.</p><p>.licounter</p><p>    The .licounter variable contains a counter that is
+    incremented for each instance in a list. This means that
+    it will be 0 in the legend, contain the total number of
+    list instances in the footer and something in between in
+    the basic show template.</p><p>$(parameter)</p><p> The value of 'parameter' is substituted.</p><p>$(cond?word1:word2)</p><p> The expansion of 'word1' is substituted if 'cond'
+ evaluates to true, otherwise the expansion of 'word2' is
+ substituted.</p><p> 'cond' may be one of</p><p>   parameter</p><p>     Evaluates to true if the node exists.</p><p>   parameter == &lt;value&gt;</p><p>     Evaluates to true if the value of the parameter equals
+     &lt;value&gt;.</p><p>   parameter != &lt;value&gt;</p><p>     Evalutes to true if the value of the parameter does not
+     equal &lt;value&gt;</p><p>   parameter ~= &lt;value&gt;</p><p>     Provided that the value of the parameter is a list
+     (i.e., the node that the parameter refers to is a
+     leaf-list), this expression evaluates to true if &lt;value&gt;
+     is a member of the list.</p><p> Note that it is also possible to omit ':word2' in
+ order to print the entire statement, or nothing.
+ As an example $(conf?word1) will print 'word1' if conf
+ exists, otherwise it will print nothing.</p><p>$(cond??word1)</p><p> Double question marks can be used to achieve the same effect
+ as above, but with the distinction that the 'cond' variable
+ needs to be explicitly configured, in order to be evaluated
+ as existing. This is needed in the case of evaluating leafs
+ with default values, where the single question mark operator
+ would evaluate to existing even if not explicitly configured.</p><p>$(parameter|filter)</p><p> The value of 'parameter' processed by 'filter' is
+ substituted. Filters may be either one of the
+ built-ins or a customized filter defined in a
+ callback. See /confdConfig/cli/templateFilter.</p><p> A built-in 'filter' may be one of:</p><p>   capfirst</p><p>     Capitalizes the first character of the value.</p><p>   lower</p><p>     Converts the value into lowercase.</p><p>   upper</p><p>     Converts the value into uppercase.</p><p>   filesizeformat</p><p>     Formats the value in a human-readable format (e.g.,
+     '13 KB', '4.10 MB',  '102 bytes' etc), where  K
+      means 1024, M means 1024*1024 etc.</p><p>     When used without argument the default number of
+     decimals displayed is 2. When used with a numeric
+     integer argument, filesizeformat will display the
+     given number of decimal places.</p><p>   humanreadable</p><p>     Similar to filesizeformat except no bytes suffix
+     is added  (e.g., '13.00 k', '4.10 M' '102' etc),
+     where k means 1000, M means 1000*1000 etc.</p><p>     When used without argument the default number of
+     decimals displayed is 2. When used with a numeric
+     integer argument, humanreadable will display the
+     given number of decimal places.</p><p>   commasep</p><p>     Separate the numerical values into groups of three
+     digits using a comma (e.g., 1234567 -&gt; 1,234,567)</p><p>   hex</p><p>     Display integer as hex number. An argument can be
+     used to indicate how many digits should be used in
+     the output. If the hex number is too long it will
+     be truncated at the front, if it is too short it will
+     be padded with zeros at the front. If the width is
+     a negative number then at most that number of digits
+     will be used, but short numbers will not be padded
+     with zeroes. Another argument can be given to indicate
+     if the hex numbers should be written with lower
+     or upper case.</p><p>     For example:</p><div class="informalexample"><pre class="programlisting">       value            Template                       Output
+       12345           {{ value|hex }}                 3039
+       12345           {{ value|hex:2 }}               39
+       12345           {{ value|hex:8 }}               00003039
+       12345           {{ value|hex:-8 }}              3039
+       14911           {{ value|hex:-8:upper }}        3A3F
+       14911           {{ value|hex:-8:lower }}        3a3f</pre></div><p>   hexlist</p><p>     Display integer as hex number with : between pairs. An
+     argument can be used to indicate how many digits should
+     be used in the output. If the hex number is too long it
+     will be truncated at the front, if it is too short it will
+     be padded with zeros at the front. If the width is
+     a negative number then at most that number of digits
+     will be used, but short numbers will not be padded
+     with zeroes. Another argument can be given to indicate
+     if the hex numbers should be written with lower
+     or upper case.</p><p>     For example:</p><div class="informalexample"><pre class="programlisting">       value            Template                       Output
+       12345           {{ value|hexlist }}             30:39
+       12345           {{ value|hexlist:2 }}           39
+       12345           {{ value|hexlist:8 }}           00:00:30:39
+       12345           {{ value|hexlist:-8 }}          30:39
+       14911           {{ value|hexlist:-8:upper }}    3A:3F
+       14911           {{ value|hexlist:-8:lower }}    3a:3f</pre></div><p>   floatformat</p><p>     Used for type 'float' in tailf-xsd-types. We recommend
+     that the YANG built-in type 'decimal64' is used instead of
+     'float'.</p><p>     When used without an argument, rounds a floating-point
+     number to one decimal place -- but only if there is a
+     decimal part to be displayed.</p><p>     For example:</p><div class="informalexample"><pre class="programlisting">       value           Template                        Output
+       34.23234        {{ value|floatformat }}         34.2
+       34.00000        {{ value|floatformat }}         34
+       34.26000        {{ value|floatformat }}         34.3</pre></div><p>     If used with a numeric integer argument, floatformat
+     rounds a number to that many decimal places. For example:</p><div class="informalexample"><pre class="programlisting">       value           Template                        Output
+       34.23234        {{ value|floatformat:3 }}       34.232
+       34.00000        {{ value|floatformat:3 }}       34.000
+       34.26000        {{ value|floatformat:3 }}       34.260</pre></div><p>     If the argument passed to floatformat is negative, it will
+     round a number to that many decimal places -- but only if
+     there's a decimal part to be displayed. For example:</p><div class="informalexample"><pre class="programlisting">       value           Template                        Output
+       34.23234        {{ value|floatformat:-3 }}      34.232
+       34.00000        {{ value|floatformat:-3 }}      34
+       34.26000        {{ value|floatformat:-3 }}      34.260</pre></div><p>     Using floatformat with no argument is equivalent to using
+     floatformat with an argument of -1.</p><p>   ljust:width</p><p>     Left-align the value given a width.</p><p>   rjust:width</p><p>     Right-align the value given a width.</p><p>   trunc:width</p><p>     Truncate value to a given width.</p><p>   lower</p><p>     Convert the value into lowercase.</p><p>   upper</p><p>     Convert the value into uppercase.</p><p>   show:&lt;dictionary&gt;</p><p>     Substitutes the result of invoking the default display
+     function for the parameter. The dictionary can be used
+     for introducing own variables that can be accessed in
+     the same manner as builtin variables. The user defined
+     variables overrides builtin variables. The dictionary
+     is specified as a string on the following form:</p><p>       (key=value)(:key=value)*</p><p>     For example, with the following expression:</p><p>       $(foo|show:myvar1=true:myvar2=Interface)</p><p>     the user defined variables can be accessed like this:</p><p>       $(.myvar1!=true?Address) $(.myvar2)</p><p>     A special case is the dict variable 'indent'. It
+     controls the indentation level of the displayed path.
+     The current indent level can be incremented and
+     decremented using =+ and =-.</p><p>     For example:</p><p>       $(foobar|show:indent=+2)
+       $(foobar|show:indent=-1)
+       $(foobar|show:indent=10)</p><p>     Another special case is he dict variable 'noalign'.
+     It  may be used to suppress the default aligning that
+     may occur when displaying an element.</p><p>     For example:</p><p>       $(foobar|show:noalign)</p><p>   dict:&lt;dictionary&gt;</p><p>     Translates the value using the dictionary. Can for
+     example be used for displaying on/off instead of
+     true/false. The dictionary is specified as a string on
+     the following form:</p><p>       (key=value)(:key=value)*</p><p>     For example, with the following expression:</p><p>       $(foo|dict:true=on:false=off)</p><p>     if the leaf 'foo' has value 'true', it is displayed as 'on', and
+     if its value is 'false' it is displayed as 'off'.</p><div class="informalexample"><pre class="programlisting"> Nested invocations are allowed, ie it is possible to have expressions
+ like $((state|dict:yes=Yes:no=No)|rjust:14), or $(/foo{$(../bar)})</pre></div><p>
+For example:</p><div class="informalexample"><pre class="programlisting"> list interface {
+   key name;
+   leaf name { ... }
+   leaf status { ... }
+   container line {
+     leaf status { ... }
+   }
+   leaf mtu { ... }
+   leaf bw { ... }
+   leaf encapsulation { ... }
+   leaf loopback { ... }
+   tailf:cli-show-template
+     '$(name) is administratively $(status),'
+   + ' line protocol is $(line/status)\n'
+   + 'MTU $(mtu) bytes, BW $(bw|humanreadable)bit, \n'
+   + 'Encap $(encapsulation|upper), $(loopback?:loopback not set)\n';
+ }</pre></div></div></div><div class="refsect1"><a name="man.5.tailf_yang_cli_extensions.see_also"></a><h2>SEE ALSO</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term">The User Guide</span></dt><dd><p></p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">confdc</span>(1)</span>
+        </span></dt><dd><p>ConfD compiler</p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">tailf_yang_extensions</span>(5)</span>
+        </span></dt><dd><p>Tail-f YANG extensions</p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn03re18.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn03re20.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">mib_annotations&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;tailf_yang_extensions</td></tr></table></div></body></html>

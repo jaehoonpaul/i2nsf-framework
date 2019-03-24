@@ -1,0 +1,11 @@
+
+
+CONFDC      = confdc
+
+all: tailf-configuration-policy.fxs
+
+tailf-configuration-policy.fxs: tailf-configuration-policy.yang
+	$(CONFDC) -c $< -o $@
+
+clean:
+	rm -f tailf-configuration-policy.fxs

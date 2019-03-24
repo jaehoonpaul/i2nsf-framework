@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <data>
+    <netconf xmlns="urn:ietf:params:xml:ns:netmod:notification">
+      <streams>
+        <stream>
+          <name>NETCONF</name>
+          <description>default NETCONF event stream</description>
+          <replaySupport>false</replaySupport>
+        </stream>
+        <stream>
+          <name>linkUp</name>
+          <description>Example notifications</description>
+          <replaySupport>true</replaySupport>
+          <replayLogCreationTime>2007-03-31T23:23:07-00:00</replayLogCreationTime>
+          <replayLogAgedTime>2007-03-30T23:23:07-00:00</replayLogAgedTime>
+        </stream>
+      </streams>
+    </netconf>
+  </data>
+</rpc-reply>

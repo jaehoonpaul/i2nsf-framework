@@ -1,0 +1,367 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module _confd.events</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="_confd.html"><font color="#ffffff">_confd</font></a>.events</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Low&nbsp;level&nbsp;module&nbsp;for&nbsp;subscribing&nbsp;to&nbsp;ConfD&nbsp;event&nbsp;notifications.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;ConfD&nbsp;and&nbsp;subscribe&nbsp;to&nbsp;certain<br>
+events&nbsp;generated&nbsp;by&nbsp;ConfD.&nbsp;The&nbsp;API&nbsp;to&nbsp;receive&nbsp;events&nbsp;from&nbsp;ConfD&nbsp;is&nbsp;a<br>
+socket&nbsp;based&nbsp;API&nbsp;whereby&nbsp;the&nbsp;application&nbsp;connects&nbsp;to&nbsp;ConfD&nbsp;and&nbsp;receives<br>
+events&nbsp;on&nbsp;a&nbsp;socket.&nbsp;See&nbsp;also&nbsp;the&nbsp;Notifications&nbsp;chapter&nbsp;in&nbsp;the&nbsp;User&nbsp;Guide.<br>
+The&nbsp;program&nbsp;misc/notifications/confd_notifications.c&nbsp;in&nbsp;the&nbsp;examples<br>
+collection&nbsp;illustrates&nbsp;subscription&nbsp;and&nbsp;processing&nbsp;for&nbsp;all&nbsp;these&nbsp;events,<br>
+and&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;standalone&nbsp;in&nbsp;a&nbsp;development&nbsp;environment&nbsp;to&nbsp;monitor<br>
+ConfD&nbsp;events.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_events(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="_confd.events.html#Notification">Notification</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.events.html#NotificationsData">NotificationsData</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Notification">class <strong>Notification</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;is&nbsp;a&nbsp;placeholder&nbsp;for&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_notification.<br>
+&nbsp;<br>
+<a href="#Notification">Notification</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Notification-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Notification-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Notification-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#Notification-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#Notification-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NotificationsData">class <strong>NotificationsData</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_notifications_data.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#NotificationsData">NotificationsData</a>(hearbeat_interval,&nbsp;health_check_interval,&nbsp;stream_name,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start_time,&nbsp;stop_time,&nbsp;xpath_filter,&nbsp;usid)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+heartbeat_interval&nbsp;--&nbsp;time&nbsp;in&nbsp;milli&nbsp;seconds&nbsp;(int)<br>
+health_check_interval&nbsp;--&nbsp;time&nbsp;in&nbsp;milli&nbsp;seconds&nbsp;(int)<br>
+stream_name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;notification&nbsp;stream&nbsp;(string)<br>
+start_time&nbsp;--&nbsp;the&nbsp;start&nbsp;time&nbsp;(Value)<br>
+stop_time&nbsp;--&nbsp;the&nbsp;stop&nbsp;time&nbsp;(Value)<br>
+xpath_filter&nbsp;--&nbsp;XPath&nbsp;filter&nbsp;for&nbsp;the&nbsp;stream&nbsp;(string)&nbsp;-&nbsp;optional<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id&nbsp;for&nbsp;AAA&nbsp;restriction&nbsp;(int)&nbsp;-&nbsp;optional<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="NotificationsData-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationsData-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="NotificationsData-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationsData-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="NotificationsData-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#NotificationsData-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#NotificationsData-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-diff_notification_done"><strong>diff_notification_done</strong></a>(...)</dt><dd><tt><a href="#-diff_notification_done">diff_notification_done</a>(sock,&nbsp;tctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;received&nbsp;event&nbsp;was&nbsp;NOTIF_COMMIT_DIFF&nbsp;it&nbsp;is&nbsp;important&nbsp;that&nbsp;we&nbsp;call<br>
+this&nbsp;function&nbsp;when&nbsp;we&nbsp;are&nbsp;done&nbsp;reading&nbsp;the&nbsp;transaction&nbsp;diffs&nbsp;over&nbsp;MAAPI.<br>
+The&nbsp;transaction&nbsp;is&nbsp;hanging&nbsp;until&nbsp;this&nbsp;function&nbsp;gets&nbsp;called.&nbsp;This&nbsp;function<br>
+also&nbsp;releases&nbsp;memory&nbsp;associated&nbsp;to&nbsp;the&nbsp;transaction&nbsp;in&nbsp;the&nbsp;library.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;notification&nbsp;socket<br>
+tctx&nbsp;--&nbsp;a&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-notifications_connect"><strong>notifications_connect</strong></a>(...)</dt><dd><tt><a href="#-notifications_connect">notifications_connect</a>(sock,&nbsp;mask,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;creates&nbsp;a&nbsp;notification&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+mask&nbsp;--&nbsp;a&nbsp;bitmask&nbsp;of&nbsp;one&nbsp;or&nbsp;several&nbsp;notification&nbsp;type&nbsp;values<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional).</tt></dd></dl>
+ <dl><dt><a name="-notifications_connect2"><strong>notifications_connect2</strong></a>(...)</dt><dd><tt><a href="#-notifications_connect2">notifications_connect2</a>(sock,&nbsp;mask,&nbsp;data,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;variant&nbsp;of&nbsp;notifications_connect&nbsp;is&nbsp;required&nbsp;if&nbsp;we&nbsp;wish&nbsp;to&nbsp;subscribe<br>
+to&nbsp;NOTIF_HEARTBEAT,&nbsp;NOTIF_HEALTH_CHECK,&nbsp;or&nbsp;NOTIF_STREAM_EVENT&nbsp;events.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+mask&nbsp;--&nbsp;a&nbsp;bitmask&nbsp;of&nbsp;one&nbsp;or&nbsp;several&nbsp;notification&nbsp;type&nbsp;values<br>
+data&nbsp;--&nbsp;a&nbsp;_events.<a href="#NotificationsData">NotificationsData</a>&nbsp;instance<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-read_notification"><strong>read_notification</strong></a>(...)</dt><dd><tt><a href="#-read_notification">read_notification</a>(sock)&nbsp;-&gt;&nbsp;dict<br>
+&nbsp;<br>
+The&nbsp;application&nbsp;is&nbsp;responsible&nbsp;for&nbsp;polling&nbsp;the&nbsp;notification&nbsp;socket.&nbsp;Once<br>
+data&nbsp;is&nbsp;available&nbsp;to&nbsp;be&nbsp;read&nbsp;on&nbsp;the&nbsp;socket&nbsp;the&nbsp;application&nbsp;must&nbsp;call<br>
+<a href="#-read_notification">read_notification</a>()&nbsp;to&nbsp;read&nbsp;the&nbsp;data&nbsp;from&nbsp;the&nbsp;socket.&nbsp;On&nbsp;success&nbsp;a<br>
+dictionary&nbsp;containing&nbsp;notification&nbsp;information&nbsp;will&nbsp;be&nbsp;returned&nbsp;(see&nbsp;below).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;notification&nbsp;socket<br>
+On&nbsp;success&nbsp;the&nbsp;returned&nbsp;dict&nbsp;will&nbsp;contain&nbsp;information&nbsp;corresponding&nbsp;to&nbsp;the<br>
+c&nbsp;struct&nbsp;confd_notification.&nbsp;The&nbsp;notification&nbsp;type&nbsp;is&nbsp;accessible&nbsp;through<br>
+the&nbsp;'type'&nbsp;key.&nbsp;The&nbsp;remaining&nbsp;information&nbsp;will&nbsp;be&nbsp;different&nbsp;depending&nbsp;on<br>
+which&nbsp;type&nbsp;of&nbsp;notification&nbsp;this&nbsp;is&nbsp;(described&nbsp;below).<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_AUDIT&nbsp;(struct&nbsp;confd_audit_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;logno<br>
+&nbsp;&nbsp;&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;msg<br>
+&nbsp;&nbsp;&nbsp;usid<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_DAEMON,&nbsp;NOTIF_NETCONF,&nbsp;NOTIF_DEVEL&nbsp;or<br>
+NOTIF_TAKEOVER_SYSLOG&nbsp;(struct&nbsp;confd_syslog_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;prio<br>
+&nbsp;&nbsp;&nbsp;logno<br>
+&nbsp;&nbsp;&nbsp;msg<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_COMMIT_SIMPLE&nbsp;(struct&nbsp;confd_commit_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;database<br>
+&nbsp;&nbsp;&nbsp;diff_available<br>
+&nbsp;&nbsp;&nbsp;flags<br>
+&nbsp;&nbsp;&nbsp;uinfo<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_COMMIT_DIFF&nbsp;(struct&nbsp;confd_commit_diff_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;database<br>
+&nbsp;&nbsp;&nbsp;flags<br>
+&nbsp;&nbsp;&nbsp;uinfo<br>
+&nbsp;&nbsp;&nbsp;tctx<br>
+&nbsp;&nbsp;&nbsp;label&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;comment&nbsp;(optional)<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_USER_SESSION&nbsp;(struct&nbsp;confd_user_sess_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;uinfo<br>
+&nbsp;&nbsp;&nbsp;database<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_HA_INFO&nbsp;(struct&nbsp;confd_ha_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type&nbsp;(1)<br>
+&nbsp;&nbsp;&nbsp;nomaster&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;HA_INFO_NOMASTER<br>
+&nbsp;&nbsp;&nbsp;slave_died&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;HA_INFO_SLAVE_DIED&nbsp;(see&nbsp;below)<br>
+&nbsp;&nbsp;&nbsp;slave_arrived&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;HA_INFO_SLAVE_ARRIVED&nbsp;(see&nbsp;below)<br>
+&nbsp;&nbsp;&nbsp;cb_initialized_by_copy&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;HA_INFO_SLAVA_INITIALIZED<br>
+&nbsp;&nbsp;&nbsp;beslave_result&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;HA_INFO_BESLAVE_RESULT<br>
+&nbsp;<br>
+If&nbsp;slave_died&nbsp;or&nbsp;slave_arrived&nbsp;is&nbsp;present&nbsp;they&nbsp;will&nbsp;in&nbsp;turn&nbsp;contain&nbsp;a<br>
+dictinary&nbsp;with&nbsp;the&nbsp;following&nbsp;keys:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;nodeid<br>
+&nbsp;&nbsp;&nbsp;af&nbsp;(1)<br>
+&nbsp;&nbsp;&nbsp;ip4&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;AF_INET<br>
+&nbsp;&nbsp;&nbsp;ip6&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;AF_INET6<br>
+&nbsp;&nbsp;&nbsp;str&nbsp;-&nbsp;if&nbsp;(1)&nbsp;if&nbsp;AF_UNSPEC<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_SUBAGENT_INFO&nbsp;(struct&nbsp;confd_subagent_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;name<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_COMMIT_FAILED&nbsp;(struct&nbsp;confd_commit_failed_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;provider&nbsp;(1)<br>
+&nbsp;&nbsp;&nbsp;dbname<br>
+&nbsp;&nbsp;&nbsp;port&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;DP_NETCONF<br>
+&nbsp;&nbsp;&nbsp;af&nbsp;(2)&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;DP_NETCONF<br>
+&nbsp;&nbsp;&nbsp;ip4&nbsp;-&nbsp;if&nbsp;(2)&nbsp;is&nbsp;AF_INET<br>
+&nbsp;&nbsp;&nbsp;ip6&nbsp;-&nbsp;if&nbsp;(2)&nbsp;is&nbsp;AF_INET6<br>
+&nbsp;&nbsp;&nbsp;daemon_name&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;DP_EXTERNAL<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_SNMPA&nbsp;(struct&nbsp;confd_snmpa_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;pdu_type&nbsp;(1)<br>
+&nbsp;&nbsp;&nbsp;request_id<br>
+&nbsp;&nbsp;&nbsp;error_status<br>
+&nbsp;&nbsp;&nbsp;error_index<br>
+&nbsp;&nbsp;&nbsp;port<br>
+&nbsp;&nbsp;&nbsp;af&nbsp;(2)<br>
+&nbsp;&nbsp;&nbsp;ip4&nbsp;-&nbsp;if&nbsp;(3)&nbsp;is&nbsp;AF_INET<br>
+&nbsp;&nbsp;&nbsp;ip6&nbsp;-&nbsp;if&nbsp;(3)&nbsp;is&nbsp;AF_INET6<br>
+&nbsp;&nbsp;&nbsp;vb&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;generic_trap&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;SNMPA_PDU_V1TRAP<br>
+&nbsp;&nbsp;&nbsp;specific_trap&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;SNMPA_PDU_V1TRAP<br>
+&nbsp;&nbsp;&nbsp;time_stamp&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;SNMPA_PDU_V1TRAP<br>
+&nbsp;&nbsp;&nbsp;enterprise&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;SNMPA_PDU_V1TRAP&nbsp;(optional)<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_FORWARD_INFO&nbsp;(struct&nbsp;confd_forward_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;target<br>
+&nbsp;&nbsp;&nbsp;uinfo<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_CONFIRMED_COMMIT<br>
+&nbsp;(struct&nbsp;confd_confirmed_commit_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;timeout<br>
+&nbsp;&nbsp;&nbsp;uinfo<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_UPGRADE_EVENT&nbsp;(struct&nbsp;confd_upgrade_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;event<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_COMMIT_PROGRESS&nbsp;(struct&nbsp;confd_progress_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;database<br>
+&nbsp;&nbsp;&nbsp;usid<br>
+&nbsp;&nbsp;&nbsp;thandle<br>
+&nbsp;&nbsp;&nbsp;msg<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_STREAM_EVENT&nbsp;(struct&nbsp;confd_stream_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type&nbsp;(1)<br>
+&nbsp;&nbsp;&nbsp;error&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;STREAM_REPLAY_FAILED<br>
+&nbsp;&nbsp;&nbsp;event_time&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;STREAM_NOTIFICATION_EVENT<br>
+&nbsp;&nbsp;&nbsp;values&nbsp;-&nbsp;if&nbsp;(1)&nbsp;is&nbsp;STREAM_NOTIFICATION_EVENT<br>
+&nbsp;<br>
+Keys&nbsp;for&nbsp;type&nbsp;NOTIF_CQ_PROGRESS&nbsp;(struct&nbsp;ncs_cq_progress_notification):<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;timestamp<br>
+&nbsp;&nbsp;&nbsp;cq_tag<br>
+&nbsp;&nbsp;&nbsp;cq_id<br>
+&nbsp;&nbsp;&nbsp;completed_devices&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;transient_devices&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;failed_devices&nbsp;(optional)<br>
+&nbsp;&nbsp;&nbsp;failed_reasons&nbsp;-&nbsp;if&nbsp;failed_devices&nbsp;is&nbsp;present&nbsp;&nbsp;&nbsp;completed_services&nbsp;(optional)&nbsp;&nbsp;&nbsp;completed_services_completed_devices&nbsp;-&nbsp;if&nbsp;completed_services&nbsp;is&nbsp;present&nbsp;&nbsp;&nbsp;failed_services&nbsp;(optional)&nbsp;&nbsp;&nbsp;failed_services_completed_devices&nbsp;-&nbsp;if&nbsp;failed_services&nbsp;is&nbsp;present&nbsp;&nbsp;&nbsp;failed_services_failed_devices&nbsp;-&nbsp;if&nbsp;failed_services&nbsp;is&nbsp;present</tt></dd></dl>
+ <dl><dt><a name="-sync_audit_notification"><strong>sync_audit_notification</strong></a>(...)</dt><dd><tt><a href="#-sync_audit_notification">sync_audit_notification</a>(sock,&nbsp;usid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;received&nbsp;event&nbsp;was&nbsp;NOTIF_AUDIT,&nbsp;and&nbsp;we&nbsp;are&nbsp;subscribing&nbsp;to<br>
+notifications&nbsp;with&nbsp;the&nbsp;flag&nbsp;NOTIF_AUDIT_SYNC,&nbsp;this&nbsp;function&nbsp;must&nbsp;be&nbsp;called<br>
+when&nbsp;we&nbsp;are&nbsp;done&nbsp;processing&nbsp;the&nbsp;notification.&nbsp;The&nbsp;user&nbsp;session&nbsp;is&nbsp;hanging<br>
+until&nbsp;this&nbsp;function&nbsp;gets&nbsp;called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;notification&nbsp;socket<br>
+usid&nbsp;--&nbsp;the&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-sync_ha_notification"><strong>sync_ha_notification</strong></a>(...)</dt><dd><tt><a href="#-sync_ha_notification">sync_ha_notification</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;received&nbsp;event&nbsp;was&nbsp;NOTIF_HA_INFO,&nbsp;and&nbsp;we&nbsp;are&nbsp;subscribing&nbsp;to<br>
+notifications&nbsp;with&nbsp;the&nbsp;flag&nbsp;NOTIF_HA_INFO_SYNC,&nbsp;this&nbsp;function&nbsp;must&nbsp;be<br>
+called&nbsp;when&nbsp;we&nbsp;are&nbsp;done&nbsp;processing&nbsp;the&nbsp;notification.&nbsp;All&nbsp;HA&nbsp;processing&nbsp;is<br>
+blocked&nbsp;until&nbsp;this&nbsp;function&nbsp;gets&nbsp;called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;notification&nbsp;socket</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ABORT_COMMIT</strong> = 3<br>
+<strong>CONFIRMED_COMMIT</strong> = 1<br>
+<strong>CONFIRMING_COMMIT</strong> = 2<br>
+<strong>DP_CDB</strong> = 1<br>
+<strong>DP_EXTERNAL</strong> = 3<br>
+<strong>DP_JAVASCRIPT</strong> = 5<br>
+<strong>DP_NETCONF</strong> = 2<br>
+<strong>DP_SNMPGW</strong> = 4<br>
+<strong>FORWARD_INFO_DOWN</strong> = 2<br>
+<strong>FORWARD_INFO_FAILED</strong> = 3<br>
+<strong>FORWARD_INFO_UP</strong> = 1<br>
+<strong>HA_INFO_BESLAVE_RESULT</strong> = 7<br>
+<strong>HA_INFO_IS_MASTER</strong> = 5<br>
+<strong>HA_INFO_IS_NONE</strong> = 6<br>
+<strong>HA_INFO_NOMASTER</strong> = 1<br>
+<strong>HA_INFO_SLAVE_ARRIVED</strong> = 3<br>
+<strong>HA_INFO_SLAVE_DIED</strong> = 2<br>
+<strong>HA_INFO_SLAVE_INITIALIZED</strong> = 4<br>
+<strong>NCS_CQ_ITEM_COMPLETED</strong> = 4<br>
+<strong>NCS_CQ_ITEM_DELETED</strong> = 6<br>
+<strong>NCS_CQ_ITEM_EXECUTING</strong> = 2<br>
+<strong>NCS_CQ_ITEM_FAILED</strong> = 5<br>
+<strong>NCS_CQ_ITEM_LOCKED</strong> = 3<br>
+<strong>NCS_CQ_ITEM_WAITING</strong> = 1<br>
+<strong>NCS_NOTIF_CQ_PROGRESS</strong> = 4194304<br>
+<strong>NCS_NOTIF_PACKAGE_RELOAD</strong> = 2097152<br>
+<strong>NOTIF_AUDIT</strong> = 1<br>
+<strong>NOTIF_AUDIT_SYNC</strong> = 131072<br>
+<strong>NOTIF_COMMIT_DIFF</strong> = 16<br>
+<strong>NOTIF_COMMIT_FAILED</strong> = 256<br>
+<strong>NOTIF_COMMIT_FLAG_CONFIRMED</strong> = 1<br>
+<strong>NOTIF_COMMIT_FLAG_CONFIRMED_EXTENDED</strong> = 2<br>
+<strong>NOTIF_COMMIT_PROGRESS</strong> = 65536<br>
+<strong>NOTIF_COMMIT_SIMPLE</strong> = 8<br>
+<strong>NOTIF_CONFIRMED_COMMIT</strong> = 16384<br>
+<strong>NOTIF_DAEMON</strong> = 2<br>
+<strong>NOTIF_DEVEL</strong> = 4096<br>
+<strong>NOTIF_FORWARD_INFO</strong> = 1024<br>
+<strong>NOTIF_HA_INFO</strong> = 64<br>
+<strong>NOTIF_HA_INFO_SYNC</strong> = 1048576<br>
+<strong>NOTIF_HEALTH_CHECK</strong> = 262144<br>
+<strong>NOTIF_HEARTBEAT</strong> = 8192<br>
+<strong>NOTIF_NETCONF</strong> = 2048<br>
+<strong>NOTIF_REOPEN_LOGS</strong> = 8388608<br>
+<strong>NOTIF_SNMPA</strong> = 512<br>
+<strong>NOTIF_STREAM_EVENT</strong> = 524288<br>
+<strong>NOTIF_SUBAGENT_INFO</strong> = 128<br>
+<strong>NOTIF_SYSLOG</strong> = 2<br>
+<strong>NOTIF_SYSLOG_TAKEOVER</strong> = 6<br>
+<strong>NOTIF_TAKEOVER_SYSLOG</strong> = 4<br>
+<strong>NOTIF_UPGRADE_EVENT</strong> = 32768<br>
+<strong>NOTIF_USER_SESSION</strong> = 32<br>
+<strong>STREAM_NOTIFICATION_COMPLETE</strong> = 2<br>
+<strong>STREAM_NOTIFICATION_EVENT</strong> = 1<br>
+<strong>STREAM_REPLAY_COMPLETE</strong> = 3<br>
+<strong>STREAM_REPLAY_FAILED</strong> = 4<br>
+<strong>SUBAGENT_INFO_DOWN</strong> = 2<br>
+<strong>SUBAGENT_INFO_UP</strong> = 1<br>
+<strong>UPGRADE_ABORTED</strong> = 5<br>
+<strong>UPGRADE_COMMITED</strong> = 4<br>
+<strong>UPGRADE_INIT_STARTED</strong> = 1<br>
+<strong>UPGRADE_INIT_SUCCEEDED</strong> = 2<br>
+<strong>UPGRADE_PERFORMED</strong> = 3<br>
+<strong>USER_SESS_LOCK</strong> = 3<br>
+<strong>USER_SESS_START</strong> = 1<br>
+<strong>USER_SESS_START_TRANS</strong> = 5<br>
+<strong>USER_SESS_STOP</strong> = 2<br>
+<strong>USER_SESS_STOP_TRANS</strong> = 6<br>
+<strong>USER_SESS_UNLOCK</strong> = 4</td></tr></table>
+</body></html>

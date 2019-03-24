@@ -1,0 +1,12 @@
+# Created by: admin
+# Date: 2019-03-23 19:44:04
+# Via: netconf
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10003
+
+i2nsf-nsf-registrations {
+    delete:
+    i2nsf-nsf-capability-registration voip_volte_filter;
+}

@@ -1,0 +1,2112 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;17.&nbsp;The SNMP Agent</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch16.html" title="Chapter&nbsp;16.&nbsp;The CLI agent"><link rel="next" href="ch18.html" title="Chapter&nbsp;18.&nbsp;Web UI Development"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;17.&nbsp;The SNMP Agent</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch16.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch18.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.snmpa"></a>Chapter&nbsp;17.&nbsp;The SNMP Agent</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch17.html#ug.snmpa.intro">17.1. Introduction to the ConfD SNMP Agent</a></span></dt><dt><span class="sect1"><a href="ch17.html#d5e8462">17.2. Agent Functional Description</a></span></dt><dt><span class="sect1"><a href="ch17.html#ug.snmpa.genmib">17.3. Generating MIBs from YANG</a></span></dt><dt><span class="sect1"><a href="ch17.html#ug.snmpa.config.confd">17.4. Configuring the SNMP Agent</a></span></dt><dt><span class="sect1"><a href="ch17.html#d5e9585">17.5. How the SNMP Agent Interacts with ConfD</a></span></dt><dt><span class="sect1"><a href="ch17.html#d5e9617">17.6. Running the SNMP Agent as a NET-SNMP subagent</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.snmpa.intro"></a>17.1.&nbsp;Introduction to the ConfD SNMP Agent</h2></div></div></div><p>
+      The ConfD integrated SNMP agent provides an environment where
+      SNMP and other agents such as NETCONF, Web UI, and CLI, coexist
+      and use the same built-in database (CDB) for configuration
+      storage and the same set of instrumentation functions for
+      controlling managed objects (MOs).
+      Simple bindings from SNMP
+      MIB objects to YANG nodes is all that is needed to open up a
+      configuration database to be accessed by an SNMP manager.
+    </p><p>
+      The advantage of having an integrated SNMP agent in ConfD is
+      that configuration data can be accessed directly from the
+      built-in database (CDB) or from user written managed objects
+      without having to do the tedious work of writing a separate set
+      of instrumentation functions just for SNMP. One set of common
+      instrumentation functions is used for serving the NETCONF, CLI,
+      Web UI, and SNMP agents.
+    </p><p>
+      <span class="command"><strong>confdc --mib2yang</strong></span>
+      
+      is used to make YANG models
+      from MIBs.  It also provides the necessary bindings from MIB
+      objects to nodes in the YANG model.
+    </p><p>
+      To go the opposite way, from YANG to MIBs, see <a class="xref" href="ch17.html#ug.snmpa.genmib" title="17.3.&nbsp;Generating MIBs from YANG">Section&nbsp;17.3, &#8220;Generating MIBs from YANG&#8221;</a>.
+    </p><p>
+      The ConfD SNMP agent application provides the following
+      features:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            An extensible SNMP agent that understands SNMPv1, SNMPv2c
+            and SNMPv3.
+          </p></li><li class="listitem"><p>
+            A MIB compiler that understands SMIv1 and SMIv2.
+          </p></li><li class="listitem"><p>
+            Configuration data is specified in YANG models.
+          </p></li><li class="listitem"><p>
+            Common instrumentation functions for controlling
+            managed objects (MO's) via NETCONF, CLI, Web UI, and
+            SNMP agent.
+          </p></li><li class="listitem"><p>
+            The SNMP agent uses ConfD AAA datarules to determine
+            access to data, as well as using the standard SNMP
+            view based and user based access control mechanisms.
+          </p></li><li class="listitem"><p>
+            The following MIBs are builtin in the ConfD SNMP
+            agent:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                  SNMPv2-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3418.txt" target="_top">RFC
+                  3418</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-FRAMEWORK-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3411.txt" target="_top">RFC
+                  3411</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-USER-BASED-SM-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3414.txt" target="_top">RFC
+                  3414</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-VIEW-BASED-ACM-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3415.txt" target="_top">RFC
+                  3415</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-COMMUNITY-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3584.txt" target="_top">RFC
+                  3584</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-TARGET-MIB and SNMP-NOTIFICATION-MIB <a class="link" href="http://www.ietf.org/rfc/rfc3413.txt" target="_top">RFC
+                  3413</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-MPD-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3412.txt" target="_top">RFC
+                  3412</a>
+                </p></li><li class="listitem"><p>
+                  TRANSPORT-ADDRESS-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3419.txt" target="_top">RFC
+                  3419</a>
+                </p></li><li class="listitem"><p>
+                  SNMP-USM-AES-MIB
+                  <a class="link" href="http://www.ietf.org/rfc/rfc3826.txt" target="_top">RFC
+                  3826</a>
+                </p></li><li class="listitem"><p>
+                  IPV6-TC
+                  <a class="link" href="http://www.ietf.org/rfc/rfc2465.txt" target="_top">RFC
+                  2465</a>
+                </p></li></ul></div><p>
+          </p></li><li class="listitem"><p>
+            The following MIBs define the SMI language:
+            </p><div class="itemizedlist"><a name="ug.snmpa.smi_mibs"></a><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>
+                  SNMPv2-SMI
+                  <a class="link" href="http://www.ietf.org/rfc/rfc2578.txt" target="_top">
+                  RFC 2578</a>
+                </p></li><li class="listitem"><p>
+                  SNMPv2-TC
+                  <a class="link" href="http://www.ietf.org/rfc/rfc2579.txt" target="_top">
+                  RFC 2579</a>
+                </p></li><li class="listitem"><p>
+                  SNMPv2-CONF
+                  <a class="link" href="http://www.ietf.org/rfc/rfc2580.txt" target="_top">
+                  RFC 2580</a>
+                </p></li><li class="listitem"><p>
+                  RFC1155-SMI
+                  <a class="link" href="http://www.ietf.org/rfc/rfc1155.txt" target="_top">
+                  RFC 1155</a>
+                </p></li><li class="listitem"><p>
+                  RFC-1212
+                  <a class="link" href="http://www.ietf.org/rfc/rfc1212.txt" target="_top">
+                  RFC 1212</a>
+                </p></li><li class="listitem"><p>
+                  RFC-1215
+                  <a class="link" href="http://www.ietf.org/rfc/rfc1215.txt" target="_top">
+                  RFC 1215</a>
+                </p></li></ul></div><p>
+          </p></li></ul></div><p>
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8426"></a>17.1.1.&nbsp;Implementing MIBs</h3></div></div></div><p>
+        To set up an SNMP agent to manage objects in the MIB the
+        following information must be provided:
+      </p><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              MIB
+            </p></li><li class="listitem"><p>
+              YANG (<code class="filename">.yang</code> or
+              <code class="filename">.yin</code>) file.
+            </p></li><li class="listitem"><p>
+              Associations between objects in the MIB
+              and nodes in the YANG module.
+            </p></li><li class="listitem"><p>
+              Instrumentation functions (not needed for config data if
+              CDB is used)
+            </p></li></ul></div><p>
+      </p><p>
+        The MIBs are typically already existing standard or
+        proprietary enterprise MIBs, but they can also be generated
+        from the YANG models.
+      </p><p>
+        The MIB compiler needs a mapping between the MIB object to
+        nodes in the YANG module.  This is done by adding YANG statements
+        to the data model, that associate YANG nodes
+        with objects in the MIB.  The association statements can be
+        written directly in the YANG module file, or in a separate
+        YANG annotation file (see <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a>).
+      </p><p>
+        The
+        <span class="command"><strong>confdc</strong></span>
+        
+        compiler verifies that the types of the SNMP
+        objects and the types in the YANG module are compatible.
+      </p><p>
+        There are three main use cases to consider when implementing a
+        MIB with ConfD:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            The MIB is given, and a YANG module is generated from the MIB.
+          </p><p>
+            The YANG modules and associations are generated with the
+            <span class="command"><strong>confdc --mib2yang</strong></span>
+            
+            translator program.  The generated YANG modules will in this
+            case resemble the structure of the MIBs.
+          </p></li><li class="listitem"><p>
+            The MIB and YANG module are both given (or written manually).
+          </p><p>
+            In this case, MIB associations
+            should be written to bind MIB objects to the nodes in
+            the YANG data model.  Statements <code class="code">tailf:snmp-name</code>,
+            <code class="code">tailf:snmp-oid</code>, etc. are added either directly in the
+            YANG module or in a separate annotation file (see <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a>).
+          </p></li><li class="listitem"><p>
+            The YANG module is given (or written manually), and the
+            MIB is generated from it.
+          </p><p>
+            The MIBs are generated using the <span class="command"><strong>confdc --emit-mib</strong></span>  command.
+          </p></li></ol></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e8462"></a>17.2.&nbsp;Agent Functional Description</h2></div></div></div><p>
+        The ConfD SNMP agent provides SNMP access to the data
+        available through the ConfD management backplane.  The
+        same
+        data can also be accessed via other protocols/applications
+        such as NETCONF, Web UI, and CLI.  This data can be stored in
+        CDB, or made available by a data provider.
+      </p><p>
+        SNMP has certain features that are not meaningful to model in
+        YANG.  There are also some requirements on how the
+        data is to be sorted in tables since SNMP operations require a
+        strict lexicographical order of the elements in a table.
+        Below is a listing of some of the SNMP specific behaviors and
+        what needs to be done:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            The <span class="emphasis"><em>RowStatus</em></span> column in tables are handled by the
+            SNMP agent and must not be part of the YANG model.
+            Rows with a RowStatus column set to 'notReady' or 'notInService'
+            are temporarily stored in the SNMP agent and will not
+            show up in the database. Once activated they will be inserted
+            into the database.
+            </p></li><li class="listitem"><p>
+            SNMP requires objects that are stored in tables to be
+            ordered in a strict lexicographical order.  If we have a
+            list in a YANG module which is handled by an
+            instrumentation function, the
+            <span class="phrase"><code class="function">get_next()</code> callback function </span>
+            
+            (which must be provided by the user), must return the elements in
+            the same lexicographical order as SNMP expects. If the
+            order of the elements is not correct, then an SNMP manager will
+            not be able to correctly traverse the elements in a table.
+            If the list statement has a
+            <code class="code">tailf:secondary-index</code> with the name
+            <span class="emphasis"><em>snmp</em></span>, the agent will iterate over the table
+            using this index.  Thus,
+            the instrumentation code can reply with instances in SNMP
+            lexicographical order when the objects are retrieved over
+            SNMP, and a more natural sort order when the objects are
+            retrieved in the CLI and other northbound interfaces.
+            </p></li><li class="listitem"><p>
+            Tables with <span class="emphasis"><em>INDEX</em></span> with dynamic length
+            must have a length byte as part of the index.  If the
+            table index is specified as <span class="emphasis"><em>IMPLIED</em></span>,
+            then the length byte is excluded from the index. The statement
+            <code class="code">tailf:sort-order</code> can be specified in
+            lists and secondary indexes in the YANG module, to control
+            whether index elements should be ordered with the length
+            byte included or not.
+            </p></li><li class="listitem"><p>
+              Enumerations must have the same enumerated values in
+              YANG and in the MIB.  Note that the symbolic string
+              associated with the enum may be different in the YANG
+              module and MIB.
+            </p></li><li class="listitem"><p>
+            SNMP v3 has support for <span class="emphasis"><em>contexts</em></span>.
+            The ConfD SNMP agent uses <span class="emphasis"><em>""</em></span> as the
+            default context where all operations for this context are
+            made towards the <span class="emphasis"><em>running</em></span> database.
+            </p></li><li class="listitem"><p>
+              Scalar variables of <span class="emphasis"><em>TestAndIncr</em></span> are
+              automatically handled by the agent.
+            </p></li></ul></div><p>
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8491"></a>17.2.1.&nbsp;Operation Overview</h3></div></div></div><p>
+          The following steps are needed to get a ConfD SNMP agent
+          up and running:
+            </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Write a MIB module, generate one from a YANG
+                module, or use an existing one.</p></li><li class="listitem"><p>Write a YANG module, generate one from a MIB
+                module, or use an existing one.</p></li><li class="listitem"><p>Write associations that provide the mapping of
+                MIB objects into YANG nodes.</p></li><li class="listitem"><p>Write instrumentation functions for nodes in
+                the YANG module, or store data in CDB.</p></li><li class="listitem"><p>Compile the YANG module into an
+                <code class="filename">.fxs</code> file.</p></li><li class="listitem"><p>Run the MIB together with the YANG
+                <code class="filename">.fxs</code> file, and an optional mib
+                annotations file (<code class="filename">.miba</code>, see
+                <a class="xref" href="rn03re18.html" title="mib_annotations"><span class="refentrytitle">mib_annotations</span>(5)</a>), through
+                the MIB compiler to produce a
+                <code class="filename">.bin</code> file.</p></li><li class="listitem"><p>Configure the agent
+                (<code class="filename">confd.conf</code>
+                 and initial MIB
+                data).  Specify which compiled MIBs are to be loaded
+                by the agent (<code class="filename">.bin</code> files) in
+                <code class="filename">confd.conf</code>
+                .</p></li><li class="listitem"><p>The produced <code class="filename">.fxs</code> file as well as the
+                <code class="filename">.fxs</code> files for the built-in MIBs must be
+                found in the <span class="emphasis"><em>loadPath</em></span> specified in
+                <code class="filename">confd.conf</code>
+                .</p></li><li class="listitem"><p>Start ConfD.</p></li></ol></div><p>
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8525"></a>17.2.2.&nbsp;MIBs and YANG</h3></div></div></div><p>
+        The basic objects in a MIB are scalar objects and table
+        objects.  Each MIB object must be mapped to a node in a YANG
+        module.  Scalar MIB objects must be mapped to YANG leafs with
+        matching types, so that the agent can translate the value
+        between the SNMP value and the internal value defined by the
+        YANG type.  Tables in the MIB must be mapped to lists in YANG.
+        The mapping between the MIB objects and the YANG nodes is
+        specified in the YANG module (or annotation file for
+        the module) using <code class="code">tailf:snmp-name</code> and
+        <code class="code">tail:snmp-oid</code> statements.
+        <code class="code">tailf:snmp-name</code> specifies the symbolic name of a
+        MIB object, and <code class="code">tailf:snmp-oid</code> specifies the
+        corresponding OID.
+      </p><p>
+        Let us assume that we have the following MIB named
+        SIMPLE-MIB containing a scalar and table:
+      </p><div class="informalexample"><pre class="programlisting">
+-- a scalar
+numberOfHosts OBJECT-TYPE
+    SYNTAX      INTEGER (0..65535)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+            "Return the current number of hosts"
+    ::= { simpleVariables 1 }
+
+-- a table
+hostTable OBJECT-TYPE
+    SYNTAX       SEQUENCE OF HostEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+        "The table of hosts."
+    ::= { simpleTables 1 }
+
+hostEntry OBJECT-TYPE
+    SYNTAX       HostEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+        "Information about a host."
+    INDEX       { hostName }
+    ::= { hostTable 1 }
+
+HostEntry ::= SEQUENCE {
+    hostName              DisplayString,
+    hostEnabled           TruthValue,
+    hostNumberOfServers   Integer32,
+    hostRowStatus         RowStatus
+}
+
+hostName OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+        "The unique index value of a row in this table."
+    ::= { hostEntry 1 }
+
+hostEnabled OBJECT-TYPE
+    SYNTAX       TruthValue
+    MAX-ACCESS   read-create
+    STATUS       current
+    DESCRIPTION
+        "A bool value saying if host is enabled or not."
+    ::= { hostEntry 2 }
+
+hostNumberOfServers OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-only
+    STATUS       current
+    DESCRIPTION
+        "A read-only integer saying how many servers there currently are."
+    ::= { hostEntry 3 }
+
+hostRowStatus OBJECT-TYPE
+    SYNTAX       RowStatus
+    MAX-ACCESS   read-create
+    STATUS       current
+    DESCRIPTION
+        "The status of this conceptual row in the hostTable."
+    ::= { hostEntry 4 }
+</pre></div><p>
+        An association must be written to bind the two SNMP objects
+        (the scalar and the table) into YANG.  Below
+        is an example of a simple YANG module with SNMP statements that
+        maps to SNMP objects in the MIB.
+      </p><div class="example"><a name="d5e8536"></a><p class="title"><b>Example&nbsp;17.1.&nbsp;Simple YANG module</b></p><div class="example-contents"><pre class="programlisting">
+module simple {
+  namespace "http://tail-f.com/ns/simple";
+  prefix simple;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef nameType {
+    type string {
+      length "min .. 255";
+    }
+  }
+
+  tailf:snmp-mib-module-name TAIL-F-TEST-MIB;
+
+  container simpleObjects {
+
+    leaf numberOfHosts {
+      type uint16;
+      mandatory true;
+      tailf:snmp-name numberOfHosts;
+    }
+
+    container hosts {
+      list host {
+        key name;
+        max-elements 64;
+        tailf:sort-order snmp;
+        tailf:snmp-name hostTable;
+        tailf:snmp-row-status-column 4;
+
+        leaf name {
+          type nameType;
+        }
+
+        leaf enabled {
+          type boolean;
+          mandatory true;
+          tailf:snmp-name hostEnabled;
+        }
+
+        leaf numberOfServers {
+          type uint16;
+          mandatory true;
+          tailf:snmp-oid .3;
+        }
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>
+        In the code listing above there is one variable
+        <code class="varname">numberOfHosts</code> mapped to the SNMP scalar
+        variable <code class="varname">numberOfHosts</code> using the
+        <code class="code">tailf:snmp-name</code> statement.  The
+        <code class="varname">numberOfServers</code> object uses the alternative
+        notation with a <code class="code">tailf:snmp-oid</code> statement.  Which
+        one to use is a matter of taste.
+      </p><p>
+        The list <span class="emphasis"><em>host</em></span> is mapped
+        to the SNMP table <span class="emphasis"><em>hostTable</em></span> using
+        <code class="code">tailf:snmp-name hostTable</code>. It would also be possible
+        to specify the <code class="code">tailf:snmp-oid</code> if preferred.  Notice also
+        that for tables which support creation and deletion of rows
+        through a RowStatus column, the statement
+        <code class="code">tailf:snmp-row-status-column</code> can be given.
+        (This is not necessary if the model will be used with an existing MIB,
+        but it is necessary for
+        <span class="command"><strong>confdc --emit-mib</strong></span>
+        
+        to
+        generate a writable table if the model is used for generating a new
+        MIB.) See <a class="xref" href="ch17.html#ug.snmpa.rowstatus" title="17.2.9.&nbsp;The RowStatus column">Section&nbsp;17.2.9, &#8220;The RowStatus column&#8221;</a> for more details.
+      </p><p>
+        It is possible to map one YANG node to multiple SNMP objects.
+        For example, if an SNMP table augments another table, both
+        these tables can be implemented in a single YANG list, where
+        some leafs are mapped to the base table, and some are mapped
+        to the augmented table.
+      </p><p>
+        The following example illustrates the idea.  The single YANG
+        list 'interface' is mapped to the MIB tables ifTable,
+        ifXTable, and ipv4InterfaceTable:
+      </p><div class="informalexample"><pre class="programlisting">
+list interface {
+  key index;
+  tailf:snmp-name 'ifTable'; // primary table
+  tailf:snmp-name 'ifXTable';
+  tailf:snmp-name 'IP-MIB:ipv4InterfaceTable';
+
+  leaf index {
+    type int32;
+  }
+  leaf description {
+    type string;
+    tailf:snmp-name 'ifDescr';  // mapped to primary table
+  }
+  leaf name {
+    type string;
+    tailf:snmp-name 'ifXTable:ifName';
+  }
+  leaf ipv4-enable {
+    type boolean;
+    tailf:snmp-name
+      'IP-MIB:ipv4InterfaceTable:ipv4InterfaceEnableStatus';
+  }
+  ...
+}
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8557"></a>17.2.3.&nbsp;Types</h3></div></div></div><p>
+        When the SNMP agent receives a request to GET an object, it
+        will lookup the object in the compiled MIB, and through the
+        association information find the corresponding YANG node.
+        Next, it will retrieve the correct instances value
+        from a data provider.  This value will be encoded according to
+        the type in the YANG module.  The SNMP agent translates this
+        value to the corresponding SNMP value, and sends the reply to
+        the manager.  For this translation to work, the types in the
+        YANG module and MIB must match.
+      </p><p>
+        The following table shows how SMI data types are mapped to
+        YANG datatypes.  This mapping is used internally in the agent
+        in runtime, and also by the
+        <span class="command"><strong>confdc --mib2yang</strong></span>
+        
+        program when a YANG module is generated
+        from a MIB.
+        <span class="phrase">
+        See the <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a>
+        man page for details about the XSD and confd types.
+        </span>
+      </p><div class="table"><a name="ug.snmpa.types.s2y"></a><p class="title"><b>Table&nbsp;17.1.&nbsp;SMI mapping to YANG types</b></p><div class="table-contents"><table><thead><tr>
+            <td>SMI</td> <td>YANG</td> <td>C value type</td> <td>XML example</td>
+          </tr></thead><tbody><tr>
+            <td>OBJECT IDENTIFIER</td> <td>yang:object-identifier</td> <td>C_OID</td>
+            <td>1.3.6.1.2.1</td>
+          </tr><tr>
+            <td>IpAddress</td> <td>inet:ipv4-address</td> <td>C_IPV4</td>
+            <td>192.168.2.3</td>
+          </tr><tr>
+            <td>Unsigned32</td> <td>uint32</td> <td>C_UINT32</td> <td></td>
+          </tr><tr>
+            <td>Gauge32</td> <td>yang:gauge32</td> <td>C_UINT32</td> <td></td>
+          </tr><tr>
+            <td>Counter32</td> <td>yang:counter32</td> <td>C_UINT32</td> <td></td>
+          </tr><tr>
+            <td>TimeTicks</td> <td>yang:time-ticks</td> <td>C_UINT32</td> <td></td>
+          </tr><tr>
+            <td>Integer32</td> <td>int32</td> <td>C_INT32</td> <td></td>
+          </tr><tr>
+            <td>Counter64</td> <td>yang:counter64</td> <td>C_UINT64</td> <td></td>
+          </tr><tr>
+            <td>INTEGER { enums... }</td> <td>enumeration</td>
+            <td>C_ENUMHASH</td> <td>udp</td>
+          </tr><tr>
+            <td>INTEGER</td> <td>int32</td> <td>C_INT32</td> <td>42</td>
+          </tr><tr>
+            <td>DisplayString</td> <td>string</td> <td>C_BUF/C_STR</td>
+            <td>Hello world!</td>
+          </tr><tr>
+            <td>OCTET STRING (with DISPLAY-HINT on the form "Na" or "Nt")</td> <td>string</td> <td>C_BUF/C_STR</td>
+            <td>Hello world!</td>
+          </tr><tr>
+            <td>OCTET STRING (binary), Opaque</td> <td>tailf:hex-list</td>
+            <td>C_BINARY</td>
+            <td>4f:12:ff</td>
+          </tr><tr>
+            <td>IPV6-TC::Ipv6Address</td> <td>inet:ipv6-address</td> <td>C_IPV6</td>
+            <td>::213.180.94.158</td>
+          </tr><tr>
+            <td>SNMPv2-TC::DateAndTime</td> <td>yang:date-and-time</td> <td>C_DATETIME</td>
+            <td>2006-08-17T16:30:53+02:00</td>
+          </tr><tr>
+            <td>SNMPv2-TC::TruthValue</td>
+            <td>boolean, enumeration (1), empty</td>
+            <td>C_BOOL, C_ENUMHASH</td>
+            <td>true</td>
+          </tr><tr>
+            <td>SNMPv2-TC::PhysAddress</td> <td>yang:phys-address</td><td>C_BINARY</td>
+            <td></td>
+          </tr><tr>
+            <td>SNMPv2-TC::MacAddress</td> <td>yang:mac-address</td><td>C_BINARY</td>
+            <td></td>
+          </tr><tr>
+            <td>SNMPv2-TC::TimeStamp</td> <td>yang:timestamp</td><td>C_UINT32</td>
+            <td></td>
+          </tr><tr>
+            <td>SNMPv2-TC::TimeInterval</td> <td>int32</td><td>C_INT32</td>
+            <td></td>
+          </tr><tr>
+            <td>SNMPv2-TC::TAddress</td> <td>tailf:octet-list</td><td>C_BINARY</td>
+            <td></td>
+          </tr></tbody></table></div></div><br class="table-break"><p>
+        (1) SNMPv2-TC::TruthValue is a bit special.  At runtime, the
+        agent can map it either to a normal enumeration (which is how
+        it is defined in SNMPv2-TC), to a boolean, to an empty leaf,
+        or to a presence-container.  When <span class="command"><strong>confd
+        --mib2yang</strong></span> is used to create the YANG module from a
+        MIB, it uses the enumeration mapping.  This is also the
+        recommended mapping.  If a boolean is used, it cannot be part
+        of the INDEX in a table.
+      </p><p>
+        The following table shows how YANG data types are
+        mapped to SMI datatypes.  This mapping is used internally
+        in the agent in runtime, and also by the
+        <span class="command"><strong>confdc --emit-mib</strong></span>
+        
+        program when a MIB is generated from a
+        YANG module.
+      </p><p>
+        If the association between the MIB and YANG module is written
+        manually, the type mappings in this table must be used.
+      </p><p>
+        Some of the more complex YANG types that cannot be
+        easily translated to native SMI types are translated into
+        strings of the type "ConfdString" In this case, the
+        human-readable string value is passed over SNMP.  These
+        types cannot be used as INDEX in SNMP tables.
+      </p><p>
+        See the <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a> man page
+        for details about the XSD and confd types.
+      </p><div class="table"><a name="ug.snmpa.types.y2s"></a><p class="title"><b>Table&nbsp;17.2.&nbsp;YANG mapping to SMI types</b></p><div class="table-contents"><table><thead><tr>
+            <td>YANG</td> <td>SMI</td> <td>C value type</td> <td>Use as INDEX</td>
+          </tr></thead><tbody><tr>
+            <td>int32</td> <td>Integer32</td> <td>C_INT32</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>int16</td> <td>Integer32 (-32768..32767)</td> <td>C_INT16</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>int8</td> <td>Integer32 (-128..127)</td> <td>C_INT8</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>uint64</td> <td>ConfdString</td> <td>C_UINT64</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>uint32</td> <td>Unsigned32</td> <td>C_UINT32</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>uint16</td> <td>Unsigned32 (0..65535)</td> <td>C_UINT16</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>uint8</td> <td>Unsigned32 (0..255)</td> <td>C_UINT8</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>boolean</td> <td>SNMPv2-TC::TruthValue</td> <td>C_BOOL</td>
+            <td>no</td>
+          </tr><tr>
+            <td>enumeration</td> <td>INTEGER { enums... }</td>
+            <td>C_ENUMHASH</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>string</td>
+            <td>OCTET STRING</td> <td>C_BUF / C_STR</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>decimal64</td> <td>ConfdString</td> <td>C_DECIMAL64</td>
+            <td>no</td>
+          </tr><tr>
+            <td>int64</td> <td>ConfdString</td> <td>C_INT64</td>
+            <td>no</td>
+          </tr><tr>
+            <td>union</td> <td>ConfdString</td> <td>depending on type</td>
+            <td>no</td>
+          </tr><tr>
+            <td>binary</td> <td>OCTET STRING</td> <td>C_BINARY</td>
+            <td>no</td>
+          </tr><tr>
+            <td>empty</td> <td>SNMPV2-TC::TruthValue</td> <td>C_BOOL</td>
+            <td>no</td>
+          </tr><tr>
+            <td>identity</td> <td>not supported</td> <td>n/a</td>
+            <td>n/a</td>
+          </tr><tr>
+            <td>yang:date-and-time</td> <td>SNMPv2-TC::DateAndTime</td> <td>C_DATETIME</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>yang:counter32</td> <td>Counter32</td> <td>C_UINT32</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>yang:counter64</td> <td>Counter64</td> <td>C_UINT64</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>yang:gauge32</td> <td>Gauge32</td> <td>C_UINT32</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>yang:object-identifier</td> <td>OBJECT IDENTIFIER</td> <td>C_OID</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>xs:float, xs:double, xs:decimal</td> <td>ConfdString</td> <td>C_DOUBLE</td>
+            <td>no</td>
+          </tr><tr>
+            <td>inet:ipv4-address</td> <td>IpAddress</td> <td>C_IPV4</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:ipv6-address</td> <td>IPV6-TC::Ipv6Address</td> <td>C_IPV6</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:ip-address</td> <td>OCTET STRING (SIZE (4|16))</td>
+            <td>C_IPV4 | C_IPV6</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:host</td> <td>ConfdString</td> <td>C_BUF / C_STR</td>
+            <td>no</td>
+          </tr><tr>
+            <td>inet:domain-name</td> <td>ConfdString</td> <td>C_BUF / C_STR</td>
+            <td>no</td>
+          </tr><tr>
+            <td>inet:port-number</td> <td>Unsigned32 (0..65535)</td> <td>C_UINT16</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:ipv4-prefix</td> <td>OCTET STRING (SIZE (5))</td> <td>C_IPV4PREFIX</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:ipv6-prefix</td> <td>OCTET STRING (SIZE (17))</td> <td>C_IPV6PREFIX</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>inet:ip-prefix</td> <td>OCTET STRING (SIZE (5|17))</td>
+            <td>C_IPV4PREFIX | C_IPV6PREFIX</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>tailf:size</td> <td>OCTET STRING</td> <td>C_BUF / C_STR</td>
+            <td>no</td>
+          </tr><tr>
+            <td>tailf:octet-list, tailf:hex-list</td> <td>OCTET STRING</td> <td>C_BINARY</td>
+            <td>yes</td>
+          </tr><tr>
+            <td>xs:date</td> <td>ConfdString</td> <td>C_DATE</td>
+            <td>no</td>
+          </tr><tr>
+            <td>xs:time</td> <td>ConfdString</td> <td>C_TIME</td>
+            <td>no</td>
+          </tr><tr>
+            <td>xs:duration</td> <td>ConfdString</td> <td>C_DURATION</td>
+            <td>no</td>
+          </tr><tr>
+            <td>xs:hexBinary</td> <td>OCTET STRING</td> <td>C_BINARY</td>
+            <td>no</td>
+          </tr><tr>
+            <td>xs:QName</td> <td>not supported</td> <td>n/a</td>
+            <td>n/a</td>
+          </tr></tbody></table></div></div><br class="table-break"><p>
+        A YANG presence container and a leaf of type empty can be
+        mapped to a SMI scalar or columnar object of type
+        SNMPv2-TC::TruthValue.  If the empty leaf or presence
+        container exists, the SMI object is 'true', and if it does not
+        exist, but its parent exists, it has the value 'false'.
+        Setting the SMI object to 'true' creates the leaf or presence
+        container, and setting it to 'false' deletes it.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8886"></a>17.2.4.&nbsp;Generating the YANG module</h3></div></div></div><p>
+            The
+            <span class="command"><strong>confdc --mib2yang</strong></span>
+            
+            is used to
+            generate a YANG (<code class="filename">.yang</code>) files from
+            MIBs.  The element structure in the resulting
+            YANG module will resemble the structure of the objects in the
+            MIB.
+          </p><p>
+         If the MIB IMPORTs other MIBs, these MIBs must be available
+         (as .mib files) to the compiler when a YANG module is
+         generated.  By default, all MIBs in the current directory and
+         all builtin MIBs (see <a class="xref" href="ch17.html#ug.snmpa.intro" title="17.1.&nbsp;Introduction to the ConfD SNMP Agent">Section&nbsp;17.1, &#8220;Introduction to the ConfD SNMP Agent&#8221;</a>)
+         are available. Since
+         the compiler uses the tool <span class="command"><strong>smidump</strong></span> to
+         perform the conversion to YANG, the environment variable
+         <code class="varname">SMIPATH</code> can be set to a colon-separated
+         list of directories to search for MIB files.
+       </p><div class="example"><a name="d5e8895"></a><p class="title"><b>Example&nbsp;17.2.&nbsp;Generating and compiling YANG from MIB</b></p><div class="example-contents"><pre class="screen">
+$ confdc --mib2yang -o SIMPLE-MIB.yang SIMPLE-MIB.mib
+$ confdc -c -o SIMPLE-MIB.fxs SIMPLE-MIB.yang
+</pre></div></div><br class="example-break"><p>
+         Below is the generated YANG module. The structure of the YANG module
+         resembles the structure of the SIMPLE-MIB it was generated from.
+       </p><div class="example"><a name="d5e8899"></a><p class="title"><b>Example&nbsp;17.3.&nbsp;The YANG file generated by
+         <span class="command">confdc --mib2yang</span>
+         
+         </b></p><div class="example-contents"><pre class="programlisting">
+module SIMPLE-MIB {
+  namespace "http://tail-f.com/ns/mibs/SIMPLE-MIB/200702080000Z";
+  prefix SIMPLE-MIB;
+  tailf:id "";
+  tailf:snmp-mib-module-name SIMPLE-MIB;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  import SNMPv2-TC {
+    prefix SNMPv2-TC;
+  }
+
+  revision 2007-02-08 {
+    description "";
+  }
+  container SIMPLE-MIB {
+    container variables {
+      tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.1;
+      leaf numberOfHosts {
+        type int32;
+        tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.1.1;
+      }
+    }
+    container hostTable {
+      list hostEntry {
+        key hostName;
+        tailf:sort-order snmp;
+        tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.2.1;
+        leaf hostName {
+          type hostNameType;
+          tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.2.1.1.1;
+        }
+        leaf hostEnabled {
+          type SNMPv2-TC:TruthValue;
+          tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.2.1.1.2;
+        }
+        leaf hostNumberOfServers {
+          type int32;
+          tailf:snmp-oid 1.3.6.1.4.1.24961.3.1.2.1.1.3;
+        }
+      }
+    }
+  }
+  typedef hostNameType {
+    type string {
+      length "min .. 64";
+    }
+  }
+}
+</pre></div></div><br class="example-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8903"></a>17.2.5.&nbsp;Compiling the YANG modules</h3></div></div></div><p>
+         Compile the YANG modules representing MIBs the same way that
+         any other YANG module is compiled, using <span class="command"><strong>confdc</strong></span> .
+       </p><p>
+         Note that all YANG modules representing the builtin MIBs are
+         available in <code class="filename">$CONFD_DIR/src/confd/snmp/yang</code>
+         directory.  The parameter <span class="command"><strong>--yangpath</strong></span> can be
+         given to the compiler to search this directory.
+       </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.compile"></a>17.2.6.&nbsp;Compiling the MIBs</h3></div></div></div><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="354"><tr><td align="center"><img src="pics/mibcompile2.png" align="middle" width="354"></td></tr></table><div class="caption"><p>MIB compilation</p></div></div><p>
+         The
+         <span class="command"><strong>confdc</strong></span>
+         
+         compiler is used for
+         compiling the MIB into a binary format that can be loaded by
+         the ConfD SNMP agent. The MIB is compiled with the YANG .fxs file
+         with associations that map the YANG nodes into
+         objects in the MIB.  The resulting file is a binary (.bin)
+         file that is loaded into the ConfD SNMP agent.
+       </p><div class="informalexample"><pre class="screen">$ confdc -c SIMPLE-MIB.mib simple.fxs</pre></div><p>
+         If the MIB IMPORTs other MIBs, these MIBs must be available
+         (as compiled .bin files) to the compiler.  By default, all
+         compiled MIBs in the current directory and all builtin MIBs
+         are available.  Use the parameters
+         <span class="emphasis"><em>--include-dir</em></span> or
+         <span class="emphasis"><em>--include-file</em></span> to specify where the
+         compiler can find the compiled MIBs.
+       </p><p>
+         Note that not every object in the MIB must have a mapping to
+         a node in the YANG module.  By using a separate MIB
+         annotation file, ConfD can be instructed how these missing
+         objects should be treated by the SNMP agent.  The agent can
+         treat the objects either as not implemented, or as
+         implemented but non-existent.
+       </p><p>
+         The format of an annotation line is
+         <span class="emphasis"><em>object-name</em></span>
+         <span class="emphasis"><em>annotation</em></span>, where
+         <span class="emphasis"><em>object-name</em></span> is the name of an object
+         type (column or scalar), and <span class="emphasis"><em>annotation</em></span>
+         has the form <code class="code">behavior=noSuchObject</code>,
+         <code class="code">behavior=noSuchInstance</code>,
+         <code class="code">max_access=not_accessible</code>,
+         <code class="code">max_access=read_only</code>.
+        </p><p>
+          If a line is blank or starts with a <code class="code">#</code> character, it
+          is ignored. An object name may occur on several lines.
+        </p><p>
+          Example:
+        </p><div class="informalexample"><pre class="screen">
+$ cat HOST-RESOURCES-MIB.miba
+# tell the agent to not implement these objects
+hrPartitionID           behavior=noSuchInstance
+hrSWInstalledDate       behavior=noSuchObject
+$ confdc -c HOST_RESOURCES-MIB.mib \
+         --mib-annotation HOST_RESOURCES.miba host-resources.fxs
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e8939"></a>17.2.7.&nbsp;Loading MIBs</h3></div></div></div><p>
+            The ConfD SNMP agent have the following built-in MIBs:
+          </p><p>
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>SNMPv2-MIB, a mandatory MIB for an agent. This MIB is
+                always loaded at start-up.</p></li><li class="listitem"><p>SNMP-MPD-MIB, a mandatory MIB for an agent. This MIB
+                is always loaded at start-up if the agent is
+                configured for SNMPv3.</p></li><li class="listitem"><p>SNMP-FRAMEWORK-MIB, a mandatory MIB for an agent. This
+                MIB is always loaded at start-up if the agent is
+                configured for SNMPv3.</p></li><li class="listitem"><p>SNMP-COMMUNITY-MIB, handles SNMP v1 and v2c communities.</p></li><li class="listitem"><p>SNMP-VIEW-BASED-ACM-MIB, handles the view based access control.</p></li><li class="listitem"><p>SNMP-USER-BASED-SM-MIB, handles the user based access control.</p></li><li class="listitem"><p>SNMP-TARGET-MIB, to be able to configure targets for SNMP traps.</p></li><li class="listitem"><p>SNMP-NOTIFICATION-MIB, defines SNMP traps. </p></li><li class="listitem"><p>IPV6-TC, defines some IPv6 specific
+                TEXTUAL-CONVENTIONs.</p></li><li class="listitem"><p>TRANSPORT-ADDRESS-MIB, defines some
+                OBJECT-IDENTITYs for transport protocols.  This MIB
+                module cannot be loaded as a built-in module in the
+                agent.  If some other MIB IMPORTs this MIB, then it
+                needs to be compiled and loaded as other non-built-in
+                MIBs.</p></li><li class="listitem"><p>SNMP-USM-AES-MIB, defines an OBJECT-IDENTITY for
+                the AES privacy protocol.  This MIB module must not be
+                loaded into the agent.</p></li></ul></div><p>
+          </p><p>
+            These MIBs of course must have their corresponding
+            YANG .fxs files loaded in order for the SNMP agent to work (see
+            the next section).  The MIBs themselves are not required
+            to be loaded. The user decides which MIBs should be
+            loaded, and there may be reasons to not provide SNMP
+            access to certain MIBs.
+          </p><p>
+            The MIBs SNMPv2-MIB, SNMP-MPD-MIB, and SNMP-FRAMEWORK-MIB,
+            are always loaded into the ConfD SNMP agent at
+            start-up. These MIBs are required for an SNMP agent.
+          </p><p>
+            The other built-in MIBs are not loaded per default, which
+            means that they cannot be accessed/configured via SNMP but
+            of course via for example CDB init files (see <a class="xref" href="ch05.html#ug.cdb.init" title="5.8.&nbsp;Loading initial data into CDB">Section&nbsp;5.8, &#8220;Loading initial data into CDB&#8221;</a>) NETCONF, or even CLI
+            directly.  If the intention is to have these MIBs loaded,
+            they must be listed in <code class="filename">confd.conf</code>
+            without any explicit paths to where they are stored as
+            shown in the example below.
+          </p><p>
+            Other MIBs (that are not built-in) are loaded by
+            specifying their absolute or relative paths, or
+            alternatively the MIBs can be loaded from
+            ConfDs
+            loadPath.  We recommend that these MIBs are loaded from
+            the load path.  This is how other data model files
+            (<code class="filename">.fxs</code> etc) are handled.
+          </p><p>
+            The main reason for this recommendation is how MIBs can be
+            dynamically reloaded.  MIBs that are explicitly listed are
+            reloaded by giving the command <span class="command"><strong>confd
+            --reload</strong></span>.  If any MIB cannot be loaded for
+            whatever reason,
+            ConfD halts.  MIBs in the load path are
+            reloaded using the data model upgrade functions, see <a class="xref" href="ch13.html" title="Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade">Chapter&nbsp;13, <i>In-service Data Model Upgrade</i></a>.
+          </p><div class="example"><a name="d5e8976"></a><p class="title"><b>Example&nbsp;17.4.&nbsp;Specifying built-in MIBs to be loaded into the agent</b></p><div class="example-contents"><pre class="programlisting">
+&lt;snmpAgent&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;mibs&gt;
+    &lt;!-- Load built-in MIBS --&gt;
+    &lt;file&gt;SNMP-COMMUNITY-MIB.bin&lt;/file&gt;
+    &lt;file&gt;SNMP-VIEW-BASED-ACM-MIB.bin&lt;/file&gt;
+    &lt;file&gt;SNMP-USER-BASED-SM-MIB.bin&lt;/file&gt;
+    &lt;file&gt;SNMP-TARGET-MIB.bin&lt;/file&gt;
+    &lt;file&gt;SNMP-NOTIFICATION-MIB.bin&lt;/file&gt;
+
+    &lt;!-- Load specific user MIBs --&gt;
+    &lt;file&gt;/etc/confd/mibs/SIMPLE-MIB.bin&lt;/file&gt;
+
+    &lt;!-- Load all MIBs present in the loadPath --&gt;
+    &lt;fromLoadPath&gt;true&lt;/fromLoadPath&gt;
+  &lt;/mibs&gt;
+&lt;/snmpAgent&gt;
+</pre></div></div><br class="example-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.csload"></a>17.2.8.&nbsp;Loading YANG modules for built-in MIBs</h3></div></div></div><p>
+            The SNMP agent has a few built-in MIBs that store its
+            configuration data in CDB.  The following <code class="filename">.fxs</code>
+            files defines namespaces for the built-in MIBs and must be
+            loaded at start-up if the SNMP agent is enabled:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                <code class="filename">SNMPv2-MIB.fxs</code>,
+                <code class="filename">SNMPv2-SMI.fxs</code>,
+                <code class="filename">SNMPv2-TC.fxs</code> - contains base
+                SNMPv2 types
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-FRAMEWORK-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-MPD-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-COMMUNITY-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-VIEW-BASED-ACM-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-USER-BASED-SM-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-TARGET-MIB.fxs</code>
+              </p></li><li class="listitem"><p>
+                <code class="filename">SNMP-NOTIFICATION-MIB.fxs</code>
+              </p></li></ul></div><p>
+            Preferably a <code class="sgmltag-element">loadPath</code> in the
+            <code class="filename">confd.conf</code>
+             file can be set to the
+            directory where these files are installed. If ConfD fails
+            to load these files it will terminate with a fatal error.
+          </p><p>
+            The built-in <code class="filename">.fxs</code> files are delivered as
+            pre-built, but the YANG source code is provided
+            as well. Tampering with these files is not advised and may
+            result in a serious internal error.  However we may wish
+            to recompile these YANG modules using the
+            <span class="command"><strong>confdc</strong></span>
+            
+            compiler flag <code class="option">--export</code>, to not expose the built-in
+            MIB data to other ConfD internal protocols/applications
+            such as NETCONF, CLI, and Web UI.  The YANG source
+            code is provided for this reason.
+          </p><p>
+            Also, it is possible to provide external callpoints for the
+            built-in MIB data to store the data in an external database
+            instead of CDB.
+
+            If this is done and the SNMP Agent config is stored in an
+            external database, ConfD must be told to pick up changes to
+            the SNMP Agent config by means of the
+            <code class="function">maapi_snmpa_reload()</code> function, see the
+            <span class="olink">????</span>
+            manual page.
+
+            This is a drawback compared to storing the data in CDB,
+            since then, changes to the config will be automatically
+            picked up by ConfD.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.rowstatus"></a>17.2.9.&nbsp;The RowStatus column</h3></div></div></div><p>
+            The rowstatus column for tables is always handled by the
+            SNMP agent and should not be modeled in the YANG
+            modules. The <code class="code">tailf:snmp-row-status-column</code>
+            statement can be left out and the row status column will
+            be looked up by the compiler.
+          </p><p>
+            The <span class="emphasis"><em>RowStatus</em></span> column in an SNMP table
+            is used for reading the status of a conceptual row in a
+            table and for creating and deleting new conceptual rows in
+            the table.  The following values are always defined for
+            the row status:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                <span class="emphasis"><em>active</em></span> (1) - indicates that the conceptual
+                row is available.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>notInService</em></span> (2) - indicates that the
+                conceptual row is unavailable.  This is a temporary
+                state where the row is stored in the SNMP agent and
+                not in the database. A row with a RowStatus of
+                'notInService' can be made 'active' which means that
+                the row will be inserted into the database.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>notReady</em></span> (3) - indicates that the conceptual
+                row is missing information.  This is a temporary state
+                where the row is stored in the SNMP agent and not in
+                the database. A RowStatus of 'notReady' is returned to
+                indicate that the row is missing a value for one or
+                more mandatory column(s).  When the row have all the
+                mandatory values set, a RowStatus of 'notInService'
+                will be returned instead of 'notReady'.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>createAndGo</em></span> (4) - set by manager to create
+                new row instance.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>createAndWait</em></span> (5) - set by manager to create
+                new row instance but not make it available.  A
+                RowStatus of 'notInService' or 'notReady' is returned
+                depending on if all values for the mandatory columns
+                are set or not.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>destroy</em></span> (6) - set by manager to delete all
+                instances in the conceptual row.
+              </p></li></ul></div><p>
+            The <span class="emphasis"><em>createAndWait</em></span> creates a new
+            instance of a conceptual row in a temporary state where
+            the row will have a RowStatus set to 'notReady' or
+            'notInService' depending on if all the mandatory columns
+            are set for the column or not. It can be made 'active' and
+            will then be inserted into the database.  Note that there
+            are no guarantees that the row will exist more than 5
+            minutes (by default) in the temporary storage in the SNMP
+            Agent.  The temporary cache used by the SNMP agent for
+            this storage is volatile.  The temporary storage time can
+            be configured in by setting
+            <span class="emphasis"><em>temporaryStorageTime</em></span> in
+            <code class="filename">confd.conf</code>
+            .
+          </p><p>
+            To delete a conceptual row the <span class="emphasis"><em>destroy</em></span> value is used.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9051"></a>17.2.10.&nbsp;TestAndIncr</h3></div></div></div><p>
+          When a YANG module is generated from a MIB, and the MIB
+          contains any scalar object of type
+          <span class="emphasis"><em>TestAndIncr</em></span>, these objects are not
+          translated into the YANG module, since they don't make sense
+          outside SNMP.  Then, when the MIB is compiled, the compiler
+          generates code so ConfD automatically handles these objects.
+          No coding is required.
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.access"></a>17.2.11.&nbsp;MIB access and YANG config</h3></div></div></div><p>
+          Objects in MIBs can be read-only or writable.  In YANG,
+          nodes are marked as representing configuration or
+          non-configuration data.
+        </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e9058"></a>Read-only MIB objects</h4></div></div></div><p>
+            If a MIB object is read-only, it can be mapped to a
+            configuration or non-configuration YANG node.
+          </p><p>
+            When a YANG module is generated from a MIB, all read-only
+            MIB objects are translated into non-configuration YANG
+            nodes.
+          </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.snmpa.access.writable"></a>Writable MIB objects</h4></div></div></div><p>
+            If a MIB object is writable, it is usually mapped to a
+            configuration YANG node.  However, in some cases, the MIB
+            object doesn't really represent configuration, but is
+            rather writable operational data.  An example could be a
+            scalar variable <code class="code">rebootRouter</code>.  When written
+            to, the router will reboot.  In order to support this,
+            non-configuration YANG nodes can be marked with
+            <code class="code">tailf:writable true</code>.  Writable MIB objects
+            can be mapped into non-configuration YANG nodes that are
+            marked with <code class="code">tailf:writable true</code>.
+          </p><p>
+            When a YANG module is generated from a MIB, writable MIB
+            objects are translated into configuration YANG nodes,
+            unless the MIB object is marked as representing writable
+            operational data in a MIB annotation file (see <a class="xref" href="rn03re18.html" title="mib_annotations"><span class="refentrytitle">mib_annotations</span>(5)</a>).
+          </p><p>
+            If the SNMP agent receives a SET PDU with one or more
+            writable operational objects, it will start a read-write
+            transaction towards <code class="code">CONFD_OPERATIONAL</code>.  In
+            this transaction, the agent will write all variables from
+            the PDU, and then it will commit the transaction.
+            Instrumentation code needs to be written to handle these
+            writes.
+          </p><p>
+            See <a class="xref" href="ch07.html#ug.ext_data.writable_operational" title="7.8.&nbsp;Writable operational data">Section&nbsp;7.8, &#8220;Writable operational data&#8221;</a>
+            for how these objects are implemented, and
+            <code class="filename">examples.confd/snmpa/9-writable-operational</code>
+            in the ConfD examples collection for an example of how
+            this can be implemented.
+          </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9075"></a>17.2.12.&nbsp;Optional YANG nodes</h3></div></div></div><p>
+          There is no protocol support in SNMP to delete optional
+          nodes.  Conceptual table rows are typically created and
+          deleted by using a <code class="code">RowStatus</code> column, but there
+          is no standardized way to delete optional nodes.  One
+          technique to handle this is to introduce a special value for
+          the object, so that the object is deleted when it is set to
+          this special value. ConfD supports this technique with
+          the YANG extension <code class="code">tailf:snmp-delete-value</code>.
+        </p><p>
+          In order to use this technique, an optional leaf in the YANG
+          model is mapped to a scalar or columnar object in the MIB
+          module.  The data type definition of the MIB object allows
+          the same values as the corresponding YANG leaf, and in
+          addition it also allows one extra value, not allowed by the
+          YANG leaf.  This special value is also defined in the YANG
+          model in the <code class="code">tailf:snmp-delete-value</code>
+          statement.
+        </p><p>
+          In the following example, we define a MIB object
+          <code class="code">fooOptionalLeaf</code>, and corresponding YANG leaf
+          <code class="code">foo-optional-leaf</code>.
+        </p><div class="example"><a name="d5e9085"></a><p class="title"><b>Example&nbsp;17.5.&nbsp;SMI definition of an optional object</b></p><div class="example-contents"><pre class="programlisting">
+fooOptionalLeaf OBJECT-TYPE
+    SYNTAX       Integer32 (0..255)
+    MAX-ACCESS   read-create
+    STATUS       current
+    DESCRIPTION
+        "The special value zero means not used."
+    ::= { fooEntry 3 }
+</pre></div></div><br class="example-break"><div class="example"><a name="d5e9088"></a><p class="title"><b>Example&nbsp;17.6.&nbsp;YANG definition of an optional leaf</b></p><div class="example-contents"><pre class="programlisting">
+leaf foo-optional-leaf {
+  type int32 {
+    range "1..255";
+  }
+  tailf:snmp-delete-value 0;
+  tailf:snmp-name fooOptionalLeaf;
+}
+</pre></div></div><br class="example-break"><p>
+            When the SNMP agent receives a SET request to set this
+            object to '0', the leaf will be deleted.
+          </p><p>
+            If the <code class="code">tailf:snmp-delete-value</code> statement has
+            the substatement
+            <code class="code">tailf:snmp-send-delete-value</code>, the same
+            special value will be returned on a GET request, instead
+            of the default <code class="code">noSuchInstance</code>.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9096"></a>17.2.13.&nbsp;tailf:sort-order on tables</h3></div></div></div><p>
+            Tables in SNMP are strictly lexicographically ordered.  An
+            SNMP table is typically traversed with
+            <code class="code">GET-NEXT</code> requests, where given a previous
+            index of a row the next greater index is returned.  Since
+            the table is specified in a YANG module and may be stored in
+            an external database or perhaps as a managed object (MO)
+            written in
+            <span class="phrase">
+            C, it is important that the
+            <code class="function">get_next()</code> function
+            </span>
+            
+            returns the
+            elements in correct order. If the <span class="emphasis"><em>get-next</em></span>
+            function doesn't return the elements properly in order,
+            SNMP will not work.  If CDB is used to store the data the
+            ordering of the elements will be correct. Note that the
+            <code class="code">tailf:sort-order</code> statement may have to be
+            specified for indexes with dynamic length (see <a class="xref" href="ch17.html#ug.snmpa.csload" title="17.2.8.&nbsp;Loading YANG modules for built-in MIBs">Section&nbsp;17.2.8, &#8220;Loading YANG modules for built-in MIBs&#8221;</a>).
+          </p><p>
+            Types with dynamic length in SNMP like <span class="type">OCTET
+            STRING</span> will have a length indicator when they are
+            part of the <span class="emphasis"><em>INDEX</em></span>, so the ordering
+            for strings stored in such a table will be on length
+            first, unless they are declared as <span class="type">IMPLIED</span> as
+            in <span class="type">IMPLIED OCTET STRING</span>.  In this case the
+            index will not have any length indicator included, and the
+            table should be sorted as normal.
+          </p><p>
+            The following values can be given to the
+            <code class="varname">tailf:sort-order</code> statement:
+            </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>normal</code></em></span></dt><dd><p>
+                    This is the default and means that the table is
+                    sorted using the key values.  This value should be
+                    used when the corresponding SNMP table does not
+                    have any INDEX object with dynamic length.
+                  </p></dd><dt><span class="term"><em class="parameter"><code>snmp</code></em></span></dt><dd><p>
+                    This value means that when sorting, any key
+                    element of dynamic length will have the length
+                    prepended to the value before sorting.  It should
+                    be used if the corresponding SNMP table has any
+                    INDEX object with dynamic length, and no IMPLIED
+                    object.
+                </p></dd><dt><span class="term"><em class="parameter"><code>snmp-implied</code></em></span></dt><dd><p>
+                  This value is the same as
+                  <em class="parameter"><code>snmp</code></em>, except that the last
+                  key element will not prepend the length indicator to
+                  the key value.  It should be used if the
+                  corresponding SNMP table has any IMPLIED INDEX.
+                </p></dd></dl></div><p>
+          </p><p>
+            Here's an example of a MIB table with a
+            <span class="type">DisplayString</span> with dynamic length as index.
+          </p><div class="example"><a name="d5e9131"></a><p class="title"><b>Example&nbsp;17.7.&nbsp;simple.mib</b></p><div class="example-contents"><pre class="programlisting">
+hostTable OBJECT-TYPE
+    SYNTAX       SEQUENCE OF HostEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+        "The table of hosts."
+    ::= { simpleTables 1 }
+
+hostEntry OBJECT-TYPE
+    SYNTAX       HostEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+        "Information about a host."
+    INDEX       { hostName }
+    ::= { hostTable 1 }
+
+HostEntry ::= SEQUENCE {
+    hostName             DisplayString,
+    hostEnabled          TruthValue,
+    hostNumberOfServers  INTEGER,
+    hostRowStatus        RowStatus
+}
+</pre></div></div><br class="example-break"><p>
+            If the list corresponding to this SNMP table is
+            stored in CDB, the definition in the YANG module must specify
+            <code class="code">tailf:sort-order snmp</code> so that the table is
+            sorted correctly (with length indicator included).
+          </p><div class="example"><a name="d5e9136"></a><p class="title"><b>Example&nbsp;17.8.&nbsp;simple.yang</b></p><div class="example-contents"><pre class="programlisting">
+
+list host {
+  key name;
+
+  tailf:sort-order snmp;
+
+  leaf name {
+    type nameType;
+  }
+
+  leaf enabled {
+    type boolean;
+    mandatory true;
+  }
+
+  leaf numberOfServers {
+    type uint16;
+    mandatory true;
+  }
+}
+</pre></div></div><br class="example-break"><p>
+            When the sort order is set to "snmp" or "snmp-implied" on
+            a list, it affects the displayed sort order in
+            all northbound interfaces.  Thus the list of hosts above
+            will be sorted according to SNMP lexicographical ordering,
+            even in e.g. the CLI.  Sometimes this may be confusing to
+            users.  This problem can be solved by adding a
+            <code class="code">tailf:secondary-index</code> to the list:
+          </p><div class="example"><a name="d5e9141"></a><p class="title"><b>Example&nbsp;17.9.&nbsp;simple.yang with secondary index</b></p><div class="example-contents"><pre class="programlisting">
+list host {
+  key name;
+
+  tailf:secondary-index snmp {
+    tailf:index-leafs "name";
+    tailf:sort-order snmp;
+  }
+
+  leaf name {
+    type nameType;
+  }
+
+  leaf enabled {
+    type boolean;
+    mandatory true;
+  }
+
+  leaf numberOfServers {
+    type uint16;
+    mandatory true;
+  }
+}
+</pre></div></div><br class="example-break"><p>
+            When the SNMP agent traverses a table, it checks if there
+            is a secondary-index with the reserved name "snmp" defined
+            for the table.  If there is such an index, the agent
+            traverses the table using this index.
+          </p><p>
+            In the example above, the <code class="code">host</code> table is
+            sorted in normal order, which means that
+            <span class="emphasis"><em>"arthur"</em></span> appears before
+            <span class="emphasis"><em>"ford"</em></span>.  But since there is a
+            secondary-index called <span class="emphasis"><em>snmp</em></span>, the SNMP
+            agent will use this index when traversing the table, so
+            that <span class="emphasis"><em>4."ford"</em></span> appears before
+            <span class="emphasis"><em>5."arthur"</em></span> over SNMP.
+          </p><p>
+            Note that the presence of a
+            <span class="emphasis"><em>secondary-index</em></span> in the YANG module is not
+            enough; the instrumentation code must be prepared to
+            perform the actual sorting.  See <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> for details.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9155"></a>17.2.14.&nbsp;Enumerations</h3></div></div></div><p>
+            Enumerations in SNMP have textual representation mapped to
+            an integer.  A simple example would be the definition for
+            <span class="emphasis"><em>TruthValue</em></span>:
+          </p><div class="example"><a name="d5e9159"></a><p class="title"><b>Example&nbsp;17.10.&nbsp;TruthValue from the SNMPv2-TC</b></p><div class="example-contents"><pre class="programlisting">
+TruthValue ::= TEXTUAL-CONVENTION
+    STATUS       current
+    DESCRIPTION
+            "Represents a boolean value."
+    SYNTAX       INTEGER { true(1), false(2) }
+
+</pre></div></div><br class="example-break"><p>
+            The
+            <span class="command"><strong>confdc --mib2yang</strong></span>
+            
+            tool produces the following type
+            definition for <span class="emphasis"><em>TruthValue</em></span>:
+          </p><div class="example"><a name="d5e9165"></a><p class="title"><b>Example&nbsp;17.11.&nbsp;A typedef for TruthValue</b></p><div class="example-contents"><pre class="programlisting">
+typedef TruthValue {
+  type enumeration {
+    enum true {
+      value 1;
+    }
+    enum false {
+      value 2;
+    }
+  }
+}
+</pre></div></div><br class="example-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.notifs"></a>17.2.15.&nbsp;Notifications</h3></div></div></div><p>
+            Notifications are defined by the NOTIFICATION-TYPE macro
+            in SMIv2.  There are two types of notifications in SNMP:
+            <span class="emphasis"><em>trap</em></span> and <span class="emphasis"><em>inform</em></span>.  When the managed
+            object needs to send <span class="emphasis"><em>trap</em></span> notifications the
+            following functions should be called (from MO's written in
+            C).
+          </p><div class="example"><a name="d5e9174"></a><p class="title"><b>Example&nbsp;17.12.&nbsp;Functions for sending notification from C</b></p><div class="example-contents"><pre class="programlisting">
+int confd_register_snmp_notification(
+    struct confd_daemon_ctx *dx, int fd,
+    const char *notify_name, const char *ctx_name,
+    struct confd_notification_ctx **nctx);
+
+int confd_notification_send_snmp(
+    struct confd_notification_ctx *nctx, const char *notification,
+    struct confd_snmp_varbind *varbinds, int num_vars);
+            </pre></div></div><br class="example-break"><p>
+            The
+            <code class="function">confd_register_snmp_notification()</code>
+            function is typically called once to register the
+            parameters common to a set of notifications, and then the
+            individual notifications are sent by calling
+            <code class="function">confd_notification_send_snmp()</code>. The
+            daemon context pointer <code class="code">dx</code> is obtained by
+            calling <code class="function">confd_init_daemon()</code>, and the
+            socket file descriptor <code class="code">fd</code> is a worker socket
+            connected to the ConfD daemon via a call to
+            <code class="function">confd_connect()</code>. See <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> man page for details about
+            these functions. Note also that a control socket must be
+            connected to the ConfD daemon before calling
+            <code class="function">confd_register_snmp_notification()</code>.
+          </p><p>
+            The <code class="code">notify_name</code> parameter matches the
+            NotifyName in the snmpNotifyTable in the
+            SNMP-NOTIFICATION-MIB.  Trap will be sent to targets
+            pointed out by NotifyName.  If NotifyName is
+            <span class="emphasis"><em>""</em></span>; the normal procedure defined in
+            SNMP-NOTIFICATION-MIB is used, i.e. the trap is sent to
+            all managers.  Otherwise, the NotifyName is used to find
+            an entry in the SnmpNotifyTable which defines how to send
+            the notification (as an Inform or a Trap), and to select
+            targets from SnmpTargetAddrTable (using the Tag).
+          </p><p>
+            The <code class="code">ctx_name</code> is the name of the context.
+            The default context is <span class="emphasis"><em>""</em></span>.
+          </p><p>
+            The <code class="code">notification</code> string is the notification
+            name. For example <code class="code">"coldStart"</code> or
+            <code class="code">"warmStart"</code>. This symbolic name of a notification
+            must be defined in a MIB that is loaded into the agent.
+          </p><p>
+            If the empty string is used as notification name, the notification
+            to send is constructed from the <code class="code">varbinds</code> array alone,
+            which must then contain a value for the <span class="emphasis"><em>snmpTrapOID</em></span>
+            variable.
+          </p><p>
+            The <code class="code">varbinds</code> array contains
+            variable bindings for parameters that
+            should be sent along in the notification.
+            The include file <code class="filename">confd_lib.h</code> defines
+            data structures for these:
+          </p><div class="example"><a name="d5e9202"></a><p class="title"><b>Example&nbsp;17.13.&nbsp;SNMP varbind structures from <code class="filename">confd_maapi.h</code></b></p><div class="example-contents"><pre class="programlisting">
+enum confd_snmp_var_type {
+    CONFD_SNMP_VARIABLE = 1,
+    CONFD_SNMP_OID      = 2,
+    CONFD_SNMP_COL_ROW  = 3
+};
+
+struct confd_snmp_oid {
+    int oid[128];
+    int len;
+};
+
+struct confd_snmp_col_row {
+    char column[256];
+    struct confd_snmp_oid rowindex;
+};
+
+struct confd_snmp_varbind {
+    enum confd_snmp_var_type type;
+    union {
+        char name[256];
+        struct confd_snmp_oid oid;
+        struct confd_snmp_col_row cr;
+    } var;
+    confd_value_t val;
+};
+            </pre></div></div><br class="example-break"><p>
+             Each <span class="emphasis"><em>varbind</em></span> is either:
+             </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">a variable</span></dt><dd><p>
+                     a symbolic name of a scalar variable referred to
+                     in the notification specification.
+                   </p></dd><dt><span class="term">a column</span></dt><dd><p>
+                     a symbolic name of a column variable.  Rowindex
+                     is the index of the specified column.
+                   </p></dd><dt><span class="term">an OBJECT IDENTIFIER</span></dt><dd><p>
+                     for the instance of an object, scalar variable or
+                     column variable.
+                   </p></dd></dl></div><p>
+           </p><p>
+             If a value is given it will be used. If it is not given
+             (i.e. set to <code class="constant">C_NOEXISTS</code>) then the agent will look up
+             the value with a <code class="sgmltag-element">GET</code> operation.
+           </p><div class="example"><a name="d5e9224"></a><p class="title"><b>Example&nbsp;17.14.&nbsp;Notification registration</b></p><div class="example-contents"><pre class="programlisting">
+int setup(struct confd_daemon_ctx *dctx, int workersock,
+          struct confd_notification_ctx **nctx)
+{
+    if (confd_register_snmp_notification(dctx, workersock,
+                                         "std_v1_trap", "", nctx)) != CONFD_OK)
+        return CONFD_ERR;
+    return confd_register_done(dctx);
+}
+             </pre></div></div><br class="example-break"><div class="example"><a name="d5e9227"></a><p class="title"><b>Example&nbsp;17.15.&nbsp;Sending a coldStart notification</b></p><div class="example-contents"><pre class="programlisting">
+int test1(struct confd_notification_ctx *nctx)
+{
+    return confd_notification_send_snmp(nctx, "coldStart", NULL, 0);
+}
+             </pre></div></div><br class="example-break"><div class="example"><a name="d5e9230"></a><p class="title"><b>Example&nbsp;17.16.&nbsp;Sending a notification with a varbind</b></p><div class="example-contents"><pre class="programlisting">
+int test2(struct confd_notification_ctx *nctx)
+{
+    struct confd_snmp_varbind vb;
+    vb.type = CONFD_SNMP_VARIABLE;
+    strcpy(vb.var.name, "myVariable");
+    CONFD_SET_INT32(&amp;vb.val, 32);
+    return confd_notification_send_snmp(nctx, "notif1", &amp;vb, 1);
+}
+             </pre></div></div><br class="example-break"><p>
+             The <span class="emphasis"><em>inform</em></span> type notifications are similar to
+             the <span class="emphasis"><em>trap</em></span> type except there is an
+             acknowledgment sent back from the manager that
+             received the inform.
+             Two callbacks needs to be registered to receive the
+             result of the inform, and there's a separate function
+             for sending an inform.
+           </p><div class="informalexample"><pre class="programlisting">int confd_register_notification_snmp_inform_cb(
+    struct confd_daemon_ctx *dx,
+    const struct confd_notification_snmp_inform_cbs *cb);
+</pre></div><div class="informalexample"><pre class="programlisting">int confd_notification_send_snmp_inform(
+    struct confd_notification_ctx *nctx, const char *notification,
+    struct confd_snmp_varbind *varbinds, int num_vars,
+    const char *cb_id, int ref);
+</pre></div><p>
+             The <span class="type">struct
+             confd_notification_snmp_inform_cbs</span> is defined as:
+           </p><div class="informalexample"><pre class="programlisting">struct confd_notification_snmp_inform_cbs {
+    char cb_id[MAX_CALLPOINT_LEN];
+    void (*targets)(struct confd_notification_ctx *nctx,
+                    int ref, struct confd_snmp_target *targets,
+                    int num_targets);
+    void (*result)(struct confd_notification_ctx *nctx,
+                   int ref, struct confd_snmp_target *target,
+                   int got_response);
+    void *cb_opaque;        /* private user data */
+};
+</pre></div><p>
+      In order to debug the notification sending process in ConfD, the
+      <code class="sgmltag-element">/confdConfig/logs/developerLogLevel</code> in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a> can be set to "trace".
+    </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.snmpa.genmib"></a>17.3.&nbsp;Generating MIBs from YANG</h2></div></div></div><p>
+          The previous sections have discussed the scenario where
+          there is an existing set of MIB files, and then
+          <span class="command"><strong>confdc --mib2yang</strong></span> is used to convert these
+          to YANG with the associations that the agent needs.
+        </p><p>
+          If instead no MIBs exist, but a number of YANG files
+          (complied to <code class="filename">.fxs</code> files), these can be
+          translated to MIB files (in SMIv2 syntax), using the
+          <code class="option">--emit-mib</code> option of
+          <span class="command"><strong>confdc</strong></span>.
+        </p><p>
+          The normal operation of the translator is to select those
+          nodes that have an <code class="code">tailf:snmp-oid</code> statement,
+          and ignore the others. If the option
+          <code class="option">--generate-oids</code> is given (described later
+          in this section), all elements are selected, unless
+          explicitly marked with
+          <code class="code">tailf:snmp-exclude-object</code>.
+        </p><p>
+          The value of the <code class="code">tailf:snmp-oid</code> statement can be either a
+          one-component suffix,
+          for example ".4", or a full OID, such as "1.3.6.1.4.1.12345" or
+          "private.1.12345". If it's a suffix, a full OID should
+          be specified for some ancestor element, in the YANG module
+          header, or using the <code class="option">--oid</code> option.
+        </p><p>
+          In order to be selected for translation to the MIB file, an
+          element must also match the module name. The module name can
+          be given as an <code class="code">tailf:snmp-mib-module-name</code>
+          statement in the YANG module header, which is then inherited
+          by all nodes, or using the <code class="option">--module</code>
+          option. It can also be specified on a node, which then
+          overrides the value from the header or ancestor nodes.
+        </p><p>
+          Since tables can not reside inside tables in SMI, lists
+          containing lists are handled by moving
+          the inner lists up to top level.
+        </p><p>
+          Nodes inside containers in lists are given OIDs
+          directly below the table entry, and names which are the
+          concatenation of the path down from the table level. The
+          containers should not have an OID.
+        </p><p>
+          If a RowStatus column is desired for a table, use the statement
+          <code class="code">tailf:snmp-row-status-column</code> on the corresponding list.
+          The statement's value should be the column number
+          (i.e., the last OID component, with no leading period). The
+          object will be called <code class="code">rowstatus</code>.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9270"></a>17.3.1.&nbsp;Translating a <code class="filename">.fxs</code> file to a MIB</h3></div></div></div><p>
+            The form of the translation command is shown below (using
+            fictitious parameters):
+          </p><p>
+            <span class="command"><strong>confdc --emit-mib FOO-MIB.mib --oid enterprises.24961 -- foo.fxs</strong></span>
+            
+          </p><p>
+            The basename of the output file (here,
+            <code class="code">FOO-MIB</code>) by default becomes the name of the
+            module (with all letters made upper case).  The option
+            <code class="option">--module</code> can be used to specify the
+            module name.
+          </p><p>
+            Any other <code class="filename">.fxs</code> files we depend on have to be given
+            with <code class="option">-f</code>, as
+            usual.
+          </p><p>
+            <span class="command"><strong>confdc --emit-mib FOO-MIB.mib --oid enterprises.24961 -f types.fxs -- foo.fxs</strong></span>
+            
+          </p><p>
+            To build the <code class="filename">.bin</code> file to be loaded by the ConfD SNMP
+            agent, do
+          </p><p>
+            <span class="command"><strong>confdc -c FOO-MIB.mib foo.fxs -f types.fxs</strong></span>
+            
+          </p><p>
+            During translation, problems are reported as warnings or errors.
+            When
+            an error occurs, translation continues so that a complete
+            MIB file is still produced, but the exit status from
+            <span class="command"><strong>confdc</strong></span>
+            
+            is 1, rather than 0.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9290"></a>17.3.2.&nbsp;<code class="option">--generate-oids</code></h3></div></div></div><p>
+            With the option <code class="option">--generate-oids</code>, the
+            translator selects all nodes, inventing OIDs for the nodes
+            which don't already have an <code class="code">tailf:snmp-oid</code>
+            statement.  If a node has a
+            <code class="code">tailf:snmp-exclude-object</code> statement, it is
+            ignored.  The <code class="option">--generate-oids</code> is useful
+            when the original YANG module cannot be modified.
+          </p><p>
+            By default, the OID suffixes of child elements are numbered
+            consecutively, starting with 1. This can be overridden with a
+            suffix <code class="code">tailf:snmp-oid</code> on a node. The
+            suffixes of the following elements will continue from that point.
+          </p><p>
+            A RowStatus element is always generated.
+          </p><p>
+            Since the MIB compiler (i.e.,
+            <span class="command"><strong>confdc -c</strong></span>
+            
+            when given a MIB file) needs to know the association
+            between MIB objects and YANG nodes, and this association
+            is not present in the YANG module (if it was, there would
+            be no need for generating OIDs),
+            we use YANG annotation files.
+          </p><p>
+            A YANG annotation file is used to define the
+            mapping between YANG nodes and MIB objects.  The YANG
+            annotation file can be written by hand, or generated from
+            the YANG module.  Since it is important in SNMP that OIDs
+            once assigned do not change, it is recommended to generate
+            an initial version of a YANG annotation file, and then
+            update it manually as the YANG module evolves.  The
+            process to do this is:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  Compile the YANG module:
+                  <span class="command"><strong>confdc -c foo.yang</strong></span>
+                  
+                </p></li><li class="listitem"><p>
+                  Generate an initial YANG annotation file:
+                  <span class="command"><strong>confdc --emit-mib FOO-MIB.mib --oid experimental.1 --generate-oids --generate-yang-annotation foo.fxs</strong></span>
+                  
+                </p><p>
+                  The YANG annotation file will be called
+                  <code class="code">foo-ann.yang</code>.
+                </p></li></ul></div><p>
+
+            Once the initial YANG annotation file is generated, it
+            should be kept and updated as the original YANG module is
+            updated.  The MIB can then be generated as needed:
+
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                  Compile the YANG module and annotation file:
+                  <span class="command"><strong>confdc -c -a foo-ann.yang foo.yang</strong></span>
+                  
+                </p></li><li class="listitem"><p>
+                  Generate the MIB:
+                  <span class="command"><strong>confdc --emit-mib FOO-MIB.mib foo.fxs</strong></span>
+                  
+                </p></li><li class="listitem"><p>
+                  Compile the MIB:
+                  <span class="command"><strong>confdc -c FOO-MIB.mib foo.fxs</strong></span>
+                  
+                </p></li></ul></div><p>
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9323"></a>17.3.3.&nbsp;Lexical structure</h3></div></div></div><p>
+            At the start of the generated MIB file, a header of comments gives
+            some
+            information on how the file was produced, including the
+             <span class="command"><strong>confdc</strong></span>
+             
+
+            invocation, the namespace of the <code class="filename">.fxs</code> file,
+            and
+            the current date and time. (Any <code class="code">--</code> strings are converted
+            to <code class="code">++</code> because the former cannot occur in SMI comments.)
+          </p><p>
+            The only field in the module header which can be filled in
+            with information from the <code class="filename">.fxs</code> file
+            is the first <code class="code">DESCRIPTION</code> field, which is
+            taken from the YANG module's <code class="code">description</code>
+            statement, if one exists.
+          </p><p>
+            The remaining fields have the following format, in order to
+            facilitate automatic editing of the values:
+            </p><div class="informalexample"><pre class="programlisting">
+    LAST-UPDATED "@LAST-UPDATED"
+    ORGANIZATION "@ORGANIZATION"
+    CONTACT-INFO "@CONTACT-INFO"
+    REVISION "@REVISION"
+    DESCRIPTION "@REVISION-DESCRIPTION"
+              </pre></div><p>
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9337"></a>17.3.4.&nbsp;Names</h3></div></div></div><p>
+            The names of the objects are constructed by joining all
+            the parts of the full tag path of the nodes, capitalizing
+            each part.  An alternative is to not
+            capitalize, and join the parts with "<code class="code">-</code>" (with
+            the option <code class="option">--join-names hyphen</code> see <a class="xref" href="rn01re06.html#man.1.confdc.options.emit-mib" title="Emit SMIv2 MIB options">the section called &#8220;Emit SMIv2 MIB options&#8221;</a>).
+          </p><p>
+            If the statement <code class="code">tailf:snmp-name</code> is used on a
+            node, its value is taken as the full name of the
+            object. For containers and tables, it also becomes the
+            first part of its children's names.
+          </p><p>
+            The characters '<code class="code">.</code>' and '<code class="code">_</code>' can
+            occur in YANG identifiers but not in SNMP identifiers;
+            they are converted to '<code class="code">-</code>', unless the option
+            <code class="option">--join-names force-capitalize</code> is given.
+            In this case, such identifiers are capitalized (to
+            lowerCamelCase).
+          </p><p>
+            If generated names clash with each other (for example both
+            <code class="code">/x/a/b-c</code> and
+            <code class="code">/x/a-b/c</code> yielding the name <code class="code">x-a-b-c</code>), an error
+            is reported.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9354"></a>17.3.5.&nbsp;Types</h3></div></div></div><p>
+            YANG types are mapped according to the table in
+            <a class="xref" href="ch17.html#ug.snmpa.types.y2s" title="Table&nbsp;17.2.&nbsp;YANG mapping to SMI types">Table&nbsp;17.2, &#8220;YANG mapping to SMI types&#8221;</a>.
+            .
+          </p><p>
+            The type restrictions that deal with lengths ranges are
+            translated. The remaining restrictions (<code class="code">pattern</code>,
+            <code class="code">fraction-digits</code>) are silently ignored.
+          </p><p>
+            If <span class="type">inet:ipv6-address</span> is used, <span class="type">Ipv6Address</span> is
+            imported from
+            <span class="type">IPV6-TC</span>. Otherwise, imports are only made from
+            <code class="code">SNMPv2-SMI</code>, <code class="code">SNMPv2-CONF</code> and <code class="code">SNMPv2-TC</code>.
+          </p><p>
+            Leafs with types which are not handled are skipped in the
+            translation, with a warning.
+          </p><p>
+            Identifiers which have an invalid syntax (for example, start
+            with a digit) are kept in the translation, but a warning is
+            given.
+          </p><p>
+            If a leaf with type <span class="type">yang:counter64</span> is used as an index
+            or as
+            writable, a warning is given.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9372"></a>17.3.6.&nbsp;Miscellaneous</h3></div></div></div><p>
+            STATUS is <code class="code">current</code> by default for all objects. To cause
+            STATUS to be <code class="code">deprecated</code> or <code class="code">obsolete</code>, use the
+            YANG statement <code class="code">status</code> with the corresponding value on the
+            YANG node.
+          </p><p>
+            MAX-ACCESS is <code class="code">read-only</code> for operational nodes
+            (having <code class="code">config false;</code>).
+          </p><p>
+            Actions are silently ignored.
+          </p><p>
+            Before each generated OBJECT-TYPE and OBJECT IDENTIFIER, a comment
+            containing the word "tagpath" indicates which YANG node
+            the object corresponds to.
+          </p><p>
+            <code class="code">DESCRIPTION</code> is copied from the <code class="filename">.fxs</code> file, when
+            available (if the <code class="code">description</code> statement is present).
+            For containers, they are emitted as
+            comments instead (the string "<code class="code">--</code>" is replaced with
+            "<code class="code">- -</code>"). <code class="code">description</code> for nodes that are not
+            translated into
+            any OID are lost. Double quote characters, which can't
+            occur in <code class="code">DESCRIPTION</code>, are replaced with single quotes.
+          </p><p>
+            For a string with a min length, but no max length,
+            the max length is assumed to be 65535.
+          </p><p>
+            <code class="code">tailf:sort-order snmp-implied;</code> results in the <code class="code">IMPLIED</code>
+            keyword, if appropriate for the type.
+          </p><p>
+            If a type containing negative values is used as an index, or if
+            a string with unlimited length is used as an index, a warning is
+            given.
+          </p><p>
+            If a list uses <code class="code">tailf:sort-order normal</code>,
+            the child nodes may
+            not appear in SNMP order when listed, and so some elements
+            may get lost, or confuse the manager. A warning is given
+            for such cases.
+          </p><p>
+            If <code class="code">tailf:sort-order snmp-implied</code> is used for one list
+            list, which contains another list, the last index of the
+            outer list (with implied length) can no longer have
+            implied length in SNMP, so agent communication will most
+            likely fail.
+          </p><p>
+            <code class="code">DEFVAL</code> clauses are emitted for string and integer types
+            (including bit types), but not for others.
+          </p><p>
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.snmpa.config.confd"></a>17.4.&nbsp;Configuring the SNMP Agent</h2></div></div></div><p>
+          Configuration data for the ConfD SNMP agent consists of:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                data in <code class="filename">confd.conf</code>
+                
+              </p></li><li class="listitem"><p>
+                data for built-in MIBs
+              </p></li></ul></div><p>
+        </p><p>
+          The configuration data in <code class="filename">confd.conf</code>
+           is
+          typically only configured once and then never changed. (It
+          is possible to change however).
+        </p><p>
+          To store initial data for the built-in MIBs, CDB init files
+          can be used.  CDB init files are loaded the first time the
+          system is started and the database is initialized with this
+          data.  See <a class="xref" href="ch05.html#ug.cdb.init" title="5.8.&nbsp;Loading initial data into CDB">Section&nbsp;5.8, &#8220;Loading initial data into CDB&#8221;</a>.  Typically
+          these files will define access rules and users of the agent.
+          Updating the MIB data is done directly from the northbound
+          agents such as NETCONF or CLI.  The
+          <span class="command"><strong>confdc</strong></span>
+          
+          compiler flag
+          <code class="option">--export</code> can be used to grant access for
+          applications / protocols such as NETCONF and CLI to modify
+          the built-in SNMP data.  For this reason the YANG source for
+          the built-in MIBs are provided so that they can be
+          recompiled with the <code class="option">--export</code> flag.
+        </p><p>
+          The data for the SNMP agent built-in MIBs are by default
+          stored in CDB, but it is also possible have this data in an
+          external database. In this case the user needs to add
+          external callpoints to the YANG modules and recompile them.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9421"></a>17.4.1.&nbsp;Configuration data in <code class="filename">confd.conf</code>
+        </h3></div></div></div><p>
+            There are a few elements that must be configured in
+            <code class="filename">confd.conf</code>
+             in order for the SNMP agent to start.
+            First of all the ConfD SNMP agent must be
+            <span class="emphasis"><em>enabled</em></span>, and it must have an address and a port
+            that it will try to bind to at start-up.  If if fails to
+            bind to the port, ConfD will fail to start.  It should
+            also have a list of MIBs that should be loaded into the
+            agent. If it fails to load any of the MIBs, ConfD will
+            fail to start.
+          </p><p>
+            Several options can be given to control the behavior of
+            the SNMP agent:
+          </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">enabled</code></span></dt><dd><p>
+                  Whether or not the agent should be started.
+                </p></dd><dt><span class="term"><code class="code">ip, port</code></span></dt><dd><p>
+                  The IP address and port that the agent will bind and
+                  listen for incoming requests to.
+                </p></dd><dt><span class="term"><code class="code">mibs</code></span></dt><dd><p>
+                  The MIBs that the agent should load at start-up.
+                </p></dd><dt><span class="term"><code class="code">snmpVersions</code></span></dt><dd><p>The version of the SNMP protocol that the agent
+                will understand (the supported versions are v1, v2c,
+                and v3).
+                </p></dd><dt><span class="term"><code class="code">snmpEngineID, snmpEngineMaxMessageSize</code></span></dt><dd><p>The engine identifier and max message size that
+                this agent can handle.
+                </p></dd><dt><span class="term"><code class="code">sysDescr</code></span></dt><dd><p>Description of the entity. The description
+                should include the full name and version
+                identification of the system. See SNMPv2-MIB for more
+                information.
+                </p></dd><dt><span class="term"><code class="code">sysObjectID</code></span></dt><dd><p>The vendor's authoritative identification of the
+                network management subsystem contained in the
+                entity. See SNMPv2-MIB for more information.
+                </p></dd><dt><span class="term"><code class="code">sysServices</code></span></dt><dd><p>A value which identifies the set of services
+                that this entity primarily offers. See SNMPv2-MIB for
+                more information.
+                </p></dd><dt><span class="term"><code class="code">sysORTable</code></span></dt><dd><p>An optional table with SNMP agent
+                capabilities. These entries will populate the real
+                sysORTable in the SNMPv2-MIB.
+                </p></dd></dl></div><p>
+            Below is an example of a <code class="filename">confd.conf</code>
+             file:
+          </p><div class="example"><a name="d5e9476"></a><p class="title"><b>Example&nbsp;17.17.&nbsp;Example of a confd.conf</b></p><div class="example-contents"><pre class="programlisting">
+&lt;snmpAgent&gt;
+   &lt;enabled&gt;true&lt;/enabled&gt;
+   &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+   &lt;port&gt;161&lt;/port&gt;
+   &lt;mibs&gt;
+      &lt;file&gt;SIMPLE-MIB.bin&lt;/file&gt;
+   &lt;/mibs&gt;
+   &lt;snmpVersions&gt;
+      &lt;v1&gt;true&lt;/v1&gt;
+      &lt;v2c&gt;true&lt;/v2c&gt;
+      &lt;v3&gt;false&lt;/v3&gt;
+   &lt;/snmpVersions&gt;
+    &lt;snmpEngine&gt;
+      &lt;snmpEngineID&gt;80:00:61:81:05:01&lt;/snmpEngineID&gt;
+    &lt;/snmpEngine&gt;
+   &lt;system&gt;
+      &lt;sysDescr&gt;Tail-f ConfD agent&lt;/sysDescr&gt;
+      &lt;sysObjectID&gt;1.3.6.1.4.1.24961&lt;/sysObjectID&gt;
+   &lt;/system&gt;
+&lt;/snmpAgent&gt;
+</pre></div></div><br class="example-break"><p>
+            This will enable the SNMP agent, which will listen to
+            requests incoming to locally at port 161. The MIB file
+            <code class="filename">SIMPLE-MIB.bin</code> is loaded in the
+            agent, and the agent will understand SNMP versions v1 and
+            v2c, but not v3.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9481"></a>17.4.2.&nbsp;Changing configuration data in <code class="filename">confd.conf</code>
+         in
+        run-time</h3></div></div></div><p>
+            The data stored in <code class="filename">confd.conf</code> can be changed by
+            modifying the file and then issuing a <span class="command"><strong>confd
+            --reload</strong></span> command. This will trigger an already running
+            ConfD daemon to check its configuration data and make the
+            necessary changes. Certain changes like the SNMP agents IP
+            address will trigger an internal restart of the SNMP agent
+            (ConfD will still remain up), other changes like the MIBs
+            that are loaded can be done without restarting the SNMP
+            agent.  It's thus possible to update the MIBs in a running
+            ConfD SNMP agent without restarting the SNMP agent.
+          </p><div class="example"><a name="d5e9487"></a><p class="title"><b>Example&nbsp;17.18.&nbsp;Old confd.conf content</b></p><div class="example-contents"><pre class="programlisting">
+&lt;snmpAgent&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+  &lt;port&gt;161&lt;/port&gt;
+  &lt;mibs&gt;
+    &lt;file&gt;SIMPLE-MIB.bin&lt;/file&gt;
+  &lt;/mibs&gt;
+&lt;/snmpAgent&gt;
+</pre></div></div><br class="example-break"><div class="example"><a name="d5e9490"></a><p class="title"><b>Example&nbsp;17.19.&nbsp;Updated confd.conf content</b></p><div class="example-contents"><pre class="programlisting">
+&lt;snmpAgent&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+  &lt;port&gt;161&lt;/port&gt;
+  &lt;mibs&gt;
+    &lt;file&gt;SIMPLE-MIB.bin&lt;/file&gt;
+    &lt;file&gt;SIMPLE-MIB2.bin&lt;/file&gt;
+  &lt;/mibs&gt;
+&lt;/snmpAgent&gt;
+</pre></div></div><br class="example-break"><p>
+             The example above will on a <span class="command"><strong>confd --reload</strong></span> command
+             unload all the loaded MIBs that were specified on the old
+             configuration, and load the MIBs specified in the updated
+             configuration.  The MIB <code class="filename">SIMPLE-MIB.bin</code> is
+             unloaded and then loaded again, which can be useful
+             during development to update to a newer version of the
+             MIB.
+           </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9496"></a>17.4.3.&nbsp;Built-in MIB data</h3></div></div></div><p>
+            There is a set of standard MIBs which are used to control
+            and configure an SNMP agent.  These MIBs are implemented
+            in this agent.  The user can control which of these MIBs
+            are actually loaded into the agent, and thus made visible
+            to SNMP managers. For example, in a non-secure
+            environment, it might be a good idea to not make MIBs that
+            define access control visible.  Note, the data that the
+            MIBs define is used internally in the agent, even if the
+            MIBs are not loaded.
+          </p><p>
+            Any SNMP agent must implement the <span class="emphasis"><em>system</em></span> group
+            and the <span class="emphasis"><em>snmp</em></span> group, defined in
+            SNMPv2-MIB.  This MIB will be loaded by default.
+          </p><p>
+            An SNMPv3 agent must implement the SNMP-FRAMEWORK-MIB and
+            SNMP-MPD-MIB. These MIBs are also loaded by default, if
+            the agent is configured for SNMPv3.
+          </p><p>
+            There are five other standard MIBs, which also may be
+            loaded into the agent. These MIBs are:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>SNMP-TARGET-MIB and SNMP-NOTIFICATION-MIB which
+              defines managed objects for configuration of management
+              targets, i.e. receivers of notifications (traps and
+              informs).  These MIBs can be used with any SNMP version.
+              </p></li><li class="listitem"><p>
+                SNMP-VIEW-BASED-ACM-MIB, which defines managed objects
+                for access control. This MIB can be used with any SNMP
+                version.
+              </p></li><li class="listitem"><p>SNMP-COMMUNITY-MIB, which defines managed objects
+              for coexistence of SNMPv1 and SNMPv2c with SNMPv3.  This
+              MIB is only useful if SNMPv1 or SNMPv2c is used,
+              possibly in combination with SNMPv3. </p></li><li class="listitem"><p>
+                SNMP-USER-BASED-SM-MIB, which defines managed objects
+                for authentication and privacy. This MIB is only
+                useful with SNMPv3.
+              </p></li></ul></div><p>
+          </p><p>
+            Initial config data for communities, access rules, users
+            etc. is preferably stored in CDB init files. They are read
+            once when the system is started for the first time and put
+            in the database. The files must be located in the
+            <span class="emphasis"><em>dbDir</em></span>.  Typically a system have the
+            following CDB init files for the built-in MIBs (the file
+            name can be anything but must end with the suffix
+            <code class="code">_init.xml</code>):
+          </p><p>
+            </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="filename">community_init.xml</code></span></dt><dd><p>
+                    Data for SNMP-COMMUNITY-MIB. Defines the
+                    communities that have access to the system.
+                  </p></dd><dt><span class="term"><code class="filename">vacm_init.xml</code></span></dt><dd><p>
+                    Data for SNMP-VIEW-BASED-ACM-MIB. Defines view
+                    based access.
+                  </p></dd><dt><span class="term"><code class="filename">usm_init.xml</code></span></dt><dd><p>
+                    Data for SNMP-USER-BASED-SM-MIB. Defines user
+                    based access used with authentication and
+                    privacy. This is only used with SNMP v3.
+                  </p></dd><dt><span class="term"><code class="filename">target_init.xml</code></span></dt><dd><p>
+                    Data for SNMP-TARGET-MIB. Defines trap targets.
+                  </p></dd><dt><span class="term"><code class="filename">notify_init.xml</code></span></dt><dd><p>
+                    Data for SNMP-NOTIFICATION-MIB. Defines
+                    notifications.
+                  </p></dd></dl></div><p>
+          </p><p>
+            Below is an example of an init file to define a community
+            within the agent.
+          </p><div class="example"><a name="d5e9544"></a><p class="title"><b>Example&nbsp;17.20.&nbsp;Example community_init.xml</b></p><div class="example-contents"><pre class="programlisting">
+&lt;SNMP-COMMUNITY-MIB
+        xmlns="http://tail-f.com/ns/mibs/SNMP-COMMUNITY-MIB/200308060000Z"&gt;
+  &lt;snmpCommunityTable&gt;
+    &lt;snmpCommunityEntry&gt;
+      &lt;snmpCommunityIndex&gt;public&lt;/snmpCommunityIndex&gt;
+      &lt;snmpCommunityName&gt;public&lt;/snmpCommunityName&gt;
+      &lt;snmpCommunitySecurityName&gt;public&lt;/snmpCommunitySecurityName&gt;
+      &lt;snmpCommunityContextEngineID&gt;80:00:61:81:05:01&lt;/snmpCommunityContextEngineID&gt;
+      &lt;snmpCommunityContextName/&gt;
+      &lt;snmpCommunityTransportTag/&gt;
+      &lt;snmpCommunityStorageType&gt;permanent&lt;/snmpCommunityStorageType&gt;
+    &lt;/snmpCommunityEntry
+  &lt;/snmpCommunityTable&gt;
+&lt;/SNMP-COMMUNITY-MIB&gt;
+</pre></div></div><br class="example-break"><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e9547"></a>SNMP-TARGET-MIB</h4></div></div></div><p>
+          The following values are supported for the object
+          <code class="code">snmpTargetAddrTDomain</code>:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="code">SNMPv2-TM::snmpUDPDomain</code> UDP over IPv4</p></li><li class="listitem"><p><code class="code">TRANSPORT-ADDRESS-MIB::transportDomainUdpIpv4</code> UDP over IPv4 (same as snmpUDPDomain above)</p></li><li class="listitem"><p><code class="code">TRANSPORT-ADDRESS-MIB::transportDomainUdpIpv6</code> UDP over IPv6</p></li></ul></div><p>
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e9561"></a>SNMP-USER-BASED-SM-MIB</h4></div></div></div><p>
+              The following authentication algorithms are supported:
+              </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                    <code class="code">SNMP-USER-BASED-SM-MIB::usmNoAuthProtocol</code>
+                    No Authentication Protocol.
+                  </p></li><li class="listitem"><p>
+                    <code class="code">SNMP-USER-BASED-SM-MIB::usmHMACMD5AuthProtocol</code>
+                    The HMAC-MD5-96 Digest Authentication Protocol.
+                  </p></li><li class="listitem"><p>
+                    <code class="code">SNMP-USER-BASED-SM-MIB::usmHMACSHAAuthProtocol</code>
+                    The HMAC-SHA-96 Digest Authentication Protocol.
+                  </p></li></ul></div><p>
+            </p><p>
+              The following privacy algorithms are supported:
+              </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                    <code class="code">SNMP-USER-BASED-SM-MIB::usmNoPrivProtocol</code>
+                    No Privacy Protocol.
+                  </p></li><li class="listitem"><p>
+                    <code class="code">SNMP-USER-BASED-SM-MIB::usmDESPrivProtocol</code>
+                    The CBC-DES Symmetric Encryption Protocol.
+                  </p></li><li class="listitem"><p>
+                    <code class="code">SNMP-USM-AES-MIB::usmAesCfb128Protocol</code>
+                    The CFB128-AES-128 Privacy Protocol.
+                  </p></li></ul></div><p>
+            </p></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9585"></a>17.5.&nbsp;How the SNMP Agent Interacts with ConfD</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9587"></a>17.5.1.&nbsp;ConfD Sessions and Transactions</h3></div></div></div><p>
+          All data access to ConfD is done through <span class="emphasis"><em>user
+          sessions</em></span>.  Once a user session is established, it
+          can open read-only or read-write
+          <span class="emphasis"><em>transactions</em></span> towards a data store or
+          towards operational data.
+        </p><p>
+          All requests start transactions towards the
+          running data store.
+        </p><p>
+          SNMP over UDP does not have a concept of a user session.
+          Each packet is (in theory) handled independently.  However,
+          for performance reasons, the SNMP agent creates a user
+          session and a transaction when it receives the first
+          packet.  It then caches the session and transaction, and if
+          it gets a new packet with the same source IP address,
+          same UDP port, and same securityName, it reuses the session
+          and transaction.
+        </p><p>
+          If no packet has been received during a 10 second period,
+          the session and transaction are closed.
+        </p><p>
+          The cache has a limit of 32 sessions. If the cache is full
+          when the agent needs to create a new session, an old session
+          can be closed for this purpose, even though it was in use less
+          than 10 seconds ago.
+        </p><p>
+          The <code class="filename">confd.conf</code>
+           parameters for session
+          limits can be used to limit the number of concurrent SNMP
+          user sessions or configuration transactions, but note that
+          higher values than 32 (the session cache limit described above)
+          will not have any effect.
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.snmpa.aaa"></a>17.5.2.&nbsp;USM and VACM and ConfD AAA</h3></div></div></div><p>
+          When the SNMP agent receives a SNMP request, it determines
+          the securityName and SNMP context for the request.  If
+          SNMPv1 or SNMPv2c is used, the snmpCommunityTable is
+          consulted to determine the securityName and SNMP context.
+          If SNMPv3 is used, the SNMP context is explicitly given in
+          the request, and the securityName is determined from the
+          usmUserTable.
+        </p><p>
+          When the SNMP agent starts a user session in ConfD, it uses
+          the securityName as the username, the string "snmp" as ConfD
+          AAA context, and no groups.  If the username is a member of
+          any of ConfD's AAA groups, it will be placed in these
+          groups.  Otherwise, if there is a defaultGroup configured in
+          <code class="filename">confd.conf</code>
+          , the user will be placed in
+          this group.  Otherwise, the user does not belong to any
+          group.
+        </p><p>
+          Note that the user is authenticated by the SNMP agent, and
+          not by ConfD's AAA.
+        </p><p>
+          For each SNMP object the user tries to access, VACM is
+          consulted to see if the user's securityName has access, in
+          the given context.  If it has, the SNMP agent will try to
+          access the corresponding YANG object. ConfD's normal AAA
+          authorization is consulted to see if the groups the user
+          belongs to have access to the YANG object.
+        </p><p>
+          Since both VACM and ConfD's AAA are consulted, a
+          ConfD user
+          can choose to use one of them, or both.  One usage strategy
+          can be to add VACM rules which gives full access to
+          everyone, and then rely on ConfD's AAA datarules. Another
+          strategy could be to have detailed rules in VACM, and then
+          give full access to the "snmp" context in ConfD's AAA.
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e9606"></a>17.5.3.&nbsp;ConfD High Availability</h3></div></div></div><p>
+          If ConfD is run in HA mode, the SNMP variables
+          <code class="code">sysUpTime</code>, <code class="code">snmpEngineTime</code>, and
+          <code class="code">snmpEngineBoots</code> are automatically replicated.
+          This means that if a slave ConfD takes over as master,
+          these variables will keep their values.
+        </p><p>
+          It is essential that each ConfD instance in the cluster
+          has the same <code class="code">snmpEngineID</code> configured. This value
+          is defined in <code class="filename">confd.conf</code>
+          , and it is the
+          responsibility of the user to make sure it has the same
+          value on all nodes in the cluster. However, if ConfD's
+          configuration is stored in CDB (see <a class="xref" href="ch28.html#ug.advanced.config_confd_dyn" title="28.4.2.&nbsp;Storing ConfD configuration parameters in CDB">Section&nbsp;28.4.2, &#8220;Storing ConfD configuration parameters in CDB&#8221;</a>), then since
+          CDB is replicated, the <code class="code">snmpEngineID</code> will always
+          be the same in the cluster.
+        </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9617"></a>17.6.&nbsp;Running the SNMP Agent as a NET-SNMP subagent</h2></div></div></div><p>
+      The ConfD integrated SNMP agent can
+      run as subagent to the NET-SNMP master agent. This is useful in
+      scenarios where you want to use NET-SNMP agents for monitoring
+      the host, or reuse other NET-SNMP subagents in your solution.
+    </p><p>
+      The easiest way to run the agent as sub-agent is to configure the
+      proxy alternative in NET-SNMP <code class="code">snmpd.conf</code>.
+      (See the <a class="ulink" href="http://www.net-snmp.org/docs/man/snmpd.conf.html" target="_top"> snmpd.conf </a> man page)
+      Make sure that you have created an access view with the correct OID root.
+
+      You need to add a proxy command entry to the <code class="code">snmpd.conf</code> file.
+
+      </p><pre class="programlisting">
+      proxy [-Cn CONTEXTNAME] [SNMPCMD_ARGS] HOST OID [REMOTEOID]
+      </pre><p>
+
+      Values for the proxy configuration:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p> SNMPCMD_ARGS : these are the authentication parameters you want to pass to the
+          ConfD SNMP agent. Note that the original auth parameters will not be used.
+          (See <a class="ulink" href="http://www.net-snmp.org/docs/man/snmpcmd.html" target="_top"> snmpcmd </a> man page).
+          In the simplest configuration you
+          specify a community string, for example -c secret where secret will be used as community string
+          for all requests forwarded to ConfD.
+          </p></li><li class="listitem"><p> HOST :  IPv4-address[:port] : the IP address and the port of the ConfD SNMP agent.
+          Make sure that ConfD
+          uses a different port than the standard ports which you probably have
+          configured for the NET-SNMP master agent.
+          </p></li><li class="listitem"><p> OID : the SNMP OBJECT-IDENTIFIER of the root of the tree managed by ConfD SNMP agent.
+          </p></li></ul></div><p>
+      After adding the values in the <code class="code">snmpd.conf</code> file, restart the snmpd service.
+    </p><p>
+
+    The example below will forward all requests for Tail-f specific objects to the
+    ConfD agent running on
+    localhost on port 5000 using the communit string <code class="code">secret</code>.
+    </p><pre class="programlisting">
+    proxy -c secret localhost:5000 1.3.1.6.4.24961
+    </pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch16.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch18.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;16.&nbsp;The CLI agent&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;18.&nbsp;Web UI Development</td></tr></table></div></body></html>

@@ -1,0 +1,59 @@
+Example twophase
+----------------
+
+This example demonstrates how you can abort a transaction from
+a two-phase subscriber. Once a transaction enters prepare state
+all CDB two-phase subscribers will be notified in priority order.
+Thus, in the prepare phase a subscriber have the possibility
+to abort the transaction by calling cdb_sub_abort_trans().
+
+In this simple example the subscriber checks if some fictional
+hardware is up and ready to be configured. This done by simply
+reading a value from a text file (hardware.txt, "1"=ready "0"="not ready").
+
+Note also that this subscriber is registered as a mandatory subscriber
+through cdb_mandatory_subscriber(). Absence of one or more mandatory
+subscribers will result in abort of all transactions
+
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+1. Build the necessary files and start ConfD and the CDB client by
+    typing
+
+    $ make all start
+
+This will start confd and a subscriber subscribing to path "/system"
+
+2. In a new terminal[1] Start a CLI
+
+   $ confd_cli -C
+
+Set some arbitrary configuration
+
+   # config
+   # system nodes node1 nodeA 1 nodeB 1 nodeC 2 nodeD 3
+   # system nodes node2 nodeA 5 nodeB 8 nodeC 13 nodeD 21
+   # commit
+
+3. So lets say the hardware goes down, terminal[2]
+
+   $ make hardware_down
+
+4. terminal[1]
+
+    # system nodes node3 nodeA 34 nodeB 55 nodeC 89 nodeD 144
+    # commit
+
+The transaction gets aborted.
+
+5. Also check what happens if the subscriber goes down, terminal[2]
+
+    $ make hardware_up
+    $ ps -ax | grep "twophase /system" -> <pid>
+    $ kill <pid>
+
+    terminal[1]:
+    # system nodes node10 nodeA 1 nodeB 1
+    # commit

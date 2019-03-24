@@ -1,0 +1,15 @@
+module ietf-restconf-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  description
+    "Annotation module for ietf-restconf.";
+
+  tailf:annotate-module 'ietf-restconf' {
+    tailf:export rest;
+  }
+}

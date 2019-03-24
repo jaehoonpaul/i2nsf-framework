@@ -1,0 +1,1753 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module _confd.maapi</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="_confd.html"><font color="#ffffff">_confd</font></a>.maapi</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Low&nbsp;level&nbsp;module&nbsp;for&nbsp;connecting&nbsp;to&nbsp;ConfD&nbsp;with&nbsp;a&nbsp;read/write&nbsp;interface<br>
+inside&nbsp;transactions.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;the&nbsp;ConfD&nbsp;transaction&nbsp;manager.<br>
+The&nbsp;API&nbsp;described&nbsp;here&nbsp;has&nbsp;several&nbsp;purposes.&nbsp;We&nbsp;can&nbsp;use&nbsp;MAAPI&nbsp;when&nbsp;we&nbsp;wish<br>
+to&nbsp;implement&nbsp;our&nbsp;own&nbsp;proprietary&nbsp;management&nbsp;agent.<br>
+We&nbsp;also&nbsp;use&nbsp;MAAPI&nbsp;to&nbsp;attach&nbsp;to&nbsp;already&nbsp;existing&nbsp;ConfD&nbsp;transactions,&nbsp;for<br>
+example&nbsp;when&nbsp;we&nbsp;wish&nbsp;to&nbsp;implement&nbsp;semantic&nbsp;validation&nbsp;of&nbsp;configuration<br>
+data&nbsp;in&nbsp;Python,&nbsp;and&nbsp;also&nbsp;when&nbsp;we&nbsp;wish&nbsp;to&nbsp;implement&nbsp;CLI&nbsp;wizards&nbsp;in&nbsp;Python.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_maapi(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="_confd.maapi.html#Cursor">Cursor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.maapi.html#MaapiRollback">MaapiRollback</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Cursor">class <strong>Cursor</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>struct&nbsp;maapi_cursor&nbsp;<a href="__builtin__.html#object">object</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Cursor-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#Cursor-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="Cursor-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Cursor-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Cursor-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#Cursor-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#Cursor-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MaapiRollback">class <strong>MaapiRollback</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;maapi_rollback.<br>
+&nbsp;<br>
+MaapRollback&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MaapiRollback-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#MaapiRollback-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="MaapiRollback-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#MaapiRollback-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="MaapiRollback-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#MaapiRollback-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>comment</strong></dt>
+<dd><tt>the&nbsp;comment&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>creator</strong></dt>
+<dd><tt>the&nbsp;creator&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>datestr</strong></dt>
+<dd><tt>the&nbsp;date&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>fixed_nr</strong></dt>
+<dd><tt>the&nbsp;fixed_nr&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>label</strong></dt>
+<dd><tt>the&nbsp;label&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>nr</strong></dt>
+<dd><tt>the&nbsp;nr&nbsp;attribute&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>via</strong></dt>
+<dd><tt>the&nbsp;via&nbsp;(string)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#MaapiRollback-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-aaa_reload"><strong>aaa_reload</strong></a>(...)</dt><dd><tt><a href="#-aaa_reload">aaa_reload</a>(sock,&nbsp;synchronous)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Start&nbsp;a&nbsp;reload&nbsp;of&nbsp;aaa&nbsp;from&nbsp;external&nbsp;data&nbsp;provider.<br>
+&nbsp;<br>
+Used&nbsp;by&nbsp;external&nbsp;data&nbsp;provider&nbsp;to&nbsp;notify&nbsp;that&nbsp;there&nbsp;is&nbsp;a&nbsp;change&nbsp;to&nbsp;the&nbsp;AAA<br>
+data.&nbsp;Calling&nbsp;the&nbsp;function&nbsp;with&nbsp;the&nbsp;argument&nbsp;'synchronous'&nbsp;set&nbsp;to&nbsp;1&nbsp;or&nbsp;True<br>
+means&nbsp;that&nbsp;the&nbsp;call&nbsp;will&nbsp;block&nbsp;until&nbsp;the&nbsp;loading&nbsp;is&nbsp;completed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+synchronous&nbsp;--&nbsp;if&nbsp;1,&nbsp;will&nbsp;wait&nbsp;for&nbsp;the&nbsp;loading&nbsp;complete&nbsp;and&nbsp;return&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loading&nbsp;is&nbsp;complete,&nbsp;if&nbsp;0&nbsp;will&nbsp;only&nbsp;initiate&nbsp;the&nbsp;loading&nbsp;of&nbsp;AAA&nbsp;data&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;immediately</tt></dd></dl>
+ <dl><dt><a name="-aaa_reload_path"><strong>aaa_reload_path</strong></a>(...)</dt><dd><tt><a href="#-aaa_reload_path">aaa_reload_path</a>(sock,&nbsp;synchronous,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Start&nbsp;a&nbsp;reload&nbsp;of&nbsp;aaa&nbsp;from&nbsp;external&nbsp;data&nbsp;provider.<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;_maapi_aaa_reload()&nbsp;that&nbsp;causes&nbsp;only&nbsp;the&nbsp;AAA&nbsp;subtree&nbsp;given&nbsp;by<br>
+path&nbsp;to&nbsp;be&nbsp;loaded.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+synchronous&nbsp;--&nbsp;if&nbsp;1,&nbsp;will&nbsp;wait&nbsp;for&nbsp;the&nbsp;loading&nbsp;complete&nbsp;and&nbsp;return&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loading&nbsp;is&nbsp;complete,&nbsp;if&nbsp;0&nbsp;will&nbsp;only&nbsp;initiate&nbsp;the&nbsp;loading&nbsp;of&nbsp;AAA&nbsp;data&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;immediately<br>
+path&nbsp;--&nbsp;the&nbsp;subtree&nbsp;to&nbsp;be&nbsp;loaded</tt></dd></dl>
+ <dl><dt><a name="-abort_trans"><strong>abort_trans</strong></a>(...)</dt><dd><tt><a href="#-abort_trans">abort_trans</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Final&nbsp;phase&nbsp;of&nbsp;a&nbsp;two&nbsp;phase&nbsp;transaction,&nbsp;aborting&nbsp;the&nbsp;trans.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-abort_upgrade"><strong>abort_upgrade</strong></a>(...)</dt><dd><tt><a href="#-abort_upgrade">abort_upgrade</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Can&nbsp;be&nbsp;called&nbsp;before&nbsp;committing&nbsp;upgrade&nbsp;in&nbsp;order&nbsp;to&nbsp;abort&nbsp;it.<br>
+&nbsp;<br>
+Final&nbsp;step&nbsp;in&nbsp;an&nbsp;upgrade.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-apply_trans"><strong>apply_trans</strong></a>(...)</dt><dd><tt><a href="#-apply_trans">apply_trans</a>(sock,&nbsp;thandle,&nbsp;keepopen)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Apply&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+Validates,&nbsp;prepares&nbsp;and&nbsp;eventually&nbsp;commits&nbsp;or&nbsp;aborts&nbsp;the&nbsp;transaction.&nbsp;If<br>
+the&nbsp;validation&nbsp;fails&nbsp;and&nbsp;the&nbsp;'keep_open'&nbsp;argument&nbsp;is&nbsp;set&nbsp;to&nbsp;1&nbsp;or&nbsp;True,&nbsp;the<br>
+transaction&nbsp;is&nbsp;left&nbsp;open&nbsp;and&nbsp;the&nbsp;developer&nbsp;can&nbsp;react&nbsp;upon&nbsp;the&nbsp;validation<br>
+errors.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+keepopen&nbsp;--&nbsp;if&nbsp;true,&nbsp;transaction&nbsp;is&nbsp;not&nbsp;discarded&nbsp;if&nbsp;validation&nbsp;fails</tt></dd></dl>
+ <dl><dt><a name="-apply_trans_flags"><strong>apply_trans_flags</strong></a>(...)</dt><dd><tt><a href="#-apply_trans_flags">apply_trans_flags</a>(sock,&nbsp;thandle,&nbsp;keepopen,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;<a href="#-apply_trans">apply_trans</a>()&nbsp;that&nbsp;takes&nbsp;an&nbsp;additional&nbsp;'flags'&nbsp;argument.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+keepopen&nbsp;--&nbsp;if&nbsp;true,&nbsp;transaction&nbsp;is&nbsp;not&nbsp;discarded&nbsp;if&nbsp;validation&nbsp;fails<br>
+flags&nbsp;--&nbsp;flags&nbsp;to&nbsp;set&nbsp;in&nbsp;the&nbsp;transaction</tt></dd></dl>
+ <dl><dt><a name="-apply_trans_with_result"><strong>apply_trans_with_result</strong></a>(...)</dt><dd><tt><a href="#-apply_trans_with_result">apply_trans_with_result</a>(sock,&nbsp;thandle,&nbsp;keepopen,&nbsp;flags,&nbsp;tag,&nbsp;timeout)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;<a href="#-apply_trans">apply_trans</a>()&nbsp;that&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;tagValues&nbsp;depending<br>
+on&nbsp;the&nbsp;flags&nbsp;passed&nbsp;in.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+keepopen&nbsp;--&nbsp;if&nbsp;true,&nbsp;transaction&nbsp;is&nbsp;not&nbsp;discarded&nbsp;if&nbsp;validation&nbsp;fails<br>
+flags&nbsp;--&nbsp;flags&nbsp;to&nbsp;set&nbsp;in&nbsp;the&nbsp;transaction<br>
+tag&nbsp;--&nbsp;user&nbsp;defined&nbsp;opaque&nbsp;tag&nbsp;attached&nbsp;to&nbsp;the&nbsp;resulting&nbsp;queue&nbsp;item<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;using&nbsp;MAAPI_COMMIT_NCS_ASYNC_COMMIT_QUEUE&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_COMMIT_NCS_SYNC_COMMIT_QUEUE&nbsp;flag<br>
+timeout&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;for&nbsp;when&nbsp;the&nbsp;MAAPI_COMMIT_NCS_SYNC_COMMIT_QUEUE<br>
+is&nbsp;set.&nbsp;-1&nbsp;means&nbsp;infinity</tt></dd></dl>
+ <dl><dt><a name="-attach"><strong>attach</strong></a>(...)</dt><dd><tt><a href="#-attach">attach</a>(sock,&nbsp;hashed_ns,&nbsp;ctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Attach&nbsp;to&nbsp;a&nbsp;existing&nbsp;transaction.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+hashed_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;to&nbsp;use<br>
+ctx&nbsp;--&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-attach2"><strong>attach2</strong></a>(...)</dt><dd><tt><a href="#-attach2">attach2</a>(sock,&nbsp;hashed_ns,&nbsp;usid,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Used&nbsp;when&nbsp;there&nbsp;is&nbsp;no&nbsp;transaction&nbsp;context&nbsp;beforehand,&nbsp;to&nbsp;attach&nbsp;to&nbsp;a<br>
+existing&nbsp;transaction.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+hashed_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;to&nbsp;use<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id,&nbsp;can&nbsp;be&nbsp;set&nbsp;to&nbsp;0&nbsp;to&nbsp;use&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;transaction<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-attach_init"><strong>attach_init</strong></a>(...)</dt><dd><tt><a href="#-attach_init">attach_init</a>(sock)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Attach&nbsp;the&nbsp;_MAAPI&nbsp;socket&nbsp;to&nbsp;the&nbsp;special&nbsp;transaction&nbsp;available&nbsp;during&nbsp;phase0.<br>
+Returns&nbsp;the&nbsp;thandle&nbsp;as&nbsp;an&nbsp;integer.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-authenticate"><strong>authenticate</strong></a>(...)</dt><dd><tt><a href="#-authenticate">authenticate</a>(sock,&nbsp;user,&nbsp;password,&nbsp;n)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Authenticate&nbsp;a&nbsp;user&nbsp;session.&nbsp;Use&nbsp;the&nbsp;'n'&nbsp;to&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;n-1&nbsp;groups&nbsp;that<br>
+the&nbsp;user&nbsp;is&nbsp;a&nbsp;member&nbsp;of.&nbsp;Use&nbsp;n=1&nbsp;if&nbsp;the&nbsp;function&nbsp;is&nbsp;used&nbsp;in&nbsp;a&nbsp;context<br>
+where&nbsp;the&nbsp;group&nbsp;names&nbsp;are&nbsp;not&nbsp;needed.&nbsp;Returns&nbsp;1&nbsp;if&nbsp;accepted&nbsp;without&nbsp;groups.<br>
+If&nbsp;the&nbsp;authentication&nbsp;failed&nbsp;or&nbsp;was&nbsp;accepted&nbsp;a&nbsp;tuple&nbsp;with&nbsp;first&nbsp;element<br>
+status&nbsp;code,&nbsp;0&nbsp;for&nbsp;rejection&nbsp;and&nbsp;1&nbsp;for&nbsp;accepted&nbsp;is&nbsp;returned.&nbsp;The&nbsp;second<br>
+element&nbsp;either&nbsp;contains&nbsp;the&nbsp;reason&nbsp;for&nbsp;the&nbsp;rejection&nbsp;as&nbsp;a&nbsp;string&nbsp;OR&nbsp;a&nbsp;list<br>
+groupnames.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+user&nbsp;--&nbsp;username<br>
+pass&nbsp;--&nbsp;password<br>
+n&nbsp;--&nbsp;number&nbsp;of&nbsp;groups&nbsp;to&nbsp;return</tt></dd></dl>
+ <dl><dt><a name="-authenticate2"><strong>authenticate2</strong></a>(...)</dt><dd><tt><a href="#-authenticate2">authenticate2</a>(sock,&nbsp;user,&nbsp;password,&nbsp;src_addr,&nbsp;src_port,&nbsp;context,&nbsp;prot,&nbsp;n)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;does&nbsp;the&nbsp;same&nbsp;thing&nbsp;as&nbsp;maapi_authenticate(),&nbsp;but&nbsp;allows&nbsp;for<br>
+passing&nbsp;of&nbsp;the&nbsp;additional&nbsp;parameters&nbsp;src_addr,&nbsp;src_port,&nbsp;context,&nbsp;and&nbsp;prot,<br>
+which&nbsp;otherwise&nbsp;are&nbsp;passed&nbsp;only&nbsp;to&nbsp;maapi_start_user_session()/<br>
+maapi_start_user_session2().&nbsp;The&nbsp;parameters&nbsp;are&nbsp;passed&nbsp;on&nbsp;to&nbsp;an&nbsp;external<br>
+authentication&nbsp;executable.<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+user&nbsp;--&nbsp;username<br>
+pass&nbsp;--&nbsp;password<br>
+src_addr&nbsp;--&nbsp;ip&nbsp;address<br>
+src_port&nbsp;--&nbsp;port&nbsp;number<br>
+context&nbsp;--&nbsp;context&nbsp;for&nbsp;the&nbsp;session<br>
+prot&nbsp;--&nbsp;the&nbsp;protocol&nbsp;used&nbsp;by&nbsp;the&nbsp;client&nbsp;for&nbsp;connecting<br>
+n&nbsp;--&nbsp;number&nbsp;of&nbsp;groups&nbsp;to&nbsp;return</tt></dd></dl>
+ <dl><dt><a name="-candidate_abort_commit"><strong>candidate_abort_commit</strong></a>(...)</dt><dd><tt><a href="#-candidate_abort_commit">candidate_abort_commit</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Cancel&nbsp;an&nbsp;ongoing&nbsp;confirmed&nbsp;commit.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-candidate_abort_commit_persistent"><strong>candidate_abort_commit_persistent</strong></a>(...)</dt><dd><tt><a href="#-candidate_abort_commit_persistent">candidate_abort_commit_persistent</a>(sock,&nbsp;persist_id)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Cancel&nbsp;an&nbsp;ongoing&nbsp;confirmed&nbsp;commit&nbsp;with&nbsp;the&nbsp;cookie&nbsp;given&nbsp;by&nbsp;persist_id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+persist_id&nbsp;--&nbsp;gives&nbsp;the&nbsp;cookie&nbsp;for&nbsp;an&nbsp;already&nbsp;ongoing&nbsp;persistent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;confirmed&nbsp;commit</tt></dd></dl>
+ <dl><dt><a name="-candidate_commit"><strong>candidate_commit</strong></a>(...)</dt><dd><tt><a href="#-candidate_commit">candidate_commit</a>(sock)&nbsp;-&gt;&nbsp;None&nbsp;<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;copies&nbsp;the&nbsp;candidate&nbsp;to&nbsp;running.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-candidate_commit_info"><strong>candidate_commit_info</strong></a>(...)</dt><dd><tt><a href="#-candidate_commit_info">candidate_commit_info</a>(sock,&nbsp;persist_id,&nbsp;label,&nbsp;comment)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Commit&nbsp;the&nbsp;candidate&nbsp;to&nbsp;running,&nbsp;or&nbsp;confirm&nbsp;an&nbsp;ongoing&nbsp;confirmed&nbsp;commit,<br>
+and&nbsp;set&nbsp;the&nbsp;Label&nbsp;and/or&nbsp;Comment&nbsp;that&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback&nbsp;file&nbsp;when<br>
+the&nbsp;candidate&nbsp;is&nbsp;committed&nbsp;to&nbsp;running.<br>
+&nbsp;<br>
+Note:&nbsp;To&nbsp;ensure&nbsp;that&nbsp;the&nbsp;Label&nbsp;and/or&nbsp;Comment&nbsp;are&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback<br>
+file&nbsp;in&nbsp;all&nbsp;cases&nbsp;when&nbsp;doing&nbsp;a&nbsp;confirmed&nbsp;commit,&nbsp;they&nbsp;must&nbsp;be&nbsp;given&nbsp;both<br>
+with&nbsp;the&nbsp;confirmed&nbsp;commit&nbsp;(using&nbsp;maapi_candidate_confirmed_commit_info())<br>
+and&nbsp;with&nbsp;the&nbsp;confirming&nbsp;commit&nbsp;(using&nbsp;this&nbsp;function).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+persist_id&nbsp;--&nbsp;gives&nbsp;the&nbsp;cookie&nbsp;for&nbsp;an&nbsp;already&nbsp;ongoing&nbsp;persistent&nbsp;confirmed&nbsp;commit<br>
+label&nbsp;--&nbsp;the&nbsp;Label<br>
+comment&nbsp;--&nbsp;the&nbsp;Comment</tt></dd></dl>
+ <dl><dt><a name="-candidate_commit_persistent"><strong>candidate_commit_persistent</strong></a>(...)</dt><dd><tt><a href="#-candidate_commit_persistent">candidate_commit_persistent</a>(sock,&nbsp;persist_id)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Confirm&nbsp;an&nbsp;ongoing&nbsp;persistent&nbsp;commit&nbsp;with&nbsp;the&nbsp;cookie&nbsp;given&nbsp;by&nbsp;persist_id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+persist_id&nbsp;--&nbsp;gives&nbsp;the&nbsp;cookie&nbsp;for&nbsp;an&nbsp;already&nbsp;ongoing&nbsp;persistent&nbsp;confirmed&nbsp;commit</tt></dd></dl>
+ <dl><dt><a name="-candidate_confirmed_commit"><strong>candidate_confirmed_commit</strong></a>(...)</dt><dd><tt><a href="#-candidate_confirmed_commit">candidate_confirmed_commit</a>(sock,&nbsp;timeoutsecs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;also&nbsp;copies&nbsp;the&nbsp;candidate&nbsp;into&nbsp;running.&nbsp;However&nbsp;if&nbsp;a&nbsp;call&nbsp;to<br>
+maapi_candidate_commit()&nbsp;is&nbsp;not&nbsp;done&nbsp;within&nbsp;timeoutsecs&nbsp;an&nbsp;automatic<br>
+rollback&nbsp;will&nbsp;occur.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+timeoutsecs&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds</tt></dd></dl>
+ <dl><dt><a name="-candidate_confirmed_commit_info"><strong>candidate_confirmed_commit_info</strong></a>(...)</dt><dd><tt><a href="#-candidate_confirmed_commit_info">candidate_confirmed_commit_info</a>(sock,&nbsp;timeoutsecs,&nbsp;persist,&nbsp;persist_id,&nbsp;label,&nbsp;comment)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Like&nbsp;candidate_confirmed_commit_persistent,&nbsp;but&nbsp;also&nbsp;allows&nbsp;for&nbsp;setting&nbsp;the<br>
+Label&nbsp;and/or&nbsp;Comment&nbsp;that&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback&nbsp;file&nbsp;when&nbsp;the&nbsp;candidate<br>
+is&nbsp;committed&nbsp;to&nbsp;running.<br>
+&nbsp;<br>
+Note:&nbsp;To&nbsp;ensure&nbsp;that&nbsp;the&nbsp;Label&nbsp;and/or&nbsp;Comment&nbsp;are&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback<br>
+file&nbsp;in&nbsp;all&nbsp;cases&nbsp;when&nbsp;doing&nbsp;a&nbsp;confirmed&nbsp;commit,&nbsp;they&nbsp;must&nbsp;be&nbsp;given&nbsp;both<br>
+with&nbsp;the&nbsp;confirmed&nbsp;commit&nbsp;(using&nbsp;this&nbsp;function)&nbsp;and&nbsp;with&nbsp;the&nbsp;confirming<br>
+commit&nbsp;(using&nbsp;<a href="#-candidate_commit_info">candidate_commit_info</a>()).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+timeoutsecs&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds<br>
+persist&nbsp;--&nbsp;sets&nbsp;the&nbsp;cookie&nbsp;for&nbsp;the&nbsp;persistent&nbsp;confirmed&nbsp;commit<br>
+persist_id&nbsp;--&nbsp;gives&nbsp;the&nbsp;cookie&nbsp;for&nbsp;an&nbsp;already&nbsp;ongoing&nbsp;persistent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;confirmed&nbsp;commit<br>
+label&nbsp;--&nbsp;the&nbsp;Label<br>
+comment&nbsp;--&nbsp;the&nbsp;Comment</tt></dd></dl>
+ <dl><dt><a name="-candidate_confirmed_commit_persistent"><strong>candidate_confirmed_commit_persistent</strong></a>(...)</dt><dd><tt><a href="#-candidate_confirmed_commit_persistent">candidate_confirmed_commit_persistent</a>(sock,&nbsp;timeoutsecs,&nbsp;persist,&nbsp;persist_id)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Start&nbsp;or&nbsp;extend&nbsp;a&nbsp;confirmed&nbsp;commit&nbsp;using&nbsp;persist&nbsp;id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+timeoutsecs&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds<br>
+persist&nbsp;--&nbsp;sets&nbsp;the&nbsp;cookie&nbsp;for&nbsp;the&nbsp;persistent&nbsp;confirmed&nbsp;commit<br>
+persist_id&nbsp;--&nbsp;gives&nbsp;the&nbsp;cookie&nbsp;for&nbsp;an&nbsp;already&nbsp;ongoing&nbsp;persistent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;confirmed&nbsp;commit</tt></dd></dl>
+ <dl><dt><a name="-candidate_reset"><strong>candidate_reset</strong></a>(...)</dt><dd><tt><a href="#-candidate_reset">candidate_reset</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copy&nbsp;running&nbsp;into&nbsp;candidate.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-candidate_validate"><strong>candidate_validate</strong></a>(...)</dt><dd><tt><a href="#-candidate_validate">candidate_validate</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;validates&nbsp;the&nbsp;candidate.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-cd"><strong>cd</strong></a>(...)</dt><dd><tt><a href="#-cd">cd</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Change&nbsp;current&nbsp;position&nbsp;in&nbsp;the&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;to&nbsp;change&nbsp;to</tt></dd></dl>
+ <dl><dt><a name="-clear_opcache"><strong>clear_opcache</strong></a>(...)</dt><dd><tt><a href="#-clear_opcache">clear_opcache</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Clearing&nbsp;of&nbsp;operational&nbsp;data&nbsp;cache.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+path&nbsp;--&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;subtree&nbsp;to&nbsp;clear</tt></dd></dl>
+ <dl><dt><a name="-cli_accounting"><strong>cli_accounting</strong></a>(...)</dt><dd><tt><a href="#-cli_accounting">cli_accounting</a>(sock,&nbsp;user,&nbsp;usid,&nbsp;cmdstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Generates&nbsp;an&nbsp;audit&nbsp;log&nbsp;entry&nbsp;in&nbsp;the&nbsp;CLI&nbsp;audit&nbsp;log.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+user&nbsp;--&nbsp;user&nbsp;to&nbsp;generate&nbsp;the&nbsp;entry&nbsp;for<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd"><strong>cli_cmd</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd">cli_cmd</a>(sock,&nbsp;usess,&nbsp;buf)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Execute&nbsp;CLI&nbsp;command&nbsp;in&nbsp;the&nbsp;ongoing&nbsp;CLI&nbsp;session.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+buf&nbsp;--&nbsp;string&nbsp;to&nbsp;write</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd2"><strong>cli_cmd2</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd2">cli_cmd2</a>(sock,&nbsp;usess,&nbsp;buf,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Execute&nbsp;CLI&nbsp;command&nbsp;in&nbsp;a&nbsp;ongoing&nbsp;CLI&nbsp;session.&nbsp;With&nbsp;flags:<br>
+CMD_NO_FULLPATH&nbsp;-&nbsp;Do&nbsp;not&nbsp;perform&nbsp;the&nbsp;fullpath&nbsp;check&nbsp;on&nbsp;show&nbsp;commands.<br>
+CMD_NO_HIDDEN&nbsp;-&nbsp;Allows&nbsp;execution&nbsp;of&nbsp;hidden&nbsp;CLI&nbsp;commands.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+buf&nbsp;--&nbsp;string&nbsp;to&nbsp;write<br>
+flags&nbsp;--&nbsp;as&nbsp;above</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd3"><strong>cli_cmd3</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd3">cli_cmd3</a>(sock,&nbsp;usess,&nbsp;buf,&nbsp;flags,&nbsp;unhide)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Execute&nbsp;CLI&nbsp;command&nbsp;in&nbsp;a&nbsp;ongoing&nbsp;CLI&nbsp;session.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+buf&nbsp;--&nbsp;string&nbsp;to&nbsp;write<br>
+flags&nbsp;--&nbsp;as&nbsp;above<br>
+unhide&nbsp;--&nbsp;The&nbsp;unhide&nbsp;parameter&nbsp;is&nbsp;used&nbsp;for&nbsp;passing&nbsp;a&nbsp;hide&nbsp;group&nbsp;which&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;unhidden&nbsp;during&nbsp;the&nbsp;execution&nbsp;of&nbsp;the&nbsp;command.</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd4"><strong>cli_cmd4</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd4">cli_cmd4</a>(sock,&nbsp;usess,&nbsp;buf,&nbsp;flags,&nbsp;unhide)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Execute&nbsp;CLI&nbsp;command&nbsp;in&nbsp;a&nbsp;ongoing&nbsp;CLI&nbsp;session.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+buf&nbsp;--&nbsp;string&nbsp;to&nbsp;write<br>
+flags&nbsp;--&nbsp;as&nbsp;above<br>
+unhide&nbsp;--&nbsp;The&nbsp;unhide&nbsp;parameter&nbsp;is&nbsp;used&nbsp;for&nbsp;passing&nbsp;a&nbsp;hide&nbsp;group&nbsp;which&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;unhidden&nbsp;during&nbsp;the&nbsp;execution&nbsp;of&nbsp;the&nbsp;command.</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd_to_path"><strong>cli_cmd_to_path</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd_to_path">cli_cmd_to_path</a>(sock,&nbsp;line,&nbsp;nsize,&nbsp;psize)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Returns&nbsp;string&nbsp;of&nbsp;the&nbsp;C/I&nbsp;namespaced&nbsp;CLI&nbsp;path&nbsp;that&nbsp;can&nbsp;be&nbsp;associated&nbsp;with<br>
+the&nbsp;given&nbsp;command.&nbsp;Returns&nbsp;a&nbsp;tuple&nbsp;ns&nbsp;and&nbsp;path.&nbsp;<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+line&nbsp;--&nbsp;data&nbsp;model&nbsp;path&nbsp;as&nbsp;string<br>
+nsize&nbsp;--&nbsp;limit&nbsp;length&nbsp;of&nbsp;namespace<br>
+psize&nbsp;--&nbsp;limit&nbsp;length&nbsp;of&nbsp;path</tt></dd></dl>
+ <dl><dt><a name="-cli_cmd_to_path2"><strong>cli_cmd_to_path2</strong></a>(...)</dt><dd><tt><a href="#-cli_cmd_to_path2">cli_cmd_to_path2</a>(sock,&nbsp;thandle,&nbsp;line,&nbsp;nsize,&nbsp;psize)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Returns&nbsp;string&nbsp;of&nbsp;the&nbsp;C/I&nbsp;namespaced&nbsp;CLI&nbsp;path&nbsp;that&nbsp;can&nbsp;be&nbsp;associated&nbsp;with<br>
+the&nbsp;given&nbsp;command.&nbsp;In&nbsp;the&nbsp;context&nbsp;of&nbsp;the&nbsp;provided&nbsp;transaction&nbsp;handle.<br>
+Returns&nbsp;a&nbsp;tuple&nbsp;ns&nbsp;and&nbsp;path.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+line&nbsp;--&nbsp;data&nbsp;model&nbsp;path&nbsp;as&nbsp;string<br>
+nsize&nbsp;--&nbsp;limit&nbsp;length&nbsp;of&nbsp;namespace<br>
+psize&nbsp;--&nbsp;limit&nbsp;length&nbsp;of&nbsp;path</tt></dd></dl>
+ <dl><dt><a name="-cli_diff_cmd"><strong>cli_diff_cmd</strong></a>(...)</dt><dd><tt><a href="#-cli_diff_cmd">cli_diff_cmd</a>(sock,&nbsp;thandle,&nbsp;thandle_old,&nbsp;flags,&nbsp;path,&nbsp;size)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;diff&nbsp;between&nbsp;two&nbsp;sessions&nbsp;as&nbsp;a&nbsp;series&nbsp;C/I&nbsp;cli&nbsp;commands.&nbsp;Returns&nbsp;a<br>
+string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+thandle_old&nbsp;--&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;as&nbsp;for&nbsp;cli_path_cmd<br>
+path&nbsp;--&nbsp;as&nbsp;for&nbsp;cli_path_cmd<br>
+size&nbsp;--&nbsp;limit&nbsp;diff</tt></dd></dl>
+ <dl><dt><a name="-cli_get"><strong>cli_get</strong></a>(...)</dt><dd><tt><a href="#-cli_get">cli_get</a>(sock,&nbsp;usess,&nbsp;opt)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Read&nbsp;CLI&nbsp;session&nbsp;parameter&nbsp;or&nbsp;attribute.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+opt&nbsp;--&nbsp;option&nbsp;to&nbsp;get</tt></dd></dl>
+ <dl><dt><a name="-cli_path_cmd"><strong>cli_path_cmd</strong></a>(...)</dt><dd><tt><a href="#-cli_path_cmd">cli_path_cmd</a>(sock,&nbsp;thandle,&nbsp;flags,&nbsp;path,&nbsp;size)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Returns&nbsp;string&nbsp;of&nbsp;the&nbsp;C/I&nbsp;CLI&nbsp;command&nbsp;that&nbsp;can&nbsp;be&nbsp;associated&nbsp;with&nbsp;the&nbsp;given<br>
+path.&nbsp;The&nbsp;flags&nbsp;can&nbsp;be&nbsp;given&nbsp;as&nbsp;FLAG_EMIT_PARENTS&nbsp;to&nbsp;enable&nbsp;the&nbsp;commands&nbsp;to<br>
+reach&nbsp;the&nbsp;submode&nbsp;for&nbsp;the&nbsp;path&nbsp;to&nbsp;be&nbsp;emitted.&nbsp;The&nbsp;flags&nbsp;can&nbsp;be&nbsp;given&nbsp;as<br>
+FLAG_DELETE&nbsp;to&nbsp;emit&nbsp;the&nbsp;command&nbsp;to&nbsp;delete&nbsp;the&nbsp;given&nbsp;path.&nbsp;The&nbsp;flags&nbsp;can&nbsp;be<br>
+given&nbsp;as&nbsp;FLAG_NON_RECURSIVE&nbsp;to&nbsp;prevent&nbsp;that&nbsp;&nbsp;all&nbsp;children&nbsp;to&nbsp;a&nbsp;container&nbsp;or<br>
+list&nbsp;item&nbsp;are&nbsp;displayed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;as&nbsp;above<br>
+path&nbsp;--&nbsp;the&nbsp;path&nbsp;for&nbsp;the&nbsp;cmd<br>
+size&nbsp;--&nbsp;limit&nbsp;cmd</tt></dd></dl>
+ <dl><dt><a name="-cli_prompt"><strong>cli_prompt</strong></a>(...)</dt><dd><tt><a href="#-cli_prompt">cli_prompt</a>(sock,&nbsp;usess,&nbsp;prompt,&nbsp;echo)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Prompt&nbsp;user&nbsp;for&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+prompt&nbsp;--&nbsp;string&nbsp;to&nbsp;show&nbsp;the&nbsp;user<br>
+echo&nbsp;--&nbsp;determines&nbsp;wether&nbsp;to&nbsp;control&nbsp;if&nbsp;the&nbsp;input&nbsp;should&nbsp;be&nbsp;echoed&nbsp;or&nbsp;not.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ECHO&nbsp;shows&nbsp;the&nbsp;input,&nbsp;NOECHO&nbsp;does&nbsp;not</tt></dd></dl>
+ <dl><dt><a name="-cli_prompt_oneof"><strong>cli_prompt_oneof</strong></a>(...)</dt><dd><tt>Prompt&nbsp;user&nbsp;for&nbsp;a&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-cli_prompt_oneof2"><strong>cli_prompt_oneof2</strong></a>(...)</dt><dd><tt>Prompt&nbsp;user&nbsp;for&nbsp;a&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-cli_read_eof"><strong>cli_read_eof</strong></a>(...)</dt><dd><tt>Prompt&nbsp;user&nbsp;for&nbsp;a&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-cli_read_eof2"><strong>cli_read_eof2</strong></a>(...)</dt><dd><tt>Prompt&nbsp;user&nbsp;for&nbsp;a&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-cli_set"><strong>cli_set</strong></a>(...)</dt><dd><tt><a href="#-cli_set">cli_set</a>(sock,&nbsp;usess,&nbsp;opt,&nbsp;value)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;CLI&nbsp;session&nbsp;parameter.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+opt&nbsp;--&nbsp;option&nbsp;to&nbsp;set<br>
+value&nbsp;--&nbsp;the&nbsp;new&nbsp;value&nbsp;of&nbsp;the&nbsp;session&nbsp;parameter</tt></dd></dl>
+ <dl><dt><a name="-cli_write"><strong>cli_write</strong></a>(...)</dt><dd><tt><a href="#-cli_write">cli_write</a>(sock,&nbsp;usess,&nbsp;buf)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Write&nbsp;to&nbsp;the&nbsp;cli.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usess&nbsp;--&nbsp;user&nbsp;session<br>
+buf&nbsp;--&nbsp;string&nbsp;to&nbsp;write</tt></dd></dl>
+ <dl><dt><a name="-close"><strong>close</strong></a>(...)</dt><dd><tt><a href="#-close">close</a>(sock)&nbsp;-&gt;&nbsp;None&nbsp;<br>
+&nbsp;<br>
+Ends&nbsp;session&nbsp;and&nbsp;closes&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-commit_queue_result"><strong>commit_queue_result</strong></a>(...)</dt><dd><tt><a href="#-commit_queue_result">commit_queue_result</a>(sock,&nbsp;thandle,&nbsp;timeoutsecs)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Get&nbsp;result&nbsp;from&nbsp;commit&nbsp;queue.&nbsp;Returns&nbsp;tuple(int,&nbsp;int)&nbsp;containing&nbsp;queue&nbsp;id<br>
+and&nbsp;status.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+timeoutsecs&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds</tt></dd></dl>
+ <dl><dt><a name="-commit_trans"><strong>commit_trans</strong></a>(...)</dt><dd><tt><a href="#-commit_trans">commit_trans</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Final&nbsp;phase&nbsp;of&nbsp;a&nbsp;two&nbsp;phase&nbsp;transaction,&nbsp;committing&nbsp;the&nbsp;trans.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+keepopen&nbsp;--&nbsp;if&nbsp;true,&nbsp;transaction&nbsp;is&nbsp;not&nbsp;discarded&nbsp;if&nbsp;validation&nbsp;fails</tt></dd></dl>
+ <dl><dt><a name="-commit_upgrade"><strong>commit_upgrade</strong></a>(...)</dt><dd><tt><a href="#-commit_upgrade">commit_upgrade</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Final&nbsp;step&nbsp;in&nbsp;an&nbsp;upgrade.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-confirmed_commit_in_progress"><strong>confirmed_commit_in_progress</strong></a>(...)</dt><dd><tt><a href="#-confirmed_commit_in_progress">confirmed_commit_in_progress</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Checks&nbsp;wether&nbsp;a&nbsp;confirmed&nbsp;commit&nbsp;is&nbsp;ongoing.&nbsp;Returns&nbsp;boolean.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-connect"><strong>connect</strong></a>(...)</dt><dd><tt><a href="#-connect">connect</a>(sock,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Connect&nbsp;to&nbsp;the&nbsp;system&nbsp;daemon.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address<br>
+port&nbsp;--&nbsp;the&nbsp;port<br>
+path&nbsp;--&nbsp;the&nbsp;path&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-copy"><strong>copy</strong></a>(...)</dt><dd><tt><a href="#-copy">copy</a>(sock,&nbsp;from_thandle,&nbsp;to_thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copy&nbsp;all&nbsp;data&nbsp;from&nbsp;one&nbsp;data&nbsp;store&nbsp;to&nbsp;another.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+from_thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+to_thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-copy_path"><strong>copy_path</strong></a>(...)</dt><dd><tt><a href="#-copy">copy</a>(sock,&nbsp;from_thandle,&nbsp;to_thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copy&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;from&nbsp;one&nbsp;data&nbsp;store&nbsp;to&nbsp;another.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+from_thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+to_thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;the&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;is&nbsp;copied</tt></dd></dl>
+ <dl><dt><a name="-copy_running_to_startup"><strong>copy_running_to_startup</strong></a>(...)</dt><dd><tt><a href="#-copy_running_to_startup">copy_running_to_startup</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copies&nbsp;running&nbsp;to&nbsp;startup.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-copy_tree"><strong>copy_tree</strong></a>(...)</dt><dd><tt><a href="#-copy_tree">copy_tree</a>(sock,&nbsp;thandle,&nbsp;frompath,&nbsp;topath)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copy&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;frompath&nbsp;to&nbsp;topath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+frompath&nbsp;--&nbsp;the&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;is&nbsp;copied<br>
+topath&nbsp;--&nbsp;to&nbsp;which&nbsp;path&nbsp;the&nbsp;subtree&nbsp;is&nbsp;copied</tt></dd></dl>
+ <dl><dt><a name="-create"><strong>create</strong></a>(...)</dt><dd><tt><a href="#-create">create</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Create&nbsp;a&nbsp;new&nbsp;list&nbsp;entry,&nbsp;a&nbsp;presence&nbsp;container&nbsp;or&nbsp;a&nbsp;leaf&nbsp;of&nbsp;type&nbsp;empty<br>
+in&nbsp;the&nbsp;data&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;path&nbsp;of&nbsp;item&nbsp;to&nbsp;create</tt></dd></dl>
+ <dl><dt><a name="-delete"><strong>delete</strong></a>(...)</dt><dd><tt><a href="#-delete">delete</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Delete&nbsp;an&nbsp;existing&nbsp;list&nbsp;entry,&nbsp;a&nbsp;presence&nbsp;container&nbsp;or&nbsp;a&nbsp;leaf&nbsp;of&nbsp;type&nbsp;empty<br>
+from&nbsp;the&nbsp;data&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;path&nbsp;of&nbsp;item&nbsp;to&nbsp;delete</tt></dd></dl>
+ <dl><dt><a name="-delete_all"><strong>delete_all</strong></a>(...)</dt><dd><tt><a href="#-delete_all">delete_all</a>(sock,&nbsp;thandle,&nbsp;how)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Delete&nbsp;all&nbsp;data&nbsp;within&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+The&nbsp;how&nbsp;argument&nbsp;specifies&nbsp;how&nbsp;to&nbsp;delete:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DEL_SAFE&nbsp;-&nbsp;Delete&nbsp;everything&nbsp;except&nbsp;namespaces&nbsp;that&nbsp;were&nbsp;exported&nbsp;with<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tailf:export&nbsp;none.&nbsp;Top-level&nbsp;nodes&nbsp;that&nbsp;cannot&nbsp;be&nbsp;deleted<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;due&nbsp;to&nbsp;AAA&nbsp;rules&nbsp;are&nbsp;left&nbsp;in&nbsp;place&nbsp;(descendant&nbsp;nodes&nbsp;may&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deleted&nbsp;if&nbsp;the&nbsp;rules&nbsp;allow&nbsp;it).<br>
+&nbsp;&nbsp;&nbsp;DEL_EXPORTED&nbsp;-&nbsp;As&nbsp;DEL_SAFE,&nbsp;but&nbsp;AAA&nbsp;rules&nbsp;are&nbsp;ignored.<br>
+&nbsp;&nbsp;&nbsp;DEL_ALL&nbsp;-&nbsp;Delete&nbsp;everything,&nbsp;AAA&nbsp;rules&nbsp;are&nbsp;ignored.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+how&nbsp;--&nbsp;DEL_SAFE,&nbsp;DEL_EXPORTED&nbsp;or&nbsp;DEL_ALL</tt></dd></dl>
+ <dl><dt><a name="-delete_config"><strong>delete_config</strong></a>(...)</dt><dd><tt><a href="#-delete_config">delete_config</a>(sock,&nbsp;name)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Empties&nbsp;a&nbsp;datastore.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;datastore&nbsp;to&nbsp;empty</tt></dd></dl>
+ <dl><dt><a name="-destroy_cursor"><strong>destroy_cursor</strong></a>(...)</dt><dd><tt><a href="#-destroy_cursor">destroy_cursor</a>(mc)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Deallocates&nbsp;memory&nbsp;which&nbsp;is&nbsp;associated&nbsp;with&nbsp;the&nbsp;cursor.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+mc&nbsp;--&nbsp;maapiCursor</tt></dd></dl>
+ <dl><dt><a name="-detach"><strong>detach</strong></a>(...)</dt><dd><tt><a href="#-detach">detach</a>(sock,&nbsp;ctx)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Detaches&nbsp;an&nbsp;attached&nbsp;_MAAPI&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+ctx&nbsp;--&nbsp;transaction&nbsp;context</tt></dd></dl>
+ <dl><dt><a name="-detach2"><strong>detach2</strong></a>(...)</dt><dd><tt><a href="#-detach2">detach2</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Detaches&nbsp;an&nbsp;attached&nbsp;_MAAPI&nbsp;socket&nbsp;when&nbsp;we&nbsp;do&nbsp;not&nbsp;have&nbsp;a&nbsp;transaction&nbsp;context<br>
+available.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-diff_iterate"><strong>diff_iterate</strong></a>(...)</dt><dd><tt><a href="#-diff_iterate">diff_iterate</a>(sock,&nbsp;thandle,&nbsp;iter,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Iterate&nbsp;through&nbsp;a&nbsp;transaction&nbsp;diff.<br>
+&nbsp;<br>
+For&nbsp;each&nbsp;diff&nbsp;in&nbsp;the&nbsp;transaction&nbsp;the&nbsp;callback&nbsp;function&nbsp;'iter'&nbsp;will&nbsp;be<br>
+called.&nbsp;The&nbsp;iter&nbsp;function&nbsp;needs&nbsp;to&nbsp;have&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+def&nbsp;iter(keypath,&nbsp;operation,&nbsp;oldvalue,&nbsp;newvalue)<br>
+&nbsp;<br>
+Arguments:<br>
+keypath&nbsp;-&nbsp;the&nbsp;affected&nbsp;path&nbsp;(HKeypathRef)<br>
+operation&nbsp;-&nbsp;one&nbsp;of&nbsp;MOP_CREATED,&nbsp;MOP_DELETED,&nbsp;MOP_MODIFIED,&nbsp;MOP_VALUE_SET<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MOP_MOVED_AFTER&nbsp;and&nbsp;MOP_ATTR_SET<br>
+oldvalue&nbsp;-&nbsp;always&nbsp;None<br>
+newvalue&nbsp;-&nbsp;see&nbsp;below<br>
+&nbsp;<br>
+The&nbsp;'newvalue'&nbsp;argument&nbsp;may&nbsp;be&nbsp;set&nbsp;for&nbsp;operation&nbsp;MOP_VALUE_SET&nbsp;and&nbsp;is&nbsp;a<br>
+Value&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;in&nbsp;that&nbsp;case.&nbsp;For&nbsp;MOP_MOVED_AFTER&nbsp;it&nbsp;may&nbsp;be&nbsp;set&nbsp;to&nbsp;a&nbsp;list&nbsp;of<br>
+key&nbsp;values&nbsp;identifying&nbsp;an&nbsp;entry&nbsp;in&nbsp;the&nbsp;list&nbsp;-&nbsp;if&nbsp;it's&nbsp;None&nbsp;the&nbsp;list&nbsp;entry<br>
+has&nbsp;been&nbsp;moved&nbsp;to&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;list.&nbsp;For&nbsp;MOP_ATTR_SET&nbsp;it&nbsp;will&nbsp;be<br>
+set&nbsp;to&nbsp;a&nbsp;2-tuple&nbsp;of&nbsp;Value's&nbsp;where&nbsp;the&nbsp;first&nbsp;Value&nbsp;is&nbsp;the&nbsp;attribute&nbsp;set<br>
+and&nbsp;the&nbsp;second&nbsp;Value&nbsp;is&nbsp;the&nbsp;value&nbsp;the&nbsp;attribute&nbsp;was&nbsp;set&nbsp;to.&nbsp;If&nbsp;the<br>
+attribute&nbsp;has&nbsp;been&nbsp;deleted&nbsp;the&nbsp;second&nbsp;value&nbsp;is&nbsp;of&nbsp;type&nbsp;C_NOEXISTS<br>
+&nbsp;<br>
+The&nbsp;iter&nbsp;function&nbsp;should&nbsp;return&nbsp;one&nbsp;of:<br>
+&nbsp;<br>
+ITER_STOP&nbsp;-&nbsp;Stop&nbsp;further&nbsp;iteration<br>
+ITER_RECURSE&nbsp;-&nbsp;Recurse&nbsp;further&nbsp;down&nbsp;the&nbsp;node&nbsp;children<br>
+ITER_CONTINUE&nbsp;-&nbsp;Ignore&nbsp;node&nbsp;children&nbsp;and&nbsp;continue&nbsp;with&nbsp;the&nbsp;node's&nbsp;siblings<br>
+&nbsp;<br>
+One&nbsp;could&nbsp;also&nbsp;define&nbsp;a&nbsp;class&nbsp;implementing&nbsp;the&nbsp;call&nbsp;function&nbsp;as:<br>
+&nbsp;<br>
+class&nbsp;DiffIterator(<a href="__builtin__.html#object">object</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;__init__(self):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.<strong>count</strong>&nbsp;=&nbsp;0<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;__call__(self,&nbsp;kp,&nbsp;op,&nbsp;oldv,&nbsp;newv):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print('kp={0},&nbsp;op={1},&nbsp;oldv={2},&nbsp;newv={3}'.format(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;str(kp),&nbsp;str(op),&nbsp;str(oldv),&nbsp;str(newv)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.<strong>count</strong>&nbsp;+=&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_confd.ITER_RECURSE<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+iter&nbsp;--&nbsp;iterator&nbsp;function,&nbsp;will&nbsp;be&nbsp;called&nbsp;for&nbsp;every&nbsp;diff&nbsp;in&nbsp;the&nbsp;transaction<br>
+flags&nbsp;--&nbsp;bitmask&nbsp;of&nbsp;ITER_WANT_ATTR&nbsp;and&nbsp;ITER_WANT_P_CONTAINER</tt></dd></dl>
+ <dl><dt><a name="-disconnect_remote"><strong>disconnect_remote</strong></a>(...)</dt><dd><tt><a href="#-disconnect_remote">disconnect_remote</a>(sock,&nbsp;address)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Disconnect&nbsp;all&nbsp;remote&nbsp;connections&nbsp;to&nbsp;'address'&nbsp;except&nbsp;HA&nbsp;connections.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+address&nbsp;--&nbsp;ip&nbsp;address&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-disconnect_sockets"><strong>disconnect_sockets</strong></a>(...)</dt><dd><tt><a href="#-disconnect_remote">disconnect_remote</a>(sock,&nbsp;sockets)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Disconnect&nbsp;'sockets'&nbsp;which&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;sockets&nbsp;(fileno).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+sockets&nbsp;--&nbsp;list&nbsp;of&nbsp;sockets&nbsp;(int)</tt></dd></dl>
+ <dl><dt><a name="-do_display"><strong>do_display</strong></a>(...)</dt><dd><tt><a href="#-do_display">do_display</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;data&nbsp;model&nbsp;uses&nbsp;the&nbsp;YANG&nbsp;when&nbsp;or&nbsp;tailf:display-when&nbsp;statement,&nbsp;this<br>
+function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;determine&nbsp;if&nbsp;the&nbsp;item&nbsp;given&nbsp;by&nbsp;'path'&nbsp;should<br>
+be&nbsp;displayed&nbsp;or&nbsp;not.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;the&nbsp;'display-when'&nbsp;statement</tt></dd></dl>
+ <dl><dt><a name="-end_user_session"><strong>end_user_session</strong></a>(...)</dt><dd><tt><a href="#-end_user_session">end_user_session</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+End&nbsp;the&nbsp;MAAPI&nbsp;user&nbsp;session&nbsp;associated&nbsp;with&nbsp;the&nbsp;socket<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-exists"><strong>exists</strong></a>(...)</dt><dd><tt><a href="#-exists">exists</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;boolean<br>
+&nbsp;<br>
+Check&nbsp;wether&nbsp;a&nbsp;node&nbsp;in&nbsp;the&nbsp;data&nbsp;tree&nbsp;exists.&nbsp;Returns&nbsp;boolean.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;to&nbsp;check</tt></dd></dl>
+ <dl><dt><a name="-find_next"><strong>find_next</strong></a>(...)</dt><dd><tt><a href="#-find_next">find_next</a>(mc,&nbsp;type,&nbsp;inkeys)&nbsp;-&gt;&nbsp;list(Value)&nbsp;|&nbsp;False<br>
+&nbsp;<br>
+Update&nbsp;the&nbsp;cursor&nbsp;mc&nbsp;with&nbsp;the&nbsp;key(s)&nbsp;for&nbsp;the&nbsp;list&nbsp;entry&nbsp;designated&nbsp;by&nbsp;the<br>
+type&nbsp;and&nbsp;inkeys&nbsp;parameters.&nbsp;This&nbsp;function&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;start&nbsp;a&nbsp;traversal<br>
+from&nbsp;an&nbsp;arbitrary&nbsp;entry&nbsp;in&nbsp;a&nbsp;list.&nbsp;Keys&nbsp;for&nbsp;subsequent&nbsp;entries&nbsp;may&nbsp;be<br>
+retrieved&nbsp;with&nbsp;the&nbsp;<a href="#-get_next">get_next</a>()&nbsp;function.&nbsp;When&nbsp;no&nbsp;more&nbsp;keys&nbsp;are&nbsp;found,&nbsp;False<br>
+is&nbsp;returned.<br>
+&nbsp;<br>
+The&nbsp;strategy&nbsp;to&nbsp;use&nbsp;is&nbsp;defined&nbsp;by&nbsp;type:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FIND_NEXT&nbsp;-&nbsp;The&nbsp;keys&nbsp;for&nbsp;the&nbsp;first&nbsp;list&nbsp;entry&nbsp;after&nbsp;the&nbsp;one<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;indicated&nbsp;by&nbsp;the&nbsp;inkeys&nbsp;argument.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FIND_SAME_OR_NEXT&nbsp;-&nbsp;If&nbsp;the&nbsp;values&nbsp;in&nbsp;the&nbsp;inkeys&nbsp;array&nbsp;completely<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifies&nbsp;an&nbsp;actual&nbsp;existing&nbsp;list&nbsp;entry,&nbsp;the&nbsp;keys&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;entry&nbsp;are&nbsp;requested.&nbsp;Otherwise&nbsp;the&nbsp;same&nbsp;logic&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;FIND_NEXT&nbsp;above.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+mc&nbsp;--&nbsp;maapiCursor<br>
+type&nbsp;--&nbsp;CONFD_FIND_NEXT&nbsp;or&nbsp;CONFD_FIND_SAME_OR_NEXT<br>
+inkeys&nbsp;--&nbsp;where&nbsp;to&nbsp;start&nbsp;finding</tt></dd></dl>
+ <dl><dt><a name="-finish_trans"><strong>finish_trans</strong></a>(...)</dt><dd><tt><a href="#-finish_trans">finish_trans</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Finish&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;transaction&nbsp;is&nbsp;implemented&nbsp;by&nbsp;an&nbsp;external&nbsp;database,&nbsp;this&nbsp;will&nbsp;invoke<br>
+the&nbsp;finish()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-get_attrs"><strong>get_attrs</strong></a>(...)</dt><dd><tt><a href="#-get_attrs">get_attrs</a>(sock,&nbsp;thandle,&nbsp;attrs,&nbsp;keypath)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Get&nbsp;attributes&nbsp;for&nbsp;a&nbsp;node.&nbsp;Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;attributes.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+attrs&nbsp;--&nbsp;list&nbsp;of&nbsp;type&nbsp;of&nbsp;attributes&nbsp;to&nbsp;get<br>
+keypath&nbsp;--&nbsp;path&nbsp;to&nbsp;choice</tt></dd></dl>
+ <dl><dt><a name="-get_authorization_info"><strong>get_authorization_info</strong></a>(...)</dt><dd><tt><a href="#-get_authorization_info">get_authorization_info</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;confdAuthorizationInfo<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;retrieves&nbsp;authorization&nbsp;info&nbsp;for&nbsp;a&nbsp;user&nbsp;session,i.e.&nbsp;the&nbsp;groups&nbsp;that&nbsp;the&nbsp;user&nbsp;has&nbsp;been&nbsp;assigned&nbsp;to.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-get_case"><strong>get_case</strong></a>(...)</dt><dd><tt><a href="#-get_case">get_case</a>(sock,&nbsp;thandle,&nbsp;choice,&nbsp;keypath)&nbsp;-&gt;&nbsp;confdValue<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;case&nbsp;from&nbsp;a&nbsp;YANG&nbsp;choice&nbsp;statement.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+choice&nbsp;--&nbsp;choice&nbsp;name<br>
+keypath&nbsp;--&nbsp;path&nbsp;to&nbsp;choice</tt></dd></dl>
+ <dl><dt><a name="-get_elem"><strong>get_elem</strong></a>(...)</dt><dd><tt><a href="#-get_elem">get_elem</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;confdValue<br>
+&nbsp;<br>
+Path&nbsp;must&nbsp;be&nbsp;a&nbsp;valid&nbsp;leaf&nbsp;node&nbsp;in&nbsp;the&nbsp;data&nbsp;tree.&nbsp;Returns&nbsp;a&nbsp;Value&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;of&nbsp;elem</tt></dd></dl>
+ <dl><dt><a name="-get_my_user_session_id"><strong>get_my_user_session_id</strong></a>(...)</dt><dd><tt><a href="#-get_my_user_session_id">get_my_user_session_id</a>(sock)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;user&nbsp;session&nbsp;id<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-get_next"><strong>get_next</strong></a>(...)</dt><dd><tt><a href="#-get_next">get_next</a>(mc)&nbsp;-&gt;&nbsp;list(Value)&nbsp;|&nbsp;False<br>
+&nbsp;<br>
+Iterates&nbsp;and&nbsp;gets&nbsp;the&nbsp;keys&nbsp;for&nbsp;the&nbsp;next&nbsp;entry&nbsp;in&nbsp;a&nbsp;list.&nbsp;When&nbsp;no&nbsp;more&nbsp;keys<br>
+are&nbsp;found,&nbsp;False&nbsp;is&nbsp;returned.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+mc&nbsp;--&nbsp;maapiCursor</tt></dd></dl>
+ <dl><dt><a name="-get_object"><strong>get_object</strong></a>(...)</dt><dd><tt><a href="#-get_object">get_object</a>(sock,&nbsp;thandle,&nbsp;n,&nbsp;keypath)&nbsp;-&gt;&nbsp;list(Value)<br>
+&nbsp;<br>
+Read&nbsp;at&nbsp;most&nbsp;n&nbsp;values&nbsp;from&nbsp;keypath&nbsp;in&nbsp;a&nbsp;list.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;of&nbsp;list&nbsp;entry</tt></dd></dl>
+ <dl><dt><a name="-get_objects"><strong>get_objects</strong></a>(...)</dt><dd><tt><a href="#-get_objects">get_objects</a>(mc,&nbsp;n,&nbsp;nobj)&nbsp;-&gt;&nbsp;list(Value)<br>
+&nbsp;<br>
+Read&nbsp;at&nbsp;most&nbsp;n&nbsp;values&nbsp;from&nbsp;each&nbsp;nobj&nbsp;lists&nbsp;starting&nbsp;at&nbsp;<a href="#Cursor">Cursor</a>&nbsp;mc.<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+mc&nbsp;--&nbsp;maapiCursor<br>
+n&nbsp;--&nbsp;at&nbsp;most&nbsp;n&nbsp;values&nbsp;will&nbsp;be&nbsp;read<br>
+nobj&nbsp;--&nbsp;number&nbsp;of&nbsp;nobj&nbsp;lists&nbsp;which&nbsp;n&nbsp;elements&nbsp;will&nbsp;be&nbsp;taken&nbsp;from</tt></dd></dl>
+ <dl><dt><a name="-get_running_db_status"><strong>get_running_db_status</strong></a>(...)</dt><dd><tt><a href="#-get_running_db_status">get_running_db_status</a>(sock)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;transaction&nbsp;fails&nbsp;in&nbsp;the&nbsp;commit()&nbsp;phase,&nbsp;the&nbsp;configuration&nbsp;database&nbsp;is<br>
+in&nbsp;in&nbsp;a&nbsp;possibly&nbsp;inconsistent&nbsp;state.&nbsp;This&nbsp;function&nbsp;queries&nbsp;ConfD&nbsp;on&nbsp;the<br>
+consistency&nbsp;state.&nbsp;Returns&nbsp;1&nbsp;if&nbsp;the&nbsp;configuration&nbsp;is&nbsp;consistent&nbsp;and&nbsp;0<br>
+otherwise.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-get_schema_file_path"><strong>get_schema_file_path</strong></a>(...)</dt><dd><tt><a href="#-get_schema_file_path">get_schema_file_path</a>(sock)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+If&nbsp;shared&nbsp;memory&nbsp;schema&nbsp;support&nbsp;has&nbsp;been&nbsp;enabled,&nbsp;this&nbsp;function&nbsp;will<br>
+return&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;file&nbsp;used&nbsp;for&nbsp;the&nbsp;shared&nbsp;memory&nbsp;mapping,<br>
+which&nbsp;can&nbsp;then&nbsp;be&nbsp;passed&nbsp;to&nbsp;the&nbsp;mmap_schemas()&nbsp;function&gt;<br>
+&nbsp;<br>
+If&nbsp;creation&nbsp;of&nbsp;the&nbsp;schema&nbsp;file&nbsp;is&nbsp;in&nbsp;progress&nbsp;when&nbsp;the&nbsp;function<br>
+is&nbsp;called,&nbsp;the&nbsp;call&nbsp;will&nbsp;block&nbsp;until&nbsp;the&nbsp;creation&nbsp;has&nbsp;completed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-get_stream_progress"><strong>get_stream_progress</strong></a>(...)</dt><dd><tt><a href="#-get_stream_progress">get_stream_progress</a>(sock,&nbsp;id)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Used&nbsp;in&nbsp;conjunction&nbsp;with&nbsp;a&nbsp;maapi&nbsp;stream&nbsp;to&nbsp;see&nbsp;how&nbsp;much&nbsp;data&nbsp;has&nbsp;been<br>
+consumed.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;allows&nbsp;us&nbsp;to&nbsp;limit&nbsp;the&nbsp;amount&nbsp;of&nbsp;data&nbsp;'in&nbsp;flight'&nbsp;between&nbsp;the<br>
+application&nbsp;and&nbsp;the&nbsp;system.&nbsp;The&nbsp;sock&nbsp;parameter&nbsp;must&nbsp;be&nbsp;the&nbsp;maapi&nbsp;socket<br>
+used&nbsp;for&nbsp;a&nbsp;function&nbsp;call&nbsp;that&nbsp;required&nbsp;a&nbsp;stream&nbsp;socket&nbsp;for&nbsp;writing<br>
+(currently&nbsp;the&nbsp;only&nbsp;such&nbsp;function&nbsp;is&nbsp;<a href="#-load_config_stream">load_config_stream</a>()),&nbsp;and&nbsp;the&nbsp;id<br>
+parameter&nbsp;is&nbsp;the&nbsp;id&nbsp;returned&nbsp;by&nbsp;that&nbsp;function.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+id&nbsp;--&nbsp;the&nbsp;id&nbsp;returned&nbsp;from&nbsp;<a href="#-load_config_stream">load_config_stream</a>()</tt></dd></dl>
+ <dl><dt><a name="-get_user_session"><strong>get_user_session</strong></a>(...)</dt><dd><tt><a href="#-get_user_session">get_user_session</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;UserInfo<br>
+&nbsp;<br>
+Return&nbsp;user&nbsp;info.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-get_user_session_identification"><strong>get_user_session_identification</strong></a>(...)</dt><dd><tt><a href="#-get_user_session_identification">get_user_session_identification</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;dict<br>
+&nbsp;<br>
+Get&nbsp;user&nbsp;session&nbsp;identification&nbsp;data.<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;user&nbsp;identification&nbsp;data&nbsp;related&nbsp;to&nbsp;a&nbsp;user&nbsp;session&nbsp;provided&nbsp;by&nbsp;the<br>
+'usessid'&nbsp;argument.&nbsp;The&nbsp;function&nbsp;returns&nbsp;a&nbsp;dict&nbsp;with&nbsp;the&nbsp;user<br>
+identification&nbsp;data.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-get_user_session_opaque"><strong>get_user_session_opaque</strong></a>(...)</dt><dd><tt><a href="#-get_user_session_opaque">get_user_session_opaque</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;string&nbsp;containing&nbsp;additional&nbsp;'opaque'&nbsp;information,&nbsp;if&nbsp;additional<br>
+'opaque'&nbsp;information&nbsp;is&nbsp;available.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-get_user_sessions"><strong>get_user_sessions</strong></a>(...)</dt><dd><tt><a href="#-get_user_sessions">get_user_sessions</a>(sock)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Return&nbsp;a&nbsp;list&nbsp;of&nbsp;session&nbsp;ids.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-get_values"><strong>get_values</strong></a>(...)</dt><dd><tt><a href="#-get_values">get_values</a>(sock,&nbsp;thandle,&nbsp;values,&nbsp;keypath)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Get&nbsp;values&nbsp;from&nbsp;keypath&nbsp;based&nbsp;on&nbsp;the&nbsp;Tag&nbsp;Value&nbsp;array&nbsp;values.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+values&nbsp;--&nbsp;list&nbsp;of&nbsp;tagValues</tt></dd></dl>
+ <dl><dt><a name="-getcwd"><strong>getcwd</strong></a>(...)</dt><dd><tt><a href="#-getcwd">getcwd</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;current&nbsp;position&nbsp;in&nbsp;the&nbsp;tree&nbsp;as&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-getcwd_kpath"><strong>getcwd_kpath</strong></a>(...)</dt><dd><tt><a href="#-getcwd_kpath">getcwd_kpath</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;HKeypathRef<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;current&nbsp;position&nbsp;in&nbsp;the&nbsp;tree&nbsp;as&nbsp;a&nbsp;HKeypathRef.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-init_cursor"><strong>init_cursor</strong></a>(...)</dt><dd><tt><a href="#-init_cursor">init_cursor</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;_maapiCursor<br>
+&nbsp;<br>
+Whenever&nbsp;we&nbsp;wish&nbsp;to&nbsp;iterate&nbsp;over&nbsp;the&nbsp;entries&nbsp;in&nbsp;a&nbsp;list&nbsp;in&nbsp;the&nbsp;data&nbsp;tree,&nbsp;we<br>
+must&nbsp;first&nbsp;initialize&nbsp;a&nbsp;cursor.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;of&nbsp;elem</tt></dd></dl>
+ <dl><dt><a name="-init_upgrade"><strong>init_upgrade</strong></a>(...)</dt><dd><tt><a href="#-init_upgrade">init_upgrade</a>(sock,&nbsp;timeoutsecs,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+First&nbsp;step&nbsp;in&nbsp;an&nbsp;upgrade,&nbsp;initializes&nbsp;the&nbsp;upgrade&nbsp;procedure.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+timeoutsecs&nbsp;--&nbsp;maximum&nbsp;time&nbsp;to&nbsp;wait&nbsp;for&nbsp;user&nbsp;to&nbsp;voluntarily&nbsp;exit&nbsp;from<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'configuration'&nbsp;mode<br>
+flags&nbsp;--&nbsp;0&nbsp;or&nbsp;'UPGRADE_KILL_ON_TIMEOUT'&nbsp;(will&nbsp;terminate&nbsp;all&nbsp;ongoing<br>
+&nbsp;&nbsp;&nbsp;&nbsp;transactions</tt></dd></dl>
+ <dl><dt><a name="-insert"><strong>insert</strong></a>(...)</dt><dd><tt><a href="#-insert">insert</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Insert&nbsp;a&nbsp;new&nbsp;entry&nbsp;in&nbsp;a&nbsp;list,&nbsp;the&nbsp;key&nbsp;of&nbsp;the&nbsp;list&nbsp;must&nbsp;be&nbsp;a&nbsp;integer.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;the&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;is&nbsp;copied</tt></dd></dl>
+ <dl><dt><a name="-install_crypto_keys"><strong>install_crypto_keys</strong></a>(...)</dt><dd><tt><a href="#-install_crypto_keys">install_crypto_keys</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Copy&nbsp;configured&nbsp;DES3&nbsp;and&nbsp;AES&nbsp;keys&nbsp;into&nbsp;the&nbsp;memory&nbsp;in&nbsp;the&nbsp;library.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-is_candidate_modified"><strong>is_candidate_modified</strong></a>(...)</dt><dd><tt><a href="#-is_candidate_modified">is_candidate_modified</a>(sock)&nbsp;-&gt;&nbsp;boolean<br>
+&nbsp;<br>
+Checks&nbsp;if&nbsp;candidate&nbsp;is&nbsp;modified.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-is_lock_set"><strong>is_lock_set</strong></a>(...)</dt><dd><tt><a href="#-is_lock_set">is_lock_set</a>(sock,&nbsp;name)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Check&nbsp;if&nbsp;db&nbsp;name&nbsp;is&nbsp;locked.&nbsp;Return&nbsp;the&nbsp;'usid'&nbsp;of&nbsp;the&nbsp;user&nbsp;holding&nbsp;the&nbsp;lock<br>
+or&nbsp;0&nbsp;if&nbsp;not&nbsp;locked.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-is_running_modified"><strong>is_running_modified</strong></a>(...)</dt><dd><tt><a href="#-is_running_modified">is_running_modified</a>(sock)&nbsp;-&gt;&nbsp;boolean<br>
+&nbsp;<br>
+Checks&nbsp;if&nbsp;running&nbsp;is&nbsp;modified.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-iterate"><strong>iterate</strong></a>(...)</dt><dd><tt><a href="#-iterate">iterate</a>(sock,&nbsp;thandle,&nbsp;iter,&nbsp;flags,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Used&nbsp;to&nbsp;iterate&nbsp;over&nbsp;all&nbsp;the&nbsp;data&nbsp;in&nbsp;a&nbsp;transaction&nbsp;and&nbsp;the&nbsp;underlying&nbsp;data<br>
+store&nbsp;as&nbsp;opposed&nbsp;to&nbsp;only&nbsp;iterate&nbsp;over&nbsp;changes&nbsp;like&nbsp;diff_iterate.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+iter&nbsp;--&nbsp;iterator&nbsp;function,&nbsp;will&nbsp;be&nbsp;called&nbsp;for&nbsp;every&nbsp;diff&nbsp;in&nbsp;the&nbsp;transaction<br>
+flags&nbsp;--&nbsp;ITER_WANT_ATTR&nbsp;or&nbsp;0<br>
+path&nbsp;--&nbsp;receive&nbsp;only&nbsp;changes&nbsp;from&nbsp;this&nbsp;path&nbsp;and&nbsp;below<br>
+&nbsp;<br>
+The&nbsp;iter&nbsp;callback&nbsp;function&nbsp;should&nbsp;have&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;my_iterator(kp,&nbsp;v,&nbsp;attr_vals)</tt></dd></dl>
+ <dl><dt><a name="-keypath_diff_iterate"><strong>keypath_diff_iterate</strong></a>(...)</dt><dd><tt><a href="#-keypath_diff_iterate">keypath_diff_iterate</a>(sock,&nbsp;thandle,&nbsp;iter,&nbsp;flags,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Like&nbsp;diff_iterate&nbsp;but&nbsp;takes&nbsp;an&nbsp;additional&nbsp;path&nbsp;argument.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+iter&nbsp;--&nbsp;iterator&nbsp;function,&nbsp;will&nbsp;be&nbsp;called&nbsp;for&nbsp;every&nbsp;diff&nbsp;in&nbsp;the&nbsp;transaction<br>
+flags&nbsp;--&nbsp;bitmask&nbsp;of&nbsp;ITER_WANT_ATTR&nbsp;and&nbsp;ITER_WANT_P_CONTAINER<br>
+path&nbsp;--&nbsp;receive&nbsp;only&nbsp;changes&nbsp;from&nbsp;this&nbsp;path&nbsp;and&nbsp;below</tt></dd></dl>
+ <dl><dt><a name="-kill_user_session"><strong>kill_user_session</strong></a>(...)</dt><dd><tt><a href="#-kill_user_session">kill_user_session</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Kill&nbsp;MAAPI&nbsp;user&nbsp;session&nbsp;with&nbsp;session&nbsp;id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;the&nbsp;MAAPI&nbsp;session&nbsp;id&nbsp;to&nbsp;be&nbsp;killed</tt></dd></dl>
+ <dl><dt><a name="-list_rollbacks"><strong>list_rollbacks</strong></a>(...)</dt><dd><tt><a href="#-list_rollbacks">list_rollbacks</a>(sock,&nbsp;rp_size)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Get&nbsp;a&nbsp;list&nbsp;of&nbsp;rollbacks,&nbsp;at&nbsp;most&nbsp;rp_size&nbsp;big.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+rp_size&nbsp;--&nbsp;maximum&nbsp;number&nbsp;of&nbsp;rollback&nbsp;files&nbsp;to&nbsp;list</tt></dd></dl>
+ <dl><dt><a name="-load_config"><strong>load_config</strong></a>(...)</dt><dd><tt><a href="#-load_config">load_config</a>(sock,&nbsp;thandle,&nbsp;flags,&nbsp;filename)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Loads&nbsp;configuration&nbsp;from&nbsp;'filename'.<br>
+The&nbsp;caller&nbsp;of&nbsp;the&nbsp;function&nbsp;has&nbsp;to&nbsp;indicate&nbsp;which&nbsp;format&nbsp;the&nbsp;file&nbsp;has&nbsp;by<br>
+using&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;flags:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIG_XML&nbsp;--&nbsp;XML&nbsp;format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIG_J&nbsp;--&nbsp;Juniper&nbsp;curly&nbsp;bracket&nbsp;style<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIG_C&nbsp;--&nbsp;Cisco&nbsp;XR&nbsp;style<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONFIG_C_IOS&nbsp;--&nbsp;Cisco&nbsp;IOS&nbsp;style<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;a&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;as&nbsp;above<br>
+filename&nbsp;--&nbsp;to&nbsp;read&nbsp;the&nbsp;configuration&nbsp;from</tt></dd></dl>
+ <dl><dt><a name="-load_config_cmds"><strong>load_config_cmds</strong></a>(...)</dt><dd><tt><a href="#-load_config_cmds">load_config_cmds</a>(sock,&nbsp;thandle,&nbsp;flags,&nbsp;cmds,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Loads&nbsp;configuration&nbsp;from&nbsp;the&nbsp;string&nbsp;'cmds'<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;a&nbsp;transaction&nbsp;handle<br>
+cmds&nbsp;--&nbsp;a&nbsp;string&nbsp;of&nbsp;cmds<br>
+flags&nbsp;--&nbsp;as&nbsp;above</tt></dd></dl>
+ <dl><dt><a name="-load_config_stream"><strong>load_config_stream</strong></a>(...)</dt><dd><tt><a href="#-load_config_stream">load_config_stream</a>(sock,&nbsp;th,&nbsp;flags)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Loads&nbsp;configuration&nbsp;from&nbsp;the&nbsp;stream&nbsp;socket.&nbsp;The&nbsp;th&nbsp;and&nbsp;flags&nbsp;parameters&nbsp;are<br>
+the&nbsp;same&nbsp;as&nbsp;for&nbsp;<a href="#-load_config">load_config</a>().&nbsp;Returns&nbsp;and&nbsp;id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;a&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;as&nbsp;for&nbsp;<a href="#-load_config">load_config</a>()</tt></dd></dl>
+ <dl><dt><a name="-load_config_stream_result"><strong>load_config_stream_result</strong></a>(...)</dt><dd><tt><a href="#-load_config_stream_result">load_config_stream_result</a>(sock,&nbsp;id)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+We&nbsp;use&nbsp;this&nbsp;function&nbsp;to&nbsp;verify&nbsp;that&nbsp;the&nbsp;configuration&nbsp;we&nbsp;wrote&nbsp;on&nbsp;the<br>
+stream&nbsp;socket&nbsp;was&nbsp;successfully&nbsp;loaded.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+id&nbsp;--&nbsp;the&nbsp;id&nbsp;returned&nbsp;from&nbsp;<a href="#-load_config_stream">load_config_stream</a>()</tt></dd></dl>
+ <dl><dt><a name="-load_rollback"><strong>load_rollback</strong></a>(...)</dt><dd><tt><a href="#-load_rollback">load_rollback</a>(sock,&nbsp;thandle,&nbsp;rollback_num)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Install&nbsp;a&nbsp;rollback&nbsp;file&nbsp;with&nbsp;number&nbsp;'rollback_num'.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+rollback_num&nbsp;--&nbsp;rollback&nbsp;file&nbsp;no</tt></dd></dl>
+ <dl><dt><a name="-load_schemas"><strong>load_schemas</strong></a>(...)</dt><dd><tt><a href="#-load_schemas">load_schemas</a>(sock)&nbsp;-&gt;&nbsp;None&nbsp;<br>
+&nbsp;<br>
+Loads&nbsp;all&nbsp;schema&nbsp;information&nbsp;into&nbsp;the&nbsp;lib.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-load_schemas_list"><strong>load_schemas_list</strong></a>(...)</dt><dd><tt>load_schema_list(sock,&nbsp;flags,&nbsp;nshash,&nbsp;nsflags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Loads&nbsp;selected&nbsp;schema&nbsp;information&nbsp;into&nbsp;the&nbsp;lib.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+flags&nbsp;--&nbsp;the&nbsp;flags&nbsp;to&nbsp;set<br>
+nshash&nbsp;--&nbsp;the&nbsp;listed&nbsp;namespaces&nbsp;that&nbsp;schema&nbsp;information&nbsp;should&nbsp;beloaded&nbsp;for<br>
+nsflags&nbsp;--&nbsp;namespace&nbsp;specific&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-lock"><strong>lock</strong></a>(...)</dt><dd><tt><a href="#-lock">lock</a>(sock,&nbsp;name)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Lock&nbsp;database&nbsp;with&nbsp;name.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database&nbsp;to&nbsp;lock</tt></dd></dl>
+ <dl><dt><a name="-lock_partial"><strong>lock_partial</strong></a>(...)</dt><dd><tt><a href="#-lock_partial">lock_partial</a>(sock,&nbsp;name,&nbsp;xpaths)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Lock&nbsp;a&nbsp;subset&nbsp;(xpaths)&nbsp;of&nbsp;database&nbsp;name.&nbsp;Returns&nbsp;lockid.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+xpaths&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;strings</tt></dd></dl>
+ <dl><dt><a name="-move"><strong>move</strong></a>(...)</dt><dd><tt><a href="#-move">move</a>(sock,&nbsp;thandle,&nbsp;tokey,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Moves&nbsp;an&nbsp;existing&nbsp;list&nbsp;entry,&nbsp;i.e.&nbsp;renames&nbsp;the&nbsp;entry&nbsp;using&nbsp;the&nbsp;tokey<br>
+parameter.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+tokey&nbsp;--&nbsp;confdValue&nbsp;list<br>
+path&nbsp;--&nbsp;the&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;is&nbsp;copied</tt></dd></dl>
+ <dl><dt><a name="-move_ordered"><strong>move_ordered</strong></a>(...)</dt><dd><tt><a href="#-move_ordered">move_ordered</a>(sock,&nbsp;thandle,&nbsp;where,&nbsp;tokey,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Moves&nbsp;an&nbsp;entry&nbsp;in&nbsp;an&nbsp;'ordered-by&nbsp;user'&nbsp;statement&nbsp;to&nbsp;a&nbsp;new&nbsp;position.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+where&nbsp;--&nbsp;FIRST,&nbsp;LAST,&nbsp;BEFORE&nbsp;or&nbsp;AFTER<br>
+tokey&nbsp;--&nbsp;confdValue&nbsp;list<br>
+path&nbsp;--&nbsp;the&nbsp;subtree&nbsp;rooted&nbsp;at&nbsp;path&nbsp;is&nbsp;copied</tt></dd></dl>
+ <dl><dt><a name="-num_instances"><strong>num_instances</strong></a>(...)</dt><dd><tt><a href="#-num_instances">num_instances</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;number&nbsp;of&nbsp;instances&nbsp;in&nbsp;a&nbsp;list&nbsp;in&nbsp;the&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;to&nbsp;check</tt></dd></dl>
+ <dl><dt><a name="-perform_upgrade"><strong>perform_upgrade</strong></a>(...)</dt><dd><tt><a href="#-perform_upgrade">perform_upgrade</a>(sock,&nbsp;loadpathdirs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Second&nbsp;step&nbsp;in&nbsp;an&nbsp;upgrade.&nbsp;Loads&nbsp;new&nbsp;data&nbsp;model&nbsp;files.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+loadpathdirs&nbsp;--&nbsp;list&nbsp;of&nbsp;directories&nbsp;that&nbsp;are&nbsp;searched&nbsp;for&nbsp;CDB&nbsp;'init'&nbsp;files</tt></dd></dl>
+ <dl><dt><a name="-popd"><strong>popd</strong></a>(...)</dt><dd><tt><a href="#-popd">popd</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Return&nbsp;to&nbsp;earlier&nbsp;saved&nbsp;(pushd)&nbsp;position&nbsp;in&nbsp;the&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-prepare_trans"><strong>prepare_trans</strong></a>(...)</dt><dd><tt><a href="#-prepare_trans">prepare_trans</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+First&nbsp;phase&nbsp;of&nbsp;a&nbsp;two-phase&nbsp;trans.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-prepare_trans_flags"><strong>prepare_trans_flags</strong></a>(...)</dt><dd><tt><a href="#-prepare_trans_flags">prepare_trans_flags</a>(sock,&nbsp;thandle,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+First&nbsp;phase&nbsp;of&nbsp;a&nbsp;two-phase&nbsp;trans&nbsp;with&nbsp;flags.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;flags&nbsp;to&nbsp;set&nbsp;in&nbsp;the&nbsp;transaction</tt></dd></dl>
+ <dl><dt><a name="-prio_message"><strong>prio_message</strong></a>(...)</dt><dd><tt><a href="#-prio_message">prio_message</a>(sock,&nbsp;to,&nbsp;message)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Like&nbsp;sys_message&nbsp;but&nbsp;will&nbsp;be&nbsp;output&nbsp;directly&nbsp;instead&nbsp;of&nbsp;delivered&nbsp;when&nbsp;the<br>
+receiver&nbsp;terminates&nbsp;any&nbsp;ongoing&nbsp;command.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+to&nbsp;--&nbsp;user&nbsp;to&nbsp;send&nbsp;message&nbsp;to&nbsp;or&nbsp;'all'&nbsp;to&nbsp;send&nbsp;to&nbsp;all&nbsp;users<br>
+message&nbsp;--&nbsp;the&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-pushd"><strong>pushd</strong></a>(...)</dt><dd><tt><a href="#-pushd">pushd</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Like&nbsp;cd,&nbsp;but&nbsp;saves&nbsp;the&nbsp;previous&nbsp;position&nbsp;in&nbsp;the&nbsp;tree.&nbsp;This&nbsp;can&nbsp;later&nbsp;be&nbsp;used<br>
+by&nbsp;popd&nbsp;to&nbsp;return.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;position&nbsp;to&nbsp;change&nbsp;to</tt></dd></dl>
+ <dl><dt><a name="-query_free_result"><strong>query_free_result</strong></a>(...)</dt><dd><tt><a href="#-query_free_result">query_free_result</a>(qrs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Deallocates&nbsp;the&nbsp;struct&nbsp;returned&nbsp;by&nbsp;'<a href="#-query_result">query_result</a>()'.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+qrs&nbsp;--&nbsp;the&nbsp;query&nbsp;result&nbsp;structure&nbsp;to&nbsp;free</tt></dd></dl>
+ <dl><dt><a name="-query_reset"><strong>query_reset</strong></a>(...)</dt><dd><tt><a href="#-query_reset">query_reset</a>(sock,&nbsp;qh)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Reset&nbsp;the&nbsp;query&nbsp;to&nbsp;the&nbsp;beginning&nbsp;again.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+qh&nbsp;--&nbsp;query&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-query_reset_to"><strong>query_reset_to</strong></a>(...)</dt><dd><tt><a href="#-query_reset_to">query_reset_to</a>(sock,&nbsp;qh,&nbsp;offset)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Reset&nbsp;the&nbsp;query&nbsp;to&nbsp;offset.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+qh&nbsp;--&nbsp;query&nbsp;handle<br>
+offset&nbsp;--&nbsp;offset&nbsp;counted&nbsp;from&nbsp;the&nbsp;beginning</tt></dd></dl>
+ <dl><dt><a name="-query_result"><strong>query_result</strong></a>(...)</dt><dd><tt><a href="#-query_result">query_result</a>(sock,&nbsp;qh)&nbsp;-&gt;&nbsp;QueryResult<br>
+&nbsp;<br>
+Fetches&nbsp;the&nbsp;next&nbsp;available&nbsp;chunk&nbsp;of&nbsp;results&nbsp;associated&nbsp;with&nbsp;query&nbsp;handle<br>
+qh.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+qh&nbsp;--&nbsp;query&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-query_result_count"><strong>query_result_count</strong></a>(...)</dt><dd><tt><a href="#-query_result_count">query_result_count</a>(sock,&nbsp;qh)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Counts&nbsp;the&nbsp;number&nbsp;of&nbsp;query&nbsp;results<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+qh&nbsp;--&nbsp;query&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-query_start"><strong>query_start</strong></a>(...)</dt><dd><tt><a href="#-query_start">query_start</a>(sock,&nbsp;thandle,&nbsp;expr,&nbsp;context_node,&nbsp;chunk_size,&nbsp;initial_offset,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result_as,&nbsp;select,&nbsp;sort)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Starts&nbsp;a&nbsp;new&nbsp;query&nbsp;attached&nbsp;to&nbsp;the&nbsp;transaction&nbsp;given&nbsp;in&nbsp;'th'.<br>
+Returns&nbsp;a&nbsp;query&nbsp;handle.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+expr&nbsp;--&nbsp;the&nbsp;XPath&nbsp;Path&nbsp;expression&nbsp;to&nbsp;evaluate<br>
+context_node&nbsp;--&nbsp;The&nbsp;context&nbsp;node&nbsp;(an&nbsp;ikeypath)&nbsp;for&nbsp;the&nbsp;primary&nbsp;expression,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;None&nbsp;(which&nbsp;means&nbsp;that&nbsp;the&nbsp;context&nbsp;node&nbsp;will&nbsp;be&nbsp;/).<br>
+chunk_size&nbsp;--&nbsp;&nbsp;How&nbsp;many&nbsp;results&nbsp;to&nbsp;return&nbsp;at&nbsp;a&nbsp;time.&nbsp;If&nbsp;set&nbsp;to&nbsp;0&nbsp;&nbsp;a&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;will&nbsp;be&nbsp;used.<br>
+initial_offset&nbsp;--&nbsp;Which&nbsp;result&nbsp;in&nbsp;line&nbsp;to&nbsp;begin&nbsp;with&nbsp;(1&nbsp;means&nbsp;to&nbsp;start&nbsp;from<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;beginning).<br>
+result_as&nbsp;--&nbsp;The&nbsp;format&nbsp;the&nbsp;results&nbsp;will&nbsp;be&nbsp;returned&nbsp;in.<br>
+select&nbsp;--&nbsp;An&nbsp;array&nbsp;of&nbsp;XPath&nbsp;'select'&nbsp;expressions.<br>
+sort&nbsp;--&nbsp;An&nbsp;array&nbsp;of&nbsp;XPath&nbsp;expressions&nbsp;which&nbsp;will&nbsp;be&nbsp;used&nbsp;for&nbsp;sorting</tt></dd></dl>
+ <dl><dt><a name="-query_stop"><strong>query_stop</strong></a>(...)</dt><dd><tt><a href="#-query_stop">query_stop</a>(sock,&nbsp;qh)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Stop&nbsp;the&nbsp;running&nbsp;query.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+qh&nbsp;--&nbsp;query&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-rebind_listener"><strong>rebind_listener</strong></a>(...)</dt><dd><tt><a href="#-rebind_listener">rebind_listener</a>(sock,&nbsp;listener)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Request&nbsp;that&nbsp;the&nbsp;subsystems&nbsp;specified&nbsp;by&nbsp;'listeners'&nbsp;rebinds&nbsp;its&nbsp;listener<br>
+socket(s).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+listener&nbsp;--&nbsp;One&nbsp;of&nbsp;the&nbsp;following&nbsp;parameters&nbsp;(ORed&nbsp;together&nbsp;if&nbsp;more&nbsp;than&nbsp;one)<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTENER_IPC&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTENER_NETCONF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTENER_SNMP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTENER_CLI<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LISTENER_WEBUI</tt></dd></dl>
+ <dl><dt><a name="-reload_config"><strong>reload_config</strong></a>(...)</dt><dd><tt><a href="#-reload_config">reload_config</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Request&nbsp;that&nbsp;the&nbsp;system&nbsp;reloads&nbsp;its&nbsp;configuration&nbsp;files.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-reopen_logs"><strong>reopen_logs</strong></a>(...)</dt><dd><tt><a href="#-reopen_logs">reopen_logs</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Request&nbsp;that&nbsp;the&nbsp;system&nbsp;closes&nbsp;and&nbsp;re-opens&nbsp;its&nbsp;log&nbsp;files.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-request_action"><strong>request_action</strong></a>(...)</dt><dd><tt><a href="#-request_action">request_action</a>(sock,&nbsp;params,&nbsp;hashed_ns,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Invoke&nbsp;an&nbsp;action&nbsp;defined&nbsp;in&nbsp;the&nbsp;data&nbsp;model.&nbsp;Returns&nbsp;a&nbsp;list&nbsp;oftagValues.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+params&nbsp;--&nbsp;tagValue&nbsp;parameters&nbsp;for&nbsp;the&nbsp;action<br>
+hashed_ns&nbsp;--&nbsp;namespace<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;action</tt></dd></dl>
+ <dl><dt><a name="-request_action_str_th"><strong>request_action_str_th</strong></a>(...)</dt><dd><tt><a href="#-request_action_str_th">request_action_str_th</a>(sock,&nbsp;thandle,&nbsp;cmd,&nbsp;path)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+The&nbsp;same&nbsp;as&nbsp;request_action_th&nbsp;but&nbsp;takes&nbsp;the&nbsp;parameters&nbsp;as&nbsp;a&nbsp;string&nbsp;and<br>
+returns&nbsp;the&nbsp;result&nbsp;as&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+cmd&nbsp;--&nbsp;string&nbsp;parameters<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;action</tt></dd></dl>
+ <dl><dt><a name="-request_action_th"><strong>request_action_th</strong></a>(...)</dt><dd><tt><a href="#-request_action_th">request_action_th</a>(sock,&nbsp;thandle,&nbsp;params,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Same&nbsp;as&nbsp;for&nbsp;<a href="#-request_action">request_action</a>()&nbsp;but&nbsp;uses&nbsp;the&nbsp;current&nbsp;namespace.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+params&nbsp;--&nbsp;tagValue&nbsp;parameters&nbsp;for&nbsp;the&nbsp;action<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;action</tt></dd></dl>
+ <dl><dt><a name="-revert"><strong>revert</strong></a>(...)</dt><dd><tt><a href="#-revert">revert</a>(sock,&nbsp;thandle)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Removes&nbsp;all&nbsp;changes&nbsp;done&nbsp;to&nbsp;the&nbsp;transaction.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle</tt></dd></dl>
+ <dl><dt><a name="-roll_config"><strong>roll_config</strong></a>(...)</dt><dd><tt><a href="#-roll_config">roll_config</a>(sock,&nbsp;thandle,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;save&nbsp;the&nbsp;equivalent&nbsp;of&nbsp;a&nbsp;rollback&nbsp;file&nbsp;for&nbsp;a<br>
+given&nbsp;configuration&nbsp;before&nbsp;it&nbsp;is&nbsp;committed&nbsp;(or&nbsp;a&nbsp;subtree&nbsp;thereof)&nbsp;in&nbsp;curly<br>
+bracket&nbsp;format.&nbsp;Returns&nbsp;an&nbsp;id<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+path&nbsp;--&nbsp;tree&nbsp;for&nbsp;which&nbsp;to&nbsp;save&nbsp;the&nbsp;rollback&nbsp;configuration</tt></dd></dl>
+ <dl><dt><a name="-roll_config_result"><strong>roll_config_result</strong></a>(...)</dt><dd><tt><a href="#-roll_config_result">roll_config_result</a>(sock,&nbsp;id)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+We&nbsp;use&nbsp;this&nbsp;function&nbsp;to&nbsp;assert&nbsp;that&nbsp;we&nbsp;received&nbsp;the&nbsp;entire&nbsp;rollback<br>
+configuration&nbsp;over&nbsp;a&nbsp;stream&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+id&nbsp;--&nbsp;the&nbsp;id&nbsp;returned&nbsp;from&nbsp;<a href="#-roll_config">roll_config</a>()</tt></dd></dl>
+ <dl><dt><a name="-save_config"><strong>save_config</strong></a>(...)</dt><dd><tt><a href="#-save_config">save_config</a>(sock,&nbsp;thandle,&nbsp;flags,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Save&nbsp;the&nbsp;config,&nbsp;returns&nbsp;an&nbsp;id.<br>
+The&nbsp;flags&nbsp;parameter&nbsp;controls&nbsp;the&nbsp;saving&nbsp;as&nbsp;follows.&nbsp;The&nbsp;value&nbsp;is&nbsp;a&nbsp;bitmask.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_XML&nbsp;-&nbsp;The&nbsp;configuration&nbsp;format&nbsp;is&nbsp;XML.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_XML_PRETTY&nbsp;-&nbsp;The&nbsp;configuration&nbsp;format&nbsp;is&nbsp;pretty&nbsp;printed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;XML.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_J&nbsp;-&nbsp;The&nbsp;configuration&nbsp;is&nbsp;in&nbsp;curly&nbsp;bracket&nbsp;Juniper&nbsp;CLI<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_C&nbsp;-&nbsp;The&nbsp;configuration&nbsp;is&nbsp;in&nbsp;Cisco&nbsp;XR&nbsp;style&nbsp;format.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_C_IOS&nbsp;-&nbsp;The&nbsp;configuration&nbsp;is&nbsp;in&nbsp;Cisco&nbsp;IOS&nbsp;style&nbsp;format.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_XPATH&nbsp;-&nbsp;The&nbsp;path&nbsp;gives&nbsp;an&nbsp;XPath&nbsp;filter&nbsp;instead&nbsp;of&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keypath.&nbsp;Can&nbsp;only&nbsp;be&nbsp;used&nbsp;with&nbsp;MAAPI_CONFIG_XML&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_XML_PRETTY.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_WITH_DEFAULTS&nbsp;-&nbsp;Default&nbsp;values&nbsp;are&nbsp;part&nbsp;of&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;configuration&nbsp;dump.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_SHOW_DEFAULTS&nbsp;-&nbsp;Default&nbsp;values&nbsp;are&nbsp;also&nbsp;shown&nbsp;next&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;real&nbsp;configuration&nbsp;value.&nbsp;Applies&nbsp;only&nbsp;to&nbsp;the&nbsp;CLI&nbsp;formats.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_WITH_OPER&nbsp;-&nbsp;Include&nbsp;operational&nbsp;data&nbsp;in&nbsp;the&nbsp;dump.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_HIDE_ALL&nbsp;-&nbsp;Hide&nbsp;all&nbsp;hidden&nbsp;nodes&nbsp;(see&nbsp;below).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_UNHIDE_ALL&nbsp;-&nbsp;Unhide&nbsp;all&nbsp;hidden&nbsp;nodes&nbsp;(see&nbsp;below).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAAPI_CONFIG_WITH_SERVICE_META&nbsp;-&nbsp;Include&nbsp;NCS&nbsp;service-meta-data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attributes(refcounter,&nbsp;backpointer,&nbsp;and&nbsp;original-value)&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dump.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;as&nbsp;above<br>
+path&nbsp;--&nbsp;save&nbsp;only&nbsp;configuration&nbsp;below&nbsp;path</tt></dd></dl>
+ <dl><dt><a name="-save_config_result"><strong>save_config_result</strong></a>(...)</dt><dd><tt><a href="#-save_config_result">save_config_result</a>(sock,&nbsp;id)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Verify&nbsp;that&nbsp;we&nbsp;received&nbsp;the&nbsp;entire&nbsp;configuration&nbsp;over&nbsp;the&nbsp;stream&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+id&nbsp;--&nbsp;the&nbsp;id&nbsp;returned&nbsp;from&nbsp;save_config</tt></dd></dl>
+ <dl><dt><a name="-set_attr"><strong>set_attr</strong></a>(...)</dt><dd><tt><a href="#-set_attr">set_attr</a>(sock,&nbsp;thandle,&nbsp;attr,&nbsp;v,&nbsp;keypath)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;attributes&nbsp;for&nbsp;a&nbsp;node.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+attr&nbsp;--&nbsp;attributes&nbsp;to&nbsp;set<br>
+v&nbsp;--&nbsp;value&nbsp;to&nbsp;set&nbsp;the&nbsp;attribute&nbsp;to<br>
+keypath&nbsp;--&nbsp;path&nbsp;to&nbsp;choice</tt></dd></dl>
+ <dl><dt><a name="-set_comment"><strong>set_comment</strong></a>(...)</dt><dd><tt><a href="#-set_comment">set_comment</a>(sock,&nbsp;thandle,&nbsp;comment)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;the&nbsp;Comment&nbsp;that&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback&nbsp;file&nbsp;when&nbsp;a&nbsp;transaction<br>
+towards&nbsp;running&nbsp;is&nbsp;committed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+comment&nbsp;--&nbsp;the&nbsp;Comment</tt></dd></dl>
+ <dl><dt><a name="-set_delayed_when"><strong>set_delayed_when</strong></a>(...)</dt><dd><tt><a href="#-set_delayed_when">set_delayed_when</a>(sock,&nbsp;thandle,&nbsp;on)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;enables&nbsp;(on&nbsp;non-zero)&nbsp;or&nbsp;disables&nbsp;(on&nbsp;==&nbsp;0)&nbsp;the&nbsp;'delayed&nbsp;when'<br>
+mode&nbsp;of&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+on&nbsp;--&nbsp;disables&nbsp;when&nbsp;on=0,&nbsp;enables&nbsp;for&nbsp;all&nbsp;other&nbsp;n</tt></dd></dl>
+ <dl><dt><a name="-set_elem"><strong>set_elem</strong></a>(...)</dt><dd><tt><a href="#-set_elem">set_elem</a>(sock,&nbsp;thandle,&nbsp;v,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;element&nbsp;to&nbsp;confdValue.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+v&nbsp;--&nbsp;confdValue<br>
+path&nbsp;--&nbsp;position&nbsp;of&nbsp;elem</tt></dd></dl>
+ <dl><dt><a name="-set_elem2"><strong>set_elem2</strong></a>(...)</dt><dd><tt><a href="#-set_elem">set_elem</a>(sock,&nbsp;thandle,&nbsp;strval,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;element&nbsp;to&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+strval&nbsp;--&nbsp;confdValue<br>
+path&nbsp;--&nbsp;position&nbsp;of&nbsp;elem</tt></dd></dl>
+ <dl><dt><a name="-set_flags"><strong>set_flags</strong></a>(...)</dt><dd><tt><a href="#-set_flags">set_flags</a>(sock,&nbsp;thandle,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Modify&nbsp;read/write&nbsp;session&nbsp;aspect.&nbsp;See&nbsp;MAAPI_FLAG_xyz.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+flags&nbsp;--&nbsp;flags&nbsp;to&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-set_label"><strong>set_label</strong></a>(...)</dt><dd><tt><a href="#-set_label">set_label</a>(sock,&nbsp;thandle,&nbsp;label)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;the&nbsp;Label&nbsp;that&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;rollback&nbsp;file&nbsp;when&nbsp;a&nbsp;transaction<br>
+towards&nbsp;running&nbsp;is&nbsp;committed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+label&nbsp;--&nbsp;the&nbsp;Label</tt></dd></dl>
+ <dl><dt><a name="-set_namespace"><strong>set_namespace</strong></a>(...)</dt><dd><tt><a href="#-set_namespace">set_namespace</a>(sock,&nbsp;thandle,&nbsp;hashed_ns)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Indicate&nbsp;which&nbsp;namespace&nbsp;to&nbsp;use&nbsp;in&nbsp;case&nbsp;of&nbsp;ambiguities.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+hashed_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;to&nbsp;use</tt></dd></dl>
+ <dl><dt><a name="-set_next_user_session_id"><strong>set_next_user_session_id</strong></a>(...)</dt><dd><tt><a href="#-set_next_user_session_id">set_next_user_session_id</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;the&nbsp;user&nbsp;session&nbsp;id&nbsp;that&nbsp;will&nbsp;be&nbsp;assigned&nbsp;to&nbsp;the&nbsp;next&nbsp;user&nbsp;session<br>
+started.&nbsp;The&nbsp;given&nbsp;value&nbsp;is&nbsp;silently&nbsp;forced&nbsp;to&nbsp;be&nbsp;in&nbsp;the&nbsp;range&nbsp;100&nbsp;..&nbsp;2^31-1.<br>
+This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;ensure&nbsp;that&nbsp;session&nbsp;ids&nbsp;for&nbsp;user&nbsp;sessions<br>
+started&nbsp;by&nbsp;northbound&nbsp;agents&nbsp;or&nbsp;via&nbsp;MAAPI&nbsp;are&nbsp;unique&nbsp;across&nbsp;a&nbsp;restart.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-set_object"><strong>set_object</strong></a>(...)</dt><dd><tt><a href="#-set_object">set_object</a>(sock,&nbsp;thandle,&nbsp;values,&nbsp;keypath)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;leafs&nbsp;at&nbsp;path&nbsp;to&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+values&nbsp;--&nbsp;list&nbsp;of&nbsp;values<br>
+keypath&nbsp;--&nbsp;path&nbsp;to&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-set_readonly_mode"><strong>set_readonly_mode</strong></a>(...)</dt><dd><tt><a href="#-set_readonly_mode">set_readonly_mode</a>(sock,&nbsp;flag)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Control&nbsp;if&nbsp;northbound&nbsp;agents&nbsp;should&nbsp;be&nbsp;able&nbsp;to&nbsp;write&nbsp;or&nbsp;not.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+flag&nbsp;--&nbsp;non-zero&nbsp;means&nbsp;read-only&nbsp;mode</tt></dd></dl>
+ <dl><dt><a name="-set_running_db_status"><strong>set_running_db_status</strong></a>(...)</dt><dd><tt><a href="#-set_running_db_status">set_running_db_status</a>(sock,&nbsp;status)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Sets&nbsp;the&nbsp;notion&nbsp;of&nbsp;consistent&nbsp;state&nbsp;of&nbsp;the&nbsp;running&nbsp;db.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+status&nbsp;--&nbsp;integer&nbsp;status&nbsp;to&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-set_user_session"><strong>set_user_session</strong></a>(...)</dt><dd><tt><a href="#-set_user_session">set_user_session</a>(sock,&nbsp;usessid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Associate&nbsp;a&nbsp;socket&nbsp;with&nbsp;an&nbsp;already&nbsp;existing&nbsp;user&nbsp;session.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+usessid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-set_values"><strong>set_values</strong></a>(...)</dt><dd><tt><a href="#-set_values">set_values</a>(sock,&nbsp;thandle,&nbsp;values,&nbsp;keypath)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;leafs&nbsp;at&nbsp;path&nbsp;to&nbsp;values.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+values&nbsp;--&nbsp;list&nbsp;of&nbsp;tagValues<br>
+keypath&nbsp;--&nbsp;path&nbsp;to&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-snmpa_reload"><strong>snmpa_reload</strong></a>(...)</dt><dd><tt><a href="#-snmpa_reload">snmpa_reload</a>(sock,&nbsp;synchronous)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Start&nbsp;a&nbsp;reload&nbsp;of&nbsp;SNMP&nbsp;Agent&nbsp;config&nbsp;from&nbsp;external&nbsp;data&nbsp;provider.<br>
+&nbsp;<br>
+Used&nbsp;by&nbsp;external&nbsp;data&nbsp;provider&nbsp;to&nbsp;notify&nbsp;that&nbsp;there&nbsp;is&nbsp;a&nbsp;change&nbsp;to&nbsp;the&nbsp;SNMP<br>
+Agent&nbsp;config&nbsp;data.&nbsp;Calling&nbsp;the&nbsp;function&nbsp;with&nbsp;the&nbsp;argument&nbsp;'synchronous'&nbsp;set<br>
+to&nbsp;1&nbsp;or&nbsp;True&nbsp;means&nbsp;that&nbsp;the&nbsp;call&nbsp;will&nbsp;block&nbsp;until&nbsp;the&nbsp;loading&nbsp;is&nbsp;completed.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+synchronous&nbsp;--&nbsp;if&nbsp;1,&nbsp;will&nbsp;wait&nbsp;for&nbsp;the&nbsp;loading&nbsp;complete&nbsp;and&nbsp;return&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loading&nbsp;is&nbsp;complete,&nbsp;if&nbsp;0&nbsp;will&nbsp;only&nbsp;initiate&nbsp;the&nbsp;loading&nbsp;and&nbsp;return<br>
+&nbsp;&nbsp;&nbsp;&nbsp;immediately</tt></dd></dl>
+ <dl><dt><a name="-start_phase"><strong>start_phase</strong></a>(...)</dt><dd><tt><a href="#-start_phase">start_phase</a>(sock,&nbsp;phase,&nbsp;synchronous)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;the&nbsp;system&nbsp;has&nbsp;been&nbsp;started&nbsp;in&nbsp;phase0,&nbsp;this&nbsp;function&nbsp;tells&nbsp;the&nbsp;system<br>
+to&nbsp;proceed&nbsp;to&nbsp;start&nbsp;phase&nbsp;1&nbsp;or&nbsp;2.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+phase&nbsp;--&nbsp;phase&nbsp;to&nbsp;start,&nbsp;1&nbsp;or&nbsp;2<br>
+synchronous&nbsp;--&nbsp;if&nbsp;1,&nbsp;will&nbsp;wait&nbsp;for&nbsp;the&nbsp;loading&nbsp;complete&nbsp;and&nbsp;return&nbsp;when&nbsp;the<br>
+loading&nbsp;is&nbsp;complete,&nbsp;if&nbsp;0&nbsp;will&nbsp;only&nbsp;initiate&nbsp;the&nbsp;loading&nbsp;of&nbsp;AAA&nbsp;data&nbsp;and<br>
+return&nbsp;immediately</tt></dd></dl>
+ <dl><dt><a name="-start_trans"><strong>start_trans</strong></a>(...)</dt><dd><tt><a href="#-start_trans">start_trans</a>(sock,&nbsp;name,&nbsp;readwrite)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Creates&nbsp;a&nbsp;new&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;data&nbsp;store&nbsp;specified&nbsp;by&nbsp;name,&nbsp;which<br>
+can&nbsp;be&nbsp;one&nbsp;of&nbsp;CONFD_CANDIDATE,&nbsp;CONFD_RUNNING,&nbsp;or&nbsp;CONFD_STARTUP&nbsp;(however<br>
+updating&nbsp;the&nbsp;startup&nbsp;data&nbsp;store&nbsp;is&nbsp;better&nbsp;done&nbsp;via<br>
+maapi_copy_running_to_startup()).&nbsp;The&nbsp;readwrite&nbsp;parameter&nbsp;can&nbsp;be&nbsp;either<br>
+CONFD_READ,&nbsp;to&nbsp;start&nbsp;a&nbsp;readonly&nbsp;transaction,&nbsp;or&nbsp;CONFD_READ_WRITE,&nbsp;to&nbsp;start<br>
+a&nbsp;read-write&nbsp;transaction.&nbsp;The&nbsp;function&nbsp;returns&nbsp;the&nbsp;transaction&nbsp;id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database<br>
+readwrite&nbsp;--&nbsp;CONFD_READ&nbsp;or&nbsp;CONFD_WRITE</tt></dd></dl>
+ <dl><dt><a name="-start_trans2"><strong>start_trans2</strong></a>(...)</dt><dd><tt><a href="#-start_trans2">start_trans2</a>(sock,&nbsp;name,&nbsp;readwrite,&nbsp;usid)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Start&nbsp;a&nbsp;transaction&nbsp;within&nbsp;an&nbsp;existing&nbsp;user&nbsp;session,&nbsp;returns&nbsp;the&nbsp;transaction<br>
+id.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database<br>
+readwrite&nbsp;--&nbsp;CONFD_READ&nbsp;or&nbsp;CONFD_WRITE<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-start_trans_flags"><strong>start_trans_flags</strong></a>(...)</dt><dd><tt><a href="#-start_trans_flags">start_trans_flags</a>(sock,&nbsp;name,&nbsp;readwrite,&nbsp;usid)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+The&nbsp;same&nbsp;as&nbsp;start_trans2,&nbsp;but&nbsp;can&nbsp;also&nbsp;set&nbsp;the&nbsp;same&nbsp;flags&nbsp;that&nbsp;'set_flags'<br>
+can&nbsp;set.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database<br>
+readwrite&nbsp;--&nbsp;CONFD_READ&nbsp;or&nbsp;CONFD_WRITE<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id<br>
+flags&nbsp;--&nbsp;same&nbsp;as&nbsp;for&nbsp;'set_flags'</tt></dd></dl>
+ <dl><dt><a name="-start_trans_flags2"><strong>start_trans_flags2</strong></a>(...)</dt><dd><tt><a href="#-start_trans_flags2">start_trans_flags2</a>(sock,&nbsp;name,&nbsp;readwrite,&nbsp;usid,&nbsp;vendor,&nbsp;product,&nbsp;version,<br>
+&nbsp;client_id)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;does&nbsp;the&nbsp;same&nbsp;as&nbsp;<a href="#-start_trans_flags">start_trans_flags</a>()&nbsp;but&nbsp;allows&nbsp;for<br>
+additional&nbsp;information&nbsp;to&nbsp;be&nbsp;passed&nbsp;to&nbsp;ConfD/NCS.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database<br>
+readwrite&nbsp;--&nbsp;CONFD_READ&nbsp;or&nbsp;CONFD_WRITE<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id<br>
+flags&nbsp;--&nbsp;same&nbsp;as&nbsp;for&nbsp;'set_flags'<br>
+vendor&nbsp;--&nbsp;vendor&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+product&nbsp;--&nbsp;product&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+version&nbsp;--&nbsp;version&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+client_id&nbsp;--&nbsp;client&nbsp;identification&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)</tt></dd></dl>
+ <dl><dt><a name="-start_trans_in_trans"><strong>start_trans_in_trans</strong></a>(...)</dt><dd><tt><a href="#-start_trans_in_trans">start_trans_in_trans</a>(sock,&nbsp;readwrite,&nbsp;usid,&nbsp;thandle)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Start&nbsp;a&nbsp;transaction&nbsp;within&nbsp;an&nbsp;existing&nbsp;transaction,&nbsp;using&nbsp;the&nbsp;started<br>
+transaction&nbsp;as&nbsp;backend&nbsp;instead&nbsp;of&nbsp;an&nbsp;actual&nbsp;data&nbsp;store.&nbsp;Returns&nbsp;the<br>
+transaction&nbsp;id&nbsp;as&nbsp;an&nbsp;integer.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+readwrite&nbsp;--&nbsp;CONFD_READ&nbsp;or&nbsp;CONFD_WRITE<br>
+usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id<br>
+thandle&nbsp;--&nbsp;identifies&nbsp;the&nbsp;backend&nbsp;transaction&nbsp;to&nbsp;use</tt></dd></dl>
+ <dl><dt><a name="-start_user_session"><strong>start_user_session</strong></a>(...)</dt><dd><tt><a href="#-start_user_session">start_user_session</a>(sock,&nbsp;username,&nbsp;context,&nbsp;groups,&nbsp;src_addr,&nbsp;prot)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Establish&nbsp;a&nbsp;user&nbsp;session&nbsp;on&nbsp;the&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+username&nbsp;--&nbsp;the&nbsp;user&nbsp;for&nbsp;the&nbsp;session<br>
+context&nbsp;--&nbsp;context&nbsp;for&nbsp;the&nbsp;session<br>
+groups&nbsp;--&nbsp;groups<br>
+src-addr&nbsp;--&nbsp;src&nbsp;address&nbsp;of&nbsp;e.g.&nbsp;the&nbsp;client&nbsp;connecting<br>
+prot&nbsp;--&nbsp;the&nbsp;protocol&nbsp;used&nbsp;by&nbsp;the&nbsp;client&nbsp;for&nbsp;connecting</tt></dd></dl>
+ <dl><dt><a name="-start_user_session2"><strong>start_user_session2</strong></a>(...)</dt><dd><tt><a href="#-start_user_session2">start_user_session2</a>(sock,&nbsp;username,&nbsp;context,&nbsp;groups,&nbsp;src_addr,&nbsp;src_port,&nbsp;prot)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Establish&nbsp;a&nbsp;user&nbsp;session&nbsp;on&nbsp;the&nbsp;socket.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+username&nbsp;--&nbsp;the&nbsp;user&nbsp;for&nbsp;the&nbsp;session<br>
+context&nbsp;--&nbsp;context&nbsp;for&nbsp;the&nbsp;session<br>
+groups&nbsp;--&nbsp;groups<br>
+src-addr&nbsp;--&nbsp;src&nbsp;address&nbsp;of&nbsp;e.g.&nbsp;the&nbsp;client&nbsp;connecting<br>
+src-port&nbsp;--&nbsp;src&nbsp;port&nbsp;of&nbsp;e.g.&nbsp;the&nbsp;client&nbsp;connecting<br>
+prot&nbsp;--&nbsp;the&nbsp;protocol&nbsp;used&nbsp;by&nbsp;the&nbsp;client&nbsp;for&nbsp;connecting</tt></dd></dl>
+ <dl><dt><a name="-start_user_session3"><strong>start_user_session3</strong></a>(...)</dt><dd><tt><a href="#-start_user_session3">start_user_session3</a>(sock,&nbsp;username,&nbsp;context,&nbsp;groups,&nbsp;src_addr,&nbsp;src_port,&nbsp;prot,&nbsp;vendor,&nbsp;product,&nbsp;version,&nbsp;client_id)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Establish&nbsp;a&nbsp;user&nbsp;session&nbsp;on&nbsp;the&nbsp;socket.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;does&nbsp;the&nbsp;same&nbsp;as&nbsp;<a href="#-start_user_session2">start_user_session2</a>()&nbsp;but&nbsp;allows&nbsp;for<br>
+additional&nbsp;information&nbsp;to&nbsp;be&nbsp;passed&nbsp;to&nbsp;ConfD/NCS.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+username&nbsp;--&nbsp;the&nbsp;user&nbsp;for&nbsp;the&nbsp;session<br>
+context&nbsp;--&nbsp;context&nbsp;for&nbsp;the&nbsp;session<br>
+groups&nbsp;--&nbsp;groups<br>
+src-addr&nbsp;--&nbsp;src&nbsp;address&nbsp;of&nbsp;e.g.&nbsp;the&nbsp;client&nbsp;connecting<br>
+src-port&nbsp;--&nbsp;src&nbsp;port&nbsp;of&nbsp;e.g.&nbsp;the&nbsp;client&nbsp;connecting<br>
+prot&nbsp;--&nbsp;the&nbsp;protocol&nbsp;used&nbsp;by&nbsp;the&nbsp;client&nbsp;for&nbsp;connecting<br>
+vendor&nbsp;--&nbsp;vendor&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+product&nbsp;--&nbsp;product&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+version&nbsp;--&nbsp;version&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)<br>
+client_id&nbsp;--&nbsp;client&nbsp;identification&nbsp;string&nbsp;(may&nbsp;be&nbsp;None)</tt></dd></dl>
+ <dl><dt><a name="-stop"><strong>stop</strong></a>(...)</dt><dd><tt><a href="#-stop">stop</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Request&nbsp;that&nbsp;the&nbsp;system&nbsp;stops.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-sys_message"><strong>sys_message</strong></a>(...)</dt><dd><tt><a href="#-sys_message">sys_message</a>(sock,&nbsp;to,&nbsp;message)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Send&nbsp;a&nbsp;message&nbsp;to&nbsp;a&nbsp;specific&nbsp;user,&nbsp;a&nbsp;specific&nbsp;session&nbsp;or&nbsp;all&nbsp;user&nbsp;depending<br>
+on&nbsp;the&nbsp;'to'&nbsp;parameter.&nbsp;'all',&nbsp;&lt;session-id&gt;&nbsp;or&nbsp;&lt;user-name&gt;&nbsp;can&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+to&nbsp;--&nbsp;user&nbsp;to&nbsp;send&nbsp;message&nbsp;to&nbsp;or&nbsp;'all'&nbsp;to&nbsp;send&nbsp;to&nbsp;all&nbsp;users<br>
+message&nbsp;--&nbsp;the&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-unlock"><strong>unlock</strong></a>(...)</dt><dd><tt><a href="#-unlock">unlock</a>(sock,&nbsp;name)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Unlock&nbsp;database&nbsp;with&nbsp;name.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+name&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;database&nbsp;to&nbsp;unlock</tt></dd></dl>
+ <dl><dt><a name="-unlock_partial"><strong>unlock_partial</strong></a>(...)</dt><dd><tt><a href="#-unlock_partial">unlock_partial</a>(sock,&nbsp;lockid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Unlock&nbsp;a&nbsp;subset&nbsp;of&nbsp;a&nbsp;database&nbsp;which&nbsp;is&nbsp;locked&nbsp;by&nbsp;lockid.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+lockid&nbsp;--&nbsp;id&nbsp;of&nbsp;the&nbsp;lock</tt></dd></dl>
+ <dl><dt><a name="-user_message"><strong>user_message</strong></a>(...)</dt><dd><tt><a href="#-user_message">user_message</a>(sock,&nbsp;to,&nbsp;message,&nbsp;sender)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Send&nbsp;a&nbsp;message&nbsp;to&nbsp;a&nbsp;specific&nbsp;user.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+to&nbsp;--&nbsp;user&nbsp;to&nbsp;send&nbsp;message&nbsp;to&nbsp;or&nbsp;'all'&nbsp;to&nbsp;send&nbsp;to&nbsp;all&nbsp;users<br>
+message&nbsp;--&nbsp;the&nbsp;message<br>
+sender&nbsp;--&nbsp;send&nbsp;as</tt></dd></dl>
+ <dl><dt><a name="-validate_trans"><strong>validate_trans</strong></a>(...)</dt><dd><tt><a href="#-validate_trans">validate_trans</a>(sock,&nbsp;thandle,&nbsp;unlock,&nbsp;forcevalidation)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Validates&nbsp;all&nbsp;data&nbsp;written&nbsp;in&nbsp;a&nbsp;transaction.<br>
+&nbsp;<br>
+If&nbsp;unlock&nbsp;is&nbsp;1&nbsp;(or&nbsp;True),&nbsp;the&nbsp;transaction&nbsp;is&nbsp;open&nbsp;for&nbsp;further&nbsp;editing&nbsp;even<br>
+if&nbsp;validation&nbsp;succeeds.&nbsp;If&nbsp;unlock&nbsp;is&nbsp;0&nbsp;(or&nbsp;False)&nbsp;and&nbsp;the&nbsp;function&nbsp;returns<br>
+CONFD_OK,&nbsp;the&nbsp;next&nbsp;function&nbsp;to&nbsp;be&nbsp;called&nbsp;MUST&nbsp;be&nbsp;maapi_prepare_trans()&nbsp;or<br>
+maapi_finish_trans().<br>
+&nbsp;<br>
+unlock&nbsp;=&nbsp;1&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;implement&nbsp;a&nbsp;'validate'&nbsp;command&nbsp;which&nbsp;can&nbsp;be<br>
+given&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;an&nbsp;editing&nbsp;session.&nbsp;The&nbsp;first&nbsp;thing&nbsp;that&nbsp;happens&nbsp;is<br>
+that&nbsp;a&nbsp;lock&nbsp;is&nbsp;set.&nbsp;If&nbsp;unlock&nbsp;==&nbsp;1,&nbsp;the&nbsp;lock&nbsp;is&nbsp;released&nbsp;on&nbsp;success.&nbsp;The<br>
+lock&nbsp;is&nbsp;always&nbsp;released&nbsp;on&nbsp;failure.<br>
+&nbsp;<br>
+The&nbsp;forcevalidation&nbsp;argument&nbsp;should&nbsp;normally&nbsp;be&nbsp;0&nbsp;(or&nbsp;False).&nbsp;It&nbsp;has&nbsp;no<br>
+effect&nbsp;for&nbsp;a&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;running&nbsp;or&nbsp;startup&nbsp;data&nbsp;stores,<br>
+validation&nbsp;is&nbsp;always&nbsp;performed.&nbsp;For&nbsp;a&nbsp;transaction&nbsp;towards&nbsp;the&nbsp;candidate<br>
+data&nbsp;store,&nbsp;validation&nbsp;will&nbsp;not&nbsp;be&nbsp;done&nbsp;unless&nbsp;forcevalidation&nbsp;is&nbsp;non-zero.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+unlock&nbsp;--&nbsp;int&nbsp;or&nbsp;bool<br>
+forcevalidation&nbsp;--&nbsp;int&nbsp;or&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-wait_start"><strong>wait_start</strong></a>(...)</dt><dd><tt><a href="#-wait_start">wait_start</a>(sock,&nbsp;phase)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Wait&nbsp;for&nbsp;the&nbsp;system&nbsp;to&nbsp;reach&nbsp;a&nbsp;certain&nbsp;start&nbsp;phase&nbsp;(0,1&nbsp;or&nbsp;2).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+phase&nbsp;--&nbsp;phase&nbsp;to&nbsp;wait&nbsp;for,&nbsp;0,&nbsp;1&nbsp;or&nbsp;2</tt></dd></dl>
+ <dl><dt><a name="-xpath2kpath"><strong>xpath2kpath</strong></a>(...)</dt><dd><tt><a href="#-xpath2kpath">xpath2kpath</a>(sock,&nbsp;xpath)&nbsp;-&gt;&nbsp;HKeypathRef<br>
+&nbsp;<br>
+Convert&nbsp;an&nbsp;xpath&nbsp;to&nbsp;a&nbsp;hashed&nbsp;keypath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+xpath&nbsp;-&nbsp;to&nbsp;convert</tt></dd></dl>
+ <dl><dt><a name="-xpath_eval"><strong>xpath_eval</strong></a>(...)</dt><dd><tt><a href="#-xpath_eval">xpath_eval</a>(sock,&nbsp;thandle,&nbsp;expr,&nbsp;result,&nbsp;trace,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Evaluate&nbsp;the&nbsp;xpath&nbsp;expression&nbsp;in&nbsp;'expr'.&nbsp;For&nbsp;each&nbsp;node&nbsp;in&nbsp;the&nbsp;&nbsp;resulting<br>
+node&nbsp;the&nbsp;function&nbsp;'result'&nbsp;is&nbsp;called&nbsp;with&nbsp;the&nbsp;keypath&nbsp;to&nbsp;the&nbsp;resulting<br>
+node&nbsp;as&nbsp;the&nbsp;first&nbsp;argument&nbsp;and,&nbsp;if&nbsp;the&nbsp;node&nbsp;is&nbsp;a&nbsp;leaf&nbsp;and&nbsp;has&nbsp;a&nbsp;value.&nbsp;the<br>
+value&nbsp;of&nbsp;that&nbsp;node&nbsp;as&nbsp;the&nbsp;second&nbsp;argument.&nbsp;For&nbsp;each&nbsp;invocation&nbsp;of&nbsp;'result'<br>
+the&nbsp;function&nbsp;should&nbsp;return&nbsp;ITER_CONTINUE&nbsp;to&nbsp;tell&nbsp;the&nbsp;XPath&nbsp;evaluator&nbsp;to<br>
+continue&nbsp;or&nbsp;ITER_STOP&nbsp;to&nbsp;stop&nbsp;the&nbsp;evaluation.&nbsp;A&nbsp;trace&nbsp;function,&nbsp;'pytrace',<br>
+could&nbsp;be&nbsp;supplied&nbsp;and&nbsp;will&nbsp;be&nbsp;called&nbsp;with&nbsp;a&nbsp;single&nbsp;string&nbsp;as&nbsp;an&nbsp;argument.<br>
+'None'&nbsp;can&nbsp;be&nbsp;used&nbsp;if&nbsp;no&nbsp;trace&nbsp;is&nbsp;needed.&nbsp;Unless&nbsp;a&nbsp;'path'&nbsp;is&nbsp;given&nbsp;the<br>
+root&nbsp;node&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;a&nbsp;context&nbsp;for&nbsp;the&nbsp;evaluations.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+expr&nbsp;--&nbsp;the&nbsp;XPath&nbsp;Path&nbsp;expression&nbsp;to&nbsp;evaluate<br>
+result&nbsp;--&nbsp;the&nbsp;result&nbsp;function<br>
+trace&nbsp;--&nbsp;a&nbsp;trace&nbsp;function&nbsp;that&nbsp;takes&nbsp;a&nbsp;string&nbsp;as&nbsp;a&nbsp;parameter<br>
+path&nbsp;--&nbsp;the&nbsp;context&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-xpath_eval_expr"><strong>xpath_eval_expr</strong></a>(...)</dt><dd><tt><a href="#-xpath_eval_expr">xpath_eval_expr</a>(sock,&nbsp;thandle,&nbsp;expr,&nbsp;trace,&nbsp;path)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Like&nbsp;xpath_eval&nbsp;but&nbsp;returns&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;python&nbsp;socket&nbsp;instance<br>
+thandle&nbsp;--&nbsp;transaction&nbsp;handle<br>
+expr&nbsp;--&nbsp;the&nbsp;XPath&nbsp;Path&nbsp;expression&nbsp;to&nbsp;evaluate<br>
+trace&nbsp;--&nbsp;a&nbsp;trace&nbsp;function&nbsp;that&nbsp;takes&nbsp;a&nbsp;string&nbsp;as&nbsp;a&nbsp;parameter<br>
+path&nbsp;--&nbsp;the&nbsp;context&nbsp;node</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>CMD_NO_AAA</strong> = 4<br>
+<strong>CMD_NO_FULLPATH</strong> = 1<br>
+<strong>CMD_NO_HIDDEN</strong> = 2<br>
+<strong>COMMIT_NCS_ASYNC_COMMIT_QUEUE</strong> = 256<br>
+<strong>COMMIT_NCS_BYPASS_COMMIT_QUEUE</strong> = 64<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_ASYNC</strong> = 256<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_ATOMIC</strong> = 8192<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_BLOCK_OTHERS</strong> = 4096<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_BYPASS</strong> = 64<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_LOCK</strong> = 2048<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_NONATOMIC</strong> = 16384<br>
+<strong>COMMIT_NCS_COMMIT_QUEUE_SYNC</strong> = 512<br>
+<strong>COMMIT_NCS_DRY_RUN_CLI</strong> = 65536<br>
+<strong>COMMIT_NCS_DRY_RUN_NATIVE</strong> = 131072<br>
+<strong>COMMIT_NCS_DRY_RUN_REVERSE</strong> = 262144<br>
+<strong>COMMIT_NCS_DRY_RUN_XML</strong> = 32768<br>
+<strong>COMMIT_NCS_NO_DEPLOY</strong> = 8<br>
+<strong>COMMIT_NCS_NO_FASTMAP</strong> = 8<br>
+<strong>COMMIT_NCS_NO_LSA</strong> = 1048576<br>
+<strong>COMMIT_NCS_NO_NETWORKING</strong> = 16<br>
+<strong>COMMIT_NCS_NO_OUT_OF_SYNC_CHECK</strong> = 32<br>
+<strong>COMMIT_NCS_NO_OVERWRITE</strong> = 1024<br>
+<strong>COMMIT_NCS_NO_REVISION_DROP</strong> = 4<br>
+<strong>COMMIT_NCS_SYNC_COMMIT_QUEUE</strong> = 512<br>
+<strong>COMMIT_NCS_THROUGH_COMMIT_QUEUE</strong> = 128<br>
+<strong>COMMIT_NCS_USE_LSA</strong> = 524288<br>
+<strong>CONFIG_AUTOCOMMIT</strong> = 8192<br>
+<strong>CONFIG_C</strong> = 4<br>
+<strong>CONFIG_CONTINUE_ON_ERROR</strong> = 16384<br>
+<strong>CONFIG_C_IOS</strong> = 32<br>
+<strong>CONFIG_HIDE_ALL</strong> = 2048<br>
+<strong>CONFIG_J</strong> = 2<br>
+<strong>CONFIG_JSON</strong> = 131072<br>
+<strong>CONFIG_MERGE</strong> = 64<br>
+<strong>CONFIG_NO_PARENTS</strong> = 524288<br>
+<strong>CONFIG_OPER_ONLY</strong> = 1048576<br>
+<strong>CONFIG_REPLACE</strong> = 1024<br>
+<strong>CONFIG_SHOW_DEFAULTS</strong> = 16<br>
+<strong>CONFIG_SUPPRESS_ERRORS</strong> = 32768<br>
+<strong>CONFIG_UNHIDE_ALL</strong> = 4096<br>
+<strong>CONFIG_WITH_DEFAULTS</strong> = 8<br>
+<strong>CONFIG_WITH_OPER</strong> = 128<br>
+<strong>CONFIG_WITH_SERVICE_META</strong> = 262144<br>
+<strong>CONFIG_XML</strong> = 1<br>
+<strong>CONFIG_XML_LOAD_LAX</strong> = 65536<br>
+<strong>CONFIG_XML_PRETTY</strong> = 512<br>
+<strong>CONFIG_XPATH</strong> = 256<br>
+<strong>C_SNMP_COL_ROW</strong> = 3<br>
+<strong>C_SNMP_OID</strong> = 2<br>
+<strong>C_SNMP_VARIABLE</strong> = 1<br>
+<strong>DEL_ALL</strong> = 2<br>
+<strong>DEL_EXPORTED</strong> = 3<br>
+<strong>DEL_SAFE</strong> = 1<br>
+<strong>ECHO</strong> = 1<br>
+<strong>FLAG_CONFIG_CACHE_ONLY</strong> = 32<br>
+<strong>FLAG_CONFIG_ONLY</strong> = 4<br>
+<strong>FLAG_DELAYED_WHEN</strong> = 64<br>
+<strong>FLAG_DELETE</strong> = 2<br>
+<strong>FLAG_EMIT_PARENTS</strong> = 1<br>
+<strong>FLAG_HIDE_INACTIVE</strong> = 8<br>
+<strong>FLAG_HINT_BULK</strong> = 1<br>
+<strong>FLAG_NON_RECURSIVE</strong> = 4<br>
+<strong>FLAG_NO_CONFIG_CACHE</strong> = 16<br>
+<strong>FLAG_NO_DEFAULTS</strong> = 2<br>
+<strong>MOVE_AFTER</strong> = 3<br>
+<strong>MOVE_BEFORE</strong> = 2<br>
+<strong>MOVE_FIRST</strong> = 1<br>
+<strong>MOVE_LAST</strong> = 4<br>
+<strong>NCS_COMMIT_QUEUE_ASYNC</strong> = 1<br>
+<strong>NCS_COMMIT_QUEUE_COMPLETED</strong> = 2<br>
+<strong>NCS_COMMIT_QUEUE_DELETED</strong> = 4<br>
+<strong>NCS_COMMIT_QUEUE_FAILED</strong> = 5<br>
+<strong>NCS_COMMIT_QUEUE_NONE</strong> = 0<br>
+<strong>NCS_COMMIT_QUEUE_TIMEOUT</strong> = 3<br>
+<strong>NOECHO</strong> = 0<br>
+<strong>PRODUCT</strong> = 'ConfD'<br>
+<strong>SHARED_NO_BACKPOINTER</strong> = 1<br>
+<strong>UPGRADE_KILL_ON_TIMEOUT</strong> = 1</td></tr></table>
+</body></html>

@@ -1,0 +1,1482 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package _confd</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>_confd</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/_confd/__init__.py">/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/_confd/__init__.py</a></font></td></tr></table>
+    <p><tt>Common&nbsp;functions&nbsp;for&nbsp;applications&nbsp;connecting&nbsp;to&nbsp;ConfD.<br>
+&nbsp;<br>
+The&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;ConfD.&nbsp;It&nbsp;describes&nbsp;functions&nbsp;and&nbsp;data<br>
+structures&nbsp;that&nbsp;are&nbsp;not&nbsp;specific&nbsp;to&nbsp;any&nbsp;of&nbsp;the&nbsp;APIs&nbsp;described&nbsp;in&nbsp;the<br>
+submodules.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_lib(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="_confd._confd_py2.html">_confd_py2</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="_confd.html#AttrValue">AttrValue</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#AuthorizationInfo">AuthorizationInfo</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#CsCase">CsCase</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#CsChoice">CsChoice</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#CsNode">CsNode</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#CsNodeInfo">CsNodeInfo</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#CsType">CsType</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#DateTime">DateTime</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#HKeypathRef">HKeypathRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#QueryResult">QueryResult</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#SnmpVarbind">SnmpVarbind</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#TagValue">TagValue</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#TransCtxRef">TransCtxRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#UserInfo">UserInfo</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#Value">Value</a>
+</font></dt><dt><font face="helvetica, arial"><a href="_confd.html#XmlTag">XmlTag</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AttrValue">class <strong>AttrValue</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;confd_attr_value_t.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#AttrValue">AttrValue</a>(attr,&nbsp;v)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+attr&nbsp;--&nbsp;attribute&nbsp;type<br>
+v&nbsp;--&nbsp;value<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AttrValue-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#AttrValue-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="AttrValue-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#AttrValue-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="AttrValue-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#AttrValue-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>attr</strong></dt>
+<dd><tt>attribute&nbsp;type&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>v</strong></dt>
+<dd><tt>attribute&nbsp;value&nbsp;(Value)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#AttrValue-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AuthorizationInfo">class <strong>AuthorizationInfo</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_authorization_info.<br>
+&nbsp;<br>
+<a href="#AuthorizationInfo">AuthorizationInfo</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AuthorizationInfo-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationInfo-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="AuthorizationInfo-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationInfo-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="AuthorizationInfo-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#AuthorizationInfo-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>groups</strong></dt>
+<dd><tt>authorization&nbsp;groups&nbsp;(list&nbsp;of&nbsp;strings)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#AuthorizationInfo-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CsCase">class <strong>CsCase</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_cs_case.<br>
+&nbsp;<br>
+<a href="#CsCase">CsCase</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CsCase-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CsCase-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="CsCase-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CsCase-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CsCase-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CsCase-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CsCase-choices"><strong>choices</strong></a>(...)</dt><dd><tt><a href="#CsCase-choices">choices</a>()&nbsp;-&gt;&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;choices.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-first"><strong>first</strong></a>(...)</dt><dd><tt><a href="#CsCase-first">first</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;first.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-last"><strong>last</strong></a>(...)</dt><dd><tt><a href="#CsCase-last">last</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;last.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-next"><strong>next</strong></a>(...)</dt><dd><tt><a href="#CsCase-next">next</a>()&nbsp;-&gt;&nbsp;<a href="#CsCase">CsCase</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;next.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-ns"><strong>ns</strong></a>(...)</dt><dd><tt><a href="#CsCase-ns">ns</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;ns&nbsp;hash.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-parent"><strong>parent</strong></a>(...)</dt><dd><tt><a href="#CsCase-parent">parent</a>()&nbsp;-&gt;&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;parent.</tt></dd></dl>
+
+<dl><dt><a name="CsCase-tag"><strong>tag</strong></a>(...)</dt><dd><tt><a href="#CsCase-tag">tag</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsCase">CsCase</a>&nbsp;tag&nbsp;hash.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CsCase-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CsChoice">class <strong>CsChoice</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_cs_choice.<br>
+&nbsp;<br>
+<a href="#CsChoice">CsChoice</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CsChoice-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CsChoice-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CsChoice-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CsChoice-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-case_parent"><strong>case_parent</strong></a>(...)</dt><dd><tt><a href="#CsChoice-case_parent">case_parent</a>()&nbsp;-&gt;&nbsp;<a href="#CsCase">CsCase</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;case&nbsp;parent.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-cases"><strong>cases</strong></a>(...)</dt><dd><tt><a href="#CsChoice-cases">cases</a>()&nbsp;-&gt;&nbsp;<a href="#CsCase">CsCase</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;cases.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-default_case"><strong>default_case</strong></a>(...)</dt><dd><tt><a href="#CsChoice-default_case">default_case</a>()&nbsp;-&gt;&nbsp;<a href="#CsCase">CsCase</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;default&nbsp;case.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-min_occurs"><strong>min_occurs</strong></a>(...)</dt><dd><tt><a href="#CsChoice-min_occurs">min_occurs</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;minOccurs.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-next"><strong>next</strong></a>(...)</dt><dd><tt><a href="#CsChoice-next">next</a>()&nbsp;-&gt;&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;next.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-ns"><strong>ns</strong></a>(...)</dt><dd><tt><a href="#CsChoice-ns">ns</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;ns&nbsp;hash.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-parent"><strong>parent</strong></a>(...)</dt><dd><tt><a href="#CsChoice-parent">parent</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;parent&nbsp;<a href="#CsNode">CsNode</a>.</tt></dd></dl>
+
+<dl><dt><a name="CsChoice-tag"><strong>tag</strong></a>(...)</dt><dd><tt><a href="#CsChoice-tag">tag</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;tag&nbsp;hash.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CsChoice-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CsNode">class <strong>CsNode</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_cs_node.<br>
+&nbsp;<br>
+<a href="#CsNode">CsNode</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CsNode-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNode-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="CsNode-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNode-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CsNode-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNode-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CsNode-children"><strong>children</strong></a>(...)</dt><dd><tt><a href="#CsNode-children">children</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;children&nbsp;<a href="#CsNode">CsNode</a>&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-has_display_when"><strong>has_display_when</strong></a>(...)</dt><dd><tt><a href="#CsNode-has_display_when">has_display_when</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;has&nbsp;YANG&nbsp;'tailf:display-when'&nbsp;statement(s).</tt></dd></dl>
+
+<dl><dt><a name="CsNode-has_when"><strong>has_when</strong></a>(...)</dt><dd><tt><a href="#CsNode-has_when">has_when</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;has&nbsp;YANG&nbsp;'when'&nbsp;statement(s).</tt></dd></dl>
+
+<dl><dt><a name="CsNode-info"><strong>info</strong></a>(...)</dt><dd><tt><a href="#CsNode-info">info</a>()&nbsp;-&gt;&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a><br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_action"><strong>is_action</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_action">is_action</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;an&nbsp;action.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_action_param"><strong>is_action_param</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_action_param">is_action_param</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;an&nbsp;action&nbsp;parameter.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_action_result"><strong>is_action_result</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_action_result">is_action_result</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;an&nbsp;action&nbsp;result.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_case"><strong>is_case</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_case">is_case</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;case.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_container"><strong>is_container</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_container">is_container</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;container.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_empty_leaf"><strong>is_empty_leaf</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_empty_leaf">is_empty_leaf</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;leaf&nbsp;which&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_key"><strong>is_key</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_key">is_key</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;key.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_leaf"><strong>is_leaf</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_leaf">is_leaf</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;leaf.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_leaf_list"><strong>is_leaf_list</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_leaf_list">is_leaf_list</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;leaf-list.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_leafref"><strong>is_leafref</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_leafref">is_leafref</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;YANG&nbsp;'leafref'.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_list"><strong>is_list</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_list">is_list</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_non_empty_leaf"><strong>is_non_empty_leaf</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_non_empty_leaf">is_non_empty_leaf</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;leaf&nbsp;which&nbsp;is&nbsp;not&nbsp;of&nbsp;type&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_notif"><strong>is_notif</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_notif">is_notif</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;notification.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_np_container"><strong>is_np_container</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_np_container">is_np_container</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;non&nbsp;presence&nbsp;container.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_oper"><strong>is_oper</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_oper">is_oper</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;OPER&nbsp;data.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_p_container"><strong>is_p_container</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_p_container">is_p_container</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;a&nbsp;presence&nbsp;container.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-is_writable"><strong>is_writable</strong></a>(...)</dt><dd><tt><a href="#CsNode-is_writable">is_writable</a>()&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Returns&nbsp;True&nbsp;if&nbsp;<a href="#CsNode">CsNode</a>&nbsp;is&nbsp;writable.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-next"><strong>next</strong></a>(...)</dt><dd><tt><a href="#CsNode-next">next</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;next&nbsp;<a href="#CsNode">CsNode</a>&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-ns"><strong>ns</strong></a>(...)</dt><dd><tt><a href="#CsNode-ns">ns</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;namespace&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-parent"><strong>parent</strong></a>(...)</dt><dd><tt><a href="#CsNode-parent">parent</a>()&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;parent&nbsp;<a href="#CsNode">CsNode</a>&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="CsNode-tag"><strong>tag</strong></a>(...)</dt><dd><tt><a href="#CsNode-tag">tag</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;tag&nbsp;value.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CsNode-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CsNodeInfo">class <strong>CsNodeInfo</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_cs_node_info.<br>
+&nbsp;<br>
+<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CsNodeInfo-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNodeInfo-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(<a href="#CsNodeInfo-type">type</a>(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNodeInfo-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CsNodeInfo-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-choices"><strong>choices</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-choices">choices</a>()&nbsp;-&gt;&nbsp;<a href="#CsChoice">CsChoice</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;choices.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-cmp"><strong>cmp</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-cmp">cmp</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;cmp.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-defval"><strong>defval</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-defval">defval</a>()&nbsp;-&gt;&nbsp;<a href="#Value">Value</a><br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-flags"><strong>flags</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-flags">flags</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;flags.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-keys"><strong>keys</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-keys">keys</a>()&nbsp;-&gt;&nbsp;list(unsigned&nbsp;int)<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;hashed&nbsp;key&nbsp;values.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-max_occurs"><strong>max_occurs</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-max_occurs">max_occurs</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;max_occurs.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-meta_data"><strong>meta_data</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-meta_data">meta_data</a>()&nbsp;-&gt;&nbsp;PyDict&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;meta_data.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-min_occurs"><strong>min_occurs</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-min_occurs">min_occurs</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;min_occurs.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-shallow_type"><strong>shallow_type</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-shallow_type">shallow_type</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;shallow_type.</tt></dd></dl>
+
+<dl><dt><a name="CsNodeInfo-type"><strong>type</strong></a>(...)</dt><dd><tt><a href="#CsNodeInfo-type">type</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;type.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CsNodeInfo-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CsType">class <strong>CsType</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_type.<br>
+&nbsp;<br>
+<a href="#CsType">CsType</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CsType-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#CsType-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="CsType-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#CsType-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="CsType-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#CsType-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="CsType-bitbig_size"><strong>bitbig_size</strong></a>(...)</dt><dd><tt><a href="#CsType-bitbig_size">bitbig_size</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;maximum&nbsp;size&nbsp;needed&nbsp;for&nbsp;the&nbsp;byte&nbsp;array&nbsp;for&nbsp;the&nbsp;BITBIG&nbsp;value<br>
+when&nbsp;a&nbsp;YANG&nbsp;bits&nbsp;type&nbsp;has&nbsp;a&nbsp;highest&nbsp;position&nbsp;above&nbsp;63.&nbsp;If&nbsp;this&nbsp;is&nbsp;not&nbsp;a<br>
+BITBIG&nbsp;value&nbsp;or&nbsp;if&nbsp;the&nbsp;highest&nbsp;position&nbsp;is&nbsp;63&nbsp;or&nbsp;less,&nbsp;this&nbsp;function&nbsp;will<br>
+return&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="CsType-defval"><strong>defval</strong></a>(...)</dt><dd><tt><a href="#CsType-defval">defval</a>()&nbsp;-&gt;&nbsp;<a href="#CsType">CsType</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsType">CsType</a>&nbsp;defval.</tt></dd></dl>
+
+<dl><dt><a name="CsType-parent"><strong>parent</strong></a>(...)</dt><dd><tt><a href="#CsType-parent">parent</a>()&nbsp;-&gt;&nbsp;<a href="#CsType">CsType</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;<a href="#CsType">CsType</a>&nbsp;parent.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#CsType-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DateTime">class <strong>DateTime</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_datetime.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#DateTime">DateTime</a>(year,&nbsp;month,&nbsp;day,&nbsp;hour,&nbsp;min,&nbsp;sec,&nbsp;micro,&nbsp;timezone,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;timezone_minutes)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+year&nbsp;--&nbsp;the&nbsp;year&nbsp;(int)<br>
+month&nbsp;--&nbsp;the&nbsp;month&nbsp;(int)<br>
+day&nbsp;--&nbsp;the&nbsp;day&nbsp;(int)<br>
+hour&nbsp;--&nbsp;the&nbsp;hour&nbsp;(int)<br>
+min&nbsp;--&nbsp;minutes&nbsp;(int)<br>
+sec&nbsp;--&nbsp;seconds&nbsp;(int)<br>
+micro&nbsp;--&nbsp;micro&nbsp;seconds&nbsp;(int)<br>
+timezone&nbsp;--&nbsp;the&nbsp;timezone&nbsp;(int)<br>
+timezone_minutes&nbsp;--&nbsp;number&nbsp;of&nbsp;timezone_minutes&nbsp;(int)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="DateTime-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#DateTime-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="DateTime-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#DateTime-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="DateTime-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#DateTime-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>day</strong></dt>
+<dd><tt>the&nbsp;day</tt></dd>
+</dl>
+<dl><dt><strong>hour</strong></dt>
+<dd><tt>the&nbsp;hour</tt></dd>
+</dl>
+<dl><dt><strong>micro</strong></dt>
+<dd><tt>micro&nbsp;seconds</tt></dd>
+</dl>
+<dl><dt><strong>min</strong></dt>
+<dd><tt>minutes</tt></dd>
+</dl>
+<dl><dt><strong>month</strong></dt>
+<dd><tt>the&nbsp;month</tt></dd>
+</dl>
+<dl><dt><strong>sec</strong></dt>
+<dd><tt>seconds</tt></dd>
+</dl>
+<dl><dt><strong>timezone</strong></dt>
+<dd><tt>timezone</tt></dd>
+</dl>
+<dl><dt><strong>timezone_minutes</strong></dt>
+<dd><tt>timezone&nbsp;minutes</tt></dd>
+</dl>
+<dl><dt><strong>year</strong></dt>
+<dd><tt>the&nbsp;year</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#DateTime-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HKeypathRef">class <strong>HKeypathRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;confd_hkeypath_t.<br>
+&nbsp;<br>
+<a href="#HKeypathRef">HKeypathRef</a>&nbsp;implements&nbsp;some&nbsp;sequence&nbsp;methods&nbsp;which&nbsp;enables&nbsp;indexing,<br>
+iteration&nbsp;and&nbsp;length&nbsp;checking.&nbsp;There&nbsp;is&nbsp;also&nbsp;support&nbsp;for&nbsp;slicing,&nbsp;e.g:<br>
+&nbsp;<br>
+Lets&nbsp;say&nbsp;the&nbsp;variable&nbsp;hkp&nbsp;is&nbsp;a&nbsp;valid&nbsp;hkeypath&nbsp;pointing&nbsp;to&nbsp;'/foo/bar{a}/baz'<br>
+and&nbsp;we&nbsp;slice&nbsp;that&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;like&nbsp;this:<br>
+&nbsp;<br>
+&nbsp;&nbsp;newhkp&nbsp;=&nbsp;hkp[1:]<br>
+&nbsp;<br>
+In&nbsp;this&nbsp;case&nbsp;newhkp&nbsp;will&nbsp;be&nbsp;a&nbsp;new&nbsp;hkeypath&nbsp;pointing&nbsp;to&nbsp;'/foo/bar{a}'.<br>
+Note&nbsp;that&nbsp;the&nbsp;last&nbsp;element&nbsp;must&nbsp;always&nbsp;be&nbsp;included,&nbsp;so&nbsp;trying&nbsp;to&nbsp;create<br>
+a&nbsp;slice&nbsp;with&nbsp;hkp[1:2]&nbsp;will&nbsp;fail.<br>
+&nbsp;<br>
+The&nbsp;example&nbsp;above&nbsp;could&nbsp;also&nbsp;be&nbsp;written&nbsp;using&nbsp;the&nbsp;<a href="#HKeypathRef-dup_len">dup_len</a>()&nbsp;method:<br>
+&nbsp;<br>
+&nbsp;&nbsp;newhkp&nbsp;=&nbsp;hkp.<a href="#HKeypathRef-dup_len">dup_len</a>(3)<br>
+&nbsp;<br>
+Retrieving&nbsp;an&nbsp;element&nbsp;of&nbsp;the&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;when&nbsp;the&nbsp;underlying&nbsp;<a href="#Value">Value</a>&nbsp;is&nbsp;of<br>
+type&nbsp;C_XMLTAG&nbsp;returns&nbsp;a&nbsp;<a href="#XmlTag">XmlTag</a>&nbsp;instance.&nbsp;In&nbsp;all&nbsp;other&nbsp;cases&nbsp;a&nbsp;tuple&nbsp;of<br>
+Values&nbsp;is&nbsp;returned.<br>
+&nbsp;<br>
+When&nbsp;receiving&nbsp;an&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;as&nbsp;on&nbsp;argument&nbsp;in&nbsp;a&nbsp;callback&nbsp;method,<br>
+the&nbsp;underlying&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;only&nbsp;borrowed,&nbsp;so&nbsp;this&nbsp;particular&nbsp;instance&nbsp;is&nbsp;only<br>
+valid&nbsp;inside&nbsp;that&nbsp;callback&nbsp;method.&nbsp;If&nbsp;one,&nbsp;for&nbsp;some&nbsp;reason,&nbsp;would&nbsp;like<br>
+to&nbsp;keep&nbsp;the&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;'alive'&nbsp;for&nbsp;any&nbsp;longer&nbsp;than&nbsp;that,&nbsp;use<br>
+<a href="#HKeypathRef-dup">dup</a>()&nbsp;or&nbsp;<a href="#HKeypathRef-dup_len">dup_len</a>()&nbsp;to&nbsp;get&nbsp;a&nbsp;copy&nbsp;of&nbsp;it.&nbsp;Slicing&nbsp;also&nbsp;creates&nbsp;a&nbsp;copy.<br>
+&nbsp;<br>
+<a href="#HKeypathRef">HKeypathRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="HKeypathRef-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#HKeypathRef-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#HKeypathRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#HKeypathRef-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#HKeypathRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#HKeypathRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-dup"><strong>dup</strong></a>(...)</dt><dd><tt><a href="#HKeypathRef-dup">dup</a>()&nbsp;-&gt;&nbsp;<a href="#HKeypathRef">HKeypathRef</a><br>
+&nbsp;<br>
+Duplicates&nbsp;this&nbsp;hkeypath.</tt></dd></dl>
+
+<dl><dt><a name="HKeypathRef-dup_len"><strong>dup_len</strong></a>(...)</dt><dd><tt><a href="#HKeypathRef-dup_len">dup_len</a>(len)&nbsp;-&gt;&nbsp;<a href="#HKeypathRef">HKeypathRef</a><br>
+&nbsp;<br>
+Duplicates&nbsp;the&nbsp;first&nbsp;len&nbsp;elements&nbsp;of&nbsp;this&nbsp;hkeypath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+len&nbsp;--&nbsp;number&nbsp;of&nbsp;elements&nbsp;to&nbsp;include&nbsp;in&nbsp;the&nbsp;copy</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#HKeypathRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="QueryResult">class <strong>QueryResult</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_query_result.<br>
+&nbsp;<br>
+<a href="#QueryResult">QueryResult</a>&nbsp;implements&nbsp;some&nbsp;sequence&nbsp;methods&nbsp;which&nbsp;enables&nbsp;indexing,<br>
+iteration&nbsp;and&nbsp;length&nbsp;checking.<br>
+&nbsp;<br>
+<a href="#QueryResult">QueryResult</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="QueryResult-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryResult-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="QueryResult-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryResult-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(<a href="#QueryResult-type">type</a>(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="QueryResult-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryResult-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="QueryResult-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryResult-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="QueryResult-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryResult-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>nelements</strong></dt>
+<dd><tt>number&nbsp;of&nbsp;elements&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>nresults</strong></dt>
+<dd><tt>number&nbsp;of&nbsp;results&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>offset</strong></dt>
+<dd><tt>the&nbsp;offset&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>type</strong></dt>
+<dd><tt>the&nbsp;query&nbsp;result&nbsp;type&nbsp;(int)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#QueryResult-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SnmpVarbind">class <strong>SnmpVarbind</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_snmp_varbind.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#SnmpVarbind">SnmpVarbind</a>(type,&nbsp;val,&nbsp;vartype,&nbsp;name,&nbsp;oid,&nbsp;cr)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+type&nbsp;--&nbsp;SNMP_VARIABLE,&nbsp;SNMP_OID&nbsp;or&nbsp;SNMP_COL_ROW&nbsp;(int)<br>
+val&nbsp;--&nbsp;value&nbsp;(<a href="#Value">Value</a>)<br>
+vartype&nbsp;--&nbsp;snmp&nbsp;type&nbsp;(optional)<br>
+name&nbsp;--&nbsp;mandatory&nbsp;if&nbsp;type&nbsp;is&nbsp;SNMP_VARIABLE&nbsp;(string)<br>
+oid&nbsp;--&nbsp;mandatory&nbsp;if&nbsp;type&nbsp;is&nbsp;SNMP_OID&nbsp;(list&nbsp;of&nbsp;integers)<br>
+cr&nbsp;--&nbsp;mandatory&nbsp;if&nbsp;type&nbsp;is&nbsp;SNMP_COL_ROW&nbsp;(described&nbsp;below)<br>
+&nbsp;<br>
+When&nbsp;type&nbsp;is&nbsp;SNMP_COL_ROW&nbsp;the&nbsp;cr&nbsp;argument&nbsp;must&nbsp;be&nbsp;provided.&nbsp;It&nbsp;is&nbsp;built&nbsp;up<br>
+as&nbsp;a&nbsp;2-tuple&nbsp;like&nbsp;this:&nbsp;tuple(string,&nbsp;list(int)).<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;element&nbsp;of&nbsp;the&nbsp;2-tuple&nbsp;is&nbsp;the&nbsp;column&nbsp;name.<br>
+&nbsp;<br>
+The&nbsp;second&nbsp;element&nbsp;(the&nbsp;row&nbsp;index)&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;up&nbsp;to&nbsp;128&nbsp;integers.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SnmpVarbind-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#SnmpVarbind-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(<a href="#SnmpVarbind-type">type</a>(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="SnmpVarbind-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#SnmpVarbind-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="SnmpVarbind-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#SnmpVarbind-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>type</strong></dt>
+<dd><tt>the&nbsp;SnmpVarbind&nbsp;type</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#SnmpVarbind-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TagValue">class <strong>TagValue</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;confd_tag_value_t.<br>
+&nbsp;<br>
+In&nbsp;addition&nbsp;to&nbsp;the&nbsp;'ns'&nbsp;and&nbsp;'tag'&nbsp;attributes&nbsp;there&nbsp;is&nbsp;an&nbsp;additional<br>
+attribute&nbsp;'v'&nbsp;which&nbsp;containes&nbsp;the&nbsp;<a href="#Value">Value</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#TagValue">TagValue</a>(xmltag,&nbsp;v,&nbsp;tag,&nbsp;ns)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+There&nbsp;are&nbsp;two&nbsp;ways&nbsp;to&nbsp;contruct&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>.&nbsp;The&nbsp;first&nbsp;one&nbsp;requires&nbsp;that&nbsp;both<br>
+xmltag&nbsp;and&nbsp;v&nbsp;are&nbsp;specified.&nbsp;The&nbsp;second&nbsp;one&nbsp;requires&nbsp;that&nbsp;both&nbsp;tag&nbsp;and&nbsp;ns&nbsp;are<br>
+specified.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+xmltag&nbsp;--&nbsp;a&nbsp;<a href="#XmlTag">XmlTag</a>&nbsp;instance&nbsp;(optional)<br>
+v&nbsp;--&nbsp;a&nbsp;<a href="#Value">Value</a>&nbsp;instance&nbsp;(optional)<br>
+tag&nbsp;--&nbsp;tag&nbsp;hash&nbsp;(optional)<br>
+ns&nbsp;--&nbsp;namespace&nbsp;hash&nbsp;(optional)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TagValue-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#TagValue-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TagValue-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#TagValue-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="TagValue-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#TagValue-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="TagValue-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#TagValue-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>ns</strong></dt>
+<dd><tt>namespace&nbsp;hash</tt></dd>
+</dl>
+<dl><dt><strong>tag</strong></dt>
+<dd><tt>tag&nbsp;hash</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#TagValue-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TransCtxRef">class <strong>TransCtxRef</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_trans_ctx.<br>
+&nbsp;<br>
+Available&nbsp;attributes:<br>
+fd&nbsp;--&nbsp;worker&nbsp;socket&nbsp;(int)<br>
+th&nbsp;--&nbsp;transaction&nbsp;handle&nbsp;(int)<br>
+secondary_index&nbsp;--&nbsp;secondary&nbsp;index&nbsp;number&nbsp;for&nbsp;list&nbsp;traversal&nbsp;(int)<br>
+username&nbsp;--&nbsp;from&nbsp;user&nbsp;session&nbsp;(string)&nbsp;DEPRECATED,&nbsp;see&nbsp;uinfo<br>
+context&nbsp;--&nbsp;from&nbsp;user&nbsp;session&nbsp;(string)&nbsp;DEPRECATED,&nbsp;see&nbsp;uinfo<br>
+uinfo&nbsp;--&nbsp;user&nbsp;session&nbsp;(<a href="#UserInfo">UserInfo</a>)<br>
+accumulated&nbsp;--&nbsp;if&nbsp;the&nbsp;data&nbsp;provider&nbsp;is&nbsp;using&nbsp;the&nbsp;accumulate&nbsp;functionality<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;attribute&nbsp;will&nbsp;contain&nbsp;the&nbsp;first&nbsp;dp.TrItemRef&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;linked&nbsp;list,&nbsp;otherwise&nbsp;if&nbsp;will&nbsp;be&nbsp;None<br>
+&nbsp;<br>
+<a href="#TransCtxRef">TransCtxRef</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TransCtxRef-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#TransCtxRef-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="TransCtxRef-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#TransCtxRef-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="TransCtxRef-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#TransCtxRef-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="TransCtxRef-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#TransCtxRef-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#TransCtxRef-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UserInfo">class <strong>UserInfo</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;confd_user_info.<br>
+&nbsp;<br>
+<a href="#UserInfo">UserInfo</a>&nbsp;cannot&nbsp;be&nbsp;directly&nbsp;instantiated&nbsp;from&nbsp;Python.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="UserInfo-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#UserInfo-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="UserInfo-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#UserInfo-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="UserInfo-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#UserInfo-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>actx_thandle</strong></dt>
+<dd><tt>actx_thandle&nbsp;--&nbsp;action&nbsp;context&nbsp;transaction&nbsp;handle</tt></dd>
+</dl>
+<dl><dt><strong>addr</strong></dt>
+<dd><tt>addr&nbsp;--&nbsp;ip&nbsp;address&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>af</strong></dt>
+<dd><tt>af&nbsp;--&nbsp;address&nbsp;family&nbsp;AF_INIT&nbsp;or&nbsp;AF_INET6&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>clearpass</strong></dt>
+<dd><tt>clearpass&nbsp;--&nbsp;password&nbsp;if&nbsp;available&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>context</strong></dt>
+<dd><tt>context&nbsp;--&nbsp;the&nbsp;context&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>flags</strong></dt>
+<dd><tt>flags&nbsp;--&nbsp;CONFD_USESS_FLAG_...&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>lmode</strong></dt>
+<dd><tt>lmode&nbsp;--&nbsp;the&nbsp;lock&nbsp;we&nbsp;have&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>logintime</strong></dt>
+<dd><tt>logintime&nbsp;--&nbsp;time&nbsp;for&nbsp;login&nbsp;(long)</tt></dd>
+</dl>
+<dl><dt><strong>port</strong></dt>
+<dd><tt>port&nbsp;--&nbsp;source&nbsp;port&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>proto</strong></dt>
+<dd><tt>proto&nbsp;--&nbsp;protocol&nbsp;(int)</tt></dd>
+</dl>
+<dl><dt><strong>snmp_v3_ctx</strong></dt>
+<dd><tt>snmp_v3_ctx&nbsp;--&nbsp;SNMP&nbsp;context&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>username</strong></dt>
+<dd><tt>username&nbsp;--&nbsp;the&nbsp;username&nbsp;(string)</tt></dd>
+</dl>
+<dl><dt><strong>usid</strong></dt>
+<dd><tt>usid&nbsp;--&nbsp;user&nbsp;session&nbsp;id&nbsp;(int)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#UserInfo-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Value">class <strong>Value</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represents&nbsp;the&nbsp;c-type&nbsp;confd_value_t.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#Value">Value</a>(init,&nbsp;type)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+If&nbsp;type&nbsp;is&nbsp;not&nbsp;provided&nbsp;it&nbsp;will&nbsp;be&nbsp;automatically&nbsp;set&nbsp;by&nbsp;inspecting&nbsp;the&nbsp;type<br>
+of&nbsp;argument&nbsp;init&nbsp;according&nbsp;to&nbsp;this&nbsp;table:<br>
+&nbsp;<br>
+Python&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Value">Value</a>&nbsp;type<br>
+------------------------------<br>
+bool&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_BOOL<br>
+int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_INT32<br>
+long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_INT64<br>
+float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_DOUBLE<br>
+string&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C_BUF<br>
+&nbsp;<br>
+If&nbsp;any&nbsp;other&nbsp;type&nbsp;is&nbsp;provided&nbsp;for&nbsp;the&nbsp;init&nbsp;argument,&nbsp;the&nbsp;type&nbsp;will&nbsp;be&nbsp;set&nbsp;to<br>
+C_BUF&nbsp;and&nbsp;the&nbsp;value&nbsp;will&nbsp;be&nbsp;the&nbsp;string&nbsp;representation&nbsp;of&nbsp;init.<br>
+&nbsp;<br>
+For&nbsp;types&nbsp;C_XMLTAG,&nbsp;C_XMLBEGIN&nbsp;and&nbsp;C_XMLEND&nbsp;the&nbsp;init&nbsp;argument&nbsp;must&nbsp;be&nbsp;a<br>
+2-tuple&nbsp;which&nbsp;specifies&nbsp;the&nbsp;tag&nbsp;and&nbsp;ns&nbsp;values&nbsp;like&nbsp;this:&nbsp;(tag,&nbsp;ns).<br>
+&nbsp;<br>
+For&nbsp;type&nbsp;C_IDENTITYREF&nbsp;the&nbsp;init&nbsp;argument&nbsp;must&nbsp;be&nbsp;a<br>
+2-tuple&nbsp;which&nbsp;specifies&nbsp;the&nbsp;ns&nbsp;and&nbsp;id&nbsp;values&nbsp;like&nbsp;this:&nbsp;(ns,&nbsp;id).<br>
+&nbsp;<br>
+For&nbsp;types&nbsp;C_IPV4,&nbsp;C_IPV6,&nbsp;C_DATETIME,&nbsp;C_DATE,&nbsp;C_TIME,&nbsp;C_DURATION,&nbsp;C_OID,<br>
+C_IPV4PREFIX&nbsp;and&nbsp;C_IPV6PREFIX,&nbsp;the&nbsp;init&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+For&nbsp;type&nbsp;C_DECIMAL64&nbsp;the&nbsp;init&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;string,&nbsp;or&nbsp;a&nbsp;2-tuple&nbsp;which<br>
+specifies&nbsp;value&nbsp;and&nbsp;fraction&nbsp;digits&nbsp;like&nbsp;this:&nbsp;(value,&nbsp;fraction_digits).<br>
+&nbsp;<br>
+For&nbsp;type&nbsp;C_BINARY&nbsp;the&nbsp;init&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+init&nbsp;--&nbsp;the&nbsp;initial&nbsp;value<br>
+type&nbsp;--&nbsp;type&nbsp;(optional,&nbsp;see&nbsp;confd_types(3))<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Value-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="Value-__float__"><strong>__float__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__float__">__float__</a>()&nbsp;&lt;==&gt;&nbsp;float(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Value-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Value-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Value-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="Value-__int__"><strong>__int__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__int__">__int__</a>()&nbsp;&lt;==&gt;&nbsp;int(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Value-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__long__"><strong>__long__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__long__">__long__</a>()&nbsp;&lt;==&gt;&nbsp;long(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Value-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Value-__nonzero__"><strong>__nonzero__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__nonzero__">__nonzero__</a>()&nbsp;&lt;==&gt;&nbsp;x&nbsp;!=&nbsp;0</tt></dd></dl>
+
+<dl><dt><a name="Value-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#Value-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="Value-as_decimal64"><strong>as_decimal64</strong></a>(...)</dt><dd><tt><a href="#Value-as_decimal64">as_decimal64</a>()&nbsp;-&gt;&nbsp;tuple(int,&nbsp;int)<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;tuple&nbsp;containing&nbsp;(value,&nbsp;fraction_digits)&nbsp;if&nbsp;this&nbsp;value&nbsp;is&nbsp;of<br>
+type&nbsp;C_DECIMAL64.</tt></dd></dl>
+
+<dl><dt><a name="Value-as_list"><strong>as_list</strong></a>(...)</dt><dd><tt><a href="#Value-as_list">as_list</a>()&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Value">Value</a>'s&nbsp;if&nbsp;this&nbsp;value&nbsp;is&nbsp;of&nbsp;type&nbsp;C_LIST.</tt></dd></dl>
+
+<dl><dt><a name="Value-as_pyval"><strong>as_pyval</strong></a>(...)</dt><dd><tt><a href="#Value-as_pyval">as_pyval</a>()&nbsp;-&gt;&nbsp;PyObject<br>
+&nbsp;<br>
+Tries&nbsp;to&nbsp;convert&nbsp;a&nbsp;<a href="#Value">Value</a>&nbsp;to&nbsp;a&nbsp;native&nbsp;Python&nbsp;type.&nbsp;If&nbsp;possible&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a><br>
+returned&nbsp;will&nbsp;be&nbsp;of&nbsp;the&nbsp;same&nbsp;type&nbsp;as&nbsp;used&nbsp;when&nbsp;initializing&nbsp;a&nbsp;<a href="#Value">Value</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+If&nbsp;the&nbsp;type&nbsp;cannot&nbsp;be&nbsp;represented&nbsp;as&nbsp;something&nbsp;useful&nbsp;in&nbsp;Python&nbsp;a&nbsp;string<br>
+will&nbsp;be&nbsp;returned.&nbsp;Note&nbsp;that&nbsp;not&nbsp;all&nbsp;<a href="#Value">Value</a>&nbsp;types&nbsp;are&nbsp;supported.<br>
+&nbsp;<br>
+E.g.&nbsp;assuming&nbsp;you&nbsp;already&nbsp;have&nbsp;a&nbsp;value&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;this&nbsp;should&nbsp;be&nbsp;possible<br>
+in&nbsp;most&nbsp;cases:<br>
+&nbsp;<br>
+&nbsp;&nbsp;newvalue&nbsp;=&nbsp;<a href="#Value">Value</a>(value.<a href="#Value-as_pyval">as_pyval</a>(),&nbsp;value.<a href="#Value-confd_type">confd_type</a>())</tt></dd></dl>
+
+<dl><dt><a name="Value-as_xmltag"><strong>as_xmltag</strong></a>(...)</dt><dd><tt><a href="#Value-as_xmltag">as_xmltag</a>()&nbsp;-&gt;&nbsp;<a href="#XmlTag">XmlTag</a><br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;<a href="#XmlTag">XmlTag</a>&nbsp;instance&nbsp;if&nbsp;this&nbsp;value&nbsp;is&nbsp;of&nbsp;type&nbsp;C_XMLTAG.</tt></dd></dl>
+
+<dl><dt><a name="Value-confd_type"><strong>confd_type</strong></a>(...)</dt><dd><tt><a href="#Value-confd_type">confd_type</a>()&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;confd&nbsp;type.</tt></dd></dl>
+
+<dl><dt><a name="Value-confd_type_str"><strong>confd_type_str</strong></a>(...)</dt><dd><tt><a href="#Value-confd_type_str">confd_type_str</a>()&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;for&nbsp;the&nbsp;<a href="#Value">Value</a>&nbsp;type.</tt></dd></dl>
+
+<dl><dt><a name="Value-str2val"><strong>str2val</strong></a>(...)</dt><dd><tt><a href="#Value-str2val">str2val</a>(value,&nbsp;schema_type)&nbsp;-&gt;&nbsp;<a href="#Value">Value</a><br>
+(class&nbsp;method)<br>
+&nbsp;<br>
+Create&nbsp;and&nbsp;return&nbsp;a&nbsp;<a href="#Value">Value</a>&nbsp;from&nbsp;a&nbsp;string.&nbsp;The&nbsp;schema_type&nbsp;argument&nbsp;must&nbsp;be<br>
+either&nbsp;a&nbsp;2-tuple&nbsp;with&nbsp;namespace&nbsp;and&nbsp;keypath,&nbsp;a&nbsp;<a href="#CsNode">CsNode</a>&nbsp;instance&nbsp;or&nbsp;a&nbsp;<a href="#CsType">CsType</a><br>
+instance.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+value&nbsp;--&nbsp;string&nbsp;value<br>
+schema_type&nbsp;--&nbsp;either&nbsp;(ns,&nbsp;keypath),&nbsp;a&nbsp;<a href="#CsNode">CsNode</a>&nbsp;or&nbsp;a&nbsp;<a href="#CsType">CsType</a></tt></dd></dl>
+
+<dl><dt><a name="Value-val2str"><strong>val2str</strong></a>(...)</dt><dd><tt><a href="#Value-val2str">val2str</a>(schema_type)&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;<a href="#Value">Value</a>.&nbsp;The&nbsp;schema_type&nbsp;argument&nbsp;must&nbsp;be<br>
+either&nbsp;a&nbsp;2-tuple&nbsp;with&nbsp;namespace&nbsp;and&nbsp;keypath,&nbsp;a&nbsp;<a href="#CsNode">CsNode</a>&nbsp;instance&nbsp;or&nbsp;a&nbsp;<a href="#CsType">CsType</a><br>
+instance.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+schema_type&nbsp;--&nbsp;either&nbsp;(ns,&nbsp;keypath),&nbsp;a&nbsp;<a href="#CsNode">CsNode</a>&nbsp;or&nbsp;a&nbsp;<a href="#CsType">CsType</a></tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#Value-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="XmlTag">class <strong>XmlTag</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;type&nbsp;represent&nbsp;the&nbsp;c-type&nbsp;struct&nbsp;xml_tag.<br>
+&nbsp;<br>
+The&nbsp;contructor&nbsp;for&nbsp;this&nbsp;type&nbsp;has&nbsp;the&nbsp;following&nbsp;signature:<br>
+&nbsp;<br>
+<a href="#XmlTag">XmlTag</a>(ns,&nbsp;tag)&nbsp;-&gt;&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+ns&nbsp;--&nbsp;namespace&nbsp;hash<br>
+tag&nbsp;--&nbsp;tag&nbsp;hash<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="XmlTag-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#XmlTag-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="XmlTag-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#XmlTag-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="XmlTag-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#XmlTag-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>ns</strong></dt>
+<dd><tt>namespace&nbsp;hash&nbsp;value&nbsp;(unsigned&nbsp;int)</tt></dd>
+</dl>
+<dl><dt><strong>tag</strong></dt>
+<dd><tt>tag&nbsp;hash&nbsp;value&nbsp;(unsigned&nbsp;int)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#XmlTag-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-cs_node_cd"><strong>cs_node_cd</strong></a>(...)</dt><dd><tt><a href="#-cs_node_cd">cs_node_cd</a>(start,&nbsp;path)&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;finds&nbsp;the&nbsp;resulting&nbsp;<a href="#CsNode">CsNode</a>&nbsp;given&nbsp;an&nbsp;(optional)<br>
+starting&nbsp;node&nbsp;and&nbsp;a&nbsp;(relative&nbsp;or&nbsp;absolute)&nbsp;string&nbsp;keypath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+start&nbsp;--&nbsp;a&nbsp;<a href="#CsNode">CsNode</a>&nbsp;instance&nbsp;or&nbsp;None<br>
+path&nbsp;--&nbsp;the&nbsp;path</tt></dd></dl>
+ <dl><dt><a name="-decrypt"><strong>decrypt</strong></a>(...)</dt><dd><tt><a href="#-decrypt">decrypt</a>(ciphertext)&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+When&nbsp;data&nbsp;is&nbsp;read&nbsp;over&nbsp;the&nbsp;CDB&nbsp;interface,&nbsp;the&nbsp;MAAPI&nbsp;interface&nbsp;or&nbsp;received<br>
+in&nbsp;event&nbsp;notifications,&nbsp;the&nbsp;data&nbsp;for&nbsp;the&nbsp;two&nbsp;builtin&nbsp;types<br>
+tailf:des3-cbc-encrypted-string&nbsp;or&nbsp;tailf:aes-cfb-128-encrypted-string&nbsp;is<br>
+encrypted.&nbsp;This&nbsp;function&nbsp;decrypts&nbsp;ciphertext&nbsp;and&nbsp;returns&nbsp;the&nbsp;clear&nbsp;text&nbsp;as<br>
+a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+ciphertext&nbsp;--&nbsp;encrypted&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-fatal"><strong>fatal</strong></a>(...)</dt><dd><tt><a href="#-fatal">fatal</a>(str)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;formats&nbsp;a&nbsp;string,&nbsp;prints&nbsp;it&nbsp;to&nbsp;stderr&nbsp;and&nbsp;exits&nbsp;with<br>
+exit&nbsp;code&nbsp;1.&nbsp;This&nbsp;function&nbsp;will&nbsp;never&nbsp;return.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+str&nbsp;--&nbsp;a&nbsp;message&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-find_cs_node"><strong>find_cs_node</strong></a>(...)</dt><dd><tt><a href="#-find_cs_node">find_cs_node</a>(hkeypath,&nbsp;len)&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;finds&nbsp;the&nbsp;<a href="#CsNode">CsNode</a>&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;len&nbsp;first<br>
+elements&nbsp;of&nbsp;the&nbsp;hashed&nbsp;keypath.&nbsp;To&nbsp;make&nbsp;the&nbsp;search&nbsp;consider&nbsp;the&nbsp;full<br>
+keypath&nbsp;leave&nbsp;out&nbsp;the&nbsp;len&nbsp;parameter.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance<br>
+len&nbsp;--&nbsp;number&nbsp;of&nbsp;elements&nbsp;to&nbsp;return&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-find_cs_node_child"><strong>find_cs_node_child</strong></a>(...)</dt><dd><tt><a href="#-find_cs_node_child">find_cs_node_child</a>(parent,&nbsp;xmltag)&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;finds&nbsp;the&nbsp;<a href="#CsNode">CsNode</a>&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;child&nbsp;node<br>
+given&nbsp;as&nbsp;xmltag.<br>
+&nbsp;<br>
+See&nbsp;confd_find_cs_node_child()&nbsp;in&nbsp;confd_lib_lib(3).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+parent&nbsp;--&nbsp;the&nbsp;parent&nbsp;<a href="#CsNode">CsNode</a><br>
+xmltag&nbsp;--&nbsp;the&nbsp;child&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-find_cs_root"><strong>find_cs_root</strong></a>(...)</dt><dd><tt><a href="#-find_cs_root">find_cs_root</a>(ns)&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;schema&nbsp;information&nbsp;is&nbsp;available&nbsp;to&nbsp;the&nbsp;library,&nbsp;this&nbsp;function&nbsp;returns<br>
+the&nbsp;root&nbsp;of&nbsp;the&nbsp;tree&nbsp;representaton&nbsp;of&nbsp;the&nbsp;namespace&nbsp;given&nbsp;by&nbsp;ns&nbsp;for&nbsp;the<br>
+(first)&nbsp;toplevel&nbsp;node.&nbsp;For&nbsp;namespaces&nbsp;that&nbsp;are&nbsp;augmented&nbsp;into&nbsp;other<br>
+namespaces&nbsp;such&nbsp;that&nbsp;they&nbsp;do&nbsp;not&nbsp;have&nbsp;a&nbsp;toplevel&nbsp;node,&nbsp;this&nbsp;function&nbsp;returns<br>
+None&nbsp;-&nbsp;the&nbsp;nodes&nbsp;of&nbsp;such&nbsp;a&nbsp;namespace&nbsp;are&nbsp;found&nbsp;below&nbsp;the&nbsp;augment&nbsp;target<br>
+node(s)&nbsp;in&nbsp;other&nbsp;tree(s).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;id</tt></dd></dl>
+ <dl><dt><a name="-find_ns_type"><strong>find_ns_type</strong></a>(...)</dt><dd><tt><a href="#-find_ns_type">find_ns_type</a>(nshash,&nbsp;name)&nbsp;-&gt;&nbsp;<a href="#CsType">CsType</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;<a href="#CsType">CsType</a>&nbsp;type&nbsp;definition&nbsp;for&nbsp;the&nbsp;type&nbsp;named&nbsp;name,&nbsp;which&nbsp;is&nbsp;defined<br>
+in&nbsp;the&nbsp;namespace&nbsp;identified&nbsp;by&nbsp;nshash,&nbsp;or&nbsp;None&nbsp;if&nbsp;the&nbsp;type&nbsp;could&nbsp;not&nbsp;be<br>
+found.&nbsp;If&nbsp;nshash&nbsp;is&nbsp;0,&nbsp;the&nbsp;type&nbsp;name&nbsp;will&nbsp;be&nbsp;looked&nbsp;up&nbsp;among&nbsp;the&nbsp;built-in<br>
+types&nbsp;(i.e.&nbsp;the&nbsp;YANG&nbsp;built-in&nbsp;types,&nbsp;the&nbsp;types&nbsp;defined&nbsp;in&nbsp;the&nbsp;YANG<br>
+"tailf-common"&nbsp;module,&nbsp;and&nbsp;the&nbsp;types&nbsp;defined&nbsp;in&nbsp;the&nbsp;"confd"&nbsp;and&nbsp;"xs"<br>
+namespaces).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+nshash&nbsp;--&nbsp;a&nbsp;namespace&nbsp;hash&nbsp;or&nbsp;0&nbsp;(0&nbsp;searches&nbsp;for&nbsp;built-in&nbsp;types)<br>
+name&nbsp;--&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;type</tt></dd></dl>
+ <dl><dt><a name="-get_leaf_list_type"><strong>get_leaf_list_type</strong></a>(...)</dt><dd><tt><a href="#-get_leaf_list_type">get_leaf_list_type</a>(node)&nbsp;-&gt;&nbsp;<a href="#CsType">CsType</a><br>
+&nbsp;<br>
+For&nbsp;a&nbsp;leaf-list&nbsp;node,&nbsp;the&nbsp;type()&nbsp;method&nbsp;in&nbsp;the&nbsp;<a href="#CsNodeInfo">CsNodeInfo</a>&nbsp;identifies&nbsp;a<br>
+"list&nbsp;type"&nbsp;for&nbsp;the&nbsp;leaf-list&nbsp;"itself".&nbsp;This&nbsp;function&nbsp;returns&nbsp;the&nbsp;type<br>
+of&nbsp;the&nbsp;elements&nbsp;in&nbsp;the&nbsp;leaf-list,&nbsp;i.e.&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;type<br>
+substatement&nbsp;for&nbsp;the&nbsp;leaf-list&nbsp;in&nbsp;the&nbsp;YANG&nbsp;module.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+node&nbsp;--&nbsp;The&nbsp;<a href="#CsNode">CsNode</a>&nbsp;of&nbsp;the&nbsp;leaf-list</tt></dd></dl>
+ <dl><dt><a name="-get_nslist"><strong>get_nslist</strong></a>(...)</dt><dd><tt><a href="#-get_nslist">get_nslist</a>()&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Provides&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;namespaces&nbsp;known&nbsp;to&nbsp;the&nbsp;library&nbsp;as&nbsp;a&nbsp;list&nbsp;of<br>
+five-tuples.&nbsp;Each&nbsp;tuple&nbsp;contains&nbsp;the&nbsp;the&nbsp;namespace&nbsp;hash&nbsp;(int),&nbsp;the&nbsp;prefix<br>
+(string),&nbsp;the&nbsp;namespace&nbsp;uri&nbsp;(string),&nbsp;the&nbsp;revision&nbsp;(string),&nbsp;and&nbsp;the<br>
+module&nbsp;name&nbsp;(string).<br>
+&nbsp;<br>
+If&nbsp;schemas&nbsp;are&nbsp;not&nbsp;loaded&nbsp;an&nbsp;empty&nbsp;list&nbsp;will&nbsp;be&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-hash2str"><strong>hash2str</strong></a>(...)</dt><dd><tt><a href="#-hash2str">hash2str</a>(hash)&nbsp;-&gt;&nbsp;str&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;string&nbsp;representing&nbsp;the&nbsp;node&nbsp;name&nbsp;given&nbsp;by&nbsp;hash,&nbsp;or&nbsp;None&nbsp;if&nbsp;the<br>
+hash&nbsp;value&nbsp;is&nbsp;not&nbsp;found.&nbsp;Requires&nbsp;that&nbsp;schema&nbsp;information&nbsp;has&nbsp;been&nbsp;loaded<br>
+from&nbsp;the&nbsp;NCS&nbsp;daemon&nbsp;into&nbsp;the&nbsp;library&nbsp;-&nbsp;otherwise&nbsp;it&nbsp;always&nbsp;returns&nbsp;None.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hash&nbsp;--&nbsp;a&nbsp;hash</tt></dd></dl>
+ <dl><dt><a name="-hkeypath_dup"><strong>hkeypath_dup</strong></a>(...)</dt><dd><tt><a href="#-hkeypath_dup">hkeypath_dup</a>(hkeypath)&nbsp;-&gt;&nbsp;<a href="#HKeypathRef">HKeypathRef</a><br>
+&nbsp;<br>
+Duplicates&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-hkeypath_dup_len"><strong>hkeypath_dup_len</strong></a>(...)</dt><dd><tt><a href="#-hkeypath_dup_len">hkeypath_dup_len</a>(hkeypath,&nbsp;len)&nbsp;-&gt;&nbsp;<a href="#HKeypathRef">HKeypathRef</a><br>
+&nbsp;<br>
+Duplicates&nbsp;the&nbsp;first&nbsp;len&nbsp;elements&nbsp;of&nbsp;hkeypath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance<br>
+len&nbsp;--&nbsp;number&nbsp;of&nbsp;elements&nbsp;to&nbsp;include&nbsp;in&nbsp;the&nbsp;copy</tt></dd></dl>
+ <dl><dt><a name="-hkp_prefix_tagmatch"><strong>hkp_prefix_tagmatch</strong></a>(...)</dt><dd><tt><a href="#-hkp_prefix_tagmatch">hkp_prefix_tagmatch</a>(hkeypath,&nbsp;tags)&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+A&nbsp;simplified&nbsp;version&nbsp;of&nbsp;<a href="#-hkp_tagmatch">hkp_tagmatch</a>()&nbsp;-&nbsp;it&nbsp;returns&nbsp;True&nbsp;if&nbsp;the&nbsp;tagpath<br>
+matches&nbsp;a&nbsp;prefix&nbsp;of&nbsp;the&nbsp;hkeypath,&nbsp;i.e.&nbsp;it&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;calling<br>
+<a href="#-hkp_tagmatch">hkp_tagmatch</a>()&nbsp;and&nbsp;checking&nbsp;if&nbsp;the&nbsp;return&nbsp;value&nbsp;includes&nbsp;CONFD_HKP_MATCH_TAGS.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance<br>
+tags&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#XmlTag">XmlTag</a>&nbsp;instances</tt></dd></dl>
+ <dl><dt><a name="-hkp_tagmatch"><strong>hkp_tagmatch</strong></a>(...)</dt><dd><tt><a href="#-hkp_tagmatch">hkp_tagmatch</a>(hkeypath,&nbsp;tags)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+When&nbsp;checking&nbsp;the&nbsp;hkeypaths&nbsp;that&nbsp;get&nbsp;passed&nbsp;into&nbsp;each&nbsp;iteration&nbsp;in&nbsp;e.g.<br>
+cdb_diff_iterate()&nbsp;we&nbsp;can&nbsp;either&nbsp;explicitly&nbsp;check&nbsp;the&nbsp;paths,&nbsp;or&nbsp;use&nbsp;this<br>
+function&nbsp;to&nbsp;do&nbsp;the&nbsp;job.&nbsp;The&nbsp;tags&nbsp;list&nbsp;(typically&nbsp;statically&nbsp;initialized)<br>
+specifies&nbsp;a&nbsp;tagpath&nbsp;to&nbsp;match&nbsp;against&nbsp;the&nbsp;hkeypath.&nbsp;See&nbsp;cdb_diff_match().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance<br>
+tags&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#XmlTag">XmlTag</a>&nbsp;instances</tt></dd></dl>
+ <dl><dt><a name="-init"><strong>init</strong></a>(...)</dt><dd><tt><a href="#-init">init</a>(name,&nbsp;file,&nbsp;level)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Initializes&nbsp;the&nbsp;ConfD&nbsp;library.&nbsp;Must&nbsp;be&nbsp;called&nbsp;before&nbsp;any&nbsp;other&nbsp;NCS&nbsp;API<br>
+functions&nbsp;are&nbsp;called.&nbsp;There&nbsp;should&nbsp;be&nbsp;no&nbsp;need&nbsp;to&nbsp;call&nbsp;this&nbsp;function<br>
+directly.&nbsp;It&nbsp;is&nbsp;called&nbsp;internally&nbsp;when&nbsp;the&nbsp;Python&nbsp;module&nbsp;is&nbsp;loaded.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+name&nbsp;--&nbsp;e<br>
+file&nbsp;--&nbsp;(optional)<br>
+level&nbsp;--&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-max_object_size"><strong>max_object_size</strong></a>(...)</dt><dd><tt><a href="#-max_object_size">max_object_size</a>(<a href="__builtin__.html#object">object</a>)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;returns&nbsp;the&nbsp;maximum&nbsp;size&nbsp;(i.e.&nbsp;the&nbsp;needed&nbsp;length&nbsp;of<br>
+the&nbsp;confd_value_t&nbsp;array)&nbsp;for&nbsp;an&nbsp;"<a href="__builtin__.html#object">object</a>"&nbsp;retrieved&nbsp;by&nbsp;cdb_get_object(),<br>
+maapi_get_object(),&nbsp;and&nbsp;corresponding&nbsp;multi-<a href="__builtin__.html#object">object</a>&nbsp;functions.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+<a href="__builtin__.html#object">object</a>&nbsp;--&nbsp;the&nbsp;<a href="#CsNode">CsNode</a></tt></dd></dl>
+ <dl><dt><a name="-mmap_schemas"><strong>mmap_schemas</strong></a>(...)</dt><dd><tt><a href="#-mmap_schemas">mmap_schemas</a>(filename)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;shared&nbsp;memory&nbsp;schema&nbsp;support&nbsp;has&nbsp;been&nbsp;enabled,&nbsp;this&nbsp;function&nbsp;will<br>
+will&nbsp;map&nbsp;a&nbsp;shared&nbsp;memory&nbsp;segment&nbsp;into&nbsp;the&nbsp;current&nbsp;process&nbsp;address&nbsp;space<br>
+and&nbsp;make&nbsp;it&nbsp;ready&nbsp;for&nbsp;use.<br>
+&nbsp;<br>
+The&nbsp;filename&nbsp;can&nbsp;be&nbsp;obtained&nbsp;by&nbsp;using&nbsp;the&nbsp;get_schema_file_path()&nbsp;function<br>
+&nbsp;<br>
+The&nbsp;filename&nbsp;argument&nbsp;specifies&nbsp;the&nbsp;pathname&nbsp;of&nbsp;the&nbsp;file&nbsp;that&nbsp;is&nbsp;used&nbsp;as<br>
+backing&nbsp;store.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+filename&nbsp;--&nbsp;a&nbsp;filename&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-next_object_node"><strong>next_object_node</strong></a>(...)</dt><dd><tt><a href="#-next_object_node">next_object_node</a>(<a href="__builtin__.html#object">object</a>,&nbsp;cur,&nbsp;value)&nbsp;-&gt;&nbsp;<a href="#CsNode">CsNode</a>&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;to&nbsp;allow&nbsp;navigation&nbsp;of&nbsp;the&nbsp;confd_cs_node&nbsp;schema&nbsp;tree&nbsp;in<br>
+parallel&nbsp;with&nbsp;the&nbsp;confd_value_t&nbsp;array&nbsp;populated&nbsp;by&nbsp;cdb_get_object(),<br>
+maapi_get_object(),&nbsp;and&nbsp;corresponding&nbsp;multi-<a href="__builtin__.html#object">object</a>&nbsp;functions.<br>
+&nbsp;<br>
+The&nbsp;cur&nbsp;parameter&nbsp;is&nbsp;the&nbsp;<a href="#CsNode">CsNode</a>&nbsp;for&nbsp;the&nbsp;current&nbsp;value,&nbsp;and&nbsp;the&nbsp;value<br>
+parameter&nbsp;is&nbsp;the&nbsp;current&nbsp;value&nbsp;in&nbsp;the&nbsp;array.&nbsp;The&nbsp;function&nbsp;returns&nbsp;a&nbsp;<a href="#CsNode">CsNode</a><br>
+for&nbsp;the&nbsp;next&nbsp;value&nbsp;in&nbsp;the&nbsp;array,&nbsp;or&nbsp;None&nbsp;when&nbsp;the&nbsp;complete&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;has&nbsp;been<br>
+traversed.&nbsp;In&nbsp;the&nbsp;initial&nbsp;call&nbsp;for&nbsp;a&nbsp;given&nbsp;traversal,&nbsp;we&nbsp;must&nbsp;pass<br>
+children()&nbsp;for&nbsp;the&nbsp;cur&nbsp;parameter&nbsp;-&nbsp;this&nbsp;always&nbsp;points&nbsp;to&nbsp;the&nbsp;<a href="#CsNode">CsNode</a><br>
+for&nbsp;the&nbsp;first&nbsp;value&nbsp;in&nbsp;the&nbsp;array.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+<a href="__builtin__.html#object">object</a>&nbsp;--&nbsp;<a href="#CsNode">CsNode</a>&nbsp;of&nbsp;the&nbsp;list&nbsp;container&nbsp;node<br>
+cur&nbsp;--&nbsp;The&nbsp;<a href="#CsNode">CsNode</a>&nbsp;of&nbsp;the&nbsp;current&nbsp;value<br>
+value&nbsp;--&nbsp;The&nbsp;current&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-ns2prefix"><strong>ns2prefix</strong></a>(...)</dt><dd><tt><a href="#-ns2prefix">ns2prefix</a>(ns)&nbsp;-&gt;&nbsp;str&nbsp;|&nbsp;None<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;string&nbsp;giving&nbsp;the&nbsp;namespace&nbsp;prefix&nbsp;for&nbsp;the&nbsp;namespace&nbsp;ns,&nbsp;if&nbsp;the<br>
+namespace&nbsp;is&nbsp;known&nbsp;to&nbsp;the&nbsp;library&nbsp;-&nbsp;otherwise&nbsp;it&nbsp;returns&nbsp;None.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+ns&nbsp;--&nbsp;a&nbsp;namespace&nbsp;hash</tt></dd></dl>
+ <dl><dt><a name="-pp_kpath"><strong>pp_kpath</strong></a>(...)</dt><dd><tt><a href="#-pp_kpath">pp_kpath</a>(hkeypath)&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;pretty&nbsp;prints&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;path<br>
+hkeypath.&nbsp;This&nbsp;will&nbsp;use&nbsp;the&nbsp;NCS&nbsp;curly&nbsp;brace&nbsp;notation,&nbsp;i.e.<br>
+"/servers/server{www}/ip".&nbsp;Requires&nbsp;that&nbsp;schema&nbsp;information&nbsp;is&nbsp;available<br>
+to&nbsp;the&nbsp;library.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance</tt></dd></dl>
+ <dl><dt><a name="-pp_kpath_len"><strong>pp_kpath_len</strong></a>(...)</dt><dd><tt><a href="#-pp_kpath_len">pp_kpath_len</a>(hkeypath,&nbsp;len)&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+A&nbsp;variant&nbsp;of&nbsp;<a href="#-pp_kpath">pp_kpath</a>()&nbsp;that&nbsp;prints&nbsp;only&nbsp;the&nbsp;first&nbsp;len&nbsp;elements&nbsp;of&nbsp;hkeypath.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;_lib.<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance<br>
+len&nbsp;--&nbsp;number&nbsp;of&nbsp;elements&nbsp;to&nbsp;print</tt></dd></dl>
+ <dl><dt><a name="-set_debug"><strong>set_debug</strong></a>(...)</dt><dd><tt><a href="#-set_debug">set_debug</a>(level,&nbsp;file)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Sets&nbsp;the&nbsp;debug&nbsp;level<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+file&nbsp;--&nbsp;(optional)<br>
+level&nbsp;--&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-str2hash"><strong>str2hash</strong></a>(...)</dt><dd><tt><a href="#-str2hash">str2hash</a>(str)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;hash&nbsp;value&nbsp;representing&nbsp;the&nbsp;node&nbsp;name&nbsp;given&nbsp;by&nbsp;str,&nbsp;or&nbsp;0&nbsp;if&nbsp;the<br>
+string&nbsp;is&nbsp;not&nbsp;found.&nbsp;&nbsp;Requires&nbsp;that&nbsp;schema&nbsp;information&nbsp;has&nbsp;been&nbsp;loaded&nbsp;from<br>
+the&nbsp;NCS&nbsp;daemon&nbsp;into&nbsp;the&nbsp;library&nbsp;-&nbsp;otherwise&nbsp;it&nbsp;always&nbsp;returns&nbsp;0.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+str&nbsp;--&nbsp;a&nbsp;name&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-stream_connect"><strong>stream_connect</strong></a>(...)</dt><dd><tt><a href="#-stream_connect">stream_connect</a>(sock,&nbsp;id,&nbsp;flags,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Connects&nbsp;a&nbsp;stream&nbsp;socket&nbsp;to&nbsp;NCS.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+id&nbsp;--&nbsp;id<br>
+flags&nbsp;--&nbsp;flags<br>
+ip&nbsp;--&nbsp;ip&nbsp;address&nbsp;-&nbsp;if&nbsp;sock&nbsp;family&nbsp;is&nbsp;AF_INET&nbsp;or&nbsp;AF_INET6&nbsp;(optional)<br>
+port&nbsp;--&nbsp;port&nbsp;-&nbsp;if&nbsp;sock&nbsp;family&nbsp;is&nbsp;AF_INET&nbsp;or&nbsp;AF_INET6&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;-&nbsp;if&nbsp;sock&nbsp;family&nbsp;is&nbsp;AF_UNIX&nbsp;(optional)</tt></dd></dl>
+ <dl><dt><a name="-xpath_pp_kpath"><strong>xpath_pp_kpath</strong></a>(...)</dt><dd><tt><a href="#-xpath_pp_kpath">xpath_pp_kpath</a>(hkeypath)&nbsp;-&gt;&nbsp;str<br>
+&nbsp;<br>
+Utility&nbsp;function&nbsp;which&nbsp;pretty&nbsp;prints&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;path<br>
+hkeypath.&nbsp;This&nbsp;will&nbsp;format&nbsp;the&nbsp;path&nbsp;as&nbsp;an&nbsp;XPath,&nbsp;i.e.<br>
+"/servers/server[name="www"']/ip".&nbsp;Requires&nbsp;that&nbsp;schema&nbsp;information&nbsp;is<br>
+available&nbsp;to&nbsp;the&nbsp;library.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+hkeypath&nbsp;--&nbsp;a&nbsp;<a href="#HKeypathRef">HKeypathRef</a>&nbsp;instance</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCUMULATE</strong> = 1<br>
+<strong>ALREADY_LOCKED</strong> = -4<br>
+<strong>ATTR_ANNOTATION</strong> = 2147483649<br>
+<strong>ATTR_BACKPOINTER</strong> = 2147483651<br>
+<strong>ATTR_INACTIVE</strong> = 0<br>
+<strong>ATTR_TAGS</strong> = 2147483648<br>
+<strong>CANDIDATE</strong> = 1<br>
+<strong>CONFD_EOF</strong> = -2<br>
+<strong>CONFD_ERR</strong> = -1<br>
+<strong>CONFD_OK</strong> = 0<br>
+<strong>CONFD_PORT</strong> = 4565<br>
+<strong>CS_NODE_CMP_NORMAL</strong> = 0<br>
+<strong>CS_NODE_CMP_SNMP</strong> = 1<br>
+<strong>CS_NODE_CMP_SNMP_IMPLIED</strong> = 2<br>
+<strong>CS_NODE_CMP_UNSORTED</strong> = 4<br>
+<strong>CS_NODE_CMP_USER</strong> = 3<br>
+<strong>CS_NODE_HAS_DISPLAY_WHEN</strong> = 1024<br>
+<strong>CS_NODE_HAS_META_DATA</strong> = 2048<br>
+<strong>CS_NODE_HAS_WHEN</strong> = 512<br>
+<strong>CS_NODE_IS_ACTION</strong> = 8<br>
+<strong>CS_NODE_IS_CASE</strong> = 128<br>
+<strong>CS_NODE_IS_CDB</strong> = 4<br>
+<strong>CS_NODE_IS_CONTAINER</strong> = 256<br>
+<strong>CS_NODE_IS_DYN</strong> = 1<br>
+<strong>CS_NODE_IS_LEAFREF</strong> = 16384<br>
+<strong>CS_NODE_IS_LEAF_LIST</strong> = 8192<br>
+<strong>CS_NODE_IS_LIST</strong> = 1<br>
+<strong>CS_NODE_IS_NOTIF</strong> = 64<br>
+<strong>CS_NODE_IS_PARAM</strong> = 16<br>
+<strong>CS_NODE_IS_RESULT</strong> = 32<br>
+<strong>CS_NODE_IS_WRITE</strong> = 2<br>
+<strong>CS_NODE_IS_WRITE_ALL</strong> = 4096<br>
+<strong>C_BINARY</strong> = 39<br>
+<strong>C_BIT32</strong> = 29<br>
+<strong>C_BIT64</strong> = 30<br>
+<strong>C_BITBIG</strong> = 50<br>
+<strong>C_BOOL</strong> = 17<br>
+<strong>C_BUF</strong> = 5<br>
+<strong>C_CDBBEGIN</strong> = 37<br>
+<strong>C_DATE</strong> = 20<br>
+<strong>C_DATETIME</strong> = 19<br>
+<strong>C_DECIMAL64</strong> = 43<br>
+<strong>C_DEFAULT</strong> = 42<br>
+<strong>C_DOUBLE</strong> = 14<br>
+<strong>C_DQUAD</strong> = 46<br>
+<strong>C_DURATION</strong> = 27<br>
+<strong>C_ENUM_HASH</strong> = 28<br>
+<strong>C_ENUM_VALUE</strong> = 28<br>
+<strong>C_HEXSTR</strong> = 47<br>
+<strong>C_IDENTITYREF</strong> = 44<br>
+<strong>C_INT16</strong> = 7<br>
+<strong>C_INT32</strong> = 8<br>
+<strong>C_INT64</strong> = 9<br>
+<strong>C_INT8</strong> = 6<br>
+<strong>C_IPV4</strong> = 15<br>
+<strong>C_IPV4PREFIX</strong> = 40<br>
+<strong>C_IPV4_AND_PLEN</strong> = 48<br>
+<strong>C_IPV6</strong> = 16<br>
+<strong>C_IPV6PREFIX</strong> = 41<br>
+<strong>C_IPV6_AND_PLEN</strong> = 49<br>
+<strong>C_LIST</strong> = 31<br>
+<strong>C_NOEXISTS</strong> = 1<br>
+<strong>C_OBJECTREF</strong> = 34<br>
+<strong>C_OID</strong> = 38<br>
+<strong>C_PTR</strong> = 36<br>
+<strong>C_QNAME</strong> = 18<br>
+<strong>C_STR</strong> = 4<br>
+<strong>C_SYMBOL</strong> = 3<br>
+<strong>C_TIME</strong> = 23<br>
+<strong>C_UINT16</strong> = 11<br>
+<strong>C_UINT32</strong> = 12<br>
+<strong>C_UINT64</strong> = 13<br>
+<strong>C_UINT8</strong> = 10<br>
+<strong>C_UNION</strong> = 35<br>
+<strong>C_XMLBEGIN</strong> = 32<br>
+<strong>C_XMLBEGINDEL</strong> = 45<br>
+<strong>C_XMLEND</strong> = 33<br>
+<strong>C_XMLTAG</strong> = 2<br>
+<strong>DEBUG</strong> = 1<br>
+<strong>DELAYED_RESPONSE</strong> = 2<br>
+<strong>EOF</strong> = -2<br>
+<strong>ERR</strong> = -1<br>
+<strong>ERRCODE_ACCESS_DENIED</strong> = 3<br>
+<strong>ERRCODE_APPLICATION</strong> = 4<br>
+<strong>ERRCODE_APPLICATION_INTERNAL</strong> = 5<br>
+<strong>ERRCODE_DATA_MISSING</strong> = 8<br>
+<strong>ERRCODE_INCONSISTENT_VALUE</strong> = 2<br>
+<strong>ERRCODE_INTERNAL</strong> = 7<br>
+<strong>ERRCODE_INTERRUPT</strong> = 9<br>
+<strong>ERRCODE_IN_USE</strong> = 0<br>
+<strong>ERRCODE_PROTO_USAGE</strong> = 6<br>
+<strong>ERRCODE_RESOURCE_DENIED</strong> = 1<br>
+<strong>ERRINFO_KEYPATH</strong> = 0<br>
+<strong>ERRINFO_STRING</strong> = 1<br>
+<strong>ERR_ABORTED</strong> = 49<br>
+<strong>ERR_ACCESS_DENIED</strong> = 3<br>
+<strong>ERR_ALREADY_EXISTS</strong> = 2<br>
+<strong>ERR_APPLICATION_INTERNAL</strong> = 39<br>
+<strong>ERR_BADPATH</strong> = 8<br>
+<strong>ERR_BADSTATE</strong> = 17<br>
+<strong>ERR_BADTYPE</strong> = 5<br>
+<strong>ERR_BAD_CONFIG</strong> = 36<br>
+<strong>ERR_BAD_KEYREF</strong> = 14<br>
+<strong>ERR_CLI_CMD</strong> = 59<br>
+<strong>ERR_DATA_MISSING</strong> = 58<br>
+<strong>ERR_EOF</strong> = 45<br>
+<strong>ERR_EXTERNAL</strong> = 19<br>
+<strong>ERR_HA_BADFXS</strong> = 27<br>
+<strong>ERR_HA_BADNAME</strong> = 29<br>
+<strong>ERR_HA_BADTOKEN</strong> = 28<br>
+<strong>ERR_HA_BADVSN</strong> = 52<br>
+<strong>ERR_HA_BIND</strong> = 30<br>
+<strong>ERR_HA_CLOSED</strong> = 26<br>
+<strong>ERR_HA_CONNECT</strong> = 25<br>
+<strong>ERR_HA_NOTICK</strong> = 31<br>
+<strong>ERR_HA_WITH_UPGRADE</strong> = 47<br>
+<strong>ERR_INCONSISTENT_VALUE</strong> = 38<br>
+<strong>ERR_INTERNAL</strong> = 18<br>
+<strong>ERR_INUSE</strong> = 11<br>
+<strong>ERR_INVALID_INSTANCE</strong> = 43<br>
+<strong>ERR_LIB_NOT_INITIALIZED</strong> = 34<br>
+<strong>ERR_LOCKED</strong> = 10<br>
+<strong>ERR_MALLOC</strong> = 20<br>
+<strong>ERR_MISSING_INSTANCE</strong> = 42<br>
+<strong>ERR_MUST_FAILED</strong> = 41<br>
+<strong>ERR_NOEXISTS</strong> = 1<br>
+<strong>ERR_NON_UNIQUE</strong> = 13<br>
+<strong>ERR_NOSESSION</strong> = 22<br>
+<strong>ERR_NOSTACK</strong> = 9<br>
+<strong>ERR_NOTCREATABLE</strong> = 6<br>
+<strong>ERR_NOTDELETABLE</strong> = 7<br>
+<strong>ERR_NOTMOVABLE</strong> = 46<br>
+<strong>ERR_NOTRANS</strong> = 61<br>
+<strong>ERR_NOTSET</strong> = 12<br>
+<strong>ERR_NOT_IMPLEMENTED</strong> = 51<br>
+<strong>ERR_NOT_WRITABLE</strong> = 4<br>
+<strong>ERR_OS</strong> = 24<br>
+<strong>ERR_POLICY_COMPILATION_FAILED</strong> = 54<br>
+<strong>ERR_POLICY_EVALUATION_FAILED</strong> = 55<br>
+<strong>ERR_POLICY_FAILED</strong> = 53<br>
+<strong>ERR_PROTOUSAGE</strong> = 21<br>
+<strong>ERR_RESOURCE_DENIED</strong> = 37<br>
+<strong>ERR_START_FAILED</strong> = 57<br>
+<strong>ERR_SUBAGENT_DOWN</strong> = 33<br>
+<strong>ERR_TIMEOUT</strong> = 48<br>
+<strong>ERR_TOOMANYTRANS</strong> = 23<br>
+<strong>ERR_TOO_FEW_ELEMS</strong> = 15<br>
+<strong>ERR_TOO_MANY_ELEMS</strong> = 16<br>
+<strong>ERR_TOO_MANY_SESSIONS</strong> = 35<br>
+<strong>ERR_UNAVAILABLE</strong> = 44<br>
+<strong>ERR_UNSET_CHOICE</strong> = 40<br>
+<strong>ERR_UPGRADE_IN_PROGRESS</strong> = 60<br>
+<strong>ERR_VALIDATION_WARNING</strong> = 32<br>
+<strong>ERR_XPATH</strong> = 50<br>
+<strong>FALSE</strong> = 0<br>
+<strong>FIND_NEXT</strong> = 0<br>
+<strong>FIND_SAME_OR_NEXT</strong> = 1<br>
+<strong>HKP_MATCH_FULL</strong> = 3<br>
+<strong>HKP_MATCH_HKP</strong> = 2<br>
+<strong>HKP_MATCH_NONE</strong> = 0<br>
+<strong>HKP_MATCH_TAGS</strong> = 1<br>
+<strong>IN_USE</strong> = -5<br>
+<strong>ITER_CONTINUE</strong> = 3<br>
+<strong>ITER_RECURSE</strong> = 2<br>
+<strong>ITER_STOP</strong> = 1<br>
+<strong>ITER_SUSPEND</strong> = 4<br>
+<strong>ITER_UP</strong> = 5<br>
+<strong>ITER_WANT_ANCESTOR_DELETE</strong> = 2<br>
+<strong>ITER_WANT_ATTR</strong> = 4<br>
+<strong>ITER_WANT_CLI_STR</strong> = 8<br>
+<strong>ITER_WANT_LEAF_FIRST_ORDER</strong> = 32<br>
+<strong>ITER_WANT_LEAF_LAST_ORDER</strong> = 64<br>
+<strong>ITER_WANT_LEAF_LIST_AS_LEAF</strong> = 512<br>
+<strong>ITER_WANT_PREV</strong> = 1<br>
+<strong>ITER_WANT_P_CONTAINER</strong> = 256<br>
+<strong>ITER_WANT_REVERSE</strong> = 128<br>
+<strong>ITER_WANT_SCHEMA_ORDER</strong> = 16<br>
+<strong>LIB_API_VSN</strong> = 101056512<br>
+<strong>LIB_API_VSN_STR</strong> = '06060000'<br>
+<strong>LIB_PROTO_VSN</strong> = 66<br>
+<strong>LIB_PROTO_VSN_STR</strong> = '66'<br>
+<strong>LIB_VSN</strong> = 101056512<br>
+<strong>LIB_VSN_STR</strong> = '06060000'<br>
+<strong>LISTENER_CLI</strong> = 8<br>
+<strong>LISTENER_IPC</strong> = 1<br>
+<strong>LISTENER_NETCONF</strong> = 2<br>
+<strong>LISTENER_SNMP</strong> = 4<br>
+<strong>LISTENER_WEBUI</strong> = 16<br>
+<strong>LOAD_SCHEMA_HASH</strong> = 65536<br>
+<strong>LOAD_SCHEMA_NODES</strong> = 1<br>
+<strong>LOAD_SCHEMA_TYPES</strong> = 2<br>
+<strong>MMAP_SCHEMAS_FIXED_ADDR</strong> = 2<br>
+<strong>MMAP_SCHEMAS_KEEP_SIZE</strong> = 1<br>
+<strong>MOP_ATTR_SET</strong> = 6<br>
+<strong>MOP_CREATED</strong> = 1<br>
+<strong>MOP_DELETED</strong> = 2<br>
+<strong>MOP_MODIFIED</strong> = 3<br>
+<strong>MOP_MOVED_AFTER</strong> = 5<br>
+<strong>MOP_VALUE_SET</strong> = 4<br>
+<strong>NCS_ERR_CONNECTION_CLOSED</strong> = 64<br>
+<strong>NCS_ERR_CONNECTION_REFUSED</strong> = 56<br>
+<strong>NCS_ERR_CONNECTION_TIMEOUT</strong> = 63<br>
+<strong>NCS_ERR_DEVICE</strong> = 65<br>
+<strong>NCS_ERR_SERVICE_CONFLICT</strong> = 62<br>
+<strong>NCS_ERR_TEMPLATE</strong> = 66<br>
+<strong>NCS_PORT</strong> = 4569<br>
+<strong>NO_DB</strong> = 0<br>
+<strong>OK</strong> = 0<br>
+<strong>OPERATIONAL</strong> = 4<br>
+<strong>PORT</strong> = 4565<br>
+<strong>PRE_COMMIT_RUNNING</strong> = 6<br>
+<strong>PROTO_CONSOLE</strong> = 4<br>
+<strong>PROTO_HTTP</strong> = 6<br>
+<strong>PROTO_HTTPS</strong> = 7<br>
+<strong>PROTO_SSH</strong> = 2<br>
+<strong>PROTO_SSL</strong> = 5<br>
+<strong>PROTO_SYSTEM</strong> = 3<br>
+<strong>PROTO_TCP</strong> = 1<br>
+<strong>PROTO_TRACE</strong> = 3<br>
+<strong>PROTO_UDP</strong> = 8<br>
+<strong>PROTO_UNKNOWN</strong> = 0<br>
+<strong>QUERY_HKEYPATH</strong> = 1<br>
+<strong>QUERY_HKEYPATH_VALUE</strong> = 2<br>
+<strong>QUERY_STRING</strong> = 0<br>
+<strong>QUERY_TAG_VALUE</strong> = 3<br>
+<strong>READ</strong> = 1<br>
+<strong>READ_WRITE</strong> = 2<br>
+<strong>RUNNING</strong> = 2<br>
+<strong>SERIAL_HKEYPATH</strong> = 2<br>
+<strong>SERIAL_NONE</strong> = 0<br>
+<strong>SERIAL_TAG_VALUE</strong> = 3<br>
+<strong>SERIAL_VALUE_T</strong> = 1<br>
+<strong>SILENT</strong> = 0<br>
+<strong>SNMP_COL_ROW</strong> = 3<br>
+<strong>SNMP_Counter32</strong> = 6<br>
+<strong>SNMP_Counter64</strong> = 9<br>
+<strong>SNMP_INTEGER</strong> = 1<br>
+<strong>SNMP_Interger32</strong> = 2<br>
+<strong>SNMP_IpAddress</strong> = 5<br>
+<strong>SNMP_NULL</strong> = 0<br>
+<strong>SNMP_OBJECT_IDENTIFIER</strong> = 4<br>
+<strong>SNMP_OCTET_STRING</strong> = 3<br>
+<strong>SNMP_OID</strong> = 2<br>
+<strong>SNMP_Opaque</strong> = 8<br>
+<strong>SNMP_TimeTicks</strong> = 7<br>
+<strong>SNMP_Unsigned32</strong> = 10<br>
+<strong>SNMP_VARIABLE</strong> = 1<br>
+<strong>STARTUP</strong> = 3<br>
+<strong>TIMEZONE_UNDEF</strong> = -111<br>
+<strong>TRACE</strong> = 2<br>
+<strong>TRANSACTION</strong> = 5<br>
+<strong>TRUE</strong> = 1<br>
+<strong>USESS_FLAG_FORWARD</strong> = 1<br>
+<strong>USESS_FLAG_HAS_IDENTIFICATION</strong> = 2<br>
+<strong>USESS_FLAG_HAS_OPAQUE</strong> = 4<br>
+<strong>USESS_LOCK_MODE_EXCLUSIVE</strong> = 2<br>
+<strong>USESS_LOCK_MODE_NONE</strong> = 0<br>
+<strong>USESS_LOCK_MODE_PRIVATE</strong> = 1<br>
+<strong>USESS_LOCK_MODE_SHARED</strong> = 3<br>
+<strong>VALIDATION_FLAG_COMMIT</strong> = 2<br>
+<strong>VALIDATION_FLAG_TEST</strong> = 1<br>
+<strong>VALIDATION_WARN</strong> = -3</td></tr></table>
+</body></html>

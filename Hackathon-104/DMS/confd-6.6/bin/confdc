@@ -1,0 +1,29 @@
+#!/bin/sh
+
+bindir=`dirname $0`
+case $bindir in
+    /*) confddir=`dirname $bindir`;;
+    *)  confddir=`(cd $bindir/..; pwd)`;;
+esac
+libdir=$confddir/lib
+
+
+ROOTDIR=${libdir}/confd
+BINDIR=${ROOTDIR}/erts/bin
+PROGNAME=confd
+EMU=confd
+export ROOTDIR BINDIR PROGNAME EMU
+
+if [ -f ${BINDIR}/confd ]; then
+    smp="-smp disable"
+else
+    smp="-smp enable"
+fi
+
+# async I/O is just unnecessary overhead as long
+# as a single Erlang process does all the work
+async="+A0 "
+confdc_cmd="${BINDIR}/confdexec ${smp} +B ${async} -boot confdc -noinput"
+
+
+exec ${confdc_cmd} -s confdc run -extra -confddir ${confddir} "$@"

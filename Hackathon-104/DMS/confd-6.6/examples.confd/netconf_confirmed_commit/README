@@ -1,0 +1,335 @@
+ConfD Example - NETCONF confirmed commit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates NETCONF confirmed commit.
+
+Part of the example is ConfD application with CDB subscription point
+that prints modifications in CLI form. In this way one can observe how and when
+the configuration is applied and rolled back.
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+1. Build the necessary files and start ConfD and application by typing
+
+        $ make clean all start
+
+2. Start ConfD cli session for monitoring (in other terminal shell)
+
+        $ make cli
+
+3. Open other terminal shell for NETCONF (netconf-console)
+
+
+Confirmed commit with persist
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First see content of the files:
+
+cmd-confirmed-id-commit-start.xml
+cmd-confirmed-id-commit-confirm.xml
+cmd-confirmed-id-commit-cancel.xml
+
+1. Confirm with NETCONF
+
+Restart everything
+
+  $ make clean all start
+
+In NETCONF shell run command to start confirmed commit
+
+----
+netconf-console cmd-confirmed-id-commit-start.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+----
+
+In CLI shell verify the configuration is in the running-config
+
+----
+Commit performed by admin via ssh using netconf.
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In ConfD/Application shell see printed CLI modification commands
+
+----
+INFO app.c:35: Printing modifications
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In NETCONF shell run command to confirm confirmed commit and make it persistent
+
+----
+$ netconf-console cmd-confirmed-id-commit-confirm.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+----
+
+In CLI shell verify the configuration is still in the running-config
+
+----
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+Wait default timeout 10 minutes (600s) according to RFC6241 8.4. and verify
+in CLI the configuration is still in the running-config.
+
+2. Cancel with NETCONF
+
+Restart everything
+
+  $ make clean all start
+
+In NETCONF shell run command to start confirmed commit
+
+----
+netconf-console cmd-confirmed-id-commit-start.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+----
+
+In CLI shell verify the configuration is in the running-config
+
+----
+Commit performed by admin via ssh using netconf.
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In ConfD/Application shell see printed CLI modification commands
+
+----
+INFO app.c:35: Printing modifications
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In NETCONF shell run command to cancel confirmed commit
+
+----
+netconf-console cmd-confirmed-id-commit-cancel.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+----
+
+In CLI shell verify the configuration is not in the running-config anymore
+(it has been rolled back)
+
+----
+confirmed commit operation not confirmed by admin from netconf
+# show running-config hosts
+% No entries found.
+----
+
+In ConfD/Application shell see printed CLI modification commands representing
+the rollback
+
+----
+INFO app.c:35: Printing modifications
+no hosts host thost
+----
+
+
+3. Cancel with default timeout according to RFC6241
+
+In NETCONF shell run command to start confirmed commit
+
+----
+netconf-console cmd-confirmed-id-commit-start.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <ok/>
+</rpc-reply>
+----
+
+In CLI shell verify the configuration is in the running-config
+
+----
+Commit performed by admin via ssh using netconf.
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In ConfD/Application shell see printed CLI modification commands
+
+----
+INFO app.c:35: Printing modifications
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+Wait more than default timeout period (600s = 10 minutes) from RFC6241 8.4.
+
+When commit is not confirmed within this timeout, the configuration is reverted.
+
+After timeout, in CLI shell verify the configuration is not in the
+running-config anymore (it has been rolled back).
+
+----
+confirmed commit operation not confirmed by admin from netconf
+configuration rolled back
+# show running-config hosts
+% No entries found.
+----
+
+In ConfD/Application shell see printed CLI modification commands representing
+the rollback
+
+----
+INFO app.c:35: Printing modifications
+no hosts host thost
+----
+
+
+Confirmed commit with timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+According to RFC6241 8.4, confirmed commit operation without <persist> element
+must be confirmed in the same session. For this reason we cannot use file
+approach as with persist, since when 'netconf-console' processes the file, it
+also closes the session (even if <close-session> is missing).
+
+We will use 'netconf-console' interactive mode to demonstrate timeout confirm
+commit.
+
+Restart everything and start CLI session (preferably in other shell terminal)
+
+  $ make clean all start
+
+  $ make cli
+
+Start (in other shell terminal) 'netconf-console' in interactive mode
+
+   $ netconf-console -i
+
+Paste into 'netconf-console' <edit-config> command followed by the new line
+
+<edit-config>
+<target>
+    <candidate/>
+</target>
+<config>
+    <hosts xmlns="http://tail-f.com/ns/example/host"
+           xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <host nc:operation="merge">
+            <name>thost</name>
+            <ip>192.168.1.33</ip>
+        </host>
+    </hosts>
+</config>
+</edit-config>
+
+Paste into 'netconf-console' confirmed timeout <commit> command followed
+by the new line
+
+<commit>
+    <confirmed/>
+    <confirm-timeout>60</confirm-timeout>
+</commit>
+
+Before 60s timeout expires in the CLI shell verify the configuration is in
+the running-config
+
+----
+Commit performed by admin via ssh using netconf.
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In ConfD/Application shell see printed CLI modification commands
+
+----
+INFO app.c:35: Printing modifications
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+After timeout, in CLI shell verify the configuration is not in the
+running-config anymore (it has been rolled back).
+
+----
+confirmed commit operation not confirmed by admin from netconf
+configuration rolled back
+# show running-config hosts
+% No entries found.
+----
+
+In ConfD/Application shell see printed CLI modification commands representing
+the rollback
+
+----
+INFO app.c:35: Printing modifications
+no hosts host thost
+----
+
+Paste again into 'netconf-console' <edit-config> command (above)
+followed by the new line.
+
+Paste again into 'netconf-console' confirmed timeout <commit> command (above)
+followed by the new line
+
+Before 60s timeout expires in the CLI shell verify the configuration is in
+the running-config
+
+----
+Commit performed by admin via ssh using netconf.
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+In ConfD/Application shell see printed CLI modification commands
+
+----
+INFO app.c:35: Printing modifications
+hosts host thost
+ ip 192.168.1.33
+!
+----
+
+Paste into 'netconf-console' confirming  <commit> command followed by
+the new line
+
+<commit/>
+
+After 60s timeout expires in the CLI shell verify the configuration is still in
+the running-config
+
+----
+# show running-config hosts
+hosts host thost
+ ip 192.168.1.33
+!
+----

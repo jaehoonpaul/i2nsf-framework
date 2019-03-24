@@ -1,0 +1,62 @@
+module user-folders {
+
+  namespace "https://tail-f.com/ns/example/user-folders";
+  prefix "folders";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  list folder-user {
+    key "username";
+
+    leaf username {
+      type string;
+    }
+
+    choice authentication {
+      mandatory true;
+
+      case none {
+        leaf auth-none {
+          type empty;
+        }
+      }
+
+      case password {
+        leaf auth-password {
+          type tailf:aes-cfb-128-encrypted-string;
+        }
+      }
+
+      case key {
+        leaf auth-key {
+          type yang:hex-string {
+            tailf:value-length "4 .. 4096";
+          }
+        }
+      }
+    }
+
+    list managed-folder {
+      key folder-id;
+
+      leaf folder-id {
+        type string;
+      }
+
+      leaf-list content-type {
+        type enumeration {
+          enum media;
+          enum document;
+          enum archive;
+        }
+      }
+    }
+  }
+
+}

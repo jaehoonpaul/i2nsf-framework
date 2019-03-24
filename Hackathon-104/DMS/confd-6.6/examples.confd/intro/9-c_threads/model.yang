@@ -1,0 +1,51 @@
+module model {
+  namespace "http://tail-f.com/ns/example/model";
+  prefix model;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container dm {
+    list proc {
+      config false;
+      tailf:callpoint proc;
+      key pid;
+      leaf pid {
+        type uint32;
+      }
+      leaf cpu {
+        type uint32;
+        mandatory true;
+      }
+    }
+    tailf:action sleep {
+      tailf:actionpoint sleep;
+      input {
+        leaf time {
+          type uint32;
+          mandatory true;
+        }
+      }
+      output {
+        leaf slept {
+          type uint32;
+          mandatory true;
+        }
+      }
+    }
+    tailf:action totals {
+      tailf:actionpoint totals;
+      output {
+        leaf num_procs {
+          type uint32;
+          mandatory true;
+        }
+        leaf total_cpu {
+          type uint32;
+          mandatory true;
+        }
+      }
+    }
+  }
+}

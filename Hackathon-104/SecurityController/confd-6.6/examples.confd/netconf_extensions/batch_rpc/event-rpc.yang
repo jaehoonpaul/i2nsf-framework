@@ -1,0 +1,17 @@
+module event-rpc {
+  namespace "http://example.com/event";
+  prefix ev;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  rpc subscribe {
+    tailf:exec "./event" {
+      tailf:wd ".";
+      tailf:raw-xml {
+        tailf:batch;
+      }
+    }
+  }
+}

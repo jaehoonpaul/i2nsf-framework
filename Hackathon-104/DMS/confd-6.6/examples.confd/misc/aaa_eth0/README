@@ -1,0 +1,59 @@
+This example shows a small interfaces data model and it also
+shows an aaa_init.xml file which uses data
+rules to disable the removal of the system created 
+eth0 interface. 
+
+We want to be able to write anything under
+/system/interfaces/interface/ but we want to disallow the
+removal of entire interfaces.
+
+We also want the operator to be able to create new virtual interfaces
+such as eth0:3
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+To run, type
+
+# make clean all start
+# make cli
+
+Now try to remove e.g the eth0 interface in it entirety
+by entering 
+
+[edit]
+(J) admin@buzz% delete system interfaces interface eth0
+
+(C) buzz# no system interfaces interface eth0
+
+The rules are written in such a way so that the interface itself
+cannot be removed. What will happen is that the CLI will remove
+everything below eth0 to which we have write access. Thus
+
+
+(J) admin@buzz% compare running system interfaces interface eth0
+ ip 192.12.3.4;
+ enabled true;
+-mtu 1000;
+ metric 1;
+-myflag;
+[ok][2008-09-29 15:04:43]
+
+(C) buzz(config)# show configuration diff system interfaces interface eth0
+ system interfaces interface eth0
+- mtu     1000
+- myflag
+ !
+
+
+The mtu is reset to it's default value, and the container 'myflag'
+is removed.  Thus the interface is indeed not removed, but cleared.
+Whereas if we do 
+
+[edit]
+admin@buzz% delete system interfaces interface eth0:0
+
+The entire interface is removed.
+
+
+

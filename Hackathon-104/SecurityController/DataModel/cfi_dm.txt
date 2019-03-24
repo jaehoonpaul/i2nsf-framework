@@ -1,0 +1,129 @@
+module: ietf-i2nsf-cfi-policy
+  +--rw ietf-i2nsf-cfi-policy:policy
+     +--rw policy-name?         string
+     +--rw rule* [rule-name]
+     |  +--rw rule-name    string
+     |  +--rw date?        yang:date-and-time
+     |  +--rw event* [name]
+     |  |  +--rw name                string
+     |  |  +--rw date?               yang:date-and-time
+     |  |  +--rw security-event?     identityref
+     |  |  +--rw enforce-type?       enumeration
+     |  |  +--rw time-information
+     |  |  |  +--rw begin-time?   string
+     |  |  |  +--rw end-time?     string
+     |  |  +--rw recursive
+     |  |     +--rw recur?            boolean
+     |  |     +--rw recursive-type?   enumeration
+     |  +--rw condition
+     |  |  +--rw firewall-condition
+     |  |  |  +--rw source-target
+     |  |  |  |  +--rw src-target?   -> /endpoint-group/user-group/name
+     |  |  |  +--rw destination-target
+     |  |  |     +--rw dest-target*   -> /endpoint-group/user-group/name
+     |  |  +--rw ddos-condition
+     |  |  |  +--rw src-target
+     |  |  |  |  +--rw source-target*   -> /endpoint-group/device-group/name
+     |  |  |  +--rw destination-target
+     |  |  |  |  +--rw dest-target*   -> /endpoint-group/device-group/name
+     |  |  |  +--rw rate-limit
+     |  |  |     +--rw packet-per-second?   uint8
+     |  |  +--rw custom-condition
+     |  |  |  +--rw source-target
+     |  |  |  |  +--rw src-target*   -> /threat-prevention/payload-content/name
+     |  |  |  +--rw destination-target
+     |  |  |     +--rw dest-target?   -> /threat-prevention/payload-content/name
+     |  |  +--rw threat-feed-condition
+     |  |     +--rw source-target
+     |  |     |  +--rw src-target*   -> /threat-prevention/threat-feed-list/name
+     |  |     +--rw destination-target
+     |  |        +--rw dest-target?   -> /threat-prevention/threat-feed-list/name
+     |  +--rw action
+     |  |  +--rw primary-action      string
+     |  |  +--rw secondary-action?   string
+     |  +--rw owner?       string
+     +--rw multi-tenancy
+     |  +--rw policy-domain* [name]
+     |  |  +--rw name                     string
+     |  |  +--rw date?                    yang:date-and-time
+     |  |  +--rw address?                 string
+     |  |  +--rw contact?                 string
+     |  |  +--rw policy-tenant* [name]
+     |  |  |  +--rw name      string
+     |  |  |  +--rw date?     yang:date-and-time
+     |  |  |  +--rw domain?   -> /multi-tenancy/policy-domain/name
+     |  |  +--rw authentication-method?   -> /multi-tenancy/policy-mgnt-auth-method/name
+     |  +--rw policy-role
+     |  |  +--rw name?             string
+     |  |  +--rw date?             yang:date-and-time
+     |  |  +--rw access-profile* [name]
+     |  |     +--rw name               string
+     |  |     +--rw date?              yang:date-and-time
+     |  |     +--rw permission-type?   identityref
+     |  +--rw policy-user* [name]
+     |  |  +--rw name          string
+     |  |  +--rw date?         yang:date-and-time
+     |  |  +--rw password?     string
+     |  |  +--rw email?        string
+     |  |  +--rw scope-type?   identityref
+     |  |  +--rw role?         -> /multi-tenancy/policy-role/access-profile/name
+     |  +--rw policy-mgnt-auth-method* [name]
+     |     +--rw name                     string
+     |     +--rw date?                    yang:date-and-time
+     |     +--rw mutual-authentication?   boolean
+     |     +--rw password
+     |     |  +--rw password?   string
+     |     +--rw token
+     |     |  +--rw token?          string
+     |     |  +--rw token-server?   inet:ipv4-address
+     |     +--rw certificate
+     |     |  +--rw certificate?          certificate-type
+     |     |  +--rw certificate-server?   inet:ipv4-address
+     |     +--rw single-sign-on
+     |        +--rw credential?           certificate-type
+     |        +--rw certificate-server?   inet:ipv4-address
+     +--rw endpoint-group
+     |  +--rw user-group* [name]
+     |  |  +--rw name                      string
+     |  |  +--rw date?                     yang:date-and-time
+     |  |  +--rw (match-type)?
+     |  |     +--:(exact-match)
+     |  |     |  +--rw ip-address*         inet:ipv4-address
+     |  |     +--:(range-match)
+     |  |        +--rw range-ip-address* [start-ip-address end-ip-address]
+     |  |           +--rw start-ip-address    inet:ipv4-address
+     |  |           +--rw end-ip-address      inet:ip-address
+     |  +--rw device-group* [name]
+     |  |  +--rw name                      string
+     |  |  +--rw date?                     yang:date-and-time
+     |  |  +--rw (match-type)?
+     |  |  |  +--:(exact-match)
+     |  |  |  |  +--rw ip-address*         inet:ipv4-address
+     |  |  |  +--:(range-match)
+     |  |  |     +--rw range-ip-address* [start-ip-address end-ip-address]
+     |  |  |        +--rw start-ip-address    inet:ipv4-address
+     |  |  |        +--rw end-ip-address      inet:ip-address
+     |  |  +--rw protocol*                 string
+     |  +--rw location-group* [name]
+     |     +--rw name         string
+     |     +--rw date?        yang:date-and-time
+     |     +--rw continent?   identityref
+     +--rw threat-prevention
+        +--rw threat-feed-list* [name]
+        |  +--rw name                  string
+        |  +--rw date?                 yang:date-and-time
+        |  +--rw threat-feed-server
+        |  |  +--rw (match-type)?
+        |  |  |  +--:(exact-match)
+        |  |  |  |  +--rw ip-address*          inet:ipv4-address
+        |  |  |  +--:(range-match)
+        |  |  |     +--rw range-ip-address* [start-ip-address end-ip-address]
+        |  |  |        +--rw start-ip-address    inet:ipv4-address
+        |  |  |        +--rw end-ip-address      inet:ip-address
+        |  |  +--rw threat-feed-description?   string
+        |  +--rw threat-file-types*    identityref
+        |  +--rw signatures*           string
+        +--rw payload-content* [name]
+           +--rw name       string
+           +--rw date?      yang:date-and-time
+           +--rw content*   stringmodule: ietf-i2nsf-cfi-policy

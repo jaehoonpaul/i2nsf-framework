@@ -1,0 +1,89 @@
+module cli-builtin {
+  namespace "http://tail-f.com/ns/cli-builtin/1.0";
+  prefix cli-builtin;
+  tailf:id "";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  typedef history {
+    type uint64 {
+      range "0 .. 8192";
+    }
+  }
+  typedef idle-timeout {
+    type uint64 {
+      range "0 .. 8192";
+    }
+  }
+  typedef screen-length {
+    type uint64 {
+      range "0 .. 32000";
+    }
+  }
+  typedef screen-width {
+    type uint64 {
+      range "0 .. 512";
+    }
+  }
+  typedef match-before {
+    type uint64 {
+      range "1 .. 1024";
+      tailf:info "<1..1024>;;Number of prefixing lines to include";
+    }
+  }
+  typedef match-after {
+    type uint64 {
+      range "1 .. 1024";
+      tailf:info "<1..1024>;;Number of suffixing lines to include";
+    }
+  }
+  typedef match-context {
+    type uint64 {
+      range "1 .. 1024";
+      tailf:info "<1..1024>;;Number of context lines to include";
+    }
+  }
+  typedef display-level {
+    type uint64 {
+      range "1 .. 64";
+    }
+  }
+  typedef show-history {
+    type uint64 {
+      range "0 .. 32000";
+    }
+  }
+  typedef show-commit-list {
+    type uint16 {
+      range "0 .. 32000";
+      tailf:info "<0-32000>;;Max number of commits to be displayed";
+    }
+  }
+  typedef rollback-id {
+      tailf:info <number>;
+    type uint64 {
+      range "0 .. 4294967295";
+    }
+  }
+  typedef repeat-interval {
+    type uint64 {
+      range "1 .. 3600";
+    }
+  }
+  typedef extendedDateTime {
+      tailf:info "<dateTime (ccyy-mm-dd|hh:mm:ss|ccyy-mm-ddThh:mm:ss)>";
+    type union {
+      type yang:date-and-time;
+      type xs:date;
+      type xs:time;
+    }
+  }
+}

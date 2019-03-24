@@ -1,0 +1,75 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "API" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBAPI\fR \- Session (data)
+.
+.SH "METHOD get_session_data"
+Gets session data from the session store
+.
+.SS "PARAMS"
+.
+.nf
+
+{"key": <string>}
+.
+.fi
+.
+.P
+The \fBkey\fR param for which to get the stored data for\. Read more about the session store in the \fBput_session_data\fR method\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"value": <string>}
+.
+.fi
+.
+.SH "METHOD put_session_data"
+Puts session data into the session store\. The session store is small key\-value server\-side database where data can be stored under a unique key\. The data may be an arbitrary object, but not a function object\. The object is serialized into a JSON string and then stored on the server\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"key": <string>,
+ "value": <string>}
+.
+.fi
+.
+.P
+The \fBkey\fR param is the unique key for which the data in the \fBvalue\fR param is to be stored\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD erase_session_data"
+Erases session data previously stored with "put_session_data"\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"key": <string>}
+.
+.fi
+.
+.P
+The \fBkey\fR param for which all session data will be erased\. Read more about the session store in the \fBput_session_data\fR method\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

@@ -1,0 +1,166 @@
+ConfD Example: Delayed Reply Data Provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how a data provider can return CONFD_DELAYED_RESPONSE when it
+may be inconvenient to hang in the callback functions and wait for the reply
+from the data source and later explicitly send the reply once it is available.
+The example also show how the confd.conf /confdConfig/capi/queryTimeout trigger
+if the invoked callback does not generate a reply back to ConfD within the time
+configured.
+
+All the transaction callbacks as well as all the data callbacks can optionally
+return the value CONFD_DELAYED_RESPONSE. This means that the callback returns,
+and we typically end up in our main poll loop again. Once the reply returns it
+is then up to the application to send the reply back to ConfD.
+
+This example implement only the mandatory callbacks for a data provider
+application, init(), get_elem() and get_next(). All three callbacks return
+CONFD_DELAYED_RESPONSE, where the main poll loop will then delay for 1 second
+when init() was called before setting the workersock file descriptor and
+sending a delayed reply OK, and for 3s before sending a reply when get_elem()
+is called.
+
+Also, in the demonstration below, the /confdConfig/capi/queryTimeout is
+initially configured to 4 seconds to not trigger a timeout, followed by a
+second test where the timeout is set to 1 second to trigger the timeout when
+the get_elem() callback is invoked and the reply is not sent before the timeout
+expires. The queryTimeout will result in a data provider error. A data provider
+error results in ConfD closing the socket to the data provider application.
+
+See confd.conf(5) and confd_lib_dp(3) for CONFD_DELAYED_RESPONSE and
+/confdConfig/capi/queryTimeout details.
+
+Delayed Reply Demonstration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  $ make all start
+  ...
+
+Other terminal window:
+~~~~~~~~~~~~~~~~~~~~~~
+
+  $ # make query
+  $CONFD_DIR/netconf-console-tcp --get -x /routes/route[id='17']/value
+  <?xml version="1.0" encoding="UTF-8"?>
+  <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <data>
+      <routes xmlns="http://tail-f.com/ns/example/routes/1.0">
+        <route>
+          <id>17</id>
+          <value>7</value>
+        </route>
+      </routes>
+    </data>
+  </rpc-reply>
+
+DP app terminal window output:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  ...
+  TRACE New user session: 28 for user:admin ctx:netconf --> CONFD_OK
+  TRACE CALL trans init(thandle=7,mode="r",db=running) --> \
+  CONFD_DELAYED_RESPONSE
+  TRACE CALL data get_elem(thandle=7,/routes/route{17}/id) (17)  --> CONFD_OK
+  TRACE CALL data get_elem(thandle=7,/routes/route{17}/value) --> \
+  CONFD_DELAYED_RESPONSE
+   (7) TRACE CALL data get_elem(thandle=7,/routes/route{17}/value) --> \
+  CONFD_DELAYED_RESPONSE
+   (7) TRACE NULL trans finish(thandle=7)
+  TRACE Close user sess 28
+   --> CONFD_OK
+
+Other terminal window:
+~~~~~~~~~~~~~~~~~~~~~~
+
+  $ cat devel.log
+  ...
+  <DEBUG> 16-Nov-2017::02:30:00.812 confd[20638]: devel-c new_usess db request \
+  daemon id: 0
+  <DEBUG> 16-Nov-2017::02:30:00.822 confd[20638]: devel-c db reply daemon id: 0
+  <DEBUG> 16-Nov-2017::02:30:00.822 confd[20638]: devel-c new_trans request \
+  daemon id: 0 thandle: 7
+  <DEBUG> 16-Nov-2017::02:30:01.824 confd[20638]: devel-c new_trans succeeded \
+  daemon id: 0 session id: 7 worker id: 5
+  <DEBUG> 16-Nov-2017::02:30:01.827 confd[20638]: devel-c get_elem request for \
+  callpoint routescp path /r:routes/route{17}/id
+  <DEBUG> 16-Nov-2017::02:30:01.828 confd[20638]: devel-c get_elem succeeded \
+  for callpoint routescp path /r:routes/route{17}/id
+  <DEBUG> 16-Nov-2017::02:30:01.828 confd[20638]: devel-c get_elem request for \
+  callpoint routescp path /r:routes/route{17}/value
+  <DEBUG> 16-Nov-2017::02:30:04.831 confd[20638]: devel-c get_elem succeeded \
+  for callpoint routescp path /r:routes/route{17}/value
+  <DEBUG> 16-Nov-2017::02:30:04.832 confd[20638]: devel-c get_elem request for \
+  callpoint routescp path /r:routes/route{17}/value
+  <DEBUG> 16-Nov-2017::02:30:07.834 confd[20638]: devel-c get_elem succeeded \
+  for callpoint routescp path /r:routes/route{17}/value
+  <DEBUG> 16-Nov-2017::02:30:07.840 confd[20638]: devel-c close_trans request \
+  daemon id: 0 session id: 7
+  <DEBUG> 16-Nov-2017::02:30:07.841 confd[20638]: devel-c close_trans \
+  succeeded daemon id: 0 session id: 7
+  <DEBUG> 16-Nov-2017::02:30:07.841 confd[20638]: devel-c close_usess db \
+  request daemon id: 0
+  <DEBUG> 16-Nov-2017::02:30:07.842 confd[20638]: devel-c db reply daemon id: 0
+
+Timeout Demo:
+~~~~~~~~~~~~~
+
+  $ make all start-fail
+  ...
+
+Other terminal window:
+~~~~~~~~~~~~~~~~~~~~~~
+
+  $ make query
+  $CONFD_DIR/bin/netconf-console-tcp --get -x /routes/route[id='17']/value
+  <?xml version="1.0" encoding="UTF-8"?>
+  <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <rpc-error>
+      <error-type>application</error-type>
+      <error-tag>operation-failed</error-tag>
+      <error-severity>error</error-severity>
+      <error-path xmlns:r="http://tail-f.com/ns/example/routes/1.0">
+      /r:routes/r:route[r:id='17']/r:value
+    </error-path>
+      <error-message xml:lang="en">application timeout</error-message>
+      <error-info>
+        <bad-element>value</bad-element>
+      </error-info>
+    </rpc-error>
+  </rpc-reply>
+
+DP app terminal window output:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  ...
+  TRACE New user session: 28 for user:admin ctx:netconf --> CONFD_OK
+  TRACE CALL trans init(thandle=7,mode="r",db=running) --> \
+  CONFD_DELAYED_RESPONSE
+  TRACE CALL data get_elem(thandle=7,/routes/route{17}/id) (17)  --> \
+  CONFD_OK
+  TRACE CALL data get_elem(thandle=7,/routes/route{17}/value) --> \
+  CONFD_DELAYED_RESPONSE
+   (7) DEBUG EOF on socket to ConfD
+  Control socket closed
+
+Other terminal window:
+~~~~~~~~~~~~~~~~~~~~~~
+
+  $ cat devel.log
+  ...
+  <DEBUG> 16-Nov-2017::02:38:43.109 confd[20824]: devel-c new_usess db request \
+  daemon id: 0
+  <DEBUG> 16-Nov-2017::02:38:43.119 confd[20824]: devel-c db reply daemon id: 0
+  <DEBUG> 16-Nov-2017::02:38:43.131 confd[20824]: devel-c new_trans request \
+  daemon id: 0 thandle: 7
+  <DEBUG> 16-Nov-2017::02:38:44.132 confd[20824]: devel-c new_trans succeeded \
+  daemon id: 0 session id: 7 worker id: 5
+  <DEBUG> 16-Nov-2017::02:38:44.132 confd[20824]: devel-c get_elem request for \
+  callpoint routescp path /r:routes/route{17}/id
+  <DEBUG> 16-Nov-2017::02:38:44.133 confd[20824]: devel-c get_elem succeeded \
+  for callpoint routescp path /r:routes/route{17}/id
+  <DEBUG> 16-Nov-2017::02:38:44.133 confd[20824]: devel-c get_elem request for \
+  callpoint routescp path /r:routes/route{17}/value
+  <ERR> 16-Nov-2017::02:38:45.491 confd[20824]: devel-c Worker socket query \
+  timed out daemon delayed_daemon id 0
+  <ERR> 16-Nov-2017::02:38:45.492 confd[20824]: devel-c get_elem error \
+  {external_timeout, ""} for callpoint routescp path /r:routes/route{17}/value

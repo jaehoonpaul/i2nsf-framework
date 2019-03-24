@@ -1,0 +1,4193 @@
+'\" t
+.\"     Title: confd.conf
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD\&.CONF" "5" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd.conf \- ConfD daemon configuration file format
+.SH "DESCRIPTION"
+.PP
+Whenever we start (or reload) the ConfD daemon it reads its configuration from
+/etc/confd/confd\&.conf
+or from the file specified with the
+\fB\-c\fR
+option, as described in
+\m[blue]\fBconfd(1)\fR\m[]\&.
+.PP
+confd\&.conf
+is an XML configuration file formally defined by a W3C XML Schema, as referred to in the SEE ALSO section\&. This schema file is included in the distribution\&. The ConfD distribution also includes a commented confd\&.conf\&.example file\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBTip\fR
+.ps -1
+.br
+.PP
+In the ConfD distribution there is an Emacs mode suitable for confd\&.conf editing\&.
+.sp .5v
+.RE
+.PP
+A short example: A ConfD configuration file which specifies where to find compiled YANG files etc, which facility to use for syslog, that the developer log should be disabled and that the audit log should be enabled\&. Finally, it also disables clear text NETCONF support:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<?xml version="1\&.0" encoding="UTF\-8"?>
+<confdConfig xmlns="http://tail\-f\&.com/ns/confd_cfg/1\&.0">
+  <loadPath>
+    <dir>/etc/confd</dir>
+  </loadPath>
+
+  <stateDir>/var/confd/state</stateDir>
+
+  <cdb>
+    <enabled>true</enabled>
+    <dbDir>/var/confd/cdb</dbDir>
+  </cdb>
+
+  <aaa>
+    <sshServerKeyDir>/etc/confd/ssh</sshServerKeyDir>
+  </aaa>
+
+  <datastores>
+    <startup>
+      <enabled>false</enabled>
+    </startup>
+    <candidate>
+      <filename>/var/confd/candidate/candidate\&.db</filename>
+    </candidate>
+  </datastores>
+
+  <logs>
+    <syslogConfig>
+      <facility>daemon</facility>
+    </syslogConfig>
+    <developerLog>
+      <enabled>false</enabled>
+    </developerLog>
+    <auditLog>
+      <enabled>true</enabled>
+    </auditLog>
+  </logs>
+
+  <netconf>
+    <transport>
+      <tcp>
+        <enabled>false</enabled>
+      </tcp>
+    </transport>
+  </netconf>
+
+  <webui>
+    <transport>
+      <tcp>
+        <enabled>false</enabled>
+        <ip>0\&.0\&.0\&.0</ip>
+        <port>8008</port>
+      </tcp>
+    </transport>
+  </webui>
+</confdConfig>
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Many configuration parameters get their default values as defined in the schema\&. Filename parameters have no default values\&.
+.SH "CONFIGURATION PARAMETERS"
+.PP
+This section lists all available configuration parameters and their type (within parenthesis) and default values (within square brackets)\&. Parameters are written using a path notation to make it easier to see how they relate to each other:
+.PP
+/confdConfig
+.RS 4
+The top\-level element\&.
+.RE
+.PP
+/confdConfig/confdIpcAddress/ip
+.RS 4
+ConfD listens by default on 127\&.0\&.0\&.1:4565 for incoming TCP connections from CDB, MAAPI, the CLI, the external database API, as well as commands from the confd script (such as "confd \-\-reload")\&.
+.sp
+This value and port (below) can be changed\&. If they are changed all clients using MAAPI, CDB et\&.c\&. must be re\-compiled to handle this\&. See the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]
+on how to do this\&.
+.sp
+Note that there are severe security implications involved if ConfD is instructed to bind(2) to anything but localhost\&. Read more about this in the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]\&. Use the IP 0\&.0\&.0\&.0 if you want ConfD to to listen(2) on all IPv4 addresses\&.
+.RE
+.PP
+/confdConfig/confdIpcAddress/port
+.RS 4
+The port number where ConfD listens for incoming connections from CDB, the CLI and the external database API\&.
+.RE
+.PP
+/confdConfig/confdIpcExtraListenIp (inet:ip\-address)
+.RS 4
+A list of additional IPs to which we wish to bind the ConfD IPC listener\&. This is useful if we don\*(Aqt want to use the wildcard 0\&.0\&.0\&.0 address in order to never expose the ConfD IPC to certain interfaces\&.
+.RE
+.PP
+/confdConfig/confdExternalIpc/enabled (boolean) [false]
+.RS 4
+Enables a user\-provided IPC mechanism\&. ConfD can be set up to use a different protocol than TCP for the IPC connections, see the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]
+for the details\&.
+.RE
+.PP
+/confdConfig/confdExternalIpc/address (string)
+.RS 4
+The address where ConfD should listen for incoming connections from CDB, MAAPI, etc, when the user\-provided IPC mechanism is enabled\&. See the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]
+for further details\&.
+.RE
+.PP
+/confdConfig/confdIpcListenBacklog (int32) [25]
+.RS 4
+The maximum length to which the queue of pending connections for the IPC sockets may grow (see the OS manual page for listen(2))\&. If a very large number of applications connect to ConfD more or less simultaneously at startup, this value may need to be raised to avoid connection failures\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The OS may restrict the length to a lower value, e\&.g\&. on Linux it is silently truncated to the value in
+/proc/sys/net/core/somaxconn
+\- i\&.e\&. this value may also need to be raised\&.
+.sp .5v
+.RE
+.RE
+.PP
+/confdConfig/confdIpcAccessCheck/enabled (boolean) [false]
+.RS 4
+Enables access check for incoming connections to the IPC listener sockets\&. The access check requires that connecting clients prove possession of a shared secret\&. See the section
+\m[blue]\fBRestricting access to the IPC port\fR\m[]
+in the Advanced Topics chapter in the User Guide for the details\&.
+.RE
+.PP
+/confdConfig/confdIpcAccessCheck/filename (string)
+.RS 4
+The full path to a file containing the shared secret for the IPC access check\&. The file should be protected via OS file permissions, such that it can only be read by the ConfD daemon and client processes that are allowed to connect to the IPC listener sockets\&. See the section
+\m[blue]\fBRestricting access to the IPC port\fR\m[]
+in the Advanced Topics chapter in the User Guide for further details\&.
+.RE
+.PP
+/confdConfig/runtimeReconfiguration (config\-file|namespace) [config\-file]
+.RS 4
+Controls whether ConfD should find run\-time modifiable configuration parameters in the configuration file (config\-file setting) or whether ConfD should them from a namespace with the data stored in CDB\&. See further the Advanced Topics chapter in the Users Guide as well as the confdconf/dyncfg example in the example collection\&.
+.RE
+.PP
+/confdConfig/ignoreBindErrors/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. By default (false) Confd will refuse to start if any of its nortbound agents fails to bind their respective ports\&. When enabled, this parameter forces Confd to ignore that fatal error situation and instead it just issues a warning and disables the failing agent\&. The agent may be enabled by dynamically re\-configuring the failing agent to use another port and restart Confd\&.
+.RE
+.PP
+/confdConfig/enableSharedMemorySchema (boolean) [false]
+.RS 4
+is either "true" or "false"\&. If "true", then a C program will be started that loads the schema into shared memory, which then can be accessed by the C and Python APIs\&.
+.RE
+.PP
+/confdConfig/sharedMemorySchemaExecutable (string)
+.RS 4
+the executable that setup the shared memory holding the schema\&. If left unconfigured, the included executable $CONFD_DIR/lib/confd/lib/core/confd/priv/mmap_schema is used\&. Using mmap_schema means ConfD creates and maintains the backing file, meaning that you don\*(Aqt have to write your own application\&. Note that if the value is configured, it must be specified as an absolute path (i\&.e containing the root directory and all other subdirectories leading to the executable)\&.
+.RE
+.PP
+/confdConfig/loadPath/dir
+.RS 4
+The loadPath element contains any number of dir elements\&. Each dir element points to a directory path on disk which is searched for compiled YANG files (\&.fxs files), and compiled clispec files (\&.ccl file) during daemon startup\&.
+.RE
+.PP
+/confdConfig/stateDir
+.RS 4
+This is where ConfD writes persistent state data\&. Currently the only state files are \*(Aqrunning\&.invalid\*(Aq which exists only if the running database status is invalid, which it will be if one of the database implementation fails during the two\-phase commit protocol, and \*(Aqglobal\&.data\*(Aq which is used to store some data that needs to be retained across reboots\&.
+.RE
+.PP
+/confdConfig/commitRetryTimeout(xs:duration|infinity) [PT0S]
+.RS 4
+Commit timeout in the ConfD backplane\&. This timeout controls for how long the commit operation will attempt to complete the operation when some other entity is locking the database, e\&.g\&. some other commit is in progress or some managed object is locking the database\&.
+.RE
+.PP
+/confdConfig/maxValidationErrors(uint32|unbounded) [1]
+.RS 4
+Controls how many validation errors are collected and presented to the user at a time when the user performs a validate or commit operation\&. Note that syntactical errors are detected and reported when the data is entered, and thus not covered by this parameter\&.
+.RE
+.PP
+/confdConfig/hideGroup \- container element
+.RS 4
+Hide groups that can be unhidden must be listed here\&. Multiple hideGroup entries are allowed in the confd\&.conf file\&.
+.sp
+If a hide groups does not have a hideGroup entry, then it cannot be unhidden using the CLI \*(Aqunhide\*(Aq command\&. However, it is possible to add a hideGroup entry to the confd\&.conf file and then use confd \-\-reload to make it available in the CLI\&. This may be useful to enable for example a diagnostics hide groups that you do not event want accessible using a password\&.
+.RE
+.PP
+/confdConfig/hideGroup/name (string)
+.RS 4
+Name of hide group\&. This name should correspond to a hide group name in some data model\&.
+.RE
+.PP
+/confdConfig/hideGroup/password (string) []
+.RS 4
+A password can optionally be specified for a hide group\&. If no password or callback is given then the hide group can be unhidden without giving a password\&.
+.sp
+If a password is specified then the hide group cannot be enabled unless the password is entered\&.
+.sp
+To completely disable a hide group, ie make it impossible to unhide it, remove the entire hideGroup container for that hide group\&.
+.RE
+.PP
+/confdConfig/hideGroup/callback (string) []
+.RS 4
+A callback can optionally be specified for a hide group\&. If no callback or password is given then the hide group can be unhidden without giving a password\&.
+.sp
+If a callback is specified then the hide group cannot be enabled unless a password is entered and the callback successfully verifies the password\&. Using a callback it is possible to have short lived unhide passwords and per\-user unhide passwords\&.
+.sp
+The callback must be registered as a
+\fBcommand()\fR
+callback with
+\fBconfd_register_action_cbs()\fR, see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&. The
+\fIpath\fR
+argument to the callback is always
+"hidegroup", while
+\fIargv[0]\fR
+is the name of the hide group,
+\fIargv[1]\fR
+is the name of the user issuing the unhide command, and
+\fIargv[2]\fR
+is the given password\&. The callback should return CONFD_OK to allow the unhiding, otherwise CONFD_ERR\&.
+.RE
+.PP
+/confdConfig/cdb/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "false", CDB is disabled\&.
+.RE
+.PP
+/confdConfig/cdb/persistent (boolean) [true]
+.RS 4
+If persistent is set to false CDB will operate in RAM\-only mode\&. This is only applicable for permanent slave nodes, i\&.e\&. slaves that are unable to become master, in a HA cluster\&.
+.RE
+.PP
+/confdConfig/cdb/journalCompaction (automatic|manual) [automatic]
+.RS 4
+Controls the way the CDB configuration store does its journal compaction\&. Never set to anything but the default \*(Aqautomatic\*(Aq unless there is an external mechanism which controls the compaction using the cdb_initiate_journal_compaction() API call\&.
+.RE
+.PP
+/confdConfig/cdb/dbDir (string)
+.RS 4
+dbDir is the directory on disk which CDB use for its storage and any temporary files being used\&. It is also the directory where CDB searches for initialization files\&.
+.RE
+.PP
+/confdConfig/cdb/initPath
+.RS 4
+The initPath can contain any number of
+<dir>
+items, which should be directories\&. When CDB first starts it will first look in these directories for initialization files\&. The directories will be searched in the order they are listed, lastly the
+dbDir
+is searched\&.
+.RE
+.PP
+/confdConfig/cdb/clientTimeout (xs:duration|infinity) [infinity]
+.RS 4
+clientTimeout specifies how long CDB should wait while a client performs a certain action, before considering that client unresponsive\&. When set to infinity, CDB will never timeout waiting for a response from a client\&. A client which doesn\*(Aqt respond will have its socket closed\&. The timeout is applied to clients in the following situations:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+When a reader client calls
+\fBcdb_start_session()\fR
+it must end it with
+\fBcdb_end_session()\fR
+within the timeout period\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+When a subscription client receives a subscription notification, it must respond with a call to
+\fBcdb_sync_subscription_socket()\fR
+within the timeout period\&.
+.RE
+.RE
+.PP
+/confdConfig/cdb/subscriptionReplay/enabled (boolean) [false]
+.RS 4
+By setting
+subscriptionReplay/enabled
+to true it is possible to use the
+\fBcdb_replay_subscriptions()\fR
+to
+\(lqreplay\(rq
+the previously committed transaction to CDB subscribers\&. This means that CDB subscribers that miss one subscription notification can have it triggered again\&. CDB will save the previous transaction in a separate file in the dbDir\&.
+.RE
+.PP
+/confdConfig/cdb/replication (async|sync) [sync]
+.RS 4
+When CDB replication is enabled (which it is when high\-availability mode is enabled, see /confdConfig/ha) the CDB configuration stores can be replicated either asynchronously or synchronously\&. With asynchronous replication, a transaction updating the configuration is allowed to complete as soon as the updates have been sent to the connected slaves\&. With the default synchronous replication, the transaction is suspended until the updates have been completely propagated to the slaves, and the subscribers on the slaves (if any) have acknowledged their subscription notifications (see
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[])\&.
+.RE
+.PP
+/confdConfig/cdb/operational \- container element
+.RS 4
+Operational data can either be implemented by external callbacks, or stored in CDB (or a combination of both)\&. The operational datastore is used when data is to be stored in CDB\&.
+.RE
+.PP
+/confdConfig/cdb/operational/enabled (boolean) [false]
+.RS 4
+Whether to enable storage of operational data in CDB\&.
+.RE
+.PP
+/confdConfig/cdb/operational/dbDir (string)
+.RS 4
+By default CDB operational uses the same directory for its storage\&. Use this setting to make CDB operational use a separate directory\&.
+.RE
+.PP
+/confdConfig/cdb/operational/persistent (confspec|always|never) [confspec]
+.RS 4
+By default the decision on how operational data in CDB is stored (persistent or volatile) is decided for each element in the YANG data model, via the
+tailf:persistent
+substatement to
+tailf:cdb\-oper, see
+\m[blue]\fBtailf_yang_extensions(5)\fR\m[]
+It is possible to override this by using this setting in confd\&.conf\&. If "never", CDB will only keep the operational datastore in RAM\&. And if set to "always" all CDB stored operational data will be persistently backed to a file\&.
+.RE
+.PP
+/confdConfig/cdb/operational/replication (always|never|persistent) [persistent]
+.RS 4
+When CDB replication is enabled (which it is when high\-availability mode is enabled, see /confdConfig/ha) the CDB operational store can optionally be replicated too\&. When set to "persistent", only persistent operational data is replicated\&. When set to "never", CDB operational is never replicated\&. Using "always" means that both persistent and non\-persistent data is replicated\&. Note however that non\-persistent data is only replicated to connected slaves at the time of writing\&. I\&.e\&. when a new slave connects to the master, only the persistent data is synchronized from the master, even if "always" is used\&.
+.RE
+.PP
+/confdConfig/cdb/operational/replicationMode (async|sync) [async]
+.RS 4
+When CDB replication is enabled (which it is when high\-availability mode is enabled, see /confdConfig/ha) the replication of the CDB operational store (according to
+/confdConfig/cdb/operational/replication) can be done either asynchronously or synchronously\&. With the default asynchronous replication, an API call writing operational data will return as soon as the updates have been sent to the connected slaves\&. With synchronous replication, the API call will block until the updates have been completely propagated to the slaves\&.
+.RE
+.PP
+/confdConfig/ha/enabled (boolean) [false]
+.RS 4
+Enables the high\-availability mode\&.
+.RE
+.PP
+/confdConfig/ha/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+Defines which IP address ConfD should use for incoming requests from other HA nodes\&.
+.RE
+.PP
+/confdConfig/ha/port (inet:port\-number) [4569]
+.RS 4
+Defines which port number confd should use for incoming requests from other HA nodes\&.
+.RE
+.PP
+/confdConfig/ha/externalIpc/enabled (boolean) [false]
+.RS 4
+Enables a user\-provided IPC mechanism for the communication between HA nodes\&. See the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]
+for further details\&.
+.RE
+.PP
+/confdConfig/ha/externalIpc/address (string)
+.RS 4
+The address ConfD should use for incoming requests from other HA nodes when the user\-provided IPC mechanism is enabled\&. See the
+\m[blue]\fBConfD IPC section in the Advanced Topics chapter in the User Guide\fR\m[]
+for further details\&.
+.RE
+.PP
+/confdConfig/ha/tickTimeout (xs:duration) [PT20S]
+.RS 4
+Defines the timeout between keepalive ticks sent between HA nodes\&. The special value "PT0" means that no keepalive ticks will ever be sent\&.
+.RE
+.PP
+/confdConfig/encryptedStrings \- container element
+.RS 4
+encryptedStrings defines keys used to encrypt strings adhering to the types tailf:des3\-cbc\-encrypted\-string and tailf:aes\-cfb\-128\-encrypted\-string as defined in the tailf\-common YANG module, see the
+\m[blue]\fBconfd_types(3)\fR\m[]
+manual page\&.
+.RE
+.PP
+/confdConfig/encryptedStrings/DES3CBC/key1 (hex8Value), /confdConfig/encryptedStrings/DES3CBC/key2 (hex8Value), /confdConfig/encryptedStrings/DES3CBC/key3 (hex8Value), /confdConfig/encryptedStrings/DES3CBC/initVector (hex8Value)
+.RS 4
+In the DES3CBC case three 64 bits (8 bytes) keys and a random initial vector are used to encrypt the string\&. The initVector element is only used when upgrading from versions before ConfD\-6\&.2, but it is kept for backward compatibility reasons\&.
+.RE
+.PP
+/confdConfig/encryptedStrings/AESCFB128/key (hex16Value), /confdConfig/encryptedStrings/AESCFB128/initVector (hex16Value)
+.RS 4
+In the AESCFB128 case one 128 bits (16 bytes) key and a random initial vector are used to encrypt the string\&. The initVector element is only used when upgrading from versions before ConfD\-6\&.2, but it is kept for backward compatibility reasons\&.
+.RE
+.PP
+/confdConfig/cryptHash \- container element
+.RS 4
+cryptHash specifies how cleartext values should be hashed for leafs of the types ianach:crypt\-hash, tailf:sha\-256\-digest\-string, and tailf:sha\-512\-digest\-string \- see the
+\m[blue]\fBconfd_types(3)\fR\m[]
+manual page\&.
+.RE
+.PP
+/confdConfig/cryptHash/algorithm (md5|sha\-256|sha\-512) [md5]
+.RS 4
+algorithm can be set to one of the values \*(Aqmd5\*(Aq, \*(Aqsha\-256\*(Aq, or \*(Aqsha\-512\*(Aq, to choose the corresponding hash algorithm for hashing of cleartext values for the ianach:crypt\-hash type\&.
+.RE
+.PP
+/confdConfig/cryptHash/rounds (unit32 > 999) [5000]
+.RS 4
+For the \*(Aqsha\-256\*(Aq and \*(Aqsha\-512\*(Aq algorithms for the ianach:crypt\-hash type, and for the tailf:sha\-256\-digest\-string and tailf:sha\-512\-digest\-string types, \*(Aqrounds\*(Aq specifies how many times the hashing loop should be executed\&. If a value other than the default 5000 is specified, the hashed format will have \*(Aqrounds=N$\*(Aq, where N is the specified value, prepended to the salt\&. This parameter is ignored for the \*(Aqmd5\*(Aq algorithm for ianach:crypt\-hash\&.
+.RE
+.PP
+/confdConfig/logs \- container element
+.RS 4
+This section defines settings which affect the logging done by ConfD\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig
+.RS 4
+Shared settings for how to log to syslog\&. Logs (see below) can be configured to log to file and/or syslog\&. If a log is configured to log to syslog, the settings under /confdConfig/logs/syslogConfig are used used\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/version (bsd|1) [bsd]
+.RS 4
+version is either "bsd" (traditional syslog) or "1" (new IETF syslog format: RFC 5424)\&. "1" implies that /confdConfig/logs/syslogConfig/udp/enabled must be set to true\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/facility (daemon|authpriv|local0|\&.\&.\&.|local7|uint32) [daemon]
+.RS 4
+facility is either "daemon", "authpriv", "local0", \&.\&.\&., "local7" or an unsigned integer\&. This facility setting is the default facility and applies if no explicit facility is set for a log\&. It\*(Aqs also possible to set individual facilities in the different logs below\&. Furthermore with the syslogServers container described below it is possible to set default facility on a per server basis\&. If facility is explicitly set for a log type, that item is used\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/udp container
+.RS 4
+Is a container for UDP syslog\&. This container can only contain the configuration for a single UDP syslog server\&. If we need more than one syslog server we must use the /confdConfig/logs/syslogConfig/syslogServers container instead\&. If the udp container is used, the syslogServers container is ignored\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/udp/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "false", messages will be sent to the local syslog daemon\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/udp/host (inet:host)
+.RS 4
+host is either a domain name or an IPv4/IPv6 network address\&. UDP syslog messages are sent to this host\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/udp/port (inet:port\-number) [514]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/logs/syslogConfig/udp/host\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers \- container
+.RS 4
+We can have an arbitrary long list of syslog servers defined\&. As mentioned above, the use of the syslogServers container is an complementary alternative to the udp container\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers/server/host (inet:host)
+.RS 4
+host is either a domain name or an IPv4/IPv6 network address\&. UDP syslog messages are sent to this host\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers/server/port (inet:port\-number) [514]
+.RS 4
+port is a valid port number to be used in combination with this syslog server
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers/server/version (bsd|1) [bsd]
+.RS 4
+Version of syslog messages for this syslog server\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers/server/facility (daemon|local0|\&.\&.\&.|local7|uint32) [daemon]
+.RS 4
+Facility of syslog messages for this syslog server\&.
+.RE
+.PP
+/confdConfig/logs/syslogConfig/syslogServers/server/enabled (true|false) [true]
+.RS 4
+Is this syslog server enabled\&.
+.RE
+.PP
+/confdConfig/logs/confdLog \- container element
+.RS 4
+confdLog is ConfD\*(Aqs daemon log\&. Check this log for startup problems of the ConfD daemon itself\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/confdLog/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the log is enabled\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/confdLog/file/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", file logging is enabled\&.
+.RE
+.PP
+/confdConfig/logs/confdLog/file/name (string)
+.RS 4
+name is the full path to the actual log file\&.
+.RE
+.PP
+/confdConfig/logs/confdLog/syslog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", syslog messages are sent\&.
+.RE
+.PP
+/confdConfig/logs/confdLog/syslog/facility (daemon|authpriv|local0|\&.\&.\&.|local7|uint32)\fB[]\fR
+.RS 4
+facility is either "daemon", "authpriv", "local0", \&.\&.\&., "local7" or an unsigned integer\&. This optional value overrides the /confdConfig/logs/syslogConfig/facility for this particular log
+.RE
+.PP
+/confdConfig/logs/developerLog \- container element
+.RS 4
+developerLog is a debug log for troubleshooting user\-written C code, AAA rules etc\&. Enable and check this log for problems with validation code etc\&. This log is enabled by default\&. In all other regards it can be configured as confdLog\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/developerLogLevel (error|info|trace) [info]
+.RS 4
+Controls which level of developer messages are printed in the developer log\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/auditLog \- container element
+.RS 4
+auditLog is an audit log recording successful and failed logins to the ConfD backplane\&. This log is enabled by default\&. In all other regards it can be configured as /confdConfig/logs/confdLog\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/auditLogCommit (boolean) [false]
+.RS 4
+Controls whether the audit log should include messages about the resulting configuration changes for each commit to the running data store\&. This configuration parameter takes effect for both existing and new sessions\&. If set to "true", the audit log will include entries of the form:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+commit thandle <N> begin [confirmed [extended]]
+commit thandle <N> comment <comment>
+commit thandle <N> label <label>
+commit thandle <N> <path> created
+commit thandle <N> <path> deleted
+commit thandle <N> <path> moved first
+commit thandle <N> <path> moved after {<keys>}
+commit thandle <N> <path> set to "<value>"
+commit thandle <N> <path> default set (<value>)
+commit thandle <N> <path> attribute "<name>" set to "<value>"
+commit thandle <N> <path> attribute "<name>" deleted
+commit thandle <N> end
+commit confirmed completed
+commit confirmed canceled
+
+.fi
+.if n \{\
+.RE
+.\}
+The "commit thandle <N> begin" entry indicates the start of a commit for the transaction with handle N\&. This is followed by a "commit thandle <N> comment <comment>" entry and/or a "commit thandle <N> label <label>" entry if a commit comment and/or label was given, then a number of "commit thandle <N> <path> \&.\&.\&." entries detailing the changes, and finally a "commit thandle <N> end" entry\&. If "begin" is followed by "confirmed", it means that the changes are part of a confirmed commit that will not be permanent until a "commit confirmed completed" entry is logged \- if "commit confirmed canceled" is logged instead, the changes have been reverted\&. If "begin confirmed" is followed by "extended", it means that the changes are part of a confirmed commit that extends a confirmed commit that is already in progress\&.
+.RE
+.PP
+/confdConfig/logs/snmpLog \- container element
+.RS 4
+snmpLog is a log for tracing SNMP requests and responses\&. This log is disabled by default\&. In all other regards it can be configured as /confdConfig/logs/confdLog\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/snmpLogLevel (error|info) [info]
+.RS 4
+Controls which level of SNMP pdus are printed in the SNMP log\&. The value "error" means that only PDUs with error\-status not equal to "noError" are printed\&.
+.RE
+.PP
+/confdConfig/logs/netconfLog \- container element
+.RS 4
+netconfLog is a log for troubleshooting NETCONF operations, such as checking why e\&.g\&. a filter operation didn\*(Aqt return the data requested\&. This log is enabled by default\&. In all other regards it can be configured as /confdConfig/logs/confdLog\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/netconfLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", NETCONF logging is performed\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/netconfTraceLog \- container element
+.RS 4
+netconfTraceLog is a log for understanding and troubleshooting NETCONF protocol interactions\&. When this log is enabled, all NETCONF traffic to and from ConfD is stored to a file\&. By default, all XML is pretty\-printed\&. This will slow down the NETCONF server, so be careful when enabling this log\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/netconfTraceLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", all NETCONF traffic is logged\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/netconfTraceLog/filename (string)
+.RS 4
+The name of the file where the NETCONF traffic trace log is written\&.
+.RE
+.PP
+/confdConfig/logs/netconfTraceLog/format (pretty|raw) [pretty]
+.RS 4
+The value \*(Aqpretty\*(Aq means that the XML data is pretty\-printed\&. The value \*(Aqraw\*(Aq means that it is not\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/xpathTraceLog \- container element
+.RS 4
+xpathTraceLog is a log for understanding and troubleshooting XPath evaluations\&. When this log is enabled, the execution of all XPath queries evaluated by ConfD is logged to a file\&.
+.sp
+This will slow down ConfD, so be careful when enabling this log\&. This log is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/xpathTraceLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", all XPath execution is logged\&.
+.RE
+.PP
+/confdConfig/logs/xpathTraceLog/filename (string)
+.RS 4
+The name of the file where the XPath trace log is written\&.
+.RE
+.PP
+/confdConfig/logs/webuiAccessLog \- container element
+.RS 4
+webuiAccessLog is an access log for the embedded ConfD Web server\&. This file adheres to the Common Log Format, as defined by Apache and others\&. This log is not enabled by default and is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/webuiAccessLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the access log is used\&.
+.RE
+.PP
+/confdConfig/logs/webuiAccessLog/dir (string)
+.RS 4
+The path to the directory whereas the access log should be written to\&.
+.RE
+.PP
+/confdConfig/logs/webuiAccessLog/trafficLog (boolean) [false]
+.RS 4
+Is either "true" or "false"\&. If "true", all HTTP(S) traffic towards the embedded Web server is logged in a log file named "traffic\&.trace"\&. Beware: Do not use this log in a production setting\&. This log is not enabled by default and is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/webuiBrowserLog \- container element
+.RS 4
+webuiBrowserLog makes it possible to log Javascript errors/exceptions in a log file on the target device instead of just in the browser\*(Aqs error console\&. This log is not enabled by default and is not rotated, i\&.e\&. use logrotate(8)\&.
+.RE
+.PP
+/confdConfig/logs/webuiBrowserLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the browser log is used\&.
+.RE
+.PP
+/confdConfig/logs/webuiBrowserLog/filename (string)
+.RS 4
+The path to the filename whereas browser log entries should be written to\&.
+.RE
+.PP
+/confdConfig/logs/errorLog \- container element
+.RS 4
+errorLog is an error log used for internal logging from the ConfD daemon\&. It is used for troubleshooting the ConfD daemon itself, and it is recommended that it is enabled, in order to capture information about problems that are difficult to reproduce\&. This log is rotated by the ConfD daemon (see below)\&.
+.RE
+.PP
+/confdConfig/logs/errorLog/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", error logging is performed\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/logs/errorLog/filename (string)
+.RS 4
+filename is the full path to the actual log file\&. This parameter must be set if the errorLog is enabled\&.
+.RE
+.PP
+/confdConfig/logs/errorLog/maxSize (confd:size) [S1M]
+.RS 4
+maxSize is the maximum size of an individual log file before it is rotated\&. Log filenames are reused when five logs have been exhausted\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/datastores \- container element
+.RS 4
+datastores defines which datastores the ConfD daemon should be setup to handle\&.
+.RE
+.PP
+/confdConfig/datastores/startup \- container element
+.RS 4
+ConfD may keep separate running and startup configuration databases\&. When the system reboots for whatever reason, the running config database is lost, and the startup is read\&.
+.RE
+.PP
+/confdConfig/datastores/startup/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", a startup database is managed\&. Enable this only if our system uses a separate startup and running database\&.
+.RE
+.PP
+/confdConfig/datastores/candidate \- container element
+.RS 4
+ConfD may keep a shared, named alternative configuration database which can be modified without impacting the running configuration\&. Changes in the candidate can be commit to running, or discarded\&.
+.RE
+.PP
+/confdConfig/datastores/candidate/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", a candidate database is managed\&. Enable this if we want our users to use this feature from NETCONF, CLI or Webui, or other agents\&.
+.RE
+.PP
+/confdConfig/datastores/candidate/implementation (confd|external) [confd]
+.RS 4
+implementation is either "confd" or "external"\&. By default, ConfD implements the candidate configuration without impacting the application\&. But if our system already implements the candidate itself, set "implementation" to "external"\&. This implies that the "external" candidate implementation must implement 5 C function callbacks for candidate manipulation\&. (See
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+and the example "misc/extern_candidate"\&.
+.RE
+.PP
+/confdConfig/datastores/candidate/storage (disk|ram|auto) [auto]
+.RS 4
+storage is either "disk", "ram", or "auto"\&.
+.PP
+disk
+.RS 4
+ConfD always stores the candidate on disk\&. "filename" must also be set (see below)\&.
+.RE
+.PP
+ram
+.RS 4
+ConfD always stores the candidate in ram\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+If this alternative is used the implementation is not fully NETCONF compliant if confirmed\-commit is enabled\&. The reason is that when confirmed\-commit is used, the system must rollback to the previous configuration if it reboots but RAM data are lost\&.
+.sp .5v
+.RE
+.RE
+.PP
+auto
+.RS 4
+ConfD stores the candidate on disk if absolutely necessary for proper operation; otherwise it is stored in ram\&. "filename" must also be set (see below)\&.
+.RE
+.RE
+.PP
+/confdConfig/datastores/candidate/filename (string)
+.RS 4
+filename is the name of the file where the candidate will be stored, if implementation is "confd" and "storage" is "disk" or "auto"\&.
+.RE
+.PP
+/confdConfig/datastores/candidate/confirmedCommit \- container element
+.RS 4
+ConfD may use confirmed commits while using the candidate datastore\&. It is possible to configure different behaviors of how the confirmed commits will behave\&. This config section is only valid for the candidate datastore\&.
+.RE
+.PP
+/confdConfig/datastores/candidate/confirmedCommit/revertByCommit (boolean) [false]
+.RS 4
+while using confirmed commits with the candidate datastore it is possible to revert the confirmed commit using normal reversed commit(s) instead of activating a previously stored checkpoint\&. This is decided by setting the revertByCommit config parameter to true\&. RevertByCommit will only have effect if the candidate datastore is implemented in ConfD, i\&.e\&. /confdConfig/datastores/candidate/implementation is set to confd\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+Setting revertByCommit to true will have severe impact on performance upon failing confirmed commits\&. Hence, it is not recommended to use revertByCommit true unless you absolutely can\*(Aqt support the highly optimized checkpoint scenario\&.
+.sp .5v
+.RE
+.RE
+.PP
+/confdConfig/datastores/running \- container element
+.RS 4
+By default, the running configuration is writable\&. This means that the application must be prepared to handle dynamic changes to the configuration\&.
+.RE
+.PP
+/confdConfig/datastores/running/access (read\-write|writable\-through\-candidate) [read\-write]
+.RS 4
+access is either "read\-write" or "writable\-through\-candidate"\&. If "writable\-through\-candidate", the candidate datastore must be enabled\&.
+.sp
+NOTE: The default value of read\-write here is somewhat unfortunate\&. If the candidate is enabled it is better to set the value writable\-through\-candidate\&. When a NETCONF manager reconfigures a node that has the candidate and also read\-write running, the manager can never know that running is up to date with the candidate and must thus always (logically) copy running to the candidate prior to modifying the candidate\&.
+.RE
+.PP
+/confdConfig/scripts
+.RS 4
+It is possible to add scripts to control various things in ConfD, such as post\-commit callbacks\&. New CLI commands can also be added\&. The scripts must be stored under /confdConfig/scripts/dir where there is a sub\-directory for each script category\&. For some script categories it suffices to just add a script in the correct the sub\-directory in order to enable the script\&. For others some configuration needs to be done\&.
+.RE
+.PP
+/confdConfig/scripts/dir
+.RS 4
+The directory path to the location of plug\-and\-play scripts\&. The scripts directory must have the following sub\-directories:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+scripts/command/
+        policy/
+        post\-commit/
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/defaultHandlingMode (explicit|trim|report\-all) [explicit]
+.RS 4
+defaultHandlingModeType is either "explicit", "trim", or "report\-all"\&. This parameter controls how default values for leafs are handled in the northbound interfaces\&.
+.PP
+explicit
+.RS 4
+If a value is set over a northbound interface, it is not considered default\&.
+.sp
+Default values are not displayed in northbound interfaces, unless asked for by the user\&.
+.RE
+.PP
+trim
+.RS 4
+If a value is set over a northbound interface, it is considered default if it is equal to the data model\*(Aqs default value\&.
+.sp
+Values equal to the data model\*(Aqs default value are not displayed in northbound interfaces, unless asked for by the user\&.
+.RE
+.PP
+report\-all
+.RS 4
+All values are logically stored in the data store, and displayed in northbound interfaces\&.
+.RE
+.sp
+If the data store has the capability to handle default values, which for example CDB has, it will work with all values for this parameter\&. In this case, default values are never actaully stored in the data store\&. The value of this parameter should be chosen to give the end\-user the best experience\&.
+.sp
+If the data store does not have the capability to handle default values, this parameter should be set to \*(Aqreport\-all\*(Aq\&.
+.RE
+.PP
+/confdConfig/sortTransactions (boolean) [true]
+.RS 4
+This parameter controls how ConfD lists newly created, not yet committed list entries\&. If this value is set to \*(Aqfalse\*(Aq, ConfD will list all new entries before listing existing data\&. This was the only behavior in pre 2\&.5 versions of ConfD\&.
+.sp
+If this value is set to \*(Aqtrue\*(Aq, ConfD will merge new and existing entries, and provide one sorted view of the data\&. This behavior works well when CDB is used to store configuration data, but if an external data provider is used, ConfD does not know the sort order, and can thus not merge the new entries correctly\&. If an external data provider is used for configuration data, and the sort order differs from CDB\*(Aqs sort order, this parameter should be set to \*(Aqfalse\*(Aq\&.
+.RE
+.PP
+/confdConfig/enableAttributes (boolean) [false]
+.RS 4
+This parameter controls if ConfD\*(Aqs attribute feature should be enabled or not\&. Currently there are three attributes, annotation, tags, and inactive\&. These are available in northbound interfaces (e\&.g\&. the annotate command in the CLI, and annotation XML attribute in NETCONF), but in order to be useful they need support from the underlying configuration data provider\&. CDB supports attributes, but if an external data provider is used for configuration data, and it does not support the attribute callbacks, this parameter should be set to \*(Aqfalse\*(Aq\&.
+.RE
+.PP
+/confdConfig/enableInactive (boolean) [false]
+.RS 4
+This parameter controls if ConfD\*(Aqs inactive feature should be enabled or not\&. This feature also requires enableAttributes to be enabled\&.
+.RE
+.PP
+/confdConfig/sessionLimits \- container element
+.RS 4
+Parameters for limiting concurrent access to ConfD\&.
+.RE
+.PP
+/confdConfig/sessionLimits/maxSessions (uint32|unbounded) [unbounded]
+.RS 4
+Puts a limit to the total number of concurrent sessions to ConfD\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/sessionLimits/sessionLimit \- container element
+.RS 4
+Parameters for limiting concurrent access for a specific context to ConfD\&. There can be multiple instances of this container element, each one specifying parameters for a specific context\&.
+.RE
+.PP
+/confdConfig/sessionLimits/sessionLimit/context (cli|netconf|xs:token)
+.RS 4
+The context is either one of cli, netconf, webui, snmp, rest, or it can be any other context string defined through the use of MAAPI\&. As an example, if we use MAAPI to implement a CORBA interface to ConfD, our MAAPI program could send the string "corba" as context\&.
+.RE
+.PP
+/confdConfig/sessionLimits/sessionLimit/maxSessions (uint32|unbounded) [unbounded]
+.RS 4
+Puts a limit to the total number of concurrent sessions to ConfD for the corresponding context\&.
+.RE
+.PP
+/confdConfig/sessionLimits/maxConfigSessions (uint32|unbounded) [unbounded]
+.RS 4
+Puts a limit to the total number of concurrent configuration sessions to ConfD\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/sessionLimits/configSessionLimit \- container element
+.RS 4
+Parameters for limiting concurrent read\-write transactions for a specific context to ConfD\&. There can be multiple instances of this container element, each one specifying parameters for a specific context\&.
+.RE
+.PP
+/confdConfig/sessionLimits/configSessionLimit/context (cli|netconf|xs:token)
+.RS 4
+The context is either one of cli, netconf, webui, snmp, rest, or it can be any other context string defined through the use of MAAPI\&. As an example, if we use MAAPI to implement a CORBA interface to ConfD, our MAAPI program could send the string "corba" as context\&.
+.RE
+.PP
+/confdConfig/sessionLimits/configSessionLimit/maxSessions (uint32|unbounded) [unbounded]
+.RS 4
+Puts a limit to the total number of concurrent configuration sessions to ConfD for the corresponding context\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/capi \- container element
+.RS 4
+C\-API parameters\&.
+.RE
+.PP
+/confdConfig/capi/newSessionTimeout (xs:duration) [PT30S]
+.RS 4
+Timeout for a daemon to respond to a control socket request, see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&. If the daemon fails to respond within the given time, it will be disconnected\&.
+.RE
+.PP
+/confdConfig/capi/queryTimeout (xs:duration) [PT120S]
+.RS 4
+Timeout for a daemon to respond to a worker socket query, see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&. If the daemon fails to respond within the given time, it will be disconnected\&.
+.RE
+.PP
+/confdConfig/capi/connectTimeout (xs:duration) [PT60S]
+.RS 4
+Timeout for a daemon to send initial message after connecting the socket to the confd server\&. If the daemon fails to initiate the connection within the given time, it will be disconnected\&.
+.RE
+.PP
+/confdConfig/capi/objectCacheTimeout (xs:duration) [PT2S]
+.RS 4
+Timeout for the cache used by the
+\fBget_object()\fR
+and
+\fBget_next_object()\fR
+callback requests, see
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&. ConfD caches the result of these calls and serves get_elem requests from northbound agents from the cache\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+Setting this timeout too low will effectively cause the callbacks to be non\-functional \- e\&.g\&.
+\fBget_object()\fR
+may be invoked for each get_elem request from a northbound agent\&.
+.sp .5v
+.RE
+.RE
+.PP
+/confdConfig/capi/eventReplyTimeout (xs:duration) [PT120S]
+.RS 4
+Timeout for the reply from an event notification subscriber for a notification that requires a reply, see
+\m[blue]\fBconfd_lib_events(3)\fR\m[]\&. If the subscriber fails to reply within the given time, the notification socket will be closed\&.
+.RE
+.PP
+/confdConfig/rollback \- container element
+.RS 4
+Settings controlling if and where rollback files are created\&. A rollback file contains a copy of the system configuration\&. The current running configuration is always stored in rollback0, the previous version in rollback1 etc\&. The oldest saved configuration has the highest suffix\&.
+.RE
+.PP
+/confdConfig/rollback/enabled (boolean) [false]
+.RS 4
+If "true", then a rollback file will be created whenever the running configuration is modified\&. If /confdConfig/ha/enabled is set to true then rollback files are replicated from master to slaves\&. The rollback feature must be enabled on all HA nodes (although is possible to have a slave with rollbacks disabled, that slave will then not replicate the rollback files)\&.
+.RE
+.PP
+/confdConfig/rollback/directory (string)
+.RS 4
+Location where rollback files will be created\&.
+.RE
+.PP
+/confdConfig/rollback/historySize (uint32) [50]
+.RS 4
+Number of old configurations to save\&.
+.RE
+.PP
+/confdConfig/rollback/type (full|delta) [delta]
+.RS 4
+Type of rollback file to use\&. If "full" is specified, then a full configuration dump is stored in each rollback file\&. Rollback file 0 will always contain the running configuration\&.
+.sp
+If "delta" is used, then only the changes are stored in the rollback file\&. Rollback file 0 will contain the changes from the last configuration\&.
+.sp
+Using deltas is more space and time efficient for large configurations\&. Full rollback files are more robust when multiple external databases are used\&. If the external databases becomes inconsistent a previous configuration can always be restored using a full rollback file\&.
+.RE
+.PP
+/confdConfig/rollback/rollbackNumbering (fixed|rolling) [rolling]
+.RS 4
+rollbackNumbering is either "fixed" or "rolling"\&. If set to "rolling" then rollback file "0" will always contain the last commit\&. When using "fixed" each rollback will get a unique increasing number\&.
+.RE
+.PP
+/confdConfig/ssh \- container element
+.RS 4
+This section defines settings which affect the behavior of the builtin SSH implementation\&.
+.RE
+.PP
+/confdConfig/ssh/idleConnectionTimeout (xs:duration) [PT10M]
+.RS 4
+The maximum time that an authenticated connection to the SSH server is allowed to exist without open channels\&. If the timeout is reached, the SSH server closes the connection\&. Default is PT10M, i\&.e\&. 10 minutes\&. If the value is 0, there is no timeout\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms \- container element
+.RS 4
+This section defines custom lists of algorithms to be usable with the built\-in SSH implementation\&.
+.sp
+For each type of algorithm, an empty value means that all supported algorithms should be usable, and a non\-empty value (a comma\-separated list of algorithm names) means that the intersection of the supported algorithms and the configured algorithms should be usable\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/serverHostKey (string)
+.RS 4
+The supported serverHostKey algorithms (if implemented in libcrypto) are "ssh\-dss" and "ssh\-rsa", but for any SSH server, it is limited to those algorithms for which there is a host key installed in the directory given by /confdConfig/aaa/sshServerKeyDir\&.
+.sp
+To limit the usable serverHostKey algorithms to "ssh\-dss", set this value to "ssh\-dss" or avoid installing a key of any other type than ssh\-dss in the sshServerKeyDir\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/kex (string)
+.RS 4
+The supported key exchange algorithms (as long as their hash functions are implemented in libcrypto) are "diffie\-hellman\-group\-exchange\-sha256", "diffie\-hellman\-group\-exchange\-sha1", "diffie\-hellman\-group14\-sha1" and "diffie\-hellman\-group1\-sha1"\&.
+.sp
+To limit the usable key exchange algorithms to "diffie\-hellman\-group14\-sha1" and "diffie\-hellman\-group\-exchange\-sha256" (in that order) set this value to "diffie\-hellman\-group14\-sha1,diffie\-hellman\-group\-exchange\-sha256"\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/dhGroup \- container element
+.RS 4
+Range of allowed group size, the SSH server responds to the client during a "diffie\-hellman\-group\-exchange"\&. The range will be the intersection of what the client requests, if there is none the key exchange will be aborted\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/dhGroup/minSize (uint32) [2048]
+.RS 4
+Minimal size of p in bits\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/dhGroup/maxSize (uint32) [4096]
+.RS 4
+Maximal size of p in bits\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/mac (string)
+.RS 4
+The supported mac algorithms (if implemented in libcrypto) are "hmac\-md5", "hmac\-sha1", "hmac\-sha2\-256", "hmac\-sha2\-512", "hmac\-sha1\-96" and "hmac\-md5\-96"\&.
+.RE
+.PP
+/confdConfig/ssh/algorithms/encryption (string)
+.RS 4
+The supported encryption algorithms (if implemented in libcrypto) are "aes128\-ctr", "aes192\-ctr", "aes256\-ctr", "aes128\-cbc", "aes256\-cbc" and "3des\-cbc"\&.
+.RE
+.PP
+/confdConfig/ssh/clientAliveInterval (xs:duration|infinity) [infinity]
+.RS 4
+If no data has been received from a connected client for this long, a request that requires a response from the client, will be sent over the SSH transport\&.
+.RE
+.PP
+/confdConfig/ssh/clientAliveCountMax (uint32) [3]
+.RS 4
+If no data has been received from the client, after this many consecutive clientAliveInterval has passed, the connection will be dropped\&.
+.RE
+.PP
+/confdConfig/cli \- container element
+.RS 4
+CLI parameters\&.
+.RE
+.PP
+/confdConfig/cli/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the CLI server is started\&.
+.RE
+.PP
+/confdConfig/cli/transactions (boolean) [true]
+.RS 4
+Control whether commit should be supported in the CLI or not\&. When set to false all commands will be automatically committed when the user press ENTER in the CLI\&.
+.RE
+.PP
+/confdConfig/cli/transactionCntrlCmds (boolean) [false]
+.RS 4
+transactionCtrlCmds is either "true" or "false"\&. If "true", then the CLI will have commands for enabling and disabling transactions in configure mode, ie "enable transactions" and "disable transactions"\&. If set to "false" no such commands will be present\&.
+.RE
+.PP
+/confdConfig/cli/allowImplicitWildcard (boolean) [true]
+.RS 4
+When set to true, users do not need to explicitly type * in the place of keys in lists, in order to see all list instances\&. When set to false, users have to explicitly type * to see all list instances\&. This option can be set to "false", to help in the case where tab completion in the CLI takes long time when performed on lists with many instances\&.
+.RE
+.PP
+/confdConfig/cli/startupScriptNonInteractive (boolean) [false]
+.RS 4
+startupScriptNonInteractive is either "true" or "false"\&. If set to "true" then a CLI startup script will be evaluated also for non\-interactive sessions\&.
+.RE
+.PP
+/confdConfig/cli/tableLabel (boolean) [false]
+.RS 4
+tableLabel is either "true" or "false"\&. If "true" then tables displayed in C and I style CLI will have a relative location label to make it possible to know which table is displayed\&.
+.RE
+.PP
+/confdConfig/cli/addExtraTableSpacing (boolean) [false]
+.RS 4
+addExtraTableSpacing is either "true" or "false"\&. If set to "true" then an additional newline will be added on each side of the table\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/tableLookAhead (uint64 > 0) [50]
+.RS 4
+The tableLookAhead element tells confd how many rows to pre\-fetch when displaying a table\&. The prefetched rows are used for calculating the required column widths for the table\&. If set to a small number it is recommended to explicitly configure the column widths in the clispec file\&.
+.RE
+.PP
+/confdConfig/cli/moreBufferLines (uint32|unbounded) [5000]
+.RS 4
+moreBufferLines is used to limit the buffering done by the more process\&. It can be "unbounded" or a positive integer describing the maximum number of lines to buffer\&.
+.RE
+.PP
+/confdConfig/cli/showTableLabelsIfMultiple (boolean) [false]
+.RS 4
+showTableLabelsIfMultiple is either "true" or "false"\&. If set to "true" then table labels will only be displayed if multiple tables, or a table and additional data is displayed\&. If set to "false" then table labels are always shown if they exists and tableLabel is enabled\&.
+.RE
+.PP
+/confdConfig/cli/editWrapMode (wrap|newline|vt100) [wrap]
+.RS 4
+editWrapMode is either "wrap", "newline" or "vt100"\&. If "wrap" or "vt100" is used then cut\-and\-paste will work in xterms (and other terminal emulators) but the CLI may behave oddly if the screen width is manually configured to something other than the true screen width\&. If "vt100" is used then no >space<>backspace< is used to force line wrapping\&. This makes it easier for scripts that rely on command line echoing but the cursor will disappear at the end of the line temporarily\&.
+.RE
+.PP
+/confdConfig/cli/supportQuoteEOL (boolean) [true]
+.RS 4
+supportQuoteEOL is either true or false\&. If set to true then a final backslash (\e) on a line means that the next line will be concatenated with the previous line, similarly to a Linux Shell\&.
+.RE
+.PP
+/confdConfig/cli/useShortEnabled (boolean) [true]
+.RS 4
+useShortEnabled is either "true" or "false"\&. If set to "true" then the CLI will display "enabled" or "disabled" in place of "enabled true" and "enabled false"\&.
+.RE
+.PP
+/confdConfig/cli/smartRenameFiltering (boolean) [true]
+.RS 4
+smartRenameFiltering is either "true" or "false"\&. If set to "true" then only paths that leads to existing instances will be presented when doing completion\&. This will lead to some extra calls to get_next() in order to determine if a path has instances or not\&. When set to "false" all paths with potentially instances are presented\&.
+.RE
+.PP
+/confdConfig/cli/allowWildcard (boolean) [true]
+.RS 4
+allowWildcard is either "true" or "false"\&. If "true" then wildcard expressions are allowed in show commands\&.
+.RE
+.PP
+/confdConfig/cli/allowAllAsWildcard (boolean) [false]
+.RS 4
+allowAllAsWildcard is either "true" or "false"\&. If "true" then "all" can be used in place of "*" as wildcard\&.
+.RE
+.PP
+/confdConfig/cli/allowRangeExpression (boolean) [true]
+.RS 4
+allowRangeExpression is either "true" or "false"\&. If "true" then range expressions are allowed for all key values of type basic type integer\&. An alternative is to specify hasRange for each path in the clispec\&.
+.RE
+.PP
+/confdConfig/cli/allowRangeExpressionAllTypes (boolean) [true]
+.RS 4
+allowRangeExpressionAllTypes is either "true" or "false"\&. If "true" then range expressions are allowed for all key values regardless of type\&. An alternative is to specify hasRange for each element in the yang files\&.
+.RE
+.PP
+/confdConfig/cli/suppressRangeKeyword (boolean) [false]
+.RS 4
+suppressRangeKeyword is either "true" or "false"\&. If "true" then \*(Aqrange\*(Aq keyword is not allowed in C\- and I\-style for range expressions\&.
+.RE
+.PP
+/confdConfig/cli/exitModeOnEmptyRange (boolean) [false]
+.RS 4
+exitModeOnEmptyRange is either "true" or "false"\&. If "true" and if standing in a range submode, the CLI will exit to the parent submode if all instances in the range has been deleted by the user\&.
+.RE
+.PP
+/confdConfig/cli/useDoubleDotRanges (boolean) [false]
+.RS 4
+useDoubleDotRanges is either "true" or "false"\&. If "true" then range expressions are types as 1\&.\&.3, if set to "false" then ranges are given as 1\-3\&.
+.RE
+.PP
+/confdConfig/cli/singleElemPattern (boolean) [true]
+.RS 4
+singleElemPattern is either "true" or "false"\&. If "true" then filters/patterns to show commands can be used to specify that you want to see a specific leaf element of all lists\&. Only that leaf element will be shown for each list entry\&. This works for both tables and row based rendering\&. To get the old 2\&.7 behavior set this flag to "false"\&.
+.RE
+.PP
+/confdConfig/cli/multiPatternOperation (any/all) [any]
+.RS 4
+multiPatternOperation is one of "any", and "all"\&. When set to "any" a pattern is true if at least one match is found, if set to "all", all patterns needs to be found for the pattern expression to be considered true\&.
+.RE
+.PP
+/confdConfig/cli/defaultTableBehavior (dynamic|enforce|suppress) [dynamic]
+.RS 4
+defaultTableBehavior is either "dynamic", "suppress", or "enforce"\&. If set to "dynamic" then list nodes will be displayed as tables if the resulting table will fit on the screen\&. If set to suppress, then list nodes will not be displayed as tables unless a table has been specified by some other means (ie through a setting in the clispec\-file or through a command line parameter), if set to "enforce" then list nodes will always be displayed as tables unless otherwise specified in the clispec\-file or on the command line\&.
+.RE
+.PP
+/confdConfig/cli/allowTableOverflow (boolean) [false]
+.RS 4
+allowTableOverflow is either "true" or "false"\&. If "true" then tables displayed in a Cisco style CLI will be allowed to overflow\&. If "false" a too wide table will be displayed as a "setting \- value" list instead\&.
+.RE
+.PP
+/confdConfig/cli/tableOverflowTruncate (boolean) [false]
+.RS 4
+tableOverflowTruncate is either "true" or "false"\&. If "true" then overflowing tables will be truncated instead of wrapped\&.
+.RE
+.PP
+/confdConfig/cli/allowTableCellWrap (boolean) [true]
+.RS 4
+allowTableCellWrap is either "true" or "false"\&. If "true" then tables displayed in a Cisco style CLI will be allowed to wrap if the initial cell\-width estimate proves to be too narrow\&. If "false" a too wide table cell will overflow instead, pushing the rest of the line to the right\&.
+.RE
+.PP
+/confdConfig/cli/compactTable (boolean) [false]
+.RS 4
+compactTable is either "true" or "false"\&. If "true" then tables with multiple dynamic levels will be displayed more compactly\&. The first instance of the sub\-element will appear on the same row as the parent instance\&. When set to "false" all new instances will appear on a new row\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/showKeyName (boolean) [true]
+.RS 4
+showKeyName is either "true" or "false"\&. If "true" then the key name will be displayed in the completion list during completion\&.
+.RE
+.PP
+/confdConfig/cli/promptEnumLimit (uint64) [4]
+.RS 4
+promptEnumLimit controls how many enumerations should be included in the prompt when prompting the user for a value where there are a number of alternatives\&. If the number of alternatives exceeds the above configured limit then the list will be truncated and the string "\&.\&.\&." will be added\&.
+.RE
+.PP
+/confdConfig/cli/showAllNs (boolean) [false]
+.RS 4
+showAllNs is either "true" or "false"\&. If "true" then all element names will be shown with their namespace prefix in the CLI\&. This is visible when displaying the running configuration and when modifying the configuration\&.
+.RE
+.PP
+/confdConfig/cli/useExposeNsPrefix (boolean) [true]
+.RS 4
+useExposeNsPrefix is either "true" or "false"\&. If "true" then all nodes annotated with the tailf:cli\-expose\-ns\-prefix will result in the namespace prefix being shown/required\&. If set to "false" then the tailf:cli\-expose\-ns\-prefix annotation will be ignored\&.
+.RE
+.PP
+/confdConfig/cli/sortSubmodeCmds (boolean) [true]
+.RS 4
+sortSubmodeCmds is either "true" or "false"\&. If set to "true" then local submode commands are listed before global commands when the user enters ? in a submode in C and I\-style\&.
+.RE
+.PP
+/confdConfig/cli/sortLocalCmds (boolean) [true]
+.RS 4
+sortLocalCms is either "true" or "false"\&. If set to "true" and sortSubmodeCmds are also set to true, then local submode commands are listed before global commands when the user enters ? in a submode in C and I\-style, and the order of the commands is alphabetically ordered\&. If set to false then the order of the local submode commands are the same as in the data model\&.
+.RE
+.PP
+/confdConfig/cli/allowOldStyleModeCmds (boolean) [false]
+.RS 4
+allowOldStyleModeCmds is either "true" or "false"\&. If set to "true" then CLI commands in I and C\-style are interpreted as mode commands if the path coincide with a list in the data\-model\&. The recommended way to mount commands in a submode is instead to use the "mount" attribute\&.
+.RE
+.PP
+/confdConfig/cli/continueOnErrorCmdStack (boolean) [false]
+.RS 4
+continueOnErrorCmdStack is either "true" or "false"\&. If set to "true" then command stack execution will continue even if an earlier command in the stack failed with an error, ie show xx ; show zz will execute both \*(Aqshow xx\*(Aq and \*(Aqshow zz\*(Aq even if \*(Aqshow xx\*(Aq failed with an error\&. If set to "false" then command execution will be aborted as soon as a command fails\&.
+.RE
+.PP
+/confdConfig/cli/completionShowOldVal (boolean) [true]
+.RS 4
+completionShowOldVal is either "true" or "false"\&. If set to "true" a leaf\*(Aqs old value will be displayed inside brackets during command line completion\&. If set to "false" it will not be shown\&.
+.RE
+.PP
+/confdConfig/cli/completionMetaInfo (false|alt1|alt2) [false]
+.RS 4
+completionMetaInfo is either "false", "alt1" or "alt2"\&. This option only applies to the J\-style CLI\&. If set to "alt1" then the alternatives shown for possible completions will be prefixed as follows: containers with >, lists with +, and leaf\-lists +\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Possible completions:
+              \&.\&.\&.
+              > applications
+              + apply\-groups
+              \&.\&.\&.
+              + dns\-servers
+              \&.\&.\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+If set to "alt2", then possible completions will be prefixed as follows: containers with >, lists with children with +>, and lists without children +\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+              Possible completions:
+              \&.\&.\&.
+              > applications
+              +>apply\-groups
+              \&.\&.\&.
+              + dns\-servers
+              \&.\&.\&.
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/cli/reportInvalidCompletionInput (boolean) [true]
+.RS 4
+reportInvalidCompletionInput is either true or false\&. If set to \*(Aqtrue\*(Aq the CLI will display an error message during completion when the user press \*(Aq?\*(Aq to indicate if an invalid token has been entered on the command line\&.
+.RE
+.PP
+/confdConfig/cli/banner (string)
+.RS 4
+Banner shown to the user when the CLI is started\&. Default is empty\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/bannerFile (string)
+.RS 4
+Name of file whose contents are shown to the user when the CLI is started\&. If empty, the message, if any, set via /confdConfig/cli/banner is shown\&. Default is empty\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/completionShowMax (int64) [100]
+.RS 4
+Maximum number of possible alternatives to present when doing completion\&.
+.RE
+.PP
+/confdConfig/cli/rollbackAAA (boolean) [false]
+.RS 4
+If set to true then AAA rules will be applied when a rollback file is loaded\&. This means that rollback may not be possible if some other user have made changes that the current user does not have access privileges to\&.
+.RE
+.PP
+/confdConfig/cli/rollbackMax (int64)
+.RS 4
+Maximum number of rollback changes to allow through the CLI\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/rollbackNumbering (fixed|rolling) [rolling]
+.RS 4
+rollbackNumbering is either "fixed" or "rolling"\&. If set to "rolling" then rollback file "0" will always contain the last commit\&. When using "fixed" each rollback will get a unique increasing number\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/rollbackNumberingInitial (int64) [10000]
+.RS 4
+rollbackNumberingInitial is the starting point of the rollback numbering when the "increasing" rollback numbering scheme is used\&. This configuration parameter takes effect when ConfD initially starts\&.
+.RE
+.PP
+/confdConfig/cli/historyMaxSize (int64) [1000]
+.RS 4
+Sets maximum configurable history size\&.
+.RE
+.PP
+/confdConfig/cli/messageMaxSize (int64) [10000]
+.RS 4
+Maximum size of user message\&.
+.RE
+.PP
+/confdConfig/cli/compactShow (boolean) [false]
+.RS 4
+Use compact representation when showing the configuration in C and I style CLIs\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/compactStatsShow (boolean) [false]
+.RS 4
+Use compact representation when showing the operational data in C and I style CLIs\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/prettifyStatsName (boolean) [false]
+.RS 4
+Default setting for prettifying, ie changing _ and \- to space in element names when displaying config=\*(Aqfalse\*(Aq data in key\-value listings\&.
+.RE
+.PP
+/confdConfig/cli/displayEmptyConfigContainers (boolean) [true]
+.RS 4
+displayEmptyConfigContainers is either "true" or "false"\&. If set to "true" then \*(Aqshow status\*(Aq in the J\-style CLI will display empty lists that are "config true" even when there is no data to display\&. If set to "false" the those containers will not be shown\&.
+.RE
+.PP
+/confdConfig/cli/confirmUncommitedOnExit (prompt|discard) [prompt]
+.RS 4
+If set to \*(Aqprompt\*(Aq then the user will be prompted whether to discard uncommitted changes or not\&. If set to \*(Aqdiscard\*(Aq then uncommitted changes will be discarded without prompting the user\&. If set to \*(Aqcommit\*(Aq then uncommitted changes will be automatically committed without asking the user\&.
+.RE
+.PP
+/confdConfig/cli/reconfirmHidden (boolean) [false]
+.RS 4
+If set to true the user will have to re\-confirm non\-echoing values in the CLI\&. Ie, when the CLI prompts the user for a value that is not echoed the user will be asked to enter it twice\&.
+.RE
+.PP
+/confdConfig/cli/dequoteHidden (boolean) [false]
+.RS 4
+If set to true the value that the user entered will be unquoted, ie if the user enters \en it will be interpreted as a newline\&. This is the default behavior for all other leaf types\&. If set to false then no unquoting will be performed for hidden (non\-echoing) data types when the CLI explicitly prompts for their values\&. Dequoting will still be performed for values entered directly on the command line\&.
+.RE
+.PP
+/confdConfig/cli/enumKeyInfo (boolean) [false]
+.RS 4
+If set to true the CLI will add the text <keyname:enumeration> whenever it is displaying a completion list for entering a key value that is an enumeration\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+io(config)# vqe dsp channel 1
+Possible completions:
+<b\-id:enumeration>  10  11  12  13  14  5  6  9
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/cli/historySave (boolean) [true]
+.RS 4
+If set to "true" then the CLI history will be saved between CLI sessions\&. The history is stored in the state directory\&.
+.RE
+.PP
+/confdConfig/cli/historyRemoveDuplicates (boolean) [false]
+.RS 4
+If set to "true" then repeated commands in the CLI will only be stored once in the history\&. Each invocation of the command will only update the date of the last entry\&. If set to "false" duplicates will be stored in the history\&.
+.RE
+.PP
+/confdConfig/cli/unifiedHistory (boolean) [false]
+.RS 4
+If set to "true" then the \*(Aqshow history\*(Aq command will display the unified command history, ie the command history from all modes\&. If set to "false" then only the command history from the current mode will be shown\&. Also, if set to "true" then the \*(Aqclear history\*(Aq command will adopt the same behaviour as described above\&.
+.RE
+.PP
+/confdConfig/cli/showDefaults (boolean) [false]
+.RS 4
+showDefaults is either "true" or "false"\&. If "true" then default values will be shown when displaying the configuration\&. The default value is shown inside a comment on the same line as the value\&. Showing default values can also be enabled in the CLI per session using the operational mode command "set show defaults true"\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/reallocateOperTrans (boolean) [false]
+.RS 4
+reallocateOperTrans is either "true" or "false"\&. If "true" then a new read transaction will be allocated for each oper\-mode command\&. When set to "false" a single oper transaction will be used for the entire CLI session\&.
+.RE
+.PP
+/confdConfig/cli/quickSshTeardown (boolean) [false]
+.RS 4
+quickSshTeardown controls if CLI sessions initiated through an SSH sessions should be torn down directly when the socket is closed, or not\&. When set to \*(Aqtrue\*(Aq the socket will be closed as soon as the CLI receives a tcp shutdown, if set to \*(Aqfalse\*(Aq it will wait until all pending data has been written\&.
+.RE
+.PP
+/confdConfig/cli/cAlignLeafValues (boolean) [true]
+.RS 4
+cAlignLeafValues is either "true" or "false"\&. If "true" then the leaf values of all siblings in a container or list will be aligned\&.
+.RE
+.PP
+/confdConfig/cli/jAlignLeafValues (boolean) [true]
+.RS 4
+jAlignLeafValues is either "true" or "false"\&. If "true" then the leaf values of all siblings in a container or list will be aligned\&.
+.RE
+.PP
+/confdConfig/cli/columnStats (boolean) [false]
+.RS 4
+columnStats is either "true" or "false"\&. If "false" then the container element is repeated on each line when displaying config="false" data in the C and I style CLIs using the "show" command\&. If set to "true" then the name of the container will not be repeated, instead all leaves will be indented\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/allowAbbrevCmds (boolean) [true]
+.RS 4
+allowAbbrevCmds is either "true" or "false"\&. If "false" then commands are not allowed to be abbreviated in the CLI\&.
+.RE
+.PP
+/confdConfig/cli/allowAbbrevCmdsOnLoad (boolean) [true]
+.RS 4
+allowAbbrevCmdsOnLoad is either "true" or "false"\&. If "false" then commands are not allowed to be abbreviated in the CLI in non interactive mode, ie when loading configurations from file\&.
+.RE
+.PP
+/confdConfig/cli/strictRefsOnLoad (boolean) [false]
+.RS 4
+strictRefsOnLoad is either "true" or "false"\&. If "false" then keyref/leafref targets does not have to exist when loading a config from a file\&. If set to "true" then the target creation must appear earlier in the loaded file than the reference to the target\&. Note that there is a rather heavy performance penalty for loading files with many keyrefs when this is set to true, or for piping CLI commands into confd_cli\&.
+.RE
+.PP
+/confdConfig/cli/allowAbbrevKeys (boolean) [false]
+.RS 4
+allowAbbrevKeys is either "true" or "false"\&. If "false" then key elements are not allowed to be abbreviated in the CLI\&. This is relevant in the J\-style CLI when using the commands \*(Aqdelete\*(Aq and \*(Aqedit\*(Aq\&. In the C/I\-style CLIs when using the commands \*(Aqno\*(Aq, \*(Aqshow configuration\*(Aq and for commands to enter submodes\&.
+.RE
+.PP
+/confdConfig/cli/allowAbbrevParamNames (boolean) [false]
+.RS 4
+allowAbbrevParamNames is either "true" or "false"\&. If "false" then cli command parameter names, ie <name>xx</name>, cannot be abbreviated\&.
+.RE
+.PP
+/confdConfig/cli/allowAbbrevEnums (boolean) [true]
+.RS 4
+allowAbbrevEnums is either "true" or "false"\&. If "false" then enums entered in the cli cannot be abbreviated\&.
+.RE
+.PP
+/confdConfig/cli/allowCaseInsensitiveEnums (boolean) [true]
+.RS 4
+allowCaseInsensitiveEnums is either "true" or "false"\&. If "false" then enums entered in the cli must match in case, ie you cannot enter FALSE if the cli asks for \*(Aqtrue\*(Aq or \*(Aqfalse\*(Aq\&.
+.RE
+.PP
+/confdConfig/cli/caseInsensitive (boolean) [false]
+.RS 4
+caseInsensitive is either "true" or "false"\&. If "false" then all CLI commands must have the correct case\&. If set to "true" then case is mostly ignored\&. Note that if set to "true" then all data model files and clispec\-files must be written with this in mind\&. You cannot have two elems that conflict in case\&.
+.RE
+.PP
+/confdConfig/cli/caseInsensitiveKeys (boolean) [false]
+.RS 4
+caseInsensitiveKeys is either "true" or "false"\&. If "false" then all user defined instance names must have correct case\&. If set to "true" then case is mostly ignored\&. Note that if set to "true" then all data model files and clispec\-files must be written with this in mind\&. You cannot have two elems that conflict in case\&.
+.RE
+.PP
+/confdConfig/cli/ignoreLeadingWhitespace (boolean) [false]
+.RS 4
+ignoreLeadingWhitespace is either "true" or "false"\&. If "false" then the CLI will show completion help when the user enters TAB or SPACE as the first characters on a row\&. If set to "true" then leading SPACE and TAB are ignored\&. The user can enter \*(Aq?\*(Aq to get a list of possible alternatives\&. Setting the value to "true" makes it easier to paste scripts into the CLI\&.
+.RE
+.PP
+/confdConfig/cli/indentTemplates (boolean) [false]
+.RS 4
+indentTemplates is either "true" or "false"\&. If set to "true" then the text resulting from a show template will be indented to the same level as the surrounding auto\-rendered show text\&. If set to "false" then no automatic indentation will occur\&. The automatic variable "\&.indent" may be used in the templates to do manual indentation\&.
+.RE
+.PP
+/confdConfig/cli/compListCompact (boolean) [false]
+.RS 4
+compListCompact is either "true" or "false"\&. If "true" then the CLI will display items with an associated info text one per line, and all the rest in compact format\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/completionListLine (boolean) [false]
+.RS 4
+completionListLine is either "true" or "false"\&. If "true" then the CLI will display completion lists one item per line\&. If set to "false" one\-line presentation will be used for items with info texts and compact for the rest\&. (if compListCompact above is set to true there may be a mix of the to formats in the same listing) This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/showMatchBeforePossible (boolean) [false]
+.RS 4
+showMatchBeforePossible is either "true" or "false"\&. If set to "true" then the match completions will be displayed before the other possible completions, if set to "false" then the match completions will be displayed after\&.
+.RE
+.PP
+/confdConfig/cli/wrapInfo (boolean) [true]
+.RS 4
+wrapInfo is either "true" or "false"\&. If "false" then the CLI will not automatically wrap the info field in "Possible completion:" listings\&. If set to "true" then the info text will be word\-wrapped and indented\&.
+.RE
+.PP
+/confdConfig/cli/wrapPrompt (boolean) [false]
+.RS 4
+wrapPrompt is either "true" or "false"\&. If "false" then the CLI will not automatically word wrap the prompt when prompting the user for some input\&. If set to "true" then the prompt will be word\-wrapped according to the current terminal width\&.
+.RE
+.PP
+/confdConfig/cli/sortShowElems (boolean) [true]
+.RS 4
+sortShowElems is either "true" or "false"\&. If "false" then the show commands will display the elements in the order they appear in the data model\&. If set to "true" then all non\-lists will appear before the lists\&. This setting only applies to the C\- and I\-style CLIs\&.
+.RE
+.PP
+/confdConfig/cli/possibleCompletionsFormat (string) [Possible completions]
+.RS 4
+possibleCompletionsFormat is the string displayed before the displaying the actual completion possibilities\&.
+.RE
+.PP
+/confdConfig/cli/matchCompletionsFormat (string) [Possible match completions:]
+.RS 4
+matchCompletionsFormat is the string displayed before the displaying the actual match completion possibilities\&.
+.RE
+.PP
+/confdConfig/cli/noMatchCompletionsFormat (string) [Possible match completions:]
+.RS 4
+noMatchCompletionsFormat is the string displayed when there are no matching completion possibilities\&. The string is empty by default\&.
+.RE
+.PP
+/confdConfig/cli/showDescription (boolean) [true]
+.RS 4
+showDescription is either true or false\&. If set to false then the Description: xx text will not be displayed\&.
+.RE
+.PP
+/confdConfig/cli/explicitSetCreate (boolean) [false]
+.RS 4
+explicitSetCreate is either "true" or "false"\&. If set to "true" then the \*(Aqset\*(Aq command in J\-style CLI cannot be used to create instances\&. Instead a new command called \*(Aqcreate\*(Aq becomes available for creating instances\&. Note that this deviates from a typical Juniper style CLI where instance creation is performed by the \*(Aqset\*(Aq command\&.
+.RE
+.PP
+/confdConfig/cli/templateFilter \- container element
+.RS 4
+User defined template filters must be listed here\&. They can be used in show templates in the same manner as the builtin ones\&. A template filter takes a string as input in \*(Aqargv[1]\*(Aq and returns a modified version of it by invoking \*(Aqconfd_action_reply_command\*(Aq\&. It can also take extra arguments\&. For example \*(Aq|a_filter:foo:42\*(Aq implies \*(Aqargv[2]="foo"\*(Aq and \*(Aqargv[3]="42"\&.
+.RE
+.PP
+/confdConfig/cli/templateFilter/name (string)
+.RS 4
+Name of template filter\&.
+.RE
+.PP
+/confdConfig/cli/templateFilter/callback (string)
+.RS 4
+Name of callback\&. The callback receives a string as first argument, optionally followed by the list of arguments given to the filter in the show template\&.
+.RE
+.PP
+/confdConfig/cli/enableDisplayLevel (true|false|pipe) [pipe]
+.RS 4
+enableDisplayLevel is either "true", "false" or "pipe"\&. If "false" then the \*(Aqdisplaylevel\*(Aq option to the show command will not be available in the CLIs\&. If set to "pipe" then a special pipe target called \*(Aqdisplay\-level\*(Aq will be available\&.
+.sp
+The displaylevel option can be used to limit how many levels will be displayed by the show command\&. If a display level of 1 is specified then only the direct children of an element will be shown\&. If a display level of 3 is specified then only elements at depth 3 below a given element will be displayed, etc\&.
+.sp
+A user can also modify the default display level for a given CLI\- session using the display\-level setting in the CLI, similarly to the screen\-width, or idle\-timeout settings\&.
+.RE
+.PP
+/confdConfig/cli/enableDisplayGroups (boolean) [true]
+.RS 4
+enableDisplayGroups is either "true" or "false"\&. If "false" then the user will not be able to provide a set of display groups when issuing the show command\&.
+.RE
+.PP
+/confdConfig/cli/defaultDisplayLevel (int64) [99999999]
+.RS 4
+If enableDisplayLevel is set to "true" then this settings controls the default display level used if no explicit display level is specified\&. It is also used as the initial value of the (set) \*(Aqdisplay\-level\*(Aq command in the CLI\&.
+.RE
+.PP
+/confdConfig/cli/instanceDescription (boolean) [true]
+.RS 4
+instanceDescription is either "true" or "false"\&. If "true" then the CLI will look for description elems and add their values as info texts when displaying possible completions in the CLI\&. This makes it easier to identify the different instances\&.
+.RE
+.PP
+/confdConfig/cli/addErrorPrefixSuffix (boolean) [true]
+.RS 4
+addErrorPrefixSuffix is either "true" or "false"\&. If "true" then the CLI will add "Error: " or "Aborted: " and when operations fail in the CLI\&. If set to "false" then the prefix will not be added for errors generated by some callback\&.
+.RE
+.PP
+/confdConfig/cli/autocommitLoad (boolean) [false]
+.RS 4
+autocommitLoad is either "true" or "false"\&. If "true" then when executing the \*(Aqload\*(Aq command each line will be committed as soon as it has been read\&. Note that this is normally not a good idea\&. Only applies when transactions are disabled\&.
+.RE
+.PP
+/confdConfig/cli/autocommitLoadChunkSize (uint64 > 0) [1]
+.RS 4
+autocommitLoadChunkSize is used to avoid auto commit:ing after each line but instead commit after a chunk of lines have been read\&.
+.RE
+.PP
+/confdConfig/cli/allOrNothingLoad (boolean) [false]
+.RS 4
+allOrNothingLoad is either true or false\&. If set to true then the transaction will be reset and all changes discarded if an error is encountered when loading a file\&. This behavior will not happen when the \*(Aqbest effort\*(Aq pipe target is used, nor when stopLoadOnError is set to false, nor when autocommitLoad is set to true\&.
+.RE
+.PP
+/confdConfig/cli/stopLoadOnError (boolean) [true]
+.RS 4
+stopLoadOnError is either "true" or "false"\&. If "false" then the \*(Aqload\*(Aq command in the C and I\-style CLIs will not terminate on the first error but continue to process commands form the file\&.
+.RE
+.PP
+/confdConfig/cli/enableLoadMerge (boolean) [true]
+.RS 4
+enableLoadMerge is either "true" or "false"\&. If "false" then the \*(Aqload\*(Aq command in the C and I\-style CLIs will not have an option for how to load a config file\&. If set to "true" then the \*(Aqload\*(Aq command will have an additional option for loading the file either in \*(Aqoverride\*(Aq mode or in \*(Aqmerge\*(Aq mode\&. \*(Aqoverride\*(Aq is the mode used if enableLoadMerge is set to \*(Aqfalse\*(Aq\&.
+.RE
+.PP
+/confdConfig/cli/loadActivityClock (boolean) [false]
+.RS 4
+loadActivityClock can be either "true" or "false"\&. If set to "true" then a |/\-\e| style animation will be displayed if the load operation takes more than 200 ms to complete\&.
+.RE
+.PP
+/confdConfig/cli/oldDetailsArg (boolean) [false]
+.RS 4
+oldDetailsArg is either "true" or "false"\&. If "false" then commands that display the configuration will not have a "details" argument but instead have a pipe flag called "details"\&. The setting is present for backwards compatibility, the recommended setting for future use is "false"\&.
+.RE
+.PP
+/confdConfig/cli/withDefaults (boolean) [false]
+.RS 4
+DEPRECATED \- use
+/confdConfig/defaultHandlingMode
+instead to control this behavior consistently for all northbound interfaces\&. Set
+/confdConfig/defaultHandlingMode
+to
+\fIreport\-all\fR
+to display default values\&.
+.sp
+withDefaults is either "true" or "false"\&. If "false" then leaf nodes that have their default values will not be shown when the user displays the configuration, unless the user gives the "details" option to the "show" command\&.
+.sp
+This is useful when there are many settings which are seldom used\&. When set to "false" only the values actually modified by the user will be shown\&.
+.RE
+.PP
+/confdConfig/cli/ignoreShowWithDefaultOnDiff (boolean) [false]
+.RS 4
+When set to \*(Aqtrue\*(Aq ConfD will ignore the annotation tailf:cli\-show\-with\-default when displaying the configuration changes in the C\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/trimDefaultShow (boolean) [false]
+.RS 4
+trimDefaultShow is either "true" or "false"\&. If "true" then leaf nodes that have the same value as the default value will not be displayed even when explicitly configured to have that value\&. When set to "false" such leaves will be displayed if explicitly configured to have the value\&. This setting applies to show commands, ie show running\-config and show config\&.
+.sp
+If this behavior is wanted, it is recommended to set
+/confdConfig/defaultHandlingMode
+to
+\fItrim\fR
+instead of using this parameter, in order to get a consistent behavior for all northbound interfaces\&.
+.sp
+If the default handling mode is
+\fItrim\fR, explicitly configured values that are the same as the default value are never stored in the data store\&. This means that if the default handling mode is
+\fItrim\fR, this parameter has no effect\&.
+.sp
+This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/trimDefaultSave (boolean) [false]
+.RS 4
+trimDefaultSave is either "true" or "false"\&. If "true" then leaf nodes that have the same value as the default value will not be displayed even when explicitly configured to have that value\&. When set to "false" such leaves will be displayed if explicitly configured to have the value\&. This setting applies to the save command\&.
+.sp
+If this behavior is wanted, it is recommended to set
+/confdConfig/defaultHandlingMode
+to
+\fItrim\fR
+instead of using this parameter, in order to get a consistent behavior for all northbound interfaces\&.
+.sp
+If the default handling mode is
+\fItrim\fR, explicitly configured values that are the same as the default value are never stored in the data store\&. This means that if the default handling mode is
+\fItrim\fR, this parameter has no effect\&.
+.sp
+This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/docWrap (boolean) [true]
+.RS 4
+docWrap is either "true" or "false"\&. If "false" then certain documentation texts will not be enclosed in "<" and ">", if set to "true" they will be\&.
+.RE
+.PP
+/confdConfig/cli/infoOnMatch (boolean) [true]
+.RS 4
+infoOnMatch is either "true" or "false"\&. If "true" then the CLI will add info texts when displaying possible match completions\&. If set to "false" then the info text will not be shown\&.
+.RE
+.PP
+/confdConfig/cli/externalActionErrorMsg (string)
+.RS 4
+The externalActionErrorMsg value is displayed whenever an external error occurs when executing an action in the CLI\&.
+.RE
+.PP
+/confdConfig/cli/infoOnTab (boolean) [true]
+.RS 4
+infoOnTab is either "true" or "false"\&. If "false" then no info strings will be displayed in the tab completion list when the user enters TAB\&.
+.RE
+.PP
+/confdConfig/cli/infoOnSpace (boolean) [true]
+.RS 4
+infoOnSpace is either "true" or "false"\&. If "false" then no info strings will be displayed in the tab completion list when the user enters SPACE\&.
+.RE
+.PP
+/confdConfig/cli/newLogout (boolean) [true]
+.RS 4
+newLogout is either "true" or "false"\&. If "false" then the I and C modes will have a single "logout" command for logging out a user and a specific session\&. If set to "true" then there will be two different commands \- "logout user <name>" and "logout session <id>"
+.RE
+.PP
+/confdConfig/cli/newInsert (boolean) [true]
+.RS 4
+newInsert is either "true" or "false"\&. If "false" then the old insert command will be used\&. If set to "true" then the new insert command, capable of inserting ordered\-by\-user list elements, will be used\&.
+.RE
+.PP
+/confdConfig/cli/showEditors (boolean) [true]
+.RS 4
+showEditors is either true or false\&. If set to true then a list of current editors will be displayed when a user enters configure mode\&.
+.RE
+.PP
+/confdConfig/cli/whoShowMode (boolean) [true]
+.RS 4
+whoShowMode is either "true" or "false"\&. If set to "true" then an \*(AqConfig Mode\*(Aq column will be added to the table shown when issuing the \*(Aqwho\*(Aq command in C\- and I\-mode\&.
+.RE
+.PP
+/confdConfig/cli/whoHistoryDateTimeFormat (short|long) [short]
+.RS 4
+whoHistoryDateTimeFormat decides if the date should always include the date (long), or only include the date when different from today (short)\&.
+.RE
+.PP
+/confdConfig/cli/messageFormat (string) [Message from $(sender) at $(time)\&.\&.\&.\en$(message)\enEOF\en]
+.RS 4
+messageFormat controls how messages between users and from the system should be presented to the user\&. The format string may contain the variables $(sender), $(time), $(message), $(date), $(time12), $(time12ampm), $(time12hm), $(host), $(hostname), and $(user)\&.
+.RE
+.PP
+/confdConfig/cli/messageWordWrap (boolean) [false]
+.RS 4
+messageWordWrap is either "true" or "false"\&. If set to "true" then all system/user/prio messages in the CLI will be word\-wrapped to the current terminal width\&.
+.RE
+.PP
+/confdConfig/cli/messageQueueSize (int64) [10]
+.RS 4
+Some messages are not displayed in the CLI when a command executed, but are delayed until the current command execution has finished\&. The size of the queue of pending messages is configured in messageQueueSize\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/defaultPrefix (string) []
+.RS 4
+defaultPrefix is a string that is placed in front of the default value when a configuration is shown with default values as comments\&.
+.RE
+.PP
+/confdConfig/cli/jWarningPrefix (string) [Warning: ]
+.RS 4
+jWarningPrefix is a string that is placed in front of warnings when they are displayed in the CLI\&. J\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/jAbortedPrefix (string) [Aborted: ]
+.RS 4
+jAbortedPrefix is a string that is placed in front of aborted messages when they are displayed in the CLI\&. J\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/jErrorPrefix (string) [Error: ]
+.RS 4
+jErrorPrefix is a string that is placed in front of error messages when they are displayed in the CLI\&. J\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/cWarningPrefix (string) [Warning: ]
+.RS 4
+cWarningPrefix is a string that is placed in front of warnings when they are displayed in the CLI\&. I\- and C\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/cAbortedPrefix (string) [Aborted: ]
+.RS 4
+cAbortedPrefix is a string that is placed in front of aborted messages when they are displayed in the CLI\&. I\- and C\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/cErrorPrefix (string) [Error: ]
+.RS 4
+cErrorPrefix is a string that is placed in front of error messages when they are displayed in the CLI\&. I\- and C\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/invalidDataString (string) [\-\-ERROR\-\-]
+.RS 4
+invalidDataString is a string that is displayed instead of the real value whenever a data provider returns an invalid data element\&.
+.RE
+.PP
+/confdConfig/cli/prompt1 (string) [\eu@\eh> ]
+.RS 4
+Prompt used in operational mode\&. The string may contain a number of backslash\-escaped special characters which are decoded as follows:
+.PP
+\e[ and \e]
+.RS 4
+Enclosing sections of the prompt in
+\e[
+and
+\e]
+makes that part not count when calculating the width of the prompt\&. This makes sense, for example, when including non\-printable characters, or control codes that are consumed by the terminal\&. The common control codes for setting text properties for vt100/xterm are ignored automatically, so are control characters\&. Updating the xterm title can be done using a control sequence may look like this:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<prompt1>\e[&#x1b;]0;\eu@\eh&#x07;\e]\eu@\eh&gt; </prompt1>
+                  
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\ed
+.RS 4
+the date in "YYYY\-MM\-DD" format (e\&.g\&., "2006\-01\-18")
+.RE
+.PP
+\eh
+.RS 4
+the hostname up to the first \*(Aq\&.\*(Aq
+.RE
+.PP
+\eH
+.RS 4
+the hostname
+.RE
+.PP
+\es
+.RS 4
+the client source ip
+.RE
+.PP
+\eS
+.RS 4
+the name provided by the \-H argument to confd_cli
+.RE
+.PP
+\et
+.RS 4
+the current time in 24\-hour HH:MM:SS format
+.RE
+.PP
+\eT
+.RS 4
+the current time in 12\-hour HH:MM:SS format
+.RE
+.PP
+\e@
+.RS 4
+the current time in 12\-hour am/pm format
+.RE
+.PP
+\eA
+.RS 4
+the current time in 24\-hour HH:MM format
+.RE
+.PP
+\eu
+.RS 4
+the username of the current user
+.RE
+.PP
+\em
+.RS 4
+the mode name (only used in XR style)
+.RE
+.PP
+\em{N}
+.RS 4
+same as \em, but the number of trailing components in the displayed path is limited to be max N (an integer)\&. Characters removed are replaced with an ellipsis (\&.\&.\&.)\&.
+.RE
+.PP
+\eM
+.RS 4
+the mode name inside parenthesis if in a mode
+.RE
+.PP
+\eM{N}
+.RS 4
+same as \eM, but the number of trailing components in the displayed path is limited to be max N (an integer)\&. Characters removed are replaced with an ellipsis (\&.\&.\&.)\&.
+.RE
+.RE
+.PP
+/confdConfig/cli/prompt2 (string) [\eu@\eh% ]
+.RS 4
+Prompt used in configuration mode\&. The string may contain a number of backslash\-escaped special characters which are decoded as described above\&.
+.RE
+.PP
+/confdConfig/cli/cPrompt1 (string) [\eh# ]
+.RS 4
+Prompt used in operational mode in C style\&. The string may contain a number of backslash\-escaped special characters which are decoded as described above\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/cPrompt2 (string) [\eh(\em)# ]
+.RS 4
+Prompt used in configuration mode in C style\&. The string may contain a number of backslash\-escaped special characters which are decoded as described above\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/cStylePromptInJStyle (boolean) [false]
+.RS 4
+If set to true then the \em and \eM will be expanded just as in C\- and I\-style
+.RE
+.PP
+/confdConfig/cli/promptHostnameDelimiter (string) [\&.]
+.RS 4
+When the \eh token is used in a prompt the first part of the hostname up until the first occurrence of the promptHostnameDelimiter is used\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/asyncPromptRefresh (boolean) [true]
+.RS 4
+asyncPromptRefresh is either "true" or "false"\&. If set to "true" the CLI prompt will be refreshed when asynchronous tasks prints messages in the CLI, such as messages from other users\&.
+.RE
+.PP
+/confdConfig/cli/showLogDirectory (string)
+.RS 4
+Location where the \*(Aqshow log\*(Aq command looks for log files\&.
+.RE
+.PP
+/confdConfig/cli/modeInfoInAudit (true|false|path) [false]
+.RS 4
+modeInfoInAudit is either "true", "false" or "path"\&. If "true", then all commands will be prefixed with major and minor mode name when logged as audit messages\&. This means that it is possible to differentiate between commands with the same name in different modes\&. Major mode is "operational" or "configure" and minor mode is "top" in J\-style and the name of the submode in C\- and I\-mode\&. On the top\-level in C\- and I\-mode it is also "top"\&. If set to "path" the major mode will be followed by the full command path to the submode\&.
+.RE
+.PP
+/confdConfig/cli/auditLogMode (all|allowed|denied) [all]
+.RS 4
+auditLogMode is either "all", "allowed", or "denied"\&. If "all", then all commands that the user tries to execute will be logged in the audit trail log\&. If "allowed", only allowed commands will be logged, ie commands that are actually run by the user\&. If "denied", only commands that the user were not allowed to execute will be logged, prefixed with "denied"\&.
+.RE
+.PP
+/confdConfig/cli/style (j|c|i) [j]
+.RS 4
+style is either "j", "c", or "i"\&. If "j", then the CLI will be presented as a Juniper style CLI\&. If "c" then the CLI will appear as Cisco XR style, and if "i" then a Cisco IOS style CLI will be rendered\&.
+.RE
+.PP
+/confdConfig/cli/idleTimeout (xs:duration) [PT30M]
+.RS 4
+Maximum idle time before terminating a CLI session\&. Default is PT30M, ie 30 minutes\&. PT0M means no timeout\&. Will be silently capped to 49 days 17 hours\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/promptSessionsCLI (boolean) [false]
+.RS 4
+promptSessionsCLI is either "true" or "false"\&. If set to "true" then only the current CLI sessions will be displayed when the user tries to start a new CLI session and the maximum number of sessions has been reached\&. Note that MAAPI sessions with their context set to "cli" would be regarded as CLI sessions and would be listed as such\&.
+.RE
+.PP
+/confdConfig/cli/disableIdleTimeoutOnCmd (boolean) [true]
+.RS 4
+disableIdleTimeoutOnCmd is either "true" or "false"\&. If set to "false" then the idle timeout will trigger even when a command is running in the CLI\&. If set to "true" the idle timeout will only trigger if the user is idling at the CLI prompt\&.
+.RE
+.PP
+/confdConfig/cli/commandTimeout (xs:duration|infinity) [infinity]
+.RS 4
+Global command timeout\&. Terminate command unless the command has completed within the timeout\&. It is generally a bad idea to use this feature since it may have undesirable effects in a loaded system where normal commands take longer to complete than usual\&.
+.sp
+This timeout can be overridden by a command specific timeout specified in the confd\&.cli file\&.
+.RE
+.PP
+/confdConfig/cli/commitRetryTimeout (xs:duration|infinity) [PT0S]
+.RS 4
+Commit timeout in the CLI\&. This timeout controls for how long the commit operation will attempt to complete the operation when some other entity is locking the database, e\&.g\&. some other commit is in progress or some managed object is locking the database\&.
+.sp
+There is a similiar configuration parameter,
+/confdConfig/commitRetry/Timeout, which sets a timeout for all ConfD transactions, not just for CLI transactions\&.
+.RE
+.PP
+/confdConfig/cli/timezone (utc|local) [local]
+.RS 4
+Used to specify which timezone should be used when displaying the time in the CLI\&. If "local" is specified then the timezone that is configured on the device will be used\&.
+.RE
+.PP
+/confdConfig/cli/utcOffset (int64) [0]
+.RS 4
+If the timezone is set to UTC this can be set to specify the UTC offset measured in minutes\&.
+.RE
+.PP
+/confdConfig/cli/timestamp \- container element
+.RS 4
+Default value for the timestamps in the CLI\&. The user can always enable or disable the display of timestamps, this only controls the initial session value\&.
+.RE
+.PP
+/confdConfig/cli/timestamp/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true" the CLI will print a timestamp before the output of each command\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/timestamp/clock24 (boolean) [true]
+.RS 4
+clock24 is either "true" or "false"\&. If "true" the 24\-hour time notation will be used when displaying hours\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/timestamp/format (string) [\ed{l,4}\em{l,5}\eD{l,3}\eH{r,2,0}:\et{r,2,0}:\es{r,2,0}\&.\ec{l,3,0} UTC\eu{l,1}\eo{r,2,0}:\ek{r,2,0}]
+.RS 4
+Specifies the format of the timestamp\&. The string may contain a number of backslash\-escaped special characters which are decoded as follows:
+.PP
+\eY
+.RS 4
+the current year in YYYY format
+.RE
+.PP
+\eM
+.RS 4
+the current month (1\-12)
+.RE
+.PP
+\eD
+.RS 4
+the current day of month (1\-31)
+.RE
+.PP
+\em
+.RS 4
+the name of the current month (Jan, Feb, \&.\&.\&.)
+.RE
+.PP
+\ed
+.RS 4
+the name of the current day of week (Mon, Tue, \&.\&.\&.)
+.RE
+.PP
+\eH
+.RS 4
+the current hour (0\-23 or 1\-12)
+.RE
+.PP
+\et
+.RS 4
+the current minute (0\-59)
+.RE
+.PP
+\ea
+.RS 4
+am/pm
+.RE
+.PP
+\eA
+.RS 4
+AM/PM
+.RE
+.PP
+\es
+.RS 4
+the current second (0\-59)
+.RE
+.PP
+\ec
+.RS 4
+the current microsecond (0+)
+.RE
+.PP
+\eu
+.RS 4
+UTC offset sign (\-/+)
+.RE
+.PP
+\eo
+.RS 4
+UTC offset hour (0\-23 or 1\-12)
+.RE
+.PP
+\ek
+.RS 4
+UTC offset minute (0\-59)
+.RE
+.sp
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+the UTC offset characters \eu, o and \ek can still be used even if the timezone (/confdConfig/cli/timezone) is set to "local"\&. The characters \ea (am/pm) and \eA (AM/PM) should only be used when clock24 (/confdConfig/cli/timestamp/clock24) is set to "false"\&.
+.sp .5v
+.RE
+After each special character another character sequence can be specified in order to control the field width, alignment and padding character\&. The sequence can be either {A, W, P} or {A,W} where A is the alignment and can be either \*(Aql\*(Aq or \*(Aqr\*(Aq, W is the field width and P is the padding character\&. If P is not specified, " " will be used as the padding character\&. Example, the format "\ed{l,4}\em{l,5}\eD{l,3}\eH{r,2,0}:\et{r,2,0}" would translate into "Wed Jun 3 08:35"\&.
+.sp
+This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/spaceCompletion \- container element
+.RS 4
+Default value for space completion in the CLI\&. The user can always enable or disable completion on space, this only controls the initial session value\&.
+.RE
+.PP
+/confdConfig/cli/spaceCompletion/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true" command and argument completion will be performed when <space> is entered\&.
+.RE
+.PP
+/confdConfig/cli/autoWizard \- container element
+.RS 4
+Default value for autowizard in the CLI\&. The user can always enable or disable the auto wizard in each session, this controls the initial session value\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/autoWizard/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true" the CLI will prompt the user for required attributes when a new identifier is created\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/ssh/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true" ConfD will will run the builtin SSH daemon and run the CLI\&.
+.RE
+.PP
+/confdConfig/cli/ssh/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the ConfD CLI should listen to for SSH sessions\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/cli/ssh/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/cli/ssh/port (inet:port\-number) [2024]
+.RS 4
+The port number for CLI SSH
+.RE
+.PP
+/confdConfig/cli/ssh/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the CLI also listens to for SSH connections\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/cli/ssh/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/cli/ssh/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the CLI for SSH connections\&.
+.RE
+.PP
+/confdConfig/cli/ssh/banner (string) []
+.RS 4
+banner is a string that will be presented to the client before authenticating when logging in to the CLI via the built\-in SSH server\&.
+.RE
+.PP
+/confdConfig/cli/ssh/bannerFile (string)
+.RS 4
+Name of file whose contents will be presented to the client before authenticating when logging in to the CLI via the built\-in SSH server\&. If /confdConfig/cli/ssh/banner is non\-empty, its value will be shown before the contents of this file\&. Default is empty\&.
+.RE
+.PP
+/confdConfig/cli/showCommitProgress (boolean) [false]
+.RS 4
+showCommitProgress can be either "true" or "false"\&. If set to "true" then the commit operation in the CLI will provide some progress information when the output is piped to the \*(Aqdetails\*(Aq target\&.
+.RE
+.PP
+/confdConfig/cli/commitActivityClock (boolean) [false]
+.RS 4
+commitActivityClock can be either "true" or "false"\&. If set to "true" then a |/\-\e| style animation will be displayed if the commit operation takes more than 200 ms to complete\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/commitMessage (boolean) [true]
+.RS 4
+commitMessage is either "true" or "false"\&. If set to "true" then a message will be displayed in the CLI whenever a commit operation is performed in the system\&. This is always disabled in I\-style, and in transactionless mode\&. This configuration parameter takes effect only for new sessions\&.
+.RE
+.PP
+/confdConfig/cli/commitMessageFormat (string) [System message at $(time)\&.\&.\&.\enCommit performed by $(user) via $(proto) using $(ctx)\&.\en]
+.RS 4
+commitMessageFormat controls how commit messages are displayed in the CLI\&. The format string may contain the variables $(user), $(time), $(ctx), $(date), $(time12), $(time12ampm), $(time12hm), $(host), $(hostname), and $(proto)\&. This configuration parameter takes effect for both existing and new sessions\&.
+.RE
+.PP
+/confdConfig/cli/suppressCommitMessages \- container element
+.RS 4
+Suppress commit messages from certain contexts\&.
+.RE
+.PP
+/confdConfig/cli/suppressCommitMessages/context (string) []
+.RS 4
+Suppress commit messages from a certain context\&. The value of suppressCommitMessages should be the name of a context\&. For example "system"\&.
+.RE
+.PP
+/confdConfig/cli/jStatusFormat (string) [[$(status)][$(time)]\en]
+.RS 4
+jStatusFormat controls which status message is displayed after executing a CLI command in the J\-style CLI\&. The format string may contain the variables $(status), $(time), $(date), $(time12), $(time12ampm), $(time12hm), $(host), $(hostname), and $(proto)\&.
+.RE
+.PP
+/confdConfig/cli/forcedExitFormat (string) [You are forced out of configure mode by $(user)\&.\en]
+.RS 4
+forceExitFormat controls which message to display when a user is forced out of configure mode by another user\&. The format string may contain the variables $(user), $(time), $(date), $(time12), $(time12ampm), $(time12hm), $(host) and $(hostname)\&.
+.RE
+.PP
+/confdConfig/cli/showSubsystemMessages (boolean) [true]
+.RS 4
+showSubsystemMessages is either "true" or "false"\&. If "true" the CLI will display a system message whenever a connected daemon is started or stopped\&.
+.RE
+.PP
+/confdConfig/cli/ignoreSubsystemFailures (boolean) [false]
+.RS 4
+ignoreSubsystemFailures is either "true" or "false"\&. If "true" the CLI will make a best effort to display data even if a data provider is unavailable\&.
+.RE
+.PP
+/confdConfig/cli/showEmptyContainers (boolean) [false]
+.RS 4
+showEmptyContainers is either "true" or "false"\&. If "true" the CLI will display empty container nodes when displaying the configuration\&. If "false" then empty static containers will not be shown\&.
+.RE
+.PP
+/confdConfig/cli/showTags (boolean) [true]
+.RS 4
+showTags is either "true" or "false"\&. If "true" the CLI will display configuration tags if they are present\&. If set to "false" then the tags will not be displayed by default\&.
+.RE
+.PP
+/confdConfig/cli/showAnnotations (boolean) [true]
+.RS 4
+showAnnotations is either "true" or "false"\&. If "true" the CLI will display configuration annotations if they are present\&. If set to "false" then the annotations will not be displayed by default\&.
+.RE
+.PP
+/confdConfig/cli/orderedShowConfig (boolean) [true]
+.RS 4
+orderedShowConfig is either "true" or "false"\&. If "true" then the commands displayed when running the "show configuration" command in C\-mode will take leafrefs and cli\-diff\-dependency into account\&.
+.RE
+.PP
+/confdConfig/cli/suppressFastShow (boolean) [false]
+.RS 4
+suppressFastShow is either "true" or "false"\&. If "true" then the fast show optimization will be suppressed in the C\-style CLI\&. The fast show optimization is somewhat experimental and may break certain operations\&.
+.RE
+.PP
+/confdConfig/cli/leafPrompting (boolean) [true]
+.RS 4
+leafPrompting is either "true" or "false"\&. If "true" the CLI will prompt the user for leaf values if they are not provided on the command line\&. If "false" then an error message will be displayed if the user does not provide a value for a leaf\&.
+.RE
+.PP
+/confdConfig/cli/jExtendedShow (boolean) [true]
+.RS 4
+jExtendedShow is either "true" or "false"\&. If set to "true" then the J\-style CLI will have auto\-rendered show commands in the same style as the C and I\-style CLIs\&. The \*(Aqshow status\*(Aq command can still be used for viewing config="false" data\&.
+.RE
+.PP
+/confdConfig/cli/jShowCR (boolean) [false]
+.RS 4
+jShowCR is either "true" or "false"\&. If set to "true" then the J\-style CLI will show >cr< in the completion list whenever it is legal to press cr\&.
+.RE
+.PP
+/confdConfig/cli/showPipe (boolean) [true]
+.RS 4
+showPipe is either "true" or "false"\&. If set to "true" in operational mode the completion list will contain | if it is legal to enter |\&. In J\-style the jShowCR must also be set to enable this\&. If disablePipe is set, it will override the setting of showPipe and imply the same behavior as if showPipe is "false"\&.
+.RE
+.PP
+/confdConfig/cli/showPipeConfig (boolean) [false]
+.RS 4
+showPipeConfig is either "true" or "false"\&. If set to "true" in configure mode the completion list will contain | if it is legal to enter |\&. In J\-style the jShowCR must also be set to enable this\&. If disablePipeConfig is set, it will override the setting of showPipeConfig and imply the same behavior as if showPipeConfig is "false"\&.
+.RE
+.PP
+/confdConfig/cli/disablePipe (boolean) [false]
+.RS 4
+disablePipe is either "true" or "false"\&. If set to "true" then the pipe commands are disabled in operational mode\&.
+.RE
+.PP
+/confdConfig/cli/disablePipeConfig (boolean) [false]
+.RS 4
+disablePipeConfig is either "true" or "false"\&. If set to "true" then the pipe commands are disabled in configure mode\&.
+.RE
+.PP
+/confdConfig/cli/pipeHelpMode (pipeHelpModeType) [auto]
+.RS 4
+If showPipe is set to true, then pipeHelpMode determines how the pipe option will be displayed to the user\&. If set to "auto", then the description text "Output modifiers" will only be displayed if there are any other options with help texts, otherwise it will not be shown\&. If set to "always" then the help text will always be displayed, if set to "never" then it will never be displayed\&.
+.RE
+.PP
+/confdConfig/cli/jAllowDeleteAll (boolean) [true]
+.RS 4
+jAllowDeleteAll is either "true" or "false"\&. If set to "true" then the J\-style CLI will show the command "delete" without arguments, if set to "false" then an argument is required\&.
+.RE
+.PP
+/confdConfig/cli/cSilentNo (boolean) [true]
+.RS 4
+Silently ignore deletes of non\-existing instances\&.
+.RE
+.PP
+/confdConfig/cli/cModeExitFormat (string) [!]
+.RS 4
+cModeExitFormat is the string used in the CLI when displaying the running configuration to indicate exit from a submode\&.
+.RE
+.PP
+/confdConfig/cli/cRestrictiveNo (boolean) [false]
+.RS 4
+If a leaf value is given when an optional leaf is deleted, the given value is normally ignored and the node is deleted regardless of the value\&. When cRestrictiveNo is set to "true", the given value is required to be equal to the old value in order to the delete operation to be allowed\&. For example the Cisco style command "no interface eth0 mtu 1500" will only succeed if the mtu has the value 1500\&.
+.RE
+.PP
+/confdConfig/cli/cExtendedCmdSearch (boolean) [true]
+.RS 4
+Extend the available submode commands to all commands in parent (and grand\-parent) modes\&. These commands are not visible during completion but will be executed if entered\&. If set to "false" then only commands for entering other submodes are available in parent and grand\-parent modes, if set to "true" all commands in parent and grand\-parent modes are available\&.
+.RE
+.PP
+/confdConfig/cli/cSuppressCmdSearch (boolean) [false]
+.RS 4
+Prevent non\-local commands from being executed\&. This negates the effect of cExtendedCmdSearch above\&. It is recommended to also set cModeExitFormat to "exit" when this option is set to true\&.
+.RE
+.PP
+/confdConfig/cli/enterSubmodeOnLeaf (boolean) [true]
+.RS 4
+enterSubmodeOnLeaf is either "true" or "false"\&. If set to "true" (the default) then setting a leaf in a submode from a parent mode results in entering the submode after the command has completed\&. If set to "false" then an explicit command for entering the submode is needed\&. For example, if running the command
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+interface FastEthernet 1/1/1 mtu 1400
+.fi
+.if n \{\
+.RE
+.\}
+from the top level in config mode\&. If enterSubmodeOnLeaf is true the CLI will end up in the "interface FastEthernet 1/1/1" submode after the command execution\&. If set to "false" then the CLI will remain at the top level\&. To enter the submode when set to "false" the command
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+interface FastEthernet 1/1/1
+.fi
+.if n \{\
+.RE
+.\}
+is needed\&. Applied to the C\- and I\- style CLI\&.
+.RE
+.PP
+/confdConfig/cli/noFollowIncompleteCommand (boolean) [false]
+.RS 4
+noFollowIncompleteCommand is either "true" or "false"\&. If set to "true" then the \*(Aqno\*(Aq command will take incomplete\-command declarations into account\&. If set to "false" it will not\&.
+.RE
+.PP
+/confdConfig/cli/jShowUnset (boolean) [false]
+.RS 4
+jShowUnset is either "true" or "false"\&. If set to "true" then the J\-style CLI will show unset leaves with the value of jShowUnsetText when doing "show configuration"\&.
+.RE
+.PP
+/confdConfig/cli/jShowUnsetText (string) [UNSET]
+.RS 4
+jShowUnsetText is the text printed for unset values if jShowUnset has been set to true\&.
+.RE
+.PP
+/confdConfig/cli/jShowTableRecursive (boolean) [false]
+.RS 4
+jShowTableRecursive is either "true" or "false"\&. If "true" the J\-style CLI will attempt to display the result of the command "show table" as a table even when a list is not directly specified\&. If set to "false" then a table will only be produced if a list node is specified as argument to "show table"\&.
+.RE
+.PP
+/confdConfig/cli/cPrivate (boolean) [false]
+.RS 4
+cPrivate is either "true" or "false"\&. If set to "true" then the term "private" will be used in place of "terminal" for denoting the private/terminal configuration mode\&. When set to "false" the term "terminal" will be used instead\&.
+.RE
+.PP
+/confdConfig/cli/cTab (boolean) [false]
+.RS 4
+cTab is either "true" or "false"\&. If "true" the Cisco style CLI will not display any help text when the user enters TAB\&. If "false" then help text will be shown when entering TAB, similarly to the Juniper\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/cTabInfo (boolean) [false]
+.RS 4
+cTabInfo is either "true" or "false"\&. If "false" the Cisco style CLI will not display any info text when the user enters TAB\&. If "true" then info text will be shown when entering TAB, similarly to the Juniper\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/tabExtend (boolean) [false]
+.RS 4
+tabExtend is either "true" or "false"\&. If "true" the CLI will extend the current token to the next longer alternative\&.
+.RE
+.PP
+/confdConfig/cli/cHelp (boolean) [true]
+.RS 4
+cHelp is either "true" or "false"\&. If "true" the Cisco style CLI will not display any desc text when the user enters \*(Aq?\*(Aq\&. If "false" then desc text will be shown when entering \*(Aq?\*(Aq, similarly to the Juniper\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/restrictedFileAccess (boolean) [false]
+.RS 4
+restrictedFileAccess is either "true" or "false"\&. If this is set to "true", then the user only has access to the home directory (or the directory where confd_cli is started), or if a directory is specified in a cli command parameter (params/param/type/directory{wd} or params/param/type/file{wd}) to that directory\&.
+.RE
+.PP
+/confdConfig/cli/hideDotFiles (boolean) [false]
+.RS 4
+hideDotFile is either "true" or "false"\&. If "true" then files starting with a \*(Aq\&.\*(Aq will not be visible in the CLI\&.\&.
+.RE
+.PP
+/confdConfig/cli/restrictedFileRegexp (string) []
+.RS 4
+restrictedFileRegexp is either an empty string or an regular expression (AWK style)\&. If not empty then all files and directories created or accessed must match the regular expression\&. This can be used to ensure that certain symbols does not occur in created file names\&.
+.RE
+.PP
+/confdConfig/cli/mapActions (both|config|oper) [both]
+.RS 4
+mapActions is either "both", "config", or "oper"\&. If "both", then actions are available both in operational mode and in configure mode\&. If "oper" then they are only available in operational mode, and if "config" then they are only available in configure mode\&.
+.RE
+.PP
+/confdConfig/cli/modeNameStyle (full|short|two) [short]
+.RS 4
+modeNameStyle is either "short", "two", or "full"\&. If "short", then the mode name of submodes in the Cisco style CLIs will be constructed from the last element in the path and the instance key\&. If set to "two" then the two last modes will be used for the mode name\&. If set to "full" then all components in the path will be used in the mode name\&.
+.RE
+.PP
+/confdConfig/cli/modeInfoInAAA (true|false|path) [false]
+.RS 4
+modeInfoInAAA is either "true", "false" or "path", If "true", then all commands will be prefixed with major and minor mode name when processed by the AAA\-rules\&. This means that it is possible to differentiate between commands with the same name in different modes\&. Major mode is "operational" or "configure" and minor mode is "top" in J\-style and the name of the submode in C\- and I\-mode\&. On the top\-level in C\- and I\-mode it is also "top"\&. If set to "path" and if the command operation is "read" the major mode will be followed by the path to the submode which will be followed by the command\&. If set to "path" and if the command operation is "execute" the major mode will instead be followed by the command and the path to the submode will be prepended to any path arguments of the command\&.
+.RE
+.PP
+/confdConfig/cli/cmdAAAForAutowizard (true|false) [false]
+.RS 4
+cmdAAAForAutowizard si either "true" or "false"\&. If set to "true" then the CLI will generate synthetic commands, and perform AAA command rule checks for, for all paths and values requested by the autowizard functionality\&.
+.RE
+.PP
+/confdConfig/cli/quoteStyle (quote|baskslash) [backslash]
+.RS 4
+quoteStyle is either "quote" or "backslash"\&. If set to "quote" then the quote characters will be used on the CLI command line for quoting strings with troublesome characters\&. If set to "backslash" then a backslash will be used\&. For example:
+.sp
+Using quote:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+io(config)# description "description with spaces"
+.fi
+.if n \{\
+.RE
+.\}
+Using backslash:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+io(config)# description description\e with\e spaces
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/cli/laxBarQuoting (boolean) [false]
+.RS 4
+laxBarQuoting is either "true" or "false"\&. If set to "true" then | and ; are only quoted if they appear by them selves\&. A consequence of this is that the user must have whitespace on both sides of | and ; on the command line when these characters are used as pipe (|) or concatenator (;)\&.
+.RE
+.PP
+/confdConfig/cli/expandAliasOnCompletion (boolean) [true]
+.RS 4
+expandAliasOnCompletion is either true or false\&. If set to true then aliases will be expanded before invoking the completion code\&.
+.RE
+.PP
+/confdConfig/cli/expandAliasEscape (boolean) [false]
+.RS 4
+expandAliasEscape is either false or a character\&. If set to a character then expanding an alias can be prevented by putting the character in front of the alias\&.
+.RE
+.PP
+/confdConfig/cli/allowParenQuotes (boolean) [false]
+.RS 4
+allowParenQuotes is either "true" or "false"\&. If set to "true" then parentheses are treated as quotes, ie the string (xx yy) will be equivalent to "xx yy" and xx\e yy on the CLI command line\&.
+.RE
+.PP
+/confdConfig/cli/execNavigationCmds (boolean) [false]
+.RS 4
+execNavigationCmds is either "true" or "false"\&. If set to "true" then it is possible to enter a submode also in exec mode in C\- and I\-style CLI\&.
+.RE
+.PP
+/confdConfig/cli/exitConfigModeOnCtrlC (boolean) [true]
+.RS 4
+exitConfigModeOnCtrlC is either "true" or "false"\&. If set to "false" the user will not be thrown out of config mode when ctrl\-c is pressed on an empty command line\&.
+.RE
+.PP
+/confdConfig/cli/allowOvewriteOnCopy (boolean) [false]
+.RS 4
+allowOverwriteOnCopy is either "true" or "false"\&. If set to "true" then the copy command in the CLI will overwrite the target if it exists\&. If set to "false" then an error will be displayed if the target exists\&.
+.RE
+.PP
+/confdConfig/cli/inheritPaginate (boolean) [true]
+.RS 4
+inheritPaginate is either "true" or "false"\&. If set to "true" then the paginate setting of a pipe command will be determined by the paginate setting of the main command\&. If set to "false", then the output from a pipe command will not be paginated unless pagination for that pipe command has been overridden in a clispec file\&.
+.RE
+.PP
+/confdConfig/cli/escapeBackslash (boolean) [false]
+.RS 4
+escapeBackslash is either "true" or "false"\&. If "true" then backslash is escaped in the CLI\&.
+.RE
+.PP
+/confdConfig/cli/bypassAllowAbbrevKeys (boolean) [false]
+.RS 4
+bypassAllowAbbrevKeys is either "true" or "false"\&. If "true" then
+/confdConfig/cli/allowAbbrevKeys
+setting does not take any effect\&. It means that no matter what is set for
+/confdConfig/cli/allowAbbrevKeys, the key elements are not allowed to be abbreviated in the CLI\&. This is relevant in the J\-style CLI when using the commands \*(Aqdelete\*(Aq and \*(Aqedit\*(Aq\&. In the C/I\-style CLIs when using the commands \*(Aqno\*(Aq, \*(Aqshow configuration\*(Aq and for commands to enter submodes\&.
+.RE
+.PP
+/confdConfig/aaa \- container element
+.RS 4
+The login procedure to ConfD is fully described in the ConfD User\*(Aqs Guide\&.
+.RE
+.PP
+/confdConfig/aaa/sshLoginGraceTime (xs:duration) [PT10M]
+.RS 4
+ConfD closes ssh connections after this time if the client has not successfully authenticated itself by then\&. If the value is PT0S, there is no time limit for client authentication\&.
+.sp
+This is a global value for all ssh servers in ConfD\&.
+.sp
+Modification of this value will only affect ssh connections that are established after the modification has been done\&.
+.RE
+.PP
+/confdConfig/aaa/sshMaxAuthTries (uint32|unbounded) [unbounded]
+.RS 4
+ConfD closes ssh connections when the client has made this number of unsuccessful authentication attempts\&.
+.sp
+This is a global value for all ssh servers in ConfD\&.
+.sp
+Modification of this value will only affect ssh connections that are established after the modification has been done\&.
+.RE
+.PP
+/confdConfig/aaa/sshPubkeyAuthentication (none|local|system) [system]
+.RS 4
+Controls how the ConfD SSH daemon locates the user keys for public key authentication\&.
+.sp
+If set to "none", public key authentication is disabled\&.
+.sp
+If set to "local", and the user exists in
+/aaa/authentication/users, the keys in the user\*(Aqs \*(Aqssh_keydir\*(Aq directory are used\&.
+.sp
+If set to "system", the user is first looked up in
+/aaa/authentication/users, but only if
+/confdConfig/aaa/localAuthentication/enabled
+is set to "true" \- if
+localAuthentication
+is disabled, or the user does not exist in
+/aaa/authentication/users, but the user does exist in the OS password database, the keys in the user\*(Aqs $HOME/\&.ssh directory are used\&.
+.RE
+.PP
+/confdConfig/aaa/sshServerKeyDir (string)
+.RS 4
+sshServerKeyDir is the directory file path where the keys used by the ConfD SSH daemon are found\&. This parameter must be set if SSH is enabled for NETCONF or the CLI\&. If SSH is enabled, the server keys used by ConfD are of the same format as the server keys used by openssh, i\&.e\&. the same format as generated by \*(Aqssh\-keygen\*(Aq\&.
+.sp
+Only DSA\- and RSA\-type keys can be used with the ConfD SSH daemon, as generated by \*(Aqssh\-keygen\*(Aq with the \*(Aq\-t dsa\*(Aq and \*(Aq\-t rsa\*(Aq switches, respectively\&.
+.sp
+The key must be stored with an empty passphrase, and with the name \*(Aqssh_host_dsa_key\*(Aq if it is a DSA\-type key, and with the name \*(Aqssh_host_rsa_key\*(Aq if it is an RSA\-type key\&.
+.sp
+The SSH server will advertise support for those key types for which there is a key file available and for which the required algorithm is enabled, see the
+/confdConfig/ssh/algorithms/serverHostKey
+directive\&.
+.RE
+.PP
+/confdConfig/aaa/defaultGroup (string)
+.RS 4
+If the group of a user cannot be found in the AAA sub\-system, a logged in user will end up as a member of the default group (if specified)\&. If a user logs in and the group membership cannot be established, the user will have zero access rights\&.
+.RE
+.PP
+/confdConfig/aaa/authOrder (string)
+.RS 4
+By default the AAA system will try to authenticate a user in the following order\&. (1) localAuthentication i\&.e\&. the user is found inside
+/aaa/authentication/users\&. (2) pam \- i\&.e PAM authentication \- if enabled \- is tried\&. (3) externalAuthentication i\&.e\&. an external program is invoked to authenticate the user\&.
+.sp
+The default is thus:
+.sp
+"localAuthentication pam externalAuthentication"
+.sp
+To change the order \- change this string\&. For example in order to always try pam authentication before local auth set it to: "pam localAuthentication"
+.RE
+.PP
+/confdConfig/aaa/expirationWarning (ignore|display|prompt) [ignore]
+.RS 4
+When PAM or external authentication is used, the authentication mechanism may give a warning that the user\*(Aqs password is about to expire\&. This parameter controls how ConfD processes that warning message\&.
+.sp
+If set to "ignore", the warning is ignored\&.
+.sp
+If set to "display", interactive user interfaces will display the warning message at login time\&.
+.sp
+If set to "prompt", interactive user interfaces will display the warning message at login time, and require that the user acknowledges the message before proceeding\&.
+.RE
+.PP
+/confdConfig/aaa/auditUserName (always|known|never) [always]
+.RS 4
+Controls the logging of the user name when a failed authentication attempt is logged to the audit log\&.
+.sp
+If set to "always", the user name is always logged\&.
+.sp
+If set to "known", the user name is only logged when it is known to be valid (i\&.e\&. when attempting localAuthentication and the user exists in
+/aaa/authentication/users), otherwise it is logged as "[withheld]"\&.
+.sp
+If set to "never", the user name is always logged as "[withheld]"\&.
+.RE
+.PP
+/confdConfig/aaa/localAuthentication/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", local authentication is used, i\&.e\&. the user data kept in the aaa namespace is used to authenticate users\&. If "false" some other authentication mechanism such as PAM or external authentication must be used\&.
+.RE
+.PP
+/confdConfig/aaa/pam \- container element
+.RS 4
+If PAM is to be used for login the ConfD daemon typically must run as root\&.
+.RE
+.PP
+/confdConfig/aaa/pam/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", ConfD uses PAM for authentication\&.
+.RE
+.PP
+/confdConfig/aaa/pam/service (string) [common\-auth]
+.RS 4
+The PAM service to be used for the authentication\&. This can be any service we have installed in the
+/etc/pam\&.d
+directory\&. Different unices have different services installed under
+/etc/pam\&.d, and some use a file
+/etc/pam\&.conf
+instead \- choose a service which makes sense or create a new one\&.
+.RE
+.PP
+/confdConfig/aaa/pam/timeout (xs:duration) [PT10S]
+.RS 4
+The maximum time that authentication will wait for a reply from PAM\&. If the timeout is reached, the PAM authentication will fail, but authentication attempts may still be done with other mechanisms as configured for
+/confdConfig/aaa/authOrder\&. Default is PT10S, i\&.e\&. 10 seconds\&.
+.RE
+.PP
+/confdConfig/aaa/rest/authCacheTTL (xs:duration) [PT10S]
+.RS 4
+The amount of time that REST API and RESTCONF locally caches authentication credentials before querying the AAA server\&. Default is PT10S, i\&.e\&. 10 seconds\&. Setting to PT0S, i\&.e\&. 0 seconds, effectively disables the authentication cache\&.
+.RE
+.PP
+/confdConfig/aaa/rest/enableAuthCacheClientIp (boolean) [false]
+.RS 4
+If enabled, a clients source IP address will also be stored in the REST/RESTCONF authentication cache\&.
+.RE
+.PP
+/confdConfig/aaa/externalAuthentication/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", external authentication is used\&.
+.RE
+.PP
+/confdConfig/aaa/externalAuthentication/executable (string)
+.RS 4
+If we enable external authentication, an executable on the local host can be launched to authenticate a user\&. The executable will receive the username and the cleartext password on its standard input\&. The format is "[${USER};${PASS};]\en"\&. For example if user is "bob" and password is "secret", the executable will receive the string "[bob;secret;]" followed by a newline on its standard input\&. The program must parse this line\&.
+.sp
+The task of the external program, which for example could be a RADIUS client, is to authenticate the user and also provide the user to groups mapping\&. Refer to the
+\m[blue]\fBExternal authentication section of the AAA chapter in the User Guide\fR\m[]
+for the details of how the program should report the result back to ConfD\&.
+.RE
+.PP
+/confdConfig/aaa/externalAuthentication/useBase64 (boolean) [false]
+.RS 4
+When set to "true", ${USER} and ${PASS} in the data passed to the executable will be base64\-encoded, allowing e\&.g\&. for the password to contain \*(Aq;\*(Aq characters\&. For example if user is "bob" and password is "secret", the executable will receive the string "[Ym9i;c2VjcmV0;]" followed by a newline\&.
+.RE
+.PP
+/confdConfig/aaa/externalAuthentication/includeExtra (boolean) [false]
+.RS 4
+When set to "true", additional information items will be provided to the executable: source IP address and port, context, and protocol\&. I\&.e\&. the complete format will be "[${USER};${PASS};${IP};${PORT};${CONTEXT};${PROTO};]\en"\&. Example: "[bob;secret;192\&.168\&.1\&.1;12345;cli;ssh;]\en"\&.
+.RE
+.PP
+/confdConfig/aaa/authenticationCallback/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", ConfD will invoke an application callback when authentication has succeeded or failed\&. The callback may reject an otherwise successful authentication\&. If the callback has not been registered, all authentication attempts will fail\&. See
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+for the callback details\&.
+.RE
+.PP
+/confdConfig/aaa/authorization/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "false", all authorization checks are turned off similar to the \-noaaa flag in confd_cli\&.
+.RE
+.PP
+/confdConfig/aaa/authorization/callback/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", ConfD will invoke application callbacks for authorization\&. If the callbacks have not been registered, all authorization checks will be rejected\&. See
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+for the callback details\&.
+.RE
+.PP
+/confdConfig/aaa/authorization/nacmCompliant (boolean) [true]
+.RS 4
+In earlier versions, ConfD did not fully comply with the NACM specification: the \*(Aqmodule\-name\*(Aq leaf was required to match toplevel nodes, but it was not considered for the node being accessed\&. If this leaf is set to "false", this non\-compliant behavior remains \- this setting is only provided for backward compatibility with existing rule sets, and is not recommended\&.
+.RE
+.PP
+/confdConfig/aaa/aaaBridge \- container element
+.RS 4
+aaaBridge specifies if the aaa_bridge, as described in
+\m[blue]\fBconfd_aaa_bridge(1)\fR\m[], will be used to access external AAA info\&.
+.RE
+.PP
+/confdConfig/aaa/aaaBridge/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the confd_aaa_bridge program is automatically started by ConfD
+.RE
+.PP
+/confdConfig/aaa/aaaBridge/file (string)
+.RS 4
+file specifies the location of the AAA data file needed by the confd_aaa_bridge program\&.
+.RE
+.PP
+/confdConfig/aaa/namespace (string) [http://tail\-f\&.com/ns/aaa/1\&.1]
+.RS 4
+If we want to move the AAA data into another userdefined namespace, we indicate that here\&.
+.RE
+.PP
+/confdConfig/aaa/prefix (string) [/]
+.RS 4
+If we want to move the AAA data into another userdefined namespace, we indicate the prefix path in that namespace where the ConfD AAA namespace has been mounted\&.
+.sp
+This feature has been deprecated, it is easier to achieve this through a symlink\&.
+.RE
+.PP
+/confdConfig/netconf \- container element
+.RS 4
+This section defines settings which decide how the NETCONF agent should behave, with respect to NETCONF and SSH\&.
+.RE
+.PP
+/confdConfig/netconf/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the NETCONF agent is started\&.
+.RE
+.PP
+/confdConfig/netconf/versions \- container element
+.RS 4
+The list of NETCONF versions that the NETCONF server will understand and advertise\&.
+.RE
+.PP
+/confdConfig/netconf/versions/v1\&.0 (boolean) [true]
+.RS 4
+Setting the value to true will enable NETCONF version 1\&.0, as defined in RFC 4741\&.
+.RE
+.PP
+/confdConfig/netconf/versions/v1\&.1 (boolean) [true]
+.RS 4
+Setting the value to true will enable NETCONF version 1\&.1, as defined in RFC 6241\&.
+.RE
+.PP
+/confdConfig/netconf/transport \- container element
+.RS 4
+Settings deciding which transport services the NETCONF agent should listen to, e\&.g\&. TCP and SSH\&.
+.RE
+.PP
+/confdConfig/netconf/transport/ssh \- container element
+.RS 4
+Settings deciding how the NETCONF SSH transport service should behave\&.
+.RE
+.PP
+/confdConfig/netconf/transport/ssh/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the NETCONF agent uses SSH as a transport service\&.
+.RE
+.PP
+/confdConfig/netconf/transport/ssh/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the ConfD NETCONF agent should listen to\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/netconf/transport/ssh/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/netconf/transport/ssh/port (inet:port\-number) [2022]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/netconf/transport/ssh/ip\&. Note that the standard port for NETCONF over SSH is 830\&.
+.RE
+.PP
+/confdConfig/netconf/transport/ssh/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the NETCONF agent also listens to for SSH connections\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/netconf/transport/ssh/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/netconf/transport/ssh/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the NETCONF server for SSH connections\&.
+.RE
+.PP
+/confdConfig/netconf/transport/tcp \- container element
+.RS 4
+NETCONF over TCP is not standardized, but it can be useful during development in order to use e\&.g\&. netcat for scripting\&. It is also useful if we want to use our own proprietary transport\&. In that case we setup the NETCONF agent to listen to localhost and then proxy it from our transport service module\&.
+.RE
+.PP
+/confdConfig/netconf/transport/tcp/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the NETCONF agent uses clear text TCP as a transport service\&.
+.RE
+.PP
+/confdConfig/netconf/transport/tcp/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the ConfD NETCONF agent should listen to\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/netconf/transport/tcp/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/netconf/transport/tcp/port (inet:port\-number) [2023]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/netconf/transport/tcp/ip\&.
+.RE
+.PP
+/confdConfig/netconf/transport/tcp/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the NETCONF agent also listens to for TCP connections\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/netconf/transport/tcp/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/netconf/transport/tcp/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the NETCONF server for TCP connections\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities \- container element
+.RS 4
+Decide which NETCONF capabilities to enable here\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/startup/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the startup NETCONF capability is enabled\&. Enable only if /confdConfig/datastores/startup is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/candidate/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the candidate NETCONF capability is enabled\&. Enable only if /confdConfig/datastores/candidate is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/confirmed\-commit/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the confirmed\-commit NETCONF capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/writable\-running/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the writable\-running NETCONF capability is enabled\&. Enable only if /confdConfig/datastores/running/access is read\-write\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/rollback\-on\-error/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the rollback\-on\-error NETCONF capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/validate/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If enabled "true", the validate NETCONF capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/validate/test\-only (boolean) [false]
+.RS 4
+DEPRECATED \- this feature is available in NETCONF 1\&.1\&.
+.sp
+If test\-only "true", the NETCONF agent allows \*(Aqtest\-only\*(Aq as a valid value for the \*(Aq<test\-option>\*(Aq parameter in \*(Aq<edit\-config>\*(Aq\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url \- container element
+.RS 4
+Turn on the URL capability options we want to support\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the url NETCONF capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/file \- container element
+.RS 4
+Decide how the url file support should behave\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/file/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the url file scheme is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/file/rootDir (string)
+.RS 4
+rootDir is a directory path on disk where ConfD will store the result from an NETCONF operation using the url capability\&. This parameter must be set if the file url scheme is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/ftp \- container element
+.RS 4
+Decide how the url ftp scheme should behave\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/ftp/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the url ftp scheme is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/sftp \- container element
+.RS 4
+Decide how the url sftp scheme should behave\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/url/sftp/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the url sftp scheme is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/xpath/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the xpath capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/notification/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the notification capability, defined in RFC 5277, is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/notification/interleave/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the interleave capability, defined in RFC 5277, is enabled\&. With this capability enabled, the NETCONF agent will process RPCs while sending notifications\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/partial\-lock/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the partial\-lock capability defined in RFC 5717 is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/actions/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/actions/1\&.0
+capability is enabled\&.
+.RE
+.PP
+>/confdConfig/netconf/capabilities/transactions/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/transactions/1\&.0
+capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/ietf\-with\-defaults/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the with\-defaults capability, defined in RFC 6243, is enabled\&.
+.sp
+The NETCONF server will advertise its \*(Aqbasic\-mode\*(Aq and \*(Aqalso\-supported\*(Aq modes depending on the parameter
+/confdConfig/defaultHandlingMode\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/with\-defaults/enabled (boolean) [false]
+.RS 4
+DEPRECATED \- use ietf\-with\-defaults instead\&.
+.sp
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/with\-defaults/1\&.0
+capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/forward/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/forward/1\&.0
+capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/tailf\-commit/enabled (boolean) [false]
+.RS 4
+DEPRECATED \- this feature is available in NETCONF 1\&.1\&.
+.sp
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/commit/1\&.0
+capability is enabled\&.
+.sp
+.RE
+.PP
+/confdConfig/netconf/capabilities/query/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/query
+capability is enabled\&.
+.sp
+.RE
+.PP
+/confdConfig/netconf/capabilities/inactive/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the
+http://tail\-f\&.com/ns/netconf/inactive/1\&.0
+capability is enabled\&.
+.RE
+.PP
+/confdConfig/netconf/capabilities/capability (xs:anyURI)
+.RS 4
+capability is a parameter can be given multiple times\&. It specifies a URI string which the NETCONF agent will report as a capability in the hello message sent to the client\&.
+.RE
+.PP
+/confdConfig/netconf/maxBatchProcesses(uint32|unbounded) [unbounded]"
+.RS 4
+Controls how many concurrent NETCONF batch processes there can be at any time\&. A batch process can be started by the agent if a new NETCONF operation is implemented as a batch operation\&. See the NETCONF chapter in the ConfD User\*(Aqs Guide for details\&.
+.RE
+.PP
+/confdConfig/netconf/extendedSessions (boolean) [false]
+.RS 4
+If extendedSessions are enabled, all ConfD sessions can be terminated using <kill\-session>, i\&.e\&. not only can other NETCONF session be terminated, but also CLI sessions, Webui sessions etc\&. If such a session holds a lock, it\*(Aqs session id will be returned in the <lock\-denied>, instead of "0"\&.
+.sp
+Strictly speaking, this extension is not covered by the NETCONF specification; therefore it\*(Aqs false by default\&.
+.RE
+.PP
+/confdConfig/netconf/sendDefaults (boolean) [false]
+.RS 4
+DEPRECATED \- use
+/confdConfig/defaultHandlingMode
+instead to control this behavior consistently for all northbound interfaces\&.
+.sp
+If sendDefaults is true, default values will be included in the replies to <get>, <get\-config>, and <copy\-config>\&. If sendDefaults is false, default values will not be included by default\&.
+.sp
+If /confdConfig/netconf/capabilities/with\-defaults is enabled, this behavior can be controlled by the NETCONF client\&.
+.RE
+.PP
+/confdConfig/netconf/rpcErrors (close|inline) [close]
+.RS 4
+If rpcErrors is "inline", and an error occurs during the processing of a <get> or <get\-config> request when ConfD tries to fetch some data from a data provider, ConfD will generate an rpc\-error element in the faulty element, and continue to process the next element\&.
+.sp
+If an error occurs and rpcErrors is "close", the NETCONF transport is closed by ConfD\&.
+.RE
+.PP
+/confdConfig/netconf/idleTimeout (xs:duration) [PT0S]
+.RS 4
+Maximum idle time before terminating a NETCONF session\&. If the session is waiting for notifications, or has a pending confirmed commit, the idle timeout is not used\&. The default value is 0, which means no timeout\&. Will be silently capped to 49 days 17 hours Modification of this value will only affect connections that are established after the modification has been done\&.
+.RE
+.PP
+/confdConfig/netconf/writeTimeout (xs:duration) [PT0S]
+.RS 4
+Maximum time for a write operation towards a client to complete\&. If the time is exceeded, the NETCONF session is terminated\&. The default value is 0, which means no timeout\&. Modification of this value will only affect connections that are established after the modification has been done\&.
+.RE
+.PP
+/confdConfig/proxyForwarding \- container element
+.RS 4
+This section defines settings which affect the behavior of Proxy Forwarding\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", proxy forwarding is enabled\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/autoLogin (boolean) [false]
+.RS 4
+autoLogin is either "true" or "false"\&. If "true", ConfD will try to login to the target system with the current sessions credentials, if it has access to them\&. In order for ConfD to get access to the session credentials, the builtin SSH daemon must be used\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy \- container element
+.RS 4
+Parameters for a single proxy\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/target \- container element
+.RS 4
+The name of the proxy target\&. It is used as a unique identifier of the proxy target\&. This is the target name that users give when they want to connect to the target\&.
+.sp
+The name is included in the proxy events (see
+\m[blue]\fBconfd_lib_events(3)\fR\m[]) generated by ConfD\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/address (inet:host)
+.RS 4
+The IP address of the proxy target system\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/netconf \- container element
+.RS 4
+If present, the target is available for NETCONF proxy forwarding\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/netconf/ssh \- container element
+.RS 4
+If present, the proxy connections between ConfD and the proxy NETCONF target will be over SSH\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/netconf/ssh/port (inet:port\-number) [2022]
+.RS 4
+The port where the proxy target listens for NETCONF SSH connections\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/netconf/tcp \- container element
+.RS 4
+If present, the proxy connections between ConfD and the proxy NETCONF target will be over TCP\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/netconf/tcp/port (inet:port\-number) [2023]
+.RS 4
+The port where the proxy target listens for NETCONF TCP connections\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/cli \- container element
+.RS 4
+If present, the target is available for CLI proxy forwarding\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/cli/ssh \- container element
+.RS 4
+If present, the proxy connections between ConfD and the proxy CLI target will be over SSH\&.
+.RE
+.PP
+/confdConfig/proxyForwarding/proxy/cli/ssh/port (inet:port\-number) [22]
+.RS 4
+The port where the proxy target listens for CLI SSH connections\&.
+.RE
+.PP
+/confdConfig/snmpAgent \- container element
+.RS 4
+This section defines settings which affect the behavior of the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the SNMP agent is enabled\&.
+.RE
+.PP
+/confdConfig/snmpAgent/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the ConfD SNMP agent should listen to\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/snmpAgent/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/snmpAgent/port (inet:port\-number) [161]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/snmpAgent/ip\&.
+.RE
+.PP
+/confdConfig/snmpAgent/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the SNMP agent also listens to\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/snmpAgent/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/snmpAgent/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/mibs \- container element
+.RS 4
+This section defines a list of MIBs that should be loaded into the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/mibs/file (string)
+.RS 4
+file is the location of a MIB file that should be loaded into the SNMP agent\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<file>\&./TAIL\-F\-TEST\-MIB\&.bin</file>
+.fi
+.if n \{\
+.RE
+.\}
+The MIB file must be in binary format (\&.bin) produced with the confdc compiler\&. For loading of a built\-in MIB no path must be given\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<file>SNMP\-USER\-BASED\-SM\-MIB\&.bin</file>
+.fi
+.if n \{\
+.RE
+.\}
+See the ConfD User\*(Aqs Guide for more information about loading MIBs into the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/mibs/fromLoadPath (boolean) [false]
+.RS 4
+If true, any "\&.bin" file found in the /confdConfig/loadPath is loaded at startup\&. Bult\-in MIBs must still be listed explicitly using the "file" element\&.
+.RE
+.PP
+/confdConfig/snmpAgent/temporaryStorageTime (uint32) [300]
+.RS 4
+The time, in seconds, that the agent keeps temporary table entries before deleting them\&. A table entry is temporary if its RowStatus column is \*(AqnotReady\*(Aq or \*(AqnotInService\*(Aq\&.
+.RE
+.PP
+/confdConfig/snmpAgent/sessionIgnorePort (boolean) [false]
+.RS 4
+If true, the SNMP Agent will consider requests originating from one and the same IP Address, and using the same security name, as related, regardless of source port\&. Per default, the SNMP Agent will consider requests originating from one and the same IP Address and port, and using the same security name, as related\&. Related requests are handled in the same user session\&. This is absolutely necessary for achieving good performance when processing consecutive get\-next requests, as during SNMP walks\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpVersions \- container element
+.RS 4
+This section defines the list of SNMP versions that the SNMP agent should understand\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpVersions/v1 (boolean) [true]
+.RS 4
+Setting the value to true will enable SNMP v1 in the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpVersions/v2c (boolean) [true]
+.RS 4
+Setting the value to true will enable SNMP v2c in the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpVersions/v3 (boolean) [true]
+.RS 4
+Setting the value to true will enable SNMP v3 in the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpEngine \- container element
+.RS 4
+This section defines properties from the SNMP\-FRAMEWORK\-MIB (RFC3411) for the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpEngine/snmpEngineID (confd:hexlist) [
+.RS 4
+The name of the SNMP engine\&. snmpEngineID is defined in the SNMP\-FRAMEWORK\-MIB (RFC3411)\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpEngine/snmpEngineMaxMessageSize (uint64) [50000]
+.RS 4
+The maximum size of SNMP messages that the agent can send or receive\&. The snmpEngineMaxMessageSize is defined in the SNMP\-FRAMEWORK\-MIB (RFC3411)\&.
+.RE
+.PP
+/confdConfig/snmpAgent/snmpEngine/authenticationFailureNotifyName (string) [""]
+.RS 4
+When the SNMP agent sends the standard authenticationFailure notification, it is delivered to the management targets defined for the snmpNotifyName in the snmpNotifyTable in SNMP\-NOTIFICATION\-MIB (RFC3413)\&. If authenticationFailureNotifyName is the empty string (default), the notification is delivered to all management targets\&.
+.RE
+.PP
+/confdConfig/snmpAgent/contexts (string)
+.RS 4
+A leaf\-list of context names which this SNMP Agent, i\&.e\&. one or more external data providers, recognize in addition to the empty context, ""\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<contexts>
+items\&.
+.RE
+.PP
+/confdConfig/snmpAgent/dropWhenInUse (boolean) [false]
+.RS 4
+Whenever a set request cannot be completed, due to competing actions (typically CDB clients, or other transactions) preventing the SNMP Agent from taking the required locks on configuration stores and data providers affected by the request, the SNMP Agent will respond to the set request with an "in use" error\&. If dropWhenInUse is true, the SNMP Agent will silently drop the request instead\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system \- container element
+.RS 4
+This section defines properties from the SNMPv2\-MIB (RFC3418) for the SNMP agent\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysDescr (string)
+.RS 4
+A textual description of the entity\&. This value should include the full name and version identification of the system\*(Aqs hardware type, software operating\-system, and networking software\&. The sysDescr is defined in the SNMPv2\-MIB (RFC3418)\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysObjectID (confd:oid)
+.RS 4
+The vendor\*(Aqs authoritative identification of the network management subsystem contained in the entity\&. The sysObjectID is defined in the SNMPv2\-MIB (RFC3418)\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysServices (uint64) [72]
+.RS 4
+A value which indicates the set of services that this entity may potentially offer\&. The sysServices is defined in the SNMPv2\-MIB (RFC3418)\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysORTable \- container element
+.RS 4
+Entries that will populate the sysORTable from SNMPv2\-MIB\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysORTable/sysOREntry \- container element
+.RS 4
+Corresponds to one entry in the sysORTable from SNMPv2\-MIB\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysORTable/sysOREntry/sysORIndex (uint64)
+.RS 4
+The index for this row in the table\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysORTable/sysOREntry/sysORID (confd:oid)
+.RS 4
+The OID of the AGENT\-CAPABILITIES invocation\&.
+.RE
+.PP
+/confdConfig/snmpAgent/system/sysORTable/sysOREntry/sysORDescr (string)
+.RS 4
+A textual description of capabilities defined in sysORID\&.
+.RE
+.PP
+/confdConfig/snmpgw \- container element
+.RS 4
+This section defines settings which affect the behavior of the SNMP gateway\&.
+.RE
+.PP
+/confdConfig/snmpgw/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the gateway is enabled\&.
+.RE
+.PP
+/confdConfig/snmpgw/trapPort (inet:port\-number)
+.RS 4
+The port number to listen for traps on\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent \- container element
+.RS 4
+Parameters for a single agent\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the agent is enabled\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/name (xs:token)
+.RS 4
+A name for the agent, mainly used for error reporting\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/subscriptionId (xs:token)
+.RS 4
+The subscription id, if set, is used for indicating to which applications external traps should be sent on\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/forwardNotifStream (xs:token)
+.RS 4
+The forwarding notification stream, if present, indicates that traps should be automatically translated in accordance with the yang definition of the notification, and sent out on the given stream\&. The given stream may not implement replay support externally\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/community (string) [private]
+.RS 4
+The community string for communication with the agent\&. If the community string cannot be expressed in Unicode, use the element community_bin instead (see below)\&. If both community_bin and community are specified, community is ignored\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/community_bin (xs:hexBinary)
+.RS 4
+The community string for communication with the agent, encoded in hexBinary\&. For example,
+<community>AB</community>
+and
+<community_bin>4142</community_bin>
+are equivalent\&. The main use for this is when the community string cannot be expressed in Unicode\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/version (v1 | v2c) [v2c]
+.RS 4
+The default protocol version to use\&. The value indicates the preferred version \- if the agent doesn\*(Aqt respond, the other version will be tried\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/timeout (xs:duration) [PT5S]
+.RS 4
+The amount of time to wait for an answer from the agent before aborting the operation\&. The default is five seconds\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/ip (inet:ip\-address)
+.RS 4
+The host (specified as a name or an IP address) on which the agent is running\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/port (inet:port\-number) [161]
+.RS 4
+The port number to use for communication with the agent\&.
+.RE
+.PP
+/confdConfig/snmpgw/agent/module (string)
+.RS 4
+A list of MIB module names that this agent implements\&. Each such MIB must be convert to YANG and compiled with the \-\-snmpgw flag to confdc\&.
+.RE
+.PP
+/confdConfig/webui \- container element
+.RS 4
+This section defines settings which decide how the embedded ConfD Web server should behave, with respect to TCP and SSL etc\&.
+.RE
+.PP
+/confdConfig/webui/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the Web server is started\&.
+.RE
+.PP
+/confdConfig/webui/serverName (string) [localhost]
+.RS 4
+The hostname the Web server serves\&.
+.RE
+.PP
+/confdConfig/webui/matchHostName(boolean) [false]
+.RS 4
+This setting specifies if the Web server only should serve URLs adhering to the serverName defined above\&. By default the serverName is "localhost" and matchHostName is "false", i\&.e\&. any server name can be given in the URL\&. If you want the server to only accept URLs adhering to the serverName, enable this setting\&.
+.RE
+.PP
+/confdConfig/webui/cacheRefreshSecs (uint64) [0]
+.RS 4
+The ConfD Web server uses a RAM cache for static content\&. An entry sits in the cache for a number of seconds before it is reread from disk (on access)\&. The default is 0\&.
+.RE
+.PP
+/confdConfig/webui/maxRefEntries (uint64) [100]
+.RS 4
+Leafref and keyref entries are represented as drop\-down menus in the automatically generated Web UI\&. By default no more than 100 entries are fetched\&. This element makes this number configurable\&.
+.RE
+.PP
+/confdConfig/webui/docroot
+.RS 4
+The location of the document root on disk\&. If this configurable is omitted the docroot points to the next generation docroot in the ConfD distro instead\&.
+.RE
+.PP
+/confdConfig/webui/webuiIndexUrl
+.RS 4
+Where to redirect after successful login, which by default is \*(Aq/index\&.html\*(Aq\&.
+.RE
+.PP
+/confdConfig/webui/loginDir
+.RS 4
+The loginDir element points out an alternative login directory which contains your HTML code etc used to login to the Web UI\&. This directory will be mapped https://<ip\-address>/login\&. If this element is not specified the default login/ directory in the docroot will be used instead\&.
+.RE
+.PP
+/confdConfig/webui/customDir
+.RS 4
+The custom\-dir element points out a custom directory which contains the customizations you want to apply to the auto\- generated Web UI\&. The content of this directory should be as described in the User Guide and it will be mapped to https://<ip\-address>/custom\&.
+.RE
+.PP
+/confdConfig/webui/customHeaders/header
+.RS 4
+The customHeaders element contains any number of header elements, with a valid header\-field as defined in RFC7230\&. The headers will be part of HTTP responses on "/login\&.html", "/index\&.html" and "/jsonrpc"\&.
+.RE
+.PP
+/confdConfig/webui/customHeaders/header/name (string)
+.RS 4
+RFC7230 field\-name, e\&.g\&. Accept\-Control\-Allow\-Origin
+.RE
+.PP
+/confdConfig/webui/customHeaders/header/value (string)
+.RS 4
+RFC7230 field\-value, e\&.g\&. http://www\&.cisco\&.com
+.RE
+.PP
+/confdConfig/webui/X\-Frame\-Options
+.RS 4
+By default the X\-Frame\-Options header is set to DENY for the /login\&.html and /index\&.html pages\&. With this header it can be set to SAMEORIGIN or ALLOW\-FROM instead\&.
+.RE
+.PP
+/confdConfig/webui/disableAuth/dir
+.RS 4
+The disableAuth element contains any number of dir elements\&. Each dir element points to a directory path in the docroot which should not be restricted by the AAA engine\&. If no dir elements are specified the following directories and files will not be restricted by the AAA engine: "/login" and "/login\&.html"\&.
+.RE
+.PP
+/confdConfig/webui/transport \- container element
+.RS 4
+Settings deciding which transport services the Web server should listen to, e\&.g\&. TCP and SSL\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp \- container element
+.RS 4
+Settings deciding how the Web server TCP transport service should behave\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the Web server uses cleart text TCP as a transport service\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp/redirect (string)
+.RS 4
+If given the user will be redirected to the specified URL\&. Two macros can be specified, i\&.e\&. @HOST@ and @PORT@\&. For example https://@HOST@:443 or https://192\&.12\&.4\&.3:@PORT@
+.RE
+.PP
+/confdConfig/webui/transport/tcp/disableNonAuthRedirect (boolean) [false]
+.RS 4
+disableNonAuthRedirect is either "true" or "false"\&. If "true" non\-authenticated HTTP requests (expect "/" and "/index\&.html") result in a 404 HTTP reply\&. If false all non\-authenticated requests are redirected to "/login\&.html"\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the Web server should listen to\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/webui/transport/tcp/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp/port (inet:port\-number) [8008]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/webui/transport/tcp/ip\&.
+.RE
+.PP
+/confdConfig/webui/transport/tcp/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the Web server also listens to for TCP connections\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/webui/transport/tcp/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/webui/transport/tcp/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the Web server for TCP connections\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl \- container element
+.RS 4
+Settings deciding how the Web server SSL (Secure Sockets Layer) transport service should behave\&.
+.sp
+SSL is widely deployed on the Internet and virtually all bank transactions as well as all on\-line shopping today is done with SSL encryption\&. There are many good sources on describing SSL in detail, e\&.g\&.
+\m[blue]\fB\%http://www.tldp.org/HOWTO/SSL-Certificates-HOWTO/\fR\m[]
+which describes how to manage certificates and keys\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the Web server uses SSL as a transport service\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/disableNonAuthRedirect (boolean) [false]
+.RS 4
+disableNonAuthRedirect is either "true" or "false"\&. If "true" non\-authenticated HTTP requests (expect "/" and "/index\&.html") result in a 404 HTTP reply\&. If false all non\-authenticated requests are redirected to "/login\&.html"\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/redirect (string)
+.RS 4
+If given the user will be redirected to the specified URL\&. Two macros can be specified, i\&.e\&. @HOST@ and @PORT@\&. For example http://@HOST@:80 or http://192\&.12\&.4\&.3:@PORT@
+.RE
+.PP
+/confdConfig/webui/transport/ssl/ip (inet:ip\-address) [0\&.0\&.0\&.0]
+.RS 4
+ip is an IP address which the Web server should listen to\&. 0\&.0\&.0\&.0 means that it listens to the port (/confdConfig/webui/transport/ssl/port) for all IPv4 addresses on the machine\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/port (inet:port\-number) [8888]
+.RS 4
+port is a valid port number to be used in combination with /confdConfig/webui/transport/ssl/ip\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/extraIpPorts (ip:port ip:port \&.\&.\&.) []
+.RS 4
+extraIpPorts is a leaf\-list of ip:port pairs which the Web server also listens to for SSL connections\&. For IPv6 addresses, the syntax [ip]:port may be used\&. If the ":port" is omitted,
+/confdConfig/webui/transport/ssl/port
+is used\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<extraIpPorts>
+items\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<extraIpPorts>10\&.45\&.22\&.11:4777</extraIpPorts>
+<extraIpPorts>127\&.0\&.0\&.1</extraIpPorts>
+<extraIpPorts>:::88</extraIpPorts>
+<extraIpPorts>[::]</extraIpPorts>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/webui/transport/ssl/dscp (uint8)
+.RS 4
+Support for setting the Differentiated Services Code Point (6 bits) for traffic originating from the Web server for SSL connections\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/keyFile (string)
+.RS 4
+Specifies which file that contains the private key for the certificate\&. Read more about certificates in /confdConfig/webui/transport/ssl/certFile\&. If this configurable is omitted the keyFile points to a built\-in self signed certificate/key in the ConfD distro instead\&. Note: Only use this certificate/key for test purposes\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/certFile (string)
+.RS 4
+Specifies which file that contains the server certificate\&. The certificate is either a self\-signed test certificate or a genuin and validated certificate bought from a CA (Certificate Authority)\&. If this configurable is omitted the keyFile points to a built\-in self signed certificate/key in the ConfD distro instead\&. Note: Only use this certificate/key for test purposes\&.
+.sp
+The ConfD distribution comes with a server certificate which can be used for testing purposes ($CONFD_DIST/var/confd/webui/cert/host\&.{cert,key})\&. This server certificate has been generated using a local CA certificate:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ openssl
+OpenSSL> genrsa \-out ca\&.key 4096
+OpenSSL> req \-new \-x509 \-days 3650 \-key ca\&.key \-out ca\&.cert
+OpenSSL> genrsa \-out host\&.key 4096
+OpenSSL> req \-new \-key host\&.key \-out host\&.csr
+OpenSSL> x509 \-req \-days 365 \-in host\&.csr \-CA ca\&.cert \e
+              \-CAkey ca\&.key \-set_serial 01 \-out host\&.cert
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/webui/transport/ssl/caCertFile (string)
+.RS 4
+Specifies which file that contains the trusted certificates to use during client authentication and to use when attempting to build the server certificate chain\&. The list is also used in the list of acceptable CA certificates passed to the client when a certificate is requested\&.
+.sp
+The ConfD distribution comes with a CA certificate which can be used for testing purposes ($CONFD_DIST/var/confd/webui/ca_cert/ca\&.cert)\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/verify (1 | 2 | 3) [1]
+.RS 4
+Specifies the level of verification the server does on client certificates\&. 1 means nothing, 2 means the server will ask the client for a certificate but not fail if the client does not supply a client certificate, 3 means that the server requires the client to supply a client certificate\&.
+.sp
+If caCertFile has been set to the ca\&.cert file generated above you can verify that it works correctly using, for example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ openssl s_client \-connect 127\&.0\&.0\&.1:8888 \e
+                   \-cert client\&.cert \-key client\&.key
+.fi
+.if n \{\
+.RE
+.\}
+For this to work client\&.cert must have been generated using the ca\&.cert from above:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+OpenSSL> genrsa \-out client\&.key 4096
+OpenSSL> req \-new \-key client\&.key \-out client\&.csr
+OpenSSL> x509 \-req \-days 3650 \-in client\&.csr \-CA ca\&.cert \e
+              \-CAkey ca\&.key \-set_serial 01 \-out client\&.cert
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/webui/transport/ssl/depth (uint64) [1]
+.RS 4
+Specifies the depth of certificate chains the server is prepared to follow when verifying client certificates\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/ciphers (string) [DEFAULT]
+.RS 4
+Specifies the cipher suites to be used by the server as a colon\-separated list from the set ECDHE\-ECDSA\-AES256\-GCM\-SHA384, ECDHE\-RSA\-AES256\-GCM\-SHA384, ECDHE\-ECDSA\-AES256\-SHA384, ECDHE\-RSA\-AES256\-SHA384, ECDH\-ECDSA\-AES256\-GCM\-SHA384, ECDH\-RSA\-AES256\-GCM\-SHA384, ECDH\-ECDSA\-AES256\-SHA384, ECDH\-RSA\-AES256\-SHA384, DHE\-RSA\-AES256\-GCM\-SHA384, DHE\-DSS\-AES256\-GCM\-SHA384, DHE\-RSA\-AES256\-SHA256, DHE\-DSS\-AES256\-SHA256, AES256\-GCM\-SHA384, AES256\-SHA256, ECDHE\-ECDSA\-AES128\-GCM\-SHA256, ECDHE\-RSA\-AES128\-GCM\-SHA256, ECDHE\-ECDSA\-AES128\-SHA256, ECDHE\-RSA\-AES128\-SHA256, ECDH\-ECDSA\-AES128\-GCM\-SHA256, ECDH\-RSA\-AES128\-GCM\-SHA256, ECDH\-ECDSA\-AES128\-SHA256, ECDH\-RSA\-AES128\-SHA256, DHE\-RSA\-AES128\-GCM\-SHA256, DHE\-DSS\-AES128\-GCM\-SHA256, DHE\-RSA\-AES128\-SHA256, DHE\-DSS\-AES128\-SHA256, AES128\-GCM\-SHA256, AES128\-SHA256, ECDHE\-ECDSA\-AES256\-SHA, ECDHE\-RSA\-AES256\-SHA, DHE\-RSA\-AES256\-SHA, DHE\-DSS\-AES256\-SHA, ECDH\-ECDSA\-AES256\-SHA, ECDH\-RSA\-AES256\-SHA, AES256\-SHA, ECDHE\-ECDSA\-DES\-CBC3\-SHA, ECDHE\-RSA\-DES\-CBC3\-SHA, EDH\-RSA\-DES\-CBC3\-SHA, EDH\-DSS\-DES\-CBC3\-SHA, ECDH\-ECDSA\-DES\-CBC3\-SHA, ECDH\-RSA\-DES\-CBC3\-SHA, DES\-CBC3\-SHA, ECDHE\-ECDSA\-AES128\-SHA, ECDHE\-RSA\-AES128\-SHA, DHE\-RSA\-AES128\-SHA, DHE\-DSS\-AES128\-SHA, ECDH\-ECDSA\-AES128\-SHA, ECDH\-RSA\-AES128\-SHA, AES128\-SHA, EDH\-RSA\-DES\-CBC\-SHA, and DES\-CBC\-SHA, or the word "DEFAULT" (use all cipher suites in that list for which the required support is implemented in libcrypto)\&. See the OpenSSL manual page ciphers(1) for the definition of the cipher suites\&. NOTE: The general cipher list syntax described in ciphers(1) is not supported\&.
+.RE
+.PP
+/confdConfig/webui/transport/ssl/protocols (string) [DEFAULT]
+.RS 4
+Specifies the SSL/TLS protocol versions to be used by the server as a whitespace\-separated list from the set sslv3 tlsv1 tlsv1\&.1 tlsv1\&.2, or the word "DEFAULT" (use all supported protocol versions except sslv3)\&.
+.RE
+.PP
+/confdConfig/webui/cgi \- container element
+.RS 4
+CGI\-script support
+.RE
+.PP
+/confdConfig/webui/cgi/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", CGI\-script support is enabled\&.
+.RE
+.PP
+/confdConfig/webui/cgi/dir (string)
+.RS 4
+The directory path to the location of the CGI\-scripts\&.
+.RE
+.PP
+/confdConfig/webui/idleTimeout (xs:duration) [PT30M]
+.RS 4
+Maximum idle time before terminating a Web UI session\&. PT0M means no timeout\&. Default is PT30M, ie 30 minutes\&.
+.RE
+.PP
+/confdConfig/webui/absoluteTimeout (xs:duration) [PT60M]
+.RS 4
+Maximum absolute time before terminating a Web UI session\&. PT0M means no timeout\&. Default is PT60M, ie 60 minutes\&.
+.RE
+.PP
+/confdConfig/webui/rateLimiting (uint64) [1000000]
+.RS 4
+Maximum number of allowed JSON\-RPC requests every hour\&. 0 means infinity\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands \- container element
+.RS 4
+Named commands are used to define a well defined set of executables which can be run on the target device from the browser using a call to Maapi\&.runCmd()\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec
+.RS 4
+"exec" directives specify how a named command is mapped to an executable or a shell script\&. It contains (in order) one "name" directive, one "osCommand" directive, zero or one "args" directives and zero or one "options" directives\&.
+.sp
+An example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<exec name="cli">
+  <osCommand>confd_cli</osCommand>
+  <args>\-u$(user) \-\-proto http</args>
+</exec>
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/name (xs:token)
+.RS 4
+The command alias name to be used in Maapi\&.runCmd() calls\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/osCommand (xs:token)
+.RS 4
+The "osCommand" directive specifies the path to the executable or shell script to be called\&. If the command is in the $PATH (as specified when we start the
+ConfD
+daemon) the path may just be the name of the command\&.
+.sp
+The command is invoked as if it had been executed by exec(3), i\&.e\&. not in a shell environment such as "/bin/sh \-c \&.\&.\&."\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/args (argsType)
+.RS 4
+The "args" directive specifies the arguments to use when executing the command specified by the "osCommand" directive\&. argsType is a space\-separated string of argument strings\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/options \- container element
+.RS 4
+The "options" directive specifies how the command is be executed\&. It contains (in any order) zero or one "uid" directives and zero or one "wd" directives\&.
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/options/uid (idType)
+.RS 4
+The "uid" directive specifies which user id to use when executing the command\&. Possible values are:
+.PP
+confd (default)
+.RS 4
+The command is run as the same user id as the
+ConfD
+daemon\&.
+.RE
+.PP
+user
+.RS 4
+The command is run as the same user id as the user logged in to the CLI, i\&.e\&. we have to make sure that this user id exists as an actual user id on the device\&.
+.RE
+.PP
+root
+.RS 4
+The command is run as root\&.
+.RE
+.PP
+<uid> (the numerical user \fI<uid>\fR)
+.RS 4
+The command is run as the user id <uid>\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+If uid is set to either "user", "root" or "<uid>" the the ConfD daemon must have been started as root (or setuid), or the cmdptywrapper must have setuid root permissions\&.
+.sp .5v
+.RE
+.RE
+.RE
+.PP
+/confdConfig/webui/namedCommands/exec/options/wd (string)
+.RS 4
+The "wd" directive specifies which working directory to use when executing the command\&. If not given, the command is executed from the location of the CLI\&.
+.RE
+.PP
+/confdConfig/webui/audit (boolean) [false]
+.RS 4
+audit is either "true" or "false"\&. If "true", then JSON\-RPC/CGI requests are logged to the audit log\&.
+.RE
+.PP
+/confdConfig/webui/useForwardedClientIp \- container element
+.RS 4
+This section is created if a Client IP address should be looked for among HTTP headers such as \*(AqX\-Forwarded\-For\*(Aq or \*(AqX\-REAL\-IP\*(Aq, etc\&.
+.RE
+.PP
+/confdConfig/webui/useForwardedClientIp/proxyHeaders (string)
+.RS 4
+Name of the HTTP headers that contain the true Client IP address\&. Typically the de facto standard is to use the \*(AqX\-Forwarded\-For\*(Aq header, but other headers exists, e\&.g: \*(AqX\-REAL\-IP\*(Aq\&. The first header in this list, found to contain an IP address will cause this IP address to be used as the Client IP address\&. In case of several elements, the first element, separated by a space or comma, will be used\&. The header name specified here is not case sensitive\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<proxyHeaders>
+items\&.
+.RE
+.PP
+/confdConfig/webui/useForwardedClientIp/allowedProxyIpPrefix (inet:ip\-prefix)
+.RS 4
+Only the source IP\-prefix addresses listed here will be trusted to contain a Client IP address in a HTTP header as specified in \*(AqproxyHeaders\*(Aq\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<allowedProxyIpPrefix>
+items\&.
+.RE
+.PP
+/confdConfig/rest \- container element
+.RS 4
+This section defines settings for the RESTful API to ConfD\&.
+.RE
+.PP
+/confdConfig/rest/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the RESTful API is activated\&.
+.RE
+.PP
+/confdConfig/rest/showHidden (boolean) [false]
+.RS 4
+Hidden nodes are not shown by default in REST\&. Such nodes can be unhidden to the REST client by including the query parameter "unhide", which is a comma separated list of
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+            <hide\-group\-name>[;<passwd>]
+            
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+If showHidden is set to "true", hidden nodes are always shown in the REST API\&.
+.RE
+.PP
+/confdConfig/rest/customHeaders/header \- container element
+.RS 4
+The customHeaders element contains any number of header elements, with a valid header\-field as defined in RFC7230 3\&.2\&.
+.RE
+.PP
+/confdConfig/rest/customHeaders/header/name (string)
+.RS 4
+RFC7230 field\-name, e\&.g\&. Accept\-Control\-Allow\-Origin
+.RE
+.PP
+/confdConfig/rest/customHeaders/header/value (string)
+.RS 4
+RFC7230 field\-value, e\&.g\&. http://www\&.cisco\&.com
+.RE
+.PP
+/confdConfig/restconf \- container element
+.RS 4
+This section defines settings for the RESTCONF API to ConfD\&.
+.RE
+.PP
+/confdConfig/restconf/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the RESTCONF API is activated\&.
+.RE
+.PP
+/confdConfig/restconf/rootResource (string) [restconf]
+.RS 4
+The RESTCONF root resource path\&.
+.RE
+.PP
+/confdConfig/restconf/schemaServerUrl (string)
+.RS 4
+Change the schema element in the ietf\-yang\-library:modules\-state resource response\&.
+.RE
+.PP
+/confdConfig/restconf/tokenResponse \- container element
+.RS 4
+When authenticating via AAA externalAuthentication or externalValidation and a token is returned, it is possible to include a header with the token in the response\&.
+.RE
+.PP
+/confdConfig/restconf/tokenResponse/xAuthToken (boolean) [false]
+.RS 4
+Either \*(Aqtrue\*(Aq or \*(Aqfalse\*(Aq\&. If \*(Aqtrue\*(Aq, a x\-auth\-token header is included in the response with any token returned from AAA\&.
+.RE
+.PP
+/confdConfig/restconf/tokenResponse/tokenCookie \- container element
+.RS 4
+Configuration of RESTCONF token cookies\&.
+.RE
+.PP
+/confdConfig/restconf/tokenResponse/tokenCookie/name (string)
+.RS 4
+The cookie name, exactly as it is to be sent\&. If configured, a HTTP cookie of that name included in the response with any token returned from AAA as value\&.
+.RE
+.PP
+/confdConfig/restconf/tokenResponse/tokenCookie/directives (string)
+.RS 4
+An optional string with directives appended to the cookie, exactly as it is to be sent\&.
+.RE
+.PP
+/confdConfig/restconf/customHeaders/header \- container element
+.RS 4
+The customHeaders element contains any number of header elements, with a valid header\-field as defined in RFC7230 3\&.2\&.
+.RE
+.PP
+/confdConfig/restconf/customHeaders/header/name (string)
+.RS 4
+RFC7230 field\-name, e\&.g\&. Accept\-Control\-Allow\-Origin
+.RE
+.PP
+/confdConfig/restconf/customHeaders/header/value (string)
+.RS 4
+RFC7230 field\-value, e\&.g\&. http://www\&.cisco\&.com
+.RE
+.PP
+/confdConfig/subagents \- container element
+.RS 4
+Present only if ConfD runs as a master agent\&. Lists all registered subagents\&.
+.RE
+.PP
+/confdConfig/subagents/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", ConfD acts as a master agent\&.
+.RE
+.PP
+/confdConfig/subagents/subagent \- container element
+.RS 4
+Parameters for a single subagent\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/name (xs:token)
+.RS 4
+The name of the subagent\&. It is used as a unique identifier of the subagent\&. The name is included in the subagent events (see
+\m[blue]\fBconfd_lib_events(3)\fR\m[]) generated by ConfD\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/enabled (boolean) [true]
+.RS 4
+enabled is either "true" or "false"\&. If "false", the subagent is ignored by ConfD\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp \- container element
+.RS 4
+Parameters to be used when the masteragent communicates with the subagent over plain text TCP\&. This is more efficient than SSH, but TCP is non\-standard\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp/ip (inet:ip\-address)
+.RS 4
+The IP address where the subagent listens for NETCONF TCP connections\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp/port (inet:port\-number) [2023]
+.RS 4
+The port where the subagent listens for NETCONF TCP connections\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp/confdAuth \- container element
+.RS 4
+Currently, in order to use NETCONF over TCP, the subagent must understand the ConfD proprietary TCP header, described in the NETCONF chapter in the ConfD User\*(Aqs Guide\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp/confdAuth/user (string)
+.RS 4
+The user name to be used for authorization on the subagent\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/tcp/confdAuth/group (string)
+.RS 4
+The group name to be used for authorization on the subagent\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/ssh \- container element
+.RS 4
+Parameters to be used when the masteragent communicates with the subagent over SSH\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/ssh/ip (inet:ip\-address)
+.RS 4
+The IP address where the subagent listens for NETCONF SSH connections\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/ssh/port (inet:port\-number) [2022]
+.RS 4
+The port where the subagent listens for NETCONF SSH connections\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/ssh/user (string)
+.RS 4
+The SSH user name used for authentication at the subagent\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/ssh/password (string)
+.RS 4
+The SSH user\*(Aqs password\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/mount \- container element
+.RS 4
+This parameter defines where in the data hierarchy the subagent is registered\&. It consists of a path which must exist in the data model of the master agent, and the name of the node which the subagent implements\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/mount/path (string)
+.RS 4
+The path, in restricted XPath syntax, where the subagent\*(Aqs data is mounted\&. The XPath is restricted as an instance\-identifier (See
+\m[blue]\fBconfd_types(3)\fR\m[])\&. To mount on the top level, use "/"\&. Note that the XPath expression must not contain any namespace prefixes\&.
+.sp
+If the subagent mounts more than one node, this object is a space separated list of paths\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/mount/node (xs:QName)
+.RS 4
+The namespace and name of the top\-level node in that namespace\&.
+.sp
+If the subagent mounts more than one node, this object is a leaf\-list of QNames, which must be of the same length as the \*(Aqpath\*(Aq object\&.
+.sp
+This element is a
+leaf\-list, i\&.e\&. multiple values are represented by multiple
+<node>
+items\&.
+.RE
+.PP
+/confdConfig/subagents/subagent/disableSubtreeOptimization (boolean) [false]
+.RS 4
+Whenever possible, the master agent sends a single subtree filter request, instead of one request for each object\&. If the subagent cannot handle these requests, for any reason, set this parameter to "true"\&.
+.RE
+.PP
+/confdConfig/notifications \- container element
+.RS 4
+This section defines settings which affect notifications\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams \- container element
+.RS 4
+Lists all available notification event streams\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream \- container element
+.RS 4
+Parameters for a single notification event stream\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/name (string)
+.RS 4
+The name attached to a specific event stream\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/description (string)
+.RS 4
+A descriptive text attached to a specific event stream\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/replaySupport (boolean)
+.RS 4
+Signals if replay support is available for a specific event stream\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/builtinReplayStore \- container element
+.RS 4
+Parameters for the builtin replay support for this event stream\&.
+.sp
+If replay support is enabled ConfD automatically stores all notifications on disk ready to be replayed should a NETCONF manager or RESTCONF event notification subscriber ask for logged notifications\&. The replay store uses a set of wrapping log files on disk (of a certain number and size) to store the notifications\&.
+.sp
+The max size of each wrap log file (see below) should not be too large\&. This to achieve fast replay of notifications in a certain time range\&. If possible use a larger number of wrap log files instead\&.
+.sp
+If in doubt use the recommended settings (see below)\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/builtinReplayStore/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "false", the applications must implement its own replay support\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/builtinReplayStore/dir (string)
+.RS 4
+The wrapping log files will be put in this disk location\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/builtinReplayStore/maxSize (confd:size)
+.RS 4
+The max size of each log wrap file\&. The recommended setting is ~S10M\&.
+.RE
+.PP
+/confdConfig/notifications/eventStreams/stream/builtinReplayStore/maxFiles (int64)
+.RS 4
+The max number of log wrap files\&. The recommended setting is ~50 files\&.
+.RE
+.PP
+/confdConfig/opcache \- container element
+.RS 4
+This section defines settings which affect the behavior of the operational data cache \- see the "Operational data" chapter in the User Guide\&.
+.RE
+.PP
+/confdConfig/opcache/enabled (boolean) [false]
+.RS 4
+enabled is either "true" or "false"\&. If "true", the cache is enabled\&.
+.RE
+.PP
+/confdConfig/opcache/timeout (uint64)
+.RS 4
+The amount of time to keep data in the cache, in seconds\&.
+.RE
+.SH "SEE ALSO"
+.PP
+\fBconfd\fR(1)
+\- command to start and control the ConfD daemon
+.PP
+\fBconfd_lib_dp\fR(3)
+\- callback library for connecting to ConfD
+.PP
+\fBconfd_types\fR(3)
+\- Confd XML value representation in C
+.PP
+confd_cfg\&.xsd \- A W3C XML schema (http://tail\-f\&.com/ns/confd_cfg/1\&.0) describing the daemon configuration\&.
+.PP
+confd\&.conf\&.example
+\- A commented confd\&.conf example file\&.
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

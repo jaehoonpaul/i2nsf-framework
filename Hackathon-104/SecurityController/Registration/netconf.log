@@ -1,0 +1,30 @@
+<INFO> 23-Mar-2019::19:44:02.522 security-controller confd[32316]: netconf id=28 new ssh session for user "admin" from 10.0.0.12
+<INFO> 23-Mar-2019::19:44:02.549 security-controller confd[32316]: netconf id=28 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:02.558 security-controller confd[32316]: netconf id=28 edit-config target=running attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:02.649 security-controller confd[32316]: netconf id=28 sending rpc-reply, attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:02.650 security-controller confd[32316]: netconf id=28 close-session attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:02.651 security-controller confd[32316]: netconf id=28 sending rpc-reply, attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:03.091 security-controller confd[32316]: netconf id=29 new ssh session for user "admin" from 10.0.0.12
+<INFO> 23-Mar-2019::19:44:03.101 security-controller confd[32316]: netconf id=29 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.106 security-controller confd[32316]: netconf id=29 edit-config target=running attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.219 security-controller confd[32316]: netconf id=29 sending rpc-reply, attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.219 security-controller confd[32316]: netconf id=29 close-session attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:03.219 security-controller confd[32316]: netconf id=29 sending rpc-reply, attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:03.696 security-controller confd[32316]: netconf id=30 new ssh session for user "admin" from 10.0.0.12
+<INFO> 23-Mar-2019::19:44:03.705 security-controller confd[32316]: netconf id=30 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.710 security-controller confd[32316]: netconf id=30 edit-config target=running attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.761 security-controller confd[32316]: netconf id=30 sending rpc-reply, attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:03.761 security-controller confd[32316]: netconf id=30 close-session attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:03.761 security-controller confd[32316]: netconf id=30 sending rpc-reply, attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:04.226 security-controller confd[32316]: netconf id=31 new ssh session for user "admin" from 10.0.0.12
+<INFO> 23-Mar-2019::19:44:04.236 security-controller confd[32316]: netconf id=31 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.241 security-controller confd[32316]: netconf id=31 edit-config target=running attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.309 security-controller confd[32316]: netconf id=31 sending rpc-reply, attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.309 security-controller confd[32316]: netconf id=31 close-session attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:04.310 security-controller confd[32316]: netconf id=31 sending rpc-reply, attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:04.767 security-controller confd[32316]: netconf id=32 new ssh session for user "admin" from 10.0.0.12
+<INFO> 23-Mar-2019::19:44:04.777 security-controller confd[32316]: netconf id=32 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.780 security-controller confd[32316]: netconf id=32 edit-config target=running attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.852 security-controller confd[32316]: netconf id=32 sending rpc-reply, attrs: message-id="1"
+<INFO> 23-Mar-2019::19:44:04.853 security-controller confd[32316]: netconf id=32 close-session attrs: message-id="2"
+<INFO> 23-Mar-2019::19:44:04.853 security-controller confd[32316]: netconf id=32 sending rpc-reply, attrs: message-id="2"

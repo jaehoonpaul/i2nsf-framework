@@ -1,0 +1,57 @@
+module action {
+  namespace "http://tail-f.com/ns/example/action";
+  prefix action;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container top {
+    list host {
+      key name;
+      leaf name {
+        type string;
+      }
+      tailf:action math {
+        tailf:actionpoint math_cs;
+        input {
+          container add {
+            presence "";
+            leaf op1 {
+              type int32;
+              mandatory true;
+            }
+            leaf op2 {
+              type int32;
+              mandatory true;
+            }
+          }
+          container del {
+            presence "";
+            leaf op1 {
+              type int32;
+              mandatory true;
+            }
+            leaf op2 {
+              type int32;
+              mandatory true;
+            }
+          }
+        }
+        output {
+          leaf result {
+            type int32;
+            mandatory true;
+          }
+        }
+      }
+      tailf:action reboot {
+        tailf:actionpoint reboot;
+        input {
+        }
+        output {
+        }
+      }
+    }
+  }
+}

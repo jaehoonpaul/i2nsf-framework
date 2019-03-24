@@ -1,0 +1,41 @@
+module maapi_example {
+    namespace "http://tail-f.com/ns/example/maapi_example";
+    prefix maapi_example;
+
+    import ietf-yang-types { prefix yang; }
+    import tailf-common { prefix tailf; }
+
+    grouping grouping_items {
+        leaf name {
+            type string;
+        }
+        leaf value {
+            type uint32;
+        }
+    }
+
+    container config {
+        list start-log {
+            key time;
+            leaf time {
+                type yang:date-and-time;
+            }
+        }
+        list items {
+            tailf:validate val_items {
+                tailf:dependency ".";
+            }
+            key name;
+            uses grouping_items;
+        }
+    }
+
+    container state {
+        config false;
+        list items {
+            tailf:callpoint items;
+            key name;
+            uses grouping_items;
+        }
+    }
+}

@@ -1,0 +1,580 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;26.&nbsp;Subagents and Proxies</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch25.html" title="Chapter&nbsp;25.&nbsp;The SNMP Gateway"><link rel="next" href="ch27.html" title="Chapter&nbsp;27.&nbsp;Plug-and-play scripting"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;26.&nbsp;Subagents and Proxies</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch25.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch27.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.subagents"></a>Chapter&nbsp;26.&nbsp;Subagents and Proxies</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch26.html#d5e13421">26.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch26.html#d5e13440">26.2. Subagent Registration</a></span></dt><dt><span class="sect1"><a href="ch26.html#d5e13508">26.3. Subagent Requirements</a></span></dt><dt><span class="sect1"><a href="ch26.html#d5e13549">26.4. Proxies</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13421"></a>26.1.&nbsp;Introduction</h2></div></div></div><p>
+        ConfD supports a master/subagent concept similar to that found
+        in e.g. AgentX (<a class="link" href="http://www.ietf.org/rfc/rfc2741.txt" target="_top">RFC
+        2741</a>).  The idea is that there is one master agent
+        running on a managed device.  It terminates the northbound
+        interfaces such as NETCONF and CLI.  The master agent is
+        connected to a set of subagents which provide instrumentation
+        of the subsystems.
+      </p><p>
+        A subagent has its own data store, separate from the master
+        agent.  A subagent is an essential part of the system, i.e. if
+        the master agent cannot talk to the subagent, this is handled
+        as a data provider failure.
+      </p><p>
+        Subagents may be used in a chassis based system when some of
+        the blades may also ship as standalone products.  In this case
+        it is desirable to have identical software on the blade
+        regardless of weather the blade sits in a chassis or is
+        shipped as a standalone product.
+      </p><p>
+        Subagents are also the right choice when there is a need to to
+        integrate software that already has a management interface of
+        its own.  In this case, it is desirable not to change that
+        code, but still make it appear as an integrated part of the
+        entire chassis.  A typical usage scenario is when there is an
+        existing standalone product that also should be part of a
+        chassis solution.
+      </p><p>
+        Subagents are not the right choice for supporting field
+        replaceable units (FRU), such as interface cards.  In this
+        case, it is recommended to have the software on the FRU
+        connect to a ConfD running on a management processor through
+        the normal ConfD C-APIs.
+      </p><p>
+        In ConfD, NETCONF is used as master-to-subagent protocol.  The
+        subagent only has to provide a NETCONF interface.  The master
+        agent can provide any northbound interfaces, for example CLI
+        and Web UI only.  This is accomplished in ConfD by separating
+        the northbound agents from the data providers.  Somewhat
+        simplified, the subagents are viewed and handled as any other
+        data provider.
+      </p><p>
+        Authentication and authorization (access control) is done by
+        the master agent.  This means that access control rules are
+        configured at the master agent, and checked in runtime at the
+        master.  The subagent should be configured to allow full
+        access to the user which the master agent uses for the
+        connections.
+      </p><p>
+        The following picture illustrates how a chassis based
+        system internally consists of three different subsystems.
+
+      </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="390"><tr><td align="center"><img src="pics/subagent_arg.png" align="middle" width="390"></td></tr></table><div class="caption"><p>Multiple devices within a chassis system</p></div></div><p>
+      </p><p>
+        Subagents are used when management station should perceive the
+        system as a whole; thus subagents can be viewed as an internal
+        implementation detail, not visible from the outside.
+      </p><p>
+        Another common architecture is that of configuring one ConfD
+        instance to be able to proxy configuration traffic
+        explicitly to one or more other managed devices.
+      </p><p>
+        This architecture is usable in similar situations as subagents
+        with the exception that the outside management station must
+        have explicit knowledge about the internal subsystems.  It is
+        common to build chassis based systems that consist of several
+        subsystems that are themselves devices. The internal devices
+        are typically not reachable on the external network, they are
+        attached to network internal to the chassis - thus the need
+        for a proxy solution.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13440"></a>26.2.&nbsp;Subagent Registration</h2></div></div></div><p>
+        The subagents are registered at the master agent.  Information
+        about each subagent is written into the master agent's
+        <code class="filename">confd.conf</code> file.  The subagent
+        configuration is marked as "reloadable", see <a class="xref" href="ch28.html#ug.advanced.config_confd" title="28.4.&nbsp;Configuring ConfD">Section&nbsp;28.4, &#8220;Configuring ConfD&#8221;</a>, so it is possible
+        for the application to easily use parts of the subagent
+        configuration in its own configuration.
+      </p><p>
+        Once a subagent is enabled, it will be viewed as an essential
+        part of the system, i.e. if the master agent cannot talk to
+        the subagent, this is handled as a data provider failure.
+        This means that operations like &lt;edit-config&gt; will fail
+        if the master cannot contact an enabled subagent.  ConfD sends
+        an event to the application when it detects communication
+        failures with subagents.  The event is described in the <a class="xref" href="rn02re11.html" title="confd_lib_events"><span class="refentrytitle">confd_lib_events</span>(3)</a> man page.  The application can
+        choose to disable or remove the subagent if it wants to,
+        either by modifying the master agent's
+        <code class="filename">confd.conf</code> file and do <span class="command"><strong>confd
+        --reload</strong></span>, or by directly changing the configuration
+        parameters (see <a class="xref" href="ch28.html#ug.advanced.config_confd" title="28.4.&nbsp;Configuring ConfD">Section&nbsp;28.4, &#8220;Configuring ConfD&#8221;</a>).
+      </p><p>
+        The registration information needed per subagent is:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>subagent address and transport</em></span></span></dt><dd><p>
+                Currently supported transports are SSH and TCP.  TCP is
+                non-standard, but unencrypted and thus more efficient.
+              </p></dd><dt><span class="term"><span class="emphasis"><em>authentication information</em></span></span></dt><dd><p>
+                For SSH, specify the username and password that ConfD
+                will use when connecting to the subagent.
+              </p><p>
+                For TCP, the ConfD specific TCP header described in the
+                NETCONF chapter is used.  This means that the user name
+                and groups have to defined for the subagent.
+              </p></dd><dt><span class="term"><span class="emphasis"><em>registration path</em></span></span></dt><dd><p>
+                An XPath expression which defines where in the master
+                agent's data hierarchy the subagent's data is
+                registered.  For example <code class="sgmltag-element">/config/blade[id="3"]</code>
+                <code class="sgmltag-element">/config/ospf</code>, or
+                just <code class="sgmltag-element">/</code>.
+              </p></dd></dl></div><p>
+      </p><p>
+        Each subagent registers a set of top-elements from one or more
+        namespaces.  These nodes will be mounted at the registration
+        path at the master agent.
+
+        
+      </p><p>
+        The data model that the subagent registers must be available at
+        the master agent, in the form of a .fxs file in the normal
+        load path.  This .fxs file must be compiled with the flag
+        <code class="option">--subagent MountPath</code> before it is loaded in
+        the master agent.  This option tells the master agent that
+        this namespace is handled by a subagent.
+        <code class="varname">MountPath</code> is the same as the registration
+        path in <code class="filename">confd.conf</code>, but without any
+        instance selectors.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13476"></a>26.2.1.&nbsp;Example</h3></div></div></div><p>
+            Here is a step-by-step example on how to add three
+            subagents, called A, B and C, to a master agent.  We will
+            assume that A and B implement one instance each of some
+            service.  A implements the SMTP service, and B IMAP and POP.
+            Subagent C implements the equipment subsystem.  The
+            idea is that there might be more than one SMTP service or
+            IMAP service, but a single equipment subsystem.
+          </p><p>
+            If a client talks directly to A, it will get the following data:
+      </p><div class="example"><a name="d5e13480"></a><p class="title"><b>Example&nbsp;26.1.&nbsp;smtp subagent data</b></p><div class="example-contents"><pre class="programlisting">&lt;smtp-config xmlns="http://example.com/smtp/1.0"&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  ...
+&lt;/smtp-config&gt;</pre></div></div><p><br class="example-break">
+          </p><p>
+            If a client talks directly to B, it will get the following data:
+      </p><div class="example"><a name="d5e13484"></a><p class="title"><b>Example&nbsp;26.2.&nbsp;imap and pop subagent data</b></p><div class="example-contents"><pre class="programlisting">&lt;imap-config xmlns="http://example.com/imap/2.1"&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  ...
+&lt;/imap-config&gt;
+&lt;pop-config xmlns="http://example.com/pop/1.2"&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  ...
+&lt;/pop-config&gt;</pre></div></div><p><br class="example-break">
+          </p><p>
+            If a client talks directly to C, it will get the following data:
+      </p><div class="example"><a name="d5e13488"></a><p class="title"><b>Example&nbsp;26.3.&nbsp;Equipment subagent data</b></p><div class="example-contents"><pre class="programlisting">&lt;config xmlns="http://example.com/equipment/2.1"&gt;
+  &lt;chassis&gt;
+    ...
+  &lt;/chassis&gt;
+&lt;/config&gt;</pre></div></div><p><br class="example-break">
+          </p><p>
+            At the master agent, we want the following data:
+      </p><div class="example"><a name="d5e13492"></a><p class="title"><b>Example&nbsp;26.4.&nbsp;master agent data</b></p><div class="example-contents"><pre class="programlisting">
+&lt;system xmlns="http://example.com/service/3.3"&gt;
+  &lt;services&gt;
+    &lt;service&gt;
+      &lt;name&gt;smtp1&lt;/name&gt;
+      &lt;type&gt;smtp&lt;/type&gt;
+      &lt;smtp-config xmlns="http://example.com/smtp/1.0"&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        ...
+      &lt;/smtp-config&gt;
+    &lt;/service&gt;
+    &lt;service&gt;
+      &lt;name&gt;imap1&lt;/name&gt;
+      &lt;type&gt;imap&lt;/type&gt;
+      &lt;imap-config xmlns="http://example.com/imap/2.1"&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        ...
+      &lt;/imap-config&gt;
+    &lt;service&gt;
+      &lt;name&gt;pop1&lt;/name&gt;
+      &lt;type&gt;pop&lt;/type&gt;
+      &lt;pop-config xmlns="http://example.com/pop/1.2"&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+         ...
+        &lt;/pop-config&gt;
+      &lt;/pop-config&gt;
+    &lt;/service&gt;
+  &lt;/services&gt;
+&lt;/system&gt;
+&lt;config xmlns="http://example.com/equipment/2.1"&gt;
+  &lt;chassis&gt;
+    ...
+  &lt;/chassis&gt;
+&lt;/config&gt;
+</pre></div></div><p><br class="example-break">
+          </p><p>
+            The first thing to do at the master agent is to compile the
+            YANG modules:
+      </p><div class="example"><a name="d5e13496"></a><p class="title"><b>Example&nbsp;26.5.&nbsp;Compile the YANG modules at the master</b></p><div class="example-contents"><pre class="programlisting">
+$ confdc -c --subagent /system/services/service -o smtp.fxs smtp.yang
+
+$ confdc -c --subagent /system/services/service -o imap.fxs imap.yang
+
+$ confdc -c --subagent /system/services/service -o pop.fxs pop.yang
+
+$ confdc -c --subagent / -o equip.fxs equip.yang
+        </pre></div></div><p><br class="example-break">
+          </p><p>
+            Next, we put the following into <code class="filename">confd.conf</code>:
+      </p><div class="example"><a name="d5e13501"></a><p class="title"><b>Example&nbsp;26.6.&nbsp;Master agent's confd.conf</b></p><div class="example-contents"><pre class="programlisting">&lt;subagents&gt;
+
+  &lt;enabled&gt;true&lt;/enabled&gt;
+
+  &lt;subagent&gt;
+    &lt;name&gt;A&lt;/name&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;tcp&gt;
+      &lt;ip&gt;10.0.0.1&lt;/ip&gt;
+      &lt;port&gt;2023&lt;/port&gt;
+      &lt;confdAuth&gt;
+        &lt;user&gt;admin&lt;/user&gt;
+        &lt;group&gt;admin&lt;/group&gt;
+      &lt;/confdAuth&gt;
+    &lt;/tcp&gt;
+    &lt;mount xmlns:sa="http://example.com/smtp/1.0"&gt;
+      &lt;path&gt;/system/services/service[name="smtp1"]&lt;/path&gt;
+      &lt;node&gt;sa:smtp-config&lt;/node&gt;
+    &lt;/mount&gt;
+  &lt;/subagent&gt;
+
+  &lt;subagent&gt;
+    &lt;name&gt;B&lt;/name&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;tcp&gt;
+      &lt;ip&gt;10.0.0.2&lt;/ip&gt;
+      &lt;port&gt;2023&lt;/port&gt;
+      &lt;confdAuth&gt;
+        &lt;user&gt;admin&lt;/user&gt;
+        &lt;group&gt;admin&lt;/group&gt;
+      &lt;/confdAuth&gt;
+    &lt;/tcp&gt;
+    &lt;mount xmlns:imap="http://example.com/imap/2.1"
+           xmlns:pop="http://example.com/pop/1.3"&gt;
+      &lt;path&gt;/system/services/service[name="imap1"]
+            /system/services/service[name="pop1"]&lt;/path&gt;
+      &lt;node&gt;imap:imap-config pop:pop-config&lt;/node&gt;
+    &lt;/mount&gt;
+  &lt;/subagent&gt;
+
+  &lt;subagent&gt;
+    &lt;name&gt;C&lt;/name&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;tcp&gt;
+      &lt;ip&gt;127.0.0.1&lt;/ip&gt;
+      &lt;port&gt;2043&lt;/port&gt;
+      &lt;confdAuth&gt;
+        &lt;user&gt;admin&lt;/user&gt;
+        &lt;group&gt;admin&lt;/group&gt;
+      &lt;/confdAuth&gt;
+    &lt;/tcp&gt;
+    &lt;mount xmlns:sa="http://example.com/equipment/2.1"&gt;
+      &lt;path&gt;/&lt;/path&gt;
+      &lt;node&gt;sa:config&lt;/node&gt;
+    &lt;/mount&gt;
+  &lt;/subagent&gt;</pre></div></div><p><br class="example-break">
+          </p><p>
+            Note that the instances
+            <code class="sgmltag-element">/services/service[name="smtp1"]</code>,
+            <code class="sgmltag-element">/services/service[name="imap1"]</code>, and
+            <code class="sgmltag-element">/services/service[name="pop1"]</code> must be created in
+            the database at the master agent before the subagent will
+            be used.
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13508"></a>26.3.&nbsp;Subagent Requirements</h2></div></div></div><p>
+        Some of the capabilities the master agent advertises must be
+        supported among all subagents.  For example, in order for the
+        master agent to advertise the startup capability, all
+        subagents must support it.  Some other capabilities can be
+        handled entirely in the master agent, and can be advertised
+        independently of the subagents.
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>:writable-running</code></em>, </span><span class="term"><em class="parameter"><code>:startup</code></em>, </span><span class="term"><em class="parameter"><code>:confirmed-commit</code></em>, </span><span class="term"><em class="parameter"><code>:validate</code></em></span></dt><dd><p>
+              These capabilities can be advertised by the master agent
+              if all subagents support them.
+            </p></dd><dt><span class="term"><em class="parameter"><code>:candidate</code></em></span></dt><dd><p>
+              This capabilities can be advertised by the master agent
+              if all subagents support them.  In this case, the master
+              ConfD must be configured with
+              <code class="sgmltag-element">/confdConfig/datastores/candidate/implementation</code>
+              set to <code class="code">external</code> in confd.conf.
+            </p></dd><dt><span class="term"><em class="parameter"><code>:rollback-on-error</code></em></span></dt><dd><p>
+              This capability can be advertised by the master agent if
+              all subagents support the <code class="uri">http://tail-f.com/ns/netconf/transactions/1.0</code>
+              capability.  One exception to this is if there is one
+              single subagent which doesn't support the 'transactions'
+              capability (and zero or more agents supporting it), and
+              this single agent supports
+              <em class="parameter"><code>:rollback-on-error</code></em>.  For more
+              information on the 'transactions' capability, see <a class="xref" href="ch15.html#ug.netconf_agent.transactions" title="15.10.&nbsp;Transactions Capability">Section&nbsp;15.10, &#8220;Transactions Capability&#8221;</a>.
+            </p></dd><dt><span class="term"><em class="parameter"><code>:xpath</code></em></span></dt><dd><p>
+              This capability can be advertised by the master agent
+              independently of the subagents.  The subagents do not
+              have to support XPath.
+            </p></dd><dt><span class="term"><em class="parameter"><code>:url</code></em></span></dt><dd><p>
+              This capability can be advertised by the master agent
+              independently of the subagents.  The subagents do not have
+              to support the <em class="parameter"><code>:url</code></em> capability.
+            </p></dd></dl></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13549"></a>26.4.&nbsp;Proxies</h2></div></div></div><p>
+        ConfD can be configured to proxy NETCONF traffic and CLI
+        sessions.  The configuration of the proxies
+        reside in confd.conf. The proxy configuration is marked as
+        "reloadable", see <a class="xref" href="ch28.html#ug.advanced.config_confd" title="28.4.&nbsp;Configuring ConfD">Section&nbsp;28.4, &#8220;Configuring ConfD&#8221;</a>, so it is possible
+        for the application to easily use parts of the proxy
+        configuration in its own configuration.
+      </p><p>
+        As an example, assume we have a chassis system with two
+        internal boards that reside on a chassis internal network that
+        is not reachable from the outside. We still want the operators
+        to be able to configure the boards, thus we instruct ConfD to
+        proxy network traffic to the internal boards. An example
+        configuration snippet (from confd.conf) could be:
+      </p><div class="example"><a name="d5e13554"></a><p class="title"><b>Example&nbsp;26.7.&nbsp;Proxy configuration</b></p><div class="example-contents"><pre class="programlisting">&lt;proxyForwarding&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;autoLogin&gt;true&lt;/autoLogin&gt;
+  &lt;proxy&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+    &lt;address&gt;10.10.0.1&lt;/address&gt;
+    &lt;netconf&gt;
+      &lt;ssh&gt;
+        &lt;port&gt;830&lt;/port&gt;
+      &lt;/ssh&gt;
+    &lt;/netconf&gt;
+    &lt;cli&gt;
+      &lt;ssh&gt;
+        &lt;port&gt;22&lt;/port&gt;
+      &lt;/ssh&gt;
+    &lt;/cli&gt;
+  &lt;/proxy&gt;
+
+  &lt;proxy&gt;
+    &lt;target&gt;board-2&lt;/target&gt;
+    &lt;address&gt;10.10.0.2&lt;/address&gt;
+    &lt;netconf&gt;
+      &lt;ssh&gt;
+        &lt;port&gt;830&lt;/port&gt;
+      &lt;/ssh&gt;
+    &lt;/netconf&gt;
+    &lt;cli&gt;
+      &lt;ssh&gt;
+        &lt;port&gt;22&lt;/port&gt;
+      &lt;/ssh&gt;
+    &lt;/cli&gt;
+  &lt;/proxy&gt;
+&lt;/proxyForwarding&gt;
+
+&lt;netconf&gt;
+  &lt;capabilities&gt;
+    &lt;forward&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/forward&gt;
+    &lt;!-- other capabilities here ... --&gt;
+  &lt;/capabilities&gt;
+  &lt;!-- more netconf config here ... --&gt;
+&lt;/netconf&gt;</pre></div></div><br class="example-break"><p>
+        The above instructs ConfD to proxy forward CLI  traffic
+        and NETCONF traffic from the "Management interface host" (MIH) to
+        the "Internal hosts" (IH)
+        Both types of traffic must be explicitly initiated by the
+        operator.
+      </p><p>
+        We define two internal hosts to which we wish to
+        proxy traffic. Each internal host has a symbolic name
+        which is is used by both the CLI operator as well as the NETCONF client.
+      </p><p>
+        For all internal hosts we define weather we want to attempt
+        auto login or not.
+        If the ConfD internal SSH server was used in the original
+        connection to the management interface host,
+        be it NETCONF or CLI, ConfD has access to the
+        clear text password. In that case an SSH connection attempt will
+        be made with the same username/password pair as the original
+        connection. If that fails, the NETCONF session will fail with
+        a error whereas the CLI will prompt for a new password. If ConfD
+        does not have access to the SSH password for the original
+        connection to the management interface host, a password must
+        be explicitly supplied by the CLI operator/NETCONF client.
+      </p><p>
+        It is of course also possible to arrange private/public keys
+        on the chassis host in such a manner so that passwords will
+        never be used.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13561"></a>26.4.1.&nbsp;CLI forwarding</h3></div></div></div><p>
+            The CLI user must explicitly initiate SSH connections
+            to the internal hosts using the builtin "forward" command
+            in the CLI. The single argument of the "forward" command is
+            the string defined as "target" in confd.conf. The SSH connection to
+            the target will be made with the same userid as the original CLI
+            connection has.
+
+          </p><div class="informalexample"><pre class="programlisting">admin@chassis&gt; forward [TAB]
+Possible completions:
+  board-1 - 10.10.0.1:22
+  board-2 - 10.10.0.2:22
+admin@chassis&gt; forward board-1
+admin@board-1&gt; id
+user = admin(2), gid=3, groups=admin, gids=
+[ok][2008-08-15 12:14:41]
+admin@board-1&gt; ^D
+Connection to board-1 closed
+[ok][2008-08-15 12:14:58]
+admin@chassis&gt;</pre></div><p>The above (Juniper style CLI) shows a session where the
+          CLI operator connects the CLI to an internal host (board-1)
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13567"></a>26.4.2.&nbsp;NETCONF forwarding</h3></div></div></div><p>
+            ConfD publishes a new "proxy forwarding" NETCONF
+            capability. If the management station issues the forward
+            command, ConfD relays this connection to the IH.  The
+            proxy forwarding capability is defined in the NETCONF
+            chapter.
+          </p><p>
+            If the command succeeds, any messages arriving in this session would
+            subsequently be forwarded to the target device without any analysis
+            on the forwarding device.  This channel is also open to
+            NETCONF notifications sent from the IH.  This goes on until
+            the session is closed.
+          </p><p>
+            A NETCONF session that connects to board-1 and asks for the dhcp
+            configuration could like this:
+          </p><div class="example"><a name="d5e13572"></a><p class="title"><b>Example&nbsp;26.8.&nbsp;Agent replies with forward capability</b></p><div class="example-contents"><pre class="programlisting">&lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;capabilities&gt;
+    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+    &lt;capability&gt;http://tail-f.com/ns/netconf/forward/1.0&lt;/capability&gt;
+  &lt;/capabilities&gt;
+&lt;/hello&gt;</pre></div></div><br class="example-break"><div class="example"><a name="d5e13575"></a><p class="title"><b>Example&nbsp;26.9.&nbsp;Manager issues forward rpc to board-1</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+  &lt;/forward&gt;
+&lt;/rpc&gt;</pre></div></div><br class="example-break"><div class="example"><a name="d5e13578"></a><p class="title"><b>Example&nbsp;26.10.&nbsp;Manager issues command</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2"&gt;
+  &lt;get&gt;
+    &lt;filter&gt;
+      &lt;dhcp xmlns="http://tail-f.com/ns/example/dhcpd/1.0"/&gt;
+    &lt;/filter&gt;
+  &lt;/get&gt;
+&lt;/rpc&gt;</pre></div></div><br class="example-break"><p>
+            This last <code class="sgmltag-element">get</code> request will be forwarded to the IH by the
+            MIH. Finally the manager issues a <code class="sgmltag-element">close-session</code>
+            request whereby the manager will have the original
+            SSH connection back to the IMH.
+          </p><div class="example"><a name="d5e13584"></a><p class="title"><b>Example&nbsp;26.11.&nbsp;close-session</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="3"&gt;
+  &lt;close-session/&gt;
+&lt;/rpc&gt;</pre></div></div><br class="example-break"><p>
+            When ConfD at the MIH sees the "forward" command, ConfD looks up
+            the IH identity in its configuration which provides a
+            mapping to the appropriate IP address.
+            ConfD then establishes an SSH connection to the IH.
+          </p><p>
+          The "forward" command may require authentication from the user.
+          This happens if ConfD is not configured to do automatic login to the
+          IH, or if automatic login fails.  In this case, the reply will be
+          'not-authorized'.
+          </p><p>
+            The authentication protocol is SASL (<a class="link" href="http://www.ietf.org/rfc/rfc4422.txt" target="_top">RFC
+            4422</a>), using the XML mapping defined for XMMP
+            (<a class="link" href="http://www.ietf.org/rfc/rfc3920.txt" target="_top">RFC
+            3920</a>).  ConfD supports the PLAIN authentication
+            mechanism (<a class="link" href="http://www.ietf.org/rfc/rfc4616.txt" target="_top">RFC
+            4616</a>).
+          </p><p>
+            On successful completion of the "forward" command, the IH's
+            capabilities are returned in the "rpc-reply".
+          </p><p>
+            When the IH or management station closes the connection, either
+            normally or in error, the MIH terminates the forwarding of that
+            session.
+          </p><p>
+            It should be noted that the management station may choose
+            to open a single SSH session to the MIH and utilize the
+            SSH channel concept to establish multiple NETCONF sessions
+            under a single SSH session.  The NETCONF sessions could be
+            directed to the MIH as well as any IH.  This is an
+            optimization that saves memory for the rather large SSH
+            session state on the management station.  For more
+            information on SSH channels, see section 5 of <a class="link" href="http://www.ietf.org/rfc/rfc4254.txt" target="_top">RFC
+            4254</a>.
+          </p><p>
+            The MIH will however have to establish full SSH sessions to each
+            IH as forward requests come in from the management station.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13598"></a>26.4.3.&nbsp;Example - ConfD is configured to do automatic login</h3></div></div></div><p>
+            This is the most simple example, the manager sends a
+            "forward" rpc and receives the capabilities of the
+            IH.
+          </p><div class="example"><a name="d5e13601"></a><p class="title"><b>Example&nbsp;26.12.&nbsp;Auto login</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+     message-id="1"&gt;
+  &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+  &lt;/forward&gt;
+&lt;/rpc&gt;
+
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+           message-id="1"&gt;
+  &lt;data&gt;
+    &lt;capabilities&gt;
+      &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+    &lt;/capabilities&gt;
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;</pre></div></div><br class="example-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13604"></a>26.4.4.&nbsp;Example - Client needs to authenticate to the IH </h3></div></div></div><p>
+            Here the client sends a "forward" rpc and receives
+            an error:
+          </p><div class="informalexample"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+     message-id="1"&gt;
+  &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+  &lt;/forward&gt;
+&lt;/rpc&gt;
+
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+           message-id="1"&gt;
+  &lt;rpc-error&gt;
+    &lt;error-type&gt;protocol&lt;/error-type&gt;
+    &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+    &lt;error-severity&gt;error&lt;/error-severity&gt;
+    &lt;error-app-tag&gt;sasl-mechanisms&lt;/error-app-tag&gt;
+    &lt;error-info&gt;
+      &lt;mechanisms xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+        &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+      &lt;/mechanisms&gt;
+    &lt;/error-info&gt;
+  &lt;/rpc-error&gt;
+&lt;/rpc&gt;</pre></div><p>
+            The error indicates that the client needs to authenticate.
+            This is done using the SASL protocol.
+          </p><div class="example"><a name="d5e13610"></a><p class="title"><b>Example&nbsp;26.13.&nbsp;Forward rpc with auth data</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+     message-id="2"&gt;
+  &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+    &lt;auth&gt;
+      &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+      &lt;initial-response&gt;AGFkbWluAHNlY3JldA==&lt;/initial-response&gt;
+    &lt;/auth&gt;
+  &lt;/forward&gt;
+&lt;/rpc&gt;</pre></div></div><br class="example-break"><p>
+            The decoded initial response in the auth message is:
+          </p><div class="informalexample"><pre class="programlisting">[NUL]admin[NUL]secret</pre></div><p>
+            Finally the client receives the capabilities of the IH
+          </p><div class="informalexample"><pre class="programlisting">&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+           message-id="2"&gt;
+  &lt;data&gt;
+    &lt;capabilities&gt;
+      &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+    &lt;/capabilities&gt;
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;</pre></div><p>
+            The client is now successfully connected to board-1
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13620"></a>26.4.5.&nbsp;Example - Client needs to authenticate to the IH but fails</h3></div></div></div><p>
+            Similar to the example above, but the client sends a
+            a bad password as in:
+          </p><div class="informalexample"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+     message-id="2"&gt;
+  &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+    &lt;target&gt;board-1&lt;/target&gt;
+    &lt;auth&gt;
+      &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+      &lt;initial-response&gt;AGFkbWluAGFlY3JldA==&lt;/initial-response&gt;
+    &lt;/auth&gt;
+  &lt;/forward&gt;
+&lt;/rpc&gt;</pre></div><p>
+              The decoded initial response in the auth message is:
+
+          </p><div class="informalexample"><pre class="programlisting">[NUL]admin[NUL]aecret</pre></div><p>
+          An error is received:
+        </p><div class="informalexample"><pre class="programlisting">&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+           message-id="2"&gt;
+  &lt;rpc-error&gt;
+    &lt;error-type&gt;protocol&lt;/error-type&gt;
+    &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+    &lt;error-severity&gt;error&lt;/error-severity&gt;
+    &lt;error-app-tag&gt;sasl-failure&lt;/error-app-tag&gt;
+    &lt;error-info&gt;
+      &lt;failure xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+        &lt;not-authorized/&gt;
+      &lt;/failure&gt;
+    &lt;/error-info&gt;
+  &lt;/rpc-error&gt;
+&lt;/rpc-reply&gt;</pre></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch25.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch27.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;25.&nbsp;The SNMP Gateway&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;27.&nbsp;Plug-and-play scripting</td></tr></table></div></body></html>

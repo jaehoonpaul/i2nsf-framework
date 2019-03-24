@@ -1,0 +1,2585 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;21.&nbsp;The REST API</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch20.html" title="Chapter&nbsp;20.&nbsp;The web server"><link rel="next" href="ch22.html" title="Chapter&nbsp;22.&nbsp;The RESTCONF API"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;21.&nbsp;The REST API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch20.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch22.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.rest"></a>Chapter&nbsp;21.&nbsp;The REST API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch21.html#d5e11521">21.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch21.html#ug.rest.gettingstarted">21.2. Getting started</a></span></dt><dt><span class="sect1"><a href="ch21.html#ug.rest.resource.examples">21.3. Resource Examples</a></span></dt><dt><span class="sect1"><a href="ch21.html#ug.rest.resources">21.4. Resources</a></span></dt><dt><span class="sect1"><a href="ch21.html#d5e12448">21.5. Configuration Meta-Data</a></span></dt><dt><span class="sect1"><a href="ch21.html#ug.rest.headers">21.6. Request/Response headers</a></span></dt><dt><span class="sect1"><a href="ch21.html#d5e12507">21.7. Special characters</a></span></dt><dt><span class="sect1"><a href="ch21.html#d5e12553">21.8. Error Responses</a></span></dt><dt><span class="sect1"><a href="ch21.html#ug.rest.query.api">21.9. The Query API</a></span></dt><dt><span class="sect1"><a href="ch21.html#d5e12752">21.10. Custom Response HTTP Headers</a></span></dt><dt><span class="sect1"><a href="ch21.html#d5e12768">21.11. HTTP Status Codes</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e11521"></a>21.1.&nbsp;Introduction</h2></div></div></div><p>
+      This document describes a RESTful API over HTTP for accessing
+      data defined in YANG. It tries to follow the RESTCONF Internet Draft
+      [draft-ietf-netconf-restconf-00] but since it predates the creation
+      of RESTCONF, a number of differences exists.
+      Whenever such a difference occur, it will be clearly stated.
+    </p><p>
+      The RESTCONF protocol operates in the configuration datastores
+      defined in NETCONF. It defines a set of
+      Create, Retrieve, Update, Delete (CRUD) operations that can be used
+      to access these datastores.  The YANG language defines the syntax and
+      semantics of datastore content, operational data and protocol
+      operations. REST operations are used
+      to access the hierarchical data within a datastore.
+      Request and response data can be in XML or JSON format, where
+      XML is the default format.
+    </p><p>
+      To get a quick introduction to how to enable REST in
+      ConfD and how to run
+      the CRUD operations, continue to
+      <a class="xref" href="ch21.html#ug.rest.gettingstarted" title="21.2.&nbsp;Getting started">Section&nbsp;21.2, &#8220;Getting started&#8221;</a>.
+    </p><p>
+      To read more about resources, continue to
+      <a class="xref" href="ch21.html#ug.rest.resources" title="21.4.&nbsp;Resources">Section&nbsp;21.4, &#8220;Resources&#8221;</a>.
+    </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>
+        All REST request/response examples in this chapter are based on the
+        <span class="emphasis"><em>examples.confd/rest/router</em></span> example. Go to this
+        example to play around and get familiar with the REST api.
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.rest.gettingstarted"></a>21.2.&nbsp;Getting started</h2></div></div></div><p>
+      In order to enable REST in ConfD, REST must be enabled in
+      <code class="filename">confd.conf</code> .  The web server
+      configuration for REST is shared with the WebUI's config.  However,
+      the WebUI does not have to be enabled for REST to work.
+    </p><p>
+      Here's a minimal example of what is needed in the conf file:
+    </p><p>
+      </p><div class="example"><a name="d5e11538"></a><p class="title"><b>Example&nbsp;21.1.&nbsp;ConfD configuration for REST</b></p><div class="example-contents"><pre class="screen">
+    &lt;rest&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;/rest&gt;
+
+    &lt;webui&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+      &lt;transport&gt;
+        &lt;tcp&gt;
+          &lt;enabled&gt;true&lt;/enabled&gt;
+          &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+          &lt;port&gt;8008&lt;/port&gt;
+        &lt;/tcp&gt;
+      &lt;/transport&gt;
+    &lt;/webui&gt;
+  </pre></div></div><p><br class="example-break">
+    </p><p>
+      
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11542"></a>21.2.1.&nbsp;The Authentication Cache</h3></div></div></div><p>The REST server maintains an authentication cache.
+      When authenticating an incoming request for a particular
+      User:Password, it is first checked if the User exists in the cache
+      and if so, the request is processed. This makes it possible to
+      avoid the, potentially time consuming, login procedure that will
+      take place in case of a cache miss.
+      </p><p>Cache entries has a maximum Time-To-Live (TTL) and upon expiry
+      a cache entry is removed which will cause the next request for that User
+      to perform the normal login procedure. The TTL value is configurable
+      via the <span class="emphasis"><em>authCacheTTL</em></span> parameter, as shown in the
+      example. Note that, by setting the TTL value to zero (PT0S), the cache
+      is effectively turned off.
+      </p><p>
+      </p><div class="example"><a name="d5e11548"></a><p class="title"><b>Example&nbsp;21.2.&nbsp;ConfD configuration of the authentication cache TTL</b></p><div class="example-contents"><pre class="screen">
+  ...
+  &lt;aaa&gt;
+     ...
+     &lt;rest&gt;
+        &lt;!-- Set the TTL to 10 seconds! --&gt;
+        &lt;authCacheTTL&gt;PT10S&lt;/authCacheTTL&gt;
+     &lt;/rest&gt;
+     ...
+  &lt;/aaa&gt;
+  ...</pre></div></div><p><br class="example-break">
+    </p><p>It is also possible to combine the Clients IP address with
+      the User name as a key into the cache. This behaviour is disabled
+      by default. It can be enabled by setting the
+      <span class="emphasis"><em>enableAuthCacheClientIp</em></span> parameter
+      to <span class="emphasis"><em>true</em></span>.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11554"></a>21.2.2.&nbsp;Client IP via Proxy</h3></div></div></div><p>It is possible to configure the ConfD REST server
+      to pick up the client IP address via a HTTP header in the request.
+      A list of HTTP headers to look for is configurable via the
+      <span class="emphasis"><em>proxyHeaders</em></span> parameter as shown in the example.
+      </p><p>To avoid misuse of this feature, only requests from trusted sources
+      will be searched for such a HTTP header. The list of trusted sources is
+      configured via the <span class="emphasis"><em>allowedProxyIpPrefix</em></span> as shown
+      in the example.
+      </p><p>
+      </p><div class="example"><a name="d5e11561"></a><p class="title"><b>Example&nbsp;21.3.&nbsp;ConfD configuration of Client IP via Proxy</b></p><div class="example-contents"><pre class="screen">
+  ...
+  &lt;webui&gt;
+     ...
+     &lt;useForwardedClientIp&gt;
+       &lt;proxyHeaders&gt;X-Forwarded-For&lt;/proxyHeaders&gt;
+       &lt;proxyHeaders&gt;X-REAL-IP&lt;/proxyHeaders&gt;
+       &lt;allowedProxyIpPrefix&gt;10.12.34.0/24&lt;/allowedProxyIpPrefix&gt;
+       &lt;allowedProxyIpPrefix&gt;2001:db8:1234::/48&lt;/allowedProxyIpPrefix&gt;
+     &lt;/useForwardedClientIp&gt;
+     ...
+  &lt;/webui&gt;
+  ...</pre></div></div><p><br class="example-break">
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11564"></a>21.2.3.&nbsp;Request URI structure</h3></div></div></div><p>
+        Resources are represented with URIs following the structure for
+        generic URIs in [RFC3986].
+      </p><div class="example"><a name="ug.rest.ex.uri.structure"></a><p class="title"><b>Example&nbsp;21.4.&nbsp;Request URI structure</b></p><div class="example-contents"><pre class="screen">
+        &lt;OP&gt; /api/&lt;path&gt;?&lt;query&gt;#&lt;fragment&gt;
+
+         ^    ^     ^        ^       ^
+         |    |     |        |       |
+       method entry resource query fragment
+
+         M      M      O       O     I
+
+       M=mandatory, O=optional, I=ignored
+
+
+       &lt;text&gt; replaced by client with real values
+       </pre></div></div><br class="example-break"><p>
+        A REST operation is derived from the HTTP method and the request
+        URI, using the following conceptual fields:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            "method": the HTTP method identifying the REST operation
+            requested by the client, to act upon the target resource specified
+            in the request URI.
+          </p></li><li class="listitem"><p>
+            "entry": the well-known REST entry point ("/api").
+          </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+              <span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+            </p></div></li><li class="listitem"><p>
+            "resource": the path expression identifying the
+            resource that is being accessed by the operation.
+            If this field is not present, then the target resource
+            is the API itself, represented by the
+            media type "application/vnd.yang.api".
+          </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+              <span class="emphasis"><em>THE MEDIA TYPE DIFFERS FROM RESTCONF!</em></span>
+            </p></div></li><li class="listitem"><p>
+            "query": the set of parameters associated with
+            the REST message.
+            These have the familiar form of "name=value" pairs.  There is a
+            specific set of parameters defined,
+            see <a class="xref" href="ch21.html#ug.rest.query.params" title="21.2.12.&nbsp;Query Parameters">Section&nbsp;21.2.12, &#8220;Query Parameters&#8221;</a>.
+            The contents of the query parameter value must be encoded
+            according to [RFC2396], section 3.4.  Any reserved characters must
+            be encoded with escape sequences, according to [RFC2396], section
+            2.4.
+          </p></li><li class="listitem"><p>
+            "fragment": This field is not used by the REST protocol.
+          </p></li></ul></div><p>
+        The REST protocol uses HTTP methods to identify the CRUD
+        operation requested for a particular resource.  The following table
+        shows how the REST operations relate to NETCONF protocol
+        operations:
+      </p><div class="table"><a name="d5e11590"></a><p class="title"><b>Table&nbsp;21.1.&nbsp;REST vs NETCONF operations</b></p><div class="table-contents"><table summary="REST vs NETCONF operations" border="0"><colgroup><col align="left" class="c1" width="25%"><col width="75%" align="left" class="c2"></colgroup><thead><tr><th align="left">REST</th><th align="left">NETCONF</th></tr></thead><tbody><tr><td align="left">GET</td><td align="left">&lt;get-config&gt;, &lt;get&gt;</td></tr><tr><td align="left">POST</td><td align="left">&lt;edit-config&gt; (operation="create")</td></tr><tr><td align="left">PUT</td><td align="left">&lt;edit-config&gt; (operation="replace")</td></tr><tr><td align="left">PATCH</td><td align="left">&lt;edit-config&gt; (operation="merge")</td></tr><tr><td align="left">DELETE</td><td align="left">&lt;edit-config&gt; (operation="delete")</td></tr><tr><td align="left">OPTIONS</td><td align="left">none</td></tr><tr><td align="left">HEAD</td><td align="left">none</td></tr></tbody></table></div></div><br class="table-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11621"></a>21.2.4.&nbsp;Accessing the REST API</h3></div></div></div><p>
+        The REST API can be accessed, e.g., by using <span class="command"><strong>curl</strong></span>:
+      </p><p>
+        </p><div class="example"><a name="d5e11626"></a><p class="title"><b>Example&nbsp;21.5.&nbsp;Using curl for accessing ConfD</b></p><div class="example-contents"><pre class="screen">
+    curl -u admin:admin -s http://localhost:8008/api/foo/bar -X GET
+    </pre><p>
+            To provide an HTTP header use the <code class="code">-H</code> switch:
+          </p><pre class="screen">
+    ... -H "Accept: application/vnd.data+xml"
+    </pre><p>
+            Note that in the following examples we will shorten the curl calls to:
+          </p><pre class="screen">
+    GET /foo/bar
+    Accept: application/vnd.data+xml
+    </pre></div></div><p><br class="example-break">
+      </p><p>
+        
+      </p><p>
+        By default curl will display responses on standard output. The headers
+        are not included. To include these the "-i" switch has to be
+        added.
+      </p><div class="informalexample"><pre class="screen">
+    curl -i ...
+    </pre></div><p>
+        The response can then typically look like:
+      </p><div class="informalexample"><pre class="screen">
+
+    HTTP/1.1 200 OK
+    Server: ConfD/5.3.0
+    Cache-control: private, no-cache, must-revalidate, proxy-revalidate
+    Date: Fri, 05 Sep 2014 13:09:46 GMT
+    Content-Type: application/vnd.yang.data+json
+    Transfer-Encoding: chunked
+    Etag: 1409-922585-953711
+    Last-Modified: Fri, 01 Jan 1971 00:00:00 GMT
+
+    {
+      "some-data": {
+        "some-value": "value"
+      }
+    }
+
+    </pre></div><p>
+        In the examples shown in this chapter we will from the beginning
+        show all headers with the response. In later examples the headers will
+        be omitted for brevity.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11642"></a>21.2.5.&nbsp;GET</h3></div></div></div><p>
+        The GET method is sent by the client to retrieve data and meta-data
+        for a resource.  It is supported for all resource types, except
+        operation resources.  The request must contain a request URI that
+        contains at least the entry point component (<code class="code">/api</code>).
+        Note how we make use of
+        the <code class="code">Accept</code> HTTP header to indicate what format we
+        want the returned result to be in. The value of the <code class="code">Accept</code>
+        HTTP header, in this example: <code class="code">application/yang.data+json</code>,
+        must be a valid media type. Since XML is the default format we
+        need to explicitly request JSON in the example below.
+        To read more about the media types, see
+        <a class="xref" href="ch21.html#ug.rest.resources" title="21.4.&nbsp;Resources">Section&nbsp;21.4, &#8220;Resources&#8221;</a>.
+      </p><p><a name="ug.rest.get.example"></a>
+        </p><div class="example"><a name="d5e11651"></a><p class="title"><b>Example&nbsp;21.6.&nbsp;Get the "sys/interfaces" resource represented as JSON</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/interfaces/ex:serial
+Accept: application/vnd.yang.collection+json
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 200 OK
+Server: 
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Last-Modified: Fri, 01 Jan 1971 00:00:00 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379499-898453
+Content-Type: application/vnd.yang.collection+json
+Transfer-Encoding: chunked
+Pragma: no-cache
+
+{
+  "collection": {
+    "example-serial:serial": [
+      {
+        "name": "ppp0",
+        "ppp": {
+          "accounting": "acme"
+        },
+        "authentication": {
+          "method": "pap"
+        },
+        "authorization": "admin",
+        "ipcp": {
+        }
+      }
+    ]
+  }
+}
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          To indicate a particular YANG namespace in the URI, the
+          YANG module prefix is used. In the example
+          we are using a module prefix: <code class="code">ex</code> .
+          <br xmlns:d="http://docbook.org/ns/docbook" xmlns:xslthl="http://xslthl.sf.net"><span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><p>
+        In accordance with RESTCONF,
+        the returned <code class="code">"serial"</code> container
+        is using a module name: <code class="code">example-serial</code> to
+        indicate a particular YANG namespace.
+      </p><p>
+        To read more about the <code class="code">ETag</code> and <code class="code">Last-Modified</code>
+        response headers, see <a class="xref" href="ch21.html#ug.rest.headers" title="21.6.&nbsp;Request/Response headers">Section&nbsp;21.6, &#8220;Request/Response headers&#8221;</a>.
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.get" title="21.3.1.&nbsp;GET and Query examples">Section&nbsp;21.3.1, &#8220;GET and Query examples&#8221;</a>
+        for more resource retrieval examples.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11669"></a>21.2.6.&nbsp;POST</h3></div></div></div><p>
+        The POST method is sent by the client to create a data resource or
+        invoke an operation resource ("rpc" or "tailf:action").
+      </p><p>
+        Here we show an example of resource creation using POST. For an
+        example of operation invokation
+        see <a class="xref" href="ch21.html#ug.rest.operation" title="21.3.3.&nbsp;Invoke Operations">Section&nbsp;21.3.3, &#8220;Invoke Operations&#8221;</a>
+      </p><p>
+        </p><div class="example"><a name="d5e11675"></a><p class="title"><b>Example&nbsp;21.7.&nbsp;
+            Create a new "sys/routes/inet/route" resource, with JSON payload
+          </b></p><div class="example-contents"><pre class="programlisting">
+POST /running/sys/routes/inet
+Content-Type: application/vnd.yang.data+json
+
+</pre><pre class="programlisting">
+{
+  "route": {
+    "name": "10.20.1.0",
+    "prefix-length": "24"
+  }
+}
+
+</pre><p>
+            If the resource is created, the server might respond as follows:
+          </p><pre class="programlisting">
+HTTP/1.1 100 Continue
+Server: 
+Allow: GET, POST, OPTIONS, HEAD
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Server: 
+Location: 
+http://127.0.0.1:8008/api/running/sys/routes/inet/route/10.20.1.0,24
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Allow: GET, POST, OPTIONS, HEAD
+Last-Modified: Wed, 12 Aug 2015 11:38:20 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379500-235361
+Content-Length: 0
+Content-Type: text/html
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        If the POST method succeeds, a <code class="code">"201 Created"</code>
+        Status-Line is returned and there is no response message body.
+        Also, a <code class="code">"Location"</code> header
+        identifying the child resource that was created is present in
+        the response.
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.create" title="Create a List Instance with POST">the section called &#8220;Create a List Instance with POST&#8221;</a>
+        for more examples of creating resources.
+      </p><p>
+        If the target resource type is an operation resource, then the POST
+        method is treated as a request to invoke that operation. The message
+        body (if any) is processed as the operation input parameters.
+        Refer to <a class="xref" href="ch21.html#ug.rest.operations.actions" title="21.4.5.&nbsp;Operations and Actions">Section&nbsp;21.4.5, &#8220;Operations and Actions&#8221;</a>
+        for details on operation resources.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11688"></a>21.2.7.&nbsp;PUT</h3></div></div></div><p>
+        The PUT method is sent by the client to create or replace the target
+        resource. The request must contain a request URI that contains a target
+        resource that identifies the data resource to create or replace.
+      </p><p>
+        </p><div class="example"><a name="d5e11692"></a><p class="title"><b>Example&nbsp;21.8.&nbsp;Replace the "sys/routes/inet/route" resource contents</b></p><div class="example-contents"><pre class="programlisting">
+PUT /running/sys/routes/inet/route/10.20.1.0,24
+Content-Type: application/vnd.yang.data+json
+
+</pre><pre class="programlisting">
+{
+  "route": {
+    "name": "10.20.1.0",
+    "prefix-length": "24",
+    "description": "Example route",
+    "enabled" : "false"
+  }
+}
+
+</pre><p>If the resource is updated, the server might respond:</p><pre class="programlisting">
+HTTP/1.1 100 Continue
+Server: 
+Allow: GET, POST, OPTIONS, HEAD
+Content-Length: 0
+
+HTTP/1.1 204 No Content
+Server: 
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Allow: GET, POST, OPTIONS, HEAD
+Last-Modified: Wed, 12 Aug 2015 11:38:20 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379500-401146
+Content-Length: 0
+Content-Type: text/html
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        The "insert" and "resource" query
+        parameters are supported by the PUT
+        method for data resources, for more examples see
+        <a class="xref" href="ch21.html#ug.rest.insert" title="Insert Data into Resources">the section called &#8220;Insert Data into Resources&#8221;</a>.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          The "resource" query parameter correspond
+          to the "point" query parameter in RESTCONF.
+          <br xmlns:d="http://docbook.org/ns/docbook" xmlns:xslthl="http://xslthl.sf.net"><span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><p>
+        If the PUT method creates a new resource,
+        a "201 Created" Status-Line is returned.  If an existing resource is
+        modified, either "200 OK" or "204 No Content" are returned.
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.put" title="Create and Replace a List Instance with PUT">the section called &#8220;Create and Replace a List Instance with PUT&#8221;</a>
+        for more examples on how to use PUT.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11706"></a>21.2.8.&nbsp;PATCH</h3></div></div></div><p>
+        The PATCH method is used to create or update a sub-resource
+        within the target resource.  If the target resource instance
+        does not exist, the server <span class="emphasis"><em>WILL NOT</em></span> create it.
+      </p><p>
+        To replace just the "enabled" field in the "route" list resource
+        (instead of replacing the entire resource with the PUT method),
+        the client might send a plain patch as follows.
+      </p><p>
+        </p><div class="example"><a name="d5e11712"></a><p class="title"><b>Example&nbsp;21.9.&nbsp;Update the "sys/routes/inet/route" resource contents</b></p><div class="example-contents"><pre class="programlisting">
+PATCH /running/sys/routes/inet/route/10.20.1.0,24
+Content-Type: application/vnd.yang.data+json
+
+</pre><pre class="programlisting">
+{
+  "route": {
+    "enabled" : "true"
+  }
+}
+
+</pre><p>If the resource is updated, the server might respond:</p><pre class="programlisting">
+HTTP/1.1 100 Continue
+Server: 
+Allow: GET, POST, OPTIONS, HEAD
+Content-Length: 0
+
+HTTP/1.1 204 No Content
+Server: 
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Allow: GET, POST, OPTIONS, HEAD
+Last-Modified: Wed, 12 Aug 2015 11:38:20 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379500-570215
+Content-Length: 0
+Content-Type: text/html
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.patch" title="Update Existing List Instance with PATCH">the section called &#8220;Update Existing List Instance with PATCH&#8221;</a>
+        for more examples on how to use PATCH.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11720"></a>21.2.9.&nbsp;DELETE</h3></div></div></div><p>
+        The DELETE method is used to delete the target resource.  If the
+        DELETE method succeeds, a "204 No Content" Status-Line is returned,
+        and there is no response message body.
+      </p><p>
+        </p><div class="example"><a name="d5e11724"></a><p class="title"><b>Example&nbsp;21.10.&nbsp;Delete the "sys/routes/inet/route" resource contents</b></p><div class="example-contents"><pre class="programlisting">
+DELETE /running/sys/routes/inet/route/10.20.1.0,24
+
+</pre><p>
+            If the resource is successfully deleted, the server might respond:
+          </p><pre class="programlisting">
+HTTP/1.1 204 No Content
+Server: 
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Last-Modified: Wed, 12 Aug 2015 11:38:20 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379500-746781
+Content-Length: 0
+Content-Type: text/html
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.delete" title="21.3.4.&nbsp;Delete Data Resources">Section&nbsp;21.3.4, &#8220;Delete Data Resources&#8221;</a>
+        for more examples on how to use DELETE.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11731"></a>21.2.10.&nbsp;OPTIONS</h3></div></div></div><p>
+        The OPTIONS method is sent by the client to discover which methods
+        are supported by the server for a specific resource.
+        The supported methods are listed in the ALLOW header.
+      </p><p><a name="ug.rest.options.example"></a>
+        </p><div class="example"><a name="d5e11735"></a><p class="title"><b>Example&nbsp;21.11.&nbsp;Get options for the "sys" resource</b></p><div class="example-contents"><pre class="programlisting">
+OPTIONS /running/sys
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 200 OK
+Server: 
+Allow: DELETE, GET, HEAD, PATCH, POST, PUT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Content-Length: 0
+Content-Type: text/html
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        Here the options method responds with an ALLOW header indicating
+        that all methods are allowed on the "sys" resource.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11741"></a>21.2.11.&nbsp;HEAD</h3></div></div></div><p>
+        The HEAD method is sent by the client to retrieve just the headers
+        that would be returned for the comparable GET method, without the
+        response body.
+
+        The access control behavior is enforced as if the method was GET
+        instead of HEAD. The server will respond the same as if the method
+        was GET instead of HEAD, except that no response body is included.
+      </p><p><a name="ug.rest.head.example"></a>
+        </p><div class="example"><a name="d5e11745"></a><p class="title"><b>Example&nbsp;21.12.&nbsp;Get head for the "sys/interfaces/ex:serial" resource</b></p><div class="example-contents"><pre class="programlisting">
+HEAD /running/sys/interfaces/ex:serial
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 200 OK
+Server: 
+Date: Wed, 12 Aug 2015 11:38:20 GMT
+Last-Modified: Wed, 12 Aug 2015 11:38:20 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379500-746781
+Content-Length: 0
+Content-Type: application/vnd.yang.collection+xml
+Pragma: no-cache
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        Here the "Content-Length" header is 0. This is because the
+        content length calculation is not eligible when the actual content is
+        suppressed as with the HEAD method.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.rest.query.params"></a>21.2.12.&nbsp;Query Parameters</h3></div></div></div><p>
+        Each REST operation allows zero or more query parameters to be
+        present in the request URI. The specific parameters that are allowed
+        depends on the resource type, and sometimes the specific target
+        resource used, in the request.
+      </p><div class="table"><a name="d5e11754"></a><p class="title"><b>Table&nbsp;21.2.&nbsp;Query Parameters</b></p><div class="table-contents"><table summary="Query Parameters" border="0"><colgroup><col align="left" class="c1" width="20%"><col align="left" class="c2" width="20%"><col width="60%" align="left" class="c3"></colgroup><thead><tr><th align="left">Name</th><th align="left">Methods</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left">deep</td><td align="left">GET</td><td align="left">Retrieve a resource with all subresources inline.</td></tr><tr><td align="left">insert</td><td align="left">POST</td><td align="left">
+                For an ordered-by user list, we can specify where a
+                resource, to be created, should be inserted. This query
+                parameter is used together with the <span class="emphasis"><em>resource</em></span>
+                query parameter.
+                Possible values are: <span class="emphasis"><em>after</em></span>,
+                <span class="emphasis"><em>before</em></span>,<span class="emphasis"><em>first</em></span> and
+                <span class="emphasis"><em>last</em></span>.
+                See <a class="xref" href="ch21.html#ug.rest.insert" title="Insert Data into Resources">the section called &#8220;Insert Data into Resources&#8221;</a> for details.
+              </td></tr><tr><td align="left">limit</td><td align="left">GET</td><td align="left">
+                Used by the client to specify a
+                limited set of list entries to retrieve.  See
+                <a class="xref" href="ch21.html#ug.rest.partial.get" title="Partial Responses">the section called &#8220;Partial Responses&#8221;</a> for details.
+              </td></tr><tr><td align="left">offset</td><td align="left">GET</td><td align="left">
+                Used by the client to specify a limited set of list
+                entries to retrieve.
+                See <a class="xref" href="ch21.html#ug.rest.partial.get" title="Partial Responses">the section called &#8220;Partial Responses&#8221;</a> for details.
+              </td></tr><tr><td align="left">operations</td><td align="left">GET</td><td align="left">
+                Used by the client to include/exclude operations
+                (tailf:actions) in the result. Possible values are:
+                <span class="emphasis"><em>true</em></span>, which is the default value,
+                and  <span class="emphasis"><em>false</em></span>.
+              </td></tr><tr><td align="left">resource</td><td align="left">POST</td><td align="left">
+                For an ordered-by user list, we can specify where a
+                resource, to be created, should be inserted. This query
+                parameter is used together with the <span class="emphasis"><em>insert</em></span>
+                query parameter.
+                See <a class="xref" href="ch21.html#ug.rest.insert" title="Insert Data into Resources">the section called &#8220;Insert Data into Resources&#8221;</a> for details.
+              </td></tr><tr><td align="left">select</td><td align="left">GET</td><td align="left">
+                Used by the client to select which
+                nodes and subresources in a resource to retrieve.  See
+                <a class="xref" href="ch21.html#ug.rest.partial.get" title="Partial Responses">the section called &#8220;Partial Responses&#8221;</a> for details.
+              </td></tr><tr><td align="left">shallow</td><td align="left">GET</td><td align="left">Retrieve a resource with no subresources inline.</td></tr><tr><td align="left">unhide</td><td align="left">GET</td><td align="left">
+                Used by the client to unhide hidden nodes.  See
+                <a class="xref" href="ch21.html#ug.rest.hidden" title="Hidden Nodes">the section called &#8220;Hidden Nodes&#8221;</a> for details.
+              </td></tr><tr><td align="left">verbose</td><td align="left">GET</td><td align="left">
+                Used by the client to control
+                display of the "self" and "path"
+                attributes of the resource.
+                See <a class="xref" href="ch21.html#ug.rest.withdefaults" title="Displaying Default Data">the section called &#8220;Displaying Default Data&#8221;</a> for details.
+              </td></tr><tr><td align="left">with-defaults</td><td align="left">GET</td><td align="left">
+                Used by the client to control
+                display of default data in GET requests.  See
+                <a class="xref" href="ch21.html#ug.rest.withdefaults" title="Displaying Default Data">the section called &#8220;Displaying Default Data&#8221;</a> for details.
+              </td></tr></tbody></table></div></div><br class="table-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          The query parameters of the REST API is not the same as for RESTCONF.
+        <br xmlns:d="http://docbook.org/ns/docbook" xmlns:xslthl="http://xslthl.sf.net"><span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><p><a name="ug.rest.deep.vs.shallow"></a>
+        If neither "deep" nor "shallow" is used, you
+        will get a variable depth returned. The output shown will stop at the
+        first encountered presence container or list key value(s).
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.rest.resource.examples"></a>21.3.&nbsp;Resource Examples</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.rest.get"></a>21.3.1.&nbsp;GET and Query examples</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e11834"></a>Retrieve Data Resources</h4></div></div></div><p>
+          If a resource only needs to be outlined, the
+          <span class="emphasis"><em>shallow</em></span> query parameter can be used on the
+          GET request.
+        </p><p><a name="ug.rest.shallow.example"></a>
+          </p><div class="example"><a name="d5e11839"></a><p class="title"><b>Example&nbsp;21.13.&nbsp;Shallow get for the "sys" resource</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys?shallow
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;sys xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;interfaces/&gt;
+  &lt;routes/&gt;
+  &lt;syslog/&gt;
+  &lt;ntp/&gt;
+  &lt;dns/&gt;
+&lt;/sys&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          On the other hand, if the full subtree under a resource is required,
+          the <span class="emphasis"><em>deep</em></span> query parameter can be used on the
+          GET request.
+        </p><p><a name="ug.rest.deep.example"></a>
+          </p><div class="example"><a name="d5e11847"></a><p class="title"><b>Example&nbsp;21.14.&nbsp;Deep get for the "sys/interfaces/interface" resource</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/interfaces/interface?deep
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;collection xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;interface xmlns="http://example.com/router"&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+    &lt;unit xmlns="http://example.com/router"&gt;
+      &lt;name&gt;0&lt;/name&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;status xmlns="http://example.com/router"&gt;
+      &lt;/status&gt;
+      &lt;family xmlns="http://example.com/router"&gt;
+        &lt;inet xmlns="http://example.com/router"&gt;
+          &lt;address xmlns="http://example.com/router"&gt;
+            &lt;name&gt;192.168.1.2&lt;/name&gt;
+            &lt;prefix-length&gt;16&lt;/prefix-length&gt;
+          &lt;/address&gt;
+        &lt;/inet&gt;
+      &lt;/family&gt;
+    &lt;/unit&gt;
+    &lt;unit xmlns="http://example.com/router"&gt;
+      &lt;name&gt;1&lt;/name&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;status xmlns="http://example.com/router"&gt;
+      &lt;/status&gt;
+      &lt;family xmlns="http://example.com/router"&gt;
+        &lt;inet xmlns="http://example.com/router"&gt;
+          &lt;address xmlns="http://example.com/router"&gt;
+            &lt;name&gt;192.168.1.3&lt;/name&gt;
+            &lt;prefix-length&gt;16&lt;/prefix-length&gt;
+          &lt;/address&gt;
+        &lt;/inet&gt;
+      &lt;/family&gt;
+    &lt;/unit&gt;
+    &lt;unit xmlns="http://example.com/router"&gt;
+      &lt;name&gt;2&lt;/name&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;description&gt;My Vlan&lt;/description&gt;
+      &lt;vlan-id&gt;18&lt;/vlan-id&gt;
+      &lt;status xmlns="http://example.com/router"&gt;
+      &lt;/status&gt;
+    &lt;/unit&gt;
+  &lt;/interface&gt;
+&lt;/collection&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          For more info about "deep" vs "shallow", see: <a class="xref" href="ch21.html#ug.rest.deep.vs.shallow">Section&nbsp;21.2.12, &#8220;Query Parameters&#8221;</a>
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.partial.get"></a>Partial Responses</h4></div></div></div><p>
+          By default, the server sends back the full representation
+          of a resource after processing a request.  For better
+          performance, the server can be instructed to send only the
+          nodes the client really needs in a partial response.
+        </p><p>
+          To request a partial response for a set of list entries,
+          use the "offset" and "limit" query
+          parameters to specify a limited set of entries to be
+          returned.
+        </p><p>
+          For example, if we what to retrieve only 2 entries from the
+          <code class="code">sys/routes/inte/route</code> list we can issue the command:
+        </p><p><a name="ug.rest.limit.example"></a>
+          </p><div class="example"><a name="d5e11861"></a><p class="title"><b>Example&nbsp;21.15.&nbsp;Limit the response</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/routes/inet/route?offset=3&amp;limit=2
+
+</pre><p>
+              The following request retrieves 2 entries
+              starting from entry 3 (the first entry is 0):
+            </p><pre class="programlisting">
+&lt;collection xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;route xmlns="http://example.com/router"&gt;
+    &lt;name&gt;10.40.0.0&lt;/name&gt;
+    &lt;prefix-length&gt;16&lt;/prefix-length&gt;
+    &lt;description&gt;Route 4&lt;/description&gt;
+    &lt;next-hop xmlns="http://example.com/router"&gt;
+      &lt;name&gt;192.168.10.4&lt;/name&gt;
+    &lt;/next-hop&gt;
+  &lt;/route&gt;
+  &lt;route xmlns="http://example.com/router"&gt;
+    &lt;name&gt;10.50.0.0&lt;/name&gt;
+    &lt;prefix-length&gt;16&lt;/prefix-length&gt;
+    &lt;description&gt;Route 5&lt;/description&gt;
+    &lt;next-hop xmlns="http://example.com/router"&gt;
+      &lt;name&gt;192.168.10.5&lt;/name&gt;
+    &lt;/next-hop&gt;
+  &lt;/route&gt;
+&lt;/collection&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          To request a filtered partial response, use the
+          "select" query parameter to specify the nodes
+          and subresources to be returned.
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          Use a semicolon-separated list to select multiple nodes.
+        </p></li><li class="listitem"><p> Use "a/b" to select a node
+        "b" that is nested within node "a"; use
+        "a/b/c" to select a node "c" nested
+        within "b".
+        </p></li><li class="listitem"><p>
+            Specify node subselectors to request only specific
+            subnodes by placing expressions in parentheses "(
+            )" after any selected node.
+          </p></li><li class="listitem"><p>
+          To specify all subnodes of a specific node use the
+          special wildcard notion within parentheses  "(*)"
+        </p></li></ul></div><p>
+          NOTE: "a/b/c;a/b/d" is equivalent to "a/b(c;d)"
+        </p><p>
+          The following request selects the routes name and next-hop/name nodes:
+        </p><p><a name="ug.rest.select.example"></a>
+          </p><div class="example"><a name="d5e11879"></a><p class="title"><b>Example&nbsp;21.16.&nbsp;Limit the response with select</b></p><div class="example-contents"><pre class="programlisting">
+GET 
+/running/sys/routes/inet/route/10.20.0.0,16?select=name;next-hop(name)
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;route xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;name&gt;10.20.0.0&lt;/name&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.10.2&lt;/name&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.hidden"></a>Hidden Nodes</h4></div></div></div><p>
+          Hidden nodes are described in
+          <a class="xref" href="ch10.html#ug.transformations.hidden_data" title="10.7.&nbsp;Hidden Data">Section&nbsp;10.7, &#8220;Hidden Data&#8221;</a>.
+          By default, hidden nodes are not visible in the REST
+          interface.  In order to unhide hidden nodes for retrieval or
+          editing, clients can use the query parameter
+          "unhide".  The format of the "unhide"
+          parameter is a comma-separated list of
+          </p><div class="informalexample"><pre class="programlisting">&lt;groupname&gt;[;&lt;password&gt;]</pre></div><p>
+          As an example:
+          </p><div class="informalexample"><pre class="programlisting">unhide=extra,debug;secret</pre></div><p>
+          This example unhides the normal group "extra" and
+          the password-protected group "debug" with the
+          password "secret".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.withdefaults"></a>Displaying Default Data</h4></div></div></div><p>
+          Normally, leaf nodes that are not set but has a default
+          value are not displayed at a GET request. This behavior can
+          be controlled by the use of the "with-defaults"
+          query parameter.
+          This parameter can take one of four values:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              "report-all": all data nodes are be
+              reported, including any data nodes considered to be
+              default data by the server.
+            </p></li><li class="listitem"><p>
+              "explicit": a data node that has been
+              explicitly set is reported. This is also the case when
+              a data node is explicitly set to a value that
+              coincide with the default value for the node.
+            </p></li><li class="listitem"><p>
+              "trim": data nodes are not reported if they
+              contain default value even if this was explicitly set
+              to that value.
+            </p></li><li class="listitem"><p>
+              "report-all-tagged": In this mode the server
+              returns all data nodes, just like the
+              "report-all" mode, except a data node that
+              is considered by the server to contain default data
+              will include an attribute to indicate this condition.
+            </p></li></ul></div><p>
+          A request with the "with-defaults" query parameter
+          without a specified value will be interpreted as
+          "report-all".
+        </p><p>
+          If we make a normal GET of the "sys/ntp/server" resource.
+          The default values are not retrieved:
+        </p><p><a name="ug.rest.getnodef.example"></a>
+          </p><div class="example"><a name="d5e11907"></a><p class="title"><b>Example&nbsp;21.17.&nbsp;The "sys/ntp/server" list (no defaults)</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/ntp/server
+
+</pre><pre class="programlisting">
+&lt;collection xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;server xmlns="http://example.com/router"&gt;
+    &lt;name&gt;10.2.3.4&lt;/name&gt;
+    &lt;key&gt;2&lt;/key&gt;
+  &lt;/server&gt;
+&lt;/collection&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          We can get also the default values by setting the query parameter
+          <code class="code">with-defaults=report-all</code>.
+        </p><p><a name="ug.rest.getreportdef.example"></a>
+          </p><div class="example"><a name="d5e11914"></a><p class="title"><b>Example&nbsp;21.18.&nbsp;The "sys/ntp/server" list with all defaults</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/ntp/server?with-defaults=report-all
+
+</pre><pre class="programlisting">
+&lt;collection xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;server xmlns="http://example.com/router"&gt;
+    &lt;name&gt;10.2.3.4&lt;/name&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;peer&gt;false&lt;/peer&gt;
+    &lt;version&gt;4&lt;/version&gt;
+    &lt;key&gt;2&lt;/key&gt;
+  &lt;/server&gt;
+&lt;/collection&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e11918"></a>21.3.2.&nbsp;Examples using POST, PUT and PATCH</h3></div></div></div><p>
+        To
+        create a child resource you POST the child resource to
+        its parent (target) resource, and in a successful result you will
+        get returned the URI to the created resource in
+        the <code class="code">Location</code> header.
+      </p><p>
+        With PUT you will create or replace a target (data) resource.
+        The message body is expected to contain the content used to
+        create or replace the target resource.
+      </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create"></a>Create a List Instance with POST</h4></div></div></div><p>
+          POST can be used to create a child resource to the resource specified by the
+          uri. In this example we create a "route" list entry. The URI points to
+          the parent container of the list. The payload in the POST request
+          contain a "route" node that, at least, contain the list keys.
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            When creating a list entry all keys must be given in the payload.
+          </p></div><p><a name="ug.rest.postxmlcreate.example"></a>
+          </p><div class="example"><a name="d5e11929"></a><p class="title"><b>Example&nbsp;21.19.&nbsp;Creating a "sys/routes/inet/route" resource</b></p><div class="example-contents"><pre class="programlisting">
+POST /running/sys/routes/inet
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;route&gt;
+  &lt;name&gt;10.20.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+&lt;/route&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 201
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          When an element is successfully created the HTTP status response is
+          201. If the element already existed the status response is 409.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create.pcontainer"></a>Create a Presence Container, within a list, with POST</h4></div></div></div><p>
+          In this example we create a "multilink" presence container.
+          The URI points to the list instance that contains the
+          presence container, i.e the URI ends with the key(s).
+          The payload in the POST request contain a "multilink" node
+          that contain a value for the leaf node "group".
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            It is not possible to create a non-presence container with
+            POST, as non-presence containers per definition always
+            exists.
+          </p></div><p><a name="ug.rest.postxmlcreatepcontainer.example"></a>
+          </p><div class="example"><a name="d5e11942"></a><p class="title"><b>Example&nbsp;21.20.&nbsp;Creating a "sys/interfaces/serial/ppp0/multilink" resource</b></p><div class="example-contents"><pre class="programlisting">
+POST /running/sys/interfaces/serial/ppp0
+Content-Type: application/vnd.yang.data+xml | egrep 
+'(HTTP.*Created.*|Locat*)'
+
+</pre><pre class="programlisting">
+&lt;multilink&gt;
+  &lt;group&gt;1&lt;/group&gt;
+&lt;/multilink&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 201 Created
+Location: 
+http://127.0.0.1:8008/api/running/sys/interfaces/ex:serial/ppp0/multil
+ink
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.put"></a>Create and Replace a List Instance with PUT</h4></div></div></div><p>
+          PUT can be used to create or replace a resource. No distinction is
+          made in the prerequisites for PUT. If no resource existed it is
+          created, but if it existed it is replaced. In the example, note
+          how the URI ends with the keys.
+        </p><p><a name="ug.rest.putcreate.example"></a>
+          </p><div class="example"><a name="d5e11952"></a><p class="title"><b>Example&nbsp;21.21.&nbsp;Creating a "route" resource using PUT</b></p><div class="example-contents"><pre class="programlisting">
+PUT /running/sys/routes/inet/route/10.30.3.0,24
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;route&gt;
+  &lt;name&gt;10.30.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.4.4&lt;/name&gt;
+    &lt;metric&gt;100&lt;/metric&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 201
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          When an element is successfully created the HTTP status response is 201.
+          We make a GET to verify the "route" list after the PUT of the element.
+        </p><p><a name="ug.rest.putcreateget.example"></a>
+          </p><div class="example"><a name="d5e11960"></a><p class="title"><b>Example&nbsp;21.22.&nbsp;The "route" resource after creation</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/routes/inet/route/10.30.3.0,24
+
+</pre><pre class="programlisting">
+&lt;route xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;name&gt;10.30.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.4.4&lt;/name&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            We didn't get the "metric" in the above result
+            from the GET! This has to do with the (non) use of "deep"
+            and "shallow",
+            see: <a class="xref" href="ch21.html#ug.rest.deep.vs.shallow">Section&nbsp;21.2.12, &#8220;Query Parameters&#8221;</a>
+          </p></div><p>
+          We will now do a replace of the same "route" element.
+        </p><div class="example"><a name="d5e11968"></a><p class="title"><b>Example&nbsp;21.23.&nbsp;Replacing a "route" resource using PUT</b></p><div class="example-contents"><pre class="programlisting">
+PUT /running/sys/routes/inet/route/10.30.3.0,24
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;route&gt;
+  &lt;name&gt;10.30.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.3.1&lt;/name&gt;
+    &lt;metric&gt;100&lt;/metric&gt;
+  &lt;/next-hop&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.4.2&lt;/name&gt;
+    &lt;metric&gt;200&lt;/metric&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><br class="example-break"><p>
+          We get the 204 response as the resource already existed. We
+          can verify that the element is replaced.
+        </p><div class="example"><a name="d5e11975"></a><p class="title"><b>Example&nbsp;21.24.&nbsp;The "route" resource after replace</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/routes/inet/route/10.30.3.0,24
+
+</pre><pre class="programlisting">
+&lt;route xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;name&gt;10.30.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.3.1&lt;/name&gt;
+  &lt;/next-hop&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.4.2&lt;/name&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre></div></div><br class="example-break"></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create.putpcontainer"></a>Create and Replace Presence Container with PUT</h4></div></div></div><p>
+          In this example we create a "multilink" presence container. The uri points to
+          the not yet existing URI for the presence container "multilink".
+          The payload in the PUT request contain a "multilink" node
+          that contain a value for the leaf node 'group'.
+        </p><p><a name="ug.rest.putxmlcreatepcontainer.example"></a>
+          </p><div class="example"><a name="d5e11983"></a><p class="title"><b>Example&nbsp;21.25.&nbsp;Creating a "sys/interfaces/serial/ppp0/multilink" resource</b></p><div class="example-contents"><pre class="programlisting">
+PUT /running/sys/interfaces/serial/ppp0/multilink
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;multilink&gt;
+  &lt;group&gt;1&lt;/group&gt;
+&lt;/multilink&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 201
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          Any subsequent request to the same URI will replace the
+          content of "multilink" with the new payload. But the
+          response code will instead be 204, since the resource
+          already exists.
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            Have in mind that PUT will replace everything with the
+            provided payload. So in the example above, if the
+            container "multilink" contained additional subnodes, other
+            than "group", they would have been deleted as they were
+            not present in the payload.
+          </p></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create.putnpcontainer"></a>Replace Non-Presence Container with PUT</h4></div></div></div><p>
+          In this example we "populate" a non-presence container
+          with subnode data. The URI points to the existing URI
+          for the non-presence container "authentication",
+          since a non-presence container always exist if its parent exist.
+        </p><p><a name="ug.rest.putxmlcreatenpcontainer.example"></a>
+          </p><div class="example"><a name="d5e11996"></a><p class="title"><b>Example&nbsp;21.26.&nbsp;Creating a "sys/interfaces/serial/ppp0/authentication" resource</b></p><div class="example-contents"><pre class="programlisting">
+PUT /running/sys/interfaces/serial/ppp0/authentication
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;authentication&gt;
+  &lt;method&gt;pap&lt;/method&gt;
+  &lt;list-name&gt;foobar&lt;/list-name&gt;
+&lt;/authentication&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            Have in mind that PUT will replace everything with the
+            provided payload. So in the example above, if the
+            container "authentication" contained additional subnodes,
+            they would have been deleted as they were not present in
+            the payload.
+          </p></div><div class="example"><a name="d5e12004"></a><p class="title"><b>Example&nbsp;21.27.&nbsp;The "authentication" resource after replace</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/interfaces/serial/ppp0/authentication
+
+</pre><pre class="programlisting">
+&lt;authentication xmlns="http://example.com/example-serial" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:ex="http://example.com/example-serial"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;method&gt;pap&lt;/method&gt;
+  &lt;list-name&gt;foobar&lt;/list-name&gt;
+&lt;/authentication&gt;
+
+</pre></div></div><br class="example-break"></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.patch"></a>Update Existing List Instance with PATCH</h4></div></div></div><p>
+          To update an existing resource the PATCH method can be used.
+          PATCH will not be allowed on non-existent resources.
+          When we use PATCH the payload should only contain the data that
+          should be modified.
+        </p><div class="example"><a name="d5e12011"></a><p class="title"><b>Example&nbsp;21.28.&nbsp;Updating a "route" resource using PATCH</b></p><div class="example-contents"><pre class="programlisting">
+PATCH /running/sys/routes/inet/route/10.30.3.0,24
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;route&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.5.1&lt;/name&gt;
+    &lt;metric&gt;400&lt;/metric&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><br class="example-break"><p>
+          The response status 204 indicated successful update. Here we can see
+          that a new next-hop entry has been added to the route.
+        </p><div class="example"><a name="d5e12018"></a><p class="title"><b>Example&nbsp;21.29.&nbsp;The "route" resource after update</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/routes/inet/route/10.30.3.0,24
+
+</pre><pre class="programlisting">
+&lt;route xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;name&gt;10.30.3.0&lt;/name&gt;
+  &lt;prefix-length&gt;24&lt;/prefix-length&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.3.1&lt;/name&gt;
+  &lt;/next-hop&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.4.2&lt;/name&gt;
+  &lt;/next-hop&gt;
+  &lt;next-hop&gt;
+    &lt;name&gt;192.168.5.1&lt;/name&gt;
+  &lt;/next-hop&gt;
+&lt;/route&gt;
+
+</pre></div></div><br class="example-break"></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create.patchpcontainer"></a>Update Presence Container with PATCH</h4></div></div></div><p>
+          PATCH can not be used to create new resources directly, since it
+          must operate on existing resources. PATCH, in contrast to
+          PUT, only merges the provided payload with the existing
+          configuration, which makes it possible to create child
+          resources within the target resource.
+          In this example we create a "multilink" presence container. The uri points to
+          the existing parent resource for the presence container "multilink".
+        </p><p><a name="ug.rest.patchxmlcreatepcontainer.example"></a>
+          </p><div class="example"><a name="d5e12026"></a><p class="title"><b>Example&nbsp;21.30.&nbsp;Creating a "sys/interfaces/serial/ppp0/multilink" resource</b></p><div class="example-contents"><pre class="programlisting">
+PATCH /running/sys/interfaces/serial/ppp0
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;serial&gt;
+  &lt;multilink&gt;
+    &lt;group&gt;1&lt;/group&gt;
+  &lt;/multilink&gt;
+&lt;/serial&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.create.patchnpcontainer"></a>Update Non-Presence Container with PATCH</h4></div></div></div><p>
+          In this example we "populate" a non-presence container
+          with subnode data. The URI points to the existing URI
+          for the non-presence container "authentication",
+          since a non-presence container always exist if its parent exist.
+        </p><p><a name="ug.rest.patchxmlcreatenpcontainer.example"></a>
+          </p><div class="example"><a name="d5e12036"></a><p class="title"><b>Example&nbsp;21.31.&nbsp;Creating a "sys/interfaces/serial/ppp0/authentication" resource</b></p><div class="example-contents"><pre class="programlisting">
+PATCH /running/sys/interfaces/serial/ppp0/authentication
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;authentication&gt;
+  &lt;method&gt;eap&lt;/method&gt;
+&lt;/authentication&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            Have in mind that PATCH will merge the existing
+            configuration with the provided payload. So in the example
+            above, if the container "authentication" contained
+            additional subnodes not present in the payload, they will
+            remain in the resulting configuration. Below the node
+            'list-name' was not present in the payload, but is still
+            present in the resulting configuration.
+          </p></div><div class="example"><a name="d5e12044"></a><p class="title"><b>Example&nbsp;21.32.&nbsp;The "authentication" resource after update</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/interfaces/serial/ppp0/authentication
+
+</pre><pre class="programlisting">
+&lt;authentication xmlns="http://example.com/example-serial" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:ex="http://example.com/example-serial"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;method&gt;eap&lt;/method&gt;
+  &lt;list-name&gt;foobar&lt;/list-name&gt;
+&lt;/authentication&gt;
+
+</pre></div></div><br class="example-break"></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.rest.insert"></a>Insert Data into Resources</h4></div></div></div><p>
+          For an ordered-by user list, the POST request can include
+          the query parameters  <span class="emphasis"><em>insert</em></span> and
+          <span class="emphasis"><em>resource</em></span>.
+        </p><p>
+          The <span class="emphasis"><em>insert</em></span> parameter indicated where
+          the new element should be created. Legal values are:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                <span class="emphasis"><em>first</em></span>: insert on top of list.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>last</em></span>: insert on bottom of list.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>before</em></span>: insert before the element
+                indicated by the <span class="emphasis"><em>resource</em></span> parameter.
+              </p></li><li class="listitem"><p>
+                <span class="emphasis"><em>after</em></span>: insert after the element
+                indicated by the <span class="emphasis"><em>resource</em></span> parameter.
+              </p></li></ul></div><p>
+        </p><p>
+          The <span class="emphasis"><em>resource</em></span> parameter contains the uri
+          to an existing element in the list.
+        </p><p>
+          So we verify this functionality by first retrieving the
+          "sys/dns/server" list:
+        </p><p><a name="ug.rest.beforeinsert.example"></a>
+          </p><div class="example"><a name="d5e12074"></a><p class="title"><b>Example&nbsp;21.33.&nbsp;The "sys/dns/server" list before insert</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/dns
+
+</pre><pre class="programlisting">
+&lt;dns xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;server&gt;
+    &lt;address&gt;10.2.3.4&lt;/address&gt;
+  &lt;/server&gt;
+&lt;/dns&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          We now insert a new element before the existing element:
+        </p><p><a name="ug.rest.insert.example"></a>
+          </p><div class="example"><a name="d5e12080"></a><p class="title"><b>Example&nbsp;21.34.&nbsp;Insert=before in the "sys/dns/server" list</b></p><div class="example-contents"><pre class="programlisting">
+POST 
+/running/sys/dns?insert=before&amp;resource=/api/running/sys/dns/server/10
+.2.3.4
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;server&gt;
+  &lt;address&gt;10.1.1.2&lt;/address&gt;
+&lt;/server&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 201
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          We get a 201 status when successful and we verify the result by
+          retreiving the list once again:
+        </p><div class="example"><a name="d5e12087"></a><p class="title"><b>Example&nbsp;21.35.&nbsp;The "sys/dns/server" list after insert</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/dns
+
+</pre><pre class="programlisting">
+&lt;dns xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;server&gt;
+    &lt;address&gt;10.1.1.2&lt;/address&gt;
+  &lt;/server&gt;
+  &lt;server&gt;
+    &lt;address&gt;10.2.3.4&lt;/address&gt;
+  &lt;/server&gt;
+&lt;/dns&gt;
+
+</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.rest.operation"></a>21.3.3.&nbsp;Invoke Operations</h3></div></div></div><p>
+        To invoke an operation, use the POST method.
+        The message body (if any) is processed as the operation
+        input parameters.
+      </p><p><a name="ug.rest.invoke.example"></a>
+        </p><div class="example"><a name="d5e12095"></a><p class="title"><b>Example&nbsp;21.36.&nbsp;An "archive-log" action request example</b></p><div class="example-contents"><p>
+            The following yang model snippet shows the definition of
+            the action <span class="emphasis"><em>archive-log</em></span>:
+          </p><pre class="programlisting">
+  grouping syslog {
+    list server {
+      key "name";
+      leaf name {
+        type inet:host;
+      }
+      leaf enabled {
+        type boolean;
+      }
+      list selector {
+        key "name";
+        leaf name {
+          type int32;
+        }
+        leaf negate {
+          type boolean;
+        }
+        leaf comparison {
+          type enumeration {
+            enum "same-or-higher";
+            enum "same";
+          }
+        }
+        leaf level {
+          type syslogLevel;
+        }
+        leaf-list facility {
+          type syslogFacility;
+          min-elements 1;
+          max-elements "8";
+        }
+      }
+      leaf administrator {
+        type string;
+        tailf:hidden maint;
+      }
+      tailf:action archive-log {
+        tailf:exec "./scripts/archive-log";
+        input {
+          leaf archive-path {
+            type string;
+          }
+          leaf compress {
+            type boolean;
+          }
+        }
+        output {
+          leaf result {
+            type string;
+          }
+        }
+      }
+    }
+  }
+
+</pre><p>
+            The action is invoked using the following URI. Note, the
+            <span class="emphasis"><em>_operations</em></span> tag that indicates the
+            action invocation:
+          </p><pre class="programlisting">
+POST /running/sys/syslog/server/10.3.4.5/
+operations/archive-log
+Content-Type: application/vnd.yang.data+xml
+
+</pre><pre class="programlisting">
+&lt;input&gt;
+  &lt;archive-path&gt;/tmp&lt;/archive-path&gt;
+  &lt;compress&gt;false&lt;/compress&gt;
+&lt;/input&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;output xmlns='http://example.com/router'&gt;
+  &lt;result&gt;success&lt;/result&gt;
+&lt;/output&gt;
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        If the POST method succeeds, a "200 OK" Status-Line is returned if
+        there is a response message body, and a "204 No Content" Status-Line
+        is returned if there is no response message body.
+      </p><p>
+        If the user is not authorized to invoke the target operation, an
+        error response containing a "403 Forbidden" Status-Line is returned
+        to the client.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.rest.delete"></a>21.3.4.&nbsp;Delete Data Resources</h3></div></div></div><p>
+        A delete removes all data in the subtree under a resource. In this
+        example we remove the complete "sys/interfaces/ex:serial" list.
+      </p><p><a name="ug.rest.delete.example"></a>
+        </p><div class="example"><a name="d5e12112"></a><p class="title"><b>Example&nbsp;21.37.&nbsp;delete the "sys/interfaces/ex:serial" list</b></p><div class="example-contents"><pre class="programlisting">
+DELETE /running/sys/interfaces/ex:serial
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204</pre></div></div><p><br class="example-break">
+        
+      </p><p>
+        The response status 204 indicates success. If we retrieve the
+        "sys/interfaces" resource we can verify that the "ex:serial" list is
+        removed.
+      </p><p><a name="ug.rest.afterdelete.example"></a>
+        </p><div class="example"><a name="d5e12119"></a><p class="title"><b>Example&nbsp;21.38.&nbsp;The "sys/interfaces" resource after delete</b></p><div class="example-contents"><pre class="programlisting">
+GET /running/sys/interfaces
+
+</pre><pre class="programlisting">
+&lt;interfaces xmlns="http://example.com/router" 
+xmlns:y="http://tail-f.com/ns/rest"  
+xmlns:r="http://example.com/router"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+
+</pre></div></div><p><br class="example-break">
+        
+      </p><p>Whenever a change is made and a rollback resource is
+      created we can set a label and a comment for that change. If we
+      used that together with the DELETE above, we could have used
+      this command instead.
+      </p><p><a name="ncs.northbound.rest.rollback_comment.example"></a>
+        </p><div class="example"><a name="d5e12125"></a><p class="title"><b>Example&nbsp;21.39.&nbsp;delete the "sys/interfaces/ex:serial" list with
+          rollback label and comment</b></p><div class="example-contents"><pre class="screen"><strong class="userinput"><code>
+DELETE /running/sys/interfaces/ex:serial?rollback-comment=remove%20subtree&amp;ro
+llback-label=delete</code></strong></pre></div></div><p><br class="example-break">
+        
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.rest.resources"></a>21.4.&nbsp;Resources</h2></div></div></div><p>
+      The RESTCONF protocol operates on a hierarchy of resources, starting
+      with the top-level API resource itself. Each resource represents a
+      manageable component within the device.
+    </p><p>
+      A resource can be considered a collection of conceptual data and the
+      set of allowed methods on that data. It can contain child nodes that
+      are nested resources. The child resource types and methods allowed
+      on them are data-model specific.
+    </p><p>
+      A resource has its own media type identifier, represented by the
+      <code class="code">Content-Type</code> header in the HTTP response message.
+      A resource can contain zero or more nested resources.
+      A resource can be created and deleted independently of its parent
+      resource, as long as the parent resource exists.
+    </p><p>
+      The RESTCONF resources are accessed via a set of URIs defined in this
+      document.  The set of YANG modules supported by the server will
+      determine the additional data model specific operations, top-level
+      data node resources, and notification event messages supported by the
+      server.
+    </p><p>
+      The resources used in the RESTCONF protocol are identified by the
+      "path" component in the request URI, see
+      <a class="xref" href="ch21.html#ug.rest.ex.uri.structure" title="Example&nbsp;21.4.&nbsp;Request URI structure">Example&nbsp;21.4, &#8220;Request URI structure&#8221;</a>.
+      Each operation is performed on a target resource.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12138"></a>21.4.1.&nbsp;Representation</h3></div></div></div><p>
+        The RESTCONF protocol defines some application specific media types
+        to identify each of the available resource types.  The following
+        resource types are defined in the REST API:
+      </p><div class="table"><a name="d5e12141"></a><p class="title"><b>Table&nbsp;21.3.&nbsp;Resources and their Media Types</b></p><div class="table-contents"><table summary="Resources and their Media Types" border="0"><colgroup><col align="left" class="c1" width="33%"><col width="67%" align="left" class="c2"></colgroup><thead><tr><th align="left">Resource</th><th align="left">Media Type</th></tr></thead><tbody><tr><td align="left">API</td><td align="left">application/vnd.yang.api</td></tr><tr><td align="left">Datastore</td><td align="left">application/vnd.yang.datastore</td></tr><tr><td align="left">Data</td><td align="left">application/vnd.yang.data</td></tr><tr><td align="left">Operation</td><td align="left">application/vnd.yang.operation</td></tr></tbody></table></div></div><br class="table-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          The REST API does not support all of the datastores
+          defined in RESTCONF, neither does it use the same media types.
+          <br xmlns:d="http://docbook.org/ns/docbook" xmlns:xslthl="http://xslthl.sf.net"><span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12166"></a>XML representation</h4></div></div></div><p>
+          A resource is represented in XML as an XML element, with an
+          XML attribute "y:self" that contains the URI for
+          the resource. In the XML representation,
+          every resource has an XML attribute:
+        </p><div class="informalexample"><pre class="programlisting">y:self="..."
+          </pre></div><p>
+          Leafs are properties of the resource.  They are encoded in XML
+          as elements.
+        </p><p>
+          XML namespaces must be used whenever there are multiple
+          sibling nodes with the same local name.  This only happens
+          if a YANG module augments a node with the same name as
+          another node in the same container or list.  XML namespaces
+          MAY always be used, even if there are no risk of a conflict.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12173"></a>JSON representation</h4></div></div></div><p>
+          In the JSON representation, this URI is encoded as:
+        </p><div class="informalexample"><pre class="programlisting">"_self": "..."
+          </pre></div><p>
+          In the representation of a list resource, the keys are always
+          present, and encoded first.
+        </p><p>
+          JSON doesn't have anything similar to XML namespaces. However,
+          we have adopted the notion defined in the Internet Draft:
+          <span class="emphasis"><em>"Modeling JSON Text with YANG"</em></span>, where a
+          <span class="emphasis"><em>&lt;yang-module-name&gt;:&lt;tag&gt;</em></span> tag name
+          is used in the JSON data to indicate the namespace. Note that
+          it is only when the namespace changes that this notion is used.
+        </p><div class="example"><a name="d5e12182"></a><p class="title"><b>Example&nbsp;21.40.&nbsp;Namespaces in JSON</b></p><div class="example-contents"><pre class="programlisting">
+   ...
+    "foo": [
+      {
+        "_self": "/api/operational/x/foo/1",
+        "id": 1,
+        // Note: the 'card' container exist in a different namespace
+        //       compared to its parent 'foo' list element. The
+        //       'a' is the Yang module name where 'card' is defined
+        "a:card": {
+          "_self": "/api/operational/x/foo/1/a:card",
+          "id": 1
+        }
+   ...
+        </pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12185"></a>21.4.2.&nbsp;API Resource (/api)</h3></div></div></div><p>
+        The top-level resource has the media type
+        "application/vnd.yang.api+xml" or
+        "application/vnd.yang.api+json". It is accessible
+        through the well-known URI "/api".
+      </p><p>
+          This resource has the following fields:
+      </p><div class="table"><a name="d5e12189"></a><p class="title"><b>Table&nbsp;21.4.&nbsp;Fields of the /api resource</b></p><div class="table-contents"><table summary="Fields of the /api resource" border="0"><colgroup><col align="left" class="c1" width="25%"><col width="75%" align="left" class="c2"></colgroup><thead><tr><th align="left">Field</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left">version</td><td align="left">The version of the REST api.</td></tr><tr><td align="left">config</td><td align="left">Link to the "config" resource.</td></tr><tr><td align="left">running</td><td align="left">Link to the "running" resource.</td></tr><tr><td align="left">startup</td><td align="left">Link to the "startup" resource.</td></tr><tr><td align="left">candidate</td><td align="left">Link to the "candidate" resource.</td></tr><tr><td align="left">operational</td><td align="left">Link to the "operational" resource.</td></tr><tr><td align="left">operations</td><td align="left">Container for available operations (i.e: YANG rpc statements).</td></tr><tr><td align="left">rollbacks</td><td align="left">Container for available rollback files.</td></tr></tbody></table></div></div><br class="table-break"><p>
+        In XML, this resource is represented as an XML document with
+        the document root element "y:api", underneath
+        which all the resource's fields are represented as
+        subelements.
+      </p><p>
+        In JSON, this resource is represented as a JSON object.
+      </p><p>
+        Supported HTTP methods: GET, HEAD, OPTIONS.
+      </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12226"></a>The version Field</h4></div></div></div><p>
+          The "version" field is a string identifying the
+          version of the REST api.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12229"></a>The config Resource</h4></div></div></div><p>
+          The "config" resource represents a unified
+          configuration datastore, used to simplify resource
+          management for the client.  The underlying NETCONF
+          datastores are used to implement the unified datastore,
+          but the clients do not have to care about which underlying
+          datastore to used.
+        </p><p>
+          The server hides all NETCONF datastore details for edit
+          operations, such as the :candidate and :startup
+          capabilities.  When a client writes to this resource, the
+          server performs the edits in the datastores used; if the
+          candidate is enabled, the changes are written to the
+          candidate, and then the candidate is committed; if the
+          startup is enabled, the changes are written to running and
+          running is copied to startup.
+        </p><p>
+          The media type of this resource is either
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            This resource resembles the RESTCONF "Datastore Resource"
+            except that it does not contain operational data.
+            RESTCONF differs from the REST API as it does not have separate
+            NETCONF datastores for "running", "candidate" and "startup".
+          </p></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12236"></a>The running Resource</h4></div></div></div><p>
+          The "running" resource represents the running
+          configuration datastore, and is present on all devices.  Not all
+          devices support direct modification to this resource.
+        </p><p>
+          The media type of this resource is either
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12240"></a>The startup Resource</h4></div></div></div><p>
+          The "startup" resource represents the startup
+          configuration datastore.  Not all devices support this resource.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12244"></a>The candidate Resource</h4></div></div></div><p>
+          The "candidate" resource represents the
+          candidate configuration datastore.  Not all devices
+          support this resource.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12248"></a>The operational Resource</h4></div></div></div><p>
+          The "operational" read-only resource represents
+          the state data as well as the config data on the device,
+          and is present on all devices.
+          Note that actions defined as <span class="emphasis"><em>config false</em></span>
+          also will show up in this resource.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            This resource resembles the RESTCONF "Datastore Resource"
+            except that it is read-only.
+          </p></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12255"></a>The transaction Resource</h4></div></div></div><p>
+          The "transaction" resource represents a transaction
+          datastore created by the JSON-RPC API. This allows REST API requests
+          that read or write towards an existing transaction, without committing
+          the transaction (this is left up to other entities e.g. the JSON-RPC API).
+        </p><p>
+          The media type of this resource is either
+          "application/vnd.yang.datastore+xml" or
+          "application/vnd.yang.datastore+json".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12259"></a>The operations Container</h4></div></div></div><p>
+          The "operations" container contains all
+          operations defined with the "rpc" statement in
+          the YANG models supported on the device.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12262"></a>The rollbacks Container</h4></div></div></div><p>
+          The "rollbacks" container contains all available
+          rollback files to be used to rollback the configuration
+          state to an earlier incarnation.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12265"></a>The logout Resource</h4></div></div></div><p>
+          The "logout" read-only resource is a meta-resource
+          that always replies with 401 Unauthorized in order to aid scenarios
+          where the REST API credentials are being cached by the HTTP client
+          (e.g. a browser). Calling this resource will prompt for new credentials
+          on subsequent requests to any other resource on the same realm.
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12268"></a>Examples</h4></div></div></div><p>
+          In order to retrieve the representation of this resource,
+          a client can send:
+        </p><p>
+          Note the use of the 'verbose' query parameter,
+          see <a class="xref" href="ch21.html#ug.rest.query.params" title="21.2.12.&nbsp;Query Parameters">Section&nbsp;21.2.12, &#8220;Query Parameters&#8221;</a>.
+        </p><p><a name="ug.rest.apiresource.example"></a>
+          </p><div class="example"><a name="d5e12274"></a><p class="title"><b>Example&nbsp;21.41.&nbsp;GET the /api resource</b></p><div class="example-contents"><pre class="programlisting">
+GET /api?verbose
+Application:vnd.yang.api+xml
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 200 OK
+Server: 
+Date: Wed, 12 Aug 2015 11:38:23 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Content-Length: 288
+Content-Type: application/vnd.yang.api+xml
+Vary: Accept-Encoding
+Pragma: no-cache
+
+&lt;api xmlns="http://tail-f.com/ns/rest" 
+xmlns:y="http://tail-f.com/ns/rest" y:self="/api"&gt;
+  &lt;version&gt;0.5&lt;/version&gt;
+  &lt;config y:self="/api/config"/&gt;
+  &lt;running y:self="/api/running"/&gt;
+  &lt;operational y:self="/api/operational"/&gt;
+  &lt;operations/&gt;
+  &lt;rollbacks y:self="/api/rollbacks"/&gt;
+&lt;/api&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12279"></a>21.4.3.&nbsp;Datastore Resource (/api/&lt;datastore&gt;)</h3></div></div></div><p>
+        The media types
+        "application/vnd.yang.datastore+xml" and
+        "application/vnd.yang.datastore+json" represent a
+        complete datastore.  All three configuration datastores
+        defined by NETCONF are available, as the resources:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            running
+          </p></li><li class="listitem"><p>
+            candidate
+          </p></li><li class="listitem"><p>
+            startup
+          </p></li><li class="listitem"><p>
+            operational (read-only)
+          </p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          The state data defined by NETCONF is
+          available as a read-only resource "operational".
+          <br xmlns:d="http://docbook.org/ns/docbook" xmlns:xslthl="http://xslthl.sf.net"><span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><p>
+        A <span class="emphasis"><em>config</em></span> datastore (i.e one of "running",
+        "candidate","startup") resource has the following fields:
+      </p><div class="table"><a name="ug.rest.datastore.table"></a><p class="title"><b>Table&nbsp;21.5.&nbsp;Fields of the /api/&lt;datastore&gt; resource</b></p><div class="table-contents"><table summary="Fields of the /api/<datastore&gt; resource" border="0"><colgroup><col align="left" class="c1" width="25%"><col width="75%" align="left" class="c2"></colgroup><thead><tr><th align="left">Field</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left">operations</td><td align="left">Container for available built-in operations.</td></tr><tr><td align="left">y:operations</td><td align="left">Container for available user defined actions.</td></tr><tr><td align="left">&lt;all top-level data models nodes&gt;</td><td align="left">Top-level nodes from the YANG models.</td></tr></tbody></table></div></div><br class="table-break"><p>
+        The <span class="emphasis"><em>"operational"</em></span> datastore contains
+        both <span class="emphasis"><em>operational</em></span> and <span class="emphasis"><em>config</em></span>
+        data; as well as the containers as
+        shown in the table: <a class="xref" href="ch21.html#ug.rest.datastore.table" title="Table&nbsp;21.5.&nbsp;Fields of the /api/<datastore&gt; resource">Table&nbsp;21.5, &#8220;Fields of the /api/&lt;datastore&gt; resource&#8221;</a>.
+      </p><p>
+        The REST API has a number of built-in operations that may be
+        applicable for a particular datastore, and if they are applicable
+        they are included in the <span class="emphasis"><em>operations</em></span> container
+        as described below:
+      </p><div class="table"><a name="d5e12322"></a><p class="title"><b>Table&nbsp;21.6.&nbsp;Built in operations</b></p><div class="table-contents"><table summary="Built in operations" border="0"><colgroup><col align="left" class="c1" width="25%"><col width="75%" align="left" class="c2"></colgroup><thead><tr><th align="left">Field</th><th align="left">Description</th></tr></thead><tbody><tr><td align="left">commit</td><td align="left">Link to the "commit" resource.</td></tr><tr><td align="left">copy-running-to-startup</td><td align="left">Link to the "copy-running-to-startup" resource.</td></tr><tr><td align="left">discard-changes</td><td align="left">Link to the "discard-changes" resource.</td></tr><tr><td align="left">lock</td><td align="left">Link to the "lock" resource.</td></tr><tr><td align="left">validate</td><td align="left">Link to the "validate" resource.</td></tr></tbody></table></div></div><br class="table-break"><p>
+        In XML, the <span class="emphasis"><em>/api/&lt;datastore&gt;</em></span>
+        resource is represented as an XML document with
+        the document root element "y:data", underneath
+        which all the resource's fields are represented as
+        subelements.
+      </p><p>
+        In JSON, this resource is represented as a JSON object.
+      </p><p>
+        The operations are described below, and all represented by
+        the media type "application/vnd.yang.operation",
+        see <a class="xref" href="ch21.html#ug.rest.operation" title="21.3.3.&nbsp;Invoke Operations">Section&nbsp;21.3.3, &#8220;Invoke Operations&#8221;</a>.
+      </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12352"></a>The lock Resource</h4></div></div></div><p>
+          In order to access a datastore through a lock, the client
+          needs to POST to the "lock" resource.  If the
+          server is able to lock the datastore, the POST request
+          succeeds with the status code "201 Created", and
+          the "Location" HTTP header contains the URI to a
+          newly created resource representing the locked datastore.
+          To unlock the datastore, the client deletes the newly
+          created resource using the HTTP method DELETE.
+        </p><p>
+          The "config" resource cannot be locked.
+        </p><p>
+          In the representation of a locked datastore, the
+          "lock" operation is not available.
+        </p><p>
+          In order to facilitate recovery from failing clients with
+          outstanding locks, the REST server deletes the resource
+          representing the lock after some time of inactivity.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.operation+xml".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12359"></a>The commit Resource</h4></div></div></div><p>
+          In the representation of the candidate datastore, the
+          "commit" operation is present, and can be POSTed
+          to by the client to commit candidate to running, as
+          described in section 8.3 in <a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">RFC
+          6241</a>.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.operation".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12364"></a>The copy-running-to-startup Resource</h4></div></div></div><p>
+          In the representation of the running datastore, the
+          "copy-running-to-startup" operation is present,
+          if the server also supports the startup datastore, and can
+          be POSTed to by the client to copy the contents of running
+          to startup, as described in section 8.7 in <a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">RFC
+          6241</a>.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.operation".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12369"></a>The discard-changes Resource</h4></div></div></div><p>
+          In the representation of the candidate datastore, the
+          "discard-changes" operation is present, and can
+          be POSTed to by the client to revert the candidate to the
+          current running configuration, as described in section
+          8.3.4.2 in <a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">RFC
+          6241</a>.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.operation".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12374"></a>The validate Resource</h4></div></div></div><p>
+          In the representation of the candidate datastore, the
+          "validate" operation is present, and can be
+          POSTed to by the client to validate the contents of the
+          candidate, as described in section 8.6.4.1 in <a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">RFC
+          6241</a>.
+        </p><p>
+          The media type of this resource is
+          "application/vnd.yang.operation".
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12379"></a>Examples</h4></div></div></div><p>
+          The examples in this section could instead have been
+          performed using JSON specific mime types such as
+          "application/vnd.yang.api+json",
+          "application/vnd.yang.datastore+json" and
+          "application/vnd.yang.data+json".
+        </p><p>
+          To retrieve a representation of the running datastore in
+          XML format, a client can send:
+        </p><p>
+          (Note the use of the 'verbose' query parameter,
+          see <a class="xref" href="ch21.html#ug.rest.query.params" title="21.2.12.&nbsp;Query Parameters">Section&nbsp;21.2.12, &#8220;Query Parameters&#8221;</a>)
+        </p><p><a name="ug.rest.apirunningresource.example"></a>
+          </p><div class="example"><a name="d5e12386"></a><p class="title"><b>Example&nbsp;21.42.&nbsp;GET the /api/running resource</b></p><div class="example-contents"><pre class="programlisting">
+GET /api/running?verbose
+Application:vnd.yang.api+xml
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 200 OK
+Server: 
+Date: Wed, 12 Aug 2015 11:38:23 GMT
+Last-Modified: Wed, 12 Aug 2015 11:38:23 GMT
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Etag: 1439-379503-31029
+Content-Type: application/vnd.yang.datastore+xml
+Transfer-Encoding: chunked
+Pragma: no-cache
+
+&lt;data xmlns:y="http://tail-f.com/ns/rest" y:self="/api/running"&gt;
+  &lt;sys xmlns="http://example.com/router" y:self="/api/running/sys"&gt;
+ ...
+  &lt;/sys&gt;
+ ...
+  &lt;operations&gt;
+    &lt;lock y:self="/api/running/_lock"&gt;/api/running/_lock&lt;/lock&gt;
+    &lt;rollback 
+y:self="/api/running/_rollback"&gt;/api/running/_rollback&lt;/rollback&gt;
+  &lt;/operations&gt;
+&lt;/data&gt;
+
+</pre><p>
+              To copy running to startup, a client can send:
+            </p><pre class="programlisting">
+            
+    POST /api/running/_copy-running-to-startup
+    Host: example.com
+    Accept: application/vnd.yang.operations+xml
+            </pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          Note that any action defined as "config false"
+          will only show up under the <span class="emphasis"><em>/api/operational</em></span>
+          datastore.
+        </p><div class="example"><a name="d5e12395"></a><p class="title"><b>Example&nbsp;21.43.&nbsp;Action in /api/operational</b></p><div class="example-contents"><pre class="programlisting">
+    ...
+    &lt;blaha xmlns="http://example.com/ns/ktm"
+           y:self="/api/operational/blaha"&gt;
+      &lt;y:operations y:path="/blaha"&gt;
+        &lt;bar y:self="/api/operational/blaha/_operations/bar"/&gt;
+        &lt;!-- NOTE: this action is defined as 'config false'
+             and hence, shows up under the 'operational'
+             datastore  --&gt;
+      &lt;/y:operations&gt;
+    &lt;/blaha&gt;
+    ...
+          </pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12398"></a>21.4.4.&nbsp;Data Resource (/api/&lt;datastore&gt;/&lt;data&gt;)</h3></div></div></div><p>
+        By default, all top-level objects, list entries, and containers are
+        resources.
+        Any resource derived from a YANG module is represented with
+        the media type "application/vnd.yang.data+xml".
+      </p><p>
+        When such a resource is retrieved, a "path"
+        property is included in its representation (a
+        "y:path" attribute in XML).  The value of this
+        property is the resource's instance-identifier.
+      </p><p>
+        Supported HTTP methods: DELETE, GET, HEAD, OPTIONS, PATCH,
+        POST, PUT.
+      </p><p>
+        Note that resources representing non-presence containers
+        cannot be deleted, and thus they do not support the DELETE
+        method.
+      </p><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.resource.examples" title="21.3.&nbsp;Resource Examples">Section&nbsp;21.3, &#8220;Resource Examples&#8221;</a>
+        for examples of how to operate on
+        "application/vnd.yang.data+xml".
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.rest.operations.actions"></a>21.4.5.&nbsp;Operations and Actions</h3></div></div></div><p>
+          YANG-defined operations, defined with the YANG statements
+          "rpc" or "tailf:action", and the built-in
+          operations, are represented with the media type
+          "application/vnd.yang.operation".
+        </p><p>
+          Resources of this type accept only the method "POST".
+        </p><p>
+          In XML, such resources are encoded as subelements to the XML
+          element "y:operations". In JSON, they are encoded
+          under "_operations".
+        </p><p>
+          If an operation does not require any parameters, the POST
+          message has no body.  If the client wishes to send
+          parameters to the operation, they are encoded as an XML
+          document with the document element "input".
+        </p><p>
+          If an operation does not produce any output, the HTTP
+          response code is 204 (No Content).  If it produces output,
+          the HTTP response code is 200 (OK), and the output of the
+          operation is encoded as an XML document with the document
+          element "output".
+        </p><p>
+          Supported HTTP methods: POST
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12414"></a>21.4.6.&nbsp;The Rollback Resource</h3></div></div></div><p>
+        The rollback resource can be accessed from the top level
+        "/api/rollbacks" resource as described above, and a rollback
+        file can be applied to any database.
+      </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12417"></a>Listing and Inspecting Rollback Files</h4></div></div></div><p>
+          In order to list available a rollback files, a client can
+          send:
+        </p><p><a name="ug.rest.getrollbackresource.example"></a>
+          </p><div class="example"><a name="d5e12421"></a><p class="title"><b>Example&nbsp;21.44.&nbsp;GET rollback files information</b></p><div class="example-contents"><pre class="programlisting">
+GET /api/rollbacks
+Application:vnd.yang.api+xml
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;rollbacks xmlns="http://tail-f.com/ns/rest" 
+xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;file&gt;
+    &lt;name&gt;0&lt;/name&gt;
+    &lt;creator&gt;admin&lt;/creator&gt;
+    &lt;date&gt;2015-08-12 13:38:23&lt;/date&gt;
+    &lt;via&gt;rest&lt;/via&gt;
+    &lt;label&gt;&lt;/label&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+  &lt;/file&gt;
+  &lt;file&gt;
+    &lt;name&gt;1&lt;/name&gt;
+    &lt;creator&gt;admin&lt;/creator&gt;
+    &lt;date&gt;2015-08-12 13:38:22&lt;/date&gt;
+    &lt;via&gt;rest&lt;/via&gt;
+    &lt;label&gt;&lt;/label&gt;
+    &lt;comment&gt;&lt;/comment&gt;
+  &lt;/file&gt;
+&lt;/rollbacks&gt;
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+          Note how each rollback file is represented as separate
+          resources, e.g. "/api/rollbacks/0". We can also see how the
+          'rollback-label' and 'rollback-comment' is used in
+          "/api/rollbacks/0/label" and
+          "/api/rollbacks/0/comment". These resources can be inspected
+          individually and a client can send:
+        </p><p><a name="ug.rest.getrollbackcontent.example"></a>
+          </p><div class="example"><a name="d5e12428"></a><p class="title"><b>Example&nbsp;21.45.&nbsp;GET rollback file content</b></p><div class="example-contents"><pre class="programlisting">
+GET /api/rollbacks/0
+Application:vnd.yang.api+xml
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+# Created by: admin
+# Date: 2015-08-12 13:38:23
+# Via: rest
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10016
+
+sys {
+    interfaces {
+        serial ppp0 {
+            ppp {
+                accounting acme;
+            }
+            authentication {
+                method    eap;
+                list-name foobar;
+            }
+            authorization admin;
+            multilink {
+                group 1;
+            }
+        }
+    }
+ }
+
+</pre></div></div><p><br class="example-break">
+          
+        </p><p>
+            The payload is in the same curly bracket rollback format as
+            used in the NETCONF, CLI and Web UI agents.
+          </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e12434"></a>Applying Rollback Files</h4></div></div></div><p>
+          To apply a rollback file to a database use the appropriate
+          "rollback" resource/operation in the datastore of your
+          choice:
+        </p><p><a name="ug.rest.applyrollback.example"></a>
+          </p><div class="example"><a name="d5e12438"></a><p class="title"><b>Example&nbsp;21.46.&nbsp;Find and use the rollback operation resource</b></p><div class="example-contents"><pre class="programlisting">
+GET /api/running
+Application:vnd.yang.datastore+xml
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+&lt;data xmlns:y="http://tail-f.com/ns/rest"&gt;
+  &lt;sys xmlns="http://example.com/router"&gt;
+ ...
+  &lt;/sys&gt;
+ ...
+  &lt;operations&gt;
+    &lt;lock&gt;/api/running/_lock&lt;/lock&gt;
+    &lt;rollback&gt;/api/running/_rollback&lt;/rollback&gt;
+  &lt;/operations&gt;
+&lt;/data&gt;
+
+</pre><p>
+              Note the "/api/running/_rollback" resource operation.
+            </p><p>
+              POST an appropriate rollback file name to the
+              "/api/running/_rollback" resource operation to apply
+              it:
+            </p><pre class="programlisting">
+POST /api/running/_rollback
+Content-Type: application/vnd.yang.data+xml
+&lt;file&gt;0&lt;/file&gt;
+
+</pre><p>The server might respond:</p><pre class="programlisting">
+HTTP/1.1 204
+
+</pre></div></div><p><br class="example-break">
+          
+        </p></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12448"></a>21.5.&nbsp;Configuration Meta-Data</h2></div></div></div><p>
+      As described in <a class="xref" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Configuration Meta-Data">Chapter&nbsp;8, <i>Configuration Meta-Data</i></a> it is possible
+      to associate meta-data with the configuration data. For REST,
+      resources such as containers, lists as well as leafs and leaf-lists
+      can have such meta-data. For XML, this meta-data is represented as
+      attributes, attached to the XML element in question. For JSON, there
+      does not exist a natural way to represent this info. Hence we have
+      introduced a special notation, see the example below.
+    </p><div class="example"><a name="d5e12452"></a><p class="title"><b>Example&nbsp;21.47.&nbsp;XML representation of meta-data</b></p><div class="example-contents"><pre class="programlisting">
+&lt;x xmlns="urn:x"
+   y:self="/api/running/x"
+   xmlns:y="http://tail-f.com/ns/rest"
+   xmlns:x="urn:x"
+   y:path="/x:x"&gt;
+  &lt;id tags=" important ethernet " annotation="hello world"&gt;42&lt;/id&gt;
+  &lt;person y:self="/api/running/x/person" annotation="This is a person"&gt;
+    &lt;name&gt;Bill&lt;/name&gt;
+    &lt;person annotation="This is another person"&gt;grandma&lt;/person&gt;
+  &lt;/person&gt;
+&lt;/x&gt;
+</pre></div></div><br class="example-break"><div class="example"><a name="d5e12455"></a><p class="title"><b>Example&nbsp;21.48.&nbsp;JSON representation of meta-data</b></p><div class="example-contents"><pre class="programlisting">{
+  "x": {
+    "_self": "/api/running/x",
+    "_path": "/x:x",
+    "id": 42,
+    "@id": {"tags": ["important","ethernet"],"annotation": "hello world"},
+    "person": {
+      "_self": "/api/running/x/person",
+      // NB: the below refers to the parent object
+      "@@person": {"annotation": "This is a person"},
+      "name": "Bill",
+      "person": "grandma",
+      // NB: the below refers to the sibling object
+      "@person": {"annotation": "This is another person"}
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>
+      For JSON, note how we represent the meta data for a certain
+      object "x" by another object constructed of the
+      object name prefixed with either one or two "@" signs.
+      The meta-data object "@x" refers to the sibling
+      object "x" and the "@@x" object refers
+      to the parent object.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          <span class="emphasis"><em>THIS DIFFERS FROM RESTCONF!</em></span>
+        </p></div><p>
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.rest.headers"></a>21.6.&nbsp;Request/Response headers</h2></div></div></div><p>
+      There are some optional request and response headers that are of interest
+      since some functionality is obtained by their use.
+      We here focus on the <code class="code">Etag</code> and
+      <code class="code">Last-Modified</code> response headers, and the request
+      headers that are correlated to these (<code class="code">If-Match</code>,
+      <code class="code">If-None-Match</code>, <code class="code">If-Modified-Since</code>
+      and <code class="code">If-Unmodified-since</code>).
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12471"></a>21.6.1.&nbsp;Response headers</h3></div></div></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              <code class="code">Etag</code>: This header (entity-tag) is a string
+              representing the latest transaction id in the
+              database. This header is only available for the
+              "running" resource or equivalent.
+            </p></li><li class="listitem"><p>
+              <code class="code">Last-Modified</code>: This header contains the
+              timestamp for the last change in the database.
+              This header is only available for the
+              "running" resource or equivalent. Also, this
+              header is only available if rollback files are enabled.
+            </p></li></ul></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12481"></a>21.6.2.&nbsp;Request headers</h3></div></div></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              <code class="code">If-None-Match</code>: This header evaluates to true
+              if the supplied value does not match the latest
+              <code class="code">Etag</code> value. If evaluated to false an error
+              response with status 304 (Not Modified) will be sent with
+              no body. The usage of this is for instance for a GET
+              operation to get information if the data has changed since
+              last retrieval. This header carry only meaning if the
+              <code class="code">Etag</code> response header has previously been
+              acquired.
+            </p></li><li class="listitem"><p>
+              <code class="code">If-Modified-Since</code>: This request-header field
+              is used with a HTTP method to make it conditional, i.e
+              if the requested variant has not been modified since the
+              time specified in this field, an entity will not be returned
+              from the server; instead, a 304 (Not Modified) response
+              will be returned without any message-body.
+            </p><p>
+              Usage of this is for instance for a GET
+              operation to get information if (and only if) the data has
+              changed since last retrieval.
+              Thus, this header should use the value of a
+              <code class="code">Last-Modified</code> response header that has previously
+              been acquired.
+            </p></li><li class="listitem"><p>
+              <code class="code">If-Match</code>: This header evaluates to true
+              if the supplied value matches the latest
+              <code class="code">Etag</code> value. If evaluated to false an error
+              response with status 412 (Precondition Failed) will be sent with
+              no body.
+            </p><p>
+              The usage of this can be to control if a POST
+              operation should be executed or not (i.e. do not execute
+              if the database has changed).
+              This header carry only meaning if the
+              <code class="code">Etag</code> response header has previously been
+              acquired.
+            </p></li><li class="listitem"><p>
+              <code class="code">If-Unmodified-Since</code>: This header evaluates to true
+              if the supplied value is later or equal to the last acquired
+              <code class="code">Last-Modified</code> timestamp.
+              If evaluated to false an error
+              response with status 412 (Precondition Failed) will be sent with
+              no body.
+            </p><p>
+              The usage of this can be to control if a POST
+              operation should be executed or not (i.e. do not execute
+              if the database has changed).
+              This header carry only meaning if the
+              <code class="code">Last-Modified</code> response header has previously been
+              acquired.
+            </p></li></ul></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12507"></a>21.7.&nbsp;Special characters</h2></div></div></div><p>
+      When setting or retrieving data it is sometimes necessary to
+      represent special characters in the payload. In the REST api the
+      payload can have both XML and JSON format.
+      The special characters handled in the REST api are:
+
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>"new line": representing a line feed (decimal
+          ascii value 10)</p></li><li class="listitem"><p>"carriage return": representing carriage
+          return (decimal ascii value 13)</p></li><li class="listitem"><p>"horizontal tab": representing a tabulation
+          (decimal ascii value 9)</p></li></ul></div><p>
+    </p><p>
+      The ambition in the REST api is that special characters should
+      be handled in the same way as they are in the CLI.
+      Since the CLI is capable to present configuration data both as
+      strings and XML the CLI representation can be used as template
+      for both the XML and JSON format.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12518"></a>21.7.1.&nbsp;XML representation of special characters</h3></div></div></div><p>
+        When in the XML case the special characters uses the
+        representation &amp;#xH; where H is the ascii hex value or
+        &amp;#DD; where DD is the ascii decimal value.
+        Since "&amp;" is the quoting character this is also treated as
+        a special character, and so is "&lt;" since this is the
+        separator character indicating the beginning of a tag value.
+        The following is the list of XML special characters:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>"new line": represented by
+            &amp;#xA; or &amp;#10;
+          </p></li><li class="listitem"><p>"carriage return": represented by
+            &amp;#xD; or &amp;#13;
+          </p></li><li class="listitem"><p>"horizontal tab": represented by
+            &amp;#x9; or &amp;#09;
+          </p></li><li class="listitem"><p>"&amp;": represented by &amp;amp;
+          </p></li><li class="listitem"><p>"&lt;": represented by &amp;lt;
+          </p></li></ul></div><p>
+        An example XML fragment is
+      </p><div class="informalexample"><pre class="screen">
+ 
+&lt;foo&gt;123\n456\\n &amp;lt;&amp;amp;&gt;&lt;/foo&gt;
+
+ which is interpreted as:
+
+123
+456\n &lt;&amp;&gt;
+
+      </pre></div><p>
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12535"></a>21.7.2.&nbsp;JSON representation of special characters</h3></div></div></div><p>
+        In the JSON formatted string case the quote character "\" and
+        string separator characters are used "\"" which also becomes
+        special characters in the string case.
+        The complete list of JSON special characters become:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>"new line": represented by \n
+          </p></li><li class="listitem"><p>"carriage return": represented by \r
+          </p></li><li class="listitem"><p>"horizontal tab": represented by \t
+          </p></li><li class="listitem"><p>"\": represented by \ or \\
+          </p></li><li class="listitem"><p>""": represented by \"
+          </p></li></ul></div><p>
+        The \ quote character is used in the following way:
+        A single \ in a string that is not directly followed by
+        characters n,r or t are unaltered (as a \ character).
+        Two \\ are interpreted as \ (the escaped \).
+        This implies that both \\\ and \\\\ are are interpreted
+        as \\ and so forth.
+      </p><p>
+        An example JSON string is
+      </p><div class="informalexample"><pre class="screen">
+ 
+"123\n456\\n \\\"
+
+ which is interpreted as:
+
+123
+456\n \\
+
+      </pre></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12553"></a>21.8.&nbsp;Error Responses</h2></div></div></div><p>
+      Error responses are formatted either in XML and JSON depending
+      on the preferred MIME type in the request.
+    </p><p>
+      In your installed release you should be able to find a Yang
+      file named <code class="filename">tailf-rest-error.yang</code> that
+      defines the structure of these error replies. An easy way
+      to find the file run, from the top directory of your
+      installation:
+    </p><pre class="programlisting">
+      find . -name tailf-rest-error.yang
+      </pre><p>
+      Let's start by looking at an example of how a structured
+      error reply can look like.
+    </p><div class="example"><a name="d5e12560"></a><p class="title"><b>Example&nbsp;21.49.&nbsp;Example of a XML formatted error message</b></p><div class="example-contents"><pre class="programlisting">
+ curl -i -X PUT "localhost:8008/api/running/hosts"
+-H "Content-Type: application/vnd.yang.data+xml" ...
+HTTP/1.1 500 Internal Server Error
+Server: ConfD/5.3.0
+Cache-control: private, no-cache, must-revalidate, proxy-revalidate
+Date: Thu, 10 Jul 2014 07:59:04 GMT
+Content-Length: 259
+Content-Type: text/xml
+
+
+&lt;errors xmlns="http://tail-f.com/ns/tailf-rest-error"&gt;
+  &lt;error&gt;
+    &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+    &lt;error-urlpath&gt;/api/running/hosts&lt;/error-urlpath&gt;
+    &lt;error-message&gt;internal error&lt;/error-message&gt;
+  &lt;/error&gt;
+&lt;/errors&gt;
+      </pre></div></div><br class="example-break"><div class="example"><a name="d5e12563"></a><p class="title"><b>Example&nbsp;21.50.&nbsp;Example of a JSON formatted error message</b></p><div class="example-contents"><pre class="programlisting">
+ curl -i -X POST "localhost:8008/api/running/hosts2" \
+-H "Content-Type: application/vnd.yang.data+json" ...
+HTTP/1.1 400 Bad Request
+Server: ConfD/5.3.0
+Cache-control: private, no-cache, must-revalidate, proxy-revalidate
+Date: Thu, 10 Jul 2014 09:11:13 GMT
+Content-Length: 199
+Content-Type: text/json
+
+{"errors":
+  {"error":
+     [{
+       "error-message": "unexpected trailing data: hosts",
+       "error-urlpath": "/api/running/hosts",
+       "error-tag": "malformed-message"
+       }
+      ]
+  }
+}
+      </pre></div></div><br class="example-break"><p>
+      The YANG model for the error messages is taken from the
+      NETCONF specification.
+      However, note that the REST API currently only sets three values
+      when reporting an error:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            "error-tag": An error classification tag.
+          </p></li><li class="listitem"><p>
+            "error-urlpath": The URI used by the error
+            generating request.
+          </p></li><li class="listitem"><p>
+            "error-message": A descriptive error message.
+          </p></li></ul></div><p>
+    </p><p>
+      The error-tag element has a number of predefined values and
+      there is also a preferred HTTP status code connected to each
+      error-tag. These are:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>"in-use": HTTP Status: <code class="code">409 Conflict</code></p></li><li class="listitem"><p>"invalid-value": HTTP Status: <code class="code">400 Bad Request</code></p></li><li class="listitem"><p>
+            "too-big": HTTP Status: <code class="code">413 Request Entity Too Large</code>
+          </p></li><li class="listitem"><p>
+            "missing-attribute": HTTP Status: <code class="code">400 Bad Request</code>
+          </p></li><li class="listitem"><p>"bad-attribute": HTTP Status: <code class="code">400 Bad Request</code></p></li><li class="listitem"><p>
+            "unknown-attribute": HTTP Status: <code class="code">400 Bad Request</code>
+          </p></li><li class="listitem"><p>"bad-element": HTTP Status: <code class="code">400 Bad Request</code></p></li><li class="listitem"><p>"unknown-element": HTTP Status: <code class="code">400 Bad Request</code></p></li><li class="listitem"><p>
+            "unknown-namespace": HTTP Status: <code class="code">400 Bad Request</code>
+          </p></li><li class="listitem"><p>"access-denied": HTTP Status: <code class="code">403 Forbidden</code></p></li><li class="listitem"><p>"lock-denied": HTTP Status: <code class="code">409 Conflict</code></p></li><li class="listitem"><p>"resource-denied": HTTP Status: <code class="code">409 Conflict</code></p></li><li class="listitem"><p>
+            "rollback-failed":
+            HTTP Status: <code class="code">500 Internal Server Error</code>
+          </p></li><li class="listitem"><p>"data-exists": HTTP Status: <code class="code">409 Conflict</code></p></li><li class="listitem"><p>"data-missing": HTTP Status: <code class="code">409 Conflict</code></p></li><li class="listitem"><p>
+            "operation-not-supported":
+            HTTP Status: <code class="code">501 Not Implemented</code>
+          </p></li><li class="listitem"><p>
+            "operation-failed":
+            HTTP Status: <code class="code">500 Internal Server Error</code>
+          </p></li><li class="listitem"><p>
+            "partial-operation":
+            HTTP Status: <code class="code">500 Internal Server Error</code>
+          </p></li><li class="listitem"><p>
+            "malformed-message": HTTP Status: <code class="code">400 Bad Request</code>
+          </p></li></ul></div><p>
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12633"></a>21.8.1.&nbsp;User extended error messages</h3></div></div></div><p>
+        For data providers, hooks, transforms etc there exist a
+        possibility to add extensions to error messages and change
+        error codes before sending errors back to the server from the
+        callbacks (see: <a class="xref" href="ch28.html#ug.advanced.custom.msgs" title="28.14.&nbsp;Error Message Customization">Section&nbsp;28.14, &#8220;Error Message Customization&#8221;</a>).
+        These codes and error messages will also be visible
+        over the REST interface. More on how to use these options can
+        be found in the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>
+        man page, e.g under
+        the <code class="code">confd_db_seterr_extended</code> function,
+        or in the Javadoc for
+        the <code class="code">com.tailf.dp.DpCallbackExtendedException</code> class.
+      </p><p>
+        Using the above mechanism to change the errorcode for an
+        emitted error, will have effect on the REST HTTP response
+        statuses. The following table show their relationship:
+      </p><div class="table"><a name="d5e12641"></a><p class="title"><b>Table&nbsp;21.7.&nbsp;Error code vs HTTP Status</b></p><div class="table-contents"><table summary="Error code vs HTTP Status" border="0"><colgroup><col width="75%" align="left" class="c1"><col align="left" class="c2" width="25%"></colgroup><thead><tr><th align="left">Error Code</th><th align="left">HTTP Status</th></tr></thead><tbody><tr><td align="left">CONFD_ERRCODE_IN_USE</td><td align="left">409 Conflict</td></tr><tr><td align="left">CONFD_ERRCODE_RESOURCE_DENIED</td><td align="left">409 Conflict</td></tr><tr><td align="left">CONFD_ERRCODE_INCONSISTENT_VALUE</td><td align="left">400 Bad Request</td></tr><tr><td align="left">CONFD_ERRCODE_ACCESS_DENIED</td><td align="left">403 Forbidden</td></tr><tr><td align="left">CONFD_ERRCODE_APPLICATION</td><td align="left">400 Bad Request</td></tr><tr><td align="left">CONFD_ERRCODE_APPLICATION_INTERNAL</td><td align="left">500 Internal Server Error</td></tr><tr><td align="left">CONFD_ERRCODE_DATA_MISSING</td><td align="left">409 Conflict</td></tr><tr><td align="left">CONFD_ERRCODE_INTERRUPT</td><td align="left">500 Internal Server Error</td></tr></tbody></table></div></div><br class="table-break"></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.rest.query.api"></a>21.9.&nbsp;The Query API</h2></div></div></div><p>
+      The Query API consists of a number of Requests and Replies
+      which are sent as payload via the (REST) HTTP connection.
+    </p><p>
+      In your installed release you should be able to find two YANG
+      files named <code class="filename">tailf-rest-query.yang</code> and
+      <code class="filename">tailf-common-query.yang</code> that defines the
+      structure of these Requests / Replies. An easy way to find the
+      files is to run the following command from the top directory of
+      your installation:
+    </p><pre class="programlisting">
+      find . -name tailf-rest-query.yang
+      </pre><p>
+      The API consists of the following Requests:
+    </p><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            "start-query": Start a query and return a query handle.
+          </p></li><li class="listitem"><p>
+            "fetch-query-result": Use a query handle to
+            repeatedly fetch chunks of the result.
+          </p></li><li class="listitem"><p>
+            "immediate-query": Start a query and return the entire
+            result immediately.
+          </p></li><li class="listitem"><p>
+            "reset-query": (Re)set where the next fetched
+            result will begin from.
+          </p></li><li class="listitem"><p>
+            "stop-query": Stop (and close) the query.
+          </p></li></ul></div><p>
+    </p><p>
+      The API consists of the following Replies:
+    </p><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            "start-query-result": Reply to the start-query request
+          </p></li><li class="listitem"><p>
+            "query-result": Reply to the fetch-query-result and
+            immediate-query requests
+          </p></li></ul></div><p>
+    </p><p>
+      In the following examples, we'll use this data model:
+    </p><div class="informalexample"><pre class="programlisting">
+container x {
+  list host {
+    key number;
+    leaf number {
+      type int32;
+    }
+    leaf enabled {
+      type boolean;
+    }
+    leaf name {
+      type string;
+    }
+    leaf address {
+      type inet:ip-address;
+    }
+  }
+}</pre></div><p>
+      The actual format of the payload should be represented either
+      in XML or JSON. For XML it could look like this:
+    </p><pre class="programlisting">
+    &lt;start-query xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;foreach&gt;
+        /x/host[enabled = 'true']
+      &lt;/foreach&gt;
+      &lt;select&gt;
+        &lt;label&gt;Host name&lt;/label&gt;
+        &lt;expression&gt;name&lt;/expression&gt;
+        &lt;result-type&gt;string&lt;/result-type&gt;
+      &lt;/select&gt;
+      &lt;select&gt;
+        &lt;expression&gt;address&lt;/expression&gt;
+        &lt;result-type&gt;string&lt;/result-type&gt;
+      &lt;/select&gt;
+      &lt;sort-by&gt;name&lt;/sort-by&gt;
+      &lt;limit&gt;100&lt;/limit&gt;
+      &lt;offset&gt;1&lt;/offset&gt;
+      &lt;timeout&gt;600&lt;/timeout&gt;
+    &lt;/start-query&gt;
+    </pre><p>
+      An informal interpretation of this query is:
+    </p><p>
+      For each '/x/host' where 'enabled' is true, select its
+      'name', and 'address', and return the result sorted by 'name',
+      in chunks of 100 results at the time.
+    </p><p>
+      Let us discuss the various pieces of this request.
+      To start with, when using XML, we need to specify the
+      name space as shown:
+    </p><pre class="programlisting">
+    &lt;start-query xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+    </pre><p>
+      The actual XPath query to run is specified by the 'foreach'
+      element. In the example below will search for all '/x/host'
+      nodes that has the 'enabled' node set to 'true':
+    </p><pre class="programlisting">
+      &lt;foreach&gt;
+        /x/host[enabled = 'true']
+      &lt;/foreach&gt;
+      </pre><p>
+      Now we need to define what we
+      want to have returned from the node set by using one or more
+      'select' sections. What to actually return is defined by the
+      XPath 'expression'.
+    </p><p>
+      Choose how the result should be represented.
+      Basically, it can be the actual value or the path leading to the
+      value.  This is specified per select chunk The possible
+      result-types are: 'string' , 'path' , 'leaf-value' and 'inline'.
+    </p><p>
+      The difference between 'string' and 'leaf-value' is somewhat
+      subtle. In the case of 'string' the result will be processed by
+      the XPath function: string() (which if the result is a node-set
+      will concatenate all the values). The 'leaf-value' will return
+      the value of the first node in the result. As long as the
+      result is a leaf node, 'string' and 'leaf-value' will return the
+      same result. In the example above, the 'string' is used as
+      shown below. At least one result-type must be specified.
+    </p><p>
+      The result-type 'inline' makes it possible to return the full
+      sub-tree of data, either in XML or in JSON format. The data will
+      be enclosed with a tag: 'data'.
+    </p><p>
+      It is possible to
+      specify an optional 'label' for a convenient
+      way of labeling the returned data:
+    </p><pre class="programlisting">
+    &lt;select&gt;
+      &lt;label&gt;Host name&lt;/label&gt;
+      &lt;expression&gt;name&lt;/expression&gt;
+      &lt;result-type&gt;string&lt;/result-type&gt;
+    &lt;/select&gt;
+    &lt;select&gt;
+      &lt;expression&gt;address&lt;/expression&gt;
+      &lt;result-type&gt;string&lt;/result-type&gt;
+    &lt;/select&gt;
+      </pre><p>
+      The returned result can be sorted. This is expressed as
+      XPath expressions, which in most cases are very simple and
+      refers to the found node set. In this example we sort the
+      result by the content of the 'name' node:
+    </p><pre class="programlisting">
+      &lt;sort-by&gt;name&lt;/sort-by&gt;
+      </pre><p>
+      To limit the max amount of results in each chunk that
+      'fetch-query-result' will return we can set the 'limit'
+      element. The default is to get all results in one chunk.
+    </p><pre class="programlisting">
+    &lt;limit&gt;100&lt;/limit&gt;
+      </pre><p>
+      With the 'offset' element we can specify at which node we
+      should start to receive the result. The default is 1, i.e., the
+      first node in the resulting node-set.
+    </p><pre class="programlisting">
+    &lt;offset&gt;1&lt;/offset&gt;
+      </pre><p>
+      It is possible to set a custom timeout when starting or
+      resetting a query. Each time a function is called, the timeout
+      timer resets. The default is 600 seconds, i.e. 10 minutes.
+    </p><pre class="programlisting">
+    &lt;timeout&gt;600&lt;/timeout&gt;
+      </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        <span class="emphasis"><em>
+          Note that there can exist other underlying timeouts that are
+          shorter than the REST Query API timeout.
+        </em></span>
+      </p></div><p>
+      This request, expressed in JSON, would look like this:
+    </p><pre class="programlisting">
+    {
+     "start-query": {
+       "foreach": "/x/host[enabled = 'true']",
+       "select": [
+         {
+           "label": "Host name",
+           "expression": "name",
+           "result-type": ["string"]
+         },
+         {
+           "expression": "address",
+           "result-type": ["string"]
+         }
+       ],
+       "sort-by": ["name"],
+       "limit": 100,
+       "offset": 1,
+       "timeout": 600
+     }
+    }
+      </pre><p>
+      Now, if we continue by putting this XML example in a file
+      <code class="filename">test.xml</code> we can send a request, using the
+      command 'curl', like this:
+    </p><pre class="programlisting">
+    curl -i 'http://admin:admin@localhost:8008/api/query' \
+         -X POST -T test.xml \
+         -H "Content-Type: application/vnd.yang.data+xml"
+      </pre><p>
+      The important parts of the above is the '/api/query' in the
+      URI and that we send a HTTP 'POST' with the correct
+      'Content-Type'.
+    </p><p>
+      The result would look something like this:
+    </p><pre class="programlisting">
+    &lt;start-query-result&gt;
+      &lt;query-handle&gt;12345&lt;/query-handle&gt;
+    &lt;/start-query-result&gt;
+      </pre><p>
+      The query handle (in this example '12345') must be used in all
+      subsequent calls. To retrieve the result, we can now send:
+    </p><pre class="programlisting">
+    &lt;fetch-query-result xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;query-handle&gt;12345&lt;/query-handle&gt;
+    &lt;/fetch-query-result&gt;
+      </pre><p>
+      Which will result in something like the following:
+    </p><pre class="programlisting">
+    &lt;query-result xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;result&gt;
+        &lt;select&gt;
+          &lt;label&gt;Host name&lt;/label&gt;
+          &lt;value&gt;One&lt;/value&gt;
+        &lt;/select&gt;
+        &lt;select&gt;
+          &lt;value&gt;10.0.0.1&lt;/value&gt;
+        &lt;/select&gt;
+      &lt;/result&gt;
+      &lt;result&gt;
+        &lt;select&gt;
+          &lt;label&gt;Host name&lt;/label&gt;
+          &lt;value&gt;Three&lt;/value&gt;
+        &lt;/select&gt;
+        &lt;select&gt;
+          &lt;value&gt;10.0.0.3&lt;/value&gt;
+        &lt;/select&gt;
+      &lt;/result&gt;
+    &lt;/query-result&gt;
+      </pre><p>
+      If we try to get more data with the 'fetch-query-result' we
+      might get more 'result' entries in return until no more data
+      exists and we get an empty query result back:
+    </p><pre class="programlisting">
+    &lt;query-result xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+    &lt;/query-result&gt;
+      </pre><p>
+      If we want to send the query and get the entire result with only
+      one request, we can do this by using 'immediate-query'. This
+      function takes similar arguments as 'start-query' and returns the
+      entire result analogous 'fetch-query-result'. Note that it is not
+      possible to paginate or set an offset start node for the result
+      list; i.e. the options 'limit' and 'offset' are ignored.
+    </p><p>
+      An example request and response:
+    </p><pre class="programlisting">
+    &lt;immediate-query xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;foreach&gt;
+        /x/host[enabled = 'true']
+      &lt;/foreach&gt;
+      &lt;select&gt;
+        &lt;label&gt;Host name&lt;/label&gt;
+        &lt;expression&gt;name&lt;/expression&gt;
+        &lt;result-type&gt;string&lt;/result-type&gt;
+      &lt;/select&gt;
+      &lt;select&gt;
+        &lt;expression&gt;address&lt;/expression&gt;
+        &lt;result-type&gt;string&lt;/result-type&gt;
+      &lt;/select&gt;
+      &lt;sort-by&gt;name&lt;/sort-by&gt;
+      &lt;timeout&gt;600&lt;/timeout&gt;
+    &lt;/immediate-query&gt;
+    </pre><pre class="programlisting">
+    &lt;query-result xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;result&gt;
+        &lt;select&gt;
+          &lt;label&gt;Host name&lt;/label&gt;
+          &lt;value&gt;One&lt;/value&gt;
+        &lt;/select&gt;
+        &lt;select&gt;
+          &lt;value&gt;10.0.0.1&lt;/value&gt;
+        &lt;/select&gt;
+      &lt;/result&gt;
+      &lt;result&gt;
+        &lt;select&gt;
+          &lt;label&gt;Host name&lt;/label&gt;
+          &lt;value&gt;Three&lt;/value&gt;
+        &lt;/select&gt;
+        &lt;select&gt;
+          &lt;value&gt;10.0.0.3&lt;/value&gt;
+        &lt;/select&gt;
+      &lt;/result&gt;
+    &lt;/query-result&gt;
+      </pre><p>
+      If we want to go back in the "stream" of received
+      data chunks and have them repeated, we can do that with the
+      'reset-query' request.  In the example below we ask to get
+      results from the 42:nd result entry:
+    </p><pre class="programlisting">
+    &lt;reset-query xmlns=\"http://tail-f.com/ns/tailf-rest-query\"&gt;
+      &lt;query-handle&gt;12345&lt;/query-handle&gt;
+      &lt;offset&gt;42&lt;/offset&gt;
+    &lt;/reset-query&gt;
+      </pre><p>
+      Finally, when we are done we stop the query:
+    </p><pre class="programlisting">
+    &lt;stop-query xmlns="http://tail-f.com/ns/tailf-rest-query"&gt;
+      &lt;query-handle&gt;12345&lt;/query-handle&gt;
+    &lt;/stop-query&gt;
+      </pre></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12752"></a>21.10.&nbsp;Custom Response HTTP Headers</h2></div></div></div><p>
+      The REST server can be configured to reply with particular HTTP
+      headers in the HTTP response. For example, to support
+      Cross-Origin Resource Sharing (CORS, http://www.w3.org/TR/cors/)
+      there is a need to add a couple of headers to the HTTP
+      Response.
+    </p><p>
+      We add the extra configuration parameter in <code class="filename">confd.conf</code> 
+    </p><p>
+      </p><div class="example"><a name="d5e12758"></a><p class="title"><b>Example&nbsp;21.51.&nbsp;ConfD configuration for REST</b></p><div class="example-contents"><pre class="screen">
+    &lt;rest&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;customHeaders&gt;
+        &lt;header&gt;
+          &lt;name&gt;Access-Control-Allow-Origin&lt;/name&gt;
+          &lt;value&gt;*&lt;/value&gt;
+        &lt;/header&gt;
+      &lt;/customHeaders&gt;
+    &lt;/rest&gt;
+        </pre></div></div><p><br class="example-break">
+    </p><p>
+      
+    </p><p>
+      </p><div class="example"><a name="d5e12763"></a><p class="title"><b>Example&nbsp;21.52.&nbsp;</b></p><div class="example-contents"><p>
+          Send a request with Origin header:
+        </p><pre class="programlisting">
+OPTIONS .bob.com
+
+</pre><p>
+        A result can then look like
+        </p><pre class="programlisting">
+          
+HTTP/1.1 200 OK
+Server: 
+Allow: GET, HEAD
+Cache-Control: private, no-cache, must-revalidate, proxy-revalidate
+Content-Length: 0
+Content-Type: text/html
+Access-Control-Allow-Origin: http://api.bob.com
+Pragma: no-cache
+
+
+        </pre></div></div><p><br class="example-break">
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12768"></a>21.11.&nbsp;HTTP Status Codes</h2></div></div></div><p>
+      The REST server will return standard HTTP response codes, as
+      described in the list below:
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">200 OK</span></dt><dd><p>
+            The request was successfully completed, and a response
+            body is returned containing a representation of the
+            resource.
+          </p></dd><dt><span class="term">201 Created</span></dt><dd><p>
+                A resource was created, and the new resource URI is
+                returned in the "Location" header.
+              </p></dd><dt><span class="term">204 No Content</span></dt><dd><p>
+                The request was successfully completed, but no
+                response body is returned.
+              </p></dd><dt><span class="term">400 Bad Request</span></dt><dd><p>
+                The request could not be processed because it contains
+                missing or invalid information (such as validation
+                error on an input field, a missing required value, and
+                so on).
+              </p></dd><dt><span class="term">401 Unauthorized</span></dt><dd><p>
+                The request requires user authentication. The response
+                includes a "WWW-Authenticate" header field
+                for basic authentication.
+              </p></dd><dt><span class="term">403 Forbidden</span></dt><dd><p>
+                Access to the resource was denied by the server, due
+                to authorization rules.
+              </p></dd><dt><span class="term">404 Not Found</span></dt><dd><p>
+                The requested resource does not exist.
+              </p></dd><dt><span class="term">405 Method Not Allowed</span></dt><dd><p>
+                The HTTP method specified in the request (DELETE, GET,
+                HEAD, PATCH, POST, PUT) is not supported for this
+                resource.
+              </p></dd><dt><span class="term">406 Not Acceptable</span></dt><dd><p>
+                The resource identified by this request is not capable
+                of generating the requested representation, specified
+                in the "Accept" header or in the
+                "format" query parameter.
+              </p></dd><dt><span class="term">409 Conflict</span></dt><dd><p>
+                This code is used if a request tries to create a
+                resource that already exists.
+              </p></dd><dt><span class="term">415 Unsupported Media Type</span></dt><dd><p>
+                The format of the request is not supported.
+              </p></dd><dt><span class="term">500 Internal Error</span></dt><dd><p>
+                The server encountered an unexpected condition which
+                prevented it from fulfilling the request.
+              </p></dd><dt><span class="term">501 Not Implemented</span></dt><dd><p>
+                The server does not (currently) support the
+                functionality required to fulfill the request.
+              </p></dd><dt><span class="term">503 Unavailable</span></dt><dd><p>
+                The server is currently unable to handle the request
+                due to the resource being used by someone else, or the
+                server is temporarily overloaded.
+              </p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch20.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch22.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;20.&nbsp;The web server&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;22.&nbsp;The RESTCONF API</td></tr></table></div></body></html>

@@ -1,0 +1,32 @@
+   <system xmlns="http://tail-f.com/ns/system">
+      <interfaces>
+        <interface>
+          <name>eth0</name>
+          <ip>192.12.3.4</ip>
+          <enabled>true</enabled>
+          <mtu>1000</mtu>
+          <metric>1</metric>
+          <myflag/>
+        </interface>
+
+
+        <interface>
+          <name>eth0:0</name>
+          <ip>192.12.4.4</ip>
+          <enabled>true</enabled>
+          <mtu>1000</mtu>
+          <metric>1</metric>
+        </interface>
+
+        <interface>
+          <name>atm0</name>
+          <ip>192.142.4.5</ip>
+          <enabled>true</enabled>
+          <mtu>1000</mtu>
+          <metric>1</metric>
+        </interface>
+
+
+      </interfaces>
+
+    </system>

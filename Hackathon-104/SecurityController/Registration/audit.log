@@ -1,0 +1,20 @@
+<INFO> 23-Mar-2019::19:44:02.502 security-controller confd[32316]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.12:49962 with ssh, member of groups: admin
+<INFO> 23-Mar-2019::19:44:02.505 security-controller confd[32316]: audit user: admin/0 logged in via netconf from 10.0.0.12:49962 with ssh using local authentication
+<INFO> 23-Mar-2019::19:44:02.521 security-controller confd[32316]: audit user: admin/28 assigned to groups: admin
+<INFO> 23-Mar-2019::19:44:02.753 security-controller confd[32316]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2019::19:44:03.083 security-controller confd[32316]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.12:49964 with ssh, member of groups: admin
+<INFO> 23-Mar-2019::19:44:03.084 security-controller confd[32316]: audit user: admin/0 logged in via netconf from 10.0.0.12:49964 with ssh using local authentication
+<INFO> 23-Mar-2019::19:44:03.090 security-controller confd[32316]: audit user: admin/29 assigned to groups: admin
+<INFO> 23-Mar-2019::19:44:03.322 security-controller confd[32316]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2019::19:44:03.662 security-controller confd[32316]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.12:49966 with ssh, member of groups: admin
+<INFO> 23-Mar-2019::19:44:03.663 security-controller confd[32316]: audit user: admin/0 logged in via netconf from 10.0.0.12:49966 with ssh using local authentication
+<INFO> 23-Mar-2019::19:44:03.695 security-controller confd[32316]: audit user: admin/30 assigned to groups: admin
+<INFO> 23-Mar-2019::19:44:03.864 security-controller confd[32316]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2019::19:44:04.194 security-controller confd[32316]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.12:49968 with ssh, member of groups: admin
+<INFO> 23-Mar-2019::19:44:04.195 security-controller confd[32316]: audit user: admin/0 logged in via netconf from 10.0.0.12:49968 with ssh using local authentication
+<INFO> 23-Mar-2019::19:44:04.225 security-controller confd[32316]: audit user: admin/31 assigned to groups: admin
+<INFO> 23-Mar-2019::19:44:04.412 security-controller confd[32316]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2019::19:44:04.743 security-controller confd[32316]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.12:49970 with ssh, member of groups: admin
+<INFO> 23-Mar-2019::19:44:04.744 security-controller confd[32316]: audit user: admin/0 logged in via netconf from 10.0.0.12:49970 with ssh using local authentication
+<INFO> 23-Mar-2019::19:44:04.766 security-controller confd[32316]: audit user: admin/32 assigned to groups: admin
+<INFO> 23-Mar-2019::19:44:04.956 security-controller confd[32316]: audit user: admin/0 logged out <local> user

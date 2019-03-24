@@ -1,0 +1,425 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;23.&nbsp;The Management Agent API</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch22.html" title="Chapter&nbsp;22.&nbsp;The RESTCONF API"><link rel="next" href="ch24.html" title="Chapter&nbsp;24.&nbsp;High Availability"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;23.&nbsp;The Management Agent API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch22.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch24.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.maapi"></a>Chapter&nbsp;23.&nbsp;The Management Agent API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch23.html#d5e12965">23.1. What is MAAPI?</a></span></dt><dt><span class="sect1"><a href="ch23.html#d5e12993">23.2. A custom toy CLI</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12965"></a>23.1.&nbsp;What is MAAPI?</h2></div></div></div><p>
+          MAAPI is a C API which provides full access to the ConfD
+          internal transaction engine. It is used in a number of
+          different settings.
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              We use MAAPI if we want to write our own management
+              application. Using the MAAPI interface, it is for
+              example possible to implement a custom built command
+              line interface (CLI) or Web UI. This usage is described
+              below.
+            </p></li><li class="listitem"><p>
+              We use MAAPI to access ConfD data inside a not yet committed
+              transaction when we wish to implement semantic validation
+              in C. This is fully described in
+              <a class="xref" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Semantic validation">Chapter&nbsp;9, <i>Semantic validation</i></a>.
+            </p></li><li class="listitem"><p>
+              We use MAAPI to access ConfD data inside a not yet committed
+              transaction when we wish to implement CLI wizards in C.
+              Here we can invoke an external C program which can read and
+              write, both to the executing transaction, but also interact
+              with the CLI user. This is fully described in
+              <a class="xref" href="ch16.html" title="Chapter&nbsp;16.&nbsp;The CLI agent">Chapter&nbsp;16, <i>The CLI agent</i></a>.
+            </p></li><li class="listitem"><p>
+              Finally MAAPI is also used during database upgrade to
+              access and write data to a special upgrade
+              transaction. This is fully described in
+              <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a>.
+            </p></li></ul></div><p>Thus, MAAPI is an API which contains functions that are the
+        northbound equivalents of all the callbacks described in
+        <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>.</p><p>
+          A typical sequence of API calls when using MAAPI to write a
+          management application would be
+        </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+              Create a user session, this is the equivalent of an
+              established SSH connection from a NETCONF manager. It is up
+              to the MAAPI application to authenticate users. The TCP
+              connection from the MAAPI application to ConfD is a
+              clear text connection.
+            </p></li><li class="listitem"><p>
+              Establish a new ConfD transaction
+            </p></li><li class="listitem"><p>
+              Issue a series of read and write operations towards
+              the ConfD transaction
+            </p></li><li class="listitem"><p>
+              Commit or abort the transaction
+            </p></li></ol></div><p>
+          MAAPI also has support for several operations that do not
+          work immediately towards a ConfD transaction. This includes
+          users session management, locking, and candidate
+          manipulation.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12993"></a>23.2.&nbsp;A custom toy CLI</h2></div></div></div><p>In this section we implement a small toy CLI towards
+        a specific data model. We start with the following YANG module:
+        </p><div class="example"><a name="d5e12996"></a><p class="title"><b>Example&nbsp;23.1.&nbsp;scli.yang YANG module</b></p><div class="example-contents"><pre class="programlisting">module scli {
+  namespace "http://tail-f.com/test/scli";
+  prefix scli;
+
+  import ietf-inet-types {
+      prefix inet;
+  }
+
+  leaf foo {
+    type string;
+    default "fooo";
+  }
+  leaf bar {
+    type int32;
+    default 66;
+  }
+  list servers {
+    key "name";
+    max-elements 64;
+    leaf name {
+      type string;
+    }
+    leaf ip {
+      type inet:ipv4-address;
+      mandatory true;
+    }
+    leaf port {
+      type inet:port-number;
+      mandatory true;
+    }
+  }
+}</pre></div></div><br class="example-break"><p>
+          We compile this file with <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a> and load it into
+          ConfD as usual.  Data is kept in CDB, since there are no
+          callpoints defined.  At this point, we can manipulate the
+          configuration data with a NETCONF manager or the ConfD
+          built-in CLI.
+        </p><p>
+          What we wish to do is to write a small
+          <code class="literal">custom</code> CLI, that understands the structure
+          of the XML tree using the MAAPI.
+        </p><p>All functions in MAAPI are described in the
+        <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> manual page. We will use a subset of
+        those functions in this example.
+        </p><p>We start off with some global variables, and a trivial
+        <code class="function">main()</code> function.
+        </p><div class="informalexample"><pre class="programlisting">#include "confd_lib.h"
+#include "confd_maapi.h"
+
+/* include .h file generated by confdc */
+#include "scli.h"
+
+static int sock, th;
+static char *user = "admin";
+static const char *groups[] = {"admin"};
+static int debuglevel = CONFD_DEBUG;
+static char *context = "maapi";
+static enum confd_dbname dbname = CONFD_RUNNING;
+
+int main(int argc, char **argv)
+{
+    int c;
+    while ((c = getopt(argc, argv, "rc")) != -1) {
+        switch(c) {
+        case 'r':
+            dbname = CONFD_RUNNING;
+            break;
+        case 'c':
+            dbname = CONFD_CANDIDATE;
+            break;
+
+        }
+    }
+    confd_init("MYNAME", stderr, debuglevel);
+    cnct();
+    runcli();
+}</pre></div><p>
+          The code in <code class="function">main()</code> sets a global variable
+          <code class="varname">dbname</code> which will be the database we are
+          opening, i.e. we can choose to run this CLI either towards
+          the running database or towards the candidate database.
+        </p><p>
+          The code first calls <code class="function">cnct()</code> which creates a
+          MAAPI socket and connects to ConfD, following that we
+          run the simple CLI.
+        </p><p>The code to connect to ConfD looks like this:</p><div class="informalexample"><pre class="programlisting">static void cnct()
+{
+    struct in_addr in;
+    struct sockaddr_in addr;
+    struct confd_ip ip;
+
+    inet_aton("127.0.0.1", &amp;in);
+    addr.sin_addr.s_addr = in.s_addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(4565);
+
+    if ((sock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open socket\n");
+
+    if (maapi_connect(sock, (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    ip.af = AF_INET;
+    inet_aton("66.55.44.33", &amp;ip.ip.v4);
+
+    maapi_start_user_session(sock, user, context, groups, 1,
+                             &amp;ip, CONFD_PROTO_TCP);
+
+    th = maapi_start_trans(sock, dbname, CONFD_READ_WRITE);
+    maapi_set_namespace(sock, th, scli__ns);
+}</pre></div><p>The code first creates a normal socket, and then
+        connects to ConfD using <code class="function">maapi_connect()</code>. Following
+        that the code calls <code class="function">maapi_start_user_session()</code> which
+        creates a <code class="literal">user session</code> on the socket.
+        </p><p>
+          We must usually have an established user session before we
+          can issue any of the MAAPI calls. There are some calls that
+          can be performed on the socket without an already established
+          user session.
+        </p><p>
+          A user session must be
+          authenticated by the agent before the agent connects to
+          ConfD. This authentication must be performed by the agent
+          code, and once the agent issues the call to
+          <code class="function">maapi_start_user_session()</code>, the authentication
+          must already be done. ConfD also has an authentication system built-in
+          to it. The behavior of the ConfD built-in authentication system
+          is controlled through the AAA section in <code class="filename">confd.conf</code>.
+          Thus, when we're implementing a proprietary agent, either we
+          do the authentication ourselves, or we can ask ConfD to authenticate
+          the user through the API function <code class="function">maapi_authenticate()</code>.
+          Thus we could have written:
+        </p><div class="informalexample"><pre class="programlisting">char *groups[10];
+if (maapi_authenticate(sock, user, pass, &amp;groups[0], 10) == 1) {
+    int i = 0;
+    while (groups[i])
+      i++;
+    maapi_start_user_session(sock, user, context, groups, i,
+                             &amp;srcip, CONFD_PROTO_TCP);</pre></div><p>This way we only need to obtain the clear text password
+          in the agent and we can let ConfD perform the actual authentication
+          as well as the group assignment.
+          The group assignment is important, since the authorization model
+          in ConfD hinges entirely on group membership.
+          </p><p>Once we have established a user session, we continue
+          to create a transaction towards either the running database
+          or the candidate. This is done through the call to
+          <code class="function">maapi_start_trans()</code>. The call returns a transaction
+          handle, a <code class="varname">th</code> which is subsequently used
+          when we read and write data. Remember that we are creating a
+          transaction, thus nothing is written to actual storage until
+          we commit the transaction. This applies also when we access
+          the running database.
+          </p><p>
+            Finally we make our first call towards the transaction, and that
+            is to indicate the name of the namespace we are planning to
+            work against. This is a hashed integer value which can be found
+            in a header file generated from <code class="filename">scli.fxs</code>. Read more about
+            how to generate a header (.h) file from a .fxs file in the
+            <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a> compiler man page.
+          </p><p>Once we have connected, established a user session and also
+          created our first transaction, we enter the CLI input loop
+          called <code class="function">runcli()</code>.
+          </p><div class="informalexample"><pre class="programlisting">#define DELIM " \n\r"
+
+static void runcli()
+{
+    char ibuf[BUFSIZ];
+    struct maapi_cursor mc;
+    int ival;
+    char *tok;
+
+    printf("#cli "); fflush(stdout);
+
+    while(fgets(ibuf, BUFSIZ, stdin) != NULL) {
+        if ((tok = strtok(ibuf, DELIM)) == NULL) {
+            printf("#cli "); fflush(stdout);
+            continue;
+        }
+
+        if (strcmp(tok, "show") == 0) {
+            if (maapi_get_str_elem(sock, th, ibuf, BUFSIZ, "/foo") ==CONFD_OK)
+                printf ("foo: %s\n", ibuf);
+            else if (confd_errno == CONFD_ERR_NOEXISTS)
+                printf ("foo: \n");
+            else
+                confd_fatal("What \n");
+
+            if (maapi_get_int32_elem(sock, th, &amp;ival, "/bar") == CONFD_OK)
+                printf ("bar: %d\n", ival);
+            else if (confd_errno == CONFD_ERR_NOEXISTS)
+                printf ("bar: ");
+            else
+                confd_fatal("What \n");
+
+            maapi_init_cursor(sock, th, &amp;mc, "/servers/server");
+            maapi_get_next(&amp;mc);
+            while (mc.n != 0) {
+                struct in_addr ip;
+                uint16_t port;
+                char tmpbuf[BUFSIZ];
+
+                maapi_get_ipv4_elem(sock, th, &amp;ip,
+                                    "/servers/server{%x}/ip",
+                                    &amp;mc.keys[0]);
+                maapi_get_u_int16_elem(sock, th, &amp;port,
+                                       "/servers/server{%x}/port",
+                                       &amp;mc.keys[0]);
+                confd_pp_value(tmpbuf,BUFSIZ,&amp;mc.keys[0]);
+                printf ("server name=%s ip=%s port=%d\n",
+                        tmpbuf, inet_ntoa(ip), port);
+                maapi_get_next(&amp;mc);
+            }
+            maapi_destroy_cursor(&amp;mc);
+        }
+        else if (strcmp(tok, "abort") == 0) {
+            maapi_abort_trans(sock, th);
+            maapi_finish_trans(sock, th);
+            th = maapi_start_trans(sock, dbname, CONFD_READ_WRITE);
+            maapi_set_namespace(sock, th, scli__ns);
+        }
+        else if (strcmp(tok, "commit") == 0) {
+            maapi_apply_trans(sock, th, 0);
+            maapi_finish_trans(sock, th);
+            th = maapi_start_trans(sock, dbname, CONFD_READ_WRITE);
+            maapi_set_namespace(sock, th, scli__ns);
+        }
+        else if (strcmp(tok, "create") == 0) {
+            char *name; char *ipstr; char *portstr;
+            if (((name = strtok(NULL, DELIM)) == NULL) ||
+                ((ipstr = strtok(NULL, DELIM)) == NULL) ||
+                ((portstr = strtok(NULL, DELIM)) == NULL)) {
+                printf ("input error \n"); goto err;
+            }
+            if (maapi_create(sock, th, "/servers/server{%s}", name) !=
+                CONFD_OK) {
+                printf ("error: %d %s \n ", confd_errno,confd_lasterr());
+                goto err;
+            }
+            if (maapi_set_elem2(sock,th,ipstr,"/servers/server{%s}/ip",name)
+                != CONFD_OK) {
+                printf ("error: %d %s \n ", confd_errno, confd_lasterr());
+                goto err;
+            }
+            if (maapi_set_elem2(sock,th,portstr,"/servers/server{%s}/port",
+                                name)
+                != CONFD_OK) {
+                printf ("error: %d %s \n ", confd_errno, confd_lasterr());
+                goto err;
+            }
+        }
+        else if (strcmp(tok, "delete-config") == 0) {
+            if (maapi_delete_config(sock, dbname) != CONFD_OK)
+                printf ("error: %d, %s\n", confd_errno,
+                        confd_lasterr());
+        }
+
+        else if (strcmp(tok, "delete") == 0) {
+            char *name;
+            if ((name= strtok(NULL, DELIM)) == NULL) {
+                printf ("input error"); goto err;
+            }
+            if (maapi_delete(sock, th, "/servers/server{%s}", name)
+                != CONFD_OK) {
+                printf ("error: %s \n ", confd_lasterr());
+                goto err;
+            }
+        }
+        else if (strcmp(tok, "candidate-reset") == 0) {
+            if (maapi_candidate_reset(sock) != CONFD_OK)
+                printf ("error: %d, %s\n", confd_errno,
+                        confd_lasterr());
+        }
+
+        else if (strcmp(tok, "validate-trans") == 0) {
+            if (maapi_validate_trans(sock, th,1,1) == CONFD_OK) {
+                printf ("ok \n");
+            }
+            else {
+                printf ("nok: %s\n", confd_lasterr());
+            }
+        }
+        else if (strcmp(tok, "candidate-confirmed-commit") == 0) {
+            char *istr = strtok(NULL, DELIM);
+            if (!istr) {printf("input error\n"); goto err;}
+            if (maapi_candidate_confirmed_commit(sock, atoi(istr))!=CONFD_OK) {
+                printf("error: %s\n", confd_lasterr());
+            }
+            else {
+                printf("ok\n");
+            }
+        }
+        else if (strcmp(tok, "candidate-commit") == 0) {
+            if (maapi_candidate_commit(sock) != CONFD_OK) {
+                printf("error: %s\n", confd_lasterr());
+            }
+            else {
+                printf("ok\n");
+            }
+        }
+        else {
+            printf("commands \n");
+            printf("   show    - show current conf\n");
+            printf("   help    - show this text\n");
+            printf("   abort   - abort current trans \n");
+            printf("   commit  - commit current trans\n");
+            printf("   create name ip port  - create new server\n");
+            printf("   delete name          - delete server\n");
+            printf("   candidate-reset      - copy running into cand");
+            printf("   validate             - trans validate");
+            printf("   delete-config        - delete config");
+            printf("   candidate-commit     - copy cand to running | confirm");
+            printf("   candidate-confirmed-commit secs \n");
+
+            printf(" \n");
+        }
+          err:
+        printf("#cli "); fflush(stdout);
+    }
+}</pre></div><p>
+            The code above reads lines from stdin, parses the line
+            and invokes different MAAPI calls. For example, if we wish to
+            use the <span class="command"><strong>show</strong></span> command to show
+            the contents of the opened database, we first read the
+            two leaf elements, called <code class="sgmltag-element">/foo</code> and
+            <code class="sgmltag-element">/bar</code>.
+            We must check the return values from those read calls. If
+            we look at the data model, the values are defined as:
+          </p><div class="informalexample"><pre class="programlisting">  leaf foo {
+    type string;
+    default "fooo";
+  }
+  leaf bar {
+    type int32;
+    default 66;
+  }</pre></div><p>The above elements both have default values. However if we
+            open an empty candidate, they do not exist there.
+          </p><p>
+            Following that, in order to show the database, we must traverse
+            all <code class="sgmltag-element">/servers/server</code> instances and display them on the
+            screen. We do this by using a <code class="code">maapi_cursor</code>. A cursor
+            must first be initialized, and then we can use the cursor to
+            find out the key value(s) of the <code class="varname">next</code> element until
+            there are no more elements.
+          </p><p>
+            Another interesting call is the call to create a new
+            server. We create a new server instance through the call to
+            <code class="function">maapi_create(sock, th, "/servers/server{%s}", name)</code>.
+            Once we have created a new "server" instance we must
+            also set the values for the two leafs inside the
+            server instance, the <code class="sgmltag-element">ip</code> and the <code class="sgmltag-element">port</code> elements.
+            If we fail to do this, commit will fail.
+          </p><p>
+            There are two variants on the MAAPI function which sets a
+            a value. One where the value is a regular string, and one where
+            the value is of type <span class="type">confd_value_t</span>. Usually when
+            we implement a proprietary agent, somehow a user will enter
+            values as strings. In our code above, we use the string variant.
+          </p><p>This program can be found in the examples section of a ConfD
+          release, in the <code class="filename">misc/maapi_cli</code> directory.
+          </p><p>If we want to use MAAPI to implement a general purpose
+          agent which works on all data models, we can use the
+          <code class="code">confd_cs_node</code> tree that is generated when we call
+          <code class="function">maapi_load_schemas()</code>/<code class="function">confd_load_schemas()</code>,
+          see <a class="xref" href="rn02re15.html#man.3.confd_types.using_schema_information" title="USING SCHEMA INFORMATION">the section called &#8220;USING SCHEMA INFORMATION&#8221;</a> in
+          the <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a> manual page.
+          This is a representation of the complete data model in the
+          form of a tree of linked C structures.
+          </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch22.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch24.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;22.&nbsp;The RESTCONF API&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;24.&nbsp;High Availability</td></tr></table></div></body></html>

@@ -1,0 +1,527 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module confd.dp</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="confd.html"><font color="#ffffff">confd</font></a>.dp</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/dp.py">/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/dp.py</a></font></td></tr></table>
+    <p><tt>Callback&nbsp;module&nbsp;for&nbsp;connecting&nbsp;data&nbsp;providers&nbsp;to&nbsp;ConfD/NCS.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="confd.log.html">confd.log</a><br>
+<a href="_confd.html">_confd</a><br>
+<a href="errno.html">errno</a><br>
+<a href="functools.html">functools</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="confd.maagic.html">confd.maagic</a><br>
+<a href="confd.maapi.html">confd.maapi</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="confd.pool.html">confd.pool</a><br>
+<a href="select.html">select</a><br>
+<a href="socket.html">socket</a><br>
+<a href="threading.html">threading</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="confd.tm.html">confd.tm</a><br>
+<a href="traceback.html">traceback</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="confd.dp.html#Action">Action</a>
+</font></dt><dt><font face="helvetica, arial"><a href="confd.dp.html#StateManager">StateManager</a>
+</font></dt><dt><font face="helvetica, arial"><a href="confd.dp.html#TransactionCallback">TransactionCallback</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="threading.html#Thread">threading.Thread</a>(<a href="threading.html#_Verbose">threading._Verbose</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="confd.dp.html#Daemon">Daemon</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Action">class <strong>Action</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Action">Action</a>&nbsp;callback.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;makes&nbsp;it&nbsp;easy&nbsp;to&nbsp;create&nbsp;and&nbsp;register&nbsp;action&nbsp;callbacks&nbsp;by<br>
+sub-classing&nbsp;it&nbsp;and&nbsp;implementing&nbsp;cb_action&nbsp;in&nbsp;the&nbsp;derived&nbsp;class.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Action-__init__"><strong>__init__</strong></a>(self, daemon, actionpoint, log<font color="#909090">=None</font>, init_args<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+The&nbsp;'daemon'&nbsp;argument&nbsp;should&nbsp;be&nbsp;a&nbsp;<a href="#Daemon">Daemon</a>&nbsp;instance.&nbsp;'actionpoint'<br>
+is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;tailf:actionpoint&nbsp;to&nbsp;manage.&nbsp;'log'&nbsp;can&nbsp;be&nbsp;any<br>
+log&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;and&nbsp;if&nbsp;not&nbsp;set&nbsp;the&nbsp;<a href="#Daemon">Daemon</a>&nbsp;logger&nbsp;will&nbsp;be&nbsp;used.<br>
+'init_args'&nbsp;may&nbsp;be&nbsp;any&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;that&nbsp;will&nbsp;be&nbsp;passed&nbsp;into&nbsp;<a href="#Action-init">init</a>()<br>
+when&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;is&nbsp;constructed.&nbsp;Lastly,&nbsp;the&nbsp;low-level&nbsp;function<br>
+dp.register_action_cbs()&nbsp;will&nbsp;be&nbsp;called.<br>
+&nbsp;<br>
+When&nbsp;using&nbsp;this&nbsp;class&nbsp;together&nbsp;with&nbsp;ncs.application.Application<br>
+there&nbsp;is&nbsp;no&nbsp;need&nbsp;to&nbsp;manually&nbsp;initialize&nbsp;this&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;as&nbsp;it&nbsp;is<br>
+done&nbsp;by&nbsp;the&nbsp;Application.register_action()&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="Action-cb_init"><strong>cb_init</strong></a>(self, uinfo)</dt><dd><tt>The&nbsp;cb_init&nbsp;callback&nbsp;must&nbsp;always&nbsp;be&nbsp;implemented.<br>
+&nbsp;<br>
+This&nbsp;default&nbsp;implementation&nbsp;will&nbsp;associate&nbsp;a&nbsp;new&nbsp;worker&nbsp;socket<br>
+with&nbsp;this&nbsp;callback.</tt></dd></dl>
+
+<dl><dt><a name="Action-init"><strong>init</strong></a>(self, init_args)</dt><dd><tt>Custom&nbsp;initialization.<br>
+&nbsp;<br>
+When&nbsp;registering&nbsp;an&nbsp;action&nbsp;using&nbsp;ncs.application.Application&nbsp;this<br>
+method&nbsp;will&nbsp;be&nbsp;called&nbsp;with&nbsp;the&nbsp;'init_args'&nbsp;passed&nbsp;into&nbsp;the<br>
+register_action()&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Action-start"><strong>start</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Action-stop"><strong>stop</strong></a>(self)</dt></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Action-action"><strong>action</strong></a>(fn)</dt><dd><tt>Decorator&nbsp;for&nbsp;the&nbsp;cb_action&nbsp;callback.<br>
+&nbsp;<br>
+Only&nbsp;use&nbsp;this&nbsp;decorator&nbsp;for&nbsp;actions&nbsp;of&nbsp;tailf:action&nbsp;type.<br>
+&nbsp;<br>
+Using&nbsp;this&nbsp;decorator&nbsp;alters&nbsp;the&nbsp;signature&nbsp;of&nbsp;the&nbsp;cb_action&nbsp;callback<br>
+and&nbsp;passes&nbsp;in&nbsp;maagic.Node&nbsp;objects&nbsp;for&nbsp;input&nbsp;and&nbsp;output&nbsp;action&nbsp;data.<br>
+&nbsp;<br>
+Example&nbsp;of&nbsp;a&nbsp;decorated&nbsp;cb_action:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@<a href="#Action">Action</a>.action<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_action(self,&nbsp;uinfo,&nbsp;name,&nbsp;kp,&nbsp;input,&nbsp;output):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Keyword&nbsp;arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;uinfo&nbsp;--&nbsp;a&nbsp;UserInfo&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;--&nbsp;the&nbsp;tailf:action&nbsp;name&nbsp;(string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kp&nbsp;--&nbsp;the&nbsp;keypath&nbsp;of&nbsp;the&nbsp;action&nbsp;(HKeypathRef)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input&nbsp;--&nbsp;input&nbsp;node&nbsp;(maagic.Node)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;output&nbsp;--&nbsp;output&nbsp;node&nbsp;(maagic.Node)</tt></dd></dl>
+
+<dl><dt><a name="Action-rpc"><strong>rpc</strong></a>(fn)</dt><dd><tt>Decorator&nbsp;for&nbsp;the&nbsp;cb_action&nbsp;callback.<br>
+&nbsp;<br>
+Only&nbsp;use&nbsp;this&nbsp;decorator&nbsp;for&nbsp;rpc:s.<br>
+&nbsp;<br>
+Using&nbsp;this&nbsp;decorator&nbsp;alters&nbsp;the&nbsp;signature&nbsp;of&nbsp;the&nbsp;cb_action&nbsp;callback<br>
+and&nbsp;passes&nbsp;in&nbsp;maagic.Node&nbsp;objects&nbsp;for&nbsp;input&nbsp;and&nbsp;output&nbsp;action&nbsp;data.<br>
+&nbsp;<br>
+Example&nbsp;of&nbsp;a&nbsp;decorated&nbsp;cb_action:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@<a href="#Action">Action</a>.rpc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;cb_action(self,&nbsp;uinfo,&nbsp;name,&nbsp;input,&nbsp;output):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pass<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Keyword&nbsp;arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;uinfo&nbsp;--&nbsp;a&nbsp;UserInfo&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;--&nbsp;the&nbsp;rpc&nbsp;name&nbsp;(string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input&nbsp;--&nbsp;input&nbsp;node&nbsp;(maagic.Node)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;output&nbsp;--&nbsp;output&nbsp;node&nbsp;(maagic.Node)</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Daemon">class <strong>Daemon</strong></a>(<a href="threading.html#Thread">threading.Thread</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Manage&nbsp;a&nbsp;data&nbsp;provider&nbsp;connection&nbsp;towards&nbsp;ConfD/NCS.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="confd.dp.html#Daemon">Daemon</a></dd>
+<dd><a href="threading.html#Thread">threading.Thread</a></dd>
+<dd><a href="threading.html#_Verbose">threading._Verbose</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Daemon-__init__"><strong>__init__</strong></a>(self, name, log<font color="#909090">=None</font>, ip<font color="#909090">='127.0.0.1'</font>, port<font color="#909090">=4565</font>, path<font color="#909090">=None</font>, state_mgr<font color="#909090">=None</font>)</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#Daemon">Daemon</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+The&nbsp;'name'&nbsp;argument&nbsp;should&nbsp;be&nbsp;unique.&nbsp;It&nbsp;will&nbsp;show&nbsp;up&nbsp;in&nbsp;the<br>
+CLI&nbsp;and&nbsp;in&nbsp;error&nbsp;messages.&nbsp;All&nbsp;other&nbsp;arguments&nbsp;are&nbsp;optional.<br>
+Argument&nbsp;'log'&nbsp;can&nbsp;be&nbsp;any&nbsp;log&nbsp;<a href="__builtin__.html#object">object</a>,&nbsp;and&nbsp;if&nbsp;not&nbsp;set&nbsp;the&nbsp;standard<br>
+logging&nbsp;mechanism&nbsp;will&nbsp;be&nbsp;used.&nbsp;Set&nbsp;'ip'&nbsp;and&nbsp;'port'&nbsp;to<br>
+where&nbsp;your&nbsp;Confd/NCS&nbsp;server&nbsp;is.&nbsp;'path'&nbsp;is&nbsp;a&nbsp;filename&nbsp;to&nbsp;a&nbsp;unix<br>
+domain&nbsp;socket&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;place&nbsp;of&nbsp;'ip'&nbsp;and&nbsp;'port'.&nbsp;If&nbsp;'path'<br>
+is&nbsp;provided,&nbsp;'ip'&nbsp;and&nbsp;'port'&nbsp;arguments&nbsp;are&nbsp;ignored.<br>
+&nbsp;<br>
+<a href="#Daemon">Daemon</a>&nbsp;supports&nbsp;automatic&nbsp;restarting&nbsp;in&nbsp;case&nbsp;of&nbsp;error&nbsp;if&nbsp;a<br>
+state&nbsp;manager&nbsp;is&nbsp;provided&nbsp;using&nbsp;the&nbsp;state_mgr&nbsp;parameter.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-ctx"><strong>ctx</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;daemon&nbsp;context.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-finish"><strong>finish</strong></a>(self)</dt><dd><tt>Stop&nbsp;the&nbsp;daemon&nbsp;thread.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-ip"><strong>ip</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;ip&nbsp;address.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-load_schemas"><strong>load_schemas</strong></a>(self)</dt><dd><tt>Load&nbsp;schema&nbsp;information&nbsp;into&nbsp;the&nbsp;process&nbsp;memory.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-path"><strong>path</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;unix&nbsp;domain&nbsp;socket&nbsp;path.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-port"><strong>port</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;port.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-register_trans_cb"><strong>register_trans_cb</strong></a>(self, trans_cb_cls<font color="#909090">=&lt;class 'confd.dp.TransactionCallback'&gt;</font>)</dt><dd><tt>Register&nbsp;a&nbsp;transaction&nbsp;callback&nbsp;class.<br>
+&nbsp;<br>
+It's&nbsp;not&nbsp;necessary&nbsp;to&nbsp;call&nbsp;this&nbsp;method.&nbsp;Only&nbsp;do&nbsp;that&nbsp;if&nbsp;a&nbsp;custom<br>
+transaction&nbsp;callback&nbsp;will&nbsp;be&nbsp;used.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-run"><strong>run</strong></a>(self)</dt><dd><tt><a href="#Daemon">Daemon</a>&nbsp;thread&nbsp;processing&nbsp;loop.<br>
+&nbsp;<br>
+Don't&nbsp;call&nbsp;this&nbsp;method&nbsp;explicitly.&nbsp;It&nbsp;handles&nbsp;reading&nbsp;of&nbsp;control<br>
+and&nbsp;worker&nbsp;sockets&nbsp;and&nbsp;notifying&nbsp;ConfD/NCS&nbsp;that&nbsp;it&nbsp;should&nbsp;continue<br>
+processing&nbsp;by&nbsp;calling&nbsp;the&nbsp;low-level&nbsp;function&nbsp;dp.fd_ready().<br>
+If&nbsp;the&nbsp;connection&nbsp;towards&nbsp;ConfD/NCS&nbsp;is&nbsp;broken&nbsp;or&nbsp;if&nbsp;<a href="#Daemon-finish">finish</a>()&nbsp;is<br>
+explicitly&nbsp;called,&nbsp;this&nbsp;function&nbsp;(and&nbsp;the&nbsp;thread)&nbsp;will&nbsp;end.</tt></dd></dl>
+
+<dl><dt><a name="Daemon-start"><strong>start</strong></a>(self)</dt><dd><tt>Start&nbsp;daemon&nbsp;work&nbsp;thread.<br>
+&nbsp;<br>
+After&nbsp;registering&nbsp;any&nbsp;callbacks&nbsp;(action,&nbsp;services&nbsp;and&nbsp;such),&nbsp;call<br>
+this&nbsp;function&nbsp;to&nbsp;start&nbsp;processing.&nbsp;The&nbsp;low-level&nbsp;function<br>
+dp.register_done()&nbsp;will&nbsp;be&nbsp;called&nbsp;before&nbsp;the&nbsp;thread&nbsp;is&nbsp;started.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>wsock</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>INIT_RETRY_INTERVAL_S</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="threading.html#Thread">threading.Thread</a>:<br>
+<dl><dt><a name="Daemon-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Daemon-getName"><strong>getName</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Daemon-isAlive"><strong>isAlive</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Daemon-isDaemon"><strong>isDaemon</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Daemon-is_alive"><strong>is_alive</strong></a> = isAlive(self)</dt></dl>
+
+<dl><dt><a name="Daemon-join"><strong>join</strong></a>(self, timeout<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Daemon-setDaemon"><strong>setDaemon</strong></a>(self, daemonic)</dt></dl>
+
+<dl><dt><a name="Daemon-setName"><strong>setName</strong></a>(self, name)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="threading.html#Thread">threading.Thread</a>:<br>
+<dl><dt><strong>daemon</strong></dt>
+</dl>
+<dl><dt><strong>ident</strong></dt>
+</dl>
+<dl><dt><strong>name</strong></dt>
+</dl>
+<hr>
+Data descriptors inherited from <a href="threading.html#_Verbose">threading._Verbose</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="StateManager">class <strong>StateManager</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;state&nbsp;managers&nbsp;used&nbsp;with&nbsp;<a href="#Daemon">Daemon</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="StateManager-__init__"><strong>__init__</strong></a>(self, log)</dt></dl>
+
+<dl><dt><a name="StateManager-setup"><strong>setup</strong></a>(self, state, previous_state)</dt></dl>
+
+<dl><dt><a name="StateManager-teardown"><strong>teardown</strong></a>(self, state, finished)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TransactionCallback">class <strong>TransactionCallback</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Default&nbsp;transaction&nbsp;callback&nbsp;implementation&nbsp;class.<br>
+&nbsp;<br>
+When&nbsp;connecting&nbsp;data&nbsp;providers&nbsp;to&nbsp;ConfD/NCS&nbsp;a&nbsp;transaction&nbsp;callback<br>
+handler&nbsp;must&nbsp;be&nbsp;provided.&nbsp;This&nbsp;class&nbsp;is&nbsp;a&nbsp;generic&nbsp;implementation&nbsp;of<br>
+such&nbsp;a&nbsp;handler.&nbsp;It&nbsp;implements&nbsp;the&nbsp;only&nbsp;required&nbsp;callback&nbsp;'cb_init'.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TransactionCallback-__init__"><strong>__init__</strong></a>(self, state)</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#TransactionCallback">TransactionCallback</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+The&nbsp;argument&nbsp;'wsock'&nbsp;is&nbsp;the&nbsp;connected&nbsp;worker&nbsp;socket&nbsp;and&nbsp;'log'<br>
+is&nbsp;a&nbsp;log&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="TransactionCallback-cb_finish"><strong>cb_finish</strong></a>(self, tctx)</dt></dl>
+
+<dl><dt><a name="TransactionCallback-cb_init"><strong>cb_init</strong></a>(self, tctx)</dt><dd><tt>The&nbsp;cb_init&nbsp;callback&nbsp;must&nbsp;always&nbsp;be&nbsp;implemented.<br>
+&nbsp;<br>
+It&nbsp;is&nbsp;required&nbsp;to&nbsp;prepare&nbsp;for&nbsp;future&nbsp;read/write&nbsp;operations&nbsp;towards<br>
+the&nbsp;data&nbsp;source.&nbsp;This&nbsp;default&nbsp;implementation&nbsp;associates&nbsp;a&nbsp;worker<br>
+socket&nbsp;with&nbsp;a&nbsp;transaction.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-return_worker_socket"><strong>return_worker_socket</strong></a>(state, key)</dt><dd><tt>Return&nbsp;worker&nbsp;socket&nbsp;associated&nbsp;with&nbsp;a&nbsp;worker&nbsp;thread&nbsp;from&nbsp;<a href="#Daemon">Daemon</a>/state.<br>
+&nbsp;<br>
+Return&nbsp;worker&nbsp;socket&nbsp;to&nbsp;pool.</tt></dd></dl>
+ <dl><dt><a name="-take_worker_socket"><strong>take_worker_socket</strong></a>(state, name, key)</dt><dd><tt>Take&nbsp;worker&nbsp;socket&nbsp;associated&nbsp;with&nbsp;a&nbsp;worker&nbsp;thread&nbsp;from&nbsp;<a href="#Daemon">Daemon</a>/state.<br>
+&nbsp;<br>
+Take&nbsp;worker&nbsp;socket&nbsp;from&nbsp;pool,&nbsp;must&nbsp;be&nbsp;returned&nbsp;with<br>
+dp.return_worker_socket&nbsp;after&nbsp;use.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCESS_CHK_FINAL</strong> = 512<br>
+<strong>ACCESS_CHK_INTERMEDIATE</strong> = 256<br>
+<strong>ACCESS_OP_CREATE</strong> = 4<br>
+<strong>ACCESS_OP_DELETE</strong> = 16<br>
+<strong>ACCESS_OP_EXECUTE</strong> = 2<br>
+<strong>ACCESS_OP_READ</strong> = 1<br>
+<strong>ACCESS_OP_UPDATE</strong> = 8<br>
+<strong>ACCESS_OP_WRITE</strong> = 32<br>
+<strong>ACCESS_RESULT_ACCEPT</strong> = 0<br>
+<strong>ACCESS_RESULT_CONTINUE</strong> = 2<br>
+<strong>ACCESS_RESULT_DEFAULT</strong> = 3<br>
+<strong>ACCESS_RESULT_REJECT</strong> = 1<br>
+<strong>BAD_VALUE_BAD_KEY_TAG</strong> = 32<br>
+<strong>BAD_VALUE_BAD_LEXICAL</strong> = 19<br>
+<strong>BAD_VALUE_BAD_TAG</strong> = 21<br>
+<strong>BAD_VALUE_BAD_VALUE</strong> = 20<br>
+<strong>BAD_VALUE_CUSTOM_FACET_ERROR_MESSAGE</strong> = 16<br>
+<strong>BAD_VALUE_ENUMERATION</strong> = 11<br>
+<strong>BAD_VALUE_FRACTION_DIGITS</strong> = 3<br>
+<strong>BAD_VALUE_INVALID_FACET</strong> = 18<br>
+<strong>BAD_VALUE_INVALID_REGEX</strong> = 9<br>
+<strong>BAD_VALUE_INVALID_TYPE_NAME</strong> = 23<br>
+<strong>BAD_VALUE_INVALID_XPATH</strong> = 34<br>
+<strong>BAD_VALUE_LENGTH</strong> = 15<br>
+<strong>BAD_VALUE_MAX_EXCLUSIVE</strong> = 5<br>
+<strong>BAD_VALUE_MAX_INCLUSIVE</strong> = 6<br>
+<strong>BAD_VALUE_MAX_LENGTH</strong> = 14<br>
+<strong>BAD_VALUE_MIN_EXCLUSIVE</strong> = 7<br>
+<strong>BAD_VALUE_MIN_INCLUSIVE</strong> = 8<br>
+<strong>BAD_VALUE_MIN_LENGTH</strong> = 13<br>
+<strong>BAD_VALUE_MISSING_NAMESPACE</strong> = 27<br>
+<strong>BAD_VALUE_NOT_RESTRICTED_XPATH</strong> = 35<br>
+<strong>BAD_VALUE_NO_DEFAULT_NAMESPACE</strong> = 24<br>
+<strong>BAD_VALUE_PATTERN</strong> = 12<br>
+<strong>BAD_VALUE_POP_TOO_FAR</strong> = 31<br>
+<strong>BAD_VALUE_RANGE</strong> = 29<br>
+<strong>BAD_VALUE_STRING_FUN</strong> = 1<br>
+<strong>BAD_VALUE_SYMLINK_BAD_KEY_REFERENCE</strong> = 33<br>
+<strong>BAD_VALUE_TOTAL_DIGITS</strong> = 4<br>
+<strong>BAD_VALUE_UNIQUELIST</strong> = 10<br>
+<strong>BAD_VALUE_UNKNOWN_BIT_LABEL</strong> = 22<br>
+<strong>BAD_VALUE_UNKNOWN_NAMESPACE</strong> = 26<br>
+<strong>BAD_VALUE_UNKNOWN_NAMESPACE_PREFIX</strong> = 25<br>
+<strong>BAD_VALUE_USER_ERROR</strong> = 17<br>
+<strong>BAD_VALUE_VALUE2VALUE_FUN</strong> = 28<br>
+<strong>BAD_VALUE_WRONG_DECIMAL64_FRACTION_DIGITS</strong> = 2<br>
+<strong>BAD_VALUE_WRONG_NUMBER_IDENTIFIERS</strong> = 30<br>
+<strong>BAD_VALUE_XPATH_ERROR</strong> = 36<br>
+<strong>CLI_ACTION_NOT_FOUND</strong> = 13<br>
+<strong>CLI_AMBIGUOUS_COMMAND</strong> = 63<br>
+<strong>CLI_BAD_ACTION_RESPONSE</strong> = 16<br>
+<strong>CLI_BAD_LEAF_VALUE</strong> = 6<br>
+<strong>CLI_COMMAND_ABORTED</strong> = 2<br>
+<strong>CLI_COMMAND_ERROR</strong> = 1<br>
+<strong>CLI_COMMAND_FAILED</strong> = 3<br>
+<strong>CLI_CONFIRMED_NOT_SUPPORTED</strong> = 39<br>
+<strong>CLI_COPY_CONFIG_FAILED</strong> = 32<br>
+<strong>CLI_COPY_FAILED</strong> = 31<br>
+<strong>CLI_COPY_PATH_IDENTICAL</strong> = 33<br>
+<strong>CLI_CREATE_PATH</strong> = 23<br>
+<strong>CLI_CUSTOM_ERROR</strong> = 4<br>
+<strong>CLI_DELETE_ALL_FAILED</strong> = 10<br>
+<strong>CLI_DELETE_ERROR</strong> = 12<br>
+<strong>CLI_DELETE_FAILED</strong> = 11<br>
+<strong>CLI_ELEMENT_DOES_NOT_EXIST</strong> = 66<br>
+<strong>CLI_ELEMENT_NOT_FOUND</strong> = 14<br>
+<strong>CLI_ELEM_NOT_WRITABLE</strong> = 7<br>
+<strong>CLI_EXPECTED_BOL</strong> = 56<br>
+<strong>CLI_EXPECTED_EOL</strong> = 57<br>
+<strong>CLI_FAILED_COPY_RUNNING</strong> = 38<br>
+<strong>CLI_FAILED_CREATE_CONTEXT</strong> = 37<br>
+<strong>CLI_FAILED_OPEN_STARTUP</strong> = 41<br>
+<strong>CLI_FAILED_OPEN_STARTUP_CONFIG</strong> = 42<br>
+<strong>CLI_FAILED_TERM_REDIRECT</strong> = 49<br>
+<strong>CLI_ILLEGAL_DIRECTORY_NAME</strong> = 52<br>
+<strong>CLI_ILLEGAL_FILENAME</strong> = 53<br>
+<strong>CLI_INCOMPLETE_CMD_PATH</strong> = 67<br>
+<strong>CLI_INCOMPLETE_COMMAND</strong> = 9<br>
+<strong>CLI_INCOMPLETE_PATH</strong> = 8<br>
+<strong>CLI_INCOMPLETE_PATTERN</strong> = 64<br>
+<strong>CLI_INVALID_PARAMETER</strong> = 54<br>
+<strong>CLI_INVALID_PASSWORD</strong> = 21<br>
+<strong>CLI_INVALID_PATH</strong> = 58<br>
+<strong>CLI_INVALID_ROLLBACK_NR</strong> = 15<br>
+<strong>CLI_INVALID_SELECT</strong> = 59<br>
+<strong>CLI_MESSAGE_TOO_LARGE</strong> = 48<br>
+<strong>CLI_MISSING_ACTION_PARAM</strong> = 17<br>
+<strong>CLI_MISSING_ACTION_PARAM_VALUE</strong> = 18<br>
+<strong>CLI_MISSING_ARGUMENT</strong> = 69<br>
+<strong>CLI_MISSING_DISPLAY_GROUP</strong> = 55<br>
+<strong>CLI_MISSING_ELEMENT</strong> = 65<br>
+<strong>CLI_MISSING_VALUE</strong> = 68<br>
+<strong>CLI_MOVE_FAILED</strong> = 30<br>
+<strong>CLI_MUST_BE_AN_INTEGER</strong> = 70<br>
+<strong>CLI_MUST_BE_INTEGER</strong> = 43<br>
+<strong>CLI_MUST_BE_TRUE_OR_FALSE</strong> = 71<br>
+<strong>CLI_NOT_ALLOWED</strong> = 5<br>
+<strong>CLI_NOT_A_DIRECTORY</strong> = 50<br>
+<strong>CLI_NOT_A_FILE</strong> = 51<br>
+<strong>CLI_NOT_FOUND</strong> = 28<br>
+<strong>CLI_NOT_SUPPORTED</strong> = 34<br>
+<strong>CLI_NOT_WRITABLE</strong> = 27<br>
+<strong>CLI_NO_SUCH_ELEMENT</strong> = 45<br>
+<strong>CLI_NO_SUCH_SESSION</strong> = 44<br>
+<strong>CLI_NO_SUCH_USER</strong> = 47<br>
+<strong>CLI_ON_LINE</strong> = 25<br>
+<strong>CLI_ON_LINE_DESC</strong> = 26<br>
+<strong>CLI_OPEN_FILE</strong> = 20<br>
+<strong>CLI_READ_ERROR</strong> = 19<br>
+<strong>CLI_REALLOCATE</strong> = 24<br>
+<strong>CLI_SENSITIVE_DATA</strong> = 73<br>
+<strong>CLI_SET_FAILED</strong> = 29<br>
+<strong>CLI_START_REPLAY_FAILED</strong> = 72<br>
+<strong>CLI_TARGET_EXISTS</strong> = 35<br>
+<strong>CLI_UNKNOWN_ARGUMENT</strong> = 61<br>
+<strong>CLI_UNKNOWN_COMMAND</strong> = 62<br>
+<strong>CLI_UNKNOWN_ELEMENT</strong> = 60<br>
+<strong>CLI_UNKNOWN_HIDEGROUP</strong> = 22<br>
+<strong>CLI_UNKNOWN_MODE</strong> = 36<br>
+<strong>CLI_WILDCARD_NOT_ALLOWED</strong> = 46<br>
+<strong>CLI_WRITE_CONFIG_FAILED</strong> = 40<br>
+<strong>COMPLETION</strong> = 0<br>
+<strong>COMPLETION_DEFAULT</strong> = 3<br>
+<strong>COMPLETION_DESC</strong> = 2<br>
+<strong>COMPLETION_INFO</strong> = 1<br>
+<strong>CONTROL_SOCKET</strong> = 0<br>
+<strong>C_CREATE</strong> = 2<br>
+<strong>C_MOVE_AFTER</strong> = 6<br>
+<strong>C_REMOVE</strong> = 3<br>
+<strong>C_SET_ATTR</strong> = 5<br>
+<strong>C_SET_CASE</strong> = 4<br>
+<strong>C_SET_ELEM</strong> = 1<br>
+<strong>DAEMON_FLAG_BULK_GET_CONTAINER</strong> = 128<br>
+<strong>DAEMON_FLAG_LEAF_LIST_AS_LEAF</strong> = 32<br>
+<strong>DAEMON_FLAG_NO_DEFAULTS</strong> = 4<br>
+<strong>DAEMON_FLAG_PREFER_BULK_GET</strong> = 64<br>
+<strong>DAEMON_FLAG_REG_DONE</strong> = 65536<br>
+<strong>DAEMON_FLAG_REG_REPLACE_DISCONNECT</strong> = 16<br>
+<strong>DAEMON_FLAG_SEND_IKP</strong> = 1<br>
+<strong>DAEMON_FLAG_STRINGSONLY</strong> = 2<br>
+<strong>ERRTYPE_BAD_VALUE</strong> = 2<br>
+<strong>ERRTYPE_CLI</strong> = 4<br>
+<strong>ERRTYPE_MISC</strong> = 8<br>
+<strong>ERRTYPE_OPERATION</strong> = 16<br>
+<strong>ERRTYPE_VALIDATION</strong> = 1<br>
+<strong>MISC_ACCESS_DENIED</strong> = 5<br>
+<strong>MISC_APPLICATION</strong> = 19<br>
+<strong>MISC_APPLICATION_INTERNAL</strong> = 20<br>
+<strong>MISC_BAD_PERSIST_ID</strong> = 16<br>
+<strong>MISC_CANDIDATE_ABORT_BAD_USID</strong> = 17<br>
+<strong>MISC_CDB_OPER_UNAVAILABLE</strong> = 37<br>
+<strong>MISC_DATA_MISSING</strong> = 44<br>
+<strong>MISC_EXTERNAL</strong> = 22<br>
+<strong>MISC_EXTERNAL_TIMEOUT</strong> = 45<br>
+<strong>MISC_FILE_ACCESS_PATH</strong> = 33<br>
+<strong>MISC_FILE_BAD_PATH</strong> = 34<br>
+<strong>MISC_FILE_BAD_VALUE</strong> = 35<br>
+<strong>MISC_FILE_CORRUPT</strong> = 52<br>
+<strong>MISC_FILE_CREATE_PATH</strong> = 29<br>
+<strong>MISC_FILE_DELETE_PATH</strong> = 32<br>
+<strong>MISC_FILE_EOF</strong> = 36<br>
+<strong>MISC_FILE_MOVE_PATH</strong> = 30<br>
+<strong>MISC_FILE_OPEN_ERROR</strong> = 27<br>
+<strong>MISC_FILE_SET_PATH</strong> = 31<br>
+<strong>MISC_FILE_SYNTAX_ERROR</strong> = 28<br>
+<strong>MISC_FILE_SYNTAX_ERROR_1</strong> = 26<br>
+<strong>MISC_INCONSISTENT_VALUE</strong> = 7<br>
+<strong>MISC_INDEXED_VIEW_LIST_HOLE</strong> = 46<br>
+<strong>MISC_INDEXED_VIEW_LIST_TOO_BIG</strong> = 18<br>
+<strong>MISC_INTERNAL</strong> = 21<br>
+<strong>MISC_INTERRUPT</strong> = 10<br>
+<strong>MISC_IN_USE</strong> = 3<br>
+<strong>MISC_LOCKED_BY</strong> = 4<br>
+<strong>MISC_MISSING_INSTANCE</strong> = 8<br>
+<strong>MISC_NODE_IS_READONLY</strong> = 13<br>
+<strong>MISC_NODE_WAS_READONLY</strong> = 14<br>
+<strong>MISC_NOT_IMPLEMENTED</strong> = 43<br>
+<strong>MISC_NO_SUCH_FILE</strong> = 2<br>
+<strong>MISC_OPERATION_NOT_SUPPORTED</strong> = 38<br>
+<strong>MISC_PROTO_USAGE</strong> = 23<br>
+<strong>MISC_RESOURCE_DENIED</strong> = 6<br>
+<strong>MISC_ROLLBACK_DISABLED</strong> = 1<br>
+<strong>MISC_SNMP_BAD_INDEX</strong> = 42<br>
+<strong>MISC_SNMP_BAD_VALUE</strong> = 41<br>
+<strong>MISC_SNMP_ERROR</strong> = 39<br>
+<strong>MISC_SNMP_TIMEOUT</strong> = 40<br>
+<strong>MISC_SUBAGENT_DOWN</strong> = 24<br>
+<strong>MISC_SUBAGENT_ERROR</strong> = 25<br>
+<strong>MISC_TOO_MANY_SESSIONS</strong> = 11<br>
+<strong>MISC_TOO_MANY_TRANSACTIONS</strong> = 12<br>
+<strong>MISC_UPGRADE_IN_PROGRESS</strong> = 15<br>
+<strong>MISC_WHEN_FAILED</strong> = 9<br>
+<strong>MISC_XPATH_COMPILE</strong> = 51<br>
+<strong>WORKER_SOCKET</strong> = 1<br>
+<strong>absolute_import</strong> = _Feature((2, 5, 0, 'alpha', 1), (3, 0, 0, 'alpha', 0), 16384)<br>
+<strong>print_function</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 65536)</td></tr></table>
+</body></html>

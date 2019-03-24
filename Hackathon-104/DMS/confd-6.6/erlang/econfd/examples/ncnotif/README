@@ -1,0 +1,21 @@
+This example shows how to work with NETCONF notifications.
+
+To run
+
+% make all
+% make start
+% make estart
+
+And then in another xterm
+
+% netconf-console-tcp -s raw sub.xml
+
+or
+
+
+% netconf-console-tcp -s raw replay.xml
+
+The user code resides in notif.erl
+
+
+

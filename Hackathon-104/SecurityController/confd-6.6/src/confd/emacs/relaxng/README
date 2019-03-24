@@ -1,0 +1,82 @@
+How to configure Emacs to automatically validate xml based files
+--------------------------------------------------------------------------
+
+  Confspec, clispec and confd.conf are just special cases of XML files, and
+  fit neatly into the nxml-mode validation system.
+
+  If you are not familiar with nxml-mode, read the final section first.
+
+  You need these files:
+
+    o confd_cfg.rnc
+    o clispec.rnc
+    o xschema.rnc
+    o schemas.xml
+
+  Put these files wherever you like, but together. If the RNC files
+  are not in the same directory as schemas.xml,
+  schemas.xml needs to be edited to point to the correct location.
+
+  Clispec files have the suffix ".cli". To enter nxml-mode
+  automatically, put the following in your .emacs file:
+
+  (require 'nxml-mode)
+  (setq auto-mode-alist (append (list (cons "\\.cli\\'" 'nxml-mode)
+                                      (cons "\\.conf\\'" 'nxml-mode))
+                                auto-mode-alist))
+  (setq nxml-slash-auto-complete-flag t)
+  (load "rng-auto.el")
+
+  ".conf" may be a too general suffix to denote confd.conf files
+  exclusively. In that case, omit it from the command above, and also
+  remove the corresponding entry in schemas.xml.
+
+  To make nxml-mode find the file schemas.xml, which points out
+  our .rnc files, put also the following in your .emacs file (edit the
+  file name according to your own choice):
+
+  (require 'rng-valid)
+  (setq rng-schema-locating-files (append rng-schema-locating-files
+                                          '("~/relaxng/schemas.xml")))
+
+  Or if your CONFD_DIR variable is set:
+
+  (setq rng-schema-locating-files
+      (append rng-schema-locating-files
+              '("${CONFD_DIR}/src/confd/emacs/relaxng/schemas.xml")))
+
+  Now all is set for editing .cs and .cli files, and confd.conf.
+
+Notes on the files
+------------------
+
+clispec.rnc is the Relax NG schema for clipecs. It corresponds
+closely to the XML Schema for clispecs (clispec.xsd, included in the
+ConfD distribution, or as
+http://www.tail-f.com/ns/clispec/1.0/). Correspondingly
+for confd_cfg.rnc.
+
+xschema.rnc is the Relax NG schema for XML schemas. xschema.rnc is
+almost identical to a xmlschema.rnc, often already included in the
+nxml-mode installation, but without the top-level node, since
+confspecs are not XML schemas.  In xschema.rnc, additionally, an
+attribute xs:idValue has been added to xs:enumeration, as well as the
+ConfD extension confd:typepoint to xs:simpleType.
+
+schemas.xml is the file that defines the connection between the XML
+file (by suffix, namespace, etc.) and the particular Relax NG schema
+file to use for validating it. The predefined connections can be found
+in the main schemas.xml file, indicated by the original value of the
+elisp variable rng-schema-locating-files.
+
+Using nxml-mode to edit and validate XML files
+----------------------------------------------
+
+Do you have nxml-mode installed? Visit a file with the suffix ".xml"
+and see whether the modeline shows "nXML". If it does, the modeline
+will also say either "Valid" or "Invalid", depending on whether the
+buffer contains valid XML data or not.
+
+If you don't have nxml-mode installed, fetch it. Its home page is
+http://www.thaiopensource.com/nxml-mode/. It may also be available as
+a downloadable package for your operating system.
