@@ -1,0 +1,163 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="next" href="rn01re02.html" title="confd_aaa_bridge"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">confd</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01re02.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.confd"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.confd.name"></a><h2>Name</h2><p>confd &#8212; command to start and control the ConfD daemon</p></div><div class="refsynopsisdiv"><a name="man.1.confd.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">confd</code>  [--conf <em class="replaceable"><code>ConfFile</code></em>] [--cd <em class="replaceable"><code>Dir</code></em>] [--libdir <em class="replaceable"><code>LibDir</code></em>] [--addloadpath <em class="replaceable"><code>Dir</code></em>] [--nolog ] [--smp <em class="replaceable"><code>Nr</code></em>] [
+         --foreground  
+         [ -v  |   --verbose ]
+         [--stop-on-eof]
+      ] [--ignore-initial-validation ] [--full-upgrade-validation ] [--start-phase0 ] [
+         --epoll  
+         { true  |   false }
+      ]</p></div><div class="cmdsynopsis"><p><code class="command">confd</code>  { --wait-phase0[
+        <em class="replaceable"><code>TryTime</code></em>]  |   --start-phase1   |   --start-phase2   |   --wait-started[
+        <em class="replaceable"><code>TryTime</code></em>]  |   --clear-aaa-cache   |   --reload   |   --areload   |   --status   |   --check-callbacks
+          [ <em class="replaceable"><code>Namespace</code></em>  |   <em class="replaceable"><code>Path</code></em> ]
+          |   --loadfile <em class="replaceable"><code>File</code></em>  |   --rollback <em class="replaceable"><code>Nr</code></em>  |   --debug-dump <em class="replaceable"><code>File</code></em>  |   --cli-j-dump <em class="replaceable"><code>File</code></em>  |   --cli-i-dump <em class="replaceable"><code>File</code></em>  |   --cli-c-dump <em class="replaceable"><code>File</code></em>  |   --cli-check-templates  |   --loadxmlfiles
+        <em class="replaceable"><code>File</code></em>...  |   --mergexmlfiles
+        <em class="replaceable"><code>File</code></em>...  |   --cdb-backup <em class="replaceable"><code>File</code></em>  |   --stop  } [--timeout <em class="replaceable"><code>MaxTime</code></em>]</p></div><div class="cmdsynopsis"><p><code class="command">confd</code>  { --version   |   --cdb-debug-dump <em class="replaceable"><code>Directory</code></em>  |   --printlog <em class="replaceable"><code>BaseFileName</code></em>  |   --set-snmp-engine-boots <em class="replaceable"><code>Nr</code></em> }</p></div></div><div class="refsect1"><a name="man.1.confd.description"></a><h2>DESCRIPTION</h2><p>Use this command to start and control the ConfD daemon.</p></div><div class="refsect1"><a name="man.1.confd.options"></a><h2>STARTING CONFD</h2><p>These options are relevant when starting the ConfD daemon.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-c</code>, <code class="option">--conf</code> ConfFile</span></dt><dd><p>ConfFile is the path to a confd.conf file. The default
+        location is defined when ConfD is installed, typically
+        /etc/confd/confd.conf.</p></dd><dt><span class="term"><code class="option">--cd</code> Dir</span></dt><dd><p>Change working directory</p></dd><dt><span class="term">
+        <code class="option">-l</code>,
+        <code class="option">--libdir</code> LibDir
+      </span></dt><dd><p>LibDir is where the ConfD helper libraries are found. The default
+        location is defined when ConfD is installed. The use of this flag is
+        deprecated since confd figures out this information automatically,
+        and using the confd command with LibDir from a different version
+        of ConfD is not supported.
+        </p></dd><dt><span class="term">
+        <code class="option">--addloadpath</code> Dir
+      </span></dt><dd><p>
+          Add Dir to the set of directories ConfD uses to load fxs, clispec
+          and, optionally, bin files.
+        </p></dd><dt><span class="term"><code class="option">--nolog</code></span></dt><dd><p>Do not log initial startup messages to syslog.</p></dd><dt><span class="term">
+        <code class="option">--smp</code> Nr
+      </span></dt><dd><p>Number of threads to run for Symmetric Multiprocessing
+        (SMP). The default is 1, i.e. no SMP support. A value bigger
+        than 1 will enable SMP support, where ConfD will at any given
+        time use at most as many logical processors as the number of
+        threads. The SMP
+        behavior can also be affected by removing one of the two ConfD
+        daemon executables from the installation, see the section <a class="link" href="ch28.html#ug.advanced.target" title="28.3.&nbsp;Installing ConfD on a target system">Installing ConfD on a target
+        system in the Advanced Topics chapter in the User Guide</a>
+        for the details of this.</p></dd><dt><span class="term"><code class="option">--foreground [ -v | --verbose ] [ --stop-on-eof ]</code></span></dt><dd><p>Do not start as a daemon.  Can be used to start ConfD from a process manager.
+        In combination with -v or --verbose, all log messages are printed
+        to stdout.  Useful during development.
+        In combination with --stop-on-eof, ConfD will stop if it receives EOF
+        (ctrl-d) on standard input.
+        Note that to stop ConfD when run in
+        foreground, send EOF (if --stop-on-eof was used) or use confd --stop.
+        Do not terminate with ctrl-c, since ConfD in that case won't
+        have the chance to close the database files.</p></dd><dt><span class="term"><code class="option">--ignore-initial-validation</code></span></dt><dd><p>When CDB starts on an empty database, or when upgrading, it starts a
+        transaction to load the initial configuration or perform the
+        upgrade. This option makes ConfD skip any validation callpoints when
+        committing these initial transaction. (The preferred alternative is to
+        use start-phases and register the validation callpoints in phase 0,
+        see the user guide).</p></dd><dt><span class="term"><code class="option">--full-upgrade-validation</code></span></dt><dd><p>Perform a full validation of the entire database if the
+        data models have been upgraded.  This is useful in order to
+        trigger external validation to run even if the database
+        content has not been modified.</p></dd><dt><span class="term"><code class="option">--start-phase0</code></span></dt><dd><p>Start the daemon, but only start internal subsystems and CDB. Phase 0
+        is used when a controlled upgrade is done.</p></dd><dt><span class="term"><code class="option">--epoll { true | false }</code></span></dt><dd><p>Determines whether ConfD should use an enhanced poll()
+          function (e.g. Linux epoll(7)). This can improve performance
+          when ConfD has a high number of connections, but there may be
+          issues with the implementation in some OS/kernel versions.
+          The default is false.</p></dd></dl></div></div><div class="refsect1"><a name="d5e15486"></a><h2>COMMUNICATING WITH CONFD</h2><p>When the ConfD daemon has been started, these options are used
+    to communicate with the running daemon.</p><p>By default these options will perform their function by
+    connecting to a running ConfD daemon over the loopback interface on the
+    standard port. If the environment variable
+    <code class="envar">CONFD_IPC_PORT</code> and/or <code class="envar">CONFD_IPC_ADDR</code>
+    are set then the address/port in those variables will be used to
+    communicate with the ConfD daemon. (Must be used if the daemon is
+    not listening on its standard port on localhost, see the
+    <code class="sgmltag-element">/confdConfig/confdIpcAddress/ip</code> setting in the <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a> man-page, and
+    the section on <a class="link" href="ch28.html#ug.advanced.confd_ipc" title="28.6.&nbsp;ConfD IPC">ConfD
+    IPC</a> in the ConfD Users Guide).</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--wait-phase0 [ TryTime ]</code></span></dt><dd><p>This call hangs until ConfD has initialized start
+        phase0. After this call has returned, it is safe to register
+        validation callbacks, upgrade CDB etc. This function is useful
+        when ConfD has been started with --foreground and
+        --start-phase0. It will keep trying the initial connection to
+        ConfD for at most TryTime seconds (default 5).</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_wait_start"><code class="function">maapi_wait_start()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--start-phase1</code></span></dt><dd><p>Do not start the subsystems that listen to the management IP
+        address. Must be called after the daemon was started with
+        --start-phase0.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_start_phase"><code class="function">maapi_start_phase()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--start-phase2</code></span></dt><dd><p>Must be called after the management interface has been
+        brought up, if --start-phase1 has been used. Starts the
+        subsystems that listens to the management IP address.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_start_phase"><code class="function">maapi_start_phase()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--wait-started [ TryTime ]</code></span></dt><dd><p>This call hangs until ConfD is completely started.  This
+        function is useful when ConfD has been started with
+        --foreground.  It will keep trying the initial connection to
+        ConfD for at most TryTime seconds (default 5).</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_wait_start"><code class="function">maapi_wait_start()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--clear-aaa-cache</code></span></dt><dd><p>Clear the ConfD AAA cache. When the AAA namespace is
+        stored outside ConfD, for example through the
+        <span class="emphasis"><em>confd_aaa_bridge.c</em></span> program, ConfD must be
+        notified when there is new AAA data to be read. ConfD caches
+        all AAA data and this command will force ConfD to reload the
+        AAA cache.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_aaa_reload"><code class="function">maapi_aaa_reload()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--reload</code></span></dt><dd><p>Reload the ConfD daemon configuration. All log files are
+        closed and reopened, which means that
+        <span class="command"><strong>confd --reload</strong></span> can be used
+        from e.g. logrotate(8) - however it is preferable to use
+        <a class="link" href="rn02re14.html#fn.maapi_reopen_logs"><code class="function">maapi_reopen_logs()</code></a>
+        for this, see <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.
+        <code class="function">maapi_reopen_logs()</code> can also be invoked via
+        <span class="command"><strong>confd_cmd -c reopen_logs</strong></span>, see <a class="link" href="rn01re04.html" title="confd_cmd">confd_cmd(1)</a>.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_reload_config"><code class="function">maapi_reload_config()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>If we update a .fxs file, it is not enough to do a
+        reload; the daemon has to be restarted, or the procedure
+        described in the <a class="link" href="ch13.html" title="Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade">In-service
+        Data Model Upgrade</a> chapter in the User Guide has to be
+        used.</p></div></dd><dt><span class="term"><code class="option">--areload</code></span></dt><dd><p>Asynchronously reload the ConfD daemon configuration. This can be
+        used in scripts executed by the ConfD daemon.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_reload_config"><code class="function">maapi_reload_config()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--stop</code></span></dt><dd><p>Stop the ConfD daemon.</p><p>For an equivalent C function see <a class="link" href="rn02re14.html#fn.maapi_stop"><code class="function">maapi_stop()</code></a>
+        in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p></dd><dt><span class="term"><code class="option">--status</code></span></dt><dd><p>Prints status information about the ConfD daemon on stdout. Among the
+        things listed are: loaded namespaces, current user sessions,
+        callpoints (and whether they are registered or not), CDB status, and
+        the current start-phase. Start phases are reported as "status:" and
+        can be one of starting (which is pre-phase0), phase0, phase1, started
+        (i.e. phase2), or stopping (which means that ConfD is about to
+        shutdown).</p></dd><dt><span class="term"><code class="option">--debug-dump File</code></span></dt><dd><p>Dump debug information from an already running ConfD
+        daemon into a file.
+        The file only makes sense to ConfD developers. It is often a good
+        idea to include a debug dump in ConfD trouble reports.</p></dd><dt><span class="term"><code class="option">--cli-j-dump File</code></span></dt><dd><p>Dump cli structure information from the ConfD daemon into
+        a file.</p></dd><dt><span class="term"><code class="option">--cli-i-dump File</code></span></dt><dd><p>Dump cli structure information from the ConfD daemon into a file.</p></dd><dt><span class="term"><code class="option">--cli-c-dump File</code></span></dt><dd><p>Dump cli structure information from the ConfD daemon into a file.</p></dd><dt><span class="term"><code class="option">--cli-check-templates</code></span></dt><dd><p>
+          Walks through the entire data tree and validates all templates and
+          verifies that all paths in the templates are valid.
+        </p></dd><dt><span class="term"><code class="option">--check-callbacks [Namespace | Path]</code></span></dt><dd><p>
+          Walks through the entire data tree (config and stat), or only the
+          Namespace or Path, and verifies that all read-callbacks are
+          implemented for all elements, and verifies their return values.
+        </p></dd><dt><span class="term"><code class="option">--loadfile File</code></span></dt><dd><p>Load configuration in curly bracket format from File.</p></dd><dt><span class="term"><code class="option">--rollback Nr</code></span></dt><dd><p>Rollback configuration to saved configuration number Nr.</p></dd><dt><span class="term"><code class="option">--loadxmlfiles File ...</code></span></dt><dd><p>Load configuration in XML format from Files.  The configuration is
+        completely replaced by the contents in Files.</p></dd><dt><span class="term"><code class="option">--mergexmlfiles File ...</code></span></dt><dd><p>Load configuration in XML format from Files.  The configuration is
+        merged with the contents in Files.  The XML may use the 'operation'
+        attribute, in the same way as it is used in a NETCONF &lt;edit-config&gt;
+        operation.</p></dd><dt><span class="term"><code class="option">--cdb-backup File</code></span></dt><dd><p>Save a snapshot of the CDB database into a GZipp:ed tar
+        archive file (given by the File argument). If the File
+        argument is a relative path, the file will be saved relative
+        the <span class="emphasis"><em>ConfD daemon's current working
+        directory</em></span>. Only configuration data stored in CDB is
+        saved (persistent CDB operational data is not). Note: if the
+        database is locked for writing, the command will fail.</p></dd><dt><span class="term"><code class="option">--timeout MaxTime</code></span></dt><dd><p>Specify the maximum time to wait for the ConfD daemon to
+        complete the command, in seconds. If this option is not given,
+        no timeout is used.</p></dd></dl></div></div><div class="refsect1"><a name="d5e15645"></a><h2>STANDALONE OPTIONS</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--cdb-debug-dump Directory</code></span></dt><dd><p>Print a lot of information about the CDB files in
+        <em class="replaceable"><code>Directory</code></em> to stdout. This is a
+        completely stand-alone feature and the only thing needed is
+        the .cdb files (no running ConfD daemon or .fxs files etc).</p></dd><dt><span class="term"><code class="option">--version</code></span></dt><dd><p>Reports the ConfD version without interacting with the daemon.</p></dd><dt><span class="term"><code class="option">--printlog BaseFileName</code></span></dt><dd><p>Print the contents of the ConfD errorLog. This is normally
+        only useful for Tail-f support and developers, since the
+        information pertains to internal details of the ConfD software
+        components, but it may also be relevant for Erlang application
+        code executed internally in ConfD. The argument is the name as
+        specified by <code class="sgmltag-element">/confdConfig/logs/errorLog/filename</code>,
+        i.e. without the <code class="filename">.idx</code>,
+        <code class="filename">.1</code> etc suffixes.</p></dd><dt><span class="term"><code class="option">--set-snmp-engine-boots Nr</code></span></dt><dd><p>Set the initial value, or override the previous value
+        for the snmpEngineBoots counter object. After invoking ConfD
+        with this option and (re-)starting ConfD the counter's value
+        will be <em class="replaceable"><code>Nr</code></em> + 1.
+        This is potentially useful if an SNMP Agent implementation
+        is being replaced by ConfD, using the same snmpEngineId as
+        the previous agent implementation, and not wanting to clear
+        the snmpEngineBoots counter for SNMP managers that have
+        been communicating with the old Agent using SNMP v3.
+        Invoking ConfD with this option must be done with
+        <code class="sgmltag-element">/confdConfig/stateDir</code> as working directory.</p></dd><dt><span class="term"><code class="option">--timeout MaxTime</code></span></dt><dd><p>See above.</p></dd></dl></div></div><div class="refsect1"><a name="man.1.confd.diagnostics"></a><h2>DIAGNOSTICS</h2><p>If ConfD starts, the exit status is 0. If not it is a positive
+integer.  The different meanings of the different exit codes are
+documented in the <a class="link" href="ch28.html" title="Chapter&nbsp;28.&nbsp;Advanced Topics">Advanced topics</a>
+chapter in the user guide.  When failing to start, the reason is
+normally given in the ConfD daemon log. The location of the daemon log
+is specified in the ConfFile as described in <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>.</p></div><div class="refsect1"><a name="man.1.confd.see_also"></a><h2>SEE ALSO</h2><p><span class="citerefentry"><span class="refentrytitle">confd.conf</span>(5)</span> - ConfD daemon configuration file format</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01re02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ConfD man-pages, Volume 1&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;confd_aaa_bridge</td></tr></table></div></body></html>

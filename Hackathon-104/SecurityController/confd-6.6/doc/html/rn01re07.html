@@ -1,0 +1,254 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>maapi</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01re06.html" title="confdc"><link rel="next" href="rn02.html" title="ConfD man-pages, Volume 3"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">maapi</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01re06.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn02.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.maapi"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.maapi.name"></a><h2>Name</h2><p>maapi &#8212; command to access an ongoing transaction</p></div><div class="refsynopsisdiv"><a name="man.1.maapi.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">maapi</code>   --get    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --set    <em class="replaceable"><code>Path</code></em>   <em class="replaceable"><code>Value</code></em>  [ <em class="replaceable"><code>Path</code></em>   <em class="replaceable"><code>Value</code></em>... ]</p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --keys    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --exists    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --delete    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --create    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --insert    <em class="replaceable"><code>Path</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --revert </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --msg    <em class="replaceable"><code>To</code></em>   <em class="replaceable"><code>Message</code></em>   <em class="replaceable"><code>Sender</code></em> <br>  --priomsg    <em class="replaceable"><code>To</code></em>   <em class="replaceable"><code>Message</code></em> <br>  --sysmsg    <em class="replaceable"><code>To</code></em>   <em class="replaceable"><code>Message</code></em> </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --cliget    <em class="replaceable"><code>Param</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --cliset    <em class="replaceable"><code>Param</code></em>   <em class="replaceable"><code>Value</code></em>  [ <em class="replaceable"><code>Param</code></em>   <em class="replaceable"><code>Value</code></em>... ]</p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --cmd2path    <em class="replaceable"><code>Cmd</code></em>  [ <em class="replaceable"><code>Cmd</code></em> ]</p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --cmd-path   [--is-deleta ] [--emit-parents ] [--non-recursive ]  <em class="replaceable"><code>Path</code></em>  [ <em class="replaceable"><code>Path</code></em> ]</p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --cmd-diff    <em class="replaceable"><code>Path</code></em>  [ <em class="replaceable"><code>Path</code></em> ]</p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --keypath-diff    <em class="replaceable"><code>Path</code></em> </p></div><div class="cmdsynopsis"><p><code class="command">maapi</code>   --clicmd   [--get-io ] [--no-hidden ] [--no-error ] [--no-aaa ] [--no-fullpath ] [--unhide <em class="replaceable"><code>&lt;group&gt;</code></em>]  <em class="replaceable"><code>Cli</code></em>   <em class="replaceable"><code>command</code></em>... <br></p></div></div><div class="refsect1"><a name="man.1.maapi.description"></a><h2>DESCRIPTION</h2><p>This command is intended to be used from inside a CLI command
+    or a NETCONF extension RPC. These can be implemented in several
+    ways, as an action callback or as an executable.</p><p>It is sometimes convenient to use a shell script to
+    implement a CLI command and then invoke the script as an
+    executable from the CLI. The maapi program makes it possible to
+    manipulate the transaction in which the script was invoked.</p><p>Using the maapi command
+    it is possible to, for example,
+    write configuration wizards and custom show commands.</p></div><div class="refsect1"><a name="man.1.maapi.options"></a><h2>OPTIONS</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-g</code>, </span><span class="term"><code class="option">--get</code> <em class="replaceable"><code>Path</code></em> ...</span></dt><dd><p>Read element value at Path and display
+          result. Multiple values can be read by giving more than one
+          Path as argument to get.</p></dd><dt><span class="term"><code class="option">-s</code>, </span><span class="term">
+          <code class="option">--set</code>
+          <em class="replaceable"><code>Path</code></em> <em class="replaceable"><code>Value</code></em> ...
+        </span></dt><dd><p>Set the value of Path to Value. Multiple values can be
+          set by giving multiple Path Value pairs as arguments to
+          set.</p></dd><dt><span class="term"><code class="option">-k</code>, </span><span class="term"><code class="option">--keys</code> <em class="replaceable"><code>Path</code></em> ...</span></dt><dd><p>Display all instances found at path. Multiple Paths
+          can be specified.</p></dd><dt><span class="term"><code class="option">-e</code>, </span><span class="term"><code class="option">--exists</code> <em class="replaceable"><code>Path</code></em> ...</span></dt><dd><p>Exit with exit code 0 if Path exists (if multiple
+          paths are given all must exist for the exit code to be
+          0).</p></dd><dt><span class="term"><code class="option">-d</code>, </span><span class="term"><code class="option">--delete</code> <em class="replaceable"><code>Path</code></em> ...</span></dt><dd><p>Delete element found at Path.</p></dd><dt><span class="term"><code class="option">-c</code>, </span><span class="term">
+          <code class="option">--create</code> <em class="replaceable"><code>Path</code></em> ...
+        </span></dt><dd><p>Create the element Path.</p></dd><dt><span class="term"><code class="option">-i</code>, </span><span class="term">
+          <code class="option">--insert</code> <em class="replaceable"><code>Path</code></em> ...
+        </span></dt><dd><p>Insert the element at Path. This is only possible if
+          the elem has the 'indexed-view' attribute set.</p></dd><dt><span class="term"><code class="option">-z</code>, </span><span class="term">
+          <code class="option">--revert</code>
+        </span></dt><dd><p>Remove all changes in the transaction.</p></dd><dt><span class="term"><code class="option">-m</code>, </span><span class="term">
+          <code class="option">--msg</code>
+          <em class="replaceable"><code>To</code></em>
+          <em class="replaceable"><code>Message</code></em>
+          <em class="replaceable"><code>Sender</code></em>
+        </span></dt><dd><p>Send message to a user logged on to the system.</p></dd><dt><span class="term"><code class="option">-Q</code>, </span><span class="term">
+          <code class="option">--priomsg</code>
+          <em class="replaceable"><code>To</code></em> <em class="replaceable"><code>Message</code></em>
+        </span></dt><dd><p>Send prio message to a user logged on to the
+          system.</p></dd><dt><span class="term"><code class="option">-M</code>, </span><span class="term">
+          <code class="option">--sysmsg</code>
+          <em class="replaceable"><code>To</code></em> <em class="replaceable"><code>Message</code></em>
+        </span></dt><dd><p>Send system message to a user logged on to the
+          system.</p></dd><dt><span class="term"><code class="option">-G</code>, </span><span class="term">
+          <code class="option">--cliget</code> <em class="replaceable"><code>Param</code></em> ...
+        </span></dt><dd><p>
+            Read and display CLI session parameter or attribute.
+            Multiple params can be read by giving more than one Param
+            as argument to cliget. Possible params are
+            <span class="phrase">
+              for C and I-style: complete-on-space, idle-timeout,
+              ignore-leading-space, paginate, output-file,
+              screen-length, screen-width, history, terminal,
+              autowizard, "service prompt config" , show-defaults,
+              and if enabled, display-level. And for J-style:
+            </span>
+            complete-on-space, idle-timeout, ignore-leading-space,
+            paginate, "output file", "screen length", "screen width",
+            terminal, history, autowizard, "show defaults", and if
+            enabled, display-level. In addition to this the attributes
+            called annotation, tags and inactive can be read.
+          </p></dd><dt><span class="term"><code class="option">-S</code>, </span><span class="term">
+          <code class="option">--cliset</code>
+          <em class="replaceable"><code>Param</code></em>
+          <em class="replaceable"><code>Value</code></em> ...
+        </span></dt><dd><p>
+            Set CLI session parameter to Value. Multiple params
+            can be set by giving more than one Param-Value pair as
+            argument to cliset. Possible params are
+            <span class="phrase">
+              for C and I-style: complete-on-space, idle-timeout,
+              ignore-leading-space, paginate, output-file,
+              screen-length, screen-width, history, terminal,
+              autowizard, "service prompt config", show-defaults,
+              and if enabled, display-level. And for J-style:
+            </span>
+            complete-on-space, idle-timeout, ignore-leading-space,
+            paginate, "output file", "screen length", "screen width",
+            terminal, history, autowizard, "show defaults", and if
+            enabled, display-level.
+          </p></dd><dt><span class="term"><code class="option">-E</code>, </span><span class="term">
+          <code class="option">--cmd-path</code>
+          [<code class="option">--is-delete</code>]
+          [<code class="option">--emit-parents</code>]
+          [<code class="option">--non-recursive</code>]
+          <em class="replaceable"><code>Path</code></em>
+        </span></dt><dd><p>
+            Display the C- and I-style command for a given path. Optionally
+            display the command to delete the path, and optionally emit
+            the parents, ie the commands to reach the submode of the path.
+          </p></dd><dt><span class="term"><code class="option">-L</code>, </span><span class="term">
+          <code class="option">--cmd-diff</code>
+          <em class="replaceable"><code>Path</code></em>
+        </span></dt><dd><p>
+            Display the C- and I-style command for going from the
+            running configuration to the current configuration.
+          </p></dd><dt><span class="term"><code class="option">-q</code>, </span><span class="term">
+          <code class="option">--keypath-diff</code>
+          <em class="replaceable"><code>Path</code></em>
+        </span></dt><dd><p>
+            Display the difference between the current state in the
+            attached transaction and the running configuration. One
+            line is emitted for each difference. Each such line begins
+            with the type of the change, followed by a colon (':')
+            character and lastly the keypath. The type of the change
+            is one of the following: "created", "deleted", "modified",
+            "value set", "moved after" and "attr set".
+          </p></dd><dt><span class="term"><code class="option">-T</code>, </span><span class="term">
+          <code class="option">--cmd2path</code>
+          <em class="replaceable"><code>Cmd</code></em>
+        </span></dt><dd><p>
+            Attempts to derive an aaa-style namespace and path from
+            a C-/I-style command path.
+          </p></dd><dt><span class="term"><code class="option">-C</code>, </span><span class="term">
+          <code class="option">--clicmd</code>
+          [<code class="option">--get-io</code>]
+          [<code class="option">--no-hidden</code>]
+          [<code class="option">--no-error</code>]
+          [<code class="option">--no-aaa</code>]
+          [<code class="option">--no-fullpath</code>]
+          [<code class="option">--unhide</code> <em class="replaceable"><code>group</code></em>]
+          <em class="replaceable"><code>Cli command to execute</code></em>
+        </span></dt><dd><p>Execute cli command in ongoing session, optionally
+          ignoring that a command is hidden, unhiding a specific hide
+          group, or ignoring the fullpath check of the argument to the
+          show command. Multiple hide groups may be unhidden using the
+          --unhide parameter multiple times.</p></dd></dl></div></div><div class="refsect1"><a name="man.1.maapi.example"></a><h2>EXAMPLE</h2><p>Suppose we want to create an add-user wizard as a shell
+    script.  We would add the command in the clispec file
+    <code class="filename"><span class="phrase">confd</span>.cli</code> as follows:</p><div class="informalexample"><pre class="programlisting"> ...
+  &lt;configureMode&gt;
+    &lt;cmd name="wizard"&gt;
+      &lt;info&gt;Configuration wizards&lt;/info&gt;
+      &lt;help&gt;Configuration wizards&lt;/help&gt;
+      &lt;cmd name="adduser"&gt;
+        &lt;info&gt;Create a user&lt;/info&gt;
+        &lt;help&gt;Create a user&lt;/help&gt;
+        &lt;callback&gt;
+          &lt;exec&gt;
+            &lt;osCommand&gt;./adduser.sh&lt;/osCommand&gt;
+          &lt;/exec&gt;
+        &lt;/callback&gt;
+      &lt;/cmd&gt;
+    &lt;/cmd&gt;
+  &lt;/configureMode&gt;
+ ...</pre></div><p>And have the following script
+    <code class="filename">adduser.sh</code>:</p><div class="informalexample"><pre class="programlisting">#!/bin/bash 
+
+## Ask for user name
+while true; do
+    echo -n "Enter user name: "
+    read user
+
+    if [ ! -n "${user}" ]; then
+	echo "You failed to supply a user name."
+    elif maapi --exists "/aaa:aaa/authentication/users/user{${user}}"; then
+	echo "The user already exists."
+    else
+	break
+    fi
+done
+
+## Ask for password
+while true; do
+    echo -n "Enter password: "
+    read -s pass1
+    echo
+
+    if [ "${pass1:0:1}" == "$" ]; then
+	echo -n "The password must not start with $. Please choose a "
+	echo    "different password."
+    else
+	echo -n "Confirm password: "
+	read -s pass2
+	echo
+
+	if [ "${pass1}" != "${pass2}" ]; then
+	    echo "Passwords do not match."
+	else
+	    break
+	fi
+    fi
+done
+
+groups=`maapi --keys "/aaa:aaa/authentication/groups/group"`
+while true; do
+    echo "Choose a group for the user."
+    echo -n "Available groups are: "
+    for i in ${groups}; do echo -n "${i} "; done    
+    echo
+    echo -n "Enter group for user: "
+    read group
+
+    if [ ! -n "${group}" ]; then
+	echo "You must enter a valid group."
+    else
+	for i in ${groups}; do
+	    if [ "${i}" == "${group}" ]; then
+		# valid group found
+		break 2;
+	    fi
+	done
+	echo "You entered an invalid group."
+    fi
+    echo
+done
+
+echo
+echo "Creating user"
+echo
+maapi --create "/aaa:aaa/authentication/users/user{${user}}"
+maapi --set "/aaa:aaa/authentication/users/user{${user}}/password" \
+	"${pass1}"
+
+echo "Setting home directory to: /var/confd/homes/${user}"
+maapi --set "/aaa:aaa/authentication/users/user{${user}}/homedir" \
+            "/var/confd/homes/${user}"
+echo
+
+echo "Setting ssh key directory to: "
+echo "/var/confd/homes/${user}/ssh_keydir"
+maapi --set "/aaa:aaa/authentication/users/user{${user}}/ssh_keydir" \
+            "/var/confd/homes/${user}/ssh_keydir"
+echo
+
+maapi --set "/aaa:aaa/authentication/users/user{${user}}/uid" "1000"
+maapi --set "/aaa:aaa/authentication/users/user{${user}}/gid" "100"
+
+echo "Adding user to the ${group} group."
+gusers=`maapi --get "/aaa:aaa/authentication/groups/group{${group}}/users"`
+
+for i in ${gusers}; do
+    if [ "${i}" == "${user}" ]; then
+	echo "User already in group"
+	exit 0
+    fi
+done
+maapi --set "/aaa:aaa/authentication/groups/group{${group}}/users" \
+            "${gusers} ${user}"
+echo
+exit 0
+
+    </pre></div></div><div class="refsect1"><a name="man.1.maapi.diagnostics"></a><h2>DIAGNOSTICS</h2><p>On success exit status is 0. On failure 1 or 2. Any error
+    message is printed to stderr.</p></div><div class="refsect1"><a name="man.1.maapi.environment_variables"></a><h2>ENVIRONMENT VARIABLES</h2><p>Environment variables are used for determining which user
+    session and transaction should be used when performing the
+    operations. The <span class="phrase">CONFD</span>_MAAPI_USID and <span class="phrase">CONFD</span>_MAAPI_THANDLE environment variables are
+    automatically set by <span class="phrase">ConfD</span> when invoking a CLI command, but when a
+    NETCONF extension RPC is invoked, only <span class="phrase">CONFD</span>_MAAPI_USID is set, since there is no
+    transaction associated with such an invocation.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_MAAPI_USID</code></span></dt><dd><p>User session to use.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_MAAPI_THANDLE</code></span></dt><dd><p>The transaction to use when performing the
+          operations.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_MAAPI_DEBUG</code></span></dt><dd><p>Maapi debug information will be printed if this
+          variable is defined.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_IPC_ADDR</code>, </span><span class="term"><code class="envar">CONFD_IPC_EXTADDR</code></span></dt><dd><p>The address used to connect to the ConfD daemon,
+          overrides the compiled in default.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_IPC_PORT</code></span></dt><dd><p>The port number to connect to the ConfD daemon on,
+          overrides the compiled in default.</p></dd><dt><span class="term"><code class="envar">CONFD_IPC_EXTSOPATH</code></span></dt><dd><p>The absolute path to the shared object to use for a
+          connection using external IPC when
+          <code class="envar">CONFD_IPC_EXTADDR</code> is given.</p></dd></dl></div></div><div class="refsect1"><a name="man.1.maapi.see_also"></a><h2>SEE ALSO</h2><p>The ConfD User Guide</p><p><span class="citerefentry"><span class="refentrytitle"><span class="phrase">confd</span></span>(1)</span>
+    - command to start and control the ConfD daemon</p><p><span class="citerefentry"><span class="refentrytitle"><span class="phrase">confdc</span></span>(1)</span>
+    - YANG compiler</p><p><span class="citerefentry"><span class="refentrytitle"><span class="phrase">confd</span>.conf</span>(5)</span>
+    - ConfD daemon configuration file format</p><p><span class="citerefentry"><span class="refentrytitle">clispec</span>(5)</span> -  CLI specification file format</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01re06.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"><span class="phrase">confdc</span>
+    &nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;ConfD man-pages, Volume 3</td></tr></table></div></body></html>

@@ -1,0 +1,86 @@
+Environment
+
+1) Install DevStack to use OpenStack environment (upper than Queens version).
+  (1) Download source codes for OpenStack installation and simulation.
+      Download link: Hackathon-104/stack
+  (2) Install OpenStack by devstack
+      # cd devstack
+      # ./stack.sh
+2) Create instances for Security Controller, DMS, and employees.
+  (1) Security Controller: Allocate floating IP as 172.24.4.4
+  (2) DMS: Allocate floating IP as 172.24.4.11
+  (3) employee_1: Allocate floating IP as 172.24.4.8
+  (4) keypair: create by the name 'demo-keypair'
+3) Download source codes for each instance as follow:
+  (1) Security Controller download link: Hackathon-104/SecurityController
+  (2) DMS download link: Hackathon-104/DMS
+4) Upload following images for NSFs to create as VNFs.
+
+----------
+Construction 
+
+1) 'stack' account
+  (1) Open new terminal and access to the 'stack' account.
+      # sudo su - stack
+  (2) Authorize by 'admin' user.
+      # . adminrc
+  (3) Run OpenStack Tacker and VNFFG environment
+      # openstack_server.py
+
+
+2) 'security-controller' instance
+  (1) Open two new terminals and access to the 'security-controller' instance.
+      # sudo su - stack  (enter password)
+      # ssh -X -i .ssh/demo-keypair ubuntu@172.24.4.4
+  (2) Terminal 1: Open NETCONF server for attaching DMS.
+      # cd Registration
+      # sudo make clean all start
+
+  (3) Terminal 2: Run Security Controller server.
+      # make target=testserver.py
+
+------------
+
+Test
+
+1) Open new terminal and access to the 'DMS' instance.
+   Open DMS server and register NSFs to Security Controller.
+   # sudo su - stack  (enter password)
+   # ssh -X -i .ssh/demo-keypair ubuntu@172.24.4.11
+   # dms_server.py
+
+2) Open new terminal and access to the 'employee' instance.
+   Test ping to 'www.facebook.com' as follow:
+   # sudo ssh -X -i /opt/stack/.ssh/demo-keypair ubuntu@172.24.4.8
+   # ping www.facebook.com
+
+   Test the others as follow:
+   # ping www.google.com
+
+3) Move to Terminal 2 of 'security-controller' instance, and enter as follow:
+   > sns.txt
+   
+4) Check whether the policy is applied!
+   Check the NSFs and policy tree in 'security-controller' instance
+
+5  Check the ping test after applying the policy in employee instance.
+   Repeat the step 2), then some SNS websites are blocked according to the policy in employee
+
+----------
+Termination
+
+1) DMS
+  (1) Move to DMS terminal
+  (2) Enter 'Ctrl + C' for terminating server
+
+2) Security Controller
+  (1) Open new terminal and access to 'security-controller' instance
+      # sudo su - stack  (enter password)
+      # ssh -X -i .ssh/demo-keypair ubuntu@172.24.4.4
+  (2) Terminate Security Controller
+      # ./clean_security_controller
+
+3) 'stack' account
+  (1) Move to 'stack' terminal
+  (2) Terminate OpenStack environment.
+      # clean.py

@@ -1,0 +1,765 @@
+'\" t
+.\"     Title: confd_lib_events
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_LIB_EVENTS" "3" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_lib_events \- library for subscribing to ConfD event notifications
+.SH "SYNOPSIS"
+.sp
+.ft B
+.nf
+#include <confd_lib\&.h>
+#include <confd_events\&.h>
+      
+.fi
+.ft
+.nr wf \w'int\ confd_notifications_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ mask);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_notifications_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_notifications_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ");" \}
+.nr wf \w'int\ confd_notifications_connect2('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ mask,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_notifications_data\ *data);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_notifications_connect2("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ", struct\ confd_notifications_data\ *" "data" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_notifications_connect2(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ", struct\ confd_notifications_data\ *" "data" ");" \}
+.nr wf \w'int\ confd_read_notification('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_notification\ *n);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_read_notification("
+.br
+.BI "int\ " "sock" ", struct\ confd_notification\ *" "n" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_read_notification(int\ " "sock" ", struct\ confd_notification\ *" "n" ");" \}
+.nr wf \w'void\ confd_free_notification('
+.nr wm 0
+.nr wp \w'struct\ confd_notification\ *n);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_notification("
+.br
+.BI "struct\ confd_notification\ *" "n" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_notification(struct\ confd_notification\ *" "n" ");" \}
+.nr wf \w'int\ confd_diff_notification_done('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_trans_ctx\ *tctx);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_diff_notification_done("
+.br
+.BI "int\ " "sock" ", struct\ confd_trans_ctx\ *" "tctx" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_diff_notification_done(int\ " "sock" ", struct\ confd_trans_ctx\ *" "tctx" ");" \}
+.nr wf \w'int\ confd_sync_audit_notification('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ usid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_sync_audit_notification("
+.br
+.BI "int\ " "sock" ", int\ " "usid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_sync_audit_notification(int\ " "sock" ", int\ " "usid" ");" \}
+.nr wf \w'int\ confd_sync_ha_notification('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_sync_ha_notification("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_sync_ha_notification(int\ " "sock" ");" \}
+.SH "LIBRARY"
+.PP
+ConfD Library, (libconfd,
+\fB\-lconfd\fR)
+.SH "DESCRIPTION"
+.PP
+The
+libconfd
+shared library is used to connect to ConfD and subscribe to certain events generated by ConfD\&. The API to receive events from ConfD is a socket based API whereby the application connects to ConfD and receives events on a socket\&. See also the
+\m[blue]\fBNotifications\fR\m[]
+chapter in the User Guide\&. The program
+misc/notifications/confd_notifications\&.c
+in the examples collection illustrates subscription and processing for all these events, and can also be used standalone in a development environment to monitor ConfD events\&.
+.SH "EVENTS"
+.PP
+The following events can be subscribed to:
+.PP
+\fBCONFD_NOTIF_AUDIT\fR
+.RS 4
+All audit log events are sent from ConfD on the event notification socket\&.
+.RE
+.PP
+\fBCONFD_NOTIF_AUDIT_SYNC\fR
+.RS 4
+This flag modifies the behavior of a subscription for the
+\fBCONFD_NOTIF_AUDIT\fR
+event \- it has no effect unless
+\fBCONFD_NOTIF_AUDIT\fR
+is also present\&. If this flag is present, ConfD will stop processing in the user session that causes an audit notification to be sent, and continue processing in that user session only after all subscribers with this flag have called
+\fBconfd_sync_audit_notification()\fR\&.
+.RE
+.PP
+\fBCONFD_NOTIF_DAEMON\fR
+.RS 4
+All log events that also goes to the
+/confdConf/logs/confdLog
+log are sent from ConfD on the event notification socket\&.
+.RE
+.PP
+\fBCONFD_NOTIF_NETCONF\fR
+.RS 4
+All log events that also goes to the
+/confdConf/logs/netconfLog
+log are sent from ConfD on the event notification socket\&.
+.RE
+.PP
+\fBCONFD_NOTIF_DEVEL\fR
+.RS 4
+All log events that also goes to the
+/confdConf/logs/developerLog
+log are sent from ConfD on the event notification socket\&.
+.RE
+.PP
+\fBCONFD_NOTIF_TAKEOVER_SYSLOG\fR
+.RS 4
+If this flag is present, ConfD will stop syslogging\&. The idea behind the flag is that we want to configure syslogging for ConfD in order to let ConfD log its startup sequence\&. Once ConfD is started we wish to subsume the syslogging done by ConfD\&. Typical applications that use this flag want to pick up all log messages, reformat them and use some local logging method\&.
+.sp
+Once all subscriber sockets with this flag set are closed, ConfD will resume to syslog\&.
+.RE
+.PP
+\fBCONFD_NOTIF_COMMIT_SIMPLE\fR
+.RS 4
+An event indicating that a user has somehow modified the configuration\&.
+.RE
+.PP
+\fBCONFD_NOTIF_COMMIT_DIFF\fR
+.RS 4
+An event indicating that a user has somehow modified the configuration\&. The main difference between this event and the abovementioned CONFD_NOTIF_COMMIT_SIMPLE is that this event is synchronous, i\&.e\&. the entire transaction hangs until we have explicitly called
+\fBconfd_diff_notification_done()\fR\&. The purpose of this event is to give the applications a chance to read the configuration diffs from the transaction before it finishes\&. A user subscribing to this event can use MAAPI to attach (\fBmaapi_attach()\fR) to the running transaction and use
+\fBmaapi_diff_iterate()\fR
+to iterate through the diff\&. This feature can also be used to produce a complete audit trail of who changed what and when in the system\&. It is up to the application to format that audit trail\&.
+.RE
+.PP
+\fBCONFD_NOTIF_COMMIT_FAILED\fR
+.RS 4
+This event is generated when a data provider fails in its commit callback\&. ConfD executes a two\-phase commit procedure towards all data providers when committing transactions\&. When a provider fails in commit, the system is an unknown state\&. See
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+and the function
+\fBmaapi_get_running_db_state()\fR\&. If the provider is "external", the name of failing daemon is provided\&. If the provider is another NETCONF agent, the IP address and port of that agent is provided\&.
+.RE
+.PP
+\fBCONFD_NOTIF_CONFIRMED_COMMIT\fR
+.RS 4
+This event is generated when a user has started a confirmed commit, when a confirming commit is issued, or when a confirmed commit is aborted; represented by
+\fBenum confd_confirmed_commit_type\fR\&.
+.sp
+For a confirmed commit, the timeout value is also present in the notification\&.
+.RE
+.PP
+\fBCONFD_NOTIF_COMMIT_PROGRESS\fR
+.RS 4
+This event provides progress information about the commit of a transaction, i\&.e\&. the same information that is reported when the
+\fBcommit | details\fR
+CLI command is used\&. The application receives a
+\fBstruct confd_progress_notification\fR
+which gives details for the specific transaction along with the progress information, see
+confd_events\&.h\&.
+.RE
+.PP
+\fBCONFD_NOTIF_USER_SESSION\fR
+.RS 4
+An event related to user sessions\&. There are 6 different user session related event types, defined in
+\fBenum confd_user_sess_type\fR: session starts/stops, session locks/unlocks database, session starts/stop database transaction\&.
+.RE
+.PP
+\fBCONFD_NOTIF_HA_INFO\fR
+.RS 4
+An event related to ConfDs perception of the current cluster configuration\&.
+.RE
+.PP
+\fBCONFD_NOTIF_HA_INFO_SYNC\fR
+.RS 4
+This flag modifies the behavior of a subscription for the
+\fBCONFD_NOTIF_HA_INFO\fR
+event \- it has no effect unless
+\fBCONFD_NOTIF_HA_INFO\fR
+is also present\&. If this flag is present, ConfD will stop all HA processing, and continue only after all subscribers with this flag have called
+\fBconfd_sync_ha_notification()\fR\&.
+.RE
+.PP
+\fBCONFD_NOTIF_SUBAGENT_INFO\fR
+.RS 4
+Only sent if ConfD runs as a master agent with subagents enabled\&. This event is sent when the subagent connection is lost or reestablished\&. There are two event types, defined in
+\fBenum confd_subagent_info_type\fR: subagent up and subagent down\&.
+.RE
+.PP
+\fBCONFD_NOTIF_SNMPA\fR
+.RS 4
+This event is generated whenever an SNMP pdu is processed by ConfD\&. The application receives a
+\fBstruct confd_snmpa_notification\fR
+structure\&. The structure contains a series of fields describing the sent or received SNMP pdu\&. It contains a list of all varbinds in the pdu\&.
+.sp
+Each varbind contains a
+\fBconfd_value_t\fR
+with the string representation of the SNMP value\&. Thus the type of the value in a varbind is always C_BUF\&. See
+confd_events\&.h
+include file for the details of the received structure\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+This event may allocate memory dynamically inside the
+\fBstruct confd_notification\fR, thus we must always call
+\fBconfd_free_notification()\fR
+after receiving and processing this event\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fBCONFD_NOTIF_FORWARD_INFO\fR
+.RS 4
+This event is generated whenever ConfD forwards (proxies) a northbound agent\&.
+.RE
+.PP
+\fBCONFD_NOTIF_UPGRADE_EVENT\fR
+.RS 4
+This event is generated for the different phases of an in\-service upgrade, i\&.e\&. when the data model is upgraded while ConfD is running\&. The application receives a
+\fBstruct confd_upgrade_notification\fR
+where the
+\fBenum confd_upgrade_event_type event\fR
+gives the specific upgrade event, see
+confd_events\&.h\&. The events correspond to the invocation of the MAAPI functions that drive the upgrade, see
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fBCONFD_NOTIF_HEARTBEAT\fR
+.RS 4
+This event can be be used by applications that wish to monitor the health and liveness of ConfD itself\&. It needs to be requested through a call to
+\fBconfd_notifications_connect2()\fR, where the required
+\fIheartbeat_interval\fR
+can be provided via the
+\fIstruct confd_notifications_data\fR
+parameter\&. ConfD will continuously generate heartbeat events on the notification socket\&. If ConfD fails to do so, ConfD is hung, or prevented from getting the CPU time required to send the event\&. The timeout interval is measured in milliseconds\&. Recommended value is 10000 milliseconds to cater for truly high load situations\&. Values less than 1000 are changed to 1000\&.
+.RE
+.PP
+\fBCONFD_NOTIF_HEALTH_CHECK\fR
+.RS 4
+This event is similar to
+\fBCONFD_NOTIF_HEARTBEAT\fR, in that it can be be used by applications that wish to monitor the health and liveness of ConfD itself\&. However while
+\fBCONFD_NOTIF_HEARTBEAT\fR
+will be generated as long as ConfD is not completely hung,
+\fBCONFD_NOTIF_HEALTH_CHECK\fR
+will only be generated after a basic liveness check of the different ConfD subsystems has completed successfully\&. This event also needs to be requested through a call to
+\fBconfd_notifications_connect2()\fR, where the required
+\fIhealth_check_interval\fR
+can be provided via the
+\fIstruct confd_notifications_data\fR
+parameter\&. Since the event generation incurs more processing than
+\fBCONFD_NOTIF_HEARTBEAT\fR, a longer interval than 10000 milliseconds is recommended, but in particular the application must be prepared for the actual interval to be significantly longer than the requested one in high load situations\&. Values less than 1000 are changed to 1000\&.
+.RE
+.PP
+\fBCONFD_NOTIF_REOPEN_LOGS\fR
+.RS 4
+This event indicates that ConfD will close and reopen its log files, i\&.e\&. that
+\fBconfd \-\-reload\fR or \fBmaapi_reopen_logs()\fR (e\&.g\&. via \fBconfd_cmd \-c reopen_logs\fR)
+has been used\&.
+.RE
+.PP
+\fBNCS_NOTIF_PACKAGE_RELOAD\fR
+.RS 4
+This event is generated whenever NCS has completed a package reload\&.
+.RE
+.PP
+\fBNCS_NOTIF_CQ_PROGRESS\fR
+.RS 4
+This event is generated to report the progress of commit queue entries\&.
+.sp
+The application receives a
+\fBstruct ncs_cq_progress_notification\fR
+where the
+\fBenum ncs_cq_progress_notif_type type\fR
+gives the specific event that occurred, see
+confd_events\&.h\&. This can be one of
+\fBNCS_CQ_ITEM_WAITING\fR
+\- (waiting on another executing entry),
+\fBNCS_CQ_ITEM_EXECUTING\fR,
+\fBNCS_CQ_ITEM_LOCKED\fR
+(stalled by parent queue in cluster),
+\fBNCS_CQ_ITEM_COMPLETED\fR,
+\fBNCS_CQ_ITEM_FAILED\fR
+or
+\fBNCS_CQ_ITEM_DELETED\fR\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+This event may allocate memory dynamically inside the
+\fBstruct confd_notification\fR, thus we must always call
+\fBconfd_free_notification()\fR
+after receiving and processing this event\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fBCONFD_NOTIF_STREAM_EVENT\fR
+.RS 4
+This event is generated for a notification stream, i\&.e\&. event notifications sent by an application as described in the
+\m[blue]\fBNOTIFICATION STREAMS\fR\m[]
+section of
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]\&. The application receives a
+\fBstruct confd_stream_notification\fR
+where the
+\fBenum confd_stream_notif_type type\fR
+gives the specific event that occurred, see
+confd_events\&.h\&. This can be either an actual event notification (\fBCONFD_STREAM_NOTIFICATION_EVENT\fR), one of
+\fBCONFD_STREAM_NOTIFICATION_COMPLETE\fR
+or
+\fBCONFD_STREAM_REPLAY_COMPLETE\fR, which indicates that a requested replay has completed, or
+\fBCONFD_STREAM_REPLAY_FAILED\fR, which indicates that a requested replay could not be carried out\&. In all cases except
+\fBCONFD_STREAM_NOTIFICATION_EVENT\fR, no further
+\fBCONFD_NOTIF_STREAM_EVENT\fR
+events will be delivered on the socket\&.
+.sp
+This event also needs to be requested through a call to
+\fBconfd_notifications_connect2()\fR, where the required
+\fIstream_name\fR
+must be provided via the
+\fIstruct confd_notifications_data\fR
+parameter\&. The additional elements in the struct can be used as follows:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The
+\fIstart_time\fR
+element can be given to request a replay, in which case
+\fIstop_time\fR
+can also be given to specify the end of the replay (or "live feed")\&. The
+\fIstart_time\fR
+and
+\fIstop_time\fR
+must be set to the type C_NOEXISTS to indicate that no value is given, otherwise values of type C_DATETIME must be given\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The
+\fIxpath_filter\fR
+element may be used to specify an XPath filter to be applied to the notification stream\&. If no filtering is wanted,
+\fIxpath_filter\fR
+must be set to NULL\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The
+\fIusid\fR
+element may be used to specify the id of an existing user session for filtering based on AAA rules\&. Only notifications that are allowed by the access rights of that user session will be received\&. If no AAA restrictions are wanted,
+\fIusid\fR
+must be set to
+\fB0\fR\&.
+.RE
+.sp
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+This event may allocate memory dynamically inside the
+\fBstruct confd_notification\fR, thus we must always call
+\fBconfd_free_notification()\fR
+after receiving and processing this event\&.
+.sp .5v
+.RE
+.RE
+.PP
+Several of the above notification messages contain a lognumber which identifies the event\&. All log numbers are listed in the file
+confd_logsyms\&.h\&. Furthermore the array
+\fIconfd_log_symbols[]\fR
+can be indexed with the lognumber and it contains the symbolic name of each error\&. The array
+\fIconfd_log_descriptions[]\fR
+can also be indexed with the lognumber and it contains a textual description of the logged event\&.
+.SH "FUNCTIONS"
+.PP
+The API to receive events from ConfD is:
+.nr wf \w'int\ confd_notifications_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ mask);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_notifications_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_notifications_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ");" \}
+.nr wf \w'int\ confd_notifications_connect2('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ mask,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_notifications_data\ *data);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_notifications_connect2("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ", struct\ confd_notifications_data\ *" "data" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_notifications_connect2(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", int\ " "mask" ", struct\ confd_notifications_data\ *" "data" ");" \}
+.PP
+These functions create a notification socket\&. The
+\fImask\fR
+is a bitmask of one or several
+\fBenum confd_notification_type\fR
+values:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum confd_notification_type {
+    CONFD_NOTIF_AUDIT                  = (1 << 0),
+    CONFD_NOTIF_DAEMON                 = (1 << 1),
+    CONFD_NOTIF_TAKEOVER_SYSLOG        = (1 << 2),
+    CONFD_NOTIF_COMMIT_SIMPLE          = (1 << 3),
+    CONFD_NOTIF_COMMIT_DIFF            = (1 << 4),
+    CONFD_NOTIF_USER_SESSION           = (1 << 5),
+    CONFD_NOTIF_HA_INFO                = (1 << 6),
+    CONFD_NOTIF_SUBAGENT_INFO          = (1 << 7),
+    CONFD_NOTIF_COMMIT_FAILED          = (1 << 8),
+    CONFD_NOTIF_SNMPA                  = (1 << 9),
+    CONFD_NOTIF_FORWARD_INFO           = (1 << 10),
+    CONFD_NOTIF_NETCONF                = (1 << 11),
+    CONFD_NOTIF_DEVEL                  = (1 << 12),
+    CONFD_NOTIF_HEARTBEAT              = (1 << 13),
+    CONFD_NOTIF_CONFIRMED_COMMIT       = (1 << 14),
+    CONFD_NOTIF_UPGRADE_EVENT          = (1 << 15),
+    CONFD_NOTIF_COMMIT_PROGRESS        = (1 << 16),
+    CONFD_NOTIF_AUDIT_SYNC             = (1 << 17),
+    CONFD_NOTIF_HEALTH_CHECK           = (1 << 18),
+    CONFD_NOTIF_STREAM_EVENT           = (1 << 19),
+    CONFD_NOTIF_HA_INFO_SYNC           = (1 << 20),
+    NCS_NOTIF_PACKAGE_RELOAD           = (1 << 21),
+    NCS_NOTIF_CQ_PROGRESS              = (1 << 22),
+    CONFD_NOTIF_REOPEN_LOGS            = (1 << 23)
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fBconfd_notifications_connect2()\fR
+variant is required if we wish to subscribe to
+\fBCONFD_NOTIF_HEARTBEAT\fR,
+\fBCONFD_NOTIF_HEALTH_CHECK\fR, or
+\fBCONFD_NOTIF_STREAM_EVENT\fR
+events\&. The
+\fBstruct confd_notifications_data\fR
+is defined as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_notifications_data {
+    int heartbeat_interval;     /* required if we wish to generate */
+                                /* CONFD_NOTIF_HEARTBEAT events    */
+                                /* the time is milli seconds       */
+    int health_check_interval;  /* required if we wish to generate */
+                                /* CONFD_NOTIF_HEALTH_CHECK events */
+                                /* the time is milli seconds       */
+    /* The following five are used for CONFD_NOTIF_STREAM_EVENT    */
+    char *stream_name;          /* stream name (required)          */
+    confd_value_t start_time;   /* type = C_NOEXISTS or C_DATETIME */
+    confd_value_t stop_time;    /* type = C_NOEXISTS or C_DATETIME */
+                                /* when start_time is C_DATETIME   */
+    char *xpath_filter;         /* optional XPath filter for the   */
+                                /* stream \-  NULL for no filter    */
+    int usid;                   /* optional user session id for    */
+                                /* AAA  restriction \- 0 for no AAA */
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+When requesting the
+\fBCONFD_NOTIF_STREAM_EVENT\fR
+event,
+\fBconfd_notifications_connect2()\fR
+may fail and return CONFD_ERR, with some specific
+\fIconfd_errno\fR
+values:
+.PP
+\fBCONFD_ERR_NOEXISTS\fR
+.RS 4
+The stream name given by
+\fIstream_name\fR
+does not exist\&.
+.RE
+.PP
+\fBCONFD_ERR_XPATH\fR
+.RS 4
+The XPath filter provided via
+\fIxpath_filter\fR
+failed to compile\&.
+.RE
+.PP
+\fBCONFD_ERR_NOSESSION\fR
+.RS 4
+The user session id given by
+\fIusid\fR
+does not identify an existing user session\&.
+.RE
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+If these calls fail (i\&.e\&. do not return CONFD_OK), the socket descriptor must be closed and a new socket created before the call is re\-attempted\&.
+.sp .5v
+.RE
+.nr wf \w'int\ confd_read_notification('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_notification\ *n);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_read_notification("
+.br
+.BI "int\ " "sock" ", struct\ confd_notification\ *" "n" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_read_notification(int\ " "sock" ", struct\ confd_notification\ *" "n" ");" \}
+.PP
+The application is responsible for polling the notification socket\&. Once data is available to be read on the socket the application must call
+\fBconfd_read_notification()\fR
+to read the data from the socket\&. On success the function returns CONFD_OK and populates the
+\fBstruct confd_notification*\fR
+pointer\&. See
+confd_events\&.h
+for the definition of the
+\fBstruct confd_notification\fR
+structure\&.
+.PP
+If the application is not reading from the socket and a write() from ConfD hangs for more than 15 seconds, ConfD will close the socket and log the event to the confdLog
+.nr wf \w'void\ confd_free_notification('
+.nr wm 0
+.nr wp \w'struct\ confd_notification\ *n);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "void confd_free_notification("
+.br
+.BI "struct\ confd_notification\ *" "n" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "void confd_free_notification(struct\ confd_notification\ *" "n" ");" \}
+.PP
+The
+\fBstruct confd_notification\fR
+can sometimes have memory dynamically allocated inside it\&. Currently the notification types that render structures with allocated memory inside them are
+\fBCONFD_NOTIF_SNMPA\fR,
+\fBCONFD_NOTIF_STREAM_EVENT\fR
+and also
+\fBNCS_NOTIF_CQ_PROGRESS\fR\&. If such an event is received, this function must be called to free any memory allocated inside the received notification structure\&.
+.PP
+For those notification structures that do not have any memory allocated, this function is a no\-op, thus it is always safe to call this function after a notification structure has been processed\&.
+.nr wf \w'int\ confd_diff_notification_done('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_trans_ctx\ *tctx);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_diff_notification_done("
+.br
+.BI "int\ " "sock" ", struct\ confd_trans_ctx\ *" "tctx" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_diff_notification_done(int\ " "sock" ", struct\ confd_trans_ctx\ *" "tctx" ");" \}
+.PP
+If the received event was CONFD_NOTIF_COMMIT_DIFF it is important that we call this function when we are done reading the transaction diffs over MAAPI\&. The transaction is hanging until this function gets called\&. This function also releases memory associated to the transaction in the library\&.
+.nr wf \w'int\ confd_sync_audit_notification('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ usid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_sync_audit_notification("
+.br
+.BI "int\ " "sock" ", int\ " "usid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_sync_audit_notification(int\ " "sock" ", int\ " "usid" ");" \}
+.PP
+If the received event was CONFD_NOTIF_AUDIT, and we are subscribing to notifications with the flag CONFD_NOTIF_AUDIT_SYNC, this function must be called when we are done processing the notification\&. The user session is hanging until this function gets called\&.
+.nr wf \w'int\ confd_sync_ha_notification('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_sync_ha_notification("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_sync_ha_notification(int\ " "sock" ");" \}
+.PP
+If the received event was CONFD_NOTIF_HA_INFO, and we are subscribing to notifications with the flag CONFD_NOTIF_HA_INFO_SYNC, this function must be called when we are done processing the notification\&. All HA processing is blocked until this function gets called\&.
+.SH "SEE ALSO"
+.PP
+The ConfD User Guide
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

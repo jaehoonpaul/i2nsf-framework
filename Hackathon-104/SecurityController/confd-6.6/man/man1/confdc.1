@@ -1,0 +1,951 @@
+'\" t
+.\"     Title: confdc
+    
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+    
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFDC" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confdc \- Confdc compiler
+.SH "SYNOPSIS"
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-c [\-a\ |\ \-\-annotate\ \fIYangAnnotationFile\fR] [\-\-deviation\ \fIDeviationFile\fR] [\-o\ \fIFxsFile\fR] [\-\-verbose] [\-\-fail\-on\-warnings] [\-E\ |\ \-\-error\ \fIErrorCode\fR...] [\-W\ |\ \-\-warning\ \fIErrorCode\fR...] [\-w\ |\ \-\-no\-warning\ \fIErrorCode\fR...] [\-\-strict\-yang] [\-\-no\-yang\-source] [\-\-use\-description\ [always]] [[\-\-no\-features] | [\-F\ |\ \-\-features\ \fIFeatures\fR...]] [\-\-ignore\-unknown\-features] [\-p\ |\ \-\-prefix\ \fIPrefix\fR] [\-\-subagent\ \fIMountPath\fR] [\-\-yangpath\ \fIYangDir\fR] [\-\-export\ \fIAgent\fR\ [\-f\ \fIFxsFileOrDir\fR...]...] \-\-\ \fIYangFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-strip\-yang\-source \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-list\-errors
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-c [\-o\ \fICclFile\fR] \fIClispecFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-c [\-o\ \fIBinFile\fR] [\-I\ \fIDir\fR] \fIMibFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-c [\-o\ \fIBinFile\fR] [\-\-read\-only] [\-\-verbose] [\-I\ \fIDir\fR] [\-\-include\-file\ \fIBinFile\fR] [\-\-fail\-on\-warnings] [\-\-warn\-on\-type\-errors] [\-\-warn\-on\-access\-mismatch] [\-\-mib\-annotation\ \fIMibA\fR] [\-f\ \fIFxsFileOrDir\fR...] \-\-\ \fIMibFile\fR \fIFxsFile\fR...
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-h\ \fIHFile\fR [\-\-macro\-prefix\ \fIPrefix\fR] [\-\-include\-type] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-h\ \fIHFile\fR [\-a\ |\ \-\-annotate\ \fIYangAnnotationFile\fR] [\-\-deviation\ \fIDeviationFile\fR] [\-\-strict\-yang] [[\-\-no\-features] | [\-F\ |\ \-\-features\ \fIFeatures\fR...]] [\-\-ignore\-unknown\-features] [\-\-yangpath\ \fIYangDir\fR] [\-\-macro\-prefix\ \fIPrefix\fR] [\-\-include\-type] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] \fIYangFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-java\ \fIJFile\fR [\-\-print\-java\-filename] [\-\-java\-disable\-prefix] [\-\-java\-package\ \fIPackage\fR] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] [\-f\ \fIFxsFileOrDir\fR...] \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-python\ \fIPyFile\fR [\-\-print\-python\-filename] [\-\-no\-init\-py] [\-\-python\-disable\-prefix] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] [\-f\ \fIFxsFileOrDir\fR...] \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-hrl\ \fIHrlFile\fR [\-\-macro\-prefix\ \fIPrefix\fR] [\-\-include\-type] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-hrl\ \fIHrlFile\fR [\-a\ |\ \-\-annotate\ \fIYangAnnotationFile\fR] [\-\-deviation\ \fIDeviationFile\fR] [\-\-strict\-yang] [[\-\-no\-features] | [\-F\ |\ \-\-features\ \fIFeatures\fR...]] [\-\-ignore\-unknown\-features] [\-\-yangpath\ \fIYangDir\fR] [\-\-macro\-prefix\ \fIPrefix\fR] [\-\-include\-type] [\-\-exclude\-enums] [\-\-fail\-on\-warnings] \fIYangFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-emit\-mib\ \fIMibFile\fR [\-\-join\-names\ \fIcapitalize\fR | \fIhyphen\fR] [\-\-oid\ \fIOID\fR] [\-\-top\ \fIName\fR] [\-\-tagpath\ \fIPath\fR] [\-\-import\ \fIModule\fR\ \fIName\fR] [\-\-module\ \fIModule\fR] [\-\-generate\-oids] [\-\-generate\-yang\-annotation] [\-\-skip\-symlinks] [\-\-top\ \fITop\fR] [\-\-fail\-on\-warnings] [\-\-no\-comments] [\-\-read\-only] \-\-\ \fIFxsFile\fR...
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-mib2yang\-std [\-p\ \fIPrefix\fR] [\-o\ \fIYangFile\fR] \-\-\ \fIMibFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-mib2yang\-mods [\-\-mib\-annotation\ \fIMibA\fR] [\-\-keep\-readonly] [\-\-namespace\ \fIUri\fR] [\-\-revision\ \fIDate\fR] [\-o\ \fIYangDeviationFile\fR] \-\-\ \fIMibFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-mib2yang [\-\-mib\-annotation\ \fIMibA\fR] [\-\-emit\-doc] [\-\-snmp\-name] [\-\-read\-only] [\-u\ \fIUri\fR] [\-p\ \fIPrefix\fR] [\-o\ \fIYangFile\fR] \-\-\ \fIMibFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-snmpuser\ \fIEngineID\fR \fIUser\fR \fIAuthType\fR \fIPrivType\fR \fIPassPhrase\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-get\-info \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-get\-uri \fIFxsFile\fR
+.HP \w'\fBconfdc\fR\ 'u
+\fBconfdc\fR \-\-version
+.SH "DESCRIPTION"
+.PP
+During startup the ConfD daemon loads \&.fxs files describing
+our configuration data models\&. A \&.fxs file is the result of a compiled YANG data model file\&. The daemon also loads clispec files describing customizations to the auto\-generated CLI\&. The clispec files are described in
+\m[blue]\fBclispec(5)\fR\m[]\&.
+.PP
+A yang file by convention uses \&.yang (or \&.yin) filename suffix\&. YANG files are directly transformed into \&.fxs files by
+confdc\&.
+.PP
+We can use any number of \&.fxs files when working with the ConfD daemon\&.
+.PP
+The
+\fB\-\-emit\-h\fR
+option is used to generate a \&.h file from a \&.fxs or YANG (\&.yang/\&.yin) file\&. How to use the generated \&.h files is described in the ConfD User Guide\&.
+.PP
+The
+\fB\-\-emit\-java\fR
+option is used to generate a \&.java file from a \&.fxs file\&. The java file is used in combination with the Java library for Java based applications\&.
+.PP
+The
+\fB\-\-emit\-python\fR
+option is used to generate a \&.py file from a \&.fxs file\&. The python file is used in combination with the Python library for Python based applications\&.
+.PP
+The
+\fB\-\-emit\-hrl\fR
+option is used to generate a \&.hrl file from a \&.fxs or YANG (\&.yang/\&.yin) file\&. The \&.hrl file can be used for Erlang based applications\&.
+.PP
+The
+\fB\-\-print\-java\-filename\fR
+option is used to print the resulting name of the would be generated \&.java file\&.
+.PP
+The
+\fB\-\-print\-python\-filename\fR
+option is used to print the resulting name of the would be generated \&.py file\&.
+.PP
+The
+\fB\-\-python\-disable\-prefix\fR
+option is used to prevent prepending the Yang module prefix to each symbol in the generated \&.py file\&.
+.PP
+The
+\fB\-\-emit\-mib\fR
+option is used to generate an SNMP MIB from \&.fxs files\&.
+.PP
+The
+\fB\-\-snmpuser\fR
+option is used to generate localized keys for SNMP v3\&.
+.PP
+A clispec file by convention uses a \&.cli filename suffix\&. We use the
+confdc
+command to compile a clispec into a loadable format (with a \&.ccl suffix)\&.
+.PP
+A mib file by convention uses a \&.mib filename suffix\&. The
+confdc
+command is used for compiling the mib with one or more fxs files (containing OID to YANG mappings) into a loadable format (with a \&.bin suffix)\&. See the ConfD User Guide for more information about compiling the mib\&.
+.PP
+Take a look at the EXAMPLE section for a crash course\&.
+.SH "OPTIONS"
+.SS "Common options"
+.PP
+\fB\-f\fR, \fB\-\-fxsdep\fR \fIFxsFileOrDir\fR\&.\&.\&.
+.RS 4
+\&.fxs files (or directories containing \&.fxs files) to be used to resolve cross namespace dependencies\&.
+.RE
+.PP
+\fB\-\-yangpath\fR \fIYangModuleDir\fR
+.RS 4
+YangModuleDir is a directory containing other YANG modules and submodules\&. This flag must be used when we import or include other YANG modules or submodules that reside in another directory\&.
+.RE
+.PP
+\fB\-o\fR, \fB\-\-output\fR \fIFile\fR
+.RS 4
+Put the resulting file in the location given by File\&.
+.RE
+.SS "Compile options"
+.PP
+\fB\-c\fR, \fB\-\-compile\fR \fIFile\fR
+.RS 4
+Compile a YANG file (\&.yang/\&.yin) to a \&.fxs file or a clispec (\&.cli file) to a \&.ccl file, or a MIB (\&.mib file) to a \&.bin file
+.RE
+.PP
+\fB\-a\fR, \fB\-\-annotate\fR \fIAnnotationFile\fR
+.RS 4
+YANG users that are utilizing the tailf:annotate extension must use this flag to indicate the YANG annotation file(s)\&.
+.sp
+This parameter can be given multiple times\&.
+.RE
+.PP
+\fB\-\-deviation \fR\fIDeviationFile\fR
+.RS 4
+Indicates that deviations from the module in
+\fIDeviationFile\fR
+should be present in the fxs file\&.
+.sp
+This parameter can be given multiple times\&.
+.RE
+.PP
+\fB\-F\fR\fIfeatures\fR, \fB\-\-feature \fR\fIfeatures\fR
+.RS 4
+Indicates that support for the YANG
+\fIfeatures\fR
+should be present in the fxs file\&.
+\fIfeatures\fR
+is a string on the form
+\fImodulename\fR:[\fIfeature\fR(,\fIfeature\fR)*]
+.sp
+This option is used to prune the data model by removing all nodes that are defined with a "if\-feature" that is not listed as
+\fIfeature\fR\&.
+.sp
+This option can be given multiple times\&.
+.sp
+If this option is not given, nothing is pruned, i\&.e\&., it works as if all features were explicitly listed\&.
+.sp
+If the module uses a feature defined in an imported YANG module, it must be given as
+\fImodulename:feature\fR\&.
+.RE
+.PP
+\fB\-\-no\-yang\-source\fR
+.RS 4
+By default, the YANG module and submodules source is included in the fxs file, so that a NETCONF or RESTCONF client can download the module from the server\&.
+.sp
+If this option is given, the YANG source is not included\&.
+.RE
+.PP
+\fB\-\-no\-features\fR
+.RS 4
+Indicates that no YANG features from the given module are supported\&.
+.RE
+.PP
+\fB\-\-ignore\-unknown\-features\fR
+.RS 4
+Instructs the compiler to not give an error if an unknown feature is specified with
+\fB\-\-feature\fR\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-prefix\fR \fIPrefix\fR
+.RS 4
+ConfD
+needs to have a unique prefix for each loaded YANG module, which is used e\&.g\&. in the CLI and in the APIs\&. By default the prefix defined in the YANG module is used, but this prefix is not required to be unique across modules\&. This option can be used to specify an alternate prefix in case of conflicts\&. The special value \*(Aqmodule\-name\*(Aq means that the module name will be used for this prefix\&.
+.RE
+.PP
+\fB\-\-use\-description [always]\fR
+.RS 4
+Normally, \*(Aqdescription\*(Aq statements are ignored by
+confdc\&. Instead the \*(Aqtailf:info\*(Aq statement is used as help and information text in the CLI and Web UI\&. When this option is specified, text in \*(Aqdescription\*(Aq statements is used if no \*(Aqtailf:info\*(Aq statement is present\&. If the option
+\fIalways\fR
+is given, \*(Aqdescription\*(Aq is used even if \*(Aqtailf:info\*(Aq is present\&.
+.RE
+.PP
+\fB\-\-export\fR \fIAgent\fR \&.\&.\&.
+.RS 4
+Makes the namespace visible to Agent\&. Agent is either "none", "all", "netconf", "snmp", "cli", "webui", "rest" or a free\-text string\&. This option overrides any
+tailf:export
+statements in the module\&. The option "all" makes it visible to all agents\&. Use "none" to make it invisible to all agents\&.
+.RE
+.PP
+\fB\-\-subagent\fR \fIMountPath\fR
+.RS 4
+This option is used to compile a subagent\*(Aqs YANG modules for the master agent\&. It tells the master agent that this namespace is handled by a subagent\&. MountPath is an XPath expression (without instance selectors) where the namespace is mounted in the master agent\*(Aqs data hierarchy\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+Make compilation fail on warnings\&.
+.RE
+.PP
+\fB\-W\fR \fIErrorCode\fR
+.RS 4
+Treat
+\fIErrorCode\fR
+as a warning, even if
+\fB\-\-fail\-on\-warnings\fR
+is given\&.
+\fIErrorCode\fR
+must be a warning or a minor error\&.
+.sp
+Use
+\fB\-\-list\-errors\fR
+to get a listing of all errors and warnings\&.
+.sp
+The following example treats all warnings except the warning for dependency mismatch as errors:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c \-\-fail\-on\-warnings \-W TAILF_DEPENDENCY_MISMATCH
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fB\-w\fR \fIErrorCode\fR
+.RS 4
+Do not report the warning
+\fIErrorCode\fR, even if
+\fB\-\-fail\-on\-warnings\fR
+is given\&.
+\fIErrorCode\fR
+must be a warning\&.
+.sp
+Use
+\fB\-\-list\-errors\fR
+to get a listing of all errors and warnings\&.
+.sp
+The following example ignores the warning TAILF_DEPENDENCY_MISMATCH:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c \-w TAILF_DEPENDENCY_MISMATCH
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fB\-E\fR \fIErrorCode\fR
+.RS 4
+Treat the warning
+\fIErrorCode\fR
+as an error\&.
+.sp
+Use
+\fB\-\-list\-errors\fR
+to get a listing of all errors and warnings\&.
+.sp
+The following example treats only the warning for unused import as an error:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c \-E UNUSED_IMPORT
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fB\-\-strict\-yang\fR
+.RS 4
+Force strict YANG compliance\&. Currently this checks that the deref() function is not used in XPath expressions and leafrefs\&.
+.RE
+.SS "Standard MIB to YANG options"
+.PP
+\fB\-\-mib2yang\-std \fR\fB\fIMibFile\fR\fR
+.RS 4
+Generate a YANG file from the MIB module (\&.mib file), in accordance with the IETF standard, RFC\-6643\&.
+.sp
+If the MIB IMPORTs other MIBs, these MIBs must be available (as \&.mib files) to the compiler when a YANG module is generated\&. By default, all MIBs in the current directory and all builtin MIBs are available\&. Since the compiler uses the tool
+\fBsmidump\fR
+to perform the conversion to YANG, the environment variable
+\fISMIPATH\fR
+can be set to a colon\-separated list of directories to search for MIB files\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-prefix\fR \fIPrefix\fR
+.RS 4
+Specify a prefix to use in the generated YANG module\&.
+.sp
+An appendix to the RFC describes how the prefix is automatically generated, but such an automatically generated prefix is not always unique, and ConfD requires unique prefixes in all loaded modules\&.
+.RE
+.SS "Standard MIB to YANG modification options"
+.PP
+\fB\-\-mib2yang\-mods \fR\fB\fIMibFile\fR\fR
+.RS 4
+Generate a combined YANG deviation/annotation file from the MIB module (\&.mib file), which can be used to compile the yang file generated by \-\-mib2yang\-std, to achieve a similar result as with the non\-standard \-\-mib2yang translation\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-prefix\fR \fIPrefix\fR
+.RS 4
+Specify a prefix to use in the generated YANG module\&.
+.sp
+An appendix to the RFC describes how the prefix is automatically generated, but such an automatically generated prefix is not always unique, and ConfD requires unique prefixes in all loaded modules\&.
+.RE
+.PP
+\fB\-\-mib\-annotation\fR \fIMibA\fR
+.RS 4
+Provide a MIB annotation file to control how to override the standard translation of specific MIB objects to YANG\&. See
+\m[blue]\fBmib_annotations(5)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-revision \fR\fB\fIDate\fR\fR
+.RS 4
+Generate a revision statement with the provided Date as value in the deviation/annotation file\&.
+.RE
+.PP
+\fB\-\-namespace\fR \fIUri\fR
+.RS 4
+Specify a uri to use as namespace in the generated deviation/annotation module\&.
+.RE
+.PP
+\fB\-\-keep\-readonly\fR
+.RS 4
+Do not generate any deviations of the standard config (false) statements\&. Without this flag, config statements will be deviated to true on yang nodes corresponding to writable MIB objects\&.
+.RE
+.SS "MIB to YANG options"
+.PP
+\fB\-\-mib2yang \fR\fB\fIMibFile\fR\fR
+.RS 4
+Generate a YANG file from the MIB module (\&.mib file)\&.
+.sp
+If the MIB IMPORTs other MIBs, these MIBs must be available (as \&.mib files) to the compiler when a YANG module is generated\&. By default, all MIBs in the current directory and all builtin MIBs are available\&. Since the compiler uses the tool
+\fBsmidump\fR
+to perform the conversion to YANG, the environment variable
+\fISMIPATH\fR
+can be set to a colon\-separated list of directories to search for MIB files\&.
+.RE
+.PP
+\fB\-u\fR, \fB\-\-uri\fR \fIUri\fR
+.RS 4
+Specify a uri to use as namespace in the generated YANG module\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-prefix\fR \fIPrefix\fR
+.RS 4
+Specify a prefix to use in the generated YANG module\&.
+.RE
+.PP
+\fB\-\-mib\-annotation\fR \fIMibA\fR
+.RS 4
+Provide a MIB annotation file to control how to translate specific MIB objects to YANG\&. See
+\m[blue]\fBmib_annotations(5)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-snmp\-name\fR
+.RS 4
+Generate the YANG statement "tailf:snmp\-name" instead of "tailf:snmp\-oid"\&.
+.RE
+.PP
+\fB\-\-read\-only\fR
+.RS 4
+Generate a YANG module where all nodes are "config false"\&.
+.RE
+.SS "MIB compiler options"
+.PP
+\fB\-c\fR, \fB\-\-compile\fR \fIMibFile\fR
+.RS 4
+Compile a MIB module (\&.mib file) to a \&.bin file\&.
+.sp
+If the MIB IMPORTs other MIBs, these MIBs must be available (as compiled \&.bin files) to the compiler\&. By default, all compiled MIBs in the current directory and all builtin MIBs are available\&. Use the parameters
+\fI\-\-include\-dir\fR
+or
+\fI\-\-include\-file\fR
+to specify where the compiler can find the compiled MIBs\&.
+.RE
+.PP
+\fB\-\-verbose\fR
+.RS 4
+Print extra debug info during compilation\&.
+.RE
+.PP
+\fB\-\-read\-only\fR
+.RS 4
+Compile the MIB as read\-only\&. All SET attempts over SNMP will be rejected\&.
+.RE
+.PP
+\fB\-I\fR, \fB\-\-include\-dir\fR \fIDir\fR
+.RS 4
+Add the directory Dir to the list of directories to be searched for IMPORTed MIBs (\&.bin files)\&.
+.RE
+.PP
+\fB\-\-include\-file\fR \fIFile\fR
+.RS 4
+Add File to the list of files of IMPORTed (compiled) MIB files\&. File must be a \&.bin file\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+Make compilation fail on warnings\&.
+.RE
+.PP
+\fB\-\-warn\-on\-type\-errors\fR
+.RS 4
+Warn rather than give error on type checks performed by the MIB compiler\&.
+.RE
+.PP
+\fB\-\-warn\-on\-access\-mismatch\fR
+.RS 4
+Give a warning if an SNMP object has read only access to a config object\&.
+.RE
+.PP
+\fB\-\-mib\-annotation\fR \fIMibA\fR
+.RS 4
+Provide a MIB annotation file to fine\-tune how specific MIB objects should behave in the SNMP agent\&. See
+\m[blue]\fBmib_annotations(5)\fR\m[]\&.
+.RE
+.SS "Emit C header file options"
+.PP
+\fB\-\-emit\-h\fR \fIHFile\fR
+.RS 4
+Generate a \&.h utility header file to be used when working with the ConfD C APIs\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+When the header file is generated from a YANG (\&.yang/\&.yin) file, the YANG file is currently compiled to a temporary \&.fxs file as an intermediary step\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fB\-\-macro\-prefix\fR \fIPrefix\fR
+.RS 4
+Without this option, all macro definitions in the generated \&.h file are prepended with the argument of the
+prefix
+statement in the YANG module\&. If this option is used, the macro definitions are prepended with Prefix instead\&.
+.RE
+.PP
+\fB\-\-include\-type\fR
+.RS 4
+If this option is used all macro definitions for enums in the generated \&.h file have the type name as part of their name\&.
+.RE
+.PP
+\fB\-\-exclude\-enums\fR
+.RS 4
+If this option is used, macro definitions for enums are omitted from the generated \&.h file\&. This can in some cases be useful to avoid conflicts between enum symbols, or between enums and other symbols\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+If this option is used all warnings are treated as errors and
+confdc
+will fail its execution\&.
+.RE
+.SS "Emit Erlang header file options"
+.PP
+\fB\-\-emit\-hrl\fR \fIHrlFile\fR
+.RS 4
+Generate a \&.hrl utility header file to be used when working with the ConfD Erlang APIs\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+When the header file is generated from a YANG (\&.yang/\&.yin) file, the YANG file is currently compiled to a temporary \&.fxs file as an intermediary step\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fB\-\-macro\-prefix\fR \fIPrefix\fR
+.RS 4
+Without this option, all macro definitions in the generated \&.hrl file are prepended with the argument of the
+prefix
+statement in the YANG module\&. If this option is used, the macro definitions are prepended with Prefix instead\&.
+.RE
+.PP
+\fB\-\-include\-type\fR
+.RS 4
+If this option is used all macro definitions for enums in the generated \&.hrl file have the type name as part of their name\&.
+.RE
+.PP
+\fB\-\-exclude\-enums\fR
+.RS 4
+If this option is used, macro definitions for enums are omitted from the generated \&.hrl file\&. This can in some cases be useful to avoid conflicts between enum symbols, or between enums and other symbols\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+If this option is used all warnings are treated as errors and
+confdc
+will fail its execution\&.
+.RE
+.SS "Emit SMIv2 MIB options"
+.PP
+\fB\-\-emit\-mib\fR \fIMibFile\fR
+.RS 4
+Generates a MIB file for use with SNMP agents/managers\&. See the appropriate section in the SNMP agent chapter in the ConfD User Guide for more information\&.
+.RE
+.PP
+\fB\-\-join\-names capitalize\fR
+.RS 4
+Join element names without separator, but capitalizing, to get the MIB name\&. This is the default\&.
+.RE
+.PP
+\fB\-\-join\-names hyphen\fR
+.RS 4
+Join element names with hyphens to get the MIB name\&.
+.RE
+.PP
+\fB\-\-join\-names force\-capitalize\fR
+.RS 4
+The characters \*(Aq\&.\*(Aq and \*(Aq_\*(Aq can occur in YANG identifiers but not in SNMP identifiers; they are converted to hyphens, unless this option is given\&. In this case, such identifiers are capitalized (to lowerCamelCase)\&.
+.RE
+.PP
+\fB\-\-oid\fR \fIOID\fR
+.RS 4
+Let
+\fIOID\fR
+be the top object\*(Aqs OID\&. If the first component of the OID is a name not defined in SNMPv2\-SMI, the
+\fB\-\-import\fR
+option is also needed in order to produce a valid MIB module, to import the name from the proper module\&. If this option is not given, a
+tailf:snmp\-oid
+statement must be specified in the YANG header\&.
+.RE
+.PP
+\fB\-\-tagpath Path\fR
+.RS 4
+Generate the MIB only for a subtree of the module\&. The
+\fIPath\fR
+argument is an absolute schema node identifier, and it must refer to container nodes only\&.
+.RE
+.PP
+\fB\-\-import\fR \fIModule\fR \fIName\fR
+.RS 4
+Add an IMPORT statement which imports
+\fIName\fR
+from the MIB
+\fIModule\fR\&.
+.RE
+.PP
+\fB\-\-top\fR \fIName\fR
+.RS 4
+Let
+\fIName\fR
+be the name of the top object\&.
+.RE
+.PP
+\fB\-\-module\fR \fIName\fR
+.RS 4
+Let
+\fIName\fR
+be the module name\&. If a
+tailf:snmp\-mib\-module\-name
+statement is in the YANG header, the two names must be equal\&.
+.RE
+.PP
+\fB\-\-generate\-oids\fR
+.RS 4
+Translate all data nodes into MIB objects, and generate OIDs for data nodes without
+tailf:snmp\-oid
+statements\&.
+.RE
+.PP
+\fB\-\-generate\-yang\-annotation\fR
+.RS 4
+Generate a YANG annotation file containing the
+tailf:snmp\-oid,
+tailf:snmp\-mib\-module\-name
+and
+tailf:snmp\-row\-status\-column
+statements for the nodes\&. Implies
+\-\-skip\-symlinks\&.
+.RE
+.PP
+\fB\-\-skip\-symlinks\fR
+.RS 4
+Do not generate MIB objects for data nodes modeled through symlinks\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+If this option is used all warnings are treated as errors and
+confdc
+will fail its execution\&.
+.RE
+.PP
+\fB\-\-no\-comments\fR
+.RS 4
+If this option is used no additional comments will be generated in the MIB\&.
+.RE
+.PP
+\fB\-\-read\-only\fR
+.RS 4
+If this option is used all objects in the MIB will be read only\&.
+.RE
+.PP
+\fB\-\-prefix\fR \fIString\fR
+.RS 4
+Prefix all MIB object names with
+\fIString\fR\&.
+.RE
+.SS "Emit SNMP user options"
+.PP
+\fB\-\-snmpuser\fR \fIEngineID\fR \fIUser\fR \fIAuthType\fR \fIPrivType\fR \fIPassPhrase\fR
+.RS 4
+Generates a user entry with localized keys for the specified engine identifier\&. The output is an usmUserEntry in XML format that can be used in an initiation file for the SNMP\-USER\-BASED\-SM\-MIB::usmUserTable\&. In short this command provides key generation for users in SNMP v3\&. This option takes five arguments: The EngineID is either a string or a colon separated hexlist, or a dot separated octet list\&. The User argument is a string specifying the user name\&. The AuthType argument is one of md5, sha, or none\&. The PrivType argument is one of des, aes, or none\&. The PassPhrase argument is a string\&.
+.RE
+.SS "Emit Java options"
+.PP
+\fB\-\-emit\-java\fR \fIJFile\fR
+.RS 4
+Generate a \&.java ConfNamespace file from a \&.fxs file to be used when working with the Java library\&. The file is useful, but not necessary when working with the NAVU library\&. JFile could either be a file or a directory\&. If JFile is a directory the resulting \&.java file will be created in that directory with a name based on the module name in the YANG module\&. If JFile is not a directory that file is created\&. Use
+\fI\-\-print\-java\-filename\fR
+to get the resulting file name\&.
+.RE
+.PP
+\fB\-\-print\-java\-filename\fR
+.RS 4
+Only print the resulting java file name\&. Due to restrictions of identifiers in Java the name of the Class and thus the name of the file might get changed if non Java characters are used in the name of the file or in the name of the module\&. If this option is used no file is emitted the name of the file which would be created is just printed on stdout\&.
+.RE
+.PP
+\fB\-\-java\-package\fR \fIPackage\fR
+.RS 4
+If this option is used the generated java file will have the given package declaration at the top\&.
+.RE
+.PP
+\fB\-\-exclude\-enums\fR
+.RS 4
+If this option is used, definitions for enums are omitted from the generated java file\&. This can in some cases be useful to avoid conflicts between enum symbols, or between enums and other symbols\&.
+.RE
+.PP
+\fB\-\-fail\-on\-warnings\fR
+.RS 4
+If this option is used all warnings are treated as errors and
+confdc
+will fail its execution\&.
+.RE
+.PP
+\fB\-f\fR, \fB\-\-fxsdep\fR \fIFxsFileOrDir\fR\&.\&.\&.
+.RS 4
+\&.fxs files (or directories containing \&.fxs files) to be used to resolve cross namespace dependencies\&.
+.RE
+.SS "Misc options"
+.PP
+\fB\-\-strip\-yang\-source\fR \fIFxsFile\fR
+.RS 4
+Removes included YANG source from the fxs file\&. This makes the file smaller, but it means that the YANG module and submodules cannot be downloaded from the server, unless they are present in the load path\&.
+.RE
+.PP
+\fB\-\-get\-info\fR \fIFxsFile\fR
+.RS 4
+Various info about the file is printed on standard output, including the names of the source files used to produce this file, which
+confdc
+version was used, and for fxs files, namespace URI, other namespaces the file depends on, namespace prefix, and mount point\&.
+.RE
+.PP
+\fB\-\-get\-uri\fR \fIFxsFile\fR
+.RS 4
+Extract the namespace URI\&.
+.RE
+.PP
+\fB\-\-version\fR
+.RS 4
+Reports the
+confdc
+version\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Assume we have the file
+system\&.yang:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+module system {
+  namespace "http://example\&.com/ns/gargleblaster";
+  prefix "gb";
+
+  import ietf\-inet\-types {
+    prefix inet;
+  }
+  container servers {
+    list server {
+      key name;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip\-address;
+      }
+      leaf port {
+        type inet:port\-number;
+      }
+    }
+  }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+To compile this file we do:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c system\&.yang
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If we intend to access data from this module from our C programs, it is meaningful to generate a \&.h file like this:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c \-\-emit\-h blaster\&.h system\&.fxs
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The \&.h file contains
+#define
+entries for the different nodes in system\&.yang\&. C code that needs to manipulate or read data from this module will typically need to include the generated \&.h file\&.
+.PP
+If we intend to manipulate this data from our Java programs, we must typically also invoke:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-\-emit\-java blaster\&.java system\&.fxs
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Finally we show how to compile a clispec into a loadable format:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ confdc \-c mycli\&.cli
+$ ls mycli\&.ccl
+myccl\&.ccl
+.fi
+.if n \{\
+.RE
+.\}
+.SH "DIAGNOSTICS"
+.PP
+On success exit status is 0\&. On failure 1\&. Any error message is printed to stderr\&.
+.SH "YANG 1.1"
+.PP
+ConfD
+supports YANG 1\&.1, as defined in RFC 7950, with the following exceptions:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Type
+\fIempty\fR
+in unions and in list keys is not supported\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Type
+\fIleafref\fR
+in unions are not validated, and treated as a string internally\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fBanydata\fR
+is not supported\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The new scoping rules for submodules are not implemented\&. Specifically, a submodule must still include other submodules in order to access definitions defined there\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Inline
+\fBnotification\fR
+statements are handled by the compiler, but not supported in the APIs\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+The new XPath functions
+\fBderived\-from()\fR
+and
+\fBderived\-from\-or\-self()\fR
+can only be used with literal strings in the second argument\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+Leafref paths without prefixes in top\-level typedefs are handled as in YANG 1\&.
+.RE
+.sp
+.SH "SEE ALSO"
+.PP
+The ConfD User Guide
+.RS 4
+.RE
+.PP
+\fBconfd \fR(1)
+.RS 4
+command to start and control the
+ConfD
+daemon
+.RE
+.PP
+\fB confd.conf \fR(5)
+.RS 4
+ConfD
+daemon configuration file format
+.RE
+.PP
+\fBclispec\fR(5)
+.RS 4
+CLI specification file format
+.RE
+.PP
+\fBmib_annotations\fR(5)
+.RS 4
+MIB annotations file format
+.RE
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

@@ -1,0 +1,20 @@
+module ietf-yang-library-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-yang-library {
+    prefix yanglib;
+  }
+
+  description
+    "Annotation module for ietf-yang-library.";
+
+  tailf:annotate "/yanglib:modules-state" {
+    tailf:callpoint "yanglib" {
+      tailf:internal;
+    }
+  }
+}

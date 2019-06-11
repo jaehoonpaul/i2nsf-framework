@@ -1,0 +1,27 @@
+#!/bin/sh
+
+bindir=`dirname $0`
+case $bindir in
+    /*) confddir=`dirname $bindir`;;
+    *)  confddir=`(cd $bindir/..; pwd)`;;
+esac
+
+if [ -d $confddir/confd_dir/lib ]; then
+    confddir=$confddir/confd_dir
+fi
+
+pyang=$confddir/lib/pyang/bin/pyang
+
+if [ "x${PYTHONPATH}" != "x" ]; then
+    PYTHONPATH=$confddir/lib/pyang:$PYTHONPATH
+else
+    PYTHONPATH=$confddir/lib/pyang
+fi
+if [ "x${YANG_MODPATH}" != "x" ]; then
+    YANG_MODPATH=$confddir/src/confd/yang:$YANG_MODPATH
+else
+    YANG_MODPATH=$confddir/src/confd/yang
+fi
+export PYTHONPATH YANG_MODPATH
+
+exec $pyang "$@"

@@ -1,0 +1,113 @@
+Introductory Examples
+~~~~~~~~~~~~~~~~~~~~~
+
+This suite of introductory examples are intended to be used as the
+first hands-on experience for Tail-f ConfD product users. They may
+also be used as a starting point for development work later.
+The examples are independent,
+so they will run in any order. Taking them in sequence is however
+likely to give the smoothest learning curve.
+
+These examples have been developed primarily for Linux. For most part,
+any other UNIX will do just as well. You won't need root privileges to
+compile and run these examples. Also, if you wish, you can install and
+run ConfD right from your own user account. See Example #1 for more
+details.
+
+To get the most out of these examples, you are probably a C (or Python)
+programmer with a reasonable understanding of XML and XML
+Schema. At the very least, you need to understand the basics of Make
+and Linux/UNIX type operating systems.
+
+ConfD Scenarios
+~~~~~~~~~~~~~~~
+
+ConfD is the Configuration Daemon. It runs on a target machine, along
+with a set of services that the target machine hosts. ConfD enables an
+operator or management system to configure the services running on the
+target machine, and possibly on other machines that are subordinate to
+this target machine.
+
+An operator uses a Configuration Management tool to add, reconfigure
+and remove services from the target machine. Another way of looking at
+it is to view the target machine as a collection of Managed Objects. A
+Managed Object could be anything from a network interface card to an
+entire router.
+
+There are several different kinds of Configuration Management tools,
+ranging from very complex data center solutions to trivial command
+line interfaces. As these examples demonstrate, ConfD supports
+Configuration Management tools that connect through the NETCONF
+protocol. ConfD also supports a production quality command line
+interface, Web User Interface, and other access methods.
+
+Data models (YANG)
+
+In order for the Configuration Manager to have a clue about what
+operations and information the Managed Objects provide, there are
+YANG models. A good introduction to YANG can be found at
+http://www.yang-central.org
+
+Scenario #1
+
+When an operator wants to get the list of IP addresses on the network
+interfaces of the target machine, she uses the Configuration Manager
+to formulate the question. In the case of a NETCONF capable
+Configuration Manager, the query will be formulated as a series of XML
+messages.
+
+The Configuration Manager opens up a connection to the ConfD daemon
+running on the target machine, sends the NETCONF/XML query, and waits
+for a response. ConfD looks up the answer in the ConfD Configuration
+Database (CDB) and returns it.
+
+Scenario #2
+
+Next, if the operator wants to know how many packets have been
+dismissed by the firewall, the same thing happens. Only this
+information is not stored in CDB, because this is not configuration
+information, this is run-time statistics. ConfD then turns to one of
+its ConfD data providers. A ConfD data provider is a program that has
+registered with ConfD as being responsible for a certain part of the
+information in the system.
+
+ConfD looks up which one of the registered data providers keep track
+of packets dismissed by the firewall, contacts the data provider to
+retrieve the information. ConfD then returns the answer to the
+operator.
+
+Examples Menu
+~~~~~~~~~~~~~
+
+Start with one of the examples below:
+
++ Example #1: Starting ConfD
+    Start here. This example will tell you how to build a simple
+    example, configure ConfD and start a system.
+
++ Example #2: Running a ConfD Query
+    How do you interface with ConfD? This example demonstrates some
+    different ways of accessing ConfD.
+
++ Example #4: Read-only Instrumentation in Java
+    This example shows how you can interface with read-only statistics
+    sources in your target system using Java.
+    If you are primarily a C programmer, you can skip to example #6.
+
++ Example #6: Read-only Instrumentation in C
+    This is similar to Example #4, only implemented in C.  This
+    example shows how you can interface with read-only statistics
+    sources in your target system. This is useful for instrumenting
+    existing C applications.
+
++ Example #7: Configuration Instrumentation in C
+    Here's how you can interface with existing system services which
+    act as their own databases.
+
++ Example #8: Actions in the Data Model Implemented in C
+    This example shows how to define an action which operates on the
+    data, how to implement such an action, and how to invoke the
+    action from the CLI and NETCONF.
+
+Now, go ahead and pick one of the examples. Open up the README file
+for the exercise and follow the instructions.

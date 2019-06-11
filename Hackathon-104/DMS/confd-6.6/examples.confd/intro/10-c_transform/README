@@ -1,0 +1,140 @@
+Example #10: Transformation callpoint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how ConfD transformations can help provide
+an alternative view on the existing YANG model, and create a transformed
+variant that offers all the northbound functionality without any need to modify
+and/or update the original YANG model or it's servicing/client applications.
+It implements a tiny bit more complex callbacks utilizing the MAAPI interface.
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+The example includes a YANG model: "yangs/user-storage.yang". This represents
+an already existing YANG model that works in the environment, and can have
+(not included in the example contents) e.g. CDB subscribers implemented,
+clients reading it's contents via ConfD APIs, etc. Main point here is, that
+there's some developed pipeline that utilizes this model.
+
+Assume new requirements have emerged for the northbound APIs, asking for
+a different structure of configurable data. Taking new input into account,
+resulting YANG model conforming with requirements is designed in the
+"yangs/user-folders.yang" model.
+
+Utilizing the ConfD transformations, this model does not store anything in
+the CDB, there is no duplication of data. Whenever the northbound request needs
+the information from "user-folders" model or tries to configure it, ConfD
+invokes registered callbacks to handle the request, retrieving/modifying data
+"in the backend". In this case, source/target of all the configuration data
+being the already existing "user-storage.yang" stored in CDB.
+
+Application called "user-storage-trans-app" implements the transformation
+callbacks that use the MAAPI transaction to read from the CDB, and respond back
+to ConfD requests.
+
+The "mapping" - relationship between the northbound request (e.g. user in CLI)
+to "user-folder.yang" model, and the data stored in the "user-storage.yang"
+model, is "embedded" in the C code implementation of transformation callbacks.
+
+Example files structure
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Example codebase consists of (operates on) few directories.
+
+The "build" directory is created on building of example, and includes all of the
+generated files necessary for both building the daemon application, as well as
+running the ConfD with defined models.
+
+The "yangs" directory includes YANG models used for the example - "user-storage"
+that represents an existing model used as a source of information for a new,
+differently structured "user-folders" model.
+
+The "src" directory includes all the C source code of the daemon application
+that implements the transformation callpoint using the ConfD library.
+
+C codebase of the application includes:
+
+  src/user-storage-trans-app.c
+    - application daemon itself that registers the transformation callpoint
+
+  src/transform_cb.c
+    - ConfD lib callpoint structure binding all the callback functions
+
+  src/cb_*.c
+    - specific callback functions used to service the transformed model, defined
+      by the ConfD data provider API
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+On the standard "make all; make start; make cli / make cli-c" command sequence,
+configuration mode offers two different accessible "sub-trees".
+"folder-user" (referenced as "T" further) belongs to "user-folders.yang" model.
+"user-storage" (referenced as "S" further) belongs to "user-storage.yang" model.
+
+Try configuring some data in the T-model, and see how the records automatically
+appear in the "show full-config user-storage" printout of the S-model.
+
+Configuring in T-model:
+
+    dev2# config
+    Entering configuration mode terminal
+    dev2(config)# folder-user bob
+    dev2(config-folder-user-bob)# auth-none
+    dev2(config-folder-user-bob)# commit
+    Commit complete.
+
+Printout of the T-model:
+
+    dev2(config-folder-user-bob)# top
+    dev2(config)# show full-configuration folder-user
+    folder-user bob
+     auth-none
+    !
+
+Printout of the S-model:
+
+    dev2(config)# show full-configuration user-storage
+    user-storage user 101
+     username bob
+    auth-info auth-type none
+    !
+
+Cleanup of the T-model and verification of the S-model contents:
+
+    dev2(config)# no folder-user
+    dev2(config)# commit
+    Commit complete.
+    dev2(config)# show full-configuration user-storage
+    % No entries found.
+
+More elements can be modified/configured. See how the modification of config
+in "/folder-user" model affects the contents of real data stored in CDB in
+"/user-storage" subtree.
+
+As the "mapping" is written with some specific intent in transformation code,
+manually editing the existing data in "/user-storage" can lead to various
+outcomes depending on robustness of the transform code. Usual practice is to
+restrict write access to the original model, e.g. by "hiding" it form northbound
+APIs by only exporting it to MAAPI API.
+
+For other use-cases, clarifications, or more details, you can see other
+existing examples that utilize the transformation callpoints:
+
+    - misc/aaa_transform
+    - misc/gen_transform
+    - snmpa/7-transform
+
+Further reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Transformations, Hooks, Hidden Data and Symlinks
++ man 3 confd_lib
+
+Exercises
+~~~~~~~~~
+Example does not include the implementation/registration of the callbacks that
+service the "metadata" functionality of ConfD, for details, see user guide
+chapter - Configuration Meta-Data.
+As an exercise, try writing .get_attrs() / .set_attr() callbacks to allow
+executing commands like "annotate" on the "/folder-user" model subtree.

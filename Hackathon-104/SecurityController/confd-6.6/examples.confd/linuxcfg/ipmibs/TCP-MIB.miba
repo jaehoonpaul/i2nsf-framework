@@ -1,0 +1,2 @@
+tcpConnectionState max_access = read_only
+tcpConnTable behavior = noSuchInstance

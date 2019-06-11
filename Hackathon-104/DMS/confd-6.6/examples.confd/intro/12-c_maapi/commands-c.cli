@@ -1,0 +1,190 @@
+<clispec xmlns="http://tail-f.com/ns/clispec/1.0"
+         style="c">
+  <operationalMode>
+    <cmd name="start-count">
+      <info>Display how many times this application was started.</info>
+      <help>Display how many times this application was started.</help>
+      <callback>
+        <capi>
+          <cmdpoint>start_count_cp</cmdpoint>
+        </capi>
+      </callback>
+    </cmd>
+    <cmd name="items-with" mount="show">
+      <info>Display items with value</info>
+      <help>Display items with value</help>
+      <callback>
+        <capi>
+          <cmdpoint>show_items_with_value_cp</cmdpoint>
+        </capi>
+      </callback>
+      <params>
+        <param>
+          <info>Value filter</info>
+          <type>
+            <simpleType name="decimal"
+                        namespace="http://www.w3.org/2001/XMLSchema"/>
+          </type>
+        </param>
+      </params>
+    </cmd>
+    <cmd name="items-with-smaller-than" mount="show">
+      <info>Display items with smaller value</info>
+      <help>Display items with smaller value</help>
+      <callback>
+        <capi>
+          <cmdpoint>show_items_with_smaller_than_value_cp</cmdpoint>
+        </capi>
+      </callback>
+      <params>
+        <param>
+          <info>Value filter</info>
+          <type>
+            <simpleType name="decimal"
+                        namespace="http://www.w3.org/2001/XMLSchema"/>
+          </type>
+        </param>
+      </params>
+    </cmd>
+  </operationalMode>
+
+  <configureMode>
+    <cmd name="maapi_confirmed_commit">
+      <info>Perform confirmed commit.</info>
+      <help>Perform confirmed commit.</help>
+      <callback>
+        <capi>
+          <cmdpoint>start_confirmed_commit</cmdpoint>
+        </capi>
+      </callback>
+      <params mode="choice" min="0" max="1">
+        <param>
+          <type>
+            <enumerate>
+              <enum>
+                <name>confirm</name>
+                <info>confirm commit</info>
+              </enum>
+            </enumerate>
+          </type>
+          <params>
+            <param>
+              <help>persist id for confirmation</help>
+              <info>persist id for confirmation</info>
+              <optional/>
+              <type>
+                <simpleType name="string"
+                  namespace="http://www.w3.org/2001/XMLSchema"/>
+              </type>
+            </param>
+          </params>
+        </param>
+
+        <param>
+          <type>
+            <enumerate>
+              <enum>
+                <name>abort</name>
+                <info>abort commit</info>
+              </enum>
+            </enumerate>
+          </type>
+          <params>
+            <param>
+              <help>persist id for abort</help>
+              <info>persist id for abort</info>
+              <optional/>
+              <type>
+                <simpleType name="string" namespace=
+                    "http://www.w3.org/2001/XMLSchema"/>
+              </type>
+            </param>
+          </params>
+        </param>
+
+        <param>
+          <type>
+            <enumerate>
+              <enum>
+                <name>status</name>
+                <info>print status info about commit</info>
+              </enum>
+            </enumerate>
+          </type>
+        </param>
+
+
+        <param>
+          <help>persist string</help>
+          <info>persist string</info>
+          <type>
+            <enumerate>
+              <enum>
+                <name>persist</name>
+                <info>persist string</info>
+              </enum>
+            </enumerate>
+          </type>
+          <params>
+            <param>
+              <type>
+                <simpleType name="string"
+                            namespace="http://www.w3.org/2001/XMLSchema"/>
+              </type>
+              <params>
+                <param>
+                  <optional/>
+                  <help>timeout value (s)</help>
+                  <info>timeout value (s)</info>
+                  <type>
+                    <enumerate>
+                      <enum>
+                        <name>timeout</name>
+                        <info>timeout value (s)</info>
+                      </enum>
+                    </enumerate>
+                  </type>
+                  <params>
+                    <param>
+                      <help>timeout value (s)</help>
+                      <info>timeout value (s)</info>
+                      <type>
+                        <simpleType name="nonNegativeInteger"
+                                 namespace="http://www.w3.org/2001/XMLSchema"/>
+                      </type>
+                    </param>
+                  </params>
+                </param>
+              </params>
+            </param>
+          </params>
+        </param>
+
+        <param>
+          <help>timeout value (s)</help>
+          <info>timeout value (s)</info>
+          <type>
+            <enumerate>
+              <enum>
+                <name>timeout</name>
+                <info>timeout value (s)</info>
+              </enum>
+            </enumerate>
+          </type>
+          <params>
+            <param>
+              <help>timeout value (s)</help>
+              <info>timeout value (s)</info>
+              <type>
+                <simpleType name="nonNegativeInteger"
+                  namespace="http://www.w3.org/2001/XMLSchema"/>
+              </type>
+            </param>
+          </params>
+        </param>
+
+      </params>
+    </cmd>
+  </configureMode>
+
+</clispec>

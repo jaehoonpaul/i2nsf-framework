@@ -1,0 +1,2093 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;28.&nbsp;Advanced Topics</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch27.html" title="Chapter&nbsp;27.&nbsp;Plug-and-play scripting"><link rel="next" href="rn01.html" title="ConfD man-pages, Volume 1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;28.&nbsp;Advanced Topics</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch27.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.advanced"></a>Chapter&nbsp;28.&nbsp;Advanced Topics</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch28.html#d5e13974">28.1. Datastores</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14058">28.2. Locks</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.target">28.3. Installing ConfD on a target system</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.config_confd">28.4. Configuring ConfD</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.starting_confd">28.5. Starting ConfD</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.confd_ipc">28.6. ConfD IPC</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14685">28.7. Restart strategies</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14697">28.8. Security issues</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14755">28.9. Running ConfD as a non privileged user</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14776">28.10. Storing encrypted values in ConfD</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.disaster">28.11. Disaster management</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e14908">28.12. Troubleshooting</a></span></dt><dt><span class="sect1"><a href="ch28.html#d5e15078">28.13. Tuning the size of confd_hkeypath_t</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.custom.msgs">28.14. Error Message Customization</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.different_openssl">28.15. Using a different version of OpenSSL</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.shared_memory_schema">28.16. Using shared memory for schema information</a></span></dt><dt><span class="sect1"><a href="ch28.html#ug.advanced.internal_econfd">28.17. Running application code inside ConfD</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13974"></a>28.1.&nbsp;Datastores</h2></div></div></div><p>
+        A datastore is a complete set of configuration parameters for
+        the device stored and manipulated as a single entity.
+      </p><p>
+        A datastore can be locked in its entirety with a global write
+        lock.
+      </p><p>
+        ConfD supports three different named configuration datastores
+        - <span class="emphasis"><em>running</em></span>, <span class="emphasis"><em>startup</em></span>, and
+        <span class="emphasis"><em>candidate</em></span>. The respective datastores support a set
+        of capabilities as explained below:
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">running</span></dt><dd><p>
+          The <span class="emphasis"><em>running</em></span> datastore contains the complete
+          configuration currently active on the device. Running can
+          be configured to support the
+          <span class="emphasis"><em>read-write</em></span> or the
+          <span class="emphasis"><em>writable-through-candidate</em></span> modes.
+          Writable-through-candidate means that running can only be
+          modified by making changes to the candidate datastore (see
+          below), and by committing these changes to the candidate.
+          </p></dd><dt><span class="term">startup</span></dt><dd><p>
+            The <span class="emphasis"><em>startup</em></span> datastore is a persistent datastore
+            which the device reads every time it reboots.
+          </p><p>
+            If running is read-write and the device has a startup
+            datastore, a manager can try changes by writing them to
+            running. If things look good, the changes can be made
+            persistent by copying them to startup. This ensures that
+            the device uses the same configuration after reboot.
+          </p></dd><dt><span class="term">candidate</span></dt><dd><p>
+            The <span class="emphasis"><em>candidate</em></span> datastore is used to hold
+            configuration data that can be manipulated without
+            impacting the current configuration. The
+            candidate configuration is a full configuration data set
+            that serves as a workspace for creating and manipulating
+            configuration data.  Additions, deletions, and changes may
+            be made to this data to construct the desired
+            configuration.
+          </p><p>
+            The candidate datastore can be committed, which means that
+            the device's running configuration is replaced with the contents
+            of the candidate datastore.
+          </p><p>
+            The candidate can be used in two different modes, with
+            different characteristics:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              It can be modified without first taking a lock on
+              the datastore. If it is modified outside a lock, it is
+              marked as being <span class="emphasis"><em>dirty</em></span>. When the candidate is
+              dirty it means that it is (potentially) different from
+              the running configuration. When it is dirty, a lock
+              cannot be taken. It leaves the dirty state by being
+              committed to running, or by discarding all changes
+              (which effectively resets it to the contents of
+              running).</p></li><li class="listitem"><p>
+              If the candidate is not dirty, and a lock is taken, no
+              one but the owner of the lock can modify the
+              database. If changes are made to the candidate while it
+              is locked, and the owner unlocks it (or closes the CLI,
+              Web UI or NETCONF session), all changes are discarded,
+              and the datastore is unlocked.</p></li></ul></div><p>
+            The candidate can be committed to running with a specified
+            <span class="emphasis"><em>timeout</em></span>. In this case, running is set to the
+            contents of the candidate. If a second commit, called a
+            <span class="emphasis"><em>confirming-commit</em></span>, is given within the timeout,
+            the changes are made permanent. If no confirming-commit is
+            given within the timeout period, running is reverted to
+            the state it had before the first commit.
+          </p></dd></dl></div><p>
+        A project using ConfD must choose a valid combination of
+        datastores to support. Which combination to choose depends on
+        the system resources available on the device, and which
+        characteristics the end-product should have.
+      </p><p>
+        The following is a list of valid combinations:
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">running in read-write mode, no startup, no candidate</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              A single, non-volatile datastore is used.
+              </p></li><li class="listitem"><p>
+              Once changes are written to the datastore, they are
+              persistent, and cannot automatically be rolled back.
+              </p></li><li class="listitem"><p>
+              The application needs to react to changes to the
+              database.  If CDB is used, this means that the
+              application must use the subscription mechanism.
+              </p></li></ul></div></dd><dt><span class="term">running in read-write mode and startup</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              startup is stored in non-volatile memory, and running in
+              read-write RAM.</p></li><li class="listitem"><p>
+              The application needs to be written in such a way
+              that it reacts to changes to the database.  If CDB is
+              used, this means that the application must use the
+              subscription mechanism.</p></li></ul></div></dd><dt><span class="term">running in read-write mode and candidate</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              Both running and candidate are stored in non-volatile
+              memory.</p></li><li class="listitem"><p> NOTE: This combination is NOT
+            RECOMMENDED.  When a manager reconfigures a node that has
+            the candidate and also read-write running, the manager can
+            never know that running is up to date with the candidate
+            and must thus always (logically) copy running to the
+            candidate prior to modifying the candidate.  This
+            introduces unnecessary overhead, and makes automation more
+            complicated.</p></li><li class="listitem"><p>
+              The application needs to react to changes to the
+              database.  If CDB is used, this means that the
+              application must use the subscription mechanism.</p></li><li class="listitem"><p>In this mode, running can be modified
+            without going through the candidate.  This means that a
+            client that wishes to work with the candidate may need to
+            copy running into the candidate, to ensure that no changes
+            to running are lost when the candidate is committed.</p></li></ul></div></dd><dt><span class="term">running in writable-through-candidate mode and candidate</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              Both running and candidate are stored in non-volatile
+              memory, but the candidate can efficiently be implemented
+              as a diff against running.</p></li><li class="listitem"><p>
+              The application needs to react to changes to the
+              database.  If CDB is used, this means that the
+              application must use the subscription mechanism.</p></li><li class="listitem"><p>In this mode, all changes always go through the candidate, so a client does never have to copy running to candidate in order to not lose any data.
+              </p></li></ul></div></dd></dl></div><p>
+        ConfD ensures that running and startup are always consistent,
+        in the sense that the validation constraints defined in the
+        data model hold. The candidate is allowed to be temporarily
+        inconsistent, but if it is committed to running, it must be
+        valid.
+      </p><p>
+        ConfD by default implements the datastores chosen in
+       CDB. However, ConfD can also be configured to use an external
+        database. If an external database is used, this database
+        <span class="emphasis"><em>must</em></span> implement the running and startup datastores if
+        applicable. If the candidate is used, it may be implemented
+        with CDB or as an external database.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14058"></a>28.2.&nbsp;Locks</h2></div></div></div><p>This section will explain the different locks that exist in
+      ConfD and how they interact. It is important to understand the
+      architecture of ConfD with its management backplane, and the
+      transaction state machine as described in
+      <a class="xref" href="ch07.html#ug.ext_data.user_sessions" title="7.5.&nbsp;User sessions and ConfD Transactions">Section&nbsp;7.5, &#8220;User sessions and ConfD Transactions&#8221;</a>
+      to be able to understand how the different locks fit
+      into the picture.</p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14062"></a>28.2.1.&nbsp;Global locks</h3></div></div></div><p>The ConfD management backplane keeps a lock for each
+      datastore: running, startup and candidate. These locks are
+      usually referred to as the global locks and they provide a
+      mechanism to grant exclusive access to the datastore the lock
+      guards.</p><p>The global locks are the only locks that can explicitly be
+      taken through a northbound agent, for example by the NETCONF
+      <code class="code">&lt;lock&gt;</code> operation, or by calling
+      <code class="code">maapi_lock()</code>.</p><p>A global lock can be taken for the whole datastore, or it can
+      be a partial lock (for a subset of the datamodel). Partial locks
+      are exposed through NETCONF and MAAPI.</p><p>An agent can request a global lock to ensure that it has
+      exclusive write-access to a datastore. When a global lock is
+      held by an agent it is not possible for anyone else to write to
+      the datastore the lock guards - this is enforced by the
+      transaction engine. A global lock on a datastore is granted to
+      an agent if there are no other holders of it (including partial
+      locks), and if all dataproviders approve the lock request. Each
+      dataprovider (CDB and/or external dataproviders) will have its
+      <code class="code">lock()</code> callback invoked to get a chance to refuse or
+      accept the lock. The output of <span class="command"><strong>confd --status</strong></span> includes
+      locking status. For each user session locks (if any) per
+      datastore is listed.</p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14072"></a>28.2.2.&nbsp;Transaction locks</h3></div></div></div><p>A northbound agent starts a user session towards ConfD's
+      management backplane. Each user session can then start multiple
+      transactions. A transaction is either read/write or read-only
+      and is always started against a specific datastore.</p><p>The transaction engine has its internal locks, one for every
+      datastore. These transaction locks exists to serialize
+      configuration updates towards the datastore and are separate
+      from the global locks.</p><p>As a northbound agent wants to update a datastore with a new
+      configuration it will implicitly grab and release the
+      transactional lock corresponding to the datastore it is trying
+      to modify. The transaction engine takes care of managing the
+      locks, as it moves through the transaction state machine and
+      there is no API that exposes the transactional locks to the
+      northbound agents.</p><p>When the transaction engine wants to take a lock for a
+      transaction (for example when entering the validate state) it
+      first checks that no other transaction has the lock. Then it
+      checks that no user session has a global lock on that
+      datastore. Finally each dataprovider is invoked by its
+      <code class="code">trans_lock()</code> callback.</p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14079"></a>28.2.3.&nbsp;Northbound agents and global locks</h3></div></div></div><p>In contrast to the implicit transactional locks, some
+      northbound agents expose explicit access to the global
+      locks. This is done a bit differently by each agent.</p><p>The management API exposes the global locks by providing
+      <code class="code">maapi_lock()</code> and <code class="code">maapi_unlock()</code>
+      functions (and the corresponding <code class="code">maapi_lock_partial()</code>
+      <code class="code">maapi_unlock_partial()</code> for partial locking). Once a user
+      session is established (or attached to) these functions can be
+      called.</p><p>In the CLI the global locks are taken when entering different
+      configure modes as follows:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+            <span class="command"><strong>configure exclusive</strong></span>
+          </span></dt><dd><p>When the candidate datastore is enabled both the
+        running and candidate global locks will be taken.</p></dd><dt><span class="term"><span class="command"><strong>configure exclusive</strong></span></span></dt><dd><p>When the candidate datastore is disabled and the
+          startup datastore is enabled both running (if enabled) and
+        startup global locks are taken.</p></dd><dt><span class="term"><span class="command"><strong>configure private | shared</strong></span></span></dt><dd><p>Does not grab any locks</p></dd></dl></div><p>The global locks are then kept by the CLI until either the
+      configure mode is exited, or in the case of
+      <span class="command"><strong>commit confirmed &lt;timeout&gt;</strong></span> the lock is
+      released when it returns.</p><p>The Web UI behaves in the same way as the CLI (it presents
+      three edit tabs called "Edit private", "Edit exclusive", and
+      "Edit shared" which corresponds to the CLI modes described
+      above).</p><p>The NETCONF agent translates the <code class="code">&lt;lock&gt;</code>
+      operation into
+      a request for the global lock for the requested
+      datastore. Partial locks are also exposed through the
+      partial-lock rpc.</p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14109"></a>28.2.4.&nbsp;External data providers</h3></div></div></div><p>Implementing the <code class="code">lock()</code> and <code class="code">unlock()</code> callbacks
+      is not required of an external dataprovider. ConfD will never
+      try to initiate the <code class="code">trans_lock()</code> state transition (see
+      the transaction state diagram in
+      <a class="xref" href="ch07.html#ug.ext_data.user_sessions" title="7.5.&nbsp;User sessions and ConfD Transactions">Section&nbsp;7.5, &#8220;User sessions and ConfD Transactions&#8221;</a>)
+      towards a data provider while a global lock is taken - so the
+      reason for a dataprovider to implement the locking callbacks is
+      if someone else can write (or lock for example to take a backup)
+      to the data providers database.</p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14116"></a>28.2.5.&nbsp;CDB</h3></div></div></div><p>CDB ignores the <code class="code">lock()</code> and <code class="code">unlock()</code> callbacks
+      (since the data-provider interface is the only write interface
+      towards it).</p><p>CDB has its own internal locks on the database. The running
+      and startup datastore each has a single write and multiple read
+      locks. It is not possible to grab the write-lock on a datastore
+      while there are active read-locks on it. The locks in CDB exists
+      to make sure that a reader always gets a consistent view of the
+      data (in particular it becomes very confusing if another user is
+      able to delete configuration nodes in between calls to get_next() on
+      YANG list entries).</p><p>During a transaction <code class="code">trans_lock()</code> takes a CDB
+      read-lock towards the transactions datastore and write_start()
+      tries to release the read-lock and grab the write-lock
+      instead.</p><p>A CDB external client (usually referred to as an MO, managed
+      object) implicitly takes a CDB read-lock between
+      <code class="code">cdb_start_session()</code> and <code class="code">cdb_end_session()</code> on the
+      specified datastore (running or startup). This means that while
+      an MO is reading, a transaction can not pass through
+      <code class="code">write_start()</code> (and conversely a CDB reader can not start
+      while a transaction is in between <code class="code">write_start()</code> and
+      <code class="code">commit()</code> or <code class="code">abort()</code>).</p><p>The Operational store in CDB does not have any locks. ConfD's
+      transaction engine can only read from it, and the MO writes are
+      atomic per write operation.</p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14132"></a>28.2.6.&nbsp;Lock impact on user sessions</h3></div></div></div><p>
+        When a session tries to modify a data store that is locked in
+        some way, it will fail.  For example, the CLI might print:
+      </p><div class="informalexample"><pre class="screen">
+admin@host% commit
+Aborted: the configuration database is locked
+[error][2009-06-11 16:27:21]
+        </pre></div><p>
+        Since some of the locks are short lived (such as a CDB read
+        lock), ConfD can be configured to retry the failing operation
+        for a short period of time.  If the data store still is locked
+        after this time, the operation fails.
+      </p><p>
+        To configure this, set
+        <code class="sgmltag-element">/confdConfig/commitRetryTimeout</code> in
+        <code class="filename">confd.conf</code>.
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.target"></a>28.3.&nbsp;Installing ConfD on a target system</h2></div></div></div><p>
+        The ConfD installation package contains both binaries for the
+        target system and a development environment including
+        documentation. Many of these files are not needed on a target,
+        and can be excluded. Additional files can be removed depending
+        on the feature configuration on the target.
+      </p><p>
+        In the following description, <code class="filename">$CONFD_DIR</code>
+        refers to the directory where ConfD has been installed.
+      </p><p>
+        A minimal example set of files on a target system can be:
+      </p><div class="informalexample"><pre class="screen">$CONFD_DIR/bin/confd
+$CONFD_DIR/etc/confd/*fxs
+$CONFD_DIR/lib/confd/bin/*
+$CONFD_DIR/lib/confd/erts/*
+$CONFD_DIR/lib/confd/lib/core/*
+$CONFD_DIR/lib/confd/lib/netconf/*</pre></div><p>
+        This target system has only NETCONF as northbound agent and no
+        examples, no source code and no development tools.
+      </p><p>
+        <code class="filename">$CONFD_DIR/etc/confd/</code> contains
+        configuration files and does not need to be located under
+        <code class="filename">$CONFD_DIR</code>.
+      </p><p>
+        Files associated with certain features can be removed if the
+        system is set up not to use them:
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">Optional utilities</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/bin/confd_cmd
+$CONFD_DIR/bin/confd_load
+$CONFD_DIR/bin/maapi
+$CONFD_DIR/bin/netconf-console
+$CONFD_DIR/bin/netconf-console-tcp</pre></div></dd><dt><span class="term">The CLI agent</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/bin/confd_cli
+$CONFD_DIR/etc/confd/confd.ccl
+$CONFD_DIR/lib/confd/lib/cli*</pre></div></dd><dt><span class="term">The NETCONF server</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/lib/confd/lib/netconf*</pre></div></dd><dt><span class="term">The Web UI and REST server</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/lib/confd/lib/webui*
+$CONFD_DIR/etc/confd/ietf-restconf-monitoring.fxs</pre></div></dd><dt><span class="term">The Web UI frontend</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/var/confd/webui*</pre></div></dd><dt><span class="term">The SNMP agent and gateway</span></dt><dd><div class="informalexample"><pre class="screen">$CONFD_DIR/bin/smidump
+$CONFD_DIR/lib/confd/lib/snmp*</pre></div><p>
+            <span class="command"><strong>smidump</strong></span> is only used for producing YANG
+            files - it is not used by ConfD itself, and therefore not
+            likely to be needed on the target.
+          </p></dd><dt><span class="term">The integrated SSH server</span></dt><dd><p>
+            The integrated SSH server is not needed if OpenSSH is used
+            to terminate SSH for NETCONF and the CLI:
+          </p><div class="informalexample"><pre class="screen">$CONFD_DIR/lib/confd/lib/core/ssh*</pre></div></dd><dt><span class="term">The confdc compiler</span></dt><dd><p>
+            The compiler can be removed unless we plan to to
+            compile YANG files on the host.
+          </p><div class="informalexample"><pre class="screen">$CONFD_DIR/bin/confdc
+$CONFD_DIR/bin/cs2yang
+$CONFD_DIR/bin/pyang
+$CONFD_DIR/bin/yanger
+$CONFD_DIR/lib/confd/lib/confdc*
+$CONFD_DIR/lib/cs2yang*
+$CONFD_DIR/lib/pyang*</pre></div></dd><dt><span class="term">The AAA bridge</span></dt><dd><p>
+            See documentation on AAA - basically this is a
+            pre-compiled example program which probably won't be used
+            on target:
+          </p><div class="informalexample"><pre class="screen">$CONFD_DIR/lib/confd/lib/core/capi/priv/confd_aaa_bridge</pre></div></dd><dt><span class="term">Static libraries</span></dt><dd><p>
+            These static libraries makes no sense on target:
+          </p><div class="informalexample"><pre class="screen">$CONFD_DIR/lib/libconfd.a</pre></div></dd></dl></div><p>
+        Support for Symmetric Multiprocessing (SMP) introduces some
+        overhead both in CPU and memory usage, and in order to give
+        optimal performance in all scenarios, the installation
+        includes two separate executables for the ConfD daemon,
+        <code class="filename">$CONFD_DIR/lib/confd/erts/bin/confd</code>
+        (no SMP support) and
+        <code class="filename">$CONFD_DIR/lib/confd/erts/bin/confd.smp</code>
+        (with SMP support). If ConfD will always be run either with or
+        without SMP support, one of these executables can be
+        removed. See also the <code class="option">--smp</code> option in the
+        <a class="xref" href="rn01re01.html" title="confd"><span class="refentrytitle">confd</span>(1)</a> manual page
+      </p><p>
+        If <code class="filename">$CONFD_DIR/lib/confd/erts/bin/confd</code> is
+        removed, ConfD will always run with SMP support, although with
+        a single thread on a single-processor system or if it is
+        started with <code class="option">--smp 1</code>. If
+        <code class="filename">$CONFD_DIR/lib/confd/erts/bin/confd.smp</code>
+        is removed, ConfD will never run with SMP support, and the
+        <code class="option">--smp</code> option has no effect other than
+        refusing to start the daemon if the argument is bigger than 1.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.config_confd"></a>28.4.&nbsp;Configuring ConfD</h2></div></div></div><p>
+        When ConfD is started, it reads its configuration file and
+        starts all subsystems configured to start (such as NETCONF,
+        CLI etc.). If a configuration parameter is changed, ConfD can be
+        reloaded by issuing:
+      </p><div class="informalexample"><pre class="screen">$ confd --reload</pre></div><p>
+        This command also tells ConfD to close and reopen all log
+        files, which makes it suitable to use from a system like
+        <span class="command"><strong>logrotate</strong></span>.
+      </p><p>
+        There is also another way, whereby the ConfD configuration
+        parameters that can be changed in runtime are loaded from an
+        external namespace. Thus allowing the user to store ConfD's
+        configuration in ConfD (specifically in CDB) itself. This will
+        be described further down.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14229"></a>28.4.1.&nbsp;Using the configuration file</h3></div></div></div><p>
+        On a typical system, the configuration data resides in ConfD's
+        database CDB. Some of the parameters in the configuration are
+        intended for the target OS environment, such as the IP address
+        of the management interface. The OS reads this information
+        from its own configuration files, such as
+        <code class="filename">/etc/conf.d/net</code>. This means that the application
+        typically reads this data from CDB, and generates
+        configuration files needed by the system before starting
+        them. If a manager changes one of these parameters, the
+        application subscribes to changes in CDB, regenerates the
+        files, and restarts the system daemons. This mechanism can
+        also be used for the configuration of ConfD itself. The
+        application must subscribe to changes to any parameter
+        affecting ConfD (such as management IP address), update the
+        ConfD configuration file <code class="filename">confd.conf</code>, and then
+        instruct ConfD to reload it.
+      </p><p>
+        ConfD comes bundled with a small example tool which can be
+        used to patch <code class="filename">confd.conf</code> files:
+        <code class="filename">$CONFD_DIR/src/confd/tools/xmlset.c</code>. This tool
+        uses the light-weight Expat XML Parser
+        (http://expat.sourceforge.net/).
+      </p><p>
+        This example changes <code class="filename">confd.conf</code> to disable the Web UI:
+      </p><div class="informalexample"><pre class="screen">$ xmlset C false confdConfig webui enabled &lt; confd.conf</pre></div><p>
+        This example changes <code class="filename">confd.conf</code> to removes the
+        encryptedStrings container:
+      </p><div class="informalexample"><pre class="screen">$ xmlset R confdConfig encryptedStrings &lt; confd.conf</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.advanced.config_confd_dyn"></a>28.4.2.&nbsp;Storing ConfD configuration parameters in CDB</h3></div></div></div><p>
+            In the ConfD distribution in the
+            <code class="filename">$CONFD_DIR/src/confd/dyncfg</code> directory the
+            <code class="filename">confd_dyncfg.yang</code> YANG module is included.
+            The module defines the
+            namespace <span class="emphasis"><em>http://tail-f.com/ns/confd_dyncfg/1.0</em></span>
+            which contains all the ConfD configuration parameters that
+            can be modified in runtime. I.e. it is a subset of the
+            namespace that defines the ConfD configuration file
+            (<code class="filename">confd.conf</code>).
+          </p><p>
+            To enable the feature of storing ConfD's configuration in
+            CDB the
+            setting <code class="sgmltag-element">/confdConfig/runtimeReconfiguration</code> has
+            to be set to <span class="emphasis"><em>namespace</em></span> in the configuration
+            file. This instructs ConfD to read all its "static"
+            configuration from the configuration file, and then load
+            the rest of the configuration from the confd_dyncfg
+            namespace (which must be served by CDB). A requirement is
+            that the confd_dyncfg.fxs is in
+            ConfD's <span class="emphasis"><em>loadPath</em></span>. It is also advisable to have a
+            suitable <code class="filename">_init.xml</code> file in ConfD's CDB directory.
+          </p><p>
+            The best way to understand how to use this feature is the
+            example <code class="filename">confdconf/dyncfg</code> in the bundled example
+            collection.
+          </p><p>
+            In most cases the interesting use of this feature is to be
+            able to expose a particular aspect of ConfD's
+            configuration to the end-user and hide the rest. This can
+            be achieved by combining the use of the
+            <span class="command"><strong>--export none</strong></span> flag when compiling the
+            <code class="filename">confd_dyncfg.yang</code>
+            module with the use of the symlink feature (exactly how
+            they work are explained in
+            <a class="xref" href="ch10.html#ug.transformations.hidden_data" title="10.7.&nbsp;Hidden Data">Section&nbsp;10.7, &#8220;Hidden Data&#8221;</a>).
+            The
+            <code class="filename">snmpa/6-dyncfg</code> example in the
+            example collection shows how to expose a small subset of
+            the SNMP agent configuration (as well as some minor
+            aspects of the CLI parameters) in a private namespace.
+          </p><p>
+            For example, if we want to be able to expose the
+            ConfD's built-in SNMP agents listen port as an end-user
+            configurable as the leaf <code class="sgmltag-element">/sys/snmp-port</code>, we
+            could write a YANG model like this:
+          </p><div class="informalexample"><pre class="programlisting">container sys {
+        tailf:symlink snmp-port {
+          tailf:path "/dyncfg:confdConfig/dyncfg:snmpAgent/dyncfg:port";
+        }
+      }</pre></div><p>
+            When a transaction containing changes to <code class="sgmltag-element">/confdConfig</code>
+            is committed ConfD will pick up the changes made and act
+            accordingly. Thus there is no longer a need for
+            <span class="command"><strong>confd --reload</strong></span> except for closing/re-opening
+            of log-files
+            (as described above) or to update the fxs files for
+            sub-agents.
+          </p><p>
+            When <code class="sgmltag-element">/confdConfig/runtimeReconfiguration</code> is set
+            to <span class="emphasis"><em>namespace</em></span>, any settings in
+            <code class="filename">confd.conf</code> for the parameters that
+            exist in the <code class="sgmltag-element">confd_dyncfg</code> namespace are ignored,
+            with one exception: the configuration under
+            <code class="sgmltag-element">/confdConfig/logs</code>. This configuration is needed
+            before CDB has started, and ConfD will therefore initially
+            use the settings from <code class="filename">confd.conf</code>, with
+            the CDB settings taking precedence once CDB has started
+            (i.e. when the transition to phase1 is completed).
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.starting_confd"></a>28.5.&nbsp;Starting ConfD</h2></div></div></div><p>
+        By default, ConfD starts in the background without an
+        associated terminal.  If it is started as
+        <span class="command"><strong>confd --foreground</strong></span>, it starts in the
+        foreground attached to the
+        current terminal.  This feature can be used to start ConfD
+        from a process manager. In order to properly stop ConfD in the
+        foreground case, close ConfD's standard input, or use
+        <span class="command"><strong>confd --stop</strong></span> as usual.  When ConfD is started in the
+        foreground, the commands <span class="command"><strong>confd --wait-phase0</strong></span> and
+        <span class="command"><strong>confd --wait-started</strong></span> can be used to synchronize the
+        startup sequence.  See below for more details.
+      </p><p>
+        If startup or candidate with confirming-commit is used, the
+        system might need to use a configuration which is different
+        from the previous running when it reboots. An example of this
+        is if startup is used, and a manager writes a configuration
+        into running which renders the device unstable, and it is
+        rebooted. It might be that the management IP address used by
+        the OS is not the one that should be used (if it was changed
+        before reboot). We'd like to be able to change this address in the
+        OS configuration files before bringing up the interface. But
+        we don't know the address until ConfD has been started, and
+        ConfD itself needs to listen to this address. To solve this
+        dilemma, ConfD's startup sequence can be split into several
+        phases. The first phase brings up the ConfD daemon, but no
+        subsystems that listen to the management IP address (such as
+        NETCONF and CLI). This phase must be started after the
+        loopback interface has been brought up, since the loopback
+        interface is used to communicate between the application and
+        ConfD.
+      </p><p>
+        It is also necessary to use the start phases when CDB is used
+        and semantic validation via external callbacks has been
+        implemented. CDB will validate the new configuration when ConfD
+        is started without an existing database, as well as when a
+        schema upgrade has caused configuration changes. This validation
+        is done on the transition to phase1, which means that
+        validation callbacks must be registered before this.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        If an application has both validation
+        callbacks and other callbacks (e.g. data provider), and uses the
+        same daemon structure and control socket through all the phases,
+        it must register all the callbacks in phase0. This is because
+        the <code class="code">confd_register_done()</code>
+        function (see <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>)
+        must be called after all registrations are done, and no callbacks
+        will be invoked before this function has been called. The tables
+        below reflect this requirement, but it is also possible to
+        register all callbacks in phase0, which may simplify the startup
+        sequence (however CDB subscribers can not be added until phase1).
+        </p></div><p>
+        The sequence to start up the system should be like this:
+        </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>bring up the loopback interface</p></li><li class="listitem"><p><span class="command"><strong>confd --start-phase0</strong></span></p></li><li class="listitem"><p>start applications that implement validation callbacks</p></li><li class="listitem"><p><span class="command"><strong>confd --start-phase1</strong></span></p></li><li class="listitem"><p>start remaining applications, read from CDB</p></li><li class="listitem"><p>potentially update <code class="filename">confd.conf</code> and do <span class="command"><strong>confd --reload</strong></span></p></li><li class="listitem"><p>bring up the management interface</p></li><li class="listitem"><p><span class="command"><strong>confd --start-phase2</strong></span></p></li></ol></div><p>
+      </p><p>
+        Note that if ConfD is started without any parameters, it
+        will bring up the entire system at once.
+      </p><p>
+        This table summarizes the different start-phases and
+        what they do.
+      </p><div class="table"><a name="d5e14316"></a><p class="title"><b>Table&nbsp;28.1.&nbsp;ConfD Start Phases</b></p><div class="table-contents"><table><thead><tr>
+            <td>Command line</td>
+            <td>When command returns ConfD has</td>
+            <td>After which <span class="emphasis"><em>application</em></span> can/should</td>
+          </tr></thead><tbody><tr>
+            <td><code class="code">confd --start-phase0</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing CDB, created an
+                initial transaction.</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing, the application
+                can modify the initial transaction</p></li><li class="listitem"><p>Register validation callbacks</p></li><li class="listitem"><p>Possibly register external data-providers,
+                transformations, etc (see Note above)</p></li><li class="listitem"><p>Setup notification sockets</p></li><li class="listitem"><p>Connect to HA</p></li></ul></div>
+            </td>
+          </tr><tr>
+            <td><code class="code">confd --start-phase1</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing CDB, committed initial
+                transaction</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Make HA state transitions</p></li><li class="listitem"><p>Register remaining external data-providers,
+                transformation callbacks, etc (see Note above)</p></li><li class="listitem"><p>Add CDB subscribers</p></li></ul></div>
+            </td>
+          </tr><tr>
+            <td><code class="code">confd --start-phase2</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Bound and started listening to NETCONF, CLI, Web UI,
+                  and SNMP addresses / ports</p></li><li class="listitem"><p>Allowed initiation of MAAPI user sessions</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr></tbody></table></div></div><br class="table-break"><p>
+        This table summarizes the different start-phases when ConfD is
+        started in the foreground.
+      </p><div class="table"><a name="d5e14378"></a><p class="title"><b>Table&nbsp;28.2.&nbsp;ConfD Start Phases, running in foreground</b></p><div class="table-contents"><table><thead><tr>
+            <td>Command line</td>
+            <td>When command returns ConfD has</td>
+            <td>After which <span class="emphasis"><em>application</em></span> can/should</td>
+          </tr></thead><tbody><tr>
+            <td><code class="code">confd --foreground --start-phase0</code></td>
+            <td>
+              This command never returns.
+            </td>
+            <td></td>
+          </tr><tr>
+            <td><code class="code">confd --wait-phase0</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing CDB, created an
+                initial transaction.</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing, the application
+                can modify the initial transaction</p></li><li class="listitem"><p>Register validation callbacks</p></li><li class="listitem"><p>Possibly register external data-providers,
+                transformations, etc (see Note above)</p></li><li class="listitem"><p>Setup notification sockets</p></li></ul></div>
+            </td>
+          </tr><tr>
+            <td><code class="code">confd --start-phase1</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If upgrading or initializing CDB, committed initial
+                transaction</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr><tr>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Connect to HA</p></li><li class="listitem"><p>Register remaining external data-providers,
+                transformation callbacks, etc (see Note above)</p></li><li class="listitem"><p>Add CDB subscribers</p></li></ul></div>
+            </td>
+          </tr><tr>
+            <td><code class="code">confd --start-phase2</code></td>
+            <td>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Bound and started listening to NETCONF, CLI, Web UI,
+                  and SNMP addresses / ports</p></li><li class="listitem"><p>Allowed initiation of MAAPI user sessions</p></li></ul></div>
+            </td>
+            <td></td>
+          </tr></tbody></table></div></div><br class="table-break"></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.confd_ipc"></a>28.6.&nbsp;ConfD IPC</h2></div></div></div><p>
+      Client libraries connect to ConfD using TCP. We tell ConfD
+      which address to use for these connections through the
+      <code class="sgmltag-element">/confdConfig/confdIpcAddress/ip</code> (default value
+      127.0.0.1) and <code class="sgmltag-element">/confdConfig/confdIpcAddress/port</code>
+      (default value 4565) elements in <code class="filename">confd.conf</code>.
+      It is possible to change these
+      values, but it requires a number of steps to also configure the
+      clients. Also there are security implications, see section
+      <span class="emphasis"><em>Security issues</em></span> below.
+    </p><p>
+      Some clients read the environment
+      variables <code class="code">CONFD_IPC_ADDR</code> and <code class="code">CONFD_IPC_PORT</code> to
+      determine if something other than the default is to be used,
+      others might need to be recompiled. This is a list of
+      clients which communicate with ConfD, and what needs to be
+      done when <code class="code">confdIpcAddress</code> is changed.
+    </p><div class="informaltable"><table><thead><tr><td>Client</td><td>Changes required</td></tr></thead><tbody><tr><td>Remote commands via the <span class="emphasis"><em>confd</em></span> command</td>
+        <td>
+          Remote commands, such as <span class="command"><strong>confd --reload</strong></span>,
+          check the environment
+          variables <span class="command"><strong>CONFD_IPC_ADDR</strong></span>
+          and <span class="command"><strong>CONFD_IPC_PORT</strong></span>.
+        </td>
+        </tr><tr><td>CDB and MAAPI clients</td>
+        <td>
+          The address supplied to <code class="code">cdb_connect()</code> and
+          <code class="code">maapi_connect()</code> must be changed.
+        </td>
+        </tr><tr><td>Data provider API clients</td>
+        <td>
+          The address supplied to <code class="code">confd_connect()</code>
+          must be changed.
+        </td>
+        </tr><tr><td>confd_cli</td>
+        <td>
+          <p>
+            The Command Line Interface (CLI) client,
+            <span class="command"><strong>confd_cli</strong></span>, checks the environment
+            variables <code class="code">CONFD_IPC_ADDR</code>
+            and <code class="code">CONFD_IPC_PORT</code>. Alternatively the port
+            can be provided on the command line (using
+            the <span class="command"><strong>-P</strong></span> option).
+          </p>
+          <p>
+            <span class="emphasis"><em>NOTE:</em></span> <span class="command"><strong>confd_cli</strong></span> is provided as source, in
+            <span class="emphasis"><em>$CONFD_DIR/src/confd/cli</em></span>, so it is also
+            possible to re-compile it using the new address as
+            default.
+          </p>
+        </td>
+        </tr><tr><td>Notification API clients</td>
+        <td>
+          The new address must be supplied to
+          <code class="code">confd_notifications_connect()</code>
+        </td>
+        </tr></tbody></table></div><p>
+          To run more than one instance of ConfD on the same host
+          (which can be useful in development scenarios) each instance
+          needs its own IPC port. For each instance set
+          <code class="sgmltag-element">/confdConfig/confdIpcAddress/port</code> in
+          <code class="filename">confd.conf</code> to something different.
+        </p><p>
+          There are two more instances of ports that will have to be
+          modified, NETCONF and CLI over SSH. The netconf (SSH and
+          TCP) ports that ConfD listens to by default are 2022 and
+          2023 respectively. Modify
+          <code class="sgmltag-element">/confdConfig/netconf/transport/ssh</code> and
+          <code class="sgmltag-element">/confdConfig/netconf/transport/tcp</code>, either by
+          disabling them or changing the ports they listen to. The CLI
+          over SSH by default listens to 2024; modify
+          <code class="sgmltag-element">/confdConfig/cli/ssh</code> either by disabling or
+          changing the default port.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14498"></a>28.6.1.&nbsp;Using a different IPC mechanism</h3></div></div></div><p>
+          We can set up ConfD to use a different IPC mechanism than TCP
+          for the client library connections, as well as for the
+          communication between ConfD nodes in a HA cluster. This can be
+          useful e.g. in a chassis system where ConfD runs on a
+          management blade, while the managed objects run on data
+          processing blades that may not have a TCP/IP implementation.
+        </p><p>
+          There are several requirements that must be fulfilled by such
+          an IPC mechanism:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>It must adhere to the standard socket API, with
+            SOCK_STREAM semantics. I.e. it must provide an ordered,
+            reliable byte stream, with connection management via the
+            <code class="function">connect()</code>, <code class="function">bind()</code>,
+            <code class="function">listen()</code>, and <code class="function">accept()</code>
+            primitives.</p></li><li class="listitem"><p>It must support non-blocking operations (requested
+            via <code class="function">fcntl(O_NONBLOCK)</code>), for
+            <code class="function">accept()</code> as well
+            as for read and write operations.
+            Ideally non-blocking <code class="function">connect()</code> should
+            also be supported, but this is not currently used by ConfD
+            in this case.</p></li><li class="listitem"><p>It must support the use of <code class="function">poll()</code> for I/O
+            multiplexing.</p></li></ul></div><p>
+          For ConfD to be able to use this mechanism without knowledge
+          of address format etc, we must provide C code in the form of a
+          shared object, which is dynamically loaded by ConfD. The
+          interface between ConfD and the shared object code is defined
+          in the <code class="filename">ipc_drv.h</code> file in the
+          <code class="filename">$CONFD_DIR/src/confd/ipc_drv</code> directory in
+          the release. The shared object must be named
+          <code class="filename">ipc_drv_ops.so</code> and installed in the
+          <code class="filename">$CONFD_DIR/lib/confd/lib/core/confd/priv</code>
+          directory of the ConfD installation, see the sample Makefile in the
+          <code class="filename">ipc_drv</code> directory. The interface is
+          implemented via the <code class="function">confd_ext_ipc_init()</code>
+          function. This function must be provided by the shared object,
+          and it must return a pointer to a callback structure defined
+          in the shared object:
+        </p><div class="informalexample"><pre class="programlisting">struct confd_ext_ipc_cbs {
+    int (*getaddrinfo)(char *address,
+                       int *family, int *type, int *protocol,
+                       struct sockaddr **addr, socklen_t *addrlen,
+                       char **errstr);
+    int (*socket)(int family, int type, int protocol, char **errstr);
+    int (*getpeeraddr)(int fd, char **address, char **errstr);  /* optional */
+    int (*connect)(char *address, char **errstr);
+    int (*bind)(char *address, char **errstr);
+    void (*unbind)(int fd);                                     /* optional */
+};</pre></div><p>
+          The structure must provide (i.e. have non-NULL function
+          pointers for) either both of the
+          <code class="function">getaddrinfo()</code> and
+          <code class="function">socket()</code> callbacks, or both of the
+          <code class="function">connect()</code> and <code class="function">bind()</code>
+          callbacks - it may of course provide all of them. The
+          <code class="function">getpeeraddr()</code> and
+          <code class="function">unbind()</code> callbacks are optional.
+          If both <code class="function">getaddrinfo()</code> and
+          <code class="function">socket()</code> are provided, the shared object
+          can also be used by applications using the C APIs to connect
+          to ConfD (see e.g. the <code class="filename">confd_cmd.c</code> source
+          code in the <code class="filename">$CONFD_DIR/src/confd/tools</code>
+          directory).
+        </p><p>
+          All the callbacks except <code class="function">unbind()</code> can
+          report an error by returning <code class="constant">-1</code>, and in
+          this case optionally provide an error message via the
+          <em class="parameter"><code>errstr</code></em> parameter. If an error message
+          is provided, <em class="parameter"><code>errstr</code></em> must point to
+          dynamically allocated memory - ConfD will free it through a
+          call to <code class="function">free(3)</code> after reporting the
+          error.
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">getaddrinfo()</span></dt><dd><p>
+              This callback should parse the given text-format
+              <em class="parameter"><code>address</code></em> (see below). If the parsing
+              is successful, the callback should return 0 and provide
+              data that can be used for the
+              <code class="function">socket()</code> callback and for the standard
+              <code class="function">bind(2)</code> and/or
+              <code class="function">connect(2)</code> system calls via the
+              <em class="parameter"><code>family</code></em>,
+              <em class="parameter"><code>type</code></em>,
+              <em class="parameter"><code>protocol</code></em>,
+              <em class="parameter"><code>addr</code></em>, and
+              <em class="parameter"><code>addrlen</code></em> parameters. The structure
+              pointed to by <em class="parameter"><code>addr</code></em> must be
+              dynamically allocated - ConfD will free it after use
+              through a call to <code class="function">free(3)</code>.
+            </p></dd><dt><span class="term">socket()</span></dt><dd><p>
+              This callback should create a socket, and if successful
+              return the socket file descriptor.
+            </p></dd><dt><span class="term">getpeeraddr()</span></dt><dd><p>
+              This optional callback should create a text representation
+              of the address of the remote host/node connected via the
+              socket <em class="parameter"><code>fd</code></em>, and if successful return
+              0 and provide the text-format address via the
+              <em class="parameter"><code>address</code></em> parameter. The main purpose
+              of the callback is to make it possible to use the
+              <code class="function">maapi_disconnect_remote()</code> function
+              (see the <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a>
+              manual page), but the provided address will also be used
+              in e.g. HA status and notifications, and will be included
+              in ConfD debug dumps.
+            </p></dd><dt><span class="term">connect()</span></dt><dd><p>
+              This callback should create a socket, connect it to the
+              given <em class="parameter"><code>address</code></em> (see below), and if
+              successful return the socket file descriptor.
+            </p></dd><dt><span class="term">bind()</span></dt><dd><p>
+              This callback should create a socket, bind it to the given
+              <em class="parameter"><code>address</code></em> (see below), and if
+              successful return the socket file descriptor.
+            </p></dd><dt><span class="term">unbind()</span></dt><dd><p>
+              This is an optional callback that can be used if we need
+              to do any special cleanup when a bound socket is closed.
+              In this case the callback must also close the file
+              descriptor - otherwise the function pointer can be set to
+              NULL, and ConfD will close the file descriptor.
+            </p></dd></dl></div><p>
+          Two examples using this interface are provided in the
+          <code class="filename">$CONFD_DIR/src/confd/ipc_drv</code>
+          directory. One of them (<code class="filename">ipc_drv_unix.c</code>)
+          uses AF_UNIX sockets, and implements only the
+          <code class="function">connect()</code>, <code class="function">bind()</code>,
+          and <code class="function">unbind()</code> callbacks. The other
+          (<code class="filename">ipc_drv_etcp.c</code>) actually uses standard
+          AF_INET/AF_INET6 TCP sockets just like the "normal" ConfD IPC
+          - this can be meaningful if we need to set some non-standard
+          socket options such as Linux SO_VRF for all IPC sockets. This
+          example implements the <code class="function">getaddrinfo()</code>,
+          <code class="function">socket()</code>, and
+          <code class="function">getpeeraddr()</code> callbacks.
+        </p><p>
+          An older version of this interface (also defined in
+          <code class="filename">ipc_drv.h</code>) used a
+          <code class="function">confd_ipc_init()</code> function and a
+          <code class="code">struct confd_ipc_cbs</code> callback structure. This
+          interface is deprecated, but will continue to be supported.
+          The main differences are that the old interface lacks the
+          <code class="function">getaddrinfo()</code>,
+          <code class="function">socket()</code>, and
+          <code class="function">getpeeraddr()</code> callbacks, and that any
+          error message would be provided via a static
+          <code class="varname">errstr</code> structure element.
+        </p><p>
+          To enable the use of this alternate IPC mechanism for the
+          client library connections, we need to set
+          <code class="sgmltag-element">/confdConfig/confdExternalIpc/enabled</code> to "true" in
+          <code class="sgmltag-element">confd.conf</code>. This causes any settings for
+          <code class="sgmltag-element">/confdConfig/confdIpcAddress/ip</code> and
+          <code class="sgmltag-element">/confdConfig/confdIpcAddress/port</code> to be ignored,
+          and we can instead specify the address to use in
+          <code class="sgmltag-element">/confdConfig/confdExternalIpc/address</code>. The address
+          is given in text form, and ConfD passes it to the
+          <code class="function">getaddrinfo()</code>,
+          <code class="function">bind()</code>, and/or
+          <code class="function">connect()</code> callbacks without any
+          interpretation.
+        </p><p>
+          If we want to use the alternate IPC for the inter-node HA
+          communication, we can in the same way set
+          <code class="sgmltag-element">/confdConfig/ha/externalIpc/enabled</code> and
+          <code class="sgmltag-element">/confdConfig/ha/externalIpc/address</code> in
+          <code class="filename">confd.conf</code>. Additionally the HA API uses
+          a struct that holds a node address:
+        </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ha_node {
+    confd_value_t nodeid;
+    <strong class="hl-keyword">int</strong> af;               <em class="hl-comment" style="color: silver">/* AF_INET | AF_INET6 | AF_UNSPEC */</em>
+    <strong class="hl-keyword">union</strong> {               <em class="hl-comment" style="color: silver">/* address of remote note */</em>
+        <strong class="hl-keyword">struct</strong> in_addr ip4;
+        <strong class="hl-keyword">struct</strong> in6_addr ip6;
+        <strong class="hl-keyword">char</strong> *str;
+    } addr;
+    <strong class="hl-keyword">char</strong> buf[<span class="hl-number">128</span>];        <em class="hl-comment" style="color: silver">/* when confd_read_notification() and            */</em>
+                          <em class="hl-comment" style="color: silver">/* confd_ha_get_status() populate these structs, */</em>
+                          <em class="hl-comment" style="color: silver">/* if type of nodeid is C_BUF, the pointer       */</em>
+                          <em class="hl-comment" style="color: silver">/* will be set to point into this buffer         */</em>
+    <strong class="hl-keyword">char</strong> addr_buf[<span class="hl-number">128</span>];   <em class="hl-comment" style="color: silver">/* similar to the above, but for the address     */</em>
+                          <em class="hl-comment" style="color: silver">/* of remote node when using external IPC        */</em>
+                          <em class="hl-comment" style="color: silver">/* (from getpeeraddr() callback for slaves)      */</em>
+};</pre></div><p>
+          When this struct is used to specify the address of the master
+          in the <code class="function">confd_ha_beslave()</code> call, the
+          <code class="varname">af</code> element should be set to
+          <code class="constant">AF_UNSPEC</code>, and the <code class="varname">str</code>
+          element of the <code class="varname">addr</code> union should point to
+          the text form of the master node's address. When the struct is
+          used to deliver information from ConfD, in the HA event
+          notifications and the result of a
+          <code class="function">confd_ha_get_status()</code> call,
+          <code class="varname">af</code> will also be set to
+          <code class="constant">AF_UNSPEC</code>, but <code class="varname">str</code>
+          will be <code class="constant">NULL</code> for slave nodes unless a
+          peer address has been provided via the
+          <code class="function">getpeeraddr()</code> callback.
+        </p><p>
+          The client changes we need to do are analogous to those listed
+          in the table above for the case of using a different IP
+          address and/or port for TCP - the differences are:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Instead of <code class="varname">CONFD_IPC_ADDR</code> and
+            <code class="varname">CONFD_IPC_PORT</code>, the environment variable
+            <code class="varname">CONFD_IPC_EXTADDR</code> is used to specify the
+            address.  This should be in the same form as used in
+            <code class="filename">confd.conf</code>, and if the variable is set
+            it causes any <code class="varname">CONFD_IPC_ADDR</code> and
+            <code class="varname">CONFD_IPC_PORT</code> settings to be
+            ignored.</p></li><li class="listitem"><p>The <span class="command"><strong>confd_cli</strong></span> program also needs to
+            be told where to find the shared object that it should use
+            for the <code class="function">connect()</code> operation. This is
+            done via the <code class="varname">CONFD_IPC_EXTSOPATH</code>
+            environment variable, i.e. it typically needs to be set to
+            <code class="filename">$CONFD_DIR/lib/confd/lib/core/confd/priv/ipc_drv_ops.so</code>.</p></li><li class="listitem"><p>Provided that the <code class="function">getaddrinfo()</code>
+            and <code class="function">socket()</code> callbacks are provided by
+            the shared object, the <span class="command"><strong>confd_cmd</strong></span>,
+            <span class="command"><strong>confd_load</strong></span>, and <span class="command"><strong>maapi</strong></span>
+            commands included in the release can also use the shared
+            object if the <code class="varname">CONFD_IPC_EXTSOPATH</code>
+            environment variable is set. Otherwise these programs will
+            assume that any setting of environment
+            <code class="varname">CONFD_IPC_EXTADDR</code> is the pathname of an
+            AF_UNIX socket.</p></li></ul></div><p>
+          As noted above, <span class="command"><strong>confd_cli</strong></span> is provided as
+          source, so we can alternatively modify it to support the
+          alternate IPC mechanism "natively". This is also the case for
+          <span class="command"><strong>confd_cmd</strong></span>, <span class="command"><strong>confd_load</strong></span>,
+          and <span class="command"><strong>maapi</strong></span>.
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            If we rebuild <span class="command"><strong>confd_cli</strong></span> or the other
+            commands from source, but want to <span class="emphasis"><em>keep</em></span>
+            the support for alternate IPC via the environment variables
+            and shared object, the preprocessor macro
+            <code class="code">EXTERNAL_IPC</code> must be defined. This can be done by
+            un-commenting the <code class="code">#define</code> in the source, or by
+            using a <span class="command"><strong>-D</strong></span> option to the compiler.
+          </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.advanced.confd_ipc.restricting"></a>28.6.2.&nbsp;Restricting access to the IPC port</h3></div></div></div><p>
+        By default, the clients connecting to the ConfD IPC port are
+        considered trusted, i.e. there is no authentication required,
+        and we rely on the use of 127.0.0.1 for
+        <code class="sgmltag-element">/confdConfig/confdIpcAddress/ip</code> to prevent remote
+        access. In case this is not sufficient, it is possible to
+        restrict the access to the IPC port by configuring an access
+        check.
+      </p><p>
+        The access check is enabled by setting the
+        <code class="filename">confd.conf</code> element
+        <code class="sgmltag-element">/confdConfig/confdIpcAccessCheck/enabled</code> to "true",
+        and specifying a filename for
+        <code class="sgmltag-element">/confdConfig/confdIpcAccessCheck/filename</code>. The file
+        should contain a shared secret, i.e. a random character string.
+        Clients connecting to the IPC port will then be required to
+        prove that they have knowledge of the secret through a challenge
+        handshake, before they are allowed access to the ConfD functions
+        provided via the IPC port.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        Obviously the access permissions on this file must be restricted
+        via OS file permissions, such that it can only be read by the
+        ConfD daemon and client processes that are allowed to connect to
+        the IPC port. E.g. if both the ConfD daemon and the clients run as
+        root, the file can be owned by root and have only "read by
+        owner" permission (i.e. mode 0400). Another possibility is to
+        have a group that only the ConfD daemon and the clients belong to,
+        set the group ID of the file to that group, and have only "read
+        by group" permission (i.e. mode 040).
+        </p></div><p>
+        To provide the secret to the client libraries, and inform them
+        that they need to use the access check handshake, we have to set
+        the environment variable <code class="code">CONFD_IPC_ACCESS_FILE</code> to the
+        full pathname of the file containing the secret. This is
+        sufficient for all the clients mentioned above, i.e. there is no
+        need to change application code to support or enable this check.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+          The access check must be either enabled or disabled for both
+          the ConfD daemon and the clients. E.g. if
+          <code class="sgmltag-element">/confdConfig/confdIpcAccessCheck/enabled</code> in
+          <code class="filename">confd.conf</code> is <span class="emphasis"><em>not</em></span> set
+          to "true", but clients are started with the environment
+          variable <code class="code">CONFD_IPC_ACCESS_FILE</code> pointing to a file
+          with a secret, the client connections will fail.
+        </p></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14685"></a>28.7.&nbsp;Restart strategies</h2></div></div></div><p>
+        If the ConfD daemon is shut down, all applications connected
+        to the ConfD daemon must enter an indefinite reconnect
+        loop. If ConfD has been configured to use a startup datastore,
+        all applications keeping configuration data in their
+        run-time state <span class="emphasis"><em>must</em></span> re-read the configuration data
+        from CDB, when the daemon comes back.
+      </p><p>
+        If ConfD has been setup to <span class="emphasis"><em>not</em></span> use a startup
+        datastore, all applications which keep configuration data in
+        their run-time state can just proceed its processing without
+        any re-read of the configuration data from CDB, when the
+        daemon comes back.
+      </p><p>
+        The ConfD daemon <span class="emphasis"><em>must</em></span> be restarted if .fxs files in a
+        running system are to be changed. It is not enough to issue a:
+      </p><div class="informalexample"><pre class="screen">$ confd --reload</pre></div><p>
+        Before we restart the daemon we need to stop all applications
+        relying on the .fxs files that are updated. Whenever the
+        daemon is up and running the stopped applications can be
+        restarted.
+      </p><p>
+        Applications which do not rely on the updated .fxs files can
+        safely be kept running. However, be sure to follow the startup
+        datastore reconnect strategy above.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14697"></a>28.8.&nbsp;Security issues</h2></div></div></div><p>ConfD requires some privileges to perform certain tasks. The
+      following tasks may, depending on the target system, require
+      root privileges.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Binding to privileged ports. The
+          <code class="filename">confd.conf</code> configuration file specifies
+          which port numbers ConfD should <span class="emphasis"><em>bind(2)</em></span>
+          to.  If any of these port numbers are lower than 1024, ConfD
+          usually requires root privileges unless the target operating
+          system allows ConfD to bind to these ports as a non-root
+          user.</p></li><li class="listitem"><p>If PAM is to be used for authentication, the program
+          installed as
+          <code class="filename">$CONFD_DIR/lib/confd/lib/core/pam/priv/epam</code> acts
+          as a PAM client. Depending on the local PAM configuration,
+          this program may require root privileges. If PAM is
+          configured to read the local <code class="filename">passwd</code>
+          file, the program must either run as root, or be setuid
+          root.  If the local PAM configuration instructs ConfD to run
+          for example <span class="emphasis"><em>pam_radius_auth</em></span>, root
+          privileges are possibly not required depending on the local
+          PAM installation.</p></li><li class="listitem"><p>If the CLI is used and we want to create CLI commands
+          that run executables, we may want to modify the permissions
+          of the
+          <code class="filename">$CONFD_DIR/lib/confd/lib/core/confd/priv/cmdptywrapper</code>
+          program.</p><p>To be able to run an executable as root or a specific user,
+          we need to make cmdptywrapper setuid root, i.e.:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><span class="command"><strong># chown root cmdptywrapper</strong></span></p></li><li class="listitem"><p><span class="command"><strong># chmod u+s cmdptywrapper</strong></span></p></li></ol></div><p>Failing that, all programs will be executed as the
+          user running the <span class="command"><strong>confd</strong></span>
+          daemon. Consequently, if that user is root we do not have to
+          perform the chmod operations above.</p><p>The same applies for executables run via actions, but then
+          we may want to modify the permissions of the
+          <code class="filename">$CONFD_DIR/lib/confd/lib/core/confd/priv/cmdwrapper</code>
+          program instead:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><span class="command"><strong># chown root cmdwrapper</strong></span></p></li><li class="listitem"><p><span class="command"><strong># chmod u+s cmdwrapper</strong></span></p></li></ol></div></li></ul></div><p>
+          ConfD can be instructed to terminate NETCONF over clear text
+          TCP. This is useful for debugging since the NETCONF traffic
+          can then be easily captured and analyzed. It is also useful
+          if we want to provide some local proprietary transport
+          mechanism which is not SSH.  Clear text TCP termination is
+          not authenticated, the clear text client simply tells ConfD
+          which user the session should run as. The idea is that
+          authentication is already done by some external entity, such
+          as an SSH server.  If clear text TCP is enabled, it is very
+          important that ConfD binds to localhost (127.0.0.1) for
+          these connections.
+        </p><p>
+          Client libraries connect to ConfD. For example the CDB API
+          is TCP based and a CDB client connects to ConfD. We instruct
+          ConfD which address to use for these connections through the
+          confd.conf parameters
+          <code class="sgmltag-element">/confdConfig/confdIpcAddress/ip</code> (default address 127.0.0.1) and
+          <code class="sgmltag-element">/confdConfig/confdIpcAddress/port</code> (default port 4565).
+        </p><p>
+          ConfD multiplexes different kinds of connections on the same
+          socket (IP and port combination). The following programs
+          connect on the socket:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Remote commands, such as e.g. <span class="command"><strong>confd --reload</strong></span></p></li><li class="listitem"><p>CDB clients.</p></li><li class="listitem"><p>External database API clients.</p></li><li class="listitem"><p>MAAPI, The Management Agent API clients.</p></li><li class="listitem"><p>The <span class="command"><strong>confd_cli</strong></span> program</p></li></ul></div><p>
+          All of the above are considered trusted. MAAPI clients and
+          <span class="command"><strong>confd_cli</strong></span> should supposedly authenticate the user before
+          connecting to ConfD whereas CDB clients and external database
+          API clients are considered trusted
+          and do not have to authenticate.
+        </p><p>
+          Thus, since the <span class="emphasis"><em>confdIpcAddress</em></span> socket allows full
+          unauthenticated access to the system, it is important to
+          ensure that the socket is not accessible from untrusted
+          networks. However it is also possible to restrict access to
+          this socket by means of an access check, see <a class="xref" href="ch28.html#ug.advanced.confd_ipc.restricting" title="28.6.2.&nbsp;Restricting access to the IPC port">Section&nbsp;28.6.2, &#8220;Restricting access to the IPC port&#8221;</a> above.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14755"></a>28.9.&nbsp;Running ConfD as a non privileged user</h2></div></div></div><p>
+        A common misfeature found on UN*X operating systems is the
+        restriction that only root can bind to ports below 1024.
+        Many a dollar has been wasted on workarounds and
+        often the results are security holes.
+      </p><p>
+        Both FreeBSD and Solaris have elegant configuration options to
+        turn this feature off. On FreeBSD:
+      </p><div class="informalexample"><pre class="screen">
+$ sysctl net.inet.ip.portrange.reservedhigh=0
+      </pre></div><p>
+        The above is best added to your /etc/sysctl.conf
+      </p><p>
+        Similarly on Solaris we can just configure this.
+        Assuming we want to run ConfD under a non-root user "confd".
+        On Solaris we can do that easily by granting the specific right to bind
+        privileged ports below 1024 (and only that) to the "confd" user using:
+      </p><div class="informalexample"><pre class="screen">
+$ /usr/sbin/usermod -K defaultpriv=basic,net_privaddr confd
+      </pre></div><p>
+        And check the we get what we want through:
+      </p><div class="informalexample"><pre class="screen">
+$ grep confd /etc/user_attr
+confd::::type=normal;defaultpriv=basic,net_privaddr
+      </pre></div><p>
+        Linux doesn't have anything like the above. There are a couple
+        of options on Linux. The best is to use an auxiliary program
+        like authbind <code class="uri">http://packages.debian.org/stable/authbind</code>
+        or privbind <code class="uri">http://sourceforge.net/projects/privbind/</code>
+      </p><p>
+        These programs are run by root.
+        To start confd under e.g authbind we can do:
+      </p><div class="informalexample"><pre class="screen">
+privbind -u confd /opt/confd/confd-2.7/bin/confd \
+    -c /etc/confd.conf
+      </pre></div><p>
+        The above command starts confd as user <span class="emphasis"><em>confd</em></span>
+        and binds to ports below 1024
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14776"></a>28.10.&nbsp;Storing encrypted values in ConfD</h2></div></div></div><p>
+        Using the <code class="code">tailf:des3-cbc-encrypted-string</code> or the
+        <code class="code">tailf:aes-cfb-128-encrypted-string</code> built-in types it is
+        possible to store encrypted values in ConfD (see
+        <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a>).
+        The keys used to encrypt these values
+        are stored in <code class="filename">confd.conf</code>. Whenever an encrypted
+        leaf is read using the CDB API or MAAPI it is possible to
+        decrypt the returned string using the <code class="code">confd_decrypt()</code>
+        function. When the keys in <code class="filename">confd.conf</code> are changed, the
+        encrypted values will not be decryptable any longer, so care
+        must be taken to re-install the values using the new
+        keys. This section will provide an example on how to do this.
+      </p><p>
+        The encrypted values can only be decrypted using
+        <code class="code">confd_decrypt()</code>, which only works when ConfD is running
+        with the correct keys, so the procedure to update the
+        encrypted values is:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Read all the encrypted values and decrypt them</p></li><li class="listitem"><p>Stop the ConfD daemon</p></li><li class="listitem"><p>Restart it with the new encryption keys</p></li><li class="listitem"><p>Write back the values in clear-text, which will cause
+        ConfD to encrypt them again</p></li></ol></div><p>
+        A very simple YANG model to store encrypted strings could be:
+      </p><div class="informalexample"><pre class="programlisting">module enctest {
+    namespace "http://www.example.com/ns/enctest";
+    prefix e;
+    import tailf-common {
+        prefix tailf;
+    }
+
+    container strs {
+        list str {
+            key nr;
+            max-elements 64;
+            leaf nr {
+                type int32;
+            }
+            leaf secret {
+                type tailf:aes-cfb-128-encrypted-string;
+                mandatory true;
+            }
+        }
+    }
+}</pre></div><p>
+        The we could write a function which would read all the
+        encrypted leafs and save the clear-text equivalent. Such a
+        function (without error checking) could look like this:
+      </p><div class="informalexample"><pre class="programlisting">static void install_keys(struct sockaddr_in *addr)
+{
+    struct confd_daemon_ctx *dctx;
+    int ctlsock = socket(PF_INET, SOCK_STREAM, 0);
+    dctx = confd_init_daemon(progname);
+    confd_connect(dctx, ctlsock, CONTROL_SOCKET, (struct sockaddr*)addr, sizeof (*addr));
+    confd_install_crypto_keys(dctx);
+    close(ctlsock);
+    confd_release_daemon(dctx);
+}
+
+static void get_clear_text(struct sockaddr_in *addr, FILE *f)
+{
+    int rsock = socket(PF_INET, SOCK_STREAM, 0);
+    int i, n;
+
+    install_keys(addr);
+
+    cdb_connect(rsock, CDB_READ_SOCKET, (struct sockaddr*)addr, sizeof(*addr));
+    cdb_start_session(rsock, CDB_RUNNING);
+    cdb_set_namespace(rsock, smp__ns);
+    n = cdb_num_instances(rsock, "/strs/str");
+    for(i=0; i&lt;n; i++) {
+        int nr;
+        char cstr[BUFSIZ], dstr[BUFSIZ];
+
+        cdb_get_str(rsock, cstr, sizeof(cstr), "/strs/str[%d]/secret", i);
+        cdb_get_int32(rsock, &amp;nr, "/strs/str[%d]/nr", i);
+        memset(dstr, 0, sizeof(dstr));
+        confd_decrypt(cstr, strlen(cstr), dstr);
+        fprintf(f, "/strs/str{%d}/secret=$0$%s\n", nr, dstr);
+    }
+    cdb_end_session(rsock),
+    cdb_close(rsock);
+}</pre></div><p>
+        Note the prefixing of the clear-text output of <code class="code">$0$</code> -
+        this is what indicates to the ConfD daemon that the strings
+        are in clear text, causing it to encrypt them when we install
+        them again.
+      </p><p>
+        Now the opposite function, reading lines on the form
+        <code class="code">"keypath=value"</code> and using the <code class="code">maapi_set_elem2()</code>
+        function to write them back to the ConfD daemon.
+      </p><div class="informalexample"><pre class="programlisting">static void set_values(struct sockaddr_in *addr, FILE *f)
+{
+    int msock = socket(PF_INET, SOCK_STREAM, 0);
+    int th;
+    struct confd_ip ip;
+    const char *groups[] = { "admin" };
+
+    maapi_connect(msock, (struct sockaddr*)addr, sizeof(*addr));
+    ip.af = AF_INET;
+    inet_aton("127.0.0.1", &amp;ip.ip.v4);
+    maapi_start_user_session(msock, "admin", progname,
+                             groups, sizeof(groups) / sizeof(*groups),
+                             &amp;ip, CONFD_PROTO_TCP);
+
+    maapi_start_trans(msock, CONFD_RUNNING, CONFD_READ_WRITE);
+    maapi_set_namespace(msock, th, smp__ns);
+    for (;;) {
+        char *key, *val, line[BUFSIZ];
+        if (fgets(line, sizeof(line), f) == NULL) {
+            break;
+        }
+        key = line;
+        val = strchr(key, (int)'=');
+        *val++ = 0; /* NUL terminate the key, make val point to value */
+        maapi_set_elem2(msock, th, val, key);
+    }
+    maapi_apply_trans(msock, th, 0);
+    maapi_end_user_session(msock);
+    close(msock);
+}</pre></div><p>
+        Putting it together with this <code class="code">main()</code> function makes a
+        useful utility program for the task at hand.
+      </p><div class="informalexample"><pre class="programlisting">int main(int argc, char **argv)
+{
+    char *confd_addr = "127.0.0.1";
+    int confd_port = CONFD_PORT;
+    struct sockaddr_in addr;
+    int c, mode = 0;            /* 1 = get, 2 = set */
+
+    /* Parse command line */
+    while ((c = getopt(argc, argv, "gs")) != EOF) {
+        switch (c) {
+        case 'g':
+            mode = 1;
+            break;
+        case 's':
+            mode = 2;
+            break;
+        default:
+            printf("huh?\n");
+            exit(1);
+        }
+    }
+    if (!mode) {
+        fprintf(stderr, "%s: must provide either -s or -g\n", argv[0]);
+        exit(1);
+    }
+    /* Initialize address to confd daemon */
+    {
+        struct in_addr in;
+        inet_aton(confd_addr, &amp;in);
+        addr.sin_addr.s_addr = in.s_addr;
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(confd_port);
+    }
+    confd_init(argv[0], stderr, dbg);
+
+    switch (mode) {
+    case 1: get_clear_text(&amp;addr, stdout); break;
+    case 2: set_values(&amp;addr, stdin); break;
+    }
+    exit(0);
+}</pre></div><p>
+        Using this utility, called <span class="command"><strong>crypto_keys</strong></span>,
+        installing new encryption keys could be done using a shell
+        script like this.
+      </p><div class="informalexample"><pre class="screen"># First save clear text version of the keys in a temporary file
+crypto_keys -g &gt; TOP_SECRET
+
+# Now stop the daemon
+confd --stop
+
+# Install the new AES encryption key (provided to this script in $1)
+mv confd.conf confd.conf.old
+xmlset C "$1" confdConfig encryptedStrings AESCFB128 key &lt; \
+    confd.conf.old  &gt; confd.conf
+rm -f confd.conf.old
+
+# Bring the daemon up to start-phase 1
+confd -c confd-conf --start-phase0
+confd --start-phase1
+
+# Now write back the keys, and remove the temporary file
+crypto_keys -s &lt; TOP_SECRET
+rm -f TOP_SECRET
+
+# We are done
+confd --start-phase2</pre></div><p>
+        In this example we are only using AES encryption, and only
+        modifying the key, not the initial vector - but it is easy to
+        extend to use the 3DES keys as well. The <span class="command"><strong>xmlset</strong></span> utility
+        (provided as example source in <code class="filename">$CONFD_DIR/src/confd/tools</code>) in the
+        ConfD distribution) is used to modify the key in
+        <code class="filename">confd.conf</code>. Writing back the encrypted leaf in
+        start phase 1 ensures that no external method (e.g. a NETCONF
+        request) modifies the data before it is re-installed with the
+        new encryption keys.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.disaster"></a>28.11.&nbsp;Disaster management</h2></div></div></div><p>
+        This section describes a number of disaster scenarios and
+        recommends various actions to take in the different disaster
+        variants.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14824"></a>28.11.1.&nbsp;ConfD fails to start</h3></div></div></div><p>
+          CDB keeps its data in two files <code class="filename">A.cdb</code> and
+          <code class="filename">C.cdb</code>. If ConfD is stopped, these two files can
+          simply be copied, and the copy is then a full backup of
+          CDB. If ConfD is running, we cannot copy the files, but need
+          to use <span class="command"><strong>confd --cdb-backup file</strong></span> to copy the two CDB
+          files into a backup file (in gzipped tar format).
+        </p><p>
+          Furthermore, if neither A.cdb nor C.cdb exists in the
+          configured CDB directory, CDB will attempt to initialize
+          from all files in the CDB directory with the suffix ".xml".
+        </p><p>
+          Thus, there exists two different ways to reinitiate CDB from
+          a previous known good state, either from .xml files of from
+          a CDB backup. The .xml files would typically be used to
+          reinstall "factory defaults" whereas a CDB backup could be
+          used in more complex scenarios.
+        </p><p>
+          When ConfD starts and fails to initialize, the following
+          exit codes can occur:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Exit codes <span class="emphasis"><em>1</em></span> and
+            <span class="emphasis"><em>19</em></span> mean that an internal
+            error has occurred. A text message should be in the logs, or
+            if the error occurred at startup before logging had been
+            activated, on standard error (standard output if ConfD was
+            started with --foreground). Generally the message will only
+            be meaningful to the ConfD developers, and an internal error
+            should always be reported to Tail-f support.</p></li><li class="listitem"><p>Exit codes <span class="emphasis"><em>2</em></span> and
+            <span class="emphasis"><em>3</em></span> are only used for the confd "control
+            commands" (see the section COMMUNICATING WITH CONFD in the
+            <a class="xref" href="rn01re01.html" title="confd"><span class="refentrytitle">confd</span>(1)</a> manual page), and mean
+            that the command failed due to timeout. Code
+            <span class="emphasis"><em>2</em></span> is used when the initial connect to
+            ConfD didn't succeed within 5 seconds (or the
+            <code class="option">TryTime</code> if given), while code
+            <span class="emphasis"><em>3</em></span> means that the ConfD daemon did not
+            complete the command within the time given by the
+            <code class="option">--timeout</code> option.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>10</em></span> means that one of the init files in
+            the CDB directory was faulty in some way. Further
+            information in the log.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>11</em></span> means that the CDB configuration was
+            changed in an unsupported way. This will only happen when
+            an existing database is detected, which was created
+            with another configuration than the current in confd.conf.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>12</em></span> means that the C.cdb file is in an
+            old and unsupported format (this can only happen if the
+            CDB database was created with a ConfD version older than
+            1.3, from which upgrading isn't supported).</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>13</em></span> means that the schema change
+            caused an upgrade, but for some reason the upgrade
+            failed. Details are in the log. The way to recover from
+            this situation is either to correct the problem or to
+            re-install the old schema (fxs) files.</p></li><li class="listitem"><p> Exit code <span class="emphasis"><em>14</em></span> means that the schema change
+            caused an upgrade, but for some reason the upgrade failed,
+            corrupting the database in the process. This is rare and
+            usually caused by a bug. To recover, either start from an
+            empty database with the new schema, or re-install the old
+            schema files and apply a backup.
+            </p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>15</em></span> means that <code class="filename">A.cdb</code> or
+            <code class="filename">C.cdb</code> is corrupt in a non-recoverable way. Remove
+            the files and re-start using a backup or init files.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>16</em></span> means that CDB ran
+            into an unrecoverable file-error while booting (such as
+            running out of space on the device while writing the
+            initial schema file).</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>20</em></span> means that ConfD failed to
+            bind a socket. By default this means that Confd refuses to start.
+            It is however possible to force Confd to ignore this fatal
+            error situation by enabling the parameter
+            <span class="emphasis"><em>/confdConfig/ignoreBindErrors</em></span>. Instead
+            a warning is issued and the failing northbound agent is disabled.
+            The agent may be enabled by dynamically re-configuring the
+            failing agent to use another port and restart Confd.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>21</em></span> means that some ConfD
+            configuration file is faulty. More information in the logs.</p></li><li class="listitem"><p>Exit code <span class="emphasis"><em>22</em></span> indicates a ConfD
+            installation related problem, e.g. that the user does not
+            have read access to some library files, or that some file
+            is missing.</p></li></ul></div><p>
+          If the ConfD daemon starts normally, the exit code is
+          <span class="emphasis"><em>0</em></span>.
+        </p><p>
+          If CDB is reinitialized to factory defaults, it may not be
+          possible to reach the machine over the network.  The only
+          way to reconfigure the machine is through a CLI login over
+          the serial console.
+        </p><p>
+          If the AAA database is broken, ConfD will start but with no
+          authorization rules loaded. This means that all write access to
+          the configuration is denied.  The ConfD CLI can be
+          started with a flag <span class="command"><strong>confd_cli --noaaa</strong></span> which will
+          allow full unauthorized access to the configuration.  Usage
+          of the ConfD cli with this flag can possibly be enabled for
+          some special UNIX user which can only login over the serial
+          port. Thus <span class="command"><strong>--noaaa</strong></span> provides a way to reconfigure the
+          box although the AAA database is broken.
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14886"></a>28.11.2.&nbsp;ConfD failure after startup</h3></div></div></div><p>
+          ConfD attempts to handle all runtime problems without
+          terminating, e.g. by restarting specific components.
+          However there are some cases where this is not possible,
+          described below. When ConfD is started the default way,
+          i.e. as a daemon, the exit codes will of course not be
+          available, but see the --foreground option in the
+          <span class="emphasis"><em>confd(1)</em></span> manual page.
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Out of memory: If ConfD is unable to allocate memory, it will
+            exit by calling <span class="emphasis"><em>abort(3)</em></span>. This will generate an
+            exit code as for reception of the SIGABRT signal - e.g. if ConfD
+            is started from a shell script, it will see 134 as exit code
+            (128 + the signal number).</p></li><li class="listitem"><p>Out of file descriptors for <span class="emphasis"><em>accept(2)</em></span>: If ConfD fails
+            to accept a TCP connection due to lack of file descriptors,
+            it will log this and then exit with code 25. To avoid this
+            problem, make sure that the process and system-wide file
+            descriptor limits are set high enough, and if needed configure
+            session limits in <code class="filename">confd.conf</code>.</p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14898"></a>28.11.3.&nbsp;Transaction commit failure</h3></div></div></div><p>
+          When the system is updated, ConfD executes a two phase
+          commit protocol towards the different participating
+          databases including CDB. If a participant fails in the
+          <code class="code">commit()</code> phase although the participant succeeded in the
+          prepare phase, the configuration is possibly in an
+          inconsistent state.
+        </p><p>
+          When ConfD considers the configuration to be in a
+          inconsistent state, operations will continue. It is still
+          possible to use NETCONF, the CLI and all other northbound
+          management agents. The CLI has a different prompt which
+          reflects that the system is considered to be in an
+          inconsistent state and also the Web UI shows this:
+        </p><div class="informalexample"><pre class="screen">
+  -- WARNING ------------------------------------------------------
+  Running db may be inconsistent. Enter private configuration mode and
+  install a rollback configuration or load a saved configuration.
+  ------------------------------------------------------------------
+        </pre></div><p>
+          It is slightly more involved using the NETCONF agent. The
+          NETCONF transaction which resulted in a failed commit will
+          fail, but following that the only way to see that the system
+          is considered to be in an inconsistent state is by reading
+          the data defined by <span class="emphasis"><em>tailf-netconf-monitoring</em></span>.
+        </p><p>
+          The MAAPI API has two interface functions which can be used
+          to set and retrieve the consistency status. This API can
+          thus be used to manually reset the consistency state. Apart
+          from this, the only way to reset the state to a consistent
+          state is by reloading the entire configuration.
+        </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e14908"></a>28.12.&nbsp;Troubleshooting</h2></div></div></div><p>
+        This section discusses problems that new users have seen when
+        they started to use ConfD.  Please do not hesitate to contact
+        our support team (see below) if you are having trouble,
+        regardless of whether your problem is listed here or not.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14911"></a>28.12.1.&nbsp;Installation Problems</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e14913"></a>Error messages during installation</h4></div></div></div><p>The installation program gives a lot of error
+          messages, the first few like the ones below. The resulting
+          installation is obviously incomplete.</p><div class="informalexample"><pre class="screen">tar: Skipping to next header
+gzip: stdin: invalid compressed data--format violated</pre></div><p>Cause: This happens if the installation program has
+          been damaged, most likely because it has been downloaded in
+          'ascii' mode.</p><p>Resolution: Remove the installation
+          directory. Download a new copy of ConfD from our servers.
+          Make sure you use binary transfer mode every step of the
+          way.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14920"></a>28.12.2.&nbsp;Problems Starting ConfD</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e14922"></a>ConfD terminating with GLIBC error</h4></div></div></div><p>ConfD terminates immediately with a message similar to
+          the one below.</p><div class="informalexample"><pre class="screen">Internal error: Open failed: /lib/tls/libc.so.6: version
+`GLIBC_2.3.4' not found (required by
+.../lib/confd/lib/core/util/priv/syst_drv.so)</pre></div><p>Cause: This happens if you are running on a very old
+          Linux version.  The GNU libc (GLIBC) version is older than
+          2.3.4, which was released 2004.</p><p>Resolution: Use a newer Linux system, or upgrade the
+          GLIBC installation.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e14929"></a>ConfD terminating with libcrypto error</h4></div></div></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>ConfD terminates immediately with a message similar
+              to this:</p><div class="informalexample"><pre class="screen">Bad configuration: .../confd.conf:0: cannot dynamically link with
+libcrypto shared library</pre></div><p>Cause: This normally happens due to the OpenSSL
+              package being of the wrong version or not installed in the
+              operating system.</p><p>Resolution: One of</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Install the OpenSSL package with the correct
+                  version. This is 1.0.0 for Linux releases of ConfD,
+                  0.9.8 or 0.9.7 for some other operating systems. To
+                  find out the version to install, run:</p><div class="informalexample"><pre class="screen">$ ldd $CONFD_DIR/lib/confd/lib/core/crypto/priv/lib/crypto.so</pre></div><p>Note: only the libcrypto shared library
+                  (libcrypto.so.N.N.N) is actually required by
+                  ConfD.</p></li><li class="listitem"><p>Provided that a different version of OpenSSL,
+                  0.9.7 or greater, is installed: Rebuild the ConfD
+                  components that depend on libcrypto to use this
+                  version, as described in <a class="xref" href="ch28.html#ug.advanced.different_openssl" title="28.15.&nbsp;Using a different version of OpenSSL">Section&nbsp;28.15, &#8220;Using a different version of OpenSSL&#8221;</a>.</p></li></ol></div></li><li class="listitem"><p>ConfD terminates immediately, or when the Web UI is
+              enabled, with a message similar to:</p><div class="informalexample"><pre class="screen">Bad configuration: .../confd.conf:0: libcrypto shared library mismatch
+(DES_INT) - crypto.so and libconfd must be rebuilt</pre></div><p>or:</p><div class="informalexample"><pre class="screen">Bad configuration: .../confd.conf:0: libcrypto shared library mismatch
+(RC4_CHAR) - crypto.so must be rebuilt for support of default setting
+for /confdConfig/webui/transport/ssl/ciphers</pre></div><p>Cause: This happens if the OpenSSL package is of the
+              correct version, but has been built with a configuration
+              parameter that makes the interface incompatible with the
+              build that is expected by ConfD.</p><p>Resolution: Applying resolution 2 above is always
+              sufficient. Applying resolution 1 is also a possibility,
+              but requires that the OpenSSL package is built with the
+              expected configuration parameters. Contact Tail-f support
+              if this method is desired but unsuccessful in solving the
+              problem.  In case only the second message (with RC4_CHAR)
+              occurs, yet another way to resolve the issue is to
+              configure a cipher list for
+              <code class="sgmltag-element">/confdConfig/webui/transport/ssl/ciphers</code> in
+              <code class="filename">confd.conf</code> (or confd_dyncfg) that
+              does not include any RC4-based ciphers - see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.</p></li></ul></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14959"></a>28.12.3.&nbsp;Problems Running Examples</h3></div></div></div><p>
+            Some examples are dependent on features that might only be available
+            on Linux. Before such examples can run, they would have to
+            be ported.
+          </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e14962"></a>The 'netconf-console' program fails</h4></div></div></div><p>
+                Sending NETCONF commands and queries with
+                'netconf-console' fails, while it works using
+                'netconf-console-tcp'.  The error message is below.
+              </p><p>
+                You must install the python ssh implementation paramiko in order
+                to use ssh.
+              </p><p>
+                Cause: The netconf-console command is implemented
+                using the Python programming language. It depends on
+                the python SSH implementation Paramiko. Since you are
+                seeing this message, your operating system doesn't
+                have the python-module Paramiko installed. The
+                Paramiko package, in turn, depends on a Python crypto
+                library (pycrypto).
+              </p><p>
+                Resolution: Install Paramiko (and pycrypto, if
+                necessary) using the standard installation mechanisms
+                for your OS. An alternative approach is to go to the
+                project home pages to fetch, build and install the
+                missing packages.
+              </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><a class="link" href="http://www.lag.net/paramiko/" target="_top">http://www.lag.net/paramiko/</a></p></li><li class="listitem"><p><a class="link" href="http://www.amk.ca/python/code/crypto" target="_top">http://www.amk.ca/python/code/crypto</a></p></li></ul></div><p>
+                These packages come with simple installation
+                instructions. You will need root privileges to install
+                these packages, however.  When properly installed, you
+                should be able to import the paramiko module without
+                error messages
+              </p><div class="informalexample"><pre class="screen">$ python
+...
+&gt;&gt;&gt; import paramiko
+&gt;&gt;&gt;</pre></div><p>Exit the Python interpreter with Ctrl+D.</p><p>
+                A workaround is to use 'netconf-console-tcp'. It uses
+                TCP instead of SSH and doesn't require Paramiko or
+                Pycrypto. Note that TCP traffic is not encrypted.
+              </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e14980"></a>28.12.4.&nbsp;General Troubleshooting Strategies</h3></div></div></div><p>
+            If you have trouble starting or running ConfD, the
+            examples or the clients you write, here are some
+            troubleshooting tips.
+          </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">Transcript</span></dt><dd><p>
+              When contacting support, it often helps the support
+              engineer to understand what you are trying to achieve if
+              you copy-paste the commands, responses and shell scripts
+              that you used to trigger the problem.</p></dd><dt><span class="term">Verbose flag</span></dt><dd><p>
+              When ConfD is started, give the --verbose (abbreviated
+              -v) and --foreground flags. This will prevent ConfD from
+              starting as a daemon and cause some messages to be printed
+              on the stdout.
+              </p><div class="informalexample"><pre class="screen">
+$ confd --verbose --foreground ...
+              </pre></div><p>
+            </p></dd><dt><span class="term">Log files</span></dt><dd><p>
+              To find out what ConfD is/was doing, browsing ConfD's
+              log files is often helpful.  In the examples, they are
+              called 'devel.log', 'confd.log', 'audit.log' and
+              'confd.log'.  If you are working with your own system,
+              make sure the log files are enabled in 'confd.conf'.
+              They are already enabled in all the examples.</p></dd><dt><span class="term">Status</span></dt><dd><p>
+              ConfD will give you a comprehensive status report if you
+              call
+              </p><div class="informalexample"><pre class="screen">
+$ confd --status
+              </pre></div><p>
+            </p><p>
+              ConfD status information is also available as operational
+              data under <code class="sgmltag-element">/confd-state</code> when the
+              <code class="filename">tailf-confd-monitoring.fxs</code> and
+              <code class="filename">tailf-common-monitoring.fxs</code> data
+              model files are present in ConfD's <code class="sgmltag-element">loadPath</code>.
+              These files are stored in
+              <code class="filename">$CONFD_DIR/etc/confd</code> in the ConfD
+              release, and the functionality thus enabled by default.
+              See the corresponding YANG modules
+              <code class="filename">tailf-confd-monitoring.yang</code> and
+              <code class="filename">tailf-common-monitoring.yang</code> in the
+              <code class="filename">$CONFD_DIR/src/confd/yang</code> directory
+              of the ConfD release for documentation of the provided
+              data. To allow programmatic access to this data via
+              MAAPI without exposing it to end users, the modules can be
+              recompiled with the <code class="option">--export none</code> option
+              to <span class="command"><strong>confdc</strong></span> (see <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a>).
+            </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+              When recompiling these modules, it is critical that the
+              annotation module
+              <code class="filename">tailf-confd-monitoring-ann.yang</code> is
+              used, see
+              <code class="filename">$CONFD_DIR/src/confd/yang/Makefile</code>.
+            </p></div></dd><dt><span class="term">Check data provider</span></dt><dd><p>
+              If you are implementing a data provider (for operational or
+              configuration data), you can verify that it works for all possible
+              data items using
+              </p><div class="informalexample"><pre class="screen">
+$ confd --check-callbacks
+</pre></div><p>
+            </p></dd><dt><span class="term">Debug dump</span></dt><dd><p>
+              If you suspect you have experienced a bug in ConfD, or
+              ConfD told you so, you can give Support a debug dump to
+              help us diagnose the problem. It contains a lot of
+              status information (including a full confd --status
+              report) and some internal state information. This
+              information is only readable and comprehensible to the
+              ConfD development team, so send the dump to your support
+              contact. A debug dump is created using
+              </p><div class="informalexample"><pre class="screen">
+$ confd --debug-dump mydump1
+              </pre></div><p>
+
+              Just as in CSI on TV, it's important that the
+              information is collected as soon as possible after the
+              event. Many interesting traces will wash away with time,
+              or stay undetected if there are lots of irrelevant facts
+              in the dump.</p></dd><dt><span class="term">Debug error log</span></dt><dd><p>
+              Another thing you can do if you suspect you have
+              experienced a bug in ConfD, is to enable the error log.
+              The logged information is only readable and
+              comprehensible to the ConfD development team, so send
+              the log to your support contact.
+              </p><p>
+                By default, the error log is disabled.  To enable it, add this
+                chunk of XML between <code class="code">&lt;logs&gt;</code> and
+                <code class="code">&lt;/logs&gt;</code> in your
+                <code class="filename">confd.conf</code> file:
+                </p><div class="informalexample"><pre class="programlisting">
+&lt;errorLog&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;filename&gt;./error.log&lt;/filename&gt;
+&lt;/errorLog&gt;
+                </pre></div><p>
+
+                This will actually create a number of files called
+                ./error.log*. Please send them all to us.
+              </p></dd><dt><span class="term">System dump</span></dt><dd><p>
+              If ConfD aborts due to failure to allocate memory
+              (see <a class="xref" href="ch28.html#ug.advanced.disaster" title="28.11.&nbsp;Disaster management">Section&nbsp;28.11, &#8220;Disaster management&#8221;</a>), and you
+              believe that this is due to a memory leak in ConfD,
+              creating one or more debug dumps as described above
+              (before ConfD aborts) will produce the most useful
+              information for Support. If this is not possible,
+              you can make ConfD produce a system dump just before
+              aborting. To do this, set the environment variable
+              <code class="varname">$CONFD_DUMP</code> to a file name for the dump
+              before starting ConfD. The dumped information is only
+              comprehensible to the ConfD development team, so send
+              the dump to your support contact.
+            </p></dd><dt><span class="term">System call trace</span></dt><dd><p>
+                To catch certain types of problems, especially
+                relating to system start and configuration, the
+                operating system's system call trace can be
+                invaluable.  This tool is called strace/ktrace/truss.
+                Please send the result to your support contact for a
+                diagnosis.  Running instructions below.
+              </p><p>Linux:</p><div class="informalexample"><pre class="screen">
+$ strace -f -o mylog1.strace -s 1024 confd ...
+              </pre></div><p>BSD:</p><div class="informalexample"><pre class="screen">
+$ ktrace -ad -f mylog1.ktrace confd ...
+$ kdump -f mylog1.ktrace &gt; mylog1.kdump
+              </pre></div><p>Solaris:</p><div class="informalexample"><pre class="screen">
+$ truss -f -o mylog1.truss confd ...
+              </pre></div></dd><dt><span class="term">Application debugging</span></dt><dd><p>
+                The primary tool for debugging the interaction between
+                applications and ConfD is to give the debug level
+                <em class="parameter"><code>debug</code></em> to
+                <code class="function">confd_init()</code> as
+                <code class="constant">CONFD_TRACE</code>, see the <a class="xref" href="rn02re13.html" title="confd_lib_lib"><span class="refentrytitle">confd_lib_lib</span>(3)</a> manual page.  If
+                more in-depth debugging using e.g.
+                <span class="command"><strong>gdb</strong></span> is needed, it may be useful to
+                rebuild the <code class="filename">libconfd</code> library from
+                source with debugging symbols. This can be done by using
+                the libconfd source package
+                <code class="filename">confd-&lt;vsn&gt;.libconfd.tar.gz</code>
+                that is delivered with the ConfD release. The package
+                includes a <code class="filename">README</code> file that
+                describes how to do the build - note in particular the
+                "Application debugging" section.
+              </p><p>
+                When debugging application memory leaks with a tool like
+                <span class="command"><strong>valgrind</strong></span>, it is often
+                <span class="emphasis"><em>necessary</em></span> to rebuild libconfd from
+                source, since the default build uses a "pool allocator"
+                that makes the stack trace information for memory leaks
+                from <span class="command"><strong>valgrind</strong></span> completely misleading
+                for allocations from libconfd. The details of how to do
+                a build that disables the pool allocator are described
+                in the "Application debugging" section of the
+                <code class="filename">README</code> in the libconfd source
+                package.
+              </p></dd></dl></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e15078"></a>28.13.&nbsp;Tuning the size of confd_hkeypath_t</h2></div></div></div><p>The ConfD C API library <code class="filename">libconfd</code> uses a
+    C struct for passing keypaths to callback functions:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_hkeypath {
+    <strong class="hl-keyword">int</strong> len;
+    confd_value_t v[MAXDEPTH][MAXKEYLEN];
+} confd_hkeypath_t;</pre></div><p>See <a class="xref" href="rn02re15.html#man.3.confd_types.xml_paths" title="XML PATHS">the section called &#8220;XML PATHS&#8221;</a> in the
+    <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a> manual page for discussion
+    about how this struct is used. The values used for
+    <code class="constant">MAXDEPTH</code> and <code class="constant">MAXKEYLEN</code> are
+    20 and 9, respectively, which should be big enough even for very
+    large and complex data models. However this comes at a cost in
+    memory (mainly stack) usage - the size of a confd_hkeypath_t is
+    approximately 5.5 kB. Also, in some rare cases, we may have a data
+    model where one or both of these values are not large enough.</p><p>It is possible to use other values for
+    <code class="constant">MAXDEPTH</code> and <code class="constant">MAXKEYLEN</code>,
+    but this requires both that <code class="filename">libconfd</code> is rebuilt
+    from source with the new values, and that all applications that use
+    <code class="filename">libconfd</code> are also compiled with the new values.
+    It is of course possible to just edit <code class="filename">confd_lib.h</code>
+    with the new values, but the <code class="code">#define</code> statements for
+    these in <code class="filename">confd_lib.h</code> are guarded with
+    <code class="code">#ifndef</code> directives, which means that they can
+    alternatively be overridden without changing
+    <code class="filename">confd_lib.h</code>.</p><p>Overriding can be done either via <code class="option">-D</code> options
+    on the compiler command line, or via <code class="code">#define</code> statements
+    before the <code class="code">#include</code> for <code class="filename">confd_lib.h</code>.
+    For building <code class="filename">libconfd</code> itself without source
+    changes, only the <code class="option">-D</code> option method is possible,
+    though. The build procedure supports an
+    <code class="varname">EXTRA_CFLAGS</code> <span class="command"><strong>make</strong></span> variable
+    that can be used this purpose, see the <code class="filename">README</code>
+    file included in the libconfd source package. E.g. we can do the
+    <code class="filename">libconfd</code> build with:</p><div class="informalexample"><pre class="screen">$ make EXTRA_CFLAGS="-DMAXDEPTH=10 -DMAXKEYLEN=5"</pre></div><p>The <code class="option">-D</code> option method can of course be used
+    when building applications too, but it is probably less error-prone
+    to use the <code class="code">#define</code> method. E.g. if we make sure that
+    none of the application C or C++ files include
+    <code class="filename">confd_lib.h</code> (or
+    <code class="filename">confd.h</code>) directly, but instead include say
+    <code class="filename">app.h</code>, we can have this in
+    <code class="filename">app.h</code>:</p><div class="informalexample"><pre class="programlisting">#define MAXDEPTH 10
+#define MAXKEYLEN 5
+#include &lt;confd_lib.h&gt;
+      </pre></div><p>Whenever an application connects to ConfD via one of the API
+    functions (i.e. <code class="function">confd_connect()</code>,
+    <code class="function">cdb_connect()</code>, etc), a check is made that the
+    <code class="constant">MAXDEPTH</code> and <code class="constant">MAXKEYLEN</code>
+    values used for building the library are large enough for the data
+    models loaded into ConfD. If they are not, the connection will fail
+    with <code class="varname">confd_errno</code> set to
+    <code class="constant">CONFD_ERR_PROTOUSAGE</code> and
+    <code class="function">confd_lasterr()</code> giving a message with the
+    required minimum values. Whether the connection succeeds or not, the
+    library will also set the global variables
+    <code class="varname">confd_maxdepth</code> and
+    <code class="varname">confd_maxkeylen</code> to the minimum values required by
+    ConfD. Thus the values can be found by simply printing these
+    variables in any application that connects to ConfD.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.custom.msgs"></a>28.14.&nbsp;Error Message Customization</h2></div></div></div><p>
+      The ConfD release includes a XML document,
+      <code class="filename">$CONFD_DIR/src/confd/errors/errcode.xml</code>, that
+      specifies all the customizable errors that may be reported in the
+      different northbound interfaces. The errors are classified with a
+      type and a code, and for each error a parameterized format string
+      for the default error message is given.
+    </p><p>
+      The purpose of this file is both to serve as a reference list of
+      the possible errors, which could e.g. be processed
+      programmatically when generating end-user documentation, and to
+      provide the basis for error message customization.
+    </p><p>
+      All the error messages specified in the file can be customized by
+      means of application callbacks. An application can register a
+      callback for one or more of the error types, and whenever an error
+      is to be reported in a northbound interface, the callback will
+      first be invoked and given the opportunity to return a message
+      that is different from the default.
+    </p><p>
+      The callback will receive user session information, the error type
+      and code, the default error message, and the parameters used to
+      create the default message. For errors of type "validation", the
+      callback also has access to the contents of the transaction that
+      failed validation. See <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.error_formatting_callback" title="ERROR FORMATTING CALLBACK">the section called &#8220;ERROR FORMATTING CALLBACK&#8221;</a> in
+      the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for the
+      details of the callback registration and invocation.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.different_openssl"></a>28.15.&nbsp;Using a different version of OpenSSL</h2></div></div></div><p>
+      ConfD depends on the OpenSSL <code class="filename">libcrypto</code> shared
+      library for a number of cryptographic functions.  (The
+      <code class="filename">libssl</code> library is not used by ConfD.)
+      Currently most ConfD releases, in particular all releases for
+      Linux systems, are built with OpenSSL version 1.0.0, and thus
+      require that the <code class="filename">libcrypto</code> library from this
+      version is present when ConfD is run. Some releases for other
+      systems require <code class="filename">libcrypto</code> from OpenSSL
+      version 0.9.8 or 0.9.7. It is also possible that a given version,
+      even though it is the one that ConfD requires, has been built
+      with configuration parameters that make the interface
+      incompatible with the build that is expected by ConfD.
+    </p><p>
+      However the <code class="filename">libcrypto</code> dependency is limited
+      to two components in the ConfD release, the
+      <code class="filename">libconfd</code> library used by applications, and a
+      shared object called <code class="filename">crypto.so</code>, that is used
+      by the ConfD daemon as an interface to
+      <code class="filename">libcrypto</code>. Both these components are
+      included in source form in the
+      <code class="filename">confd-&lt;vsn&gt;.libconfd.tar.gz</code> tar archive
+      that is provided with each ConfD release.
+    </p><p>
+      To use a different OpenSSL version than the one the ConfD release
+      is built with, e.g. due to a Linux development or target
+      environment having OpenSSL version 0.9.8 installed for other
+      purposes, it is sufficient to use the provided sources to rebuild
+      these two components with the desired OpenSSL version, and replace
+      them in the ConfD release. The toplevel README file included in
+      the tar archive has instructions on how to do the build of both
+      <code class="filename">libconfd</code> and <code class="filename">crypto.so</code>.
+    </p><p>
+      While <code class="filename">libconfd</code> can be located wherever it is
+      convenient for application use, <code class="filename">crypto.so</code>
+      <span class="emphasis"><em>must</em></span> be placed in the
+      <code class="filename">$CONFD_DIR/lib/confd/lib/core/crypto/priv/lib</code>
+      directory in the ConfD installation. The Makefiles in the tar
+      archive have <code class="code">install</code> targets for
+      <code class="filename">libconfd</code> and <code class="filename">crypto.so</code>
+      that will do a copy to the appropriate place in the ConfD
+      installation if <code class="varname">CONFD_DIR</code> is set to the
+      installation directory.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.shared_memory_schema"></a>28.16.&nbsp;Using shared memory for schema information</h2></div></div></div><p>
+      It is possible to use shared memory to make schema information
+      (see <a class="xref" href="rn02re15.html#man.3.confd_types.using_schema_information" title="USING SCHEMA INFORMATION">the section called &#8220;USING SCHEMA INFORMATION&#8221;</a> in
+      <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a>) available to multiple
+      processes on a given host, without requiring each of them to load
+      the information directly from ConfD by calling one of the
+      schema-loading functions
+      (<code class="function">confd_load_schemas()</code> etc, see the <a class="xref" href="rn02re13.html" title="confd_lib_lib"><span class="refentrytitle">confd_lib_lib</span>(3)</a> and <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> manual pages). This can be a
+      very significant performance improvement for system startup, where
+      multiple application processes will otherwise load schema
+      information more or less simultaneously, and can also reduce RAM
+      usage.
+    </p><p>
+      The mechanism uses a shared memory mapping created by
+      <code class="function">mmap(2)</code>, backed by a file. One process needs
+      to call first <code class="function">confd_mmap_schemas_setup()</code>, and
+      then one of schema-loading functions, to populate the shared
+      memory segment. Once this has been done, any process (including
+      the one doing the initial load) can call
+      <code class="function">confd_mmap_schemas()</code> to map the shared memory
+      segment into its address space and make the information available
+      to the <code class="filename">libconfd</code> library and for direct access
+      by the application. See the <a class="xref" href="rn02re13.html" title="confd_lib_lib"><span class="refentrytitle">confd_lib_lib</span>(3)</a> manual page for the
+      specification of these functions.
+    </p><p>
+      The mechanism can be used in different ways, but assuming that
+      persistent storage for the backing file is available, the optimal
+      approach is to do the load and file creation step only on first
+      system start and when a data model upgrade is done. Then it is
+      sufficient to call <code class="function">confd_mmap_schemas()</code> on
+      all other occasions. If persistent storage is not available, a
+      RAM-based file system such as Linux "tmpfs" can be used for the
+      backing file, in which case the load and file creation step needs
+      to be done on each boot (and on data model upgrade). It is also
+      possible to request that ConfD creates and maintains the backing
+      file, see <code class="sgmltag-element">/confdConfig/enableSharedMemorySchema</code> in
+      <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a> and
+      <code class="function">maapi_get_schema_file_path()</code> in <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a>.</p><p>
+      Since the schema information includes absolute pointers (e.g. the
+      <code class="varname">parent</code>, <code class="varname">children</code>, and
+      <code class="varname">next</code> pointers in a <span class="type">struct
+      confd_cs_node</span>), it is necessary to map the shared memory at
+      the same virtual address in all processes. The
+      <em class="parameter"><code>addr</code></em> argument to
+      <code class="function">confd_mmap_schemas_setup()</code> is passed to
+      <code class="function">mmap(2)</code>, and the address returned by
+      <code class="function">mmap(2)</code> is used for the mapping. The address
+      is also recorded in the shared memory segment to make it available
+      for <code class="function">confd_mmap_schemas()</code>. The value of the
+      <em class="parameter"><code>size</code></em> argument is also passed in the initial
+      <code class="function">mmap(2)</code> invocation, unless it is smaller than
+      the first allocation done (e.g. if it is 0). In any case, unless
+      the <code class="constant">CONFD_MMAP_SCHEMAS_KEEP_SIZE</code> flag is
+      passed to <code class="function">confd_mmap_schemas_setup()</code>, the
+      loading will extend the mapped segment as needed, and the final
+      size will only be as large as needed for the data, even if a
+      larger value was passed as <em class="parameter"><code>size</code></em>.
+    </p><p>
+      Ideally we would give NULL for the <em class="parameter"><code>addr</code></em>
+      argument and an approximate size for <em class="parameter"><code>size</code></em>,
+      letting the kernel choose a suitable address and letting the load
+      step adjust the final size based on the amount of data loaded.
+      Unfortunately this often results in an address that is not
+      honored on the subsequent <code class="function">mmap(2)</code> call done
+      by <code class="function">confd_mmap_schemas()</code>, which thus fails.
+      The possible choices of <em class="parameter"><code>addr</code></em> and/or
+      <em class="parameter"><code>size</code></em> to get the desired result are OS- and
+      OS-version-dependant, but on Linux it generally works to use an
+      <em class="parameter"><code>addr</code></em> argument that is at an offset from the
+      top of the heap that is larger than expected heap usage, and give
+      <em class="parameter"><code>size</code></em> as 0, as shown in the sample code
+      below using a 256 MB offset. (It is not a fatal error if heap
+      usage later exceeds this offset, as <code class="function">malloc(3)</code>
+      etc will skip over the mapped area, but it may have some
+      performance impact.)
+    </p><div class="informalexample"><pre class="programlisting">#include &lt;stdio.h&gt;
+<span class="hl-directive" style="color: maroon">#include &lt;stdlib.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;stdint.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;unistd.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;assert.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;sys/types.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;sys/socket.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;netinet/in.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;arpa/inet.h&gt;</span>
+<span class="hl-directive" style="color: maroon">#include &lt;netdb.h&gt;</span>
+
+<span class="hl-directive" style="color: maroon">#include &lt;confd_lib.h&gt;</span>
+
+<span class="hl-directive" style="color: maroon">#define MB (1024 * 1024)</span>
+<span class="hl-directive" style="color: maroon">#define SCHEMA_FILE "/etc/schemas"</span>
+
+<span class="hl-directive" style="color: maroon">#define OK(E) do {                                                      \
+        int _ret = (E);                                                 \
+        if (_ret != CONFD_OK) {                                         \
+            confd_fatal(                                                \
+                "%s returned %d, confd_errno=%d, confd_lasterr()='%s'\n", \
+                #E, _ret, confd_errno, confd_lasterr());                \
+        }                                                               \
+    } while (0)</span>
+
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">void</strong> *get_shm_addr(size_t offset)
+{
+    size_t pagesize;
+    <strong class="hl-keyword">char</strong> *addr;
+
+    pagesize = (size_t)sysconf(_SC_PAGESIZE);
+    addr = malloc(<span class="hl-number">1</span>);
+    free(addr);
+    addr += offset;
+    <em class="hl-comment" style="color: silver">/* return pagesize-aligned address */</em>
+    <strong class="hl-keyword">return</strong> addr - ((uintptr_t)addr % pagesize);
+}
+
+<strong class="hl-keyword">int</strong> main(<strong class="hl-keyword">int</strong> argc, <strong class="hl-keyword">char</strong> **argv)
+{
+    <strong class="hl-keyword">struct</strong> sockaddr_in addr;
+    <strong class="hl-keyword">void</strong> *shm_addr;
+
+    addr.sin_addr.s_addr = inet_addr(<strong class="hl-string"><em style="color:red">"127.0.0.1"</em></strong>);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(CONFD_PORT);
+
+    confd_init(argv[<span class="hl-number">0</span>], stderr, CONFD_TRACE);
+    shm_addr = get_shm_addr(<span class="hl-number">256</span> * MB);
+    OK(confd_mmap_schemas_setup(shm_addr, <span class="hl-number">0</span>, SCHEMA_FILE <strong class="hl-string"><em style="color:red">".tmp"</em></strong>, <span class="hl-number">0</span>));
+    OK(confd_load_schemas((<strong class="hl-keyword">struct</strong> sockaddr *)&amp;addr,
+                          <strong class="hl-keyword">sizeof</strong>(<strong class="hl-keyword">struct</strong> sockaddr_in)));
+    <strong class="hl-keyword">if</strong> (rename(SCHEMA_FILE <strong class="hl-string"><em style="color:red">".tmp"</em></strong>, SCHEMA_FILE) != <span class="hl-number">0</span>)
+        confd_fatal(<strong class="hl-string"><em style="color:red">"Failed to rename\n"</em></strong>);
+    <strong class="hl-keyword">return</strong> <span class="hl-number">0</span>;
+}</pre></div><p>
+      This code uses a temporary file that is renamed after the load is
+      complete. This is not necessary, but ensures that the SCHEMA_FILE
+      always represents complete schema info if it exists. It can also
+      serve as a simple synchronization mechanism to let other processes
+      know when they can do their
+      <code class="function">confd_mmap_schemas()</code> call.
+    </p><p>
+      On Solaris (at least Solaris 10), the address passed to
+      <code class="function">mmap(2)</code> is effectively ignored, and the
+      returned address depends strictly on the size of the mapping. Thus
+      there is no point passing anything other than NULL for the
+      <em class="parameter"><code>addr</code></em> to
+      <code class="function">confd_mmap_schemas_setup()</code>, but instead the
+      <em class="parameter"><code>size</code></em> must be big enough for the loaded
+      schema info, and the
+      <code class="constant">CONFD_MMAP_SCHEMAS_KEEP_SIZE</code> flag must be
+      used.
+    </p><p>
+      In a multi-node system, with application processes connecting to
+      ConfD across a network, shared memory can of course not be used
+      between the nodes. The most straightforward way to handle this is
+      to do the initial load and file creation step on each node. If the
+      nodes have the same HW architecture and OS, a possible alternative
+      could be to copy the backing store file from one node to the
+      others using some file transfer mechanism.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.advanced.internal_econfd"></a>28.17.&nbsp;Running application code inside ConfD</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e15223"></a>28.17.1.&nbsp;The econfd API</h3></div></div></div><p>
+        The Erlang API to ConfD is implemented as an Erlang/OTP
+        application called <code class="code">econfd</code>. This application comes
+        i two flavours. One is builtin in ConfD in order to support
+        applications running in the same Erlang VM as ConfD. The other
+        is a separate library which is included in source form in the
+        ConfD release, in the <code class="filename">$CONFD_DIR/erlang</code>
+        directory. Building <code class="code">econfd</code> as described in the
+        <code class="filename">$CONFD_DIR/erlang/econfd/README</code> file will
+        compile the Erlang code and generate the documentation.
+      </p><p>
+        This API can be used by applications written in Erlang in much
+        the same way as the C and Java APIs are used, i.e. code running
+        in an Erlang VM can use the <code class="code">econfd</code> API functions to
+        make socket connections to ConfD for data provider, MAAPI, CDB,
+        etc access. However the API is also available internally in
+        ConfD, which makes it possible to run Erlang application code
+        inside the ConfD daemon, without the overhead imposed by the
+        socket communication.
+      </p><p>
+        There is little or no support for testing and debugging Erlang
+        code executing internally in ConfD, since ConfD provides a very
+        limited runtime environment for Erlang in order to minimize disk
+        and memory footprints. Thus the recommended method is to develop
+        Erlang code targeted for this by using <code class="code">econfd</code> in a
+        separate Erlang VM, where an interactive Erlang shell and all
+        the other development support included in the standard
+        Erlang/OTP releases are available. When development and testing
+        is completed, the code can be deployed to run internally in
+        ConfD without changes.
+      </p><p>
+        For information about the Erlang programming language and
+        development tools, please refer to <a class="link" href="http://www.erlang.org" target="_top">www.erlang.org</a> and the
+        available books about Erlang (some are referenced on the web
+        site).
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e15236"></a>28.17.2.&nbsp;Running inside ConfD</h3></div></div></div><p>
+        All application code SHOULD use the prefix "ec_" for module
+        names, application names, registered processes (if any), and
+        named ets tables (if any), to avoid conflict with existing or
+        future names used by ConfD itself.
+      </p><p>
+        The Erlang code is packaged into applications which are
+        automatically started and stopped by ConfD if they are located
+        at the proper place. ConfD will search the load path as
+        defined by <code class="sgmltag-element">/confdConfig/loadPath</code> for directories
+        called <code class="filename">erlang-lib</code>. The structure of such
+        a directory is the same as a standard <code class="filename">lib</code>
+        directory in Erlang. The directory may contain multiple Erlang
+        applications. Each one must have a valid <code class="filename">.app</code>
+        file. See the Erlang documentation of <code class="code">application</code>
+        and <code class="code">app</code> for more info.
+      </p><p>
+        The following config settings in the <code class="filename">.app</code>
+        file are explicitly treated by ConfD:
+
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">applications</span></dt><dd><p>
+            A list of applications which needs to be started before
+            this application can be started. This info is used to
+            compute a valid start order.
+          </p></dd><dt><span class="term">included_applications</span></dt><dd><p>
+            A list of applications which are started on behalf of this
+            application. This info is used to compute a valid start
+            order.
+          </p></dd><dt><span class="term">env</span></dt><dd><p>
+            A property list, containing <code class="code">[{Key,Val}]</code>
+            tuples. Besides other keys, used by the application
+            itself, a few predefined keys are used by ConfD. The key
+            <code class="code">confd_start_phase</code> is used by ConfD to
+            determine which start phase the application is to be
+            started in. Valid values are <code class="code">phase0</code>,
+            <code class="code">phase1</code> and <code class="code">phase2</code>. Default is
+            <code class="code">phase1</code>. The key
+            <code class="code">confd_restart_type</code> is used by ConfD to
+            determine which impact a restart of the application will
+            have. This is the same as the <code class="code">restart_type()</code>
+            type in <code class="code">application</code>. Valid values are
+            <code class="code">permanent</code>, <code class="code">transient</code> and
+            <code class="code">temporary</code>. Default is <code class="code">permanent</code>.
+          </p></dd></dl></div><p>
+      </p><p>
+        When the application is started, one of its processes should
+        make initial connections to the ConfD subsystems, register
+        callbacks etc. This is typically done in the
+        <code class="code">init/1</code> function of a <code class="code">gen_server</code> or
+        similar. While the internal connections are made using the
+        exact same API functions (e.g.
+        <code class="function">econfd_maapi:connect/2</code>) as for an
+        application running in an external Erlang VM, any
+        <em class="parameter"><code>Address</code></em> and <em class="parameter"><code>Port</code></em>
+        arguments are ignored, and instead standard Erlang
+        inter-process communication is used. The
+        <code class="filename">internal_econfd/embedded_applications/transform</code>
+        example in the bundled collection shows a transform written in
+        Erlang and executing internally in ConfD.
+      </p><p>
+        An alternate way (the old way) of running custom code in the
+        Erlang VM of ConfD is to load single Erlang modules (as
+        opposed to use proper applications). When ConfD starts,
+        specifically when <code class="code">phase0</code> is reached, ConfD will
+        search the load path as defined by
+        <code class="sgmltag-element">/confdConfig/loadPath</code> for compiled Erlang modules,
+        i.e. <code class="filename">*.beam</code> files. The modules that are
+        found will be loaded, unless the module name conflicts with an
+        existing ConfD module. If there is a module name conflict,
+        ConfD will terminate with an error message and exit code 21.
+
+        The <a class="link" href="http://www.erlang.org/doc/reference_manual/code_loading.html#on_load" target="_top"><code class="code">-on_load()</code></a>
+        directive can be used to spawn a process that makes initial
+        connections to the ConfD subsystems, registers callbacks, sets
+        up supervision if desired, etc. The
+        <code class="filename">internal_econfd/single_modules/transform</code>
+        example in the bundled collection shows a transform written in
+        Erlang and executing internally in ConfD.
+      </p><p>
+        The <code class="option">--printlog</code> option to
+        <span class="command"><strong>confd</strong></span>, which prints the contents of the ConfD
+        errorLog, is normally only useful for Tail-f support and
+        developers, but it may also be relevant for debugging problems
+        with application code running inside ConfD. The errorLog
+        collects the events sent to the OTP error_logger, e.g. crash
+        reports as well as info generated by calls to functions in the
+        error_logger(3) module. Another possibility for primitive
+        debugging is to run <span class="command"><strong>confd</strong></span> with the
+        <code class="option">--foreground</code> option, where calls to
+        <code class="function">io:format/2</code> etc will print to standard
+        output. Printouts may also be directed to the developer log
+        by using <code class="function">econfd:log/3</code>.
+      </p><p>
+        While Erlang application code running in an external Erlang VM
+        can use basically any version of Erlang/OTP, this is not the
+        case for code running inside ConfD, since the Erlang VM is
+        evolving and provides limited backward/forward compatibility.
+        To avoid incompatibility issues when loading the
+        <code class="code">beam</code> files, the Erlang compiler <code class="code">erlc</code>
+        in same version the ConfD distribution should be used.
+      </p><p>
+        ConfD provides the VM, <code class="code">erlc</code> and the
+        <code class="code">kernel</code>, <code class="code">stdlib</code>, and
+        <code class="code">crypto</code> OTP applications.
+      </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        Obviously application code running internally in the ConfD
+        daemon can have an impact on the execution of the standard ConfD
+        code. Thus it is critically important that the application code
+        is thoroughly tested and verified before being deployed for
+        production in a system using ConfD.
+      </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e15305"></a>28.17.3.&nbsp;User-defined types</h3></div></div></div><p>
+        We can implement user-defined types with Erlang code in a manner
+        similar to what is described for C in <a class="xref" href="rn02re15.html#man.3.confd_types.userdefined_types" title="USER-DEFINED TYPES">the section called &#8220;USER-DEFINED TYPES&#8221;</a> in <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a>. In the econfd API, we
+        populate a <code class="code">#confd_type_cbs{}</code> record and register it
+        using <code class="function">econfd_schema:register_type_cbs/1</code>.
+        For an application running inside ConfD, this registration will
+        have the same effect as using a shared object in the C API,
+        i.e. the callback functions will be used internally by ConfD for
+        doing string &lt;-&gt; value translation and syntax validation.
+      </p><p>
+        Callbacks for user-defined types may in general be required to
+        be registered very early in the ConfD startup, in particular
+        default values specified in the YANG data model will be
+        translated from string form to internal representation when
+        the corresponding <code class="filename">.fxs</code> file is loaded. A
+        really early start of the application is achieved by using the
+        <code class="code">early_phase0</code> as <code class="code">confd_start_phase</code> in
+        the application <code class="code">.app</code> file. An application
+        started in this early phase should not have e.g. registration
+        of normal data provider callbacks, since ConfD is not prepared
+        to handle such registrations at this early point in the
+        startup. The
+        <code class="filename">internal_econfd/embedded_applications/user_type</code>
+        example shows how the callbacks can be implemented in Erlang.
+      </p><p>
+        An alternate way (the old way) of defining ConfD
+        user-defined-types in Erlang is to load a single module (as
+        opposed to use a proper application). By giving a module
+        implementing such callbacks a name starting with
+        "<code class="code">ec_user_type</code>" (i.e. file name
+        <code class="filename">ec_user_type*.beam</code>), we can tell ConfD
+        that it should be loaded early enough for default value
+        translation. The
+        <code class="filename">internal_econfd/single_modules/user_type</code>
+        example shows how the callbacks can be implemented in
+        Erlang. It uses this naming convention to be able to handle
+        the translation of a default value specified in the data
+        model.
+      </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch27.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;27.&nbsp;Plug-and-play scripting&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;ConfD man-pages, Volume 1</td></tr></table></div></body></html>

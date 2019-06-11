@@ -1,0 +1,14 @@
+<smp:strs xmlns:smp="http://tail-f.com/ns/example/smp">
+  <smp:str>
+    <smp:nr>1</smp:nr>
+    <smp:secret>$0$hello there</smp:secret>
+  </smp:str>
+  <smp:str>
+    <smp:nr>2</smp:nr>
+    <smp:secret>$0$now is the time</smp:secret>
+  </smp:str>
+  <smp:str>
+    <smp:nr>3</smp:nr>
+    <smp:secret>$0$sigge</smp:secret>
+  </smp:str>
+</smp:strs>

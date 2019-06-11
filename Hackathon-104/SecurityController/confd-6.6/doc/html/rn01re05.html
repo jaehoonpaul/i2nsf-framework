@@ -1,0 +1,207 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd_load</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01re04.html" title="confd_cmd"><link rel="next" href="rn01re06.html" title="confdc"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center"><span class="phrase">confd</span>_load</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01re04.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01re06.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.confd_load"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.confd_load.name"></a><h2>Name</h2><p><span class="phrase">confd</span>_load &#8212; Command line utility to load and save ConfD configurations</p></div><div class="refsynopsisdiv"><a name="man.1.confd_load.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_load</code>  [-W] [-S] [<i><a href="#man.1.confd_load.syn.common">(1)</a>&nbsp;common options</i>] [<em class="replaceable"><code>filename</code></em>]</p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_load</code>   -l  [ -m  |   -r ] [-D] [<i><a href="#man.1.confd_load.syn.common">(1)</a>&nbsp;common options</i>] [<em class="replaceable"><code>filename</code></em>...]</p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_load</code>   
+         -C 
+         [-R]
+         [<em class="replaceable"><code>filename</code></em>...]
+       </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_load</code>    -h  |   -?  <br><span><a name="man.1.confd_load.syn.common">(1)</a> [-d] [-t] [-F { x  |   p  |   o  |   j  |   c  |   i }
+        ] [ -H  |   -U ] [-a] [-e] [ 
+            [-u <em class="replaceable"><code>user</code></em>]
+             [-g <em class="replaceable"><code>group</code></em>...]
+             [-c <em class="replaceable"><code>context</code></em>]
+            |  [-i]] [[-p <em class="replaceable"><code>keypath</code></em>] |  [-P <em class="replaceable"><code>XPath</code></em>]] [-o] [-s] [-O]</span></p></div></div><div class="refsect1"><a name="d5e16376"></a><h2>DESCRIPTION</h2><p>The confd_load command is a command line
+    interface to the functions
+    <code class="function">maapi_save_config()</code>,
+    <code class="function">maapi_load_config()</code>,
+    <code class="function">maapi_load_config_stream()</code>, and
+    <code class="function">cdb_load_file()</code> respectively.
+    </p><p>
+    This command provides a
+    convenient way of loading and saving all or parts of the
+    configuration in different formats. It can be used to initialize
+    or restore configurations as well as in CLI commands.</p><p>If you run <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> without any options
+    it will print the current configuration in XML format on
+    stdout. The exit status will be zero on success and non-zero
+    otherwise.</p><p>Source code to this utility is included in the distribution
+    as <code class="filename">src/confd/tools/confd_load.c</code>.</p></div><div class="refsect1"><a name="d5e16389"></a><h2>COMMON OPTIONS</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-d</code></span></dt><dd><p>Debug flag. Add more to increase debug level. All
+          debug output will be to stderr.</p></dd><dt><span class="term"><code class="option">-t</code></span></dt><dd><p>Measure how long the requested command takes and print
+          the result on stderr.</p></dd><dt><span class="term"><code class="option">-F</code> x | p | o | j | c | i</span></dt><dd><p>Selects the format of the configuration, must be set
+          both when loading and saving. One of XML (x), pretty XML (p),
+          JSON (o),
+          curly braces J-style CLI (j), C-style CLI (c), or I-style
+          CLI (i).  Default is XML.</p></dd><dt><span class="term"><code class="option">-H</code></span></dt><dd><p>Hide all hidden nodes. By default, no nodes are hidden
+          unless <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> has attached to an
+          existing transaction, in which case the hidden nodes are the
+          same as in that transaction's session.</p></dd><dt><span class="term"><code class="option">-U</code></span></dt><dd><p>Unhide all hidden nodes. By default, no nodes are hidden
+          unless <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> has attached to an
+          existing transaction, in which case the hidden nodes are the
+          same as in that transaction's session.</p></dd><dt><span class="term"><code class="option">-u</code> <em class="replaceable"><code>user</code></em>, </span><span class="term"><code class="option">-g</code> <em class="replaceable"><code>group</code></em> ..., </span><span class="term"><code class="option">-c</code> <em class="replaceable"><code>context</code></em></span></dt><dd><p>Loading and saving the configuration is done in a user
+          session, using these options it is possible to specify which
+          user, groups (more than one <code class="option">-g</code> can be used
+          to add groups), and context that should be used when
+          starting the user session. If only a user is supplied the
+          user is assumed to belong to a single group with the same
+          name as the user. This is significant in that AAA rules will
+          be applied for the specified user / groups / context
+          combination. The default is to use the
+          <code class="constant">system</code> context, which implies that AAA
+          rules will <span class="emphasis"><em>not</em></span> be applied at
+          all.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>If the environment variables <code class="envar"><span class="phrase">CONFD</span>_MAAPI_USID</code> and
+          <code class="envar"><span class="phrase">CONFD</span>_MAAPI_THANDLE</code> are set
+          (see the ENVIRONMENT section), or if the <code class="option">-i</code>
+          option is used, these options are silently ignored, since
+          <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> will attach to an
+          existing transaction.</p></div></dd><dt><span class="term"><code class="option">-i</code></span></dt><dd><p>Instead of starting a new user session and transaction,
+          <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> will try to attach to the init
+          session. This is only valid when ConfD is in start phase 0,
+          and will fail otherwise. It can be used to load a
+          <span class="quote">&#8220;<span class="quote">factory default</span>&#8221;</span>file during startup, or
+          loading a file during upgrade.</p></dd><dt><span class="term"><code class="option">-s</code></span></dt><dd><p>Start transaction towards the startup datastore
+          (instead of the default running). I.e. when loading, the configuration
+          loaded will be committed to startup, and as such won't take
+          effect until ConfD is restarted.</p></dd></dl></div></div><div class="refsect1"><a name="d5e16458"></a><h2>SAVE CONFIGURATION</h2><p>By default the complete current configuration will be output
+    on stdout. To save it in a file add the filename on the command
+    line (the <code class="option">-f</code> option is deprecated). The file is
+    opened by the <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> utility, permissions
+    and ownership will be determined by the user running
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span>. Output format is specified using
+    the <code class="option">-F</code> option.</p><p>When saving the configuration in XML format, the context of
+    the user session (see the <code class="option">-c</code> option) will determine
+    which namespaces with export restriction
+    (from <code class="code">tailf:export</code>) that are
+    included. If the
+    <code class="constant">system</code> context is used (this is the default),
+    all namespaces are saved, regardless of export restriction. When
+    saving the configuration in one of the CLI formats, the context used
+    for this selection is always <code class="constant">cli</code>.</p><p>A number of options are only applicable, or have a special
+    meaning when saving the configuration:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-f</code> <em class="replaceable"><code>filename</code></em></span></dt><dd><p>Filename to save configuration to (option is
+          deprecated, just give the filename on the command
+          line).</p></dd><dt><span class="term"><code class="option">-W</code></span></dt><dd><p>Include leaves which are unset (set to their default
+          value) in the output. By default these leaves are not
+          included in the output. <span class="phrase">
+          (Corresponds to the
+          <code class="constant">MAAPI_CONFIG_WITH_DEFAULTS</code>
+          flag).</span></p></dd><dt><span class="term"><code class="option">-S</code></span></dt><dd><p>Include the default value of a leaf as a comment (only
+          works for CLI formats, not XML). (Corresponds to the
+          <code class="constant">MAAPI_CONFIG_SHOW_DEFAULTS</code>
+          flag).</p></dd><dt><span class="term"><code class="option">-p</code> <em class="replaceable"><code>keypath</code></em></span></dt><dd><p>Only include the configuration below
+          <em class="replaceable"><code>keypath</code></em> in the output.</p></dd><dt><span class="term"><code class="option">-P</code> <em class="replaceable"><code>XPath</code></em></span></dt><dd><p>Filter the configuration using the
+          <em class="replaceable"><code>XPath</code></em> expression. (Only works for
+          the XML format.)</p></dd><dt><span class="term"><code class="option">-o</code></span></dt><dd><p>Include operational data in the output. (Corresponds
+          to the <code class="constant">MAAPI_CONFIG_WITH_OPER</code>
+          flag).</p></dd><dt><span class="term"><code class="option">-O</code></span></dt><dd><p>Include <span class="emphasis"><em>only</em></span> operational data, and
+          ancestors to operational data nodes, in the
+          output. (Corresponds to the
+          <code class="constant">MAAPI_CONFIG_OPER_ONLY</code> flag).</p></dd></dl></div></div><div class="refsect1"><a name="d5e16520"></a><h2>LOAD CONFIGURATION</h2><p>When the <code class="option">-l</code> option is present
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> will load all the files listed on
+    the command line <span class="phrase">using the
+    <code class="function">maapi_load_config()</code> function</span>.
+    The file(s) are expected
+    to be in XML format unless otherwise specified using the
+    <code class="option">-F</code> flag. Note that it is the ConfD daemon that
+    opens the file(s), it must have permission to do so. However
+    relative pathnames are assumed to be relative to the working
+    directory of the
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> command <span class="phrase">(it will pass an
+    absolute pathname to
+    <code class="function">maapi_load_config()</code>)</span>.</p><p>If neither of the <code class="option">-m</code> and <code class="option">-r</code>
+    options are given when multiple files are listed on the command
+    line,
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span>
+    will silently treat the second and subsequent files as if
+    <code class="option">-m</code> had been given, i.e. it will merge in the
+    contents of these files instead of deleting and replacing the
+    configuration for each file. Note, we almost always want the merge
+    behavior. If no file is given, or "-" is given as a filename,
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span>
+    will stream standard input to ConfD
+    <span class="phrase">by using <code class="function">maapi_load_config_stream()</code></span>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-f</code> <em class="replaceable"><code>filename</code></em></span></dt><dd><p>The file to load (deprecated, just list the file after
+          the options instead).</p></dd><dt><span class="term"><code class="option">-m</code></span></dt><dd><p>Merge in the contents of
+          <em class="replaceable"><code>filename</code></em>, the (somewhat unfortunate)
+          default is to
+          delete and replace. <span class="phrase">(Corresponds to the
+          <code class="constant">MAAPI_CONFIG_MERGE</code> flag).</span></p></dd><dt><span class="term"><code class="option">-x</code></span></dt><dd><p>
+            Lax loading. Only applies to XML loading. Ignore unknown
+            namespaces, attributes and elements.
+          </p></dd><dt><span class="term"><code class="option">-r</code></span></dt><dd><p>Replace the part of the configuration that is present in
+          <em class="replaceable"><code>filename</code></em>, the default is to
+          delete and replace. (Corresponds to the
+          <code class="constant">MAAPI_CONFIG_REPLACE</code> flag).</p></dd><dt><span class="term"><code class="option">-a</code></span></dt><dd><p>When loading configuration in 'i' or 'c' format, do a
+          commit operation after each line. Default and recommended is
+          to only commit when all the configuration has been loaded.
+          (Corresponds to the
+          <code class="constant">MAAPI_CONFIG_AUTOCOMMIT</code> flag).</p></dd><dt><span class="term"><code class="option">-e</code></span></dt><dd><p>When loading configuration do not abort when
+          encountering errors (corresponds to the
+          <code class="constant">MAAPI_CONFIG_CONTINUE_ON_ERROR</code>
+          flag).</p></dd><dt><span class="term"><code class="option">-D</code></span></dt><dd><p>Call
+          <code class="function">maapi_delete_all</code>
+          (<em class="parameter"><code>MAAPI_DEL_ALL</code></em>)
+          before loading the file.</p></dd><dt><span class="term"><code class="option">-p</code> <em class="replaceable"><code>keypath</code></em></span></dt><dd><p>Call
+          <code class="function">maapi_delete(<em class="replaceable"><code>keypath</code></em>)</code>
+          before loading the file.</p></dd><dt><span class="term"><code class="option">-o</code></span></dt><dd><p>Accept but ignore contents in the file which is
+          operational data (without this flag it will be an
+          error). <span class="phrase">(Corresponds to the
+          <code class="constant">MAAPI_CONFIG_WITH_OPER</code> flag)</span></p></dd><dt><span class="term"><code class="option">-O</code></span></dt><dd><p>Start a transaction to load <span class="emphasis"><em>only</em></span> operational data, and
+         ancestors to operational data nodes. Only supported for XML input.</p></dd></dl></div></div><div class="refsect1"><a name="d5e16610"></a><h2>LOAD CDB OPERATIONAL</h2><p>
+      The <code class="option">-C</code> option is a direct interface to the
+      <code class="function">cdb_load_file()</code> function.
+    </p><p>The <code class="option">-C</code> option is used to load operational
+    data. When you use <code class="option">-C</code> all other options except
+    <code class="option">-R</code> (and <code class="option">-d</code>) are ignored, since
+    they don't apply. Files on the command line must be in XML format
+    <span class="phrase">and will be fed to
+    <code class="function">cdb_load_file()</code> in the order they are
+    listed</span>. If no file is given, or "-" is given as a filename,
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> will read standard input
+    <span class="phrase">and use
+    <code class="function">cdb_load_str()</code> to load the collected
+    data</span>. If the <code class="option">-R</code> option is included, CDB
+    operational subscription notifications will be generated.</p><p>Any data which isn't part of CDB operational per
+    the data model will be ignored. This means that you can save a
+    single file with both configuration and operational data and feed
+    it back to <span class="command"><strong><span class="phrase">confd</span>_load</strong></span>.</p><p>If you use a relative path for
+    <em class="replaceable"><code>filename</code></em> it is assumed to be relative to
+    the working directory of the
+    <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> command
+    <span class="phrase">(it will pass an
+    absolute pathname to <code class="function">cdb_load_file()</code>).</span></p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>This option is DEPRECATED. Use
+      -O instead which use <code class="function">maapi_load_config()</code>
+      with <code class="constant">MAAPI_CONFIG_OPER_ONLY</code> flag).</p></div></div><div class="refsect1"><a name="d5e16640"></a><h2>EXAMPLES</h2><div class="example"><a name="d5e16642"></a><p class="title"><b>Example&nbsp;152.&nbsp;Reloading all xml files in the cdb directory</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -D -m -l cdb/*.xml</pre></div></div><br class="example-break"><div class="example"><a name="d5e16646"></a><p class="title"><b>Example&nbsp;153.&nbsp;Merging in the contents of <code class="filename">conf.cli</code></b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -l -m -F j conf.cli</pre></div></div><br class="example-break"><div class="example"><a name="d5e16651"></a><p class="title"><b>Example&nbsp;154.&nbsp;Print interface config and statistics data in cli format</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -F i -o -p /sys:sys/ifc</pre></div></div><br class="example-break"><div class="example"><a name="d5e16655"></a><p class="title"><b>Example&nbsp;155.&nbsp;Using xslt to format output</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -F x -p /sys:sys/ifc | xsltproc fmtifc.xsl -</pre></div></div><br class="example-break"><div class="example"><a name="d5e16659"></a><p class="title"><b>Example&nbsp;156.&nbsp;Using xmllint to pretty print the xml output</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -F x | xmllint --format -</pre></div></div><br class="example-break"><div class="example"><a name="d5e16663"></a><p class="title"><b>Example&nbsp;157.&nbsp;Saving config and operational data to <code class="filename">/tmp/conf.xml</code></b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -F x -o &gt; /tmp/conf.xml</pre></div></div><br class="example-break"><div class="example"><a name="d5e16668"></a><p class="title"><b>Example&nbsp;158.&nbsp;Restoring both config and operational data</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -l -F x -o /tmp/conf.xml
+<span class="phrase">confd</span>_load -C /tmp/conf.xml</pre></div></div><br class="example-break"><div class="example"><a name="d5e16673"></a><p class="title"><b>Example&nbsp;159.&nbsp;Measure how long it takes to fetch config</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -t &gt; /dev/null
+elapsed time: 0.011 s</pre></div></div><br class="example-break"><div class="example"><a name="d5e16677"></a><p class="title"><b>Example&nbsp;160.&nbsp;Output all instances in list <code class="sgmltag-element">/foo/table</code> which has <code class="sgmltag-element">ix</code> larger than 10</b></p><div class="example-contents"><pre class="screen"><span class="phrase">confd</span>_load -F x -P "/foo/table[ix &gt; 10]"</pre></div></div><br class="example-break"></div><div class="refsect1"><a name="d5e16683"></a><h2>ENVIRONMENT</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_IPC_ADDR</code>, </span><span class="term"><code class="envar">CONFD_IPC_EXTADDR</code></span></dt><dd><p>The address used to connect to the ConfD daemon,
+          overrides the compiled in default.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_IPC_PORT</code></span></dt><dd><p>The port number to connect to the ConfD daemon on,
+          overrides the compiled in default.</p></dd><dt><span class="term"><code class="envar">CONFD_IPC_EXTSOPATH</code></span></dt><dd><p>The absolute path to the shared object to use for a
+          connection using external IPC when
+          <code class="envar">CONFD_IPC_EXTADDR</code> is given.</p></dd><dt><span class="term"><code class="envar"><span class="phrase">CONFD</span>_MAAPI_USID</code>, </span><span class="term"><code class="envar"><span class="phrase">CONFD</span>_MAAPI_THANDLE</code></span></dt><dd><p>If set <span class="command"><strong>confd_load</strong></span> will use
+          <code class="function">maapi_attach2()</code> to attach to an
+          existing transaction in an existing user session instead of
+          starting a new session.</p><p>These environment variables are set by the ConfD CLI
+          when it invokes external commands, which means you can run
+          <span class="command"><strong><span class="phrase">confd</span>_load</strong></span> directly from the CLI. For
+          example, the following addition to the
+          <code class="sgmltag-element">&lt;operationalMode&gt;</code> in a clispec file (see
+          <a class="link" href="rn03re16.html" title="clispec">clispec(5)</a>)</p><div class="informalexample"><pre class="programlisting">&lt;cmd name="servers" mount="show"&gt;
+  &lt;info/&gt;
+  &lt;help/&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;confd_load&lt;/osCommand&gt;
+          &lt;args&gt;-F j -p /system/servers&lt;/args&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+&lt;/cmd&gt;</pre></div><p>will add a <span class="command"><strong>show servers</strong></span> command
+          which, when run will invoke <span class="command"><strong><span class="phrase">confd</span>_load -F j -p
+          /system/servers</strong></span>. This will output the
+          configuration below <code class="sgmltag-element">/system/servers</code> in curly
+          braces format.</p><p>Note that when these environment variables are set, it
+          means that the configuration will be loaded into the current
+          CLI transaction (which must be in configure mode, and have
+          AAA permissions to actually modify the config). To load (or
+          save) a file in a separate transaction, unset these two
+          environment variables before invoking the
+          <span class="command"><strong><span class="phrase">confd</span>_load</strong></span>
+          command.</p></dd></dl></div></div><div class="refsect1"><a name="d5e16732"></a><h2>SEE ALSO</h2><p><span class="citerefentry"><span class="refentrytitle">confd_lib_maapi</span>(3)</span>
+    - Confd MAAPI library</p><p><span class="citerefentry"><span class="refentrytitle">confd_lib_cdb</span>(3)</span>
+    - Confd CDB library</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01re04.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01re06.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">
+      <span class="phrase">confd</span>_cmd&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;<span class="phrase">confdc</span>
+    </td></tr></table></div></body></html>

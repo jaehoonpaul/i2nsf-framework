@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <appender name="A1" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+       value="&#60;%-4p&#62; %d{dd-MMM-yyyy::HH:mm:ss.SSS} %C{1} %t: - %m%n"/>
+    </layout>
+  </appender>
+
+  <logger name="com.tailf" additivity="false" >
+    <level value="warn" />
+    <appender-ref ref="A1"/>
+  </logger>
+
+  <logger name="Cdbl" additivity="false" >
+    <level value="warn" />
+    <appender-ref ref="A1"/>
+  </logger>
+
+  <logger name="DiffIterateImpl" additivity="false" >
+    <level value="warn" />
+    <appender-ref ref="A1"/>
+  </logger>
+
+  <logger name="com.tailf.cdb" additivity="false" >
+    <level value="info" />
+    <appender-ref ref="A1"/>
+  </logger>
+
+  <root>
+    <priority value ="warn" />
+    <appender-ref ref="A1" />
+  </root>
+</log4j:configuration>
+
+
+
+
+

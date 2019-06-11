@@ -1,0 +1,16 @@
+Simple Examples
+~~~~~~~~~~~~~~~
+
+This directory contains the complete code examples which are described
+in the User's Guide.
+
++ simple_cdb
+    This is the example from the chapter "CDB - The ConfD XML
+    database", section "An example".
+
++ simple_no_trans
+    This is the example from the section "External configuration data"
+
++ simple_trans
+    This is the example from the section "External configuration data
+    with transactions"

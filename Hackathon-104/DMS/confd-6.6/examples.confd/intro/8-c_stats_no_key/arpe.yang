@@ -1,0 +1,37 @@
+module arpe {
+  namespace "http://tail-f.com/ns/example/arpe";
+  prefix arpe;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container arpentries {
+    config false;
+    tailf:callpoint arpe2;
+    list arpe {
+      max-elements 1024;
+      leaf ip {
+        type inet:ip-address;
+      }
+      leaf ifname {
+        type string;
+      }
+      leaf hwaddr {
+        type string;
+        mandatory true;
+      }
+      leaf permanent {
+        type boolean;
+        mandatory true;
+      }
+      leaf published {
+        type boolean;
+        mandatory true;
+      }
+    }
+  }
+}

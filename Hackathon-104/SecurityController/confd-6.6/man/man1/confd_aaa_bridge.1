@@ -1,0 +1,228 @@
+'\" t
+.\"     Title: confd_aaa_bridge
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_AAA_BRIDGE" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_aaa_bridge \- Populating ConfD aaa_bridge\&.fxs with external data
+.SH "SYNOPSIS"
+.sp
+.nf
+<aaa>
+    <aaaBridge>
+      <enabled>true</enabled>
+      <file>/etc/confd/aaa\&.conf</file>
+    </aaaBridge>
+  </aaa>
+.fi
+.SH "DESCRIPTION"
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+This program is deprecated\&. It does not support the NACM data model for access control\&.
+.sp .5v
+.RE
+.PP
+ConfD needs to have the YANG module defining the namespace
+http://tail\-f\&.com/ns/aaa/1\&.1
+defined\&. The namespace is mandatory for ConfD to run\&. The namespace specifies authentication and authorization data for ConfD and ConfD doesn\*(Aqt run unless this namespace is populated\&. This is fully described in the document "The ConfD AAA infrastructure"
+.PP
+We can either choose to use CDB to populate the AAA namespace in which case no C code needs to be written\&. Using CDB is the easiest and recommended way to populate the AAA\&. In the CDB case we should choose to have the "aaa_cdb\&.fxs" file in ConfD load path\&. By default ConfD use CDB to store the AAA data, thus this man page is only of interest for users that don\*(Aqt use CDB to store the "/aaa" tree\&.
+.PP
+If we do not want to use CDB, we can choose to populate the namespace using "aaa_bridge\&.fxs" using external data in which case a program \- using the ConfD external data API from libconfd\&.so must be written to populate aaa_bridge\&.fxs\&.
+.PP
+confd_aaa_bridge\&.c is an example of such a program\&. It reads and writes an ad hoc \&.ini file which is used as "external database" for authentication and authorization data\&. If we enable confd_aaa_bridge in the configuration file for ConfD (see
+\m[blue]\fBconfd\&.conf(5)\fR\m[]) ConfD will automatically start a precompiled version of confd_aaa_bridge on startup and stop it on shutdown\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+confd_aaa_bridge is just an example of how we can choose to populate the AAA namespace if we do not want to use CDB at all\&.
+.sp .5v
+.RE
+.PP
+confd_aaa_bridge reads and writes a file with the following syntax:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+[users]
+\fI \&.\&. a set of users\fR
+
+[groups]
+\fI \&.\&. a set of groups\fR
+
+[cmdrules]
+\fI \&.\&. a set of rules\fR
+
+[datarules]
+\fI \&.\&. a set of rules\fR
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+[users]
+are specified as six space/tab separated fields
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  user    uid   gid cryptpassword   sshdir  homedir
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+user
+field is the name of the user, the
+cryptpassword
+is the encrypted (see man crypt(3)) password of the user\&. The
+sshdir
+is the name of a directory where the users SSH keys are kept and finally the
+homedir
+is a directory which is considered the HOME directory of the user\&. The CLI will save files in this directory\&. The uid and gid are UNIX ids ConfD will use to run commands on behalf of the logged in user\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+[users]
+admin 0 0 $1$feedbabe$nGlMYlZpQ0bzenyFOQI3L1 /var/u1/\&.ssh /var/u1
+oper  0 0 $1$feedbabe$i2glnaB\&.iUj2VXh/zlq\&.o/ /var/u2/\&.ssh /var/u2
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+[groups]
+are specified as several space/tab separated fields
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+group   gid user1 user2 \&.\&.\&.\&.\&.\&.
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The first field, the
+\fIgroup\fR
+is the name of a group, the remainder of space separated strings is a list of users being members in the group\&. The gid is the UNIX group id of this group\&. \-1 means that no additional group id should be assigned to a user that belongs to this group\&.
+.PP
+The
+[cmdrules]
+are specified as six space/tab separated fields:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+        index  context  command  group  op  action
+      
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+And the
+[datarules]
+are specified of seven space/tab separated fields
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+index  context  namespace  keypath  group  op  action
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The meaning of the different rule fields is described in the AAA userguide\&.
+.SH "SIGNALS"
+.PP
+If the signal SIGHUP is sent to the program as in
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# killall \-HUP confd_aaa_bridge
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The program will die, ConfD will notice the exit code and silently restart confd_aaa_bridge\&. This is a convenient way to force ConfD to reload a data file edited by hand, is to kill \-HUP the confd_aaa_bridge UNIX process
+.SH "SEE ALSO"
+.PP
+See the YANG module
+tailf\-aaa\&.yang
+in the
+$CONFD_DIR/src/confd/aaa
+directory in the release, as well as the accompanying annotation YANG module
+bridge\-ann\&.yang
+in the
+$CONFD_DIR/src/confd/confd_aaa_bridge
+directory, which brings the necessary callpoint into the original YANG module
+tailf\-aaa\&.yang\&.
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

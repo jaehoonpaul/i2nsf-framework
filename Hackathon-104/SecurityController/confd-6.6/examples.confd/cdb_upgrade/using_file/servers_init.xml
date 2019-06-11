@@ -1,0 +1,22 @@
+<servers:servers xmlns:servers="http://tail-f.com/ns/example/servers">
+  <servers:server>
+    <servers:name>www</servers:name>
+    <servers:ip>192.168.3.4</servers:ip>
+    <servers:port>88</servers:port>
+  </servers:server>
+  <servers:server>
+    <servers:name>www2</servers:name>
+    <servers:ip>192.168.3.5</servers:ip>
+    <servers:port>80</servers:port>
+  </servers:server>
+  <servers:server>
+    <servers:name>smtp</servers:name>
+    <servers:ip>192.168.3.4</servers:ip>
+    <servers:port>25</servers:port>
+  </servers:server>
+  <servers:server>
+    <servers:name>dns</servers:name>
+    <servers:ip>192.168.3.5</servers:ip>
+    <servers:port>53</servers:port>
+  </servers:server>
+</servers:servers>

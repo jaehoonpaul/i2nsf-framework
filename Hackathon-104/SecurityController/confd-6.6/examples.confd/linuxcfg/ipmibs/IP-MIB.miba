@@ -1,0 +1,102 @@
+ipForwarding max_access = read_only
+ipDefaultTTL max_access = read_only
+ipv6IpForwarding max_access = read_only
+ipv6IpDefaultHopLimit max_access = read_only
+ipv4InterfaceEnableStatus max_access = read_only
+ipv6InterfaceForwarding max_access = read_only
+ipv6InterfaceEnableStatus max_access = read_only
+ipNetToPhysicalType max_access = read_only
+ipNetToPhysicalPhysAddress max_access = read_only
+
+ipAddressStorageType max_access = read_only
+ipAddressStatus max_access = read_only
+ipAddressType max_access = read_only
+ipAddressIfIndex max_access = read_only
+
+ipv6RouterAdvertDefaultLifetime max_access = read_only
+ipv6RouterAdvertCurHopLimit max_access = read_only
+ipv6RouterAdvertRetransmitTime max_access = read_only
+ipv6RouterAdvertReachableTime max_access = read_only
+ipv6RouterAdvertLinkMTU max_access = read_only
+ipv6RouterAdvertOtherConfigFlag max_access = read_only
+ipv6RouterAdvertManagedFlag max_access = read_only
+ipv6RouterAdvertMinInterval max_access = read_only
+ipv6RouterAdvertMaxInterval max_access = read_only
+ipv6RouterAdvertSendAdverts max_access = read_only
+
+ipAddressSpinLock max_access = read_only
+ipv6RouterAdvertSpinLock max_access = read_only
+
+# not available on Linux (?)
+
+ipIfStatsInOctets behavior = noSuchInstance
+ipIfStatsInForwDatagrams behavior = noSuchInstance
+ipIfStatsOutFragReqds behavior = noSuchInstance
+ipIfStatsOutTransmits behavior = noSuchInstance
+ipIfStatsOutOctets behavior = noSuchInstance
+ipIfStatsInMcastOctets behavior = noSuchInstance
+ipIfStatsOutMcastOctets behavior = noSuchInstance
+ipIfStatsInBcastPkts behavior = noSuchInstance
+ipIfStatsOutBcastPkts behavior = noSuchInstance
+
+ipSystemStatsInOctets behavior = noSuchInstance
+ipSystemStatsHCInOctets behavior = noSuchInstance
+ipSystemStatsOutOctets behavior = noSuchInstance
+ipSystemStatsHCOutOctets behavior = noSuchInstance
+ipSystemStatsInMcastOctets behavior = noSuchInstance
+ipSystemStatsHCInMcastOctets behavior = noSuchInstance
+ipSystemStatsOutMcastOctets behavior = noSuchInstance
+ipSystemStatsHCOutMcastOctets behavior = noSuchInstance
+
+# not yet implemented variables/tables
+
+ipv6RouterAdvertTable behavior = noSuchInstance
+
+# deprecated
+
+ipInReceives behavior = noSuchInstance
+ipInHdrErrors behavior = noSuchInstance
+ipInAddrErrors behavior = noSuchInstance
+ipForwDatagrams behavior = noSuchInstance
+ipInUnknownProtos behavior = noSuchInstance
+ipInDiscards behavior = noSuchInstance
+ipInDelivers behavior = noSuchInstance
+ipOutRequests behavior = noSuchInstance
+ipOutDiscards behavior = noSuchInstance
+ipOutNoRoutes behavior = noSuchInstance
+ipReasmReqds behavior = noSuchInstance
+ipReasmOKs behavior = noSuchInstance
+ipReasmFails behavior = noSuchInstance
+ipFragOKs behavior = noSuchInstance
+ipFragFails behavior = noSuchInstance
+ipFragCreates behavior = noSuchInstance
+ipAddrTable behavior = noSuchInstance
+ipNetToMediaTable behavior = noSuchInstance
+ipRoutingDiscards behavior = noSuchInstance
+
+icmpInMsgs behavior = noSuchInstance
+icmpInErrors behavior = noSuchInstance
+icmpInDestUnreachs behavior = noSuchInstance
+icmpInTimeExcds behavior = noSuchInstance
+icmpInParmProbs behavior = noSuchInstance
+icmpInSrcQuenchs behavior = noSuchInstance
+icmpInRedirects behavior = noSuchInstance
+icmpInEchos behavior = noSuchInstance
+icmpInEchoReps behavior = noSuchInstance
+icmpInTimestamps behavior = noSuchInstance
+icmpInTimestampReps behavior = noSuchInstance
+icmpInAddrMasks behavior = noSuchInstance
+icmpInAddrMaskReps behavior = noSuchInstance
+icmpOutMsgs behavior = noSuchInstance
+icmpOutErrors behavior = noSuchInstance
+icmpOutDestUnreachs behavior = noSuchInstance
+icmpOutTimeExcds behavior = noSuchInstance
+icmpOutParmProbs behavior = noSuchInstance
+icmpOutSrcQuenchs behavior = noSuchInstance
+icmpOutRedirects behavior = noSuchInstance
+icmpOutEchos behavior = noSuchInstance
+icmpOutEchoReps behavior = noSuchInstance
+icmpOutTimestamps behavior = noSuchInstance
+icmpOutTimestampReps behavior = noSuchInstance
+icmpOutAddrMasks behavior = noSuchInstance
+icmpOutAddrMaskReps behavior = noSuchInstance

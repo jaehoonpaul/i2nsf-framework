@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module econfd_ha</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module econfd_ha</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>An Erlang interface equivalent to the HA C-API
+   (documented in confd_lib_ha(3)).
+<p>Copyright © 2006 Tail-F Systems AB</p>
+
+<p><b>Version:</b> {$Id$}</p>
+
+<h2><a name="description">Description</a></h2>An Erlang interface equivalent to the HA C-API
+   (documented in confd_lib_ha(3)).
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#bemaster-2">bemaster/2</a></td><td>instruct a HA node to be master in the cluster.</td></tr>
+<tr><td valign="top"><a href="#benone-1">benone/1</a></td><td>instruct a HA node to be nothing in the cluster.</td></tr>
+<tr><td valign="top"><a href="#berelay-1">berelay/1</a></td><td>instruct a HA slave to be a relay for other slaves.</td></tr>
+<tr><td valign="top"><a href="#beslave-4">beslave/4</a></td><td>instruct a HA node to be slave in the cluster where
+  MasterNodeId is master.</td></tr>
+<tr><td valign="top"><a href="#close-1">close/1</a></td><td>Close the HA connection.</td></tr>
+<tr><td valign="top"><a href="#connect-2">connect/2</a></td><td>Connect to the HA subsystem at the ConfD server on host with
+  address Address.</td></tr>
+<tr><td valign="top"><a href="#connect-3">connect/3</a></td><td>Connect to the HA subsystem on host with address Address:Port.</td></tr>
+<tr><td valign="top"><a href="#getstatus-1">getstatus/1</a></td><td>Request status from a HA node.</td></tr>
+<tr><td valign="top"><a href="#slave_dead-2">slave_dead/2</a></td><td>instruct ConfD that another node is dead.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="bemaster-2">bemaster/2</a></h3>
+<div class="spec">
+<p><tt>bemaster(Socket::term(), MyNodeId::<a href="econfd.html#type-value">econfd:value()</a>) -&gt; ok | {error, Reason}</tt><br></p>
+</div><p>instruct a HA node to be master in the cluster.</p>
+
+<h3 class="function"><a name="benone-1">benone/1</a></h3>
+<div class="spec">
+<p><tt>benone(Socket::term()) -&gt; ok | {error, Reason}</tt><br></p>
+</div><p>instruct a HA node to be nothing in the cluster.</p>
+
+<h3 class="function"><a name="berelay-1">berelay/1</a></h3>
+<div class="spec">
+<p><tt>berelay(Socket::term()) -&gt; ok | {error, Reason}</tt><br></p>
+</div><p>instruct a HA slave to be a relay for other slaves.</p>
+
+<h3 class="function"><a name="beslave-4">beslave/4</a></h3>
+<div class="spec">
+<p><tt>beslave(Socket::term(), MyNodeId::<a href="econfd.html#type-value">econfd:value()</a>, Master::#ha_node{}, WaitReplyBool::integer()) -&gt; ok | {error, Reason}</tt><br></p>
+</div><p>instruct a HA node to be slave in the cluster where
+  MasterNodeId is master.</p>
+
+<h3 class="function"><a name="close-1">close/1</a></h3>
+<div class="spec">
+<p><tt>close(Socket::term()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Close the HA connection</p>
+
+<h3 class="function"><a name="connect-2">connect/2</a></h3>
+<div class="spec">
+<p><tt>connect(Address::<a href="#type-ip">ip()</a>, Token::binary()) -&gt; {ok, Socket::term()} | {error, Reason::term()}</tt><br></p>
+</div><p>Connect to the HA subsystem at the ConfD server on host with
+  address Address. The Token is a unique identifier which must be shared by
+  all nodes in the cluster.</p>
+
+<h3 class="function"><a name="connect-3">connect/3</a></h3>
+<div class="spec">
+<p><tt>connect(Address::<a href="#type-ip">ip()</a>, Port::integer(), Token::binary()) -&gt; {ok, Socket::term()} | {error, Reason::term()}</tt><br></p>
+</div><p><p>Connect to the HA subsystem on host with address Address:Port</p>
+ 
+  If the port is changed it must also be changed in confd.conf
+  To close a HA socket, use <a href="#close-1"><code>close/1</code></a>.</p>
+
+<h3 class="function"><a name="getstatus-1">getstatus/1</a></h3>
+<div class="spec">
+<p><tt>getstatus(Socket::term()) -&gt; {ok, #ha_status{}} | {error, Reason}</tt><br></p>
+</div><p>Request status from a HA node</p>
+
+<h3 class="function"><a name="slave_dead-2">slave_dead/2</a></h3>
+<div class="spec">
+<p><tt>slave_dead(Socket::term(), NodeId::<a href="econfd.html#type-value">econfd:value()</a>) -&gt; ok | {error, Reason}</tt><br></p>
+</div><p>instruct ConfD that another node is dead</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Mar 2 2018, 14:41:25.</i></p>
+</body>
+</html>

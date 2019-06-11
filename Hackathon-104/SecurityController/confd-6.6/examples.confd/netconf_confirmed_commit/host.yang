@@ -1,0 +1,36 @@
+/*********************************************************************
+ * ConfD NETCONF confirmed-commit example
+ *
+ * (C) 2005-2017 Tail-f Systems
+ * Permission to use this code as a starting point hereby granted
+ * This is ConfD Sample Code.
+ *
+ * See the README file for more information
+ ********************************************************************/
+
+module hst {
+    namespace "http://tail-f.com/ns/example/host";
+    prefix hst;
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+    import tailf-common {
+        prefix tailf;
+    }
+
+    container hosts {
+
+        list host {
+            key name;
+            max-elements 64;
+            leaf name {
+                type string;
+            }
+            leaf ip {
+                type inet:ip-address;
+                mandatory true;
+            }
+        }
+    }
+}

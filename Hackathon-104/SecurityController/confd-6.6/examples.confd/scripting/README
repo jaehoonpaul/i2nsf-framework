@@ -1,0 +1,151 @@
+Example: Plug and play scripting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how to add CLI commands, policy scripts and
+post-commit hooks by means of the scripting mechanism. In order to
+make this work we need to add one or more script directories to
+confd.conf:
+
+    <scripts>
+      <dir>scripts</dir>
+    </scripts>
+
+In this example we have one CLI command (echo.sh), one policy script
+(check_number_of_hosts.sh) and one post-commit hook
+(show_diff.sh). The directory structure looks like this:
+
+    # find scripts
+    scripts
+    scripts/command
+    scripts/command/echo.sh
+    scripts/policy
+    scripts/policy/check_number_of_hosts.sh
+    scripts/post-commit
+    scripts/post-commit/show_diff.sh
+
+The interface of the scripts are defined by the scripts themselves.
+ConfD invokes the scripts to determine the their interfaces. This is
+automatically done at startup and manually on demand via the
+"script reload" CLI command. In this case the new CLI command will
+be named "my script echo".
+
+In this example we do also have a CLI command that is added via the
+clispec mechanism, see confd.c.cli and confd.j.cli respectively. The
+command "my clispec echo" defined in the clispec is equivalent to the
+command "my script echo" defined by echo.sh.
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing
+
+    # make all start
+
+ 2. To see what's happening inside ConfD, optionally tail the ConfD
+    log file. Unless you have changed the default configuration for
+    this example (see confd.conf) the command would be
+
+    # tail -f ./confd.log
+
+ 3. Start the CLI with 'make cli' and try the following:
+    # make cli
+    admin connected from 127.0.0.1 using console on tellus
+    admin@tellus>
+
+ 4. Run the CLI commands
+
+    admin@tellus> my script echo ?
+    Possible completions:
+      String to be displayed
+      file - Redirect output to file
+      nolf - Do not output the trailing newline
+    admin@tellus> my script echo hello world
+    hello world
+    [ok][2013-02-15 15:10:13]
+    admin@tellus> my clispec ?
+    Possible completions:
+      echo - Display a line of text
+    admin@tellus>
+
+ 5. Violate constraint in policy script
+
+    admin@tellus# config
+    Entering configuration mode terminal
+    admin@tellus(config)# show full-configuration simpleObjects maxNumberOfHosts
+    simpleObjects maxNumberOfHosts 10
+    admin@tellus(config)# simpleObjects numberOfHosts 15
+    admin@tellus(config)# commit
+    Aborted: /simpleObjects/numberOfHosts may not be greater than 10
+    admin@tellus(config)#
+
+6. Reload changed scripts
+
+    admin@tellus> script reload ?
+    Possible completions:
+      all    - Show info about all scripts
+      debug  - Show additional debug info about the scripts
+      diff   - Show info about scripts changed since last reload
+      errors - Show info about erroneous scripts
+    admin@tellus> script reload all
+    /confd_dir/examples.confd/scripting/scripts: ok
+        command:
+            echo.sh: unchanged
+        policy:
+            check_number_of_hosts.sh: unchanged
+        post-commit:
+            show_diff.sh: unchanged
+    [ok][2013-02-15 15:41:58]
+    admin@tellus> script reload all debug
+    /confd_dir/examples.confd/scripting/scripts: ok
+        command:
+            echo.sh: unchanged
+    --- Output from /confd_dir/examples.confd/scripting/scripts/command/echo.sh --command ---
+     1: begin command
+     2:   modes: oper
+     3:   styles: c i j
+     4:   cmdpath: my script echo
+     5:   help: Display a line of text
+     6: end
+     7:
+     8: begin param
+     9:  name: nolf
+    10:  type: void
+    11:  presence: optional
+    12:  flag: -n
+    13:  help: Do not output the trailing newline
+    14: end
+    15:
+    16: begin param
+    17:  name: file
+    18:  presence: optional
+    19:  flag: -f
+    20:  help: Redirect output to file
+    21: end
+    22:
+    23: begin param
+    24:  presence: mandatory
+    25:  words: any
+    26:  help: String to be displayed
+    27: end
+    28:
+    ---
+        policy:
+            check_number_of_hosts.sh: unchanged
+    --- Output from /confd_dir/examples.confd/scripting/scripts/policy/check_number_of_hosts.sh --policy ---
+    1: begin policy
+    2:   keypath: /simpleObjects/numberOfHosts
+    3:   dependency: /simpleObjects/maxNumberOfHosts
+    4:   priority: 4
+    5:   call: each
+    6: end
+    7:
+    ---
+        post-commit:
+            show_diff.sh: unchanged
+    --- Output from /confd_dir/examples.confd/scripting/scripts/post-commit/show_diff.sh --post-commit ---
+    1: begin post-command
+    2: end
+    3:
+    ---
+    [ok][2013-02-15 15:42:03]
+    admin@tellus>

@@ -1,0 +1,14 @@
+<INFO> 6-Mar-2019::10:38:49.753 nsf-1 confd[8304]: confd embedded apps in early_phase0:
+	[]
+<INFO> 6-Mar-2019::10:38:49.908 nsf-1 confd[8304]: confd mmap_schema handle_info got msg: timeout
+<INFO> 6-Mar-2019::10:38:49.928 nsf-1 confd[8304]: confd embedded apps in phase0:
+	[]
+<INFO> 6-Mar-2019::10:38:50.127 nsf-1 confd[8304]: devel-cdb init files found in ./confd-cdb: aaa_init.xml
+<INFO> 6-Mar-2019::10:38:50.217 nsf-1 confd[8304]: devel-cdb Compacted CDB journal file: 17 ms (93 nodes in memory, disk size 1.44 KiB -> 1.39 KiB)
+<INFO> 6-Mar-2019::10:38:50.227 nsf-1 confd[8304]: confd embedded apps in phase1:
+	[]
+<ERR> 6-Mar-2019::10:38:50.262 nsf-1 confd[8304]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 6-Mar-2019::10:38:50.272 nsf-1 confd[8304]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 6-Mar-2019::10:38:50.279 nsf-1 confd[8304]: confd embedded apps in phase2:
+	[]

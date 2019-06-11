@@ -1,0 +1,46 @@
+module iid {
+  namespace "http://tail-f.com/ns/example/iid";
+  prefix iid;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  /* instance-identifier as key */
+
+  grouping iid {
+    list iid {
+      key "name obj";
+      leaf name {
+        type string;
+      }
+      leaf obj {
+        type instance-identifier {
+          require-instance false;
+        }
+      }
+      leaf value {
+        type string;
+      }
+    }
+  }
+
+  container cdb {
+    uses iid;
+  }
+
+  container ext {
+    tailf:callpoint iidcp;
+    uses iid;
+  }
+
+  list ref {
+    key k;
+    leaf k {
+      type int32;
+    }
+    leaf v {
+      type int32;
+    }
+  }
+}

@@ -1,0 +1,227 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch12.html" title="Chapter&nbsp;12.&nbsp;Notifications"><link rel="next" href="ch14.html" title="Chapter&nbsp;14.&nbsp;The AAA infrastructure"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch12.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch14.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.upgrade"></a>Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch13.html#d5e3650">13.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3658">13.2. Preparing for the Upgrade</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3691">13.3. Initializing the Upgrade</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3714">13.4. Performing the Upgrade</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3740">13.5. Committing the Upgrade</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3763">13.6. Aborting the Upgrade</a></span></dt><dt><span class="sect1"><a href="ch13.html#d5e3771">13.7. Upgrade and HA</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3650"></a>13.1.&nbsp;Introduction</h2></div></div></div><p>When we want to change the data model used by ConfD, the
+    simplest method is to stop and restart ConfD with the new .fxs files
+    in place. CDB will then detect the change and perform an upgrade,
+    automatically or assisted by external programs, as described in
+    <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a>.</p><p>If it is necessary that ConfD keeps running throughout the
+    data model change, we can instead control the upgrade from an
+    external program using a set of MAAPI functions, as described in
+    this chapter. The CDB upgrade will be performed in this case too of
+    course, and all the techniques described in the CDB chapter are
+    applicable here too. But in addition, this procedure requires
+    careful synchronization between different ConfD components,
+    e.g. transactions may not span the data model change, and all
+    components must update any related data, while still being able to
+    revert to the original data model in case problems are
+    detected.</p><p>The following four sections describe the phases and
+    corresponding MAAPI function calls that comprise this upgrade
+    procedure, and the steps that must be taken by the program
+    controlling the procedure. A complete example showing the procedure
+    can be found in
+    <code class="filename">examples.confd/in_service_upgrade/simple</code> in the
+    bundled examples collection. The code excerpts and description
+    refer to this example. See also the <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> manual page for the
+    definitions of the MAAPI functions.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3658"></a>13.2.&nbsp;Preparing for the Upgrade</h2></div></div></div><p>All the new .fxs files, clispecs, MIBs, etc, as well as the
+    <code class="filename">docroot</code> tree for the Web UI (if used), that are
+    to be used after the upgrade, must be installed separately from the
+    current ones, and the current ones may not be removed until the
+    upgrade has completed successfully. A good way to organize this is
+    to have the references to the installation directories in
+    <code class="filename">confd.conf</code> use a symbolic link. This way we can
+    switch the on-disk data to the new version by simply changing the
+    link, without the need for complex modification of
+    <code class="filename">confd.conf</code>. Files that are unchanged between
+    the two versions should be duplicated, or possibly (hard-)linked if
+    disk space is limited.</p><p>In the example, we use two directories
+    <code class="filename">pkg/v1</code> and <code class="filename">pkg/v2</code> for the
+    old and new versions, respectively, and a symlink
+    <code class="filename">pkg/current</code> that points to the currently used
+    version. In <code class="filename">confd.conf</code> both
+    <code class="sgmltag-element">/confdConfig/loadPath/dir</code> and
+    <code class="sgmltag-element">/confdConfig/webui/docroot</code> are then given with the use of
+    the symlink. Multiple loadPath directories are of course also
+    possible, by having subdirectories below <code class="filename">v1</code>
+    and/or <code class="filename">v2</code>.</p><p>For MIB (.bin) files other than the ones built-in to ConfD,
+    <code class="filename">confd.conf</code> offers two possibilities: we can
+    either specify the actual file names with
+    <code class="sgmltag-element">/confdConfig/snmpAgent/mibs/file</code> elements, or use
+    <code class="sgmltag-element">/confdConfig/snmpAgent/mibs/fromLoadPath</code> to tell ConfD to
+    load these files from the directories given via
+    <code class="sgmltag-element">/confdConfig/loadPath</code>. To have the symlink scheme work
+    for the MIB files on upgrade, we need to use the latter alternative,
+    and only specify built-in MIBs via
+    <code class="sgmltag-element">/confdConfig/snmpAgent/mibs/file</code>.</p><p>The <code class="filename">upgrade.c</code> program in the example
+    controls the upgrade procedure. It can be run either standalone or
+    via a <code class="sgmltag-element">osCommand</code> specification in the clispec. In both
+    cases it must connect a MAAPI socket and associate it with a user
+    session. When running from the CLI, it must use the user session id
+    provided by the environment variable
+    <code class="varname">CONFD_MAAPI_USID</code> for this, otherwise it can
+    start a new user session:</p><div class="informalexample"><pre class="programlisting">static int set_usess(int sock)
+{
+    char *user = "admin";
+    const char *groups[] = {"admin"};
+    char *context = "system";
+    struct confd_ip ip;
+
+    /* must use usid from CLI to be allowed to run across upgrade */
+    if ((usid_env = getenv("CONFD_MAAPI_USID")) != NULL) {
+        return maapi_set_user_session(sock, atoi(usid_env));
+    } else {
+        ip.af = AF_INET;
+        inet_pton(AF_INET, "127.0.0.1", &amp;ip.ip.v4);
+        return maapi_start_user_session(sock, user, context, groups, 1,
+                                        &amp;ip, CONFD_PROTO_TCP);
+    }
+}
+</pre></div><p>Applications connected to ConfD, e.g. data providers and CDB
+    subscribers, are not directly affected by the upgrade procedure. If
+    they need to take some action due to the upgrade, they should be
+    subscribed to <code class="constant">CONFD_NOTIF_UPGRADE_EVENT</code> event
+    notifications (see <a class="xref" href="ch12.html" title="Chapter&nbsp;12.&nbsp;Notifications">Chapter&nbsp;12, <i>Notifications</i></a>), and will
+    then be notified of the different phases of the upgrade. If nothing
+    else, most applications should call
+    <code class="function">confd_load_schemas()</code> (see <a class="xref" href="rn02re13.html" title="confd_lib_lib"><span class="refentrytitle">confd_lib_lib</span>(3)</a>) when an upgrade has completed, in
+    order to update the in-memory representation of the data model. The
+    <code class="filename">cdb_subscriber.c</code> program in the example shows
+    how this can be done.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3691"></a>13.3.&nbsp;Initializing the Upgrade</h2></div></div></div><p>After having set up the MAAPI socket, the first step in the
+    actual upgrade procedure is to call the
+    <code class="function">maapi_init_upgrade()</code> function. Its purpose is
+    to bring ConfD into "upgrade mode", where no transactions are
+    running, and the northbound agents have entered a state that does
+    not allow new transactions to be started.</p><div class="informalexample"><pre class="programlisting">    progress("Initializing upgrade...\n");
+    phase = "Init";
+    /* run notifier in separate process
+       - maapi_init_upgrade() blocks */
+    notifier = run_notifier(timeout, force);
+    OK(maapi_init_upgrade(maapisock, timeout,
+                          force ? MAAPI_UPGRADE_KILL_ON_TIMEOUT : 0));
+    if (notifier != -1)
+        kill(notifier, SIGTERM);
+    notifier = -1;
+    progress("Init OK\n");
+    maapi_prio_message(maapisock, "all",
+                       "\n&gt;&gt;&gt; System upgrade in progress...\n");
+</pre></div><p>If users have sessions in configure mode when this function is
+    called, they are given the opportunity to exit from configure mode
+    voluntarily. The function call will block until all transactions
+    have been terminated (although not longer than specified by the
+    timeout). For this reason, we fork() a process that periodically
+    sends out messages to all users, informing them of the imminent
+    upgrade.</p><p>If any transactions remain when the timeout expires,
+    <code class="function">maapi_init_upgrade()</code> will fail with
+    <code class="varname">confd_errno</code>
+    <code class="constant">CONFD_ERR_TIMEOUT</code>, unless the
+    <code class="constant">MAAPI_UPGRADE_KILL_ON_TIMEOUT</code> flag was used.
+    If <code class="filename">upgrade.c</code> was given the <code class="option">-f</code>
+    (force) option, it will pass this flag to
+    <code class="function">maapi_init_upgrade()</code>, and any remaining
+    transactions will be forcibly terminated instead.</p><p>When <code class="function">maapi_init_upgrade()</code> is called, a
+    <code class="constant">CONFD_UPGRADE_INIT_STARTED</code> event notification
+    is sent, and when it completes successfully, a
+    <code class="constant">CONFD_UPGRADE_INIT_SUCCEEDED</code> event notification
+    is sent.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>If the function fails, i.e. it does not return
+    <code class="constant">CONFD_OK</code>, ConfD will automatically abort the
+    upgrade, reverting to the pre-upgrade state, and send a
+    <code class="constant">CONFD_UPGRADE_ABORTED</code> event notification. This
+    is true also for the functions described in in the next two
+    sections.</p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3714"></a>13.4.&nbsp;Performing the Upgrade</h2></div></div></div><p>When <code class="function">maapi_init_upgrade()</code> has completed
+    successfully, the next step is to call
+    <code class="function">maapi_perform_upgrade()</code>. This tells ConfD to
+    load the new .fxs files etc, and we must pass it a list of
+    directories to load these files from. These are the directories that
+    will become the new loadPath directories once the upgrade is
+    complete. These directories will also be searched for CDB "init
+    files" (see <a class="xref" href="ch05.html#ug.cdb.init" title="5.8.&nbsp;Loading initial data into CDB">Section&nbsp;5.8, &#8220;Loading initial data into CDB&#8221;</a>), corresponding to the
+    <code class="sgmltag-element">/confdConfig/cdb/initPath</code> directories that can be
+    specified in <code class="filename">confd.conf</code>.</p><div class="informalexample"><pre class="programlisting">    progress("Performing upgrade...\n");
+    phase = "Perform";
+    /* set up new loadpath directory */
+    snprintf(buf, sizeof(buf), PKG_DIR "/%s", version);
+    load_dir[0] = &amp;buf[0];
+    OK(maapi_perform_upgrade(maapisock, &amp;load_dir[0], ndirs));
+    progress("Perform OK\n");
+</pre></div><p>At this point <code class="filename">confd.conf</code> and hence the
+    <code class="filename">current</code> symlink must still point to the current
+    version, and thus we pass the new directory "explicitly" to the
+    function as <code class="filename">"./pkg/v2"</code>. In this example ConfD
+    was also started with the <code class="option">--addloadpath</code> option
+    specifying an additional loadPath directory. The contents of this
+    directory (<code class="filename">$CONFD_DIR/etc/confd</code>) does not
+    change in the upgrade, but we must pass the same directory to
+    <code class="function">maapi_perform_upgrade()</code> too - the files found
+    in the given directories will completely replace what ConfD is
+    currently using.</p><p>A number of different problems may be detected during the
+    loading of the new files, e.g. .fxs files may have a version that is
+    incompatible with the ConfD version, or they may reference
+    namespaces that can not be found. These problems will make
+    <code class="function">maapi_perform_upgrade()</code> fail with
+    <code class="varname">confd_errno</code>
+    <code class="constant">CONFD_ERR_BAD_CONFIG</code>, and
+    <code class="function">confd_lasterr()</code> giving information about the
+    details of the problem. If the loading is successful, CDB will start
+    its special upgrade transaction, and perform any automatic upgrade
+    operations that are needed, before
+    <code class="function">maapi_perform_upgrade()</code> returns.</p><p>When <code class="function">maapi_perform_upgrade()</code> completes
+    successfully, a <code class="constant">CONFD_UPGRADE_PERFORMED</code> event
+    notification is sent.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3740"></a>13.5.&nbsp;Committing the Upgrade</h2></div></div></div><p>When <code class="function">maapi_perform_upgrade()</code> has
+    completed successfully, we must call
+    <code class="function">maapi_commit_upgrade()</code> to tell ConfD to make
+    the upgrade permanent. This will also tell CDB to commit its upgrade
+    transaction, and we may need to take some actions for this before
+    the call:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If the upgrade requires that an external program
+      modifies some CDB data, it must be done at this point, using
+      <code class="function">maapi_attach_init()</code> as described in the CDB
+      chapter.</p></li><li class="listitem"><p>If the upgrade includes new validation points, or
+      the validation logic for existing validation points has changed,
+      the new validators must connect to ConfD and register for their
+      validation points before
+      <code class="function">maapi_commit_upgrade()</code> is called.</p></li></ul></div><p>In the example, all the changes can be handled by the
+    automatic CDB upgrade, and we just proceed with the call:</p><div class="informalexample"><pre class="programlisting">    progress("Committing upgrade...\n");
+    phase = "Commit";
+    OK(maapi_commit_upgrade(maapisock));
+    relink(version);
+    progress("Commit OK\n");
+
+    maapi_prio_message(maapisock, "all",
+                       "&gt;&gt;&gt; System upgrade has completed successfully.\n");
+</pre></div><p><code class="function">maapi_commit_upgrade()</code> may fail if the
+    upgraded data does not pass validation, and the errors returned in
+    this case are the same as for e.g.
+    <code class="function">maapi_apply_trans()</code>. Since this will also make
+    ConfD automatically revert to the pre-upgrade state, we must not
+    change the on-disk data to reflect the upgrade until
+    <code class="function">maapi_commit_upgrade()</code> has succeeded.  In the
+    code above, the <code class="function">relink()</code> call changes the
+    symlink to point to the new version in an atomic manner.</p><p>When <code class="function">maapi_commit_upgrade()</code> completes
+    successfully, a <code class="constant">CONFD_UPGRADE_COMMITED</code> event
+    notification is sent.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3763"></a>13.6.&nbsp;Aborting the Upgrade</h2></div></div></div><p>We can abort the upgrade at any point before the
+    <code class="function">maapi_commit_upgrade()</code> call by calling
+    <code class="function">maapi_abort_upgrade()</code>. However as noted above,
+    this should not be done when one of the other functions fails, since
+    ConfD aborts the upgrade automatically in those cases.</p><p>When <code class="function">maapi_abort_upgrade()</code> aborts an
+    upgrade, a <code class="constant">CONFD_UPGRADE_ABORTED</code> event
+    notification is sent.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3771"></a>13.7.&nbsp;Upgrade and HA</h2></div></div></div><p>When we use the ConfD High Availability functionality, it is
+    critical that all nodes in the HA cluster agree on the data model
+    used. For this reason we can not do in-service upgrade on a ConfD
+    instance that is part of a HA cluster. A ConfD node in HA state SLAVE
+    or MASTER executing
+    <code class="function">maapi_init_upgrade()</code> will fail with
+    <code class="varname">confd_errno</code>
+    <code class="constant">CONFD_ERR_HA_WITH_UPGRADE</code>. Conversely, when an
+    in-service upgrade is in progress, calling
+    <code class="function">confd_ha_beslave()</code> will also result in this
+    error, and connections from slaves will be rejected.</p><p>Thus in-service upgrade is only possible while in HA-state
+    NONE.</p><p>To do the in-service upgrade on a HA cluster, we must thus use
+    "rolling upgrade":</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Disconnect one of the slaves from the cluster by calling
+        <code class="function">confd_ha_benone().</code></p></li><li class="listitem"><p>Upgrade the disconnected slave as described above.</p></li><li class="listitem"><p>Tell the upgraded slave to become master by calling
+        <code class="function">confd_ha_bemaster().</code></p></li><li class="listitem"><p>
+          Tell the old master to not be master by calling confd_ha_benone()
+        </p></li><li class="listitem"><p>Upgrade the remaining nodes in the cluster one by one,
+        telling each to connect as slave to the upgraded master by
+        calling <code class="function">confd_ha_beslave()</code> when the upgrade
+        is done.</p></li></ol></div><p>Alternatively, since the HA configuration should be able to
+    handle that a node is stopped and restarted without service
+    interruption, we may simply use the upgrade method described in the
+    CDB chapter for the "rolling upgrade".</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch12.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch14.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;12.&nbsp;Notifications&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;14.&nbsp;The AAA infrastructure</td></tr></table></div></body></html>

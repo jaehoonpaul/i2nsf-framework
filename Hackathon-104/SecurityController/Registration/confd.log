@@ -1,0 +1,31 @@
+<INFO> 23-Mar-2019::19:43:13.443 security-controller confd[32316]: - Writing daemon log to /home/ubuntu/Registration/confd.log
+<INFO> 23-Mar-2019::19:43:13.447 security-controller confd[32316]: - Writing NETCONF log to /home/ubuntu/Registration/netconf.log
+<INFO> 23-Mar-2019::19:43:13.448 security-controller confd[32316]: - Writing audit log to /home/ubuntu/Registration/audit.log
+<INFO> 23-Mar-2019::19:43:13.448 security-controller confd[32316]: - Writing developer log to /home/ubuntu/Registration/devel.log
+<INFO> 23-Mar-2019::19:43:13.448 security-controller confd[32316]: - Daemon logging started
+<DEBUG> 23-Mar-2019::19:43:13.467 security-controller confd[32316]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 23-Mar-2019::19:43:13.470 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2019::19:43:13.471 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 23-Mar-2019::19:43:13.472 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 23-Mar-2019::19:43:13.473 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 23-Mar-2019::19:43:13.474 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 23-Mar-2019::19:43:13.475 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 23-Mar-2019::19:43:13.476 security-controller confd[32316]: - Loading file ./ietf-i2nsf-reg-interface.fxs
+<DEBUG> 23-Mar-2019::19:43:13.477 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 23-Mar-2019::19:43:13.478 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2019::19:43:13.479 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 23-Mar-2019::19:43:13.483 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 23-Mar-2019::19:43:13.483 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 23-Mar-2019::19:43:13.485 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 23-Mar-2019::19:43:13.486 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 23-Mar-2019::19:43:13.487 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 23-Mar-2019::19:43:13.488 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 23-Mar-2019::19:43:13.506 security-controller confd[32316]: - Loading file ./commands-c.ccl
+<DEBUG> 23-Mar-2019::19:43:13.514 security-controller confd[32316]: - Loading file ./commands-j.ccl
+<DEBUG> 23-Mar-2019::19:43:13.514 security-controller confd[32316]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 23-Mar-2019::19:43:13.605 security-controller confd[32316]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2019::19:43:13.939 security-controller confd[32316]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 23-Mar-2019::19:43:14.144 security-controller confd[32316]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 23-Mar-2019::19:43:14.170 security-controller confd[32316]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 23-Mar-2019::19:43:14.213 security-controller confd[32316]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2019::19:43:14.316 security-controller confd[32316]: - ConfD started vsn: 6.6

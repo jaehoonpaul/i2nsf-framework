@@ -1,0 +1,16 @@
+Running application code inside ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The examples in this directory show how to use the Erlang ConfD API
+("econfd") to run Erlang application code internally in the ConfD
+daemon. This can be achieved by loading single Erlang modules into
+the virtual machine or by packaging the code into (embedded) applications.
+
+The examples below demonstrates the two styles:
+
+  embedded_applications - recommended for most purposes
+
+  single_modules - suffices for registration of user defined type handlers
+
+For more information about this, read the section "Running application
+code inside ConfD" in the "Advanced Topics" chapter of the User Guide.

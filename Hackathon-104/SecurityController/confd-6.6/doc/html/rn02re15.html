@@ -1,0 +1,1522 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd_types</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn02.html" title="ConfD man-pages, Volume 3"><link rel="prev" href="rn02re14.html" title="confd_lib_maapi"><link rel="next" href="rn03.html" title="ConfD man-pages, Volume 5"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">confd_types</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn02re14.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 3</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn03.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.3.confd_types"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.3.confd_types.name"></a><h2>Name</h2><p>confd_types &#8212; ConfD value representation in C</p></div><div class="refsynopsisdiv"><a name="man.3.confd_types.synopsis"></a><h2>Synopsis</h2><div class="funcsynopsis"><pre class="funcsynopsisinfo">#include &lt;confd_lib.h&gt;</pre></div></div><div class="refsect1"><a name="man.3.confd_types.description"></a><h2>DESCRIPTION</h2><p>The <code class="filename">libconfd</code> library manages data values
+    such as elements received over the NETCONF protocol. This man page
+    describes how these values as well as the XML paths
+    (<span class="type">confd_hkeypath_t</span>) identifying the values are
+    represented in the C language.</p></div><div class="refsect1"><a name="man.3.confd_types.typedefs"></a><h2>TYPEDEFS</h2><p>The following <code class="code">enum</code> defines the different
+    types. These are used to represent data model types from several
+    different sources - see the section <a class="link" href="rn02re15.html#man.3.confd_types.data_model" title="DATA MODEL TYPES">DATA MODEL TYPES</a>
+    at the end of this manual page for a full specification of how the
+    data model types map to these types.</p><div class="informalexample"><a name="enum.confd_vtype"></a><pre class="programlisting"><strong class="hl-keyword">enum</strong> confd_vtype {
+    C_NOEXISTS    = <span class="hl-number">1</span>,  <em class="hl-comment" style="color: silver">/* end marker                              */</em>
+    C_XMLTAG      = <span class="hl-number">2</span>,  <em class="hl-comment" style="color: silver">/* struct xml_tag                          */</em>
+    C_SYMBOL      = <span class="hl-number">3</span>,  <em class="hl-comment" style="color: silver">/* not yet used                            */</em>
+    C_STR         = <span class="hl-number">4</span>,  <em class="hl-comment" style="color: silver">/* NUL-terminated strings                  */</em>
+    C_BUF         = <span class="hl-number">5</span>,  <em class="hl-comment" style="color: silver">/* confd_buf_t (string ...)                */</em>
+    C_INT8        = <span class="hl-number">6</span>,  <em class="hl-comment" style="color: silver">/* int8_t    (int8)                        */</em>
+    C_INT16       = <span class="hl-number">7</span>,  <em class="hl-comment" style="color: silver">/* int16_t   (int16)                       */</em>
+    C_INT32       = <span class="hl-number">8</span>,  <em class="hl-comment" style="color: silver">/* int32_t   (int32)                       */</em>
+    C_INT64       = <span class="hl-number">9</span>,  <em class="hl-comment" style="color: silver">/* int64_t   (int64)                       */</em>
+    C_UINT8       = <span class="hl-number">10</span>, <em class="hl-comment" style="color: silver">/* u_int8_t  (uint8)                       */</em>
+    C_UINT16      = <span class="hl-number">11</span>, <em class="hl-comment" style="color: silver">/* u_int16_t (uint16)                      */</em>
+    C_UINT32      = <span class="hl-number">12</span>, <em class="hl-comment" style="color: silver">/* u_int32_t (uint32)                      */</em>
+    C_UINT64      = <span class="hl-number">13</span>, <em class="hl-comment" style="color: silver">/* u_int64_t (uint64)                      */</em>
+    C_DOUBLE      = <span class="hl-number">14</span>, <em class="hl-comment" style="color: silver">/* double (xs:float,xs:double)             */</em>
+    C_IPV4        = <span class="hl-number">15</span>, <em class="hl-comment" style="color: silver">/* struct in_addr in NBO                   */</em>
+                        <em class="hl-comment" style="color: silver">/*  (inet:ipv4-address)                    */</em>
+    C_IPV6        = <span class="hl-number">16</span>, <em class="hl-comment" style="color: silver">/* struct in6_addr in NBO                  */</em>
+                        <em class="hl-comment" style="color: silver">/*  (inet:ipv6-address)                    */</em>
+    C_BOOL        = <span class="hl-number">17</span>, <em class="hl-comment" style="color: silver">/* int       (boolean)                     */</em>
+    C_QNAME       = <span class="hl-number">18</span>, <em class="hl-comment" style="color: silver">/* struct confd_qname (xs:QName)           */</em>
+    C_DATETIME    = <span class="hl-number">19</span>, <em class="hl-comment" style="color: silver">/* struct confd_datetime                   */</em>
+                        <em class="hl-comment" style="color: silver">/*  (yang:date-and-time)                   */</em>
+    C_DATE        = <span class="hl-number">20</span>, <em class="hl-comment" style="color: silver">/* struct confd_date (xs:date)             */</em>
+    C_TIME        = <span class="hl-number">23</span>, <em class="hl-comment" style="color: silver">/* struct confd_time (xs:time)             */</em>
+    C_DURATION    = <span class="hl-number">27</span>, <em class="hl-comment" style="color: silver">/* struct confd_duration (xs:duration)     */</em>
+    C_ENUM_VALUE  = <span class="hl-number">28</span>, <em class="hl-comment" style="color: silver">/* int32_t (enumeration)                   */</em>
+    C_BIT32       = <span class="hl-number">29</span>, <em class="hl-comment" style="color: silver">/* u_int32_t (bits size 32)                */</em>
+    C_BIT64       = <span class="hl-number">30</span>, <em class="hl-comment" style="color: silver">/* u_int64_t (bits size 64)                */</em>
+    C_LIST        = <span class="hl-number">31</span>, <em class="hl-comment" style="color: silver">/* confd_list (leaf-list)                  */</em>
+    C_XMLBEGIN    = <span class="hl-number">32</span>, <em class="hl-comment" style="color: silver">/* struct xml_tag, start of container or   */</em>
+                        <em class="hl-comment" style="color: silver">/*  list entry                             */</em>
+    C_XMLEND      = <span class="hl-number">33</span>, <em class="hl-comment" style="color: silver">/* struct xml_tag, end of container or     */</em>
+                        <em class="hl-comment" style="color: silver">/*  list entry                             */</em>
+    C_OBJECTREF   = <span class="hl-number">34</span>, <em class="hl-comment" style="color: silver">/* struct confd_hkeypath*                  */</em>
+                        <em class="hl-comment" style="color: silver">/*  (instance-identifier)                  */</em>
+    C_UNION       = <span class="hl-number">35</span>, <em class="hl-comment" style="color: silver">/* (union) - not used in API functions     */</em>
+    C_PTR         = <span class="hl-number">36</span>, <em class="hl-comment" style="color: silver">/* see cdb_get_values in confd_lib_cdb(3)  */</em>
+    C_CDBBEGIN    = <span class="hl-number">37</span>, <em class="hl-comment" style="color: silver">/* as C_XMLBEGIN, with CDB instance index  */</em>
+    C_OID         = <span class="hl-number">38</span>, <em class="hl-comment" style="color: silver">/* struct confd_snmp_oid*                  */</em>
+                        <em class="hl-comment" style="color: silver">/*  (yang:object-identifier)               */</em>
+    C_BINARY      = <span class="hl-number">39</span>, <em class="hl-comment" style="color: silver">/* confd_buf_t (binary ...)                */</em>
+    C_IPV4PREFIX  = <span class="hl-number">40</span>, <em class="hl-comment" style="color: silver">/* struct confd_ipv4_prefix                */</em>
+                        <em class="hl-comment" style="color: silver">/*  (inet:ipv4-prefix)                     */</em>
+    C_IPV6PREFIX  = <span class="hl-number">41</span>, <em class="hl-comment" style="color: silver">/* struct confd_ipv6_prefix                */</em>
+                        <em class="hl-comment" style="color: silver">/*  (inet:ipv6-prefix)                     */</em>
+    C_DEFAULT     = <span class="hl-number">42</span>, <em class="hl-comment" style="color: silver">/* default value indicator                 */</em>
+    C_DECIMAL64   = <span class="hl-number">43</span>, <em class="hl-comment" style="color: silver">/* struct confd_decimal64 (decimal64)      */</em>
+    C_IDENTITYREF = <span class="hl-number">44</span>, <em class="hl-comment" style="color: silver">/* struct confd_identityref (identityref)  */</em>
+    C_XMLBEGINDEL = <span class="hl-number">45</span>, <em class="hl-comment" style="color: silver">/* as C_XMLBEGIN, but for a deleted list   */</em>
+                        <em class="hl-comment" style="color: silver">/*  entry                                  */</em>
+    C_DQUAD       = <span class="hl-number">46</span>, <em class="hl-comment" style="color: silver">/* struct confd_dotted_quad                */</em>
+                        <em class="hl-comment" style="color: silver">/*  (yang:dotted-quad)                     */</em>
+    C_HEXSTR      = <span class="hl-number">47</span>, <em class="hl-comment" style="color: silver">/* confd_buf_t (yang:hex-string)           */</em>
+    C_IPV4_AND_PLEN = <span class="hl-number">48</span>, <em class="hl-comment" style="color: silver">/* struct confd_ipv4_prefix              */</em>
+                        <em class="hl-comment" style="color: silver">/*  (tailf:ipv4-address-and-prefix-length) */</em>
+    C_IPV6_AND_PLEN = <span class="hl-number">49</span>, <em class="hl-comment" style="color: silver">/* struct confd_ipv6_prefix              */</em>
+                        <em class="hl-comment" style="color: silver">/*  (tailf:ipv6-address-and-prefix-length) */</em>
+    C_BITBIG      = <span class="hl-number">50</span>, <em class="hl-comment" style="color: silver">/* confd_buf_t (bits size &gt; 64)            */</em>
+    C_MAXTYPE           <em class="hl-comment" style="color: silver">/* maximum marker; add new values above    */</em>
+};</pre></div><p>A concrete value is represented as a
+    <span class="type">confd_value_t</span> C struct:</p><div class="informalexample"><a name="struct.confd_value"></a><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_value {
+    <strong class="hl-keyword">enum</strong> confd_vtype type;  <em class="hl-comment" style="color: silver">/* as defined above */</em>
+    <strong class="hl-keyword">union</strong> {
+        <strong class="hl-keyword">struct</strong> xml_tag xmltag;
+        u_int32_t symbol;
+        confd_buf_t buf;
+        confd_buf_const_t c_buf;
+        <strong class="hl-keyword">char</strong> *s;
+        <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *c_s;
+        int8_t i8;
+        int16_t i16;
+        int32_t i32;
+        int64_t i64;
+        u_int8_t u8;
+        u_int16_t u16;
+        u_int32_t u32;
+        u_int64_t u64;
+        <strong class="hl-keyword">double</strong> d;
+        <strong class="hl-keyword">struct</strong> in_addr ip;
+        <strong class="hl-keyword">struct</strong> in6_addr ip6;
+        <strong class="hl-keyword">int</strong> boolean;
+        <strong class="hl-keyword">struct</strong> confd_qname qname;
+        <strong class="hl-keyword">struct</strong> confd_datetime datetime;
+        <strong class="hl-keyword">struct</strong> confd_date date;
+        <strong class="hl-keyword">struct</strong> confd_time time;
+        <strong class="hl-keyword">struct</strong> confd_duration duration;
+        int32_t enumvalue;
+        u_int32_t b32;
+        u_int64_t b64;
+        <strong class="hl-keyword">struct</strong> confd_list list;
+        <strong class="hl-keyword">struct</strong> confd_hkeypath *hkp;
+        <strong class="hl-keyword">struct</strong> confd_vptr ptr;
+        <strong class="hl-keyword">struct</strong> confd_snmp_oid *oidp;
+        <strong class="hl-keyword">struct</strong> confd_ipv4_prefix ipv4prefix;
+        <strong class="hl-keyword">struct</strong> confd_ipv6_prefix ipv6prefix;
+        <strong class="hl-keyword">struct</strong> confd_decimal64 d64;
+        <strong class="hl-keyword">struct</strong> confd_identityref idref;
+        <strong class="hl-keyword">struct</strong> confd_dotted_quad dquad;
+        u_int32_t enumhash;     <em class="hl-comment" style="color: silver">/* backwards compat */</em>
+    } val;
+} confd_value_t;</pre></div><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">C_NOEXISTS</code></span></dt><dd><p>This is used internally by ConfD, as an end marker in
+          <span class="type">confd_hkeypath_t</span> arrays, and as a "value does
+          not exist" indicator in arrays of values.</p></dd><dt><span class="term"><code class="constant">C_DEFAULT</code></span></dt><dd><p>This is used to indicate that an element with a
+          default value defined in the data model does not have a value
+          set.  When reading data from ConfD, we will only get this
+          indication if we specifically request it, otherwise the
+          default value is returned.</p></dd><dt><span class="term"><code class="constant">C_XMLTAG</code></span></dt><dd><p>An C_XMLTAG value is represented as a struct:</p><div class="informalexample"><a name="struct.xml_tag"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> xml_tag {
+    u_int32_t tag;
+    u_int32_t ns;
+};</pre></div><p>When a YANG module is compiled by the <a class="link" href="rn01re06.html" title="confdc">confdc(1)</a> compiler, the
+          <code class="option">--emit-h</code> flag is used to generate a .h file
+          containing definitions for all the nodes in the module.
+          For example if we compile the following YANG module:</p><div class="informalexample"><pre class="screen"># cat blaster.yang
+module blaster {
+  namespace "http://tail-f.com/ns/blaster";
+  prefix blaster;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef Fruit {
+    type enumeration {
+      enum apple;
+      enum orange;
+      enum pear;
+    }
+  }
+  container tiny {
+    tailf:callpoint xcp;
+    leaf foo {
+      type int8;
+    }
+    leaf bad {
+      type int16;
+    }
+  }
+}
+
+# confdc -c blaster.yang
+# confdc --emit-h blaster.h blaster.fxs</pre></div><p>We get the following contents in blaster.h</p><div class="informalexample"><pre class="screen"># cat blaster.h
+/*
+ * BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE
+ * This file has been auto-generated by the confdc compiler.
+ * Source: blaster.fxs
+ * BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE
+ */
+
+#ifndef _BLASTER_H_
+#define _BLASTER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#ifndef blaster__ns
+#define blaster__ns 670579579
+#define blaster__ns_id "http://tail-f.com/ns/blaster"
+#define blaster__ns_uri "http://tail-f.com/ns/blaster"
+#endif
+
+#define blaster_orange 1
+#define blaster_apple 0
+#define blaster_pear 2
+#define blaster_foo 161968632
+#define blaster_tiny 1046642021
+#define blaster_bad 1265139696
+#define blaster__callpointid_xcp "xcp"
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif</pre></div><p>The integers in the .h file are used in the
+          <span class="type">struct xml_tag</span>, thus the container node
+          <code class="sgmltag-element">tiny</code> is
+          represented as a <span class="type">xml_tag</span> C struct
+          <code class="code">{tag=1046642021, ns=670579579}</code> or, using the
+          #defines <code class="code">{tag=blaster_tiny, ns=blaster__ns}</code>.</p><p>Each callpoint, actionpoint, and validate statement also
+          yields a preprocessor symbol. If the symbol is used rather
+          than the literal string in calls to ConfD, the C compiler
+          will catch the potential problem when the id in the data model
+          has changed but the C code hasn't been updated.</p><p>Sometimes we wish to retrieve a string representation of
+          defined hash values. This can be done with the function
+          <code class="function">confd_hash2str()</code>, see the <a class="link" href="rn02re15.html#man.3.confd_types.using_schema_information" title="USING SCHEMA INFORMATION">USING
+          SCHEMA INFORMATION</a> section below.</p></dd><dt><span class="term"><code class="constant">C_BUF</code></span></dt><dd><p>This type is used to represent the
+          YANG built-in type <span class="type">string</span> and the
+          <span class="type">xs:token</span> type. The struct which is used
+          is:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_buf {
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> size;
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">char</strong> *ptr;
+} confd_buf_t;</pre></div><p>Strings passed to the application from ConfD are
+          always NUL-terminated.  When values of this type are
+          received by the callback functions in <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>, the
+          <span class="type">ptr</span> field is a pointer to libconfd private
+          memory, and the data will not survive unless copied by the
+          application.</p><p>To create and extract values of  type C_BUF we do:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+char *x; int len;
+
+CONFD_SET_BUF(&amp;myval, "foo", 3)
+x = CONFD_GET_BUFPTR(&amp;myval);
+len = CONFD_GET_BUFSIZE(&amp;myval);
+
+</pre></div><p>It is important to realize that C_BUF data received by
+          the application through either
+          <code class="function">maapi_get_elem()</code> or
+          <code class="function">cdb_get()</code> which are of type C_BUF must
+          be freed by the application.</p></dd><dt><span class="term"><code class="constant">C_STR</code></span></dt><dd><p>This tag is never received by the application. Values
+          and keys received in the various data callbacks (See
+          <code class="function">confd_register_data_cb()</code> in <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a> never have
+          this type. It is only used when the application replies with
+          values to ConfD. (See
+          <code class="function">confd_data_reply_value()</code> in <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>).</p><p>It is used to represent regular NUL-terminated char*
+          values. Example:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+myval.type = C_STR;
+myval.val.s = "Zaphod";
+/* or alternatively and recommended */
+CONFD_SET_STR(&amp;myval, "Beeblebrox");</pre></div></dd><dt><span class="term"><code class="constant">C_INT8</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">int8</span>,
+          which is a signed 8 bit integer. The corresponding C type is
+          <span class="type">int8_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">int8_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT8(&amp;myval, -32);
+ival = CONFD_GET_INT8(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_INT16</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">int16</span>, which is a signed 16 bit integer. The
+          corresponding C type is
+          <span class="type">int16_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">int16_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT16(&amp;myval, -3277);
+ival = CONFD_GET_INT16(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_INT32</code></span></dt><dd><p>Used to represent the YANG built-in type <span class="type">int32</span>,
+          which is a signed 32 bit integer. The corresponding C type
+          is <span class="type">int32_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">int32_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT32(&amp;myval, -77732);
+ival = CONFD_GET_INT32(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_INT64</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">int64</span>, which is a signed 64 bit integer.
+          The corresponding C type is
+          <span class="type">int64_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">int64_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT64(&amp;myval, -32);
+ival = CONFD_GET_INT64(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_UINT8</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">uint8</span>, which is an unsigned 8 bit
+          integer. The corresponding C type is
+          <span class="type">u_int8_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">u_int8_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT8(&amp;myval, 32);
+ival = CONFD_GET_UINT8(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_UINT16</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">uint16</span>, which is an unsigned 16 bit
+          integer. The corresponding C type is
+          <span class="type">u_int16_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">u_int16_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT16(&amp;myval, 3277);
+ival = CONFD_GET_UINT16(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_UINT32</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">uint32</span>, which is an unsigned 32 bit
+          integer. The corresponding C type is
+          <span class="type">u_int32_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">u_int32_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT32(&amp;myval, 77732);
+ival = CONFD_GET_UINT32(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_UINT64</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">uint64</span>, which is an unsigned 64 bit integer.
+          The corresponding C type is
+          <span class="type">u_int64_t</span>. Example:</p><div class="informalexample"><pre class="programlisting">u_int64_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT64(&amp;myval, 32);
+ival = CONFD_GET_UINT64(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DOUBLE</code></span></dt><dd><p>Used to represent the  XML schema types <span class="type">xs:decimal</span>,
+          <span class="type">xs:float</span> and <span class="type">xs:double</span>. They are
+          all coerced into the C type
+          <span class="type">double</span>. Example:</p><div class="informalexample"><pre class="programlisting">double d;
+confd_value_t myval;
+
+CONFD_SET_DOUBLE(&amp;myval, 3.14);
+d = CONFD_GET_DOUBLE(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_BOOL</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">boolean</span>. The C representation is an integer
+          with <code class="literal">0</code> representing false and non-zero
+          representing true. Example:</p><div class="informalexample"><pre class="programlisting">int bool
+confd_value_t myval;
+
+CONFD_SET_BOOL(&amp;myval, 1);
+b = CONFD_GET_BOOL(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_QNAME</code></span></dt><dd><p>Used to represent XML Schema type
+          <span class="type">xs:QName</span> which consists of a pair of strings,
+          <span class="type">prefix</span> and a <span class="type">name</span>. Data is
+          allocated by the library as for C_BUF. Example:</p><div class="informalexample"><pre class="programlisting">unsigned char* prefix, *name;
+int prefix_len, name_len;
+confd_value_t myval;
+
+CONFD_SET_QNAME(&amp;myval, "myprefix", 8, "myname", 6);
+prefix = CONFD_GET_QNAME_PREFIX_PTR(&amp;myval);
+prefix_len = CONFD_GET_QNAME_PREFIX_SIZE(&amp;myval);
+name = CONFD_GET_QNAME_NAME_PTR(&amp;myval);
+name_len = CONFD_GET_QNAME_NAME_SIZE(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DATETIME</code></span></dt><dd><p>Used to represent the YANG type
+          <span class="type">yang:date-and-time</span>. The C representation is a
+          struct:</p><div class="informalexample"><a name="struct.confd_datetime"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_datetime {
+    int16_t year;
+    u_int8_t month;
+    u_int8_t day;
+    u_int8_t hour;
+    u_int8_t min;
+    u_int8_t sec;
+    u_int32_t micro;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};</pre></div><p>ConfD does not try to convert the data values into
+          timezone independent C structs. The timezone and
+          timezone_minutes fields are integers where:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+                <code class="code">timezone == 0 &amp;&amp; timezone_minutes == 0</code>
+              </span></dt><dd><p> represents UTC.  This corresponds to a timezone
+                specification in the string form of "Z" or
+                "+00:00".</p></dd><dt><span class="term">
+                <code class="code">-14 &lt;= timezone &amp;&amp; timezone &lt;= 14</code>
+              </span></dt><dd><p> represents an offset in hours from UTC. In this
+                case <code class="varname">timezone_minutes</code> represents
+                a fraction of an hour in minutes if the offset from
+                UTC isn't an integral number of hours, otherwise it is
+                0.  If <code class="code">timezone != 0</code>, its sign
+                gives the direction of the offset, and
+                <code class="varname">timezone_minutes</code> is always
+                <code class="code">&gt;= 0</code> - otherwise the sign of
+                <code class="varname">timezone_minutes</code> gives the
+                direction of the offset. E.g. <code class="code">timezone == 5
+                &amp;&amp; timezone_minutes == 30</code>
+                corresponds to a timezone specification in the
+                string form of "+05:30".</p></dd><dt><span class="term"><code class="code">timezone == CONFD_TIMEZONE_UNDEF</code></span></dt><dd><p> means that the string form indicates lack of
+                timezone information with "-00:00".</p></dd></dl></div><p>It is up to the application to transform these structs
+          into more UNIX friendly structs such as <span class="type">struct
+          tm</span> from
+          <code class="filename">&lt;time.h&gt;</code>. Example:</p><div class="informalexample"><pre class="programlisting">#include &lt;time.h&gt;
+confd_value_t myval;
+struct confd_datetime dt;
+struct tm *tm = localtime(time(NULL));
+
+dt.year = tm-&gt;tm_year + 1900; dt.month = tm-&gt;tm_mon + 1;
+dt.day = tm-&gt;tm_mday; dt-&gt;hour = tm-&gt;tm_hour;
+dt.min = tm-&gt;tm_min; dt-&gt;sec = tm-&gt;tm_sec;
+dt.micro = 0; dt.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_DATETIME(&amp;myval, dt);
+dt = CONFD_GET_DATETIME(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DATE</code></span></dt><dd><p>Used to represent the XML Schema type
+          <span class="type">xs:date</span>. The C representation is a
+          struct:</p><div class="informalexample"><a name="struct.confd_date"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_date {
+    int16_t year;
+    u_int8_t month;
+    u_int8_t day;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+struct confd_date dt;
+
+dt.year = 1960, dt.month = 3,
+dt.day = 31; dt.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_DATE(&amp;myval, dt);
+dt = CONFD_GET_DATE(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_TIME</code></span></dt><dd><p>Used to represent the XML Schema type
+          <span class="type">xs:time</span>. The C representation is a
+          struct:</p><div class="informalexample"><a name="struct.confd_time"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_time {
+    u_int8_t hour;
+    u_int8_t min;
+    u_int8_t sec;
+    u_int32_t micro;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+struct confd_time dt;
+
+dt.hour = 19, dt.min = 3,
+dt.sec = 31; dt.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_TIME(&amp;myval, dt);
+dt = CONFD_GET_TIME(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DURATION</code></span></dt><dd><p>Used to represent the XML Schema type
+          <span class="type">xs:duration</span>. The C representation is a
+          struct:</p><div class="informalexample"><a name="struct.confd_duration"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_duration {
+    u_int32_t years;
+    u_int32_t months;
+    u_int32_t days;
+    u_int32_t hours;
+    u_int32_t mins;
+    u_int32_t secs;
+    u_int32_t micros;
+};</pre></div><p>Example of something that is supposed to last 3
+          seconds:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+struct confd_duration dt;
+
+memset(&amp;dt, 0, sizeof(struct confd_duration));
+dt.secs = 3;
+CONFD_SET_DURATION(&amp;myval, dt);
+dt = CONFD_GET_DURATION(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV4</code></span></dt><dd><p>Used to represent the YANG type
+          <span class="type">inet:ipv4-address</span>.
+          The C representation is a <span class="type">struct
+          in_addr</span> Example:</p><div class="informalexample"><pre class="programlisting">struct in_addr ip;
+confd_value_t myval;
+
+ip.s_addr = inet_addr("192.168.1.2");
+CONFD_SET_IPV4(&amp;myval, ip);
+ip = CONFD_GET_IPV4(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV6</code></span></dt><dd><p>Used to represent the YANG type
+          <span class="type">inet:ipv6-address</span>.
+          The C representation is as <span class="type">struct
+          in6_addr</span> Example:</p><div class="informalexample"><pre class="programlisting">struct in6_addr ip6;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "FFFF::192.168.42.2", &amp;ip6);
+CONFD_SET_IPV6(&amp;myval, ip6);
+ip6 = CONFD_GET_IPV6(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_ENUM_VALUE</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">enumeration</span> - like the Fruit
+          enumeration from the beginning of this man page.</p><div class="informalexample"><pre class="programlisting">enum fruit {
+   ORANGE = blaster_orange,
+   APPLE = blaster_apple,
+   PEAR = blaster_pear
+};
+
+enum fruit f;
+confd_value_t myval;
+CONFD_SET_ENUM_VALUE(&amp;myval, APPLE);
+f = CONFD_GET_ENUM_VALUE(&amp;myval);</pre></div><p>Thus leafs that have type <span class="type">enumeration</span> in
+          the YANG module do not have values that are strings in the C
+          code, but integer values according to the YANG standard.
+          The file generated by <span class="command"><strong>confdc --emit-h</strong></span>
+          includes <code class="code">#define</code> symbols for these integer values.</p></dd><dt><span class="term"><code class="constant">C_BIT32</code>, </span><span class="term"><code class="constant">C_BIT64</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">bits</span> when the highest bit position assigned is
+          below 64. In C the value representation for a bitmask is
+          either a 32 bit or a 64 bit unsigned integer, depending on the
+          highest bit position assigned. The file generated by
+          <span class="command"><strong>confdc --emit-h</strong></span> includes
+          <code class="code">#define</code> symbols giving bitmask values for the
+          defined bit names.</p><div class="informalexample"><pre class="programlisting">u_int32_t mask = 77;
+confd_value_t myval;
+CONFD_SET_BIT32(&amp;myval, mask);
+mask = CONFD_GET_BIT32(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_BITBIG</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">bits</span> when the highest bit position assigned is
+          above 63. In C the value representation for a bitmask in this
+          case is a "little-endian" byte array (confd_buf_t), i.e. byte
+          0 holds bits 0-7, byte 1 holds bit 8-15, and so on. The file
+          generated by <span class="command"><strong>confdc --emit-h</strong></span> includes
+          <code class="code">#define</code> symbols giving position values for the
+          defined bit names, as well as the size needed for a byte array
+          that can hold the values for all the defined bits.</p><div class="informalexample"><pre class="programlisting">unsigned char mask[myns__size_mytype];
+unsigned char *mask2;
+confd_value_t myval;
+memset(mask, 0, sizeof(mask));
+CONFD_BITBIG_SET_BIT(mask, myns__pos_mytype_somebit);
+CONFD_SET_BITBIG(&amp;myval, mask, sizeof(mask));
+mask2 = CONFD_GET_BITBIG_PTR(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_LIST</code></span></dt><dd><p>Used to represent a YANG <code class="code">leaf-list</code>. In C the
+          value representation for is:</p><div class="informalexample"><a name="struct.confd_list"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_list {
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> size;
+    <strong class="hl-keyword">struct</strong> confd_value *ptr;
+};</pre></div><p>Similar to the C_BUF type, the confd library will
+          allocate data when an element of type <span class="type">C_LIST</span>
+          is retrieved via <code class="function">maapi_get_elem()</code> or
+          <code class="function">cdb_get()</code>.  Using
+          <code class="function">confd_free_value()</code> (see <a class="link" href="rn02re13.html" title="confd_lib_lib">confd_lib_lib(3)</a>)
+          to free
+          allocated data is especially convenient for C_LIST, as the
+          individual list elements may also have allocated data (e.g.
+          a YANG <code class="code">leaf-list</code> of type <span class="type">string</span>).</p><p>To set a value of type C_LIST we have to populate the
+          list array separately, for example:</p><div class="informalexample"><pre class="programlisting">confd_value_t arr[5];
+confd_value_t v;
+confd_value_t *vp;
+int i, size;
+
+for (i=0; i&lt;5; i++)
+     CONFD_SET_INT32(&amp;arr[i], i);
+CONFD_SET_LIST(&amp;v, &amp;arr[0], 5);
+
+vp = CONFD_GET_LIST(&amp;v);
+size = CONFD_GET_LISTSIZE(&amp;v);</pre></div></dd><dt><span class="term"><code class="constant">C_XMLBEGIN</code>, </span><span class="term"><code class="constant">C_XMLEND</code></span></dt><dd><p>These are only used in the "Tagged Value Array" format
+          for representing XML structures, see below. The
+          representation is the same as for C_XMLTAG.</p></dd><dt><span class="term"><code class="constant">C_OBJECTREF</code></span></dt><dd><p>This is used to represent the YANG built-in type
+          <span class="type">instance-identifier</span>.
+          Values are represented as
+          <span class="type">confd_hkeypath_t</span> pointers.  Data is allocated
+          by the library as for C_BUF.  When we read an
+          <span class="type">instance-identifier</span> via
+          e.g. <code class="function">cdb_get()</code> we can retrieve the
+          pointer to the keypath as:</p><div class="informalexample"><pre class="programlisting">confd_value_t v;
+confd_hkeypath_t *hkp;
+
+cdb_get(sock, &amp;v, mypath);
+hkp = CONFD_GET_OBJECTREF(&amp;v);
+
+</pre></div><p>To retrieve the value which is identified by the
+          <span class="type">instance-identifier</span>
+          we can e.g. use the "%h" modifier in the format string used
+          with the CDB and MAAPI API functions.</p></dd><dt><span class="term"><code class="constant">C_OID</code></span></dt><dd><p>This is used to represent the YANG
+          <span class="type">yang:object-identifier</span> and
+          <span class="type">yang:object-identifier-128</span> types,
+          i.e. SNMP Object Identifiers.  The value is a pointer to a
+          struct:</p><div class="informalexample"><a name="struct.confd_snmp_oid"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_snmp_oid {
+    u_int32_t oid[<span class="hl-number">128</span>];
+    <strong class="hl-keyword">int</strong> len;
+};</pre></div><p>Data is allocated by the library as for C_BUF.  When
+          using values of this type, we set or get the
+          <code class="varname">len</code> element, and the individual OID
+          elements in the <code class="varname">oid</code> array.  This
+          example will store the string "0.1.2" in
+          <code class="varname">buf</code>:</p><div class="informalexample"><pre class="programlisting">struct confd_snmp_oid myoid;
+confd_value_t myval;
+char buf[BUFSIZ];
+int i;
+
+for (i = 0; i &lt; 3; i++)
+    myoid.oid[i] = i;
+myoid.len = 3;
+CONFD_SET_OID(&amp;myval, &amp;myoid);
+
+confd_pp_value(buf, sizeof(buf), &amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_BINARY</code></span></dt><dd><p>This type is used to represent arbitrary binary data.
+          The YANG built-in type <span class="type">binary</span>, the ConfD built-in
+          types <span class="type">tailf:hex-list</span> and
+          <span class="type">tailf:octet-list</span>, and the XML Schema
+          primitive type <span class="type">xs:hexBinary</span>
+          all use this type.  The value representation is the same as
+          for C_BUF. Binary (C_BINARY) data received by the
+          application from ConfD is always NUL terminated, but since the
+          data may also contain NUL bytes, it is generally necessary to
+          use the size given by the representation.</p><div class="informalexample"><a name="struct.confd_buf"></a><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_buf {
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> size;
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">char</strong> *ptr;
+} confd_buf_t;</pre></div><p>Data is also allocated by the library as for C_BUF.
+          Example:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval, myval2;
+unsigned char *bin;
+int len;
+
+bin = CONFD_GET_BINARY_PTR(&amp;myval);
+len = CONFD_GET_BINARY_SIZE(&amp;myval);
+CONFD_SET_BINARY(&amp;myval2, bin, len);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV4PREFIX</code></span></dt><dd><p>Used to represent the YANG data
+          type <span class="type">inet:ipv4-prefix</span>.
+          The C representation is a struct as
+          follows:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ipv4_prefix {
+    <strong class="hl-keyword">struct</strong> in_addr ip;
+    u_int8_t len;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_ipv4_prefix prefix;
+confd_value_t myval;
+
+prefix.ip.s_addr = inet_addr("10.0.0.0");
+prefix.len = 8;
+CONFD_SET_IPV4PREFIX(&amp;myval, prefix);
+prefix = CONFD_GET_IPV4PREFIX(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV6PREFIX</code></span></dt><dd><p>Used to represent the YANG data
+          type <span class="type">inet:ipv6-prefix</span>.
+          The C representation is a struct as
+          follows:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ipv6_prefix {
+    <strong class="hl-keyword">struct</strong> in6_addr ip6;
+    u_int8_t len;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_ipv6_prefix prefix;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "2001:DB8::1428:57A8", &amp;prefix.ip6);
+prefix.len = 125;
+CONFD_SET_IPV6PREFIX(&amp;myval, prefix);
+prefix = CONFD_GET_IPV6PREFIX(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DECIMAL64</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">decimal64</span>, which is a decimal number with 64 bits of
+          precision. The C representation is a struct as follows:</p><div class="informalexample"><a name="struct.confd_decimal64"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_decimal64 {
+    int64_t value;
+    u_int8_t fraction_digits;
+};</pre></div><p>The <code class="varname">value</code> element is scaled with the
+          value of the <code class="varname">fraction_digits</code> element, to be
+          able to represent it as a 64-bit integer. Note that
+          <code class="varname">fraction_digits</code> is a constant for any given
+          instance of a
+          decimal64 type. It is provided whenever we receive a
+          C_DECIMAL64 from ConfD. When we provide a C_DECIMAL64 to
+          ConfD, we can set <code class="varname">fraction_digits</code> either to
+          the correct value or to 0 - however the
+          <code class="varname">value</code> element must always be correctly
+          scaled. See also
+          <code class="function">confd_get_decimal64_fraction_digits()</code> in
+          the <a class="link" href="rn02re13.html" title="confd_lib_lib">confd_lib_lib(3)</a>
+          man page.</p><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_decimal64 d64;
+confd_value_t myval;
+
+d64.value = 314159;
+d64.fraction_digits = 5;
+CONFD_SET_DECIMAL64(&amp;myval, d64);
+d64 = CONFD_GET_DECIMAL64(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_IDENTITYREF</code></span></dt><dd><p>Used to represent the YANG built-in type
+          <span class="type">identityref</span>, which references an existing
+          <code class="code">identity</code>.
+          The C representation is a struct as follows:</p><div class="informalexample"><a name="struct.confd_identityref"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_identityref {
+    u_int32_t ns;
+    u_int32_t id;
+};</pre></div><p>The <code class="varname">ns</code> and <code class="varname">id</code>
+          elements are hash values that represent the namespace of the
+          module that defines the identity, and the identity within that
+          module.</p><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_identityref idref;
+confd_value_t myval;
+
+idref.ns = des__ns;
+idref.id = des_des3
+CONFD_SET_IDENTITYREF(&amp;myval, idref);
+idref = CONFD_GET_IDENTITYREF(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_DQUAD</code></span></dt><dd><p>Used to represent the YANG data
+          type <span class="type">yang:dotted-quad</span>.
+          The C representation is a struct as
+          follows:</p><div class="informalexample"><a name="struct.confd_dotted_quad"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_dotted_quad {
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">char</strong> quad[<span class="hl-number">4</span>];
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_dotted_quad dquad;
+confd_value_t myval;
+
+dquad.quad[0] = 1;
+dquad.quad[1] = 2;
+dquad.quad[2] = 3;
+dquad.quad[3] = 4;
+CONFD_SET_DQUAD(&amp;myval, dquad);
+dquad = CONFD_GET_DQUAD(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_HEXSTR</code></span></dt><dd><p>Used to represent the YANG data
+          type <span class="type">yang:hex-string</span>.
+          The value representation is the same as
+          for C_BUF and C_BINARY. C_HEXSTR data received by the
+          application from ConfD is always NUL terminated, but since the
+          data may also contain NUL bytes, it is generally necessary to
+          use the size given by the representation.</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_buf {
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> size;
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">char</strong> *ptr;
+} confd_buf_t;</pre></div><p>Data is also allocated by the library as for C_BUF/C_BINARY.
+          Example:</p><div class="informalexample"><pre class="programlisting">confd_value_t myval, myval2;
+unsigned char *hex;
+int len;
+
+hex = CONFD_GET_HEXSTR_PTR(&amp;myval);
+len = CONFD_GET_HEXSTR_SIZE(&amp;myval);
+CONFD_SET_HEXSTR(&amp;myval2, bin, len);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV4_AND_PLEN</code></span></dt><dd><p>Used to represent the ConfD built-in data
+          type <span class="type">tailf:ipv4-address-and-prefix-length</span>.
+          The C representation is the same struct that is used for
+          C_IPV4PREFIX, as follows:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ipv4_prefix {
+    <strong class="hl-keyword">struct</strong> in_addr ip;
+    u_int8_t len;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_ipv4_prefix ip_and_len;
+confd_value_t myval;
+
+ip_and_len.ip.s_addr = inet_addr("172.16.1.2");
+ip_and_len.len = 16;
+CONFD_SET_IPV4_AND_PLEN(&amp;myval, ip_and_len);
+ip_and_len = CONFD_GET_IPV4_AND_PLEN(&amp;myval);</pre></div></dd><dt><span class="term"><code class="constant">C_IPV6_AND_PLEN</code></span></dt><dd><p>Used to represent the ConfD built-in data
+          type <span class="type">tailf:ipv6-address-and-prefix-length</span>.
+          The C representation is the same struct that is used for
+          C_IPV6PREFIX, as follows:</p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ipv6_prefix {
+    <strong class="hl-keyword">struct</strong> in6_addr ip6;
+    u_int8_t len;
+};</pre></div><p>Example:</p><div class="informalexample"><pre class="programlisting">struct confd_ipv6_prefix ip_and_len;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "2001:DB8::1428:57A8", &amp;ip_and_len.ip6);
+ip_and_len.len = 64;
+CONFD_SET_IPV6_AND_PLEN(&amp;myval, ip_and_len);
+ip_and_len = CONFD_GET_IPV6_AND_PLEN(&amp;myval);</pre></div></dd></dl></div></div><div class="refsect1"><a name="man.3.confd_types.xml_paths"></a><h2>XML PATHS</h2><p>Almost all of the callback functions the user is supposed
+    write for the <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a> library takes a
+    parameter of type <span class="type">confd_hkeypath_t</span>. This type includes
+    an array of the type <span class="type">confd_value_t</span> described above. The
+    <span class="type">confd_hkeypath_t</span> is defined as a C struct:</p><div class="informalexample"><a name="struct.confd_hkeypath"></a><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_hkeypath {
+    <strong class="hl-keyword">int</strong> len;
+    confd_value_t v[MAXDEPTH][MAXKEYLEN];
+} confd_hkeypath_t;</pre></div><p>Where:</p><div class="informalexample"><pre class="programlisting">#define MAXDEPTH 20   /* max depth of data model tree
+                         (max KP length + 1) */
+#define MAXKEYLEN 9   /* max number of key elems
+                         (max keys + 1) */</pre></div><p>For example, assume we have a YANG module with:</p><div class="informalexample"><pre class="programlisting">container servers {
+  tailf:callpoint mycp;
+  list server {
+    key name;
+    max-elements 64;
+    leaf name {
+      type string;
+    }
+    leaf ip {
+      type inet:ip-address;
+    }
+    leaf port {
+      type inet:port-number;
+    }
+  }
+}
+</pre></div><p>Assuming a <code class="sgmltag-element">server</code> entry with the name
+    "www" exists, then the path
+    <code class="sgmltag-element">/servers/server{www}/ip</code> is valid and
+    identifies the <code class="sgmltag-element">ip</code> leaf in the server entry whose
+    key is "www".</p><p>The <span class="type">confd_hkeypath_t</span> which corresponds to
+    <code class="sgmltag-element">/servers/server{www}/ip</code> is received in
+    reverse order so the following holds assuming the variable holding
+    a pointer to the keypath is called <span class="type">hkp</span>.</p><p><code class="code">hkp-&gt;v[0][0]</code> is the last element,
+    the "ip" element. It is a data model node, and
+    <code class="code">CONFD_GET_XMLTAG(&amp;hkp-&gt;v[0][0])</code> will
+    evaluate to a hashed integer (which can be found in the confdc
+    generated .h file as a #define)</p><p><code class="code">hkp-&gt;v[1][0]</code> is the next element in
+    the path. The key element is called "name". This is a
+    <span class="type">string</span> value - thus <code class="code">strcmp("www",
+    CONFD_GET_BUFPTR(&amp;hkp-&gt;v[1][0])) == 0</code>
+    holds.</p><p>If we had chosen to use multiple keys in our data model - for
+    example if we had chosen to use both the "name" and the "ip"
+    leafs as keys:</p><div class="informalexample"><pre class="programlisting">key "name ip";</pre></div><p>The hkeypaths would be different since two keys are
+    required.  A valid path identifying a <code class="sgmltag-element">port</code> leaf would be
+    <code class="sgmltag-element">/servers/server{www 10.2.3.4}/port</code>. In this case we can
+    get to the <code class="sgmltag-element">ip</code> part of the key with:</p><div class="informalexample"><pre class="programlisting">struct in_addr ip;
+ip = CONFD_GET_IPV4(&amp;hkp-&gt;v[1][1])</pre></div></div><div class="refsect1"><a name="man.3.confd_types.userdefined_types"></a><h2>USER-DEFINED TYPES</h2><p>We can define new types in addition to those listed in the
+    TYPEDEFS section above. This can be useful if none of the
+    predefined types, nor a derivation of one of those types via
+    standard YANG restrictions, is suitable. Of course it is
+    always possible to define a type as a derivation of <span class="type">string</span> and
+    have the application parse the string whenever a value needs to be
+    processed, but with a user-defined type ConfD will do the string
+    &lt;-&gt; value translation just as for the predefined
+    types.</p><p>A user-defined type will always have a value representation
+    that uses a confd_value_t with one of the <span class="type">enum
+    confd_vtype</span> values listed above, but the textual
+    representation and the range(s) of allowed values are defined by
+    the user. The <code class="filename">misc/user_type</code> example in the
+    collection delivered with the ConfD release shows implementation of
+    several user-defined types - it will be useful to refer
+    to it for the description below.</p><p>The choice of <span class="type">confd_vtype</span> to use for
+    the value representation can be whatever suits the actual data
+    values best, with one exception:</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The C_LIST <span class="type">confd_vtype</span> value can
+    <span class="emphasis"><em>not</em></span> be used for a leaf that is a key in a YANG
+    list. The "normal" C_LIST usage is only for representation of
+    leaf-lists, and a leaf-list can of course not be a key. Thus the
+    ConfD code is not prepared to handle this kind of "value" for a key.
+    It is a strong recommendation to <span class="emphasis"><em>never</em></span> use
+    C_LIST for a user-defined type, since even if the type is not
+    initially used for key leafs, subsequent development may see a need
+    for this, at which point it may be cumbersome to change to a
+    different representation.</p></div><p>The example uses C_INT32, C_IPV4PREFIX, and C_IPV6PREFIX for
+    the value representation of the respective types, but in many cases
+    the opaque byte array provided by C_BINARY will be most suitable -
+    this can e.g. be mapped to/from an arbitrary C struct.</p><p>When we want to implement a user-defined type, we need to
+    specify the type as <span class="type">string</span>, and add a
+    <code class="code">tailf:typepoint</code> statement - see <a class="link" href="rn03re20.html" title="tailf_yang_extensions">tailf_yang_extensions(5)</a>.
+    We can use <code class="code">tailf:typepoint</code> wherever a built-in or
+    derived type can be specified, i.e. as sub-statement to
+    <code class="code">typedef</code>, <code class="code">leaf</code>, or <code class="code">leaf-list</code>:
+    </p><div class="informalexample"><pre class="programlisting">typedef myType {
+  type string;
+  tailf:typepoint my_type;
+}
+
+container c {
+  leaf one {
+    type myType;
+  }
+  leaf two {
+    type string;
+    tailf:typepoint two_type;
+  }
+}
+</pre></div><p>The argument to the <code class="code">tailf:typepoint</code> statement is
+    used to locate the type implementation, similar to how "callpoints" are
+    used to locate data providers, but the actual mechanism is
+    different, as described below.</p><p>To actually implement the type definition, we need to write
+    three callback functions that are defined in the <span class="type">struct
+    confd_type</span>:</p><div class="informalexample"><a name="struct.confd_type"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_type {
+    <em class="hl-comment" style="color: silver">/* If a derived type point at the parent */</em>
+    <strong class="hl-keyword">struct</strong> confd_type *parent;
+
+    <em class="hl-comment" style="color: silver">/* not used in confspecs, but used in YANG */</em>
+    <strong class="hl-keyword">struct</strong> confd_type *defval;
+
+    <em class="hl-comment" style="color: silver">/* parse value located in str, and validate.
+     * returns CONFD_TRUE if value is syntactically correct
+     * and CONFD_FALSE otherwise.
+     */</em>
+    <strong class="hl-keyword">int</strong> (*str_to_val)(<strong class="hl-keyword">struct</strong> confd_type *self,
+                      <strong class="hl-keyword">struct</strong> confd_type_ctx *ctx,
+                      <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *str, <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> len,
+                      confd_value_t *v);
+
+    <em class="hl-comment" style="color: silver">/* print the value to str.
+     * does not print more than len bytes, including trailing NUL.
+     * return value as snprintf - i.e. if the value is correct for
+     * the type, it returns the length of the string form regardless
+     * of the len limit - otherwise it returns a negative number.
+     * thus, the NUL terminated output has been completely written
+     * if and only if the returned value is nonnegative and less
+     * than len.
+     * If strp is non-NULL and the string form is constant (i.e.
+     * C_ENUM_VALUE), a pointer to the string is stored in *strp.
+     */</em>
+    <strong class="hl-keyword">int</strong> (*val_to_str)(<strong class="hl-keyword">struct</strong> confd_type *self,
+                      <strong class="hl-keyword">struct</strong> confd_type_ctx *ctx,
+                      <strong class="hl-keyword">const</strong> confd_value_t *v,
+                      <strong class="hl-keyword">char</strong> *str, <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> len,
+                      <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> **strp);
+
+    <em class="hl-comment" style="color: silver">/* returns CONFD_TRUE if value is correct, otherwise CONFD_FALSE
+     */</em>
+    <strong class="hl-keyword">int</strong> (*validate)(<strong class="hl-keyword">struct</strong> confd_type *self,
+                    <strong class="hl-keyword">struct</strong> confd_type_ctx *ctx,
+                    <strong class="hl-keyword">const</strong> confd_value_t *v);
+
+    <em class="hl-comment" style="color: silver">/* data optionally used by the callbacks */</em>
+    <strong class="hl-keyword">void</strong> *opaque;
+};</pre></div><p>I.e. <code class="function">str_to_val()</code> and
+    <code class="function">val_to_str()</code> are responsible for the string to
+    value and value to string translations, respectively, and
+    <code class="function">validate()</code> may be called to verify that a given
+    value adheres to any restrictions on the values allowed for the
+    type. The <code class="varname">errstr</code> element in the <em class="parameter"><code>struct
+    confd_type_ctx *ctx</code></em> passed to these functions can be
+    used to return an error message when the function fails - in this
+    case <code class="varname">errstr</code> must be set to the address of a
+    dynamically allocated string. The other elements in
+    <em class="parameter"><code>ctx</code></em> are currently unused.</p><p>Including user-defined types in a YANG <code class="code">union</code> may
+    need some special consideration. Per the YANG specification, the
+    string form of a value is matched against the union member types in
+    the order they are specified until a match is found, and this
+    procedure determines the type of the value. A corresponding
+    procedure is used by ConfD when the value needs to be converted to a
+    string, but this conversion does not include any evaluation of
+    restrictions etc - the values are assumed to be correct for their
+    type. Thus the <code class="function">val_to_str()</code> function for the
+    member types are tried in order until one succeeds, and the
+    resulting string is used. This means that a)
+    <code class="function">val_to_str()</code> must verify that the value is of
+    the correct type, i.e. that it has the expected
+    <span class="type">confd_vtype</span>, and b) if the value representation is the
+    same for multiple member types, there is no guarantee that the same
+    member type as for the string to value conversion is chosen.</p><p>The <code class="varname">opaque</code> element in the <span class="type">struct
+    confd_type</span> can be used for any auxiliary (static) data needed
+    by the functions (on invocation they can reference it as
+    self-&gt;opaque). The <code class="varname">parent</code> and
+    <code class="varname">defval</code> elements are not used in this context, and
+    should be NULL.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="function">str_to_val()</code> function
+    <span class="emphasis"><em>must</em></span> allocate space (using e.g. malloc(3))
+    for the actual data value for those confd_value_t types that are
+    listed as having allocated data above, i.e. C_BUF, C_QNAME,
+    C_LIST, C_OBJECTREF, C_OID, C_BINARY, and C_HEXSTR.</p></div><p>We make the implementation available to ConfD by creating
+    one or more shared objects (.so files) containing the above
+    callback functions. Each shared object may implement one or more
+    types, and at startup the ConfD daemon will search the directories
+    specified for <code class="sgmltag-element">/confdConfig/loadPath</code> in
+    <code class="filename">confd.conf</code> for files with a
+    name that match the pattern "confd_type*.so" and load them.</p><p>Each shared object must also implement an "init"
+    callback:</p><div class="funcsynopsis"><a name="fn.confd_type_cb_init"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_type_cb_init</b>(</code></td><td>struct confd_type_cbs **<var class="pdparam">cbs</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>When the object has been loaded, ConfD will call this
+    function. It must return a pointer to an array of type callback
+    structures via the <em class="parameter"><code>cbs</code></em> argument, and the
+    number of elements in the array as return value. The
+    <span class="type">struct confd_type_cbs</span> is defined as:</p><div class="informalexample"><a name="struct.confd_type_cbs"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_type_cbs {
+    <strong class="hl-keyword">char</strong> *typepoint;
+    <strong class="hl-keyword">struct</strong> confd_type *type;
+};</pre></div><p>These structures are then used by ConfD to locate the
+    implementation of a given type, by searching for a
+    <code class="varname">typepoint</code> string that matches the
+    <code class="code">tailf:typepoint</code> argument in the YANG data model.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Since our callbacks are executed directly by the ConfD
+    daemon, it is critically important that they do not have a
+    negative impact on the daemon. No other processing can be done by
+    ConfD while the callbacks are executed, and e.g. a NULL pointer
+    dereference in one of the callbacks will cause ConfD to
+    crash. Thus they should be simple, purely algorithmic functions,
+    never referencing any external resources.</p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>When user-defined types are present, the ConfD daemon
+    also needs to load the libconfd.so shared library, otherwise used
+    only by applications. This means that either this library must be
+    in one of the system directories that are searched by the OS
+    runtime loader (typically /lib and /usr/lib), or its location must
+    be given by setting the LD_LIBRARY_PATH environment variable
+    before starting ConfD.</p></div><p>The above is enough for ConfD to use the types that we have
+    defined, but the libconfd library can also do local
+    string&lt;-&gt;value translation if we have loaded the schema
+    information, as described in the <a class="link" href="rn02re15.html#man.3.confd_types.using_schema_information" title="USING SCHEMA INFORMATION">USING
+    SCHEMA INFORMATION</a> section below. For this to work for
+    user-defined types, we must register the type definitions with the
+    library, using one of these functions:</p><div class="funcsynopsis"><a name="fn.confd_register_ns_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_ns_type</b>(</code></td><td>u_int32_t <var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">name</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Here we must pass the hash value for the namespace where the
+    type is defined as <em class="parameter"><code>nshash</code></em>, and the name of
+    the type from a <code class="code">typedef</code> statement
+    (i.e. <span class="emphasis"><em>not</em></span> the typepoint name if they are
+    different) as <em class="parameter"><code>name</code></em>. Thus we can not use this
+    function to register a user-defined type that is specified "inline"
+    in a <code class="code">leaf</code> or <code class="code">leaf-list</code> statement, since
+    we don't have a name for the type.</p><div class="funcsynopsis"><a name="fn.confd_register_node_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_node_type</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">node</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function takes a pointer to a schema node (see the
+    section <a class="link" href="rn02re15.html#man.3.confd_types.using_schema_information" title="USING SCHEMA INFORMATION">USING
+    SCHEMA INFORMATION</a>) that uses the type instead of namespace
+    and type name. It is necessary to use this for registration of
+    user-defined types that are specified "inline", but it can also be
+    used for user-defined types specified via <code class="code">typedef</code>. In
+    the latter case it will be equivalent to calling
+    <code class="function">confd_register_ns_type()</code> for the typedef,
+    i.e. a single registration will apply to all nodes using the
+    typedef.</p><p>The functions can only be called <span class="emphasis"><em>after</em></span>
+    <code class="function">confd_load_schemas()</code> or
+    <code class="function">maapi_load_schemas()</code> (see below) has been
+    called, and if
+    <code class="function">confd_load_schemas()</code>/
+    <code class="function">maapi_load_schemas()</code>
+    is called again, the registration must be re-done. The
+    <code class="filename">misc/user_type</code> example shows a way to use the
+    exact same code for the shared object and for this
+    registration.</p><p>Schema upgrades when the data is stored in CDB requires
+    special consideration for user-defined types. Normally CDB can
+    handle any type changes automatically, and this is true also when
+    changing to/from/between user-defined types, provided that the
+    following requirements are fulfilled:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>A given typepoint name always refers to the exact same
+        implementation - i.e. same value representation, same range
+        restrictions, etc.</p></li><li class="listitem"><p>Shared objects providing implementations for all the
+        typepoint ids used in the new <span class="emphasis"><em>and</em></span> the old
+        schema are made available to ConfD.</p></li></ol></div><p>I.e. if we change the implementation of a type, we also
+    change the typepoint name, and keep the old implementation
+    around. If requirement 1 isn't fulfilled, we can end up with the
+    case of e.g. a changed value representation between schema
+    versions even though the types are indistinguishable for CDB. This
+    can still be handled by using MAAPI to modify CDB during the
+    upgrade as described in the User Guide, but if that is not done,
+    CDB will just carry the old values over, which in effect results
+    in a corrupt database.</p></div><div class="refsect1"><a name="man.3.confd_types.using_schema_information"></a><h2>USING SCHEMA INFORMATION</h2><p>Schema information from the data model can be loaded from the
+    ConfD daemon at runtime using the
+    <code class="function">maapi_load_schemas()</code> function, see the <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>
+    manual page. Information for all namespaces loaded into ConfD is
+    then made available. In many cases it may be more convenient to
+    use the <code class="function">confd_load_schemas()</code> utility
+    function.  For details about this function and those discussed
+    below, see <a class="link" href="rn02re13.html" title="confd_lib_lib">confd_lib_lib(3)</a>.
+    After loading the data, we can call
+    <code class="function">confd_get_nslist()</code> to find which namespaces
+    are known to the library as a result.</p><p>Note that all pointers
+    returned (directly or indirectly) by the functions discussed here
+    reference dynamically allocated memory maintained by the library -
+    they will become invalid if
+    <code class="function">confd_load_schemas()</code> or
+    <code class="function">maapi_load_schemas()</code> is subsequently called
+    again.</p><p>The <a class="link" href="rn01re06.html" title="confdc">confdc(1)</a>
+    compiler can also optionally generate a C header file that has
+    #define symbols for the integer values corresponding to data model
+    nodes and enumerations.</p><p>When the schema information has been made available to the
+    library, we can format an arbitrary instance of a
+    <span class="type">confd_value_t</span> value using
+    <code class="function">confd_pp_value()</code> or
+    <code class="function">confd_ns_pp_value()</code>, or an arbitrary hkeypath
+    using <code class="function">confd_pp_kpath()</code> or
+    <code class="function">confd_xpath_pp_kpath()</code>.  We can also get a
+    pointer to the string representing a data model node
+    using <code class="function">confd_hash2str()</code>.</p><p>Furthermore a tree representation of the data model is
+    available, which contains a <span class="type">struct
+    confd_cs_node</span> for every node in the data
+    model. There is one tree for each namespace that has toplevel
+    elements.</p><div class="informalexample"><pre class="programlisting">/* flag bits in confd_cs_node_info */
+#define CS_NODE_IS_LIST          (1 &lt;&lt; 0)
+#define CS_NODE_IS_WRITE         (1 &lt;&lt; 1)
+#define CS_NODE_IS_CDB           (1 &lt;&lt; 2)
+#define CS_NODE_IS_ACTION        (1 &lt;&lt; 3)
+#define CS_NODE_IS_PARAM         (1 &lt;&lt; 4)
+#define CS_NODE_IS_RESULT        (1 &lt;&lt; 5)
+#define CS_NODE_IS_NOTIF         (1 &lt;&lt; 6)
+#define CS_NODE_IS_CASE          (1 &lt;&lt; 7)
+#define CS_NODE_IS_CONTAINER     (1 &lt;&lt; 8)
+#define CS_NODE_HAS_WHEN         (1 &lt;&lt; 9)
+#define CS_NODE_HAS_DISPLAY_WHEN (1 &lt;&lt; 10)
+#define CS_NODE_HAS_META_DATA    (1 &lt;&lt; 11)
+#define CS_NODE_IS_WRITE_ALL     (1 &lt;&lt; 12)
+#define CS_NODE_IS_LEAF_LIST     (1 &lt;&lt; 13)
+#define CS_NODE_IS_LEAFREF       (1 &lt;&lt; 14)
+#define CS_NODE_IS_DYN CS_NODE_IS_LIST /* backwards compat */
+
+/* cmp values in confd_cs_node_info */
+#define CS_NODE_CMP_NORMAL        0
+#define CS_NODE_CMP_SNMP          1
+#define CS_NODE_CMP_SNMP_IMPLIED  2
+#define CS_NODE_CMP_USER          3
+#define CS_NODE_CMP_UNSORTED      4
+
+struct confd_cs_node_info {
+    u_int32_t *keys;
+    int minOccurs;
+    int maxOccurs;   /* -1 if unbounded */
+    enum confd_vtype shallow_type;
+    struct confd_type *type;
+    confd_value_t *defval;
+    struct confd_cs_choice *choices;
+    int flags;
+    u_int8_t cmp;
+    struct confd_cs_meta_data *meta_data;
+};
+
+struct confd_cs_meta_data {
+    char* key;
+    char* value;
+};
+
+struct confd_cs_node {
+    u_int32_t tag;
+    u_int32_t ns;
+    struct confd_cs_node_info info;
+    struct confd_cs_node *parent;
+    struct confd_cs_node *children;
+    struct confd_cs_node *next;
+    void *opaque;   /* private user data */
+};
+
+struct confd_cs_choice {
+    u_int32_t tag;
+    u_int32_t ns;
+    int minOccurs;
+    struct confd_cs_case *default_case;
+    struct confd_cs_node *parent;         /* NULL if parent is case */
+    struct confd_cs_case *cases;
+    struct confd_cs_choice *next;
+    struct confd_cs_case *case_parent;    /* NULL if parent is node */
+};
+
+struct confd_cs_case {
+    u_int32_t tag;
+    u_int32_t ns;
+    struct confd_cs_node *first;
+    struct confd_cs_node *last;
+    struct confd_cs_choice *parent;
+    struct confd_cs_case *next;
+    struct confd_cs_choice *choices;
+};
+</pre></div><p>Each <span class="type">confd_cs_node</span> is linked to its
+    related nodes: <code class="varname">parent</code> is a pointer to the
+    parent node, <code class="varname">next</code> is a pointer to the next
+    sibling node, and <code class="varname">children</code> is a pointer to
+    the first child node - for each of these, a NULL pointer has the
+    obvious meaning.</p><p>Each <span class="type">confd_cs_node</span> also contains an
+    information structure: For a list node,
+    the <code class="varname">keys</code> field is a zero-terminated array of
+    integers - these are the <code class="varname">tag</code> values for the
+    children nodes that are key elements. This makes it possible to
+    find the name of a key element in a keypath. If the
+    <span class="type">confd_cs_node</span> is not a list node, the
+    <code class="varname">keys</code> field is NULL.  The
+    <code class="varname">shallow_type</code> field gives the "primitive" type
+    for the element, i.e. the <span class="type">enum confd_vtype</span> value that
+    is used in the <span class="type">confd_value_t</span> representation.</p><p>Typed leaf nodes also carry a complete type definition via
+    the <code class="varname">type</code> pointer, which can be used with the
+    <code class="function">conf_str2val()</code> and
+    <code class="function">confd_val2str()</code> functions, as well as the
+    leaf's default value (if any) via the <code class="varname">defval</code>
+    pointer.</p><p>If the YANG <code class="code">choice</code> statement is used in the data model,
+    additional structures are created by the schema
+    loading. For list and container nodes that have <code class="code">choice</code>
+    statements, the <code class="varname">choices</code> element in
+    <span class="type">confd_cs_node_info</span> is a pointer to a linked
+    list of <span class="type">confd_cs_choice</span> structures
+    representing the choices. Each
+    <span class="type">confd_cs_choice</span> has a pointer to the parent
+    node and a <code class="varname">cases</code> pointer to a linked
+    list of <span class="type">confd_cs_case</span> structures representing
+    the cases for that choice. Finally, each
+    <span class="type">confd_cs_case</span> structure has pointers to the
+    parent <span class="type">confd_cs_choice</span> structure, and to the
+    <span class="type">confd_cs_node</span> structures representing the
+    first and last element in the case. Those
+    <span class="type">confd_cs_node</span> structures, i.e. the "toplevel"
+    elements of a case, have the CS_NODE_IS_CASE flag set.
+    Note that it is possible for a case to be "empty", i.e. there are no
+    elements in the case - then the <code class="varname">first</code> and
+    <code class="varname">last</code> pointers in the <span class="type">confd_cs_case</span>
+    structure are NULL.</p><p>For a list node, the sort order
+    is indicated by the <code class="varname">cmp</code> element in
+    <span class="type">confd_cs_node_info</span>.  The value CS_NODE_CMP_NORMAL
+    means an ordinary, system ordered, list.  CS_NODE_CMP_SNMP is
+    system ordered, but ordered according to SNMP lexicographical
+    order, and CS_NODE_CMP_SNMP_IMPLIED is an SNMP lexicographical
+    order where the last key has an IMPLIED keyword.
+    CS_NODE_CMP_UNSORTED is system ordered, but is not sorted.  The
+    value CS_NODE_CMP_USER denotes an "ordered-by user" list.</p><p>If the <code class="code">tailf:meta-data</code> extension is used for a
+    node, the <code class="varname">meta_data</code> element points to an array of
+    <span class="type">struct confd_cs_meta_data</span>, otherwise it is NULL.
+    In the array, the <code class="varname">key</code> element is the argument
+    of <code class="code">tailf:meta-data</code>, and the <code class="varname">value</code>
+    element is the argument of the <code class="code">tailf:meta-value</code>
+    substatement, if any - otherwise it is NULL. The end of the array
+    is indicated by a struct where the <code class="varname">key</code> element
+    is NULL.</p><p>Action and notification specifications are included in the
+    tree in the same way as the config/data elements - they are
+    indicated by the CS_NODE_IS_ACTION flag being set on the
+    <code class="sgmltag-element">action</code> node, and the CS_NODE_IS_NOTIF flag being set on
+    the <code class="sgmltag-element">notification</code> node, respectively. Furthermore the
+    nodes corresponding to the sub-statements of the action's
+    <code class="code">input</code> statement have the CS_NODE_IS_PARAM flag
+    set, and those corresponding to the sub-statements of the action's
+    <code class="code">output</code> statement have the CS_NODE_IS_RESULT flag
+    set. Note that the <code class="code">input</code> and <code class="code">output</code>
+    statements do not have corresponding nodes in the tree.</p><p>The <code class="function">confd_find_cs_root()</code> function
+    returns the root of the tree for a given namespace, and the
+    <code class="function">confd_find_cs_node()</code>,
+    <code class="function">confd_find_cs_node_child()</code>, and
+    <code class="function">confd_cs_node_cd()</code> functions are useful for
+    navigating the tree.  Assume that we have the following
+    data model:</p><div class="informalexample"><pre class="programlisting">container servers {
+  list server {
+    key name;
+    max-elements 64;
+    leaf name {
+      type string;
+    }
+    leaf ip {
+      type inet:ip-address;
+    }
+    leaf port {
+      type inet:port-number;
+    }
+  }
+}
+</pre></div><p>Then, given the keypath
+    <code class="sgmltag-element">/servers/server{www}</code> in
+    <span class="type">confd_hkeypath_t</span> form, a call to
+    <code class="function">confd_find_cs_node()</code> would return a
+    <span class="type">struct confd_cs_node</span>, i.e.  a pointer into
+    the tree, as in:</p><div class="informalexample"><pre class="programlisting">struct confd_cs_node *csp;
+char *name;
+csp = confd_find_cs_node(mykeypath, mykeypath-&gt;len);
+name = confd_hash2str(csp-&gt;info.keys[0])</pre></div><p>and the C variable <code class="varname">name</code> will have the
+    value <code class="literal">"name"</code>.  These functions make it
+    possible to format keypaths in various ways.</p><p>If we have a keypath which identifies a node below
+    the one we are interested in,
+    such as <code class="sgmltag-element">/servers/server{www}/ip</code>, we can use
+    the <em class="parameter"><code>len</code></em> parameter as in
+    <code class="code">confd_find_cs_node(kp, 3)</code> where
+    <code class="literal">3</code> is the length of the keypath we wish to
+    consider.</p><p>The equivalent of the above
+    <code class="function">confd_find_cs_node()</code> example, but using a
+    string keypath, could be written as:</p><div class="informalexample"><pre class="programlisting">csp = confd_cs_node_cd(confd_find_cs_root(mynamespace),
+                       "/servers/server{www}");</pre></div><p>The <code class="varname">type</code> field in the <span class="type">struct
+    confd_cs_node_info</span> can be used for data model aware string
+    &lt;-&gt; value translations. E.g. assuming that we have a
+    <span class="type">confd_hkeypath_t *kp</span> representing the element
+    <code class="sgmltag-element">/servers/server{www}/ip</code>, we can do the
+    following:</p><div class="informalexample"><pre class="programlisting">confd_value_t v;
+csp = confd_find_cs_node(kp, kp-&gt;len);
+confd_str2val(csp-&gt;info.type, "10.0.0.1", &amp;v);</pre></div><p>The <span class="type">confd_value_t v</span> will then be filled in with
+    the corresponding C_IPV4 value. This technique is generally
+    necessary for translating C_ENUM_VALUE values to the corresponding
+    strings (or vice versa), since there isn't a type-independent
+    mapping. But <code class="function">confd_val2str()</code> (or
+    <code class="function">confd_str2val()</code>) can always do the translation,
+    since it is given the full type information. E.g. this will store
+    the string "nonVolatile" in <code class="varname">buf</code>:</p><div class="informalexample"><pre class="programlisting">confd_value_t v;
+char buf[64];
+
+CONFD_SET_ENUM_VALUE(&amp;v, 3);
+root = confd_find_cs_root(SNMP_COMMUNITY_MIB__ns);
+csp = confd_cs_node_cd(root, "/SNMP-COMMUNITY-MIB/snmpCommunityTable/"
+                       "snmpCommunityEntry/snmpCommunityStorageType");
+confd_val2str(csp-&gt;info.type, &amp;v, buf, sizeof(buf));</pre></div><p>The type information can also be found by using the
+    <code class="function">confd_find_ns_type()</code> function to look up the
+    type name as a string in the namespace where it is defined -
+    i.e. we could alternatively have achieved the same result
+    with:</p><div class="informalexample"><pre class="programlisting">CONFD_SET_ENUM_VALUE(&amp;v, 3);
+type = confd_find_ns_type(SNMPv2_TC__ns, "StorageType");
+confd_val2str(type, &amp;v, buf, sizeof(buf));</pre></div><p>If we give <code class="constant">0</code> for the
+    <em class="parameter"><code>nshash</code></em> argument to
+    <code class="function">confd_find_ns_type()</code>, the type name will be
+    looked up among the ConfD built-in types (i.e. the YANG built-in
+    types, the types defined in the YANG "tailf-common" module, and the
+    types defined in the pre-defined "confd" and/or "xs" namespaces) -
+    e.g. the type information for <code class="sgmltag-element">/servers/server{www}/name</code>
+    could be found with <code class="code">confd_find_ns_type(0,
+    "string")</code>.</p></div><div class="refsect1"><a name="man.3.confd_types.xml_structures"></a><h2>XML STRUCTURES</h2><p>Two different methods are used to represent a subtree of data
+    nodes. <a class="link" href="rn02re15.html#man.3.confd_types.xml_structures.array" title="Value Array">"Value
+    Array"</a> describes a format that is simpler but has some
+    limitations, while <a class="link" href="rn02re15.html#man.3.confd_types.xml_structures.tagged_array" title="Tagged Value Array">"Tagged
+    Value Array"</a> describes a format that is more complex but can
+    represent an arbitrary subtree.</p><div class="refsect2"><a name="man.3.confd_types.xml_structures.array"></a><h3>Value Array</h3><p>The simpler format is an array of <span class="type">confd_value_t</span>
+      elements corresponding to the complete contents of a list entry or
+      container. The content of sub-list entries
+      cannot be represented. The array is populated
+      through a "depth first" traversal of the data tree as
+      follows:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Optional leafs or <code class="code">presence</code> containers that do not
+          exist use a single array element, with type C_NOEXISTS (value
+          ignored).</p></li><li class="listitem"><p>List nodes use a single
+          array element, with type C_NOEXISTS (value ignored),
+          regardless of the actual number of entries or their contents.</p></li><li class="listitem"><p>Leafs with a type other than <span class="type">empty</span> use an
+          array element with their type and value as usual.</p></li><li class="listitem"><p>Leafs of type <span class="type">empty</span>
+          use an array element with type C_XMLTAG, and
+          <code class="varname">tag</code> and <code class="varname">ns</code> set according
+          to the leaf name.</p></li><li class="listitem"><p>Containers use one array element with type
+          C_XMLTAG, and <code class="varname">tag</code> and
+          <code class="varname">ns</code> set according to the element name,
+          followed by array elements for the sub-nodes according to
+          this list.</p></li></ol></div><p>Note that the list or container node corresponding to the
+      complete array is not included in the array, and that there is no
+      array element for the "end" of a container.</p><p>As an example, the array corresponding to the
+      <code class="sgmltag-element">/servers/server{www}</code> list entry above could
+      be populated as:</p><div class="informalexample"><pre class="programlisting">confd_value_t v[3];
+struct in_addr ip;
+
+CONFD_SET_STR(&amp;v[0], "www");
+ip.s_addr = inet_addr("192.168.1.2");
+CONFD_SET_IPV4(&amp;v[1], ip);
+CONFD_SET_UINT16(&amp;v[2], 80);</pre></div></div><div class="refsect2"><a name="man.3.confd_types.xml_structures.tagged_array"></a><h3>Tagged Value Array</h3><p>This format uses an array of
+      <span class="type">confd_tag_value_t</span> elements. This is a structure
+      defined as:</p><div class="informalexample"><a name="struct.confd_tag_value"></a><pre class="programlisting"><strong class="hl-keyword">typedef</strong> <strong class="hl-keyword">struct</strong> confd_tag_value {
+    <strong class="hl-keyword">struct</strong> xml_tag tag;
+    confd_value_t v;
+} confd_tag_value_t;</pre></div><p>I.e. each value element is associated with the <span class="type">struct
+      xml_tag</span> that identifies the node in the data model. The
+      <code class="varname">ns</code> element of the <span class="type">struct xml_tag</span>
+      can normally be set to 0, with the meaning "current
+      namespace". The array is populated, normally through a "depth
+      first" traversal of the data tree, as follows:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Optional leafs or <code class="code">presence</code> containers that do not
+          exist are omitted entirely from the array.</p></li><li class="listitem"><p>List and container nodes use one array element where the
+          value has type C_XMLBEGIN, and <code class="varname">tag</code> and
+          <code class="varname">ns</code> set according to the node name,
+          followed by array elements for the sub-nodes according to
+          this list, followed by one array element where the value has
+          type C_XMLEND, and <code class="varname">tag</code> and
+          <code class="varname">ns</code> set according to the node
+          name.</p></li><li class="listitem"><p>Leafs with a type other than <span class="type">empty</span> use an
+          array element with their type and value as usual.</p></li><li class="listitem"><p>Leafs of type <span class="type">empty</span>
+          use an array element where the
+          value has type C_XMLTAG, and <code class="varname">tag</code> and
+          <code class="varname">ns</code> set according to the leaf name.</p></li></ol></div><p>Note that the list or container node corresponding to the
+      complete array is not included in the array. In some usages,
+      non-optional nodes may also be omitted from the array - refer
+      to the relevant API documentation to see whether this is allowed
+      and the semantics of doing so.</p><p>A set of CONFD_SET_TAG_XXX() macros corresponding to the
+      CONFD_SET_XXX() macros described above are provided - these set
+      the <code class="varname">ns</code> element to 0 and the
+      <code class="varname">tag</code> element to their second argument.  The
+      array corresponding to the
+      <code class="sgmltag-element">/servers/server{www}</code> list entry above could
+      be populated as:</p><div class="informalexample"><pre class="programlisting">confd_tag_value_t tv[3];
+struct in_addr ip;
+
+CONFD_SET_TAG_STR(&amp;tv[0], servers_name, "www");
+ip.s_addr = inet_addr("192.168.1.2");
+CONFD_SET_TAG_IPV4(&amp;tv[1], servers_ip, ip);
+CONFD_SET_TAG_UINT16(&amp;tv[2], servers_port, 80);</pre></div><p>There are also macros to access the components of the
+      <span class="type">confd_tag_value_t</span> elements:</p><div class="informalexample"><pre class="programlisting">confd_tag_value_t tv;
+u_int16_t port;
+
+if (CONFD_GET_TAG_TAG(&amp;tv) == servers_port)
+    port = CONFD_GET_UINT16(CONFD_GET_TAG_VALUE(&amp;tv));</pre></div></div></div><div class="refsect1"><a name="man.3.confd_types.data_model"></a><h2>DATA MODEL TYPES</h2><p>This section describes the types that can be
+    used in YANG data modeling, and their C representation.
+    Also listed is the corresponding SMIv2 type, which is
+    used when a data model is translated into a MIB.  In several cases,
+    the data model type cannot easily be translated into a native SMIv2
+    type.  In those cases, the type <span class="type">OCTET STRING</span>
+    is used in the translation.  The SNMP agent in ConfD will in those
+    cases send the string representation of the value over SNMP.  For
+    example, the <span class="type">xs:float</span> value
+    <code class="literal">3.14</code> is sent as the string "3.14".</p><p>These subsections describe the following sets of types,
+    which can be used with YANG data modeling:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><a class="link" href="rn02re15.html#man.3.confd_types.data_model.yang_builtin_types" title="YANG built-in types">YANG
+        built-in types</a></p></li><li class="listitem"><p><a class="link" href="rn02re15.html#man.3.confd_types.data_model.ietf_yang_types" title="The ietf-yang-types YANG module">The
+        ietf-yang-types YANG module</a></p></li><li class="listitem"><p><a class="link" href="rn02re15.html#man.3.confd_types.data_model.ietf_inet_types" title="The ietf-inet-types YANG module">The
+        ietf-inet-types YANG module</a></p></li><li class="listitem"><p><a class="link" href="rn02re15.html#man.3.confd_types.data_model.tailf_common" title="The tailf-common YANG module">The
+        tailf-common YANG module</a></p></li><li class="listitem"><p><a class="link" href="rn02re15.html#man.3.confd_types.data_model.tailf_xsd_types" title="The tailf-xsd-types YANG module">The
+        tailf-xsd-types YANG module</a></p></li></ul></div><div class="refsect2"><a name="man.3.confd_types.data_model.yang_builtin_types"></a><h3>YANG built-in types</h3><p>These types are built-in to the YANG language, and also
+    built-in to ConfD.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">int8</span></span></dt><dd><p>A signed 8-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_INT8</p></li><li class="listitem"><p>union element = <code class="varname">i8</code></p></li><li class="listitem"><p>C type = <span class="type">int8_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Integer32 (-128 .. 127)</span></p></li></ul></div></dd><dt><span class="term"><span class="type">int16</span></span></dt><dd><p>A signed 16-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_INT16</p></li><li class="listitem"><p>union element = <code class="varname">i16</code></p></li><li class="listitem"><p>C type = <span class="type">int16_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Integer32 (-32768 .. 32767)</span></p></li></ul></div></dd><dt><span class="term"><span class="type">int32</span></span></dt><dd><p>A signed 32-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_INT32</p></li><li class="listitem"><p>union element = <code class="varname">i32</code></p></li><li class="listitem"><p>C type = <span class="type">int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Integer32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">int64</span></span></dt><dd><p>A signed 64-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_INT64</p></li><li class="listitem"><p>union element = <code class="varname">i64</code></p></li><li class="listitem"><p>C type = <span class="type">int64_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">uint8</span></span></dt><dd><p>An unsigned 8-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT8</p></li><li class="listitem"><p>union element = <code class="varname">u8</code></p></li><li class="listitem"><p>C type = <span class="type">u_int8_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32 (0 .. 255)</span></p></li></ul></div></dd><dt><span class="term"><span class="type">uint16</span></span></dt><dd><p>An unsigned 16-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT16</p></li><li class="listitem"><p>union element = <code class="varname">u16</code></p></li><li class="listitem"><p>C type = <span class="type">u_int16_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32 (0 .. 65535)</span></p></li></ul></div></dd><dt><span class="term"><span class="type">uint32</span></span></dt><dd><p>An unsigned 32-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT32</p></li><li class="listitem"><p>union element = <code class="varname">u32</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">uint64</span></span></dt><dd><p>An unsigned 64-bit integer.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT64</p></li><li class="listitem"><p>union element = <code class="varname">u64</code></p></li><li class="listitem"><p>C type = <span class="type">u_int64_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">decimal64</span></span></dt><dd><p>A decimal number with 64 bits of precision. The C
+          representation uses a struct with a 64-bit signed integer for
+          the scaled value, and an unsigned 8-bit integer in the range
+          1..18 for the number of fraction digits specified by the
+          <code class="code">fraction-digits</code> sub-statement.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DECIMAL64</p></li><li class="listitem"><p>union element = <code class="varname">d64</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_decimal64</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">string</span></span></dt><dd><p>The <span class="type">string</span> type is represented as a struct
+          <span class="type">confd_buf_t</span> when <span class="emphasis"><em>received</em></span>
+          from ConfD in the C code. I.e. it is
+          NUL-terminated and also has a size given.</p><p>However, when the C code wants to produce a value of the
+          <span class="type">string</span> type it is possible to use a
+          <span class="type">confd_value_t</span> with the value type C_BUF or C_STR
+          (which requires a NUL-terminated string)</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">boolean</span></span></dt><dd><p>The boolean values "true" and "false".</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BOOL</p></li><li class="listitem"><p>union element = <code class="varname">boolean</code></p></li><li class="listitem"><p>C type = <span class="type">int</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">TruthValue</span></p></li></ul></div></dd><dt><span class="term"><span class="type">enumeration</span></span></dt><dd><p>Enumerated strings with associated numeric values. The C
+          representation uses the numeric values.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_ENUM_VALUE</p></li><li class="listitem"><p>union element = <code class="varname">enumvalue</code></p></li><li class="listitem"><p>C type = <span class="type">int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">INTEGER</span></p></li></ul></div></dd><dt><span class="term"><span class="type">bits</span></span></dt><dd><p>A set of bits or flags. Depending on the highest
+          argument given to a <code class="code">position</code> sub-statement,
+          the C representation uses either C_BIT32, C_BIT64, or C_BITBIG.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BIT32, C_BIT64, or
+              C_BITBIG</p></li><li class="listitem"><p>union element = <code class="varname">b32</code>,
+              <code class="varname">b64</code>, or <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span>,
+              <span class="type">u_int64_t</span>, or <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32</span> or
+              <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">binary</span></span></dt><dd><p>Any binary data.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">identityref</span></span></dt><dd><p>A reference to an abstract identity.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IDENTITYREF</p></li><li class="listitem"><p>union element = <code class="varname">idref</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_identityref</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">union</span></span></dt><dd><p>The <span class="type">union</span> type has no special
+          <span class="type">confd_value_t</span> representation - elements are
+          represented as one of the member types according to the current
+          value instantiation.  This means that for unions that comprise
+          different "primitive" types, applications must check the
+          <code class="varname">type</code> element to determine the type, and
+          the type safe alternatives to the
+          <code class="function">cdb_get()</code> and
+          <code class="function">maapi_get_elem()</code> functions can not be
+          used.</p><p>Note that the YANG specification stipulates that when a
+          value of type <span class="type">union</span> is validated, the
+          <span class="emphasis"><em>first</em></span> matching member type should be
+          chosen. Consider this YANG fragment:</p><div class="informalexample"><pre class="programlisting">leaf uni {
+  type union {
+    type int32;
+    type int64;
+  }
+}
+
+</pre></div><p>If we set the leaf to the value <code class="constant">2</code>,
+          it should thus be of type <span class="type">int32</span>, not type
+          <span class="type">int64</span>. This is enforced when ConfD converts a
+          string to an internal value, but not when setting values
+          "directly" via e.g. <code class="function">maapi_set_elem()</code> or
+          <code class="function">cdb_set_elem()</code>. It is thus possible to
+          set the leaf to a <code class="constant">C_INT64</code> with the value
+          <code class="constant">2</code>, but this is formally an invalid
+          value.</p><p>Applications setting values of type <span class="type">union</span>
+          must thus take care to choose the member type correctly, or
+          alternatively provide the value as a string via one of the
+          functions <code class="function">maapi_set_elem2()</code>,
+          <code class="function">cdb_set_elem2()</code>, or
+          <code class="function">confd_str2val()</code>. These functions will
+          always turn the string "2" into a <code class="constant">C_INT32</code>
+          with the above definition.</p><p>The SMIv2 type is an <span class="type">OCTET STRING</span>.</p></dd><dt><span class="term"><span class="type">instance-identifier</span></span></dt><dd><p>The instance-identifier built-in type is used to
+          uniquely identify a particular instance node in the data
+          tree. The syntax for an instance-identifier is a subset of the
+          XPath abbreviated syntax.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_OBJECTREF</p></li><li class="listitem"><p>union element = <code class="varname">hkp</code></p></li><li class="listitem"><p>C type = <span class="type">confd_hkeypath_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd></dl></div><div class="refsect3"><a name="man.3.confd_types.data_model.yang_builtin_types.leaf_list"></a><h4>The <code class="code">leaf-list</code> statement</h4><p>The values of a YANG <code class="code">leaf-list</code> node is
+      represented as an element with a list of values of the type given
+      by the <code class="code">type</code> sub-statement.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_LIST</p></li><li class="listitem"><p>union element = <code class="varname">list</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_list</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></div></div><div class="refsect2"><a name="man.3.confd_types.data_model.ietf_yang_types"></a><h3>The ietf-yang-types YANG module</h3><p>This module contains a collection of generally useful derived
+    YANG data types. They are defined in the <code class="uri">urn:ietf:params:xml:ns:yang:ietf-yang-types</code>
+    namespace.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">yang:counter32, yang:zero-based-counter32</span></span></dt><dd><p>32-bit counters, corresponding to the Counter32 type and
+          the ZeroBasedCounter32 textual convention of the SMIv2.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT32</p></li><li class="listitem"><p>union element = <code class="varname">u32</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Counter32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:counter64, yang:zero-based-counter64</span></span></dt><dd><p>64-bit counters, corresponding to the Counter64 type and
+          the ZeroBasedCounter64 textual convention of the SMIv2.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT64</p></li><li class="listitem"><p>union element = <code class="varname">u64</code></p></li><li class="listitem"><p>C type = <span class="type">u_int64_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Counter64</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:gauge32</span></span></dt><dd><p>32-bit gauge value, corresponding to the Gauge32 type of
+          the SMIv2.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT32</p></li><li class="listitem"><p>union element = <code class="varname">u32</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Counter32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:gauge64</span></span></dt><dd><p>64-bit gauge value, corresponding to the
+          CounterBasedGauge64 SMIv2 textual convention.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT64</p></li><li class="listitem"><p>union element = <code class="varname">u64</code></p></li><li class="listitem"><p>C type = <span class="type">u_int64_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Counter64</span></p></li></ul></div></dd><dt><span class="term">
+          <span class="type">yang:object-identifier, yang:object-identifier-128</span>
+        </span></dt><dd><p>An SNMP OBJECT IDENTIFIER (OID).  This is a sequence of
+          integers which identifies an object instance for example
+          "1.3.6.1.4.1.24961.1".</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">tailf:value-length</code> restriction is
+          measured in integer elements for
+          <span class="type">object-identifier</span> and
+          <span class="type">object-identifier-128</span>.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_OID</p></li><li class="listitem"><p>union element = <code class="varname">oidp</code></p></li><li class="listitem"><p>C type = <span class="type">confd_snmp_oid</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OBJECT IDENTIFIER</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:yang-identifier</span></span></dt><dd><p>A YANG identifier string as defined by the 'identifier'
+          rule in Section 12 of RFC 6020.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:date-and-time</span></span></dt><dd><p>The date-and-time type is a profile of the ISO 8601
+          standard for representation of dates and times using the
+          Gregorian calendar.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DATETIME</p></li><li class="listitem"><p>union element = <code class="varname">datetime</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_datetime</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">DateAndTime</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:timeticks, yang:timestamp</span></span></dt><dd><p>Time ticks and time stamps, measured in hundredths of
+          seconds. Corresponding to the TimeTicks type and the TimeStamp
+          textual convention of the SMIv2.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT32</p></li><li class="listitem"><p>union element = <code class="varname">u32</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Counter32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:phys-address</span></span></dt><dd><p>Represents media- or physical-level addresses
+          represented as a sequence octets, each octet represented by
+          two hexadecimal digits. Octets are separated by
+          colons.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">tailf:value-length</code> restriction is
+          measured in number of octets for
+          <span class="type">phys-address</span>.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:mac-address</span></span></dt><dd><p>The mac-address type represents an IEEE 802 MAC address.</p><p>The length of the ConfD C_BINARY representation is
+          always 6.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:xpath1.0</span></span></dt><dd><p>This type represents an XPATH 1.0 expression.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:hex-string</span></span></dt><dd><p>A hexadecimal string with octets represented as hex digits
+          separated by colons.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">tailf:value-length</code> restriction is
+          measured in number of octets for
+          <span class="type">hex-string</span>.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_HEXSTR</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:uuid</span></span></dt><dd><p>A Universally Unique Identifier in the string representation
+          defined in RFC 4122.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">yang:dotted-quad</span></span></dt><dd><p>An unsigned 32-bit number expressed in the dotted-quad
+          notation.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DQUAD</p></li><li class="listitem"><p>union element = <code class="varname">dquad</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_dotted_quad</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd></dl></div></div><div class="refsect2"><a name="man.3.confd_types.data_model.ietf_inet_types"></a><h3>The ietf-inet-types YANG module</h3><p>This module contains a collection of generally useful derived
+   YANG data types for Internet addresses and related things. They are
+   defined in the <code class="uri">urn:ietf:params:xml:ns:yang:inet-types</code>
+   namespace.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">inet:ip-version</span></span></dt><dd><p>This value represents the version of the IP protocol.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_ENUM_VALUE</p></li><li class="listitem"><p>union element = <code class="varname">enumvalue</code></p></li><li class="listitem"><p>C type = <span class="type">int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">INTEGER</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:dscp</span></span></dt><dd><p>The dscp type represents a Differentiated Services
+          Code-Point.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT8</p></li><li class="listitem"><p>union element = <code class="varname">u8</code></p></li><li class="listitem"><p>C type = <span class="type">u_int8_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32 (0 .. 255)</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:ipv6-flow-label</span></span></dt><dd><p>The flow-label type represents flow identifier or Flow Label
+          in an IPv6 packet header.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_UINT32</p></li><li class="listitem"><p>union element = <code class="varname">u32</code></p></li><li class="listitem"><p>C type = <span class="type">u_int32_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">Unsigned32</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:port-number</span></span></dt><dd><p>The port-number type represents a 16-bit port number of
+          an Internet transport layer protocol such as UDP, TCP, DCCP or
+          SCTP.</p><p>The value space and representation is identical to
+          the built-in <span class="type">uint16</span> type.</p></dd><dt><span class="term"><span class="type">inet:as-number</span></span></dt><dd><p>The as-number type represents autonomous system numbers
+          which identify an Autonomous System (AS).</p><p>The value space and representation is identical to
+          the built-in <span class="type">uint32</span> type.</p></dd><dt><span class="term"><span class="type">inet:ip-address</span></span></dt><dd><p>The ip-address type represents an IP address and is IP
+          version neutral. The format of the textual representations
+          implies the IP version.</p><p>This is a <span class="type">union</span> of the
+          <span class="type">inet:ipv4-address</span> and
+          <span class="type">inet:ipv6-address</span> types defined below. The
+          representation is thus identical to the representation for
+          one of these types.</p><p>The SMIv2 type is an <span class="type">OCTET STRING (SIZE
+          (4|16))</span>.</p></dd><dt><span class="term"><span class="type">inet:ipv4-address</span></span></dt><dd><p>The ipv4-address type represents an IPv4 address in
+          dotted-quad notation.</p><p>The use of a zone index is not supported by ConfD.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV4</p></li><li class="listitem"><p>union element = <code class="varname">ip</code></p></li><li class="listitem"><p>C type = <span class="type">struct in_addr</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">IpAddress</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:ipv6-address</span></span></dt><dd><p>The ipv6-address type represents an IPv6 address in full,
+          mixed, shortened and shortened mixed notation.</p><p>The use of a zone index is not supported by ConfD.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV6</p></li><li class="listitem"><p>union element = <code class="varname">ip6</code></p></li><li class="listitem"><p>C type = <span class="type">struct in6_addr</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">IPV6-MIB:Ipv6Address</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:ip-prefix</span></span></dt><dd><p>The ip-prefix type represents an IP prefix and is IP
+          version neutral. The format of the textual representations
+          implies the IP version.</p><p>This is a <span class="type">union</span> of the
+          <span class="type">inet:ipv4-prefix</span> and
+          <span class="type">inet:ipv6-prefix</span> types defined below. The
+          representation is thus identical to the representation for
+          one of these types.</p><p>The SMIv2 type is an <span class="type">OCTET STRING (SIZE
+          (5|17))</span>.</p></dd><dt><span class="term"><span class="type">inet:ipv4-prefix</span></span></dt><dd><p>The ipv4-prefix type represents an IPv4 address prefix.
+          The prefix length is given by the number following the slash
+          character and must be less than or equal to 32.</p><p>A prefix length value of n corresponds to an IP
+          address mask which has n contiguous 1-bits from the most
+          significant bit (MSB) and all other bits set to 0.</p><p>The IPv4 address represented in dotted quad notation
+          must have all bits that do not belong to the prefix set to
+          zero.</p><p>An example: 10.0.0.0/8</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV4PREFIX</p></li><li class="listitem"><p>union element = <code class="varname">ipv4prefix</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_ipv4_prefix</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING (SIZE (5))</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:ipv6-prefix</span></span></dt><dd><p>The ipv6-prefix type represents an IPv6 address prefix.
+          The prefix length is given by the number following the slash
+          character and must be less than or equal 128.</p><p>A prefix length value of n corresponds to an IP
+          address mask which has n contiguous 1-bits from the most
+          significant bit (MSB) and all other bits set to 0.</p><p>The IPv6 address must have all bits that do not belong
+          to the prefix set to zero.</p><p>An example: 2001:DB8::1428:57AB/125</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV6PREFIX</p></li><li class="listitem"><p>union element = <code class="varname">ipv6prefix</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_ipv6_prefix</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING (SIZE (17))</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:domain-name</span></span></dt><dd><p>The domain-name type represents a DNS domain name. The
+          name SHOULD be fully qualified whenever possible.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">inet:host</span></span></dt><dd><p>The host type represents either an IP address or a DNS
+          domain name.</p><p>This is a <span class="type">union</span> of the
+          <span class="type">inet:ip-address</span> and
+          <span class="type">inet:domain-name</span> types defined above. The
+          representation is thus identical to the representation for
+          one of these types.</p><p>The SMIv2 type is an <span class="type">OCTET STRING</span>, which
+          contains the textual representation of the domain name or
+          address.</p></dd><dt><span class="term"><span class="type">inet:uri</span></span></dt><dd><p>The uri type represents a Uniform Resource Identifier
+          (URI) as defined by STD 66.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd></dl></div></div><div class="refsect2"><a name="man.3.confd_types.data_model.iana_crypt_hash"></a><h3>The iana-crypt-hash YANG module</h3><p>This module defines a type for storing passwords using a hash
+    function, and features to indicate which hash functions are
+    supported by an implementation. The type is defined in the <code class="uri">urn:ietf:params:xml:ns:yang:iana-crypt-hash</code>
+    namespace.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">ianach:crypt-hash</span></span></dt><dd><p>The crypt-hash type is used to store passwords using a
+        hash function. The algorithms for applying the hash function and
+        encoding the result are implemented in various UNIX systems as
+        the function crypt(3). A value of this type matches one of the
+        forms:</p><div class="informalexample"><pre class="programlisting">$0$&lt;clear text password&gt;
+$&lt;id&gt;$&lt;salt&gt;$&lt;password hash&gt;
+$&lt;id&gt;$&lt;parameter&gt;$&lt;salt&gt;$&lt;password hash&gt;
+
+</pre></div><p>The "$0$" prefix indicates that the value is clear text.
+        When such a value is received by the server, a hash value is
+        calculated, and the string "$&lt;id&gt;$&lt;salt&gt;$" or
+        $&lt;id&gt;$&lt;parameter&gt;$&lt;salt&gt;$ is prepended to the
+        result.  This value is stored in the configuration data
+        store.</p><p>If a value starting with "$&lt;id&gt;$", where &lt;id&gt;
+        is not "0", is received, the server knows that the value already
+        represents a hashed value, and stores it as is in the data
+        store.</p><p>In the Tail-f implementation, this type is logically a
+        union of the types tailf:md5-digest-string,
+        tailf:sha-256-digest-string, and tailf:sha-512-digest-string -
+        see the section <a class="link" href="rn02re15.html#man.3.confd_types.data_model.tailf_common" title="The tailf-common YANG module">The
+        tailf-common YANG module</a> below. All the hashed values
+        of these types are accepted, and the choice of algorithm to
+        use for hashing clear text is specified via the
+        <code class="sgmltag-element">/confdConfig/cryptHash/algorithm</code> parameter in
+        <code class="filename">confd.conf</code> (see <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>). If the
+        algorithm is set to "sha-256" or "sha-512", it can be tuned
+        via the <code class="sgmltag-element">/confdConfig/cryptHash/rounds</code> parameter in
+        <code class="filename">confd.conf</code>.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd></dl></div></div><div class="refsect2"><a name="man.3.confd_types.data_model.tailf_common"></a><h3>The tailf-common YANG module</h3><p>This module defines Tail-f common YANG types, that are
+    built-in to ConfD.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">tailf:size</span></span></dt><dd><p>A value that represents a number of bytes. An example
+          could be S1G8M7K956B; meaning 1GB+8MB+7KB+956B = 1082138556
+          bytes. The value must start with an S. Any byte magnifier
+          can be left out, i.e. S1K1B equals 1025 bytes. The order is
+          significant though, i.e. S1B56G is not a valid byte
+          size.</p><p>The value space and representation is identical to
+          the built-in <span class="type">uint64</span> type.</p></dd><dt><span class="term"><span class="type">tailf:octet-list</span></span></dt><dd><p>A list of dot-separated octets for example
+          "192.168.255.1.0".</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">tailf:value-length</code> restriction is
+          measured in number of octets for
+          <span class="type">octet-list</span>.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:hex-list</span></span></dt><dd><p>A list of colon-separated hexa-decimal octets for
+          example "4F:4C:41:71".</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">tailf:value-length</code> restriction is
+          measured in octets of binary data for
+          <span class="type">hex-list</span>.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:md5-digest-string</span></span></dt><dd><p>The md5-digest-string type automatically computes a MD5
+          digest for a value adhering to this type.</p><p>This is best explained using an example. Suppose we
+          have a leaf:</p><div class="informalexample"><pre class="programlisting">leaf key {
+  type tailf:md5-digest-string;
+}
+
+</pre></div><p>A valid configuration is:</p><div class="informalexample"><pre class="programlisting">&lt;key&gt;$0$In god we trust.&lt;/key&gt;
+
+</pre></div><p>The "$0$" prefix indicates that this is plain text and
+          that this value should be represented as a MD5 digest from
+          now. ConfD computes a MD5 digest for the value and prepends
+          "$1$&lt;salt&gt;$", where &lt;salt&gt; is a random eight
+          character salt used to generate the digest. When this value
+          later on is fetched from ConfD the following is
+          returned:</p><div class="informalexample"><pre class="programlisting">&lt;key&gt;$1$fB$ndk2z/PIS0S1SvzWLqTJb.&lt;/key&gt;
+
+</pre></div><p>A value adhering to md5-digest-string must have "$0$" or
+          a "$1$&lt;salt&gt;$" prefix.</p><p>The digest algorithm is the same
+          as the md5 crypt function used for encrypting passwords for
+          various UNIX systems, e.g. <a class="link" href="http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libcrypt/crypt.c?rev=1.5&amp;content-type=text/plain" target="_top">http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libcrypt/crypt.c?rev=1.5&amp;content-type=text/plain</a></p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">pattern</code> restriction can not be used
+          with this type.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:sha-256-digest-string</span></span></dt><dd><p>The sha-256-digest-string type automatically computes a
+          SHA-256 digest for a value adhering to this type. A value of
+          this type matches one of the forms:</p><div class="informalexample"><pre class="programlisting">$0$&lt;clear text password&gt;
+$5$&lt;salt&gt;$&lt;password hash&gt;
+$5$rounds=&lt;number&gt;$&lt;salt&gt;$&lt;password hash&gt;
+
+</pre></div><p>The "$0$" prefix indicates that this is plain text.  When
+          a plain text value is received by the server, a SHA-256 digest
+          is calculated, and the string "$5$&lt;salt&gt;$" is prepended
+          to the result, where &lt;salt&gt; is a random 16 character
+          salt used to generate the digest. This value is stored in the
+          configuration data store. The algorithm can be tuned via the
+          <code class="sgmltag-element">/confdConfig/cryptHash/rounds</code> parameter in
+          <code class="filename">confd.conf</code> (see <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>), which if
+          set to a number other than the default will cause
+          "$5$rounds=&lt;number&gt;$&lt;salt&gt;$" to be prepended
+          instead of only "$5$&lt;salt&gt;$".</p><p>If a value starting with "$5$" is received, the server
+          knows that the value already represents a SHA-256 digest, and
+          stores it as is in the data store.</p><p>The digest algorithm used is the same as the SHA-256
+          crypt function used for encrypting passwords for various UNIX
+          systems, see e.g. <a class="link" href="http://www.akkadia.org/drepper/SHA-crypt.txt" target="_top">http://www.akkadia.org/drepper/SHA-crypt.txt</a></p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:sha-512-digest-string</span></span></dt><dd><p>The sha-512-digest-string type automatically computes a
+          SHA-512 digest for a value adhering to this type. A value of
+          this type matches one of the forms:</p><div class="informalexample"><pre class="programlisting">$0$&lt;clear text password&gt;
+$6$&lt;salt&gt;$&lt;password hash&gt;
+$6$rounds=&lt;number&gt;$&lt;salt&gt;$&lt;password hash&gt;
+
+</pre></div><p>The "$0$" prefix indicates that this is plain text.  When
+          a plain text value is received by the server, a SHA-512 digest
+          is calculated, and the string "$6$&lt;salt&gt;$" is prepended
+          to the result, where &lt;salt&gt; is a random 16 character
+          salt used to generate the digest. This value is stored in the
+          configuration data store. The algorithm can be tuned via the
+          <code class="sgmltag-element">/confdConfig/cryptHash/rounds</code> parameter in
+          <code class="filename">confd.conf</code> (see <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>), which if
+          set to a number other than the default will cause
+          "$6$rounds=&lt;number&gt;$&lt;salt&gt;$" to be prepended
+          instead of only "$6$&lt;salt&gt;$".</p><p>If a value starting with "$6$" is received, the server
+          knows that the value already represents a SHA-512 digest, and
+          stores it as is in the data store.</p><p>The digest algorithm used is the same as the SHA-512
+          crypt function used for encrypting passwords for various UNIX
+          systems, see e.g. <a class="link" href="http://www.akkadia.org/drepper/SHA-crypt.txt" target="_top">http://www.akkadia.org/drepper/SHA-crypt.txt</a></p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:des3-cbc-encrypted-string</span></span></dt><dd><p>The des3-cbc-encrypted-string type automatically encrypts
+          a value adhering to this type using DES in CBC mode followed
+          by a base64 conversion. If the value isn't encrypted
+          already, that is.</p><p>This is best explained using an example. Suppose we
+          have a leaf:</p><div class="informalexample"><pre class="programlisting">leaf enc {
+  type tailf:des3-cbc-encrypted-string;
+}
+
+</pre></div><p>A valid configuration is:</p><div class="informalexample"><pre class="programlisting">&lt;enc&gt;$0$In god we trust.&lt;/enc&gt;
+
+</pre></div><p>The "$0$" prefix indicates that this is plain text.
+          When a plain text value is received by the server, the value
+          is DES3/Base64 encrypted, and the string "$7$" is prepended.
+          The resulting string is stored in the configuration data
+          store.</p><p>When a value of this type is read, the encrypted value
+          is always returned. In the example above, the following value
+          could be returned:</p><div class="informalexample"><pre class="programlisting">&lt;enc&gt;$7$Qxxsn8BVzxphCdflqRwZm6noKKmt0QoSWnRnhcXqocg=&lt;/enc&gt;
+
+</pre></div><p>If a value starting with "$7$" is received, the server
+          knows that the value is already encrypted, and stores it as is
+          in the data store.</p><p>A value adhering to this type must have a "$0$" or a
+          "$7$" prefix.</p><p>ConfD uses a configurable set of encryption keys to
+          encrypt the string. For details, see the description of
+          the <code class="sgmltag-element">encryptedStrings</code>
+          configurable in the <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a> manual
+          page.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">pattern</code> restriction can not be used
+          with this type.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:aes-cfb-128-encrypted-string</span></span></dt><dd><p>The aes-cfb-128-encrypted-string works exactly like
+          des3-cbc-encrypted-string but AES/128bits in CFB mode is used
+          to encrypt the string. The prefix for encrypted values is
+          "$8$".</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="code">pattern</code> restriction can not be used
+          with this type.</p></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:ip-address-and-prefix-length</span></span></dt><dd><p>The ip-address-and-prefix-length type represents a
+          combination of an IP address and a prefix length and is IP
+          version neutral. The format of the textual representations
+          implies the IP version.</p><p>This is a <span class="type">union</span> of the
+          <span class="type">tailf:ipv4-address-and-prefix-length</span> and
+          <span class="type">tailf:ipv6-address-and-prefix-length</span> types
+          defined below. The representation is thus identical to the
+          representation for one of these types.</p><p>The SMIv2 type is an <span class="type">OCTET STRING (SIZE
+          (5|17))</span>.</p></dd><dt><span class="term"><span class="type">tailf:ipv4-address-and-prefix-length</span></span></dt><dd><p>The ipv4-address-and-prefix-length type represents a
+          combination of an IPv4 address and a prefix length. The prefix
+          length is given by the number following the slash character
+          and must be less than or equal to 32.</p><p>An example: 172.16.1.2/16</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV4_AND_PLEN</p></li><li class="listitem"><p>union element = <code class="varname">ipv4prefix</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_ipv4_prefix</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING (SIZE (5))</span></p></li></ul></div></dd><dt><span class="term"><span class="type">tailf:ipv6-address-and-prefix-length</span></span></dt><dd><p>The ipv6-address-and-prefix-length type represents a
+          combination of an IPv6 address and a prefix length. The prefix
+          length is given by the number following the slash character
+          and must be less than or equal to 128.</p><p>An example: 2001:DB8::1428:57AB/64</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_IPV6_AND_PLEN</p></li><li class="listitem"><p>union element = <code class="varname">ipv6prefix</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_ipv6_prefix</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING (SIZE (17))</span></p></li></ul></div></dd></dl></div></div><div class="refsect2"><a name="man.3.confd_types.data_model.tailf_xsd_types"></a><h3>The tailf-xsd-types YANG module</h3><p>"This module contains useful XML Schema Datatypes that are not
+     covered by YANG types directly.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="type">xs:duration</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DURATION</p></li><li class="listitem"><p>union element = <code class="varname">duration</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_duration</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">xs:date</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DATE</p></li><li class="listitem"><p>union element = <code class="varname">date</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_date</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">xs:time</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_TIME</p></li><li class="listitem"><p>union element = <code class="varname">time</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_time</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">xs:token</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BUF</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">xs:hexBinary</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_BINARY</p></li><li class="listitem"><p>union element = <code class="varname">buf</code></p></li><li class="listitem"><p>C type = <span class="type">confd_buf_t</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd><dt><span class="term"><span class="type">xs:QName</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_QNAME</p></li><li class="listitem"><p>union element =<code class="varname">qname</code></p></li><li class="listitem"><p>C type = <span class="type">struct confd_qname</span></p></li><li class="listitem"><p>SMIv2 type = &lt;not applicable&gt;</p></li></ul></div></dd><dt><span class="term"><span class="type">xs:decimal, xs:float, xs:double</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="varname">value.type</code> = C_DOUBLE</p></li><li class="listitem"><p>union element = <code class="varname">d</code></p></li><li class="listitem"><p>C type = <span class="type">double</span></p></li><li class="listitem"><p>SMIv2 type = <span class="type">OCTET STRING</span></p></li></ul></div></dd></dl></div></div></div><div class="refsect1"><a name="man.3.confd_types.see_also"></a><h2>SEE ALSO</h2><p>The ConfD User Guide</p><p><span class="citerefentry"><span class="refentrytitle">confd_lib</span>(3)</span> - confd C library.</p><p><span class="citerefentry"><span class="refentrytitle">confd.conf</span>(5)</span>
+    - confd daemon configuration file format</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn02re14.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn02.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">confd_lib_maapi&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;ConfD man-pages, Volume 5</td></tr></table></div></body></html>

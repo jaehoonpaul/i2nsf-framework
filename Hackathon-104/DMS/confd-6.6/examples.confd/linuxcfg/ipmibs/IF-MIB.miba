@@ -1,0 +1,14 @@
+ifAdminStatus max_access = read_only
+ifAlias max_access = read_only
+ifPromiscuousMode max_access = read_only
+ifLinkUpDownTrapEnable max_access = read_only
+
+# not yet implemented
+
+ifRcvAddressTable behavior = noSuchObject
+
+# deprecated
+
+ifStackTable behavior = noSuchInstance
+ifTestTable behavior = noSuchInstance
+

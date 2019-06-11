@@ -1,0 +1,204 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_TX" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_tx\fR
+.
+.SH "METHOD get_trans"
+Lists all transactions
+.
+.SS "PARAMS"
+None\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"trans": <array of transaction>}
+
+transaction =
+ {"db": <"running" | "startup" | "candidate">,
+  "mode": <"read" | "read_write", default: "read">,
+  "conf_mode": <"private" | "shared" | "exclusive", default: "private">,
+  "tag": <string>,
+  "th": <integer>}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "get_trans"}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ {"trans":
+  [{"db": "running",
+    "th": 2}]}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD new_trans"
+Creates a new transaction
+.
+.SS "PARAMS"
+.
+.nf
+
+{"db": <"startup" | "running" | "candidate", default: "running">,
+ "mode": <"read" | "read_write", default: "read">,
+ "conf_mode": <"private" | "shared" | "exclusive", default: "private">,
+ "tag": <string>}
+.
+.fi
+.
+.P
+The \fBconf_mode\fR param specifies which transaction semantics to use when it comes to lock and commit strategies\. These three modes mimics the modes available in the CLI\.
+.
+.P
+The meaning of \fBprivate\fR, \fBshared\fR and \fBexclusive\fR have slightly different meaning depending on how the system is configured; with a writable running, startup or candidate configuration\.
+.
+.P
+\fBprivate\fR (\fIwritable running enabled\fR) \- Edit a private copy of the running configuration, no lock is taken\.
+.
+.P
+\fBprivate\fR (\fIwritable running disabled, startup enabled\fR) \- Edit a private copy of the startup configuration, no lock is taken\.
+.
+.P
+\fBexclusive\fR (\fIcandidate enabled\fR) \- Lock the running configuration and the candidate configuration and edit the candidate configuration\.
+.
+.P
+\fBexclusive\fR (\fIcandidate disabled, startup enabled\fR) \- Lock the running configuration (if enabled) and the startup configuration and edit the startup configuration\.
+.
+.P
+\fBshared\fR (\fIwritable running enabled, candidate enabled\fR) \- Edit the candidate configuration without locking it\.
+.
+.P
+The \fBtag\fR param is a way to tag transactions with a keyword, so that they can be filtered out when you call the \fBget_trans\fR method\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.P
+A new transaction handler id
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "trans\.confirmed_commit_in_progress"}
+{"type": "db\.locked", "data": {"sessions": <array of string>}}
+.
+.fi
+.
+.P
+The \fBdata\.sessions\fR param is an array of strings describing the current sessions of the locking user, e\.g\. an array of "admin tcp (cli from 192\.245\.2\.3) on since 2006\-12\-20 14:50:30 exclusive"\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "new_trans", \e
+         "params": {"db": "running", \e
+                    "mode": "read"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": 2}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD delete_trans"
+Deletes a transaction created by \fBnew_trans\fR or \fBnew_webui_trans\fR
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD set_trans_comment"
+Adds a comment to the active read\-write transaction\. This comment will be stored in rollback files and can be seen with a call to \fBget_rollbacks\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD set_trans_label"
+Adds a label to the active read\-write transaction\. This label will be stored in rollback files and can be seen with a call to \fBget_rollbacks\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

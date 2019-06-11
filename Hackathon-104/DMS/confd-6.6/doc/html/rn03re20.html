@@ -1,0 +1,1040 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>tailf_yang_extensions</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn03.html" title="ConfD man-pages, Volume 5"><link rel="prev" href="rn03re19.html" title="tailf_yang_cli_extensions"><link rel="next" href="go01.html" title="Glossary"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">tailf_yang_extensions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn03re19.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 5</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="go01.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.5.tailf_yang_extensions"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.5.tailf_yang_extensions.name"></a><h2>Name</h2><p>tailf_yang_extensions &#8212; Tail-f YANG extensions</p></div><div class="refsynopsisdiv"><a name="tailf-common.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command">tailf:action</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:actionpoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:alt-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:annotate</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:annotate-module</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:callpoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:cdb-oper</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:code-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:confirm-text</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:default-ref</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:dependency</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:display-column-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:display-groups</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:display-hint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:display-status-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:display-when</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:error-info</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:exec</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:export</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:hidden</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:id</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:id-value</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:indexed-view</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:info</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:info-html</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:java-class-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:junos-val-as-xml-tag</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:junos-val-with-prev-xml-tag</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:key-default</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:link</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:lower-case</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:meta-data</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:ncs-device-type</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:ned-data</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:ned-default-handling</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:ned-ignore-compare-config</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:no-dependency</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:no-leafref-check</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:non-strict-leafref</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:operation</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:override-auto-dependencies</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:path-filters</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:secondary-index</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-delete-value</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-exclude-object</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-lax-type-check</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-mib-module-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-name</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-ned-accessible-column</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-ned-delete-before-create</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-ned-modification-dependent</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-ned-recreate-when-modified</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-ned-set-before-row-modification</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-oid</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:snmp-row-status-column</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:sort-order</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:sort-priority</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:step</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:structure</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:suppress-echo</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:symlink</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:transaction</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:typepoint</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:unique-selector</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:validate</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:value-length</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:writable</code> </p></div><div class="cmdsynopsis"><p><code class="command">tailf:xpath-root</code> </p></div></div><div class="refsect1"><a name="man.5.tailf_yang_extensions.description"></a><h2>DESCRIPTION</h2><p>
+      This manpage describes all the Tail-f extensions to YANG.  The
+      YANG extensions consist of YANG statements and XPath functions
+      to be used in YANG data models.
+    </p><p>
+      The YANG source file
+      <code class="filename">$<span class="phrase">CONFD</span>_DIR/src/<span class="phrase">confd</span>/yang/tailf-common.yang</code>
+      gives the exact YANG syntax for all Tail-f YANG extension
+      statements - using the YANG language itself.
+    </p><p>
+      Most of the concepts implemented by the extensions listed below
+      are described in the ConfD User Guide. For example user defined
+      validation is described in the Validation chapter. The YANG syntax
+      is described here though.
+    </p></div><div class="refsect1"><a name="tailf-common.yang_statements"></a><h2>YANG STATEMENTS</h2><div class="refsect2"><a name="d5e45658"></a><h3>tailf:action <span class="emphasis"><em>name</em></span></h3><p>Defines an action (method) in the data model.</p><p>When the action is invoked, the instance on which the action is
+invoked is explicitly identified by an hierarchy of
+configuration or state data.</p><p>The action statement can have either a 'tailf:actionpoint' or a
+'tailf:exec' substatement.  If the action is implemented as a
+callback in an application daemon, 'tailf:actionpoint' is used,
+whereas 'tailf:exec' is used for an action implemented as a
+standalone executable (program or script).  Additionally, 'action'
+can have the same substatements as the standard YANG 'rpc'
+statement, e.g., 'description', 'input', and 'output'.</p><p>For example:</p><div class="informalexample"><pre class="programlisting">    container sys {
+      list interface {
+        key name;
+        leaf name {
+          type string;
+        }
+        tailf:action reset {
+          tailf:actionpoint my-ap;
+          input {
+            leaf after-seconds {
+              mandatory false;
+              type int32;
+            }
+          }
+        }
+      }
+    }</pre></div><p>We can also add a 'tailf:confirm-text', which defines a string to
+be used in the user interfaces to prompt the user for
+confirmation before the action is executed.  The optional
+'tailf:confirm-default' and 'tailf:cli-batch-confirm-default' can be set
+to control if the default is to proceed or to abort. The latter will only
+be used during batch processing in the CLI (e.g. non-interactive mode).</p><div class="informalexample"><pre class="programlisting">    tailf:action reset {
+      tailf:actionpoint my-ap;
+      input {
+        leaf after-seconds {
+          mandatory false;
+          type int32;
+        }
+      }
+      tailf:confirm-text 'Really want to do this?' {
+        tailf:confirm-default true;
+      }
+    }</pre></div><p>The 'tailf:actionpoint' statement can have a 'tailf:opaque'
+substatement, to define an opaque string that is passed to the
+callback function.</p><div class="informalexample"><pre class="programlisting">    tailf:action reset {
+      tailf:actionpoint my-ap {
+        tailf:opaque 'reset-interface';
+      }
+      input {
+        leaf after-seconds {
+          mandatory false;
+          type int32;
+        }
+      }
+    }</pre></div><p>When we use the 'tailf:exec' substatement, the argument to exec
+specifies the program or script that should be executed.  For
+example:</p><div class="informalexample"><pre class="programlisting">    tailf:action reboot {
+      tailf:exec '/opt/sys/reboot.sh' {
+        tailf:args '-c $(context) -p $(path)';
+      }
+      input {
+        leaf when {
+          type enumeration {
+            enum now;
+            enum 10secs;
+            enum 1min;
+          }
+        }
+      }
+    }</pre></div><p>
+                The <span class="emphasis"><em>action</em></span> statement can be used in: <span class="emphasis"><em>augment</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>grouping</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:actionpoint</em></span> </p><p><span class="emphasis"><em>tailf:alt-name</em></span> </p><p><span class="emphasis"><em>tailf:cli-mount-point</em></span> </p><p><span class="emphasis"><em>tailf:cli-configure-mode</em></span> </p><p><span class="emphasis"><em>tailf:cli-operational-mode</em></span> </p><p><span class="emphasis"><em>tailf:cli-oper-info</em></span> </p><p><span class="emphasis"><em>tailf:code-name</em></span> </p><p><span class="emphasis"><em>tailf:confirm-text</em></span> </p><p><span class="emphasis"><em>tailf:display-when</em></span> </p><p><span class="emphasis"><em>tailf:exec</em></span> </p><p><span class="emphasis"><em>tailf:hidden</em></span> </p><p><span class="emphasis"><em>tailf:info</em></span> </p><p><span class="emphasis"><em>tailf:info-html</em></span> </p></div><div class="refsect2"><a name="d5e45709"></a><h3>tailf:actionpoint <span class="emphasis"><em>name</em></span></h3><p>Identifies the callback in a data provider that implements the
+action.  See confd_lib_dp(3) for details on the API.</p><p>
+                The <span class="emphasis"><em>actionpoint</em></span> statement can be used in: <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>tailf:action</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:opaque</em></span> Defines an opaque string which is passed to the callback function
+in the context.</p><p><span class="emphasis"><em>tailf:internal</em></span> For internal ConfD / NCS use only.</p></div><div class="refsect2"><a name="d5e45724"></a><h3>tailf:alt-name <span class="emphasis"><em>name</em></span></h3><p>This property is used to specify an alternative name for the
+node in the CLI.  It is used instead of the node name in the CLI,
+both for input and output.</p><p>
+                The <span class="emphasis"><em>alt-name</em></span> statement can be used in: <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45737"></a><h3>tailf:annotate <span class="emphasis"><em>target</em></span></h3><p>Annotates an existing statement with a 'tailf' statement or a
+validation statement.  This is useful in order to add tailf
+statements to a module without touching the module source.
+Annotation statements can be put in a separate annotation
+module, and then passed to 'confdc' (or 'pyang') when the
+original module is compiled.</p><p>Any 'tailf' statement, except 'symlink' and 'action' can be
+annotated.  The statements 'symlink' and 'action' modifies the
+data model, and are thus not allowed.</p><p>The validation statements 'must', 'min-elements',
+'max-elements', 'mandatory', 'unique', and 'when' can also be
+annotated.</p><p>A 'description' can also be annotated.</p><p>'tailf:annotate' can occur on the top-level in a module, or in
+another 'tailf:annotate' statement.</p><p>The argument is a 'schema-nodeid', i.e. the same as for
+'augment', or a '*'.  It identifies a target node in the schema
+tree to annotate with new statements.  The special value '*' can
+be used within another 'tailf:annotate' statetement, to select all
+children for annotation.</p><p>The target node is searched for after 'uses' and 'augment'
+expansion.  All substatements to 'tailf:annotate' are treated as
+if they were written inline in the target node, with the
+exception of any 'tailf:annotate' substatements.  These are
+treated recursively.  For example, the following snippet adds
+one callpoint to /x and one to /x/y:</p><div class="informalexample"><pre class="programlisting"> tailf:annotate /x {
+   tailf:callpoint xcp;
+   tailf:annotate y {
+     tailf:callpoint ycp;
+   }
+ }
+</pre></div><p>
+                The <span class="emphasis"><em>annotate</em></span> statement can be used in: <span class="emphasis"><em>module</em></span> and <span class="emphasis"><em>submodule</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:annotate</em></span> </p></div><div class="refsect2"><a name="d5e45756"></a><h3>tailf:annotate-module <span class="emphasis"><em>module-name</em></span></h3><p>Annotates an existing module or submodule statement with a 'tailf'
+statement.  This is useful in order to add tailf statements to a
+module without touching the module source.  Annotation
+statements can be put in a separate annotation module, and then
+passed to 'confdc' (or 'pyang') when the original module is
+compiled.</p><p>'tailf:annotate-module' can occur on the top-level in a module,
+and is used to add 'tailf' statements to the module statement
+itself.</p><p>The argument is a name of the module or submodule to annotate.</p><p>
+                The <span class="emphasis"><em>annotate-module</em></span> statement can be used in: <span class="emphasis"><em>module</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:snmp-oid</em></span> </p><p><span class="emphasis"><em>tailf:snmp-mib-module-name</em></span> </p><p><span class="emphasis"><em>tailf:id</em></span> </p><p><span class="emphasis"><em>tailf:id-value</em></span> </p><p><span class="emphasis"><em>tailf:export</em></span> </p><p><span class="emphasis"><em>tailf:unique-selector</em></span> </p><p><span class="emphasis"><em>tailf:annotate-statement</em></span> Annotates an existing statement with a 'tailf' statement, a
+validation statement, or a type restrcition statement.  This is
+useful in order to add tailf statements to a module without
+touching the module source.  Annotation statements can be put in
+a separate annotation module, and then passed to 'confdc' (or
+'pyang') when the original module is compiled.</p><p>Any 'tailf' statement, except 'symlink' and 'action' can be
+annotated.  The statements 'symlink' and 'action' modifies the
+data model, and are thus not allowed.</p><p>The validation statements 'must', 'min-elements',
+'max-elements', 'mandatory', 'unique', and 'when' can also be
+annotated.</p><p>The type restriction statement 'pattern' can also be annotated.</p><p>A 'description' can also be annotated.</p><p>The argument is an XPath-like expression that selects a
+statement to annotate.  The syntax is:</p><p>  &lt;statement-name&gt; ( '[' &lt;arg-name&gt; '=' &lt;arg-value&gt; ']' )</p><p>where &lt;statement-name&gt; is the name of the statement to annotate,
+and if there are more than one such statement in the parent,
+&lt;arg-value&gt; is the quoted value of the statement's argument.</p><p>All substatements to 'tailf:annotate-statement' are treated as
+if they were written inline in the target node, with the
+exception of any 'tailf:annotate-statement' substatements.
+These are treated recursively.</p><p>For example, given the grouping:</p><p> grouping foo {
+   leaf bar {
+     type string;
+   }
+   leaf baz {
+     type string;
+   }
+ }</p><p>the following snippet adds a callpoint to the leaf 'baz':</p><p> tailf:annotate-statement grouping[name='foo'] {
+   tailf:annotate-statement leaf[name='baz'] {
+     tailf:callpoint xcp;
+   }
+ }
+</p></div><div class="refsect2"><a name="d5e45792"></a><h3>tailf:callpoint <span class="emphasis"><em>id</em></span></h3><p>Identifies a callback in a data provider.  A data provider implements
+access to external data, either configuration data in a database or
+operational data.  By default ConfD uses the embedded database
+(CDB) to store all data. However, some or all of
+the configuration data may be stored in an external source.  In
+order for ConfD to be able to manipulate external data, a data
+provider registers itself using the callpoint id as described in
+confd_lib_dp(3).</p><p>A callpoint is inherited to all child nodes unless another
+'callpoint' or an 'cdb-oper' is defined.</p><p>
+                The <span class="emphasis"><em>callpoint</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>grouping</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:config</em></span> If this statement is present, the callpoint is applied to nodes with a
+matching value of their 'config' property.</p><p><span class="emphasis"><em>tailf:transform</em></span> If set to 'true', the callpoint is a transformation callpoint.  How
+transformation callpoints are used is described in the
+'Transformations, Hooks, Hidden Data and Symlinks' chapter
+in the User's Guide.</p><p><span class="emphasis"><em>tailf:set-hook</em></span> Set hooks are a means to associate user code to the
+transaction.  Whenever an element gets written, created, or
+deleted, user code gets invoked and can optionally write more
+data into the same transaction.</p><p>The difference between set- and transaction hooks are that set
+hooks are invoked immediately when a write operation is requested
+by a north bound agent, and transaction hooks are invoked at
+commit time.</p><p>The value 'subtree' means that all nodes in the configuration
+below where the hook is defined are affected.</p><p>The value 'object' means that the hook only applies to the list
+where it is defined, i.e.  it applies to all child nodes that
+are not themselves lists.</p><p>The value 'node' means that the hook only applies to
+the node where it is defined and none of its children.</p><p>For more details on hooks,
+see the 'Transformations, Hooks, Hidden Data and Symlinks'
+chapter in the User's Guide.</p><p><span class="emphasis"><em>tailf:transaction-hook</em></span> Transaction hooks are a means to associate user code to the
+transaction.  Whenever an element gets written, created, or
+deleted, user code gets invoked and can optionally write more
+data into the same transaction.</p><p>The difference between set- and transaction hooks are that set
+hooks are invoked immediately when an element is modified, but
+transaction hooks are invoked at commit time.</p><p>The value 'subtree' means that all nodes in the configuration
+below where the hook is defined are affected.</p><p>The value 'object' means that the hook only applies to the list
+where it is defined, i.e.  it applies to all child nodes that
+are not themselves lists.</p><p>The value 'node' means that the hook only applies to
+the node where it is defined and none of its children.</p><p>For more details on hooks,
+see the 'Transformations, Hooks, Hidden Data and Symlinks'
+chapter in the User's Guide.</p><p><span class="emphasis"><em>tailf:cache</em></span> If set to 'true', the operational data served by the callpoint will
+be cached by ConfD.  If set to 'true' in a node that represents
+configuration data, the statement 'tailf:config' must be present
+and set to 'false'.  This feature is further described in the section
+'Caching operational data' in the 'Operational data' chapter in
+the User's Guide.</p><p><span class="emphasis"><em>tailf:opaque</em></span> Defines an opaque string which is passed to the callback function
+in the context.</p><p><span class="emphasis"><em>tailf:internal</em></span> For internal ConfD / NCS use only.</p></div><div class="refsect2"><a name="d5e45830"></a><h3>tailf:cdb-oper</h3><p>Indicates that operational data nodes below this node are stored in
+CDB.</p><p>
+                The <span class="emphasis"><em>cdb-oper</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:persistent</em></span> If it is set to 'true', the operational data is stored on disk.  If
+set to 'false', the operational data is not persistent across
+ConfD restarts.  The default is 'false'.</p></div><div class="refsect2"><a name="d5e45843"></a><h3>tailf:code-name <span class="emphasis"><em>name</em></span></h3><p>Used to give another name to the enum or node name in generated
+header files. This statement is typically used to avoid name
+conflicts if there is a data node with the same name as the
+enumeration, if there are multiple enumerations in different
+types with the same name but different values, or if there are
+multiple node names that are mapped to the same name in the
+header file.</p><p>
+                The <span class="emphasis"><em>code-name</em></span> statement can be used in: <span class="emphasis"><em>enum</em></span>, <span class="emphasis"><em>bit</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>identity</em></span>, <span class="emphasis"><em>notification</em></span>, and <span class="emphasis"><em>tailf:action</em></span>.</p></div><div class="refsect2"><a name="d5e45860"></a><h3>tailf:confirm-text <span class="emphasis"><em>text</em></span></h3><p>A string which is used in the user interfaces to prompt the user for
+confirmation before the action is executed. The optional
+'confirm-default' and 'cli-batch-confirm-default' can be set to control
+if the default is to proceed or to abort. The latter will only
+be used during batch processing in the CLI (e.g. non-interactive mode).</p><p>
+                The <span class="emphasis"><em>confirm-text</em></span> statement can be used in: <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, and <span class="emphasis"><em>tailf:action</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:confirm-default</em></span> Specifies if the default is to proceed or abort the action when a
+confirm-text is set.  If this value is not specified, a ConfD
+global default value can be set in clispec(5).</p><p><span class="emphasis"><em>tailf:cli-batch-confirm-default</em></span> </p></div><div class="refsect2"><a name="d5e45874"></a><h3>tailf:default-ref <span class="emphasis"><em>path</em></span></h3><p>This statement defines a dynamic default value.  It is a reference to
+some other leaf in the datamodel.  If no value has been set for
+this leaf, it defaults to the value of the leaf that the
+'default-ref' argument points to.</p><p>The textual format of a 'default-ref' is an XPath location path with
+no predicates.</p><p>The type of the leaf with a 'default-ref' will be set to the
+type of the referred leaf.  This means that the type statement in
+the leaf with the 'default-ref' is ignored, but it SHOULD match the
+type of the referred leaf.</p><p>Here is an example, where a group without a 'hold-time' will get as
+default the value of another leaf up in the hierarchy:</p><div class="informalexample"><pre class="programlisting"> leaf hold-time {
+     mandatory true;
+     type int32;
+ }
+ list group {
+     key 'name';
+     leaf name {
+         type string;
+     }
+     leaf hold-time {
+         type int32;
+         tailf:default-ref '../../hold-time';
+     }
+ }
+</pre></div><p>
+                The <span class="emphasis"><em>default-ref</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span> and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45887"></a><h3>tailf:dependency <span class="emphasis"><em>path</em></span></h3><p>This statement is used to specify that the must or when expression
+or validation function depends on a set of subtrees in the data
+store.  Whenever a node in one of those subtrees are modified,
+the must or when expression is evaluated, or validation code executed.</p><p>The textual format of a 'dependency' is an XPath location path with
+no predicates.</p><p>If the node that declares the dependency is a leaf, there is an
+implicit dependency to the leaf itself.</p><p>For example, with the leafs below, the validation code for'vp'
+will be called whenever 'a' or 'b' is modified.</p><div class="informalexample"><pre class="programlisting"> leaf a {
+     type int32;
+     tailf:validate vp {
+         tailf:dependency '../b';
+     }
+ }
+ leaf b {
+     type int32;
+ }</pre></div><p>For 'when' and 'must' expressions, the compiler can derive the
+dependencies automatically from the XPath expression in most
+cases.  The exception is if any wildcards are used in the expression.</p><p>For 'when' expressions to work, a 'tailf:dependency' statement
+must be given, unless the compiler can figure out the dependency
+by itself.</p><p>Note that having 'tailf:validate' statements without
+dependencies impacts the overall performance of the system,
+since all such validation functions are evaluated at every
+commit.</p><p>
+                The <span class="emphasis"><em>dependency</em></span> statement can be used in: <span class="emphasis"><em>must</em></span>, <span class="emphasis"><em>when</em></span>, and <span class="emphasis"><em>tailf:validate</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p></div><div class="refsect2"><a name="d5e45907"></a><h3>tailf:display-column-name <span class="emphasis"><em>name</em></span></h3><p>This property is used to specify an alternative column name for the
+leaf in the CLI.  It is used when displaying the leaf in a
+table in the CLI.</p><p>
+                The <span class="emphasis"><em>display-column-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45916"></a><h3>tailf:display-groups <span class="emphasis"><em>value</em></span></h3><p>This property is used in the CLI when 'enableDisplayGroups' has been
+set to true in the confd.conf(5) file.  Display groups are used
+to control which elements should be displayed by the show command.</p><p>The argument is a space-separated string of tags.</p><p>In the J-style CLI the 'show status', 'show table' and 'show
+all' commands use display groups.  In the C- and I-style
+CLIs the 'show &lt;pattern&gt;' command uses display groups.</p><p>If no display groups are specified when running the commands, the
+node will be displayed if it does not have the 'display-groups'
+property, or if the property value includes the special value 'none'.</p><p>If display groups are specified when running the command, then
+the node will be displayed only if its 'display-group'
+property contains one of the specified display groups.</p><p>
+                The <span class="emphasis"><em>display-groups</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45931"></a><h3>tailf:display-hint <span class="emphasis"><em>hint</em></span></h3><p>This statement can be used to add a display-hint to a leaf or
+typedef of type binary.  The display-hint is used in the CLI
+and WebUI instead of displaying the binary as a base64-encoded
+string.  It is also used for input.</p><p>The value of a 'display-hint' is defined in RFC 2579.</p><p>For example, with the display-hint value '1x:', the value is
+printed and inputted as a colon-separated hex list.</p><p>
+                The <span class="emphasis"><em>display-hint</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span> and <span class="emphasis"><em>typedef</em></span>.</p></div><div class="refsect2"><a name="d5e45941"></a><h3>tailf:display-status-name <span class="emphasis"><em>name</em></span></h3><p>This property is used to specify an alternative name for the
+element in the CLI.  It is used when displaying status
+information in the C- and I-style CLIs.</p><p>
+                The <span class="emphasis"><em>display-status-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e45952"></a><h3>tailf:display-when <span class="emphasis"><em>condition</em></span></h3><p>The argument contains an XPath expression which specifies when
+the node should be displayed in the CLI and WebUI.  For example,
+when the CLI performs completion, and one of the candidates is
+a node with a 'display-when' expression, the expression is
+evaluated by the CLI.  If the XPath expression evaluates to
+true, the node is shown as a possible completion candidate,
+otherwise not.</p><p>For a list, the display-when expression is evaluated once for the
+entire list.  In this case, the XPath context node is the list's parent
+node.</p><p>This feature is further described in the 'Transformations, Hooks,
+Hidden Data and Symlinks' chapter in the User Guide.</p><p>
+                The <span class="emphasis"><em>display-when</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p></div><div class="refsect2"><a name="d5e45968"></a><h3>tailf:error-info</h3><p>Declares a set of data nodes to be used in the NETCONF &lt;error-info&gt;
+element.</p><p>A data provider can use one of the
+confd_*_seterr_extended_info() functions (see confd_lib_dp(3))
+to set these data nodes on errors.</p><p>This statement may be used multiple times.</p><p>For example:</p><div class="informalexample"><pre class="programlisting">   tailf:error-info {
+      leaf severity {
+        type enumeration {
+          enum info;
+          enum error;
+          enum critical;
+        }
+      }
+      container detail {
+        leaf class {
+          type uint8;
+        }
+        leaf code {
+          type uint8;
+        }
+      }
+    }</pre></div><p>
+                The <span class="emphasis"><em>error-info</em></span> statement can be used in: <span class="emphasis"><em>module</em></span> and <span class="emphasis"><em>submodule</em></span>.</p></div><div class="refsect2"><a name="d5e45980"></a><h3>tailf:exec <span class="emphasis"><em>cmd</em></span></h3><p>Specifies that the rpc or action is implemented as an OS executable.
+The argument 'cmd' is the path to the executable file.  If the
+command is in the $PATH of ConfD, the 'cmd' can be just the name
+of the executable.</p><p>
+                The <span class="emphasis"><em>exec</em></span> statement can be used in: <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, and <span class="emphasis"><em>tailf:action</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:args</em></span> Specifies arguments to send to the executable when it is invoked by
+ConfD.  The argument 'value' is a space separated list of
+argument strings.  It may contain variables on the form
+$(variablename).  These variables will be expanded before the
+command is executed.  The following variables are always available:</p><p> $(user)   The name of the user which runs the operation.</p><p> $(groups) A comma separated string of the names of the groups
+           the user belongs to.</p><p> $(ip)     The source ip address of the user session.</p><p> $(uid)    The user id of the user.</p><p> $(gid)    The group id of the user.</p><p>When the parent 'exec' statement is a substatement of 'action', the
+following additional variablenames are available:</p><p> $(keypath)   The path that identifies the parent container of 'action'
+              in string keypath form, e.g.,
+              '/sys:host{earth}/interface{eth0}'.</p><p> $(path)      The path that identifies the parent container of 'action'
+              in CLI path form, e.g., 'host earth interface eth0'.</p><p> $(context)   cli | webui | netconf | any string provided by MAAPI</p><p>For  example:
+  args '-user $(user) $(uid)';
+might expand to:
+  -user bob 500
+</p><p><span class="emphasis"><em>tailf:uid</em></span> Specifies which user id to use when executing the command.</p><p>If 'uid' is an integer value, the command is run as the user with
+this user id.</p><p>If 'uid' is set to either 'user', 'root' or an integer user id, the
+ConfD daemon must have been started as root (or setuid), or the
+ConfD executable program 'cmdwrapper' must have setuid root
+permissions.</p><p><span class="emphasis"><em>tailf:gid</em></span> Specifies which group id to use when executing the command.</p><p>If 'gid' is an integer value, the command is run as the group with
+this group id.</p><p>If 'gid' is set to either 'user', 'root' or an integer group id, the
+ConfD daemon must have been started as root (or setuid), or the
+ConfD executable program 'cmdwrapper' must have setuid root
+permissions.</p><p><span class="emphasis"><em>tailf:wd</em></span> Specifies which working directory to use when executing the
+command. If not given the command is executed from the homedir
+of the user logged in to ConfD.</p><p><span class="emphasis"><em>tailf:global-no-duplicate</em></span> Specifies that only one instance with the same name can be run at any
+one time in the system. The command can be started either from
+the CLI, the WebUI or through NETCONF. If a client tries to
+execute this command while another operation with the same
+'global-no-duplicate' name is running, a 'resource-denied' error is
+generated.</p><p><span class="emphasis"><em>tailf:raw-xml</em></span> Specifies that ConfD should not convert the RPC XML parameters to
+command line arguments.  Instead, ConfD just passes the raw XML on
+stdin to the program.</p><p>This statement is not allowed in 'tailf:action'.</p><p><span class="emphasis"><em>tailf:interruptible</em></span> Specifies whether the client can abort the
+execution of the executable.</p><p><span class="emphasis"><em>tailf:interrupt</em></span> This statement specifies which signal is sent to executable by ConfD
+in case the client terminates or aborts the execution.</p><p>If not specified, 'sigkill' is sent.</p></div><div class="refsect2"><a name="d5e46022"></a><h3>tailf:export <span class="emphasis"><em>agent</em></span></h3><p>Makes this data model visible in the northbound interface 'agent'.</p><p>This statement makes it possible to have a data model visible
+through some northbound interface but not others.  For example,
+if a MIB is used to generate a YANG module, the resulting YANG
+module can be exposed through SNMP only.</p><p>Use the special agent 'none' to make the data model completely
+hidden to all notherbound interfaces.</p><p>The agent can also be a free-form string.  In this case, the data
+model will be visible to maapi applications using this string as its
+'context'.</p><p>
+                The <span class="emphasis"><em>export</em></span> statement can be used in: <span class="emphasis"><em>module</em></span>.</p></div><div class="refsect2"><a name="d5e46032"></a><h3>tailf:hidden <span class="emphasis"><em>tag</em></span></h3><p>This statement can be used to hide a node from some, or all,
+northbound interfaces.  All nodes with the same value are
+considered a hide group and are treated the same with regards to
+being visible or not in a northbound interface.</p><p>A node with an hidden property is not shown in the northbound
+user interfaces (CLI and Web UI) unless an 'unhide' operation has
+been performed in the user interface.</p><p>The hidden value 'full' indicates that the node should be hidden
+from all northbound interfaces, including programmatical interfaces
+such as NETCONF.</p><p>The value '*' is not valid.</p><p>A hide group can be unhidden only if this has been explicitly
+allowed in the confd.conf(5) daemon configuration.</p><p>Multiple hide groups can be specified by giving this statement
+multiple times.  The node is shown if any of the specified hide groups
+has been given in the 'unhide' operation.</p><p>Note that if a mandatory node is hidden, a hook callback
+function (or similar) might be needed in order to set the
+element.</p><p>
+                The <span class="emphasis"><em>hidden</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:action</em></span>, <span class="emphasis"><em>refine</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>rpc</em></span>, and <span class="emphasis"><em>action</em></span>.</p></div><div class="refsect2"><a name="d5e46053"></a><h3>tailf:id <span class="emphasis"><em>name</em></span></h3><p>This statement is used when old confspec models are translated to
+YANG.  It needs to be present if systems deployed with data
+based on confspecs are updated to YANG based data models.</p><p>In confspec, the 'id' of a data model was a string that never
+would change, even if the namespace URI would change.  It is not
+needed in YANG, since the namespace URi cannot change as a module
+is updated.</p><p>This statement is typically present in YANG modules generated by
+cs2yang.  If no live upgrade needs to be done from a confspec
+based system to a YANG based system, this statement can be
+removed from such a generated module.</p><p>
+                The <span class="emphasis"><em>id</em></span> statement can be used in: <span class="emphasis"><em>module</em></span>.</p></div><div class="refsect2"><a name="d5e46062"></a><h3>tailf:id-value <span class="emphasis"><em>value</em></span></h3><p>This statement lets you specify a hard wired numerical id value to
+associate with the parent node.  This id value is normally auto
+generated by confdc and is used when working with the ConfD API
+to refer to a tag name, to avoid expensive string comparison.
+Under certain rare circumstances this auto generated hash value
+may collide with a hash value generated for a node in another
+data model.  Whenever such a collision occurs the ConfD daemon
+fails to start and instructs the developer to use the 'id-value'
+statement to resolve the collision.</p><p>
+A thorough discussion on id-value can be found in the section Hash
+Values and the id-value Statement in the YANG chapter in the User
+Guide.</p><p>
+                The <span class="emphasis"><em>id-value</em></span> statement can be used in: <span class="emphasis"><em>module</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>identity</em></span>, <span class="emphasis"><em>notification</em></span>, <span class="emphasis"><em>choice</em></span>, <span class="emphasis"><em>case</em></span>, and <span class="emphasis"><em>tailf:action</em></span>.</p></div><div class="refsect2"><a name="d5e46081"></a><h3>tailf:indexed-view</h3><p>This element can only be used if the list has a single key of
+an integer type.</p><p>It is used to signal that lists instances uses an indexed view,
+i.e., making it possible to insert a new list entry at a certain
+position.  If a list entry is inserted at a certain position, list
+entries following this position are automatically renumbered by the
+system, if needed, to make room for the new entry.</p><p>This statement is mainly provided for backwards compatibility with
+confspecs.  New data models should consider using YANG's ordered-by
+user statement instead.</p><p>
+                The <span class="emphasis"><em>indexed-view</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:auto-compact</em></span> If an indexed-view list is marked with this statement, it means that
+the server will automatically renumber entires after a delete
+operation so that the list entries are strictly monotonically
+increasing, starting from 1, with no holes.  New list entries
+can either be insterted anywhere in the list, or created at the
+end; but it is an error to try to create a list entry with a
+key that would result in a hole in the sequence.</p><p>For example, if the list has entries 1,2,3 it is an error to
+create entry 5, but correct to create 4.</p></div><div class="refsect2"><a name="d5e46093"></a><h3>tailf:info <span class="emphasis"><em>text</em></span></h3><p>Contains a textual description of the definition, suitable for
+being presented to the CLI and WebUI users.</p><p>The first sentence of this textual description is used in the
+CLI as a summary, and displayed to the user when a short
+explanation is presented.</p><p>The 'description' statement is related, but targeted to the module
+reader, rather than the CLI or WebUI user.</p><p>The info string may contain a ';;' keyword. It is used in type
+descriptions for leafs when the builtin type info needs to be
+customized.  A 'normal' info string describing a type is assumed
+to contain a short textual description.  When ';;' is present it
+works as a delimiter where the text before the keyword is
+assumed to contain a short description and the text after the
+keyword a long(er) description.  In the context of completion in
+the CLI the text will be nicely presented in two columns where
+both descriptions are aligned when displayed.</p><p>
+                The <span class="emphasis"><em>info</em></span> statement can be used in: <span class="emphasis"><em>typedef</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>identity</em></span>, <span class="emphasis"><em>type</em></span>, <span class="emphasis"><em>enum</em></span>, <span class="emphasis"><em>bit</em></span>, <span class="emphasis"><em>length</em></span>, <span class="emphasis"><em>pattern</em></span>, <span class="emphasis"><em>range</em></span>, <span class="emphasis"><em>refine</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>tailf:action</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>tailf:cli-exit-command</em></span>.</p></div><div class="refsect2"><a name="d5e46121"></a><h3>tailf:info-html <span class="emphasis"><em>text</em></span></h3><p>This statement works exactly as 'tailf:info', with the exception
+that it can contain HTML markup.  The WebUI will display the
+string with the HTML markup, but the CLI will remove all HTML markup
+before displaying the string to the user.  In most cases,
+using this statement avoids using special descriptions in webspecs
+and clispecs.</p><p>If this statement is present, 'tailf:info' cannot be given at the same
+time.</p><p>
+                The <span class="emphasis"><em>info-html</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>rpc</em></span>, <span class="emphasis"><em>action</em></span>, <span class="emphasis"><em>identity</em></span>, <span class="emphasis"><em>tailf:action</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46138"></a><h3>tailf:java-class-name <span class="emphasis"><em>name</em></span></h3><p>Used to give another name than the default name to generated Java
+classes.  This statemement is typically used to avoid name conflicts
+in the Java classes.</p><p>
+                The <span class="emphasis"><em>java-class-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46149"></a><h3>tailf:junos-val-as-xml-tag</h3><p>Internal extension to handle non-YANG JUNOS data models.
+Use only for key enumeration leafs.</p><p>
+                The <span class="emphasis"><em>junos-val-as-xml-tag</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46155"></a><h3>tailf:junos-val-with-prev-xml-tag</h3><p>Internal extension to handle non-YANG JUNOS data models.
+Use only for keys where previous key is marked with
+'tailf:junos-val-as-xml-tag'.</p><p>
+                The <span class="emphasis"><em>junos-val-with-prev-xml-tag</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46161"></a><h3>tailf:key-default <span class="emphasis"><em>value</em></span></h3><p>Must be used for key leafs only.</p><p>Specifies a value that the CLI and WebUI will use when a list entry is
+created, and this key leaf is not given a value.</p><p>If one key leaf has a key-default value, all key leafs that
+follow this key leaf must also have key-default values.</p><p>
+                The <span class="emphasis"><em>key-default</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46170"></a><h3>tailf:link <span class="emphasis"><em>target</em></span></h3><p>This statement specifies that the data node should be
+implemented as a link to another data node, called the target
+data node.  This means that whenever the node is modified, the
+system modifies the target data node instead, and whenever the
+data node is read, the system returns the value of target data
+node.</p><p>Note that if the data node is a leaf, the target node MUST also
+be a leaf, and if the data node is a leaf-list, the target node
+MUST also be a leaf-list.</p><p>Note that the type of the data node MUST be the same as the
+target data node.  Currently the compiler cannot check this.</p><p>The argument is an XPath absolute location path.  If
+the target lies within lists, all keys must be specified.
+A key either has a value, or is a reference to a key in the path of the
+source node, using the function current() as starting
+point for an XPath location path.  For example:</p><p>  /a/b[k1='paul'][k2=current()/../k]/c</p><p>
+                The <span class="emphasis"><em>link</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span> and <span class="emphasis"><em>leaf-list</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:inherit-set-hook</em></span> This statement specifies that a 'tailf:set-hook' statement should
+survive through symlinks. If set to true a set hook gets called as
+soon as the value is set via a symlink but also during commit. The
+normal behaviour is to only call the set hook during commit time.</p></div><div class="refsect2"><a name="d5e46185"></a><h3>tailf:lower-case</h3><p>Use for config false leafs and leaf-lists only.</p><p>This extension serves as a hint to the system that the
+leaf's type has the implict pattern '[^A-Z]*', i.e., all
+strings returned by the data provider are lower case (in
+the 7-bit ASCII range).</p><p>The CLI uses this hint when it is run in case-insensitive mode
+to optimize the lookup calls towards the data provider.</p><p>
+                The <span class="emphasis"><em>lower-case</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span> and <span class="emphasis"><em>leaf-list</em></span>.</p></div><div class="refsect2"><a name="d5e46194"></a><h3>tailf:meta-data <span class="emphasis"><em>value</em></span></h3><p>Extra meta information attached to the node. The instance data part
+of this information is accessible using MAAPI. It is also printed
+in communication with CLI NEDs, but is not visible to normal
+users of the CLI.</p><div class="informalexample"><pre class="programlisting">To CLI NEDs, the output will be printed as comments like this:
+! meta-data :: /ncs:devices/device{xyz}/config/xyz:AA :: A_STRING</pre></div><p>The schema information is available to the ConfD C-API through the
+confd_cs_node struct, and to the JSON-RPC API through get-schema.</p><p>Note: Can't be used on key leafs.</p><p>
+                The <span class="emphasis"><em>meta-data</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:meta-value</em></span> This statement contains a string value for the meta data key.</p><p>The output from the CLI to CLI NEDs will be similar to
+comments like this:
+! meta-data :: /ncs:devices/device{xyz}/config/xyz:AA :: A_KEY :: A_VALUE
+</p></div><div class="refsect2"><a name="d5e46214"></a><h3>tailf:ncs-device-type <span class="emphasis"><em>type</em></span></h3><p>Internal extension to tell NCS what type of device the data model
+is used for.</p><p>
+                The <span class="emphasis"><em>ncs-device-type</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>module</em></span>.</p></div><div class="refsect2"><a name="d5e46226"></a><h3>tailf:ned-data <span class="emphasis"><em>path-expression</em></span></h3><p>Dynamic meta information to be added by the NCS device manager.</p><p>In the cases where NCS can't provide the complete 'to' and
+'from' transactions to the NED to read from (most notably when
+using the commit queue) this annotation can be used to tell the
+NCS device manager to save part of the 'to' and / or 'from'
+transaction so that the NED will be able to read from these
+parts as needed.</p><p>The 'path-expression' will be used as an XPath filter to
+indicate which data will be preserved. Use the 'transaction'
+substatement to choose which transaction to apply the filter
+on. The context node of the XPath filter is always the instance
+data node corresponding to the schema node where the 'ned-data'
+extension is added.</p><p>Note that the filter will only be applied if the node that
+has this annotation is in the diffset of the transaction. The
+'operation' substatement can be used to further limit when the
+filter should be applied.</p><p>
+                The <span class="emphasis"><em>ned-data</em></span> statement can be used in: <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, and <span class="emphasis"><em>refine</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:transaction</em></span> </p><p><span class="emphasis"><em>tailf:xpath-root</em></span> </p><p><span class="emphasis"><em>tailf:operation</em></span> </p></div><div class="refsect2"><a name="d5e46247"></a><h3>tailf:ned-default-handling <span class="emphasis"><em>mode</em></span></h3><p>This statement can only be used in NEDs for devices that have
+irregular handling of defaults.  It sets a special default
+handling mode for the leaf, regardless of the device's native
+default handling mode.</p><p>
+                The <span class="emphasis"><em>ned-default-handling</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46254"></a><h3>tailf:ned-ignore-compare-config</h3><p>Typically used for ignoring device encrypted leafs
+in the compare-config output.</p><p>
+                The <span class="emphasis"><em>ned-ignore-compare-config</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46260"></a><h3>tailf:no-dependency</h3><p>This optional statements can be used to explicitly say that a 'must'
+expression or a validation function is evaluated at every
+commit.  Use this with care, since the overall performance of
+the system is impacted if this statement is used.</p><p>
+                The <span class="emphasis"><em>no-dependency</em></span> statement can be used in: <span class="emphasis"><em>must</em></span> and <span class="emphasis"><em>tailf:validate</em></span>.</p></div><div class="refsect2"><a name="d5e46267"></a><h3>tailf:no-leafref-check</h3><p>This statement can be used to let 'leafref' type statements
+reference non-existing leafs. While similar to the
+'tailf:non-strict-leafref' statement, this does not allow
+reference from config to non-config.</p><p>
+                The <span class="emphasis"><em>no-leafref-check</em></span> statement can be used in: <span class="emphasis"><em>type</em></span>.</p></div><div class="refsect2"><a name="d5e46273"></a><h3>tailf:non-strict-leafref</h3><p>This statement can be used in leafs and leaf-lists similar
+to 'leafref', but allows reference to non-existing leafs,
+and allows reference from config to non-config.</p><p>This statement takes no argument, but expects the core YANG
+statement 'path' as a substatement.  The function 'deref' cannot
+be used in the path, since it works on nodes of type leafref
+only.</p><p>The type of the leaf or leaf-list must be exactly the same
+as the type of the target.</p><p>This statement can be viewed as a substitute for a standard
+'require-instance false' on leafrefs, which isn't allowed.</p><p>The CLI uses this statement to provide completion with
+existing values, and the WebUI uses it to provide a
+drop-down box with existing values.</p><p>
+                The <span class="emphasis"><em>non-strict-leafref</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span> and <span class="emphasis"><em>leaf-list</em></span>.</p></div><div class="refsect2"><a name="d5e46284"></a><h3>tailf:operation <span class="emphasis"><em>op</em></span></h3><p>Only evaluate the XPath filter when the operation matches.</p></div><div class="refsect2"><a name="d5e46288"></a><h3>tailf:override-auto-dependencies</h3><p>This optional statement can be used to instruct the compiler to
+use the provided tailf:dependency statements instead of the
+dependencies that the compiler calculates from the expression.</p><p>Use with care, and only if you are sure that the provided dependecies
+are correct.</p><p>
+                The <span class="emphasis"><em>override-auto-dependencies</em></span> statement can be used in: <span class="emphasis"><em>must</em></span> and <span class="emphasis"><em>when</em></span>.</p></div><div class="refsect2"><a name="d5e46296"></a><h3>tailf:path-filters <span class="emphasis"><em>value</em></span></h3><p>Used for type 'instance-identifier' only.</p><p>The argument is a space separated list of absolute or relative XPath
+expressions.</p><p>This statement declares that the instance-identifier value must match
+one of the specified paths, according to the following rules:</p><p> 1.  each XPath expression is evaluated, and returns a node set.</p><p> 2.  if there is no 'tailf:no-subtree-match' statement, the
+     instance-identifier matches if it refers to a node in this
+     node set, or if it refers to any descendant node of this
+     node set.</p><p> 3.  if there is a 'tailf:no-subtree-match' statement, the
+     instance-identifier matches if it refers to a node in this
+     node set.</p><p>For example:</p><p>  The value /a/b[key='k1']/c matches the XPath expression
+  /a/b[key='k1']/c.</p><p>  The value /a/b[key='k1']/c matches the XPath expression /a/b/c.</p><p>  The value /a/b[key='k1']/c matches the XPath expression /a/b, if
+  there is no 'tailf:no-subtree-match' statement.</p><p>  The value /a/b[key='k1'] matches the XPath expression /a/b, if
+  there is a 'tailf:no-subtree-match' statement.
+</p><p>
+                The <span class="emphasis"><em>path-filters</em></span> statement can be used in: <span class="emphasis"><em>type</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:no-subtree-match</em></span> See tailf:path-filters.</p></div><div class="refsect2"><a name="d5e46316"></a><h3>tailf:secondary-index <span class="emphasis"><em>name</em></span></h3><p>This statement creates a secondary index with a given name in the
+parent list.  The secondary index can be used to control the
+displayed sort order of the instances of the list.</p><p>Read more about sort order in 'The ConfD Command-Line Interface
+(CLI)' chapters in the User Guide, confd_lib_dp(3), and
+confd_lib_maapi(3).</p><p>NOTE: Currently secondary-index is not supported for config false
+data stored in CDB.</p><p>
+                The <span class="emphasis"><em>secondary-index</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:index-leafs</em></span> This statement contains a space separated list of leaf names.  Each
+such leaf must be a direct child to the list.  The secondary
+index is kept sorted according to the values of these leafs.</p><p><span class="emphasis"><em>tailf:sort-order</em></span> </p><p><span class="emphasis"><em>tailf:display-default-order</em></span> Specifies that the list should be displayed sorted according
+to this secondary index in the show command.</p><p>If the list has more than one secondary index,
+'display-default-order' must be present in one index only.</p><p>Used in J-, I- and C-style CLIs and WebUI.</p></div><div class="refsect2"><a name="d5e46334"></a><h3>tailf:snmp-delete-value <span class="emphasis"><em>value</em></span></h3><p>This statement is used to define a value to be used in SNMP
+to delete an optional leaf.  The argument to this statement is the
+special value.  This special value must not be part of the value
+space for the YANG leaf.</p><p>If the optional leaf does not exists, reading it over SNMP returns
+'noSuchInstance', unless the statement 'tailf:snmp-send-delete-value'
+is used, in which case the same value as used to delete the node
+is returned.</p><p>For example, the YANG leaf:</p><div class="informalexample"><pre class="programlisting">     leaf opt-int {
+       type int32 {
+         range '1..255';
+       }
+       tailf:snmp-delete-value 0 {
+         tailf:snmp-send-delete-value;
+       }
+     }</pre></div><p>can be mapped to a SMI object with syntax:</p><p>     SYNTAX       Integer32 (0..255)</p><p>Setting such an object to '0' over SNMP will delete the node
+from the datastore.  If the node does not exsist, reading it over
+SNMP will return '0'.</p><p>
+                The <span class="emphasis"><em>snmp-delete-value</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:snmp-send-delete-value</em></span> See tailf:snmp-delete-value.</p></div><div class="refsect2"><a name="d5e46351"></a><h3>tailf:snmp-exclude-object</h3><p>Used when an SNMP MIB is generated from a YANG module, using
+the --generate-oids option to confdc.</p><p>If this statement is present, confdc will exclude this object
+from the resulting MIB.</p><p>
+                The <span class="emphasis"><em>snmp-exclude-object</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46363"></a><h3>tailf:snmp-lax-type-check <span class="emphasis"><em>value</em></span></h3><p>Normally, the ConfD MIB compiler checks that the data type of an SNMP
+object matches the data type of the corresponding YANG leaf.  If
+both objects are writeble, the data types need to precisely
+match, but if the SNMP object is read-only, or if
+snmp-lax-type-check is set to 'true', the compiler accepts the
+object if the SNMP type's value space is a superset of the YANG
+type's value space.</p><p>If snmp-lax-type-check is true and the MIB object is writable, the SNMP
+agent will reject values outside the YANG data type range in runtime.</p><p>
+                The <span class="emphasis"><em>snmp-lax-type-check</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46371"></a><h3>tailf:snmp-mib-module-name <span class="emphasis"><em>name</em></span></h3><p>Used when the YANG module is mapped to an SNMP module.</p><p>Specifies the name of the SNMP MIB module where the SNMP objects
+are defined.</p><p>This property is inherited by all child nodes.</p><p>
+                The <span class="emphasis"><em>snmp-mib-module-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>module</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46385"></a><h3>tailf:snmp-name <span class="emphasis"><em>name</em></span></h3><p>Used when the YANG module is mapped to an SNMP module.</p><p>When the parent node is mapped to an SNMP object, this statement
+specifies the name of the SNMP object.</p><p>If the parent node is mapped to multiple SNMP objects, this
+statement can be given multiple times.  The first statement
+specifies the primary table.</p><p>In a list, the argument is interpreted as:</p><p>      [MIB-MODULE-NAME:]TABLE-NAME</p><p>For a leaf representing a table column, it is interpreted as:</p><p>      [[MIB-MODULE-NAME:]TABLE-NAME:]NAME</p><p>For a leaf representing a scalar variable, it is interpreted as:</p><p>      [MIB-MODULE-NAME:]NAME</p><p>If a YANG list is mapped to multiple SNMP tables, each such SNMP
+table must be specified with a 'tailf:snmp-name' statement.  If
+the table is defined in another MIB than the MIB specified in
+'tailf:snmp-mib-module-name', the MIB name must be specified in this
+argument.</p><p>A leaf in a list that is mapped to multiple SNMP tables must specify
+the name of the table it is mapped to if it is different from the
+primary table.</p><p>In the following example, a single YANG list 'interface' is mapped
+to the MIB tables ifTable, ifXTable, and ipv4InterfaceTable:</p><div class="informalexample"><pre class="programlisting"> list interface {
+   key index;
+   tailf:snmp-name 'ifTable'; // primary table
+   tailf:snmp-name 'ifXTable';
+   tailf:snmp-name 'IP-MIB:ipv4InterfaceTable';</pre></div><div class="informalexample"><pre class="programlisting">   leaf index {
+     type int32;
+   }
+   leaf description {
+     type string;
+     tailf:snmp-name 'ifDescr';  // mapped to primary table
+   }
+   leaf name {
+     type string;
+     tailf:snmp-name 'ifXTable:ifName';
+   }
+   leaf ipv4-enable {
+     type boolean;
+     tailf:snmp-name
+       'IP-MIB:ipv4InterfaceTable:ipv4InterfaceEnableStatus';
+   }
+   ...
+ }</pre></div><p>When emitting a mib from yang, enum labels are used as-is if they
+follow the SMI rules for labels (no '.' or '_' characters and beginning
+with a lowercase letter). Any label that doesn't satisfy the SMI rules
+will be converted as follows:</p><p> An initial uppercase character will be downcased.</p><p> If the initial character is not a letter it will be prepended with
+ an 'a'.</p><p> Any '.' or '_' characters elsewhere in the label will be substituted
+ with '-' characters.</p><p> In the resulting label, any multiple '-' character sequence will be
+ replaced with a single '-' character.</p><p>If this automatic conversion is not suitable, snmp-name can be used
+to specify the label to use when emitting a MIB.</p><p>
+                The <span class="emphasis"><em>snmp-name</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>enum</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46419"></a><h3>tailf:snmp-ned-accessible-column <span class="emphasis"><em>leaf-name</em></span></h3><p>The name or subid number of an accessible column that is
+instantiated in all table entries in a table.  The column does
+not have to be writable.  The SNMP NED will use this column
+when it uses GET-NEXT to loop through the list entries, and
+when doing existence tests.</p><p>If this column is not given, the SNMP NED uses the following
+algorithm:</p><p>  1.  If there is a RowStatus column, it will be used.
+  2.  If an INDEX leaf is accessible, it will be used.
+  3.  Otherwise, use the first accessible column returned
+      by the SNMP agent.</p><p>
+                The <span class="emphasis"><em>snmp-ned-accessible-column</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>.</p></div><div class="refsect2"><a name="d5e46428"></a><h3>tailf:snmp-ned-delete-before-create</h3><p>This statement is used in a list to make the SNMP NED always send
+deletes before creates.  Normally, creates are sent before deletes.</p><p>
+                The <span class="emphasis"><em>snmp-ned-delete-before-create</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>.</p></div><div class="refsect2"><a name="d5e46434"></a><h3>tailf:snmp-ned-modification-dependent</h3><p>This statement is used on all columns in a table that
+require the usage of the column marked with
+tailf:snmp-ned-set-before-row-modification.</p><p>This statement can be used on any column in a table where one
+leaf is marked with tailf:snmp-ned-set-before-row-modification,
+or a table that AUGMENTS such a table, or a table with a
+foreign index in such a table.</p><p>
+                The <span class="emphasis"><em>snmp-ned-modification-dependent</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46441"></a><h3>tailf:snmp-ned-recreate-when-modified</h3><p>This statement is used in a list to make the SNMP NED delete
+and recreate the row when a column in the row is modified.</p><p>
+                The <span class="emphasis"><em>snmp-ned-recreate-when-modified</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>.</p></div><div class="refsect2"><a name="d5e46447"></a><h3>tailf:snmp-ned-set-before-row-modification <span class="emphasis"><em>value</em></span></h3><p>If this statement is present on a leaf, it tells the SNMP NED
+that if a column in the row is modified, and it is marked with
+'tailf:snmp-ned-modification-dependent', then the column marked
+with 'tailf:snmp-ned-set-before-modification' needs to be set to
+&lt;value&gt; before the other column is modified.  After all such
+columns have been modified, the column marked with
+'tailf:snmp-ned-set-before-modification' is reset to its initial
+value.</p><p>
+                The <span class="emphasis"><em>snmp-ned-set-before-row-modification</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46454"></a><h3>tailf:snmp-oid <span class="emphasis"><em>oid</em></span></h3><p>Used when the YANG module is mapped to an SNMP module.</p><p>If this statement is present as a direct child to 'module',
+it indicates the top level OID for the module.</p><p>When the parent node is mapped to an SNMP object, this statement
+specifies the OID of the SNMP object.  It may be either a full
+OID or just a suffix (a period, followed by an integer).  In the
+latter case, a full OID must be given for some ancestor element.</p><p>NOTE: when this statement is set in a list, it refers to the OID of
+the correspondig table, not the table entry.</p><p>
+                The <span class="emphasis"><em>snmp-oid</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>tailf:symlink</em></span>, <span class="emphasis"><em>module</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46470"></a><h3>tailf:snmp-row-status-column <span class="emphasis"><em>value</em></span></h3><p>Used when an SNMP module is generated from the YANG module.</p><p>When the parent list node is mapped to an SNMP table, this
+statement specifies the column number of the generated RowStatus
+column.  If it is not specified, the generated RowStatus column
+will be the last in the table.</p><p>
+                The <span class="emphasis"><em>snmp-row-status-column</em></span> statement can be used in: <span class="emphasis"><em>list</em></span> and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46479"></a><h3>tailf:sort-order <span class="emphasis"><em>how</em></span></h3><p>This statement can be used for 'ordered-by system' lists and
+leaf-lists only.  It indicates in which way the list entries
+are sorted.</p><p>
+                The <span class="emphasis"><em>sort-order</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>leaf-list</em></span>, and <span class="emphasis"><em>tailf:secondary-index</em></span>.</p></div><div class="refsect2"><a name="d5e46488"></a><h3>tailf:sort-priority <span class="emphasis"><em>value</em></span></h3><p>This extension takes an integer parameter specifying the order and
+can be placed on leafs, containers, lists and leaf-lists.
+When showing, or getting configuration, leaf values will be returned
+in order of increasing sort-priority.</p><p>The default sort-priority is 0.</p><p>
+                The <span class="emphasis"><em>sort-priority</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>refine</em></span>.</p></div><div class="refsect2"><a name="d5e46500"></a><h3>tailf:step <span class="emphasis"><em>value</em></span></h3><p>Used to further restrict the range of integer and decimal types.  The
+argument is a positive integer or decimal value greater than
+zero.  The allowed values for the type is further restricted to
+only those values that matches the expression:</p><p>  'low' + n * 'step'</p><p>where 'low' is the lowest allowed value in the range, n is a
+non-negative integer.</p><p>For example, the following type:</p><div class="informalexample"><pre class="programlisting">  type int32 {
+    range '-2 .. 9' {
+      tailf:step 3;
+    }
+  }</pre></div><div class="informalexample"><pre class="programlisting">has the value space { -2, 1, 4, 7 }</pre></div><p>
+                The <span class="emphasis"><em>step</em></span> statement can be used in: <span class="emphasis"><em>range</em></span>.</p></div><div class="refsect2"><a name="d5e46514"></a><h3>tailf:structure <span class="emphasis"><em>name</em></span></h3><p>Internal extension to define a data structure without any semantics
+attached.</p><p>
+                The <span class="emphasis"><em>structure</em></span> statement can be used in: <span class="emphasis"><em>module</em></span> and <span class="emphasis"><em>submodule</em></span>.</p></div><div class="refsect2"><a name="d5e46522"></a><h3>tailf:suppress-echo <span class="emphasis"><em>value</em></span></h3><p>If this statetement is set to 'true', leafs of this type will not have
+their values echoed when input in the webui or when the CLI prompts
+for the value. The value will also not be included in the audit
+log in clear text but will appear as ***.</p><p>
+                The <span class="emphasis"><em>suppress-echo</em></span> statement can be used in: <span class="emphasis"><em>typedef</em></span>, <span class="emphasis"><em>leaf</em></span>, and <span class="emphasis"><em>leaf-list</em></span>.</p></div><div class="refsect2"><a name="d5e46531"></a><h3>tailf:symlink <span class="emphasis"><em>name</em></span></h3><p>DEPRECATED: Use tailf:link instead.  There are no plans to remove
+tailf:symlink.</p><p>This statement defines a 'symbolic link' from a node to some other node.
+The argument is the name of the new node, and the mandatory substatement
+'tailf:path' points to the node which is linked to.</p><p>
+                The <span class="emphasis"><em>symlink</em></span> statement can be used in: <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>module</em></span>, <span class="emphasis"><em>submodule</em></span>, <span class="emphasis"><em>augment</em></span>, and <span class="emphasis"><em>case</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:alt-name</em></span> </p><p><span class="emphasis"><em>tailf:cli-add-mode</em></span> </p><p><span class="emphasis"><em>tailf:cli-allow-join-with-key</em></span> </p><p><span class="emphasis"><em>tailf:cli-allow-join-with-value</em></span> </p><p><span class="emphasis"><em>tailf:cli-allow-key-abbreviation</em></span> </p><p><span class="emphasis"><em>tailf:cli-allow-range</em></span> </p><p><span class="emphasis"><em>tailf:cli-allow-wildcard</em></span> </p><p><span class="emphasis"><em>tailf:cli-autowizard</em></span> </p><p><span class="emphasis"><em>tailf:cli-boolean-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-break-sequence-commands</em></span> </p><p><span class="emphasis"><em>tailf:cli-column-align</em></span> </p><p><span class="emphasis"><em>tailf:cli-column-stats</em></span> </p><p><span class="emphasis"><em>tailf:cli-column-width</em></span> </p><p><span class="emphasis"><em>tailf:cli-compact-stats</em></span> </p><p><span class="emphasis"><em>tailf:cli-compact-syntax</em></span> </p><p><span class="emphasis"><em>tailf:cli-completion-actionpoint</em></span> </p><p><span class="emphasis"><em>tailf:cli-custom-error</em></span> </p><p><span class="emphasis"><em>tailf:cli-custom-range</em></span> </p><p><span class="emphasis"><em>tailf:cli-custom-range-actionpoint</em></span> </p><p><span class="emphasis"><em>tailf:cli-custom-range-enumerator</em></span> </p><p><span class="emphasis"><em>tailf:cli-delayed-auto-commit</em></span> </p><p><span class="emphasis"><em>tailf:cli-delete-container-on-delete</em></span> </p><p><span class="emphasis"><em>tailf:cli-delete-when-empty</em></span> </p><p><span class="emphasis"><em>tailf:cli-diff-dependency</em></span> </p><p><span class="emphasis"><em>tailf:cli-disabled-info</em></span> </p><p><span class="emphasis"><em>tailf:cli-disallow-value</em></span> </p><p><span class="emphasis"><em>tailf:cli-display-empty-config</em></span> </p><p><span class="emphasis"><em>tailf:cli-display-separated</em></span> </p><p><span class="emphasis"><em>tailf:cli-drop-node-name</em></span> </p><p><span class="emphasis"><em>tailf:cli-no-keyword</em></span> </p><p><span class="emphasis"><em>tailf:cli-enforce-table</em></span> </p><p><span class="emphasis"><em>tailf:cli-embed-no-on-delete</em></span> </p><p><span class="emphasis"><em>tailf:cli-exit-command</em></span> </p><p><span class="emphasis"><em>tailf:cli-explicit-exit</em></span> </p><p><span class="emphasis"><em>tailf:cli-expose-key-name</em></span> </p><p><span class="emphasis"><em>tailf:cli-expose-ns-prefix</em></span> </p><p><span class="emphasis"><em>tailf:cli-flat-list-syntax</em></span> </p><p><span class="emphasis"><em>tailf:cli-flatten-container</em></span> </p><p><span class="emphasis"><em>tailf:cli-full-command</em></span> </p><p><span class="emphasis"><em>tailf:cli-full-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-full-show-path</em></span> </p><p><span class="emphasis"><em>tailf:cli-hide-in-submode</em></span> </p><p><span class="emphasis"><em>tailf:cli-ignore-modified</em></span> </p><p><span class="emphasis"><em>tailf:cli-incomplete-command</em></span> </p><p><span class="emphasis"><em>tailf:cli-incomplete-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-incomplete-show-path</em></span> </p><p><span class="emphasis"><em>tailf:cli-instance-info-leafs</em></span> </p><p><span class="emphasis"><em>tailf:cli-key-format</em></span> </p><p><span class="emphasis"><em>tailf:cli-list-syntax</em></span> </p><p><span class="emphasis"><em>tailf:cli-min-column-width</em></span> </p><p><span class="emphasis"><em>tailf:cli-mode-name</em></span> </p><p><span class="emphasis"><em>tailf:cli-mode-name-actionpoint</em></span> </p><p><span class="emphasis"><em>tailf:cli-multi-value</em></span> </p><p><span class="emphasis"><em>tailf:cli-multi-word-key</em></span> </p><p><span class="emphasis"><em>tailf:cli-multi-line-prompt</em></span> </p><p><span class="emphasis"><em>tailf:cli-no-key-completion</em></span> </p><p><span class="emphasis"><em>tailf:cli-no-match-completion</em></span> </p><p><span class="emphasis"><em>tailf:cli-no-name-on-delete</em></span> </p><p><span class="emphasis"><em>tailf:cli-no-value-on-delete</em></span> </p><p><span class="emphasis"><em>tailf:cli-oper-info</em></span> </p><p><span class="emphasis"><em>tailf:cli-optional-in-sequence</em></span> </p><p><span class="emphasis"><em>tailf:cli-prefix-key</em></span> </p><p><span class="emphasis"><em>tailf:cli-preformatted</em></span> </p><p><span class="emphasis"><em>tailf:cli-range-delimiters</em></span> </p><p><span class="emphasis"><em>tailf:cli-range-list-syntax</em></span> </p><p><span class="emphasis"><em>tailf:cli-recursive-delete</em></span> </p><p><span class="emphasis"><em>tailf:cli-remove-before-change</em></span> </p><p><span class="emphasis"><em>tailf:cli-reset-container</em></span> </p><p><span class="emphasis"><em>tailf:cli-run-template</em></span> </p><p><span class="emphasis"><em>tailf:cli-run-template-enter</em></span> </p><p><span class="emphasis"><em>tailf:cli-run-template-footer</em></span> </p><p><span class="emphasis"><em>tailf:cli-run-template-legend</em></span> </p><p><span class="emphasis"><em>tailf:cli-sequence-commands</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-config</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-order-tag</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-order-taglist</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-template</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-template-enter</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-template-footer</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-template-legend</em></span> </p><p><span class="emphasis"><em>tailf:cli-show-with-default</em></span> </p><p><span class="emphasis"><em>tailf:cli-strict-leafref</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-key-abbreviation</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-key-sort</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-list-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-mode</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-range</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-shortenabled</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-show-conf-path</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-show-match</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-show-path</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-silent-no</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-validation-warning-prompt</em></span> </p><p><span class="emphasis"><em>tailf:cli-suppress-wildcard</em></span> </p><p><span class="emphasis"><em>tailf:cli-table-footer</em></span> </p><p><span class="emphasis"><em>tailf:cli-table-legend</em></span> </p><p><span class="emphasis"><em>tailf:cli-trim-default</em></span> </p><p><span class="emphasis"><em>tailf:cli-value-display-template</em></span> </p><p><span class="emphasis"><em>tailf:display-when</em></span> </p><p><span class="emphasis"><em>tailf:hidden</em></span> </p><p><span class="emphasis"><em>tailf:inherit-set-hook</em></span> This statement specifies that a 'tailf:set-hook' statement should
+survive through symlinks. If set to true a set hook gets called as
+soon as the value is set via a symlink but also during commit. The
+normal behaviour is to only call the set hook during commit time.</p><p><span class="emphasis"><em>tailf:info</em></span> </p><p><span class="emphasis"><em>tailf:info-html</em></span> </p><p><span class="emphasis"><em>tailf:path</em></span> This statement specifies which node a symlink points to.</p><p>The textual format of a symlink is an XPath absolute location path. If
+the target lies within lists, all keys must be specified.
+A key either has a value, or is a reference to a key in the path of the
+source node, using the function current() as starting
+point for an XPath location path.  For example:</p><p>/a/b[k1='paul'][k2=current()/../k]/c
+</p><p><span class="emphasis"><em>tailf:snmp-exclude-object</em></span> </p><p><span class="emphasis"><em>tailf:snmp-name</em></span> </p><p><span class="emphasis"><em>tailf:snmp-oid</em></span> </p><p><span class="emphasis"><em>tailf:sort-priority</em></span> </p></div><div class="refsect2"><a name="d5e46767"></a><h3>tailf:transaction <span class="emphasis"><em>direction</em></span></h3><p>Which transaction that the result of the XPath filter will be
+applied to, when set to 'both' it will apply to both the 'to'
+and the 'from' transaction.</p></div><div class="refsect2"><a name="d5e46771"></a><h3>tailf:typepoint <span class="emphasis"><em>id</em></span></h3><p>If a typedef, leaf, or leaf-list has a 'typepoint' statement, a
+user-defined type is specified, as opposed to a derivation or
+specification of an existing type.  The implementation of a
+user-defined type must be provided in the form of a shared object
+with C callback functions that is loaded into the ConfD daemon at
+startup time. Read more about user-defined types in the
+confd_types(3) manual page.</p><p>The argument defines the ID associated with a typepoint.  This
+ID is provided by the shared object, and used by the ConfD
+daemon to locate the implementation of a specific user-defined
+type.</p><p>
+                The <span class="emphasis"><em>typepoint</em></span> statement can be used in: <span class="emphasis"><em>typedef</em></span>, <span class="emphasis"><em>leaf</em></span>, and <span class="emphasis"><em>leaf-list</em></span>.</p></div><div class="refsect2"><a name="d5e46781"></a><h3>tailf:unique-selector <span class="emphasis"><em>context-path</em></span></h3><p>The standard YANG statement 'unique' can be used to check for
+uniqueness within a single list only.  Specifically, it cannot
+be used to check for uniqueness of leafs within a sublist.</p><p>For example:</p><div class="informalexample"><pre class="programlisting">  container a {
+    list b {
+      ...
+      unique 'server/ip server/port';
+      list server {
+        ...
+        leaf ip { ... };
+        leaf port { ... };
+      }
+    }
+  }</pre></div><p>The unique expression above is not legal.  The intention is
+that there must not be any two 'server' entries in any 'b' with
+the same combination of ip and port.  This would be illegal:</p><p>  &lt;a&gt;
+    &lt;b&gt;
+      &lt;name&gt;b1&lt;/name&gt;
+      &lt;server&gt;
+        &lt;ip&gt;10.0.0.1&lt;/ip&gt;
+        &lt;port&gt;80&lt;/port&gt;
+      &lt;/server&gt;
+    &lt;/b&gt;
+    &lt;b&gt;
+      &lt;name&gt;b2&lt;/name&gt;
+      &lt;server&gt;
+        &lt;ip&gt;10.0.0.1&lt;/ip&gt;
+        &lt;port&gt;80&lt;/port&gt;
+      &lt;/server&gt;
+    &lt;/b&gt;
+  &lt;/a&gt;</p><p>With 'tailf:unique-selector' and 'tailf:unique-leaf', this kind
+of constraint can be defined.</p><p>The argument to 'tailf:unique-selector' is an XPath descendant
+location path (matches the rule 'descendant-schema-nodeid' in
+RFC 6020).  The first node in the path MUST be a list node, and
+it MUST be defined in the same module as the
+tailf:unique-selector.  For example, the following is illegal:</p><div class="informalexample"><pre class="programlisting">  module y {
+    ...
+    import x {
+      prefix x;
+    }
+    tailf:unique-selector '/x:server' { // illegal
+      ...
+    }
+  }</pre></div><p>For each instance of the node where the selector is defined, it
+is evaluated, and for each node selected by the selector, a
+tuple is constructed by evaluating the 'tailf:unique-leaf'
+expression.  All such tuples must be unique.  If a
+'tailf:unique-leaf' expression refers to a non-existing leaf,
+the corresponding tuple is ignored.</p><p>In the example above, the unique expression can be replaced by:</p><div class="informalexample"><pre class="programlisting">  container a {
+    tailf:unique-selector 'b/server' {
+      tailf:unique-leaf 'ip';
+      tailf:unique-leaf 'port';
+    }
+    list b {
+      ...
+    }
+  }</pre></div><p>For each container 'a', the XPath expression 'b/server' is
+evaluated.  For each such server, a 2-tuple is constructed with
+the 'ip' and 'port' leafs.  Each such 2-tuple is guaranteed to
+be unique.</p><p>
+                The <span class="emphasis"><em>unique-selector</em></span> statement can be used in: <span class="emphasis"><em>module</em></span>, <span class="emphasis"><em>submodule</em></span>, <span class="emphasis"><em>grouping</em></span>, <span class="emphasis"><em>augment</em></span>, <span class="emphasis"><em>container</em></span>, and <span class="emphasis"><em>list</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:unique-leaf</em></span> See 'tailf:unique-selector' for a description of how this statement
+is used.</p><p>The argument is an XPath descendant location path (matches the
+rule 'descendant-schema-nodeid' in RFC 6020), and it MUST refer to
+a leaf.</p></div><div class="refsect2"><a name="d5e46811"></a><h3>tailf:validate <span class="emphasis"><em>id</em></span></h3><p>Identifies a validation callback which is invoked when a configuration
+value is to be validated.  The callback validates a value and
+typically checks it towards other values in the data store.
+Validation callbacks are used when the YANG built-in validation
+constructs ('must', 'unique') are not expressive enough.</p><p>Callbacks use the API described in confd_lib_maapi(3) to
+access whatever other configuration values needed to perform the
+validation.</p><p>Validation callbacks are typically assigned to individual nodes
+in the data model, but it may be feasible to use a single
+validation callback on a root node.  In that case the callback
+is responsible for validation of all values and their
+relationships throughout the data store.</p><p>The 'validate' statment should in almost all cases have a
+'tailf:dependency' substatement.  If such a statement is not
+given, the validate function is evaluated at every commit,
+leading to overall performance degradation.</p><p>If the 'validate' statement is defined in a 'must' statement,
+validation callback is called instead of evaluating the must
+expression.  This is useful if the evaluation of the must statement
+uses too much resources, and the condition expressed with the must
+statement is easier to check with a validation callback function.</p><p>
+                The <span class="emphasis"><em>validate</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>, <span class="emphasis"><em>leaf-list</em></span>, <span class="emphasis"><em>list</em></span>, <span class="emphasis"><em>container</em></span>, <span class="emphasis"><em>grouping</em></span>, <span class="emphasis"><em>refine</em></span>, and <span class="emphasis"><em>must</em></span>.</p><p>
+                The following substatements can be used:
+              </p><p><span class="emphasis"><em>tailf:call-once</em></span> This optional statement can be used only if the parent statement is
+a list or a leaf-list.  If 'call-once' is 'true', the validation
+callback is only called once even though there exists many list or
+leaf-list entries in the data store.  This is useful if we have a
+huge amount of instances or if values assigned to each instance have
+to be validated in comparison with its siblings.</p><p><span class="emphasis"><em>tailf:dependency</em></span> </p><p><span class="emphasis"><em>tailf:opaque</em></span> Defines an opaque string which is passed to the callback function
+in the context.</p><p><span class="emphasis"><em>tailf:internal</em></span> For internal ConfD / NCS use only.</p><p><span class="emphasis"><em>tailf:priority</em></span> This extension takes an integer parameter specifying the order
+validation code will be evaluated, in order of increasing
+priority.</p><p>The default priority is 0.</p></div><div class="refsect2"><a name="d5e46840"></a><h3>tailf:value-length <span class="emphasis"><em>value</em></span></h3><p>Used only for the types:
+  yang:object-identifier
+  yang:object-identifier-128
+  yang:phys-address
+  yang:hex-string
+  tailf:hex-list
+  tailf:octet-list
+  xs:hexBinary</p><p>This type restriction is used to limit the length of the
+value-space value of the type.  Note that since all these types are
+derived from 'string', the standard 'length' statement restricts the
+lexical representation of the value.</p><p>The argument is a length expression string, with the same syntax as
+for the standard YANG 'length' statement.</p><p>
+                The <span class="emphasis"><em>value-length</em></span> statement can be used in: <span class="emphasis"><em>type</em></span>.</p></div><div class="refsect2"><a name="d5e46849"></a><h3>tailf:writable <span class="emphasis"><em>value</em></span></h3><p>This extension makes operational data (i.e., config false data)
+writable.  Only valid for leafs.</p><p>
+                The <span class="emphasis"><em>writable</em></span> statement can be used in: <span class="emphasis"><em>leaf</em></span>.</p></div><div class="refsect2"><a name="d5e46856"></a><h3>tailf:xpath-root <span class="emphasis"><em>value</em></span></h3><p>Internal extension to 'chroot' XPath expressions</p><p>
+                The <span class="emphasis"><em>xpath-root</em></span> statement can be used in: <span class="emphasis"><em>must</em></span>, <span class="emphasis"><em>when</em></span>, <span class="emphasis"><em>path</em></span>, <span class="emphasis"><em>tailf:display-when</em></span>, <span class="emphasis"><em>tailf:cli-diff-dependency</em></span>, <span class="emphasis"><em>tailf:cli-diff-before</em></span>, <span class="emphasis"><em>tailf:cli-diff-delete-before</em></span>, <span class="emphasis"><em>tailf:cli-diff-set-before</em></span>, <span class="emphasis"><em>tailf:cli-diff-create-before</em></span>, <span class="emphasis"><em>tailf:cli-diff-modify-before</em></span>, <span class="emphasis"><em>tailf:cli-diff-after</em></span>, <span class="emphasis"><em>tailf:cli-diff-delete-after</em></span>, <span class="emphasis"><em>tailf:cli-diff-set-after</em></span>, <span class="emphasis"><em>tailf:cli-diff-create-after</em></span>, and <span class="emphasis"><em>tailf:cli-diff-modify-after</em></span>.</p></div></div><div class="refsect1"><a name="tailf-common.yang_types"></a><h2>YANG TYPES</h2><div class="refsect2"><a name="d5e46879"></a><h3>aes-cfb-128-encrypted-string</h3><p>The aes-cfb-128-encrypted-string works exactly like
+des3-cbc-encrypted-string but AES/128bits in CFB mode is used to
+encrypt the string.  The prefix for encrypted values is '$8$'.</p></div><div class="refsect2"><a name="d5e46882"></a><h3>des3-cbc-encrypted-string</h3><p>The des3-cbc-encrypted-string type automatically encrypts a value
+adhering to this type using DES in CBC mode followed by a base64
+conversion.  If the value isn't encrypted already, that is.</p><p>This is best explained using an example.  Suppose we have a leaf:</p><div class="informalexample"><pre class="programlisting">   leaf enc {
+       type tailf:des3-cbc-encrypted-string;
+   }</pre></div><p>A valid configuration is:</p><p>   &lt;enc&gt;$0$In god we trust.&lt;/enc&gt;</p><p>The '$0$' prefix signals that this is plain text.  When a plain
+text value is received by the server, the value is DES3/Base64
+encrypted, and the string '$7$' is prepended.  The resulting
+string is stored in the configuration data store.</p><p>When a value of this type is read, the encrypted value is always
+returned.  In the example above, the following value could be
+returned:</p><p>   &lt;enc&gt;$7$Qxxsn8BVzxphCdflqRwZm6noKKmt0QoSWnRnhcXqocg=&lt;/enc&gt;</p><p>If a value starting with '$7$' is received, the server knows
+that the value is already encrypted, and stores it as is in the
+data store.</p><p>A value adhering to this type must have a '$0$' or a '$7$' prefix.</p><p>ConfD uses a configurable set of encryption keys to encrypt the
+string.  For details, see 'encryptedStrings' in the
+confd.conf(5) manual page.</p></div><div class="refsect2"><a name="d5e46896"></a><h3>hex-list</h3><p>DEPRECATED: Use yang:hex-string instead.  There are no plans to remove
+tailf:hex-list.</p><p>A list of colon-separated hexa-decimal octets e.g. '4F:4C:41:71'.</p><p>The statement tailf:value-length can be used to restrict the number
+of octets.  Note that using the 'length' restriction limits the
+number of characters in the lexical representation.</p></div><div class="refsect2"><a name="d5e46901"></a><h3>ip-address-and-prefix-length</h3><p>The ip-address-and-prefix-length type represents a combination of
+an IP address and a prefix length and is IP version neutral. The
+format of the textual representations implies the IP version.</p></div><div class="refsect2"><a name="d5e46904"></a><h3>ipv4-address-and-prefix-length</h3><p>The ipv4-address-and-prefix-length type represents a combination
+of an IPv4 address and a prefix length. The prefix length is given
+by the number following the slash character and must be less than
+or equal to 32.</p></div><div class="refsect2"><a name="d5e46907"></a><h3>ipv6-address-and-prefix-length</h3><p>The ipv6-address-and-prefix-length type represents a combination
+of an IPv6 address and a prefix length. The prefix length is given
+by the number following the slash character and must be less than
+or equal to 128.</p></div><div class="refsect2"><a name="d5e46910"></a><h3>md5-digest-string</h3><p>The md5-digest-string type automatically computes a MD5 digest for
+a value adhering to this type.</p><p>This is best explained using an example.  Suppose we have a
+leaf:</p><div class="informalexample"><pre class="programlisting">   leaf key {
+       type tailf:md5-digest-string;
+   }</pre></div><p>A valid configuration is:</p><p>   &lt;key&gt;$0$In god we trust.&lt;/key&gt;</p><p>The '$0$' prefix signals that this is plain text.  When a plain
+text value is received by the server, an MD5 digest is
+calculated, and the string '$1$&lt;salt&gt;$' is prepended to the
+result, where &lt;salt&gt; is a random eight character salt used to
+generate the digest.  This value is stored in the configuration
+data store.</p><p>When a value of this type is read, the computed MD5 value is
+always returned.  In the example above, the following value
+could be returned:</p><p>   &lt;key&gt;$1$fB$ndk2z/PIS0S1SvzWLqTJb.&lt;/key&gt;</p><p>If a value starting with '$1$' is received, the server
+knows that the value already represents an MD5 digest, and
+stores it as is in the data store.</p><p>A value adhering to this type must have a '$0$' or a
+'$1$&lt;salt&gt;$' prefix.</p><p>If a default value is specified, it must have a '$1$&lt;salt&gt;$' prefix.</p><p>The digest algorithm used is the same as the md5 crypt function
+used for encrypting passwords for various UNIX systems, see e.g.
+http://www.freebsd.org/cgi/cvsweb.cgi/~checkout/~/src/lib/libcrypt/crypt.c
+</p></div><div class="refsect2"><a name="d5e46925"></a><h3>octet-list</h3><p>A list of dot-separated octets e.g. '192.168.255.1.0'.</p><p>The statement tailf:value-length can be used to restrict the number
+of octets.  Note that using the 'length' restriction limits the
+number of characters in the lexical representation.</p></div><div class="refsect2"><a name="d5e46929"></a><h3>sha-256-digest-string</h3><p>The sha-256-digest-string type automatically computes a SHA-256
+digest for a value adhering to this type.</p><p>A value of this type matches one of the forms:</p><p> $0$&lt;clear text password&gt;
+ $5$&lt;salt&gt;$&lt;password hash&gt;
+ $5$rounds=&lt;number&gt;$&lt;salt&gt;$&lt;password hash&gt;</p><p>The '$0$' prefix signals that this is plain text. When a plain
+text value is received by the server, a SHA-256 digest is
+calculated, and the string '$5$&lt;salt&gt;$' is prepended to the
+result, where &lt;salt&gt; is a random 16 character salt used to
+generate the digest.  This value is stored in the configuration
+data store. The algorithm can be tuned via the
+/confdConfig/cryptHash/rounds parameter, which if set to a number
+other than the default will cause '$5$rounds=&lt;number&gt;$&lt;salt&gt;$' to
+be prepended instead of only '$5$&lt;salt&gt;$'.</p><p>If a value starting with '$5$' is received, the server
+knows that the value already represents a SHA-256 digest, and
+stores it as is in the data store.</p><p>If a default value is specified, it must have a '$5$' prefix.</p><p>The digest algorithm used is the same as the SHA-256 crypt function
+used for encrypting passwords for various UNIX systems, see e.g.
+http://www.akkadia.org/drepper/SHA-crypt.txt</p></div><div class="refsect2"><a name="d5e46938"></a><h3>sha-512-digest-string</h3><p>The sha-512-digest-string type automatically computes a SHA-512
+digest for a value adhering to this type.</p><p>A value of this type matches one of the forms:</p><p> $0$&lt;clear text password&gt;
+ $6$&lt;salt&gt;$&lt;password hash&gt;
+ $6$rounds=&lt;number&gt;$&lt;salt&gt;$&lt;password hash&gt;</p><p>The '$0$' prefix signals that this is plain text.  When a plain
+text value is received by the server, a SHA-512 digest is
+calculated, and the string '$6$&lt;salt&gt;$' is prepended to the
+result, where &lt;salt&gt; is a random 16 character salt used to
+generate the digest.  This value is stored in the configuration
+data store. The algorithm can be tuned via the
+/confdConfig/cryptHash/rounds parameter, which if set to a number
+other than the default will cause '$6$rounds=&lt;number&gt;$&lt;salt&gt;$' to
+be prepended instead of only '$6$&lt;salt&gt;$'.</p><p>If a value starting with '$6$' is received, the server
+knows that the value already represents a SHA-512 digest, and
+stores it as is in the data store.</p><p>If a default value is specified, it must have a '$6$' prefix.</p><p>The digest algorithm used is the same as the SHA-512 crypt function
+used for encrypting passwords for various UNIX systems, see e.g.
+http://www.akkadia.org/drepper/SHA-crypt.txt</p></div><div class="refsect2"><a name="d5e46947"></a><h3>size</h3><p>A value that represents a number of bytes.  An example could be
+S1G8M7K956B; meaning 1GB + 8MB + 7KB + 956B = 1082138556 bytes.
+The value must start with an S.  Any byte magnifier can be left
+out, e.g. S1K1B equals 1025 bytes.  The order is significant
+though, i.e. S1B56G is not a valid byte size.</p><p>In ConfD, a 'size' value is represented as an uint64.</p></div></div><div class="refsect1"><a name="man.5.tailf_yang_extensions.xpath_functions"></a><h2>XPATH FUNCTIONS</h2><p>
+      This section describes XPath functions that can be used for
+      example in "must" expressions in YANG modules.
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>node-set</em></span>
+        <span class="command"><strong>deref</strong></span>(<span class="emphasis"><em>node-set</em></span>)</span></dt><dd><p>The <code class="function">deref()</code> function follows the
+          reference defined by the first node in document order in the
+          argument node-set, and returns the nodes it refers
+          to.</p><p>If the first argument node is an
+          <span class="type">instance-identifier</span>, the function returns a
+          node-set that contains the single node that the instance
+          identifier refers to, if it exists.  If no such node exists,
+          an empty node-set is returned.</p><p>If the first argument node is a <span class="type">leafref</span>,
+          the function returns a node-set that contains the nodes that
+          the leafref refers to.</p><p>If the first argument node is of any other type, an
+          empty node-set is returned.</p></dd><dt><span class="term"><span class="emphasis"><em>bool</em></span>
+        <span class="command"><strong>re-match</strong></span>(<span class="emphasis"><em>string</em></span>,
+        <span class="emphasis"><em>string</em></span>)</span></dt><dd><p>The <code class="function">re-match()</code> function returns
+          <code class="constant">true</code> if the string in the first
+          argument matches the regular expression in the second
+          argument; otherwise it returns
+          <code class="constant">false</code>.</p><p>For example: <code class="code">re-match('1.22.333',
+          '\d{1,3}\.\d{1,3}\.\d{1,3}')</code> returns
+          <code class="constant">true</code>. To count all logical interfaces
+          called eth0.<span class="emphasis"><em>number</em></span>:
+          <code class="code">count(/sys/ifc[re-match(name,'eth0\.\d+')])</code>.</p><p>The regular expressions used are the XML Schema
+          regular expressions, as specified by W3C in <a class="link" href="http://www.w3.org/TR/xmlschema-2/#regexs" target="_top">http://www.w3.org/TR/xmlschema-2/#regexs</a>. Note
+          that this includes implicit anchoring of the regular
+          expression at the head and tail, i.e. if you want to match
+          an interface that has a name that starts with 'eth' then the
+          regular expression must be <code class="code">'eth.*'</code>.</p></dd><dt><span class="term"><span class="emphasis"><em>number</em></span>
+        <span class="command"><strong>string-compare</strong></span>(<span class="emphasis"><em>string</em></span>,
+        <span class="emphasis"><em>string</em></span>)</span></dt><dd><p>The <code class="function">string-compare()</code> function
+          returns -1, 0, or 1 depending on whether the value of the
+          string of the first argument is respectively less than,
+          equal to, or greater than the value of the string of the
+          second argument.</p></dd><dt><span class="term"><span class="emphasis"><em>number</em></span>
+        <span class="command"><strong>compare</strong></span>(<span class="emphasis"><em>Expression</em></span>,
+        <span class="emphasis"><em>Expression</em></span>)</span></dt><dd><p>The <code class="function">compare()</code> function returns
+          -1, 0, or 1 depending on whether the value of the first
+          argument is respectively less than, equal to, or greater
+          than the value of the second argument.</p><p>The expressions are evaluated in a special way: If
+          they both are XPath constants they are compared using the
+          <code class="function">string-compare()</code> function. But, more
+          interestingly, if the expressions results in node-sets with
+          at least one node, and that node is an existing leaf that
+          leafs value is compared with the other expression, and if
+          the other expression is a constant that expression is
+          converted to an internal value with the same type as the
+          expression that resulted in a leaf. Thus making it possible
+          to order values based on the internal representation rather
+          than the string representation. For example, given a
+          leaf:</p><div class="informalexample"><pre class="programlisting">leaf foo {
+  type enumeration {
+    enum ccc;
+    enum bbb;
+    enum aaa;
+  }
+}
+</pre></div><p>it would be possible to call <code class="code">compare(foo,
+          'bbb')</code> (which, for example, would return -1 if
+          foo='ccc'). Or to have a must expression like this:
+          <code class="code">must "compare(.,'bbb') &gt;= 0";</code> which would
+          require foo to be set to 'bbb' or 'aaa'.</p><p>If one of the expressions result in an empty node-set,
+          a non-leaf node, or if the constant can't be converted to
+          the other expressions type then <code class="constant">NaN</code> is
+          returned.</p></dd><dt><span class="term"><span class="emphasis"><em>number</em></span>
+        <span class="command"><strong>min</strong></span>(<span class="emphasis"><em>node-set</em></span>)</span></dt><dd><p>Returns the numerically smallest number in the
+          node-set, or <code class="constant">NaN</code> if the node-set is
+          empty.</p></dd><dt><span class="term"><span class="emphasis"><em>number</em></span>
+        <span class="command"><strong>max</strong></span>(<span class="emphasis"><em>node-set</em></span>)</span></dt><dd><p>Returns the numerically largest number in the
+          node-set, or <code class="constant">NaN</code> if the node-set is
+          empty.</p></dd><dt><span class="term"><span class="emphasis"><em>number</em></span>
+        <span class="command"><strong>avg</strong></span>(<span class="emphasis"><em>node-set</em></span>)</span></dt><dd><p>Returns the numerical average of the node-set, or
+          <code class="constant">NaN</code> if the node-set is empty, or if any
+          numerical conversion of a node failed.</p></dd><dt><span class="term">
+          <span class="emphasis"><em>number</em></span>
+          <span class="command"><strong>band</strong></span>(<span class="emphasis"><em>number</em></span>,
+          <span class="emphasis"><em>number</em></span>)
+        </span></dt><dd><p>Returns the result of bitwise AND:ing the two
+          numbers. Unless the numbers are integers NaN will be
+          returned. </p></dd><dt><span class="term">
+          <span class="emphasis"><em>number</em></span>
+          <span class="command"><strong>bor</strong></span>(<span class="emphasis"><em>number</em></span>,
+          <span class="emphasis"><em>number</em></span>)
+        </span></dt><dd><p>Returns the result of bitwise OR:ing the two
+          numbers. Unless the numbers are integers NaN will be
+          returned. </p></dd><dt><span class="term">
+          <span class="emphasis"><em>number</em></span>
+          <span class="command"><strong>bxor</strong></span>(<span class="emphasis"><em>number</em></span>,
+          <span class="emphasis"><em>number</em></span>)
+        </span></dt><dd><p>Returns the result of bitwise Exclusive OR:ing the two
+          numbers. Unless the numbers are integers NaN will be
+          returned. </p></dd><dt><span class="term">
+          <span class="emphasis"><em>number</em></span>
+          <span class="command"><strong>bnot</strong></span>(<span class="emphasis"><em>number</em></span>)
+        </span></dt><dd><p>Returns the result of bitwise NOT on number. Unless
+          the number is an integer NaN will be returned. </p></dd><dt><span class="term"><span class="emphasis"><em>node-set</em></span>
+        <span class="command"><strong>sort-by</strong></span>(<span class="emphasis"><em>node-set</em></span>,
+        <span class="emphasis"><em>string</em></span>)</span></dt><dd><p>The <code class="function">sort-by()</code> function makes it
+          possible to order a node-set according to a secondary index
+          (see the tailf:secondary-index
+          extension). The first argument must be an expression that
+          evaluates to a node-set, where the nodes in the node-set are
+          all list instances of the same list. The second argument
+          must be the name of an existing secondary index on that
+          list. For example given the YANG model:</p><div class="informalexample"><pre class="programlisting">
+  container sys {
+    list host {
+      key name;
+      unique number;
+      tailf:secondary-index number {
+        tailf:index-leafs "number";
+      }
+      leaf name {
+        type string;
+      }
+      leaf number {
+        type uint32;
+        mandatory true;
+      }
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+    ...
+    }
+  }
+
+</pre></div><p>The expression
+          <code class="code">sort-by(/sys/host,"number")</code> would result in all
+          hosts, sorted by their number. And the expression,
+          <code class="code">sort-by(/sys/host[enabled='true'],"number")</code>
+          would result in all enabled hosts, sorted by number. Note
+          also that since the function returns a node-set it is also
+          legal to add location steps to the result. I.e. the
+          expression
+          <code class="code">sort-by(/sys/host[enabled='true'],"number")/name</code>
+          results in all host names sorted by the hosts number.</p></dd></dl></div></div><div class="refsect1"><a name="man.5.tailf_yang_extensions.see_also"></a><h2>SEE ALSO</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">tailf_yang_cli_extensions</span>(5)</span>
+        </span></dt><dd><p>Tail-f YANG CLI extensions</p></dd><dt><span class="term">The ConfD User Guide</span></dt><dd><p></p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">confdc</span>(1)</span>
+        </span></dt><dd><p>Confdc compiler</p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn03re19.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="go01.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">tailf_yang_cli_extensions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Glossary</td></tr></table></div></body></html>

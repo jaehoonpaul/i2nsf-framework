@@ -1,0 +1,31 @@
+module ietf-routing-ann {
+    namespace "urn:dummy";
+    prefix "dummy";
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import ietf-routing {
+        prefix rt;
+    }
+
+    tailf:annotate "/rt:routing-state" {
+        tailf:callpoint "routing_state_dp";
+    }
+
+    tailf:annotate "/rt:routing/rt:control-plane-protocols"
+        + "/rt:control-plane-protocol/rt:static-routes" {
+        // this must is not needed  when 'when' is used is added
+        // to 'container static-routes'
+        must "../type = 'rt:static'" {
+            error-message "Static route is only valid" +
+                           " for the 'static' routing protocol.";
+        }
+    }
+
+    tailf:annotate "/rt:routing-state/rt:ribs/rt:rib/rt:active-route" {
+       tailf:actionpoint "routing_state_active_route";
+    }
+
+}

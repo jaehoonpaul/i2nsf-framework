@@ -1,0 +1,246 @@
+= LinuxCfg Overview =
+
+LinuxCfg is a linux implementation for ConfD of the following
+YANG specifications:
+
+- RFC 7223 - A YANG Data Model for Interface Management
+- RFC 7224 - IANA Interface Type YANG Module
+- RFC 7277 - A YANG Data Model for IP Management
+- RFC 7317 - A YANG Data Model for System Management
+- RFC 8022 - A YANG Data Model for for the management of a routing subsystem
+
+The following YANG modules are implemented:
+
+- ietf-interfaces
+- iana-if-type
+- ietf-ip
+- ietf-system
+- iana-crypt-hash
+- ietf-routing
+  - ietf-ipv4-unicast-routing
+  - ietf-ipv6-unicast-routing
+
+It also implements the following SNMP specifications:
+
+- RFC 2579 - Textual Conventions for SMIv2
+- RFC 2863 - The Interfaces Group MIB
+- RFC 4001 - Textual Conventions for Internet Network Addresses
+- RFC 4022 - Management Information Base for the Transmission Control
+             Protocol (TCP)
+- RFC 4113 - Management Information Base for the User Datagram
+             Protocol (UDP)
+- RFC 4293 - Management Information Base for the Internet Protocol (IP)
+
+The following MIB modules are implemented:
+
+- IF-MIB
+- IANAifType-MIB
+- INET-ADDRESS-MIB
+- IP-MIB
+- TCP-MIB
+- UDP-MIB
+
+
+== Introduction ==
+
+The 'LinuxCfg' daemon connects to the 'ConfD' daemon and manages a set of
+objects (e.g., network interfaces) for a Linux OS, based on a data
+model described in a set of standardized YANG modules.  It is provided
+in source form, with the intent that users can either use it as-is or
+modify it as needed.
+
+Four principal tasks are performed by 'LinuxCfg':
+
+1. Semantic validation of configuration data.
+
+2. Application of the configuration data to the managed objects.
+
+3. When applicable, providing status information for the managed
+   objects, i.e., operational data.
+
+4. Provide RPC-points (commands) for making changes to the underlying
+system.
+
+For (2), CDB subscriptions are used.  This means that 'LinuxCfg' requires
+that all configuration data is stored in the ConfD-internal CDB
+database.
+
+As a general principle, 'LinuxCfg' does not interact with or depend on
+the "rc scripts" and associated configuration files of the Linux
+distribution, but rather runs the low-level commands such as 'ip'
+directly.  Among the reasons for this are:
+
+- The rc script infrastructure differs between Linux distributions -
+  i.e., not using it increases the portability of 'LinuxCfg'.
+
+- On an embedded system, the rc script infrastructure may not be
+  present, e.g., due to space constraints - there may not even be a
+  shell and the associated utilities needed to execute the scripts.
+
+As a consequence of this, the rc script infrastructure (if present)
+should *not* be used for objects that are under the control of
+'LinuxCfg' (e.g., network interfaces should be "unconfigured"), otherwise
+the result is unpredictable.
+
+
+== Structure ==
+
+The 'LinuxCfg' daemon is structured into a main part that handles the
+primary interaction with ConfD, and a number of component parts that
+implement the management of the objects defined in the data
+model.  Each component consists of one or more YANG modules that
+describes the part of the data model pertaining to that component, and
+C code to implement (1) -- (3) above.
+
+The current version of 'LinuxCfg' includes these components:
+
+ ietf_system - system management: dns, authorization, ntp, timezones.
+ ietf_interfaces - configuration and status of network interfaces
+ ietf_ip    - configuration of IPv4 and IPv6 addresses.
+ ietf_routing  - configuration and status of routing management
+ ipmibs     - status data from UDP, TCP, IP and IF MIBs
+
+
+In terms of file system structure of the source code, the main part of
+'LinuxCfg' is in the toplevel directory, while each component is in a
+subdirectory with the same name as the component. The result of the
+build is a single executable file called 'linuxcfg' and one schema
+file (.fxs) for each YANG module.
+
+The C code interface between the main part of 'LinuxCfg' and the
+individual components is specified in linuxcfg_api.h.  It consists of
+a simple callback structure that must be defined in each component,
+and a set of utility functions provided by the main part. In addition
+the components use the ConfD library functions directly for:
+
+  - Reading of uncommitted configuration data during validation
+  - Reading of updated configuration data
+  - Delivery of operational data
+
+== Requirements ==
+
+'LinuxCfg' is designed to be able to run on any Linux OS that has the
+kernel functionality and user-mode commands required to manage the
+objects in the data model (see the README files for the individual
+components for further details).  The current version has been tested
+on:
+
+  Ubuntu  14.04.3, with kernel 3.13.0-62
+  Ubuntu  16.10, with kernel 4.8.0-30
+
+Building 'LinuxCfg' requires GNU make, a C compiler, and an installation
+of ConfD, release 5.1 or later (ietf-routing component requires ConfD
+release 6.3.1 or later, as yang 1.1 is used in the RFC 8022).
+It is recommended to set `/confdConfig/cli/reallocateOperTrans` to `true`.
+
+
+== Build and install ==
+
+As mentioned above, the COMPONENTS line in the toplevel Makefile can
+be modified to remove components included with 'LinuxCfg', or to add
+user-provided ones.  The absolute path to the ConfD installation must
+be specified via the `CONFD_DIR` variable in the toplevel Makefile - it
+defaults to `$(PWD)/..`  on the assumption that 'LinuxCfg' was installed
+along with ConfD in a standard ConfD installation, but can be
+overridden by setting the environment variable or giving a
+command-line setting to 'make' (or the file can be edited, of course).
+
+The linuxcfg executable and the schema files are built by simply
+giving the 'make' command in the toplevel directory.  The executable
+can be installed anywhere, but the schema files must be installed in a
+directory specified in the loadPath element of confd.conf.  The
+toplevel Makefile has an 'install' target that will install linuxcfg in
+`CONFD_DIR/bin`, i.e., the same directory as the 'confd' command in a
+standard ConfD installation, the schema files in `CONFD_DIR/etc/confd`,
+i.e., the single loadPath directory of a standard ConfD installation,
+and any init files for CDB in `CONFD_DIR/var/confd/cdb`.
+
+These locations can be overridden via the Makefile variables
+`BIN_INSTALLDIR`, `CONF_INSTALLDIR`, and `INIT_INSTALLDIR`, respectively.
+Another possibility, which can be useful for testing, is to give the
+Makefile variable `PREFIX_INSTALLDIR` - this will generate a simplified
+complete ConfD setup rooted at `PREFIX_INSTALLDIR/confd`, using the
+included confd.conf file.
+
+NOTE: SNMP support is disabled when running on ConfD Basic.
+
+== Running ==
+
+'LinuxCfg' will normally require root privileges for its operation
+(e.g., network interface configuration).  It is recommended that it is
+started from a process running with real and effective uid 0.  Making
+the linuxcfg executable setuid-root may work, but has not been tested
+and has obvious security issues.
+
+In the normal build 'LinuxCfg' will be linked to the shared libconfd.so
+library from the ConfD installation.  This means that either this
+library must be installed in a directory that the Linux dynamic
+linker/loader will search, or that the environment LD_LIBRARY_PATH
+variable must be set to include the directory where libconfd.so is
+installed.
+
+The recommended procedure is to start 'LinuxCfg' in phase 1 of the ConfD
+startup:
+
+  confd --start-phase0
+  confd --start-phase1
+  linuxcfg
+  confd --start-phase2
+
+This ensures that 'LinuxCfg' has registered its validation points before
+NETCONF and CLI is accessible - configuration changes attempted before
+all validation points have been registered will fail.  However ConfD
+will accept daemon connections also when fully started, and 'LinuxCfg'
+will keep trying to connect to ConfD if the connection fails initially
+(or if it is lost later), meaning that for testing purposes, ConfD and
+'LinuxCfg' can be started in any order.
+
+There are two important exceptions to the above, CDB initialization
+and CDB upgrade.
+
+=== CDB initialization ===
+
+This is the case when ConfD is started without an existing CDB
+database.  In this case the initial database contents (based on XML
+init files and/or default values) are validated in the transition to
+ConfD phase 1, and 'LinuxCfg' needs to participate in this
+validation.  For this purpose, 'LinuxCfg' must be started in ConfD phase
+0, and be given the -i option:
+
+  confd --start-phase0
+  linuxcfg -i
+  confd --start-phase1
+  confd --start-phase2
+
+NOTE: Doing this initial startup without an XML init file for the
+'LinuxCfg' configuration will normally cause important parts of the host
+configuration to be cleared out (in accordance with the empty CDB
+configuration), which may be undesirable, e.g., when testing on a
+workstation.  The supplied 'mk_linuxcfg_init' Perl script can be used to
+create an init file based on the current host configuration and
+included components.  Giving the LINUXCFG_INIT make variable
+(e.g., LINUX_CFG_INIT=yes) with the 'make' command that builds 'LinuxCfg'
+will run the script to create an 'linuxcfg_init.xml' file, and giving it
+with 'install' will install the file.
+
+WARNING: mk_linuxcfg_init is not implemented.
+
+=== CDB upgrade ===
+
+This case is when schema files for new or changed components
+have been installed.  'LinuxCfg' needs to participate in the upgrade
+process since the upgraded configuration must be validated.  In some
+cases of component changes, the changed component may also need to
+programatically modify the new configuration beyond the automatic
+upgrade capability of CDB.  For 'LinuxCfg' to participate in the upgrade
+process, it must be started in phase 0 of the ConfD startup, and be
+given the -u option:
+
+  confd --start-phase0
+  linuxcfg -u
+  confd --start-phase1
+  confd --start-phase2
+
+Finally, the individual components may also have requirements or
+recommendations for startup procedures, see the corresponding README
+files.

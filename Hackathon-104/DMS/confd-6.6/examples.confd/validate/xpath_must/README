@@ -1,0 +1,208 @@
+
+This example shows how validation rules can be written using 'must'
+expressions in the data model, instead of writing C validation
+code. The data model in sys.yang contains a couple of 'must' statements
+which achieves various levels of complex validation.
+
+The example also shows two ways of how to debug must (and general
+XPath) expressions.
+
+
+1. Debugging using the XPath trace file
+
+  In this example, XPath tracing is enabled in confd.conf:
+
+    <xpathTraceLog>
+      <enabled>true</enabled>
+      <filename>./xpath.trace.log</filename>
+    </xpathTraceLog>
+
+  This means that all XPath evaluations in ConfD are traced to a file.
+  This is very useful for debugging XPath expressions. Just by
+  starting the system for example you will have a xpath.trace.log file
+  created:
+
+    > make clean
+    > make all
+    > make start
+    > ls -l xpath.trace.log
+    -rw-r--r--  1 admin  admin  17638 Mar  1 10:10 xpath.trace.log
+
+  The reason is that the initial configuration (in confd-cdb/init.xml)
+  is committed as a transaction, and that transaction validates all the
+  must statements in the model. Now start a new terminal window and run:
+
+    > tail-f xpath.trace.log
+
+  In your first window you can now edit the configuration try a commit
+  to see what the must expressions do. For example:
+
+    > make cli
+    admin@localhost> configure 
+    Entering configuration mode private
+    [ok][2010-03-01 12:35:11]
+
+    [edit]
+    admin@localhost% set sys numbers odd 4
+    [ok][2010-03-01 12:35:45]
+
+    [edit]
+    admin@localhost% commit
+    Aborted: sys numbers odd (value "4"): can only be an odd number
+    [error][2010-03-01 12:35:53]
+
+
+  And in your xpath.trace.log you should see something like:
+
+    Evaluating XPath for: /sys:sys/numbers/odd:
+      (. mod 2) = 1
+    get_elem("/sys:sys/numbers/odd") = 4
+    XPath for: /sys:sys/numbers/odd returns false
+
+
+
+2. Debugging using 'must' and 'xpath' CLI commands
+
+  Another useful tool is the new API call maapi_xpath_eval_expr(),
+  which can evaluate any XPath expression with the configuration as
+  the XML instance document. In xpath.j.cli (and xpath.c.cli for C
+  style CLI) this function, as implemented in the CLI helper program
+  'maapi') is used to add two new CLI commands: 'must' and
+  'xpath'. The commands both take a string parameter which is
+  evaluated. For example:
+
+    > make cli
+    admin@localhost> xpath "5 + 3"
+    8
+    [ok]
+    admin@localhost> xpath "count(/sys/ifc)"
+    4
+    [ok]
+    admin@localhost> xpath "count(/sys/ifc[enabled = 'true'])"
+    2
+    [ok]
+
+  The 'must' command is only available in configure mode, otherwise
+  the only difference between 'must' and 'xpath' is that 'must' adds a
+  boolean() function call around the expression (this is what the must
+  statement in your YANG model does in ConfD internally).
+
+  By using 'edit' in J-style CLI (and sub-modes in C-style CLI) you
+  can change the starting point for relative paths (and the XPath
+  current() function). This makes it really easy to test must
+  statements in your model. For example, take a look at the sys.yang
+  data model, in particular the must statement under
+  /sys/ifc/labels/string. What if we wanted to experiment a bit with
+  it, try:
+
+    > make cli
+    admin@localhost> configure 
+    Entering configuration mode private
+    [ok]
+
+    [edit]
+    admin@localhost% edit sys ifc eth0 labels wan-interface 
+    [ok]
+
+    [edit sys ifc eth0 labels wan-interface]
+    admin@localhost% xpath .
+    wan-interface
+    [ok]
+
+  Here . gave us 'wan-interface' which is the value of the current
+  node, what if we wanted to pick apart the must expression? For
+  example how many interfaces have the name 'wan-interface':
+
+    [edit sys ifc eth0 labels wan-interface]
+    admin@localhost% xpath "count(/sys:sys/sys:ifc[name = current()])"
+    0
+    [ok]
+
+  None. Good, then the validation should work:
+
+    [edit sys ifc eth0 labels wan-interface]
+    admin@localhost% must "not(/sys:sys/sys:ifc[name = current()])"
+    true
+    [ok]
+
+  Alright, now let's change something in this cli session, let's add a
+  label with the same name as another interface:
+
+    [edit sys ifc eth0 labels wan-interface]
+    admin@localhost% up
+    [ok]
+
+    [edit sys ifc eth0 labels]
+    admin@localhost% edit eth3 
+    [ok]
+
+    [edit sys ifc eth0 labels eth3]
+    admin@localhost% must "not(/sys:sys/sys:ifc[name = current()])"
+    false
+    [ok]
+
+  Which interface has the same name as me?
+
+    [edit sys ifc eth0 labels eth3]
+    admin@localhost% xpath "/sys:sys/sys:ifc[name = current()]/name"  
+    eth3
+    [ok]
+
+
+  When these xpath expressions are run in the CLI they are also trace
+  logged in the xpath.trace.log file. However, both 'xpath' and 'must'
+  take an optional first parameter called 'trace', which enables
+  tracing at the CLI prompt itself. For example, lets see how the
+  ConfD XPath implementation counts the enabled interfaces:
+
+    > make cli
+    admin@localhost> xpath trace "count(/sys/ifc[enabled = 'true'])"
+
+    Initial path: /
+    Expression:   count(/sys/ifc[enabled = 'true'])
+    XTRACE: get_next("/sys:sys/ifc") = {eth0}
+    XTRACE: get_elem("/sys:sys/ifc{eth0}/enabled") = true
+    XTRACE: get_next("/sys:sys/ifc{eth0}") = {eth1}
+    XTRACE: get_elem("/sys:sys/ifc{eth1}/enabled") = false
+    XTRACE: get_next("/sys:sys/ifc{eth1}") = {eth2}
+    XTRACE: get_elem("/sys:sys/ifc{eth2}/enabled") = false
+    XTRACE: get_next("/sys:sys/ifc{eth2}") = {eth3}
+    XTRACE: get_elem("/sys:sys/ifc{eth3}/enabled") = true
+    XTRACE: get_next("/sys:sys/ifc{eth3}") = false
+
+    Result: 2
+
+    [ok]
+
+
+  And, as previously mentioned, the commands work equally well in the
+  C style CLI:
+
+    > make cli_c
+    localhost# xpath "2 + 3 * 2"
+    8
+    localhost# config 
+    Entering configuration mode terminal
+    localhost(config)# sys ifc eth0
+    localhost(config-ifc-eth0)# xpath "count(labels)"
+    2
+    localhost(config-ifc-eth0)# must trace "count(labels) = 2" 
+    
+    Initial path: /sys:sys/ifc{eth0}
+    Expression:   boolean(count(labels) = 2)
+    XTRACE: get_next("/sys:sys/ifc{eth0}/labels") = {main}
+    XTRACE: get_next("/sys:sys/ifc{eth0}/labels{main}") = {wan-interface}
+    XTRACE: get_next("/sys:sys/ifc{eth0}/labels{wan-interface}") = false
+    
+    Result: true
+    
+    localhost(config-ifc-eth0)# 
+    
+
+
+
+TIP: Copy confd.j.ccl (or confd.c.ccl depending on you CLI style) to
+     your ConfD load path and you use the xpath and must commands in
+     your own data-model (provided you have the maapi command in your
+     PATH, it is usually included as $CONFD_DIR/bin/maapi).
+

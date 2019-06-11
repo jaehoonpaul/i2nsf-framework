@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<sys xmlns="http://tail-f.com/ns/test/example">
+  <ifc>
+    <name>port-0</name>
+    <enabled>false</enabled>
+    <hw/>
+    <ip>
+      <address>192.168.1.88</address>
+      <prefix-length>24</prefix-length>
+    </ip>
+    <ip>
+      <address>192.168.2.88</address>
+      <prefix-length>24</prefix-length>
+    </ip>
+  </ifc>
+  <ifc>
+    <name>port-1</name>
+    <hw>
+      <mac>00:16:cb:02:24:d0</mac>
+    </hw>
+    <ip>
+      <address>10.0.1.34</address>
+      <prefix-length>24</prefix-length>
+    </ip>
+    <ip>
+      <address>10.0.2.42</address>
+      <prefix-length>24</prefix-length>
+    </ip>
+  </ifc>
+  <ifc>
+    <name>port-2</name>
+    <enabled>false</enabled>
+  </ifc>
+  <ifc>
+    <name>port-3</name>
+    <enabled>false</enabled>
+  </ifc>
+  <ifc>
+    <name>port-4</name>
+    <ip>
+      <address>10.44.1.34</address>
+      <prefix-length>16</prefix-length>
+    </ip>
+    <ip>
+      <address>10.44.2.42</address>
+      <prefix-length>16</prefix-length>
+      <broadcast>10.44.2.255</broadcast>
+    </ip>
+    <ip>
+      <address>10.44.1.118</address>
+      <prefix-length>16</prefix-length>
+    </ip>
+  </ifc>
+</sys>
+
+

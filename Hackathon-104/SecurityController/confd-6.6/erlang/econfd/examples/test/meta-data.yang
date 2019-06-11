@@ -1,0 +1,21 @@
+module meta-data {
+  namespace "http://example.com/meta-data";
+  prefix md;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container meta-data {
+    leaf meta {
+      tailf:meta-data "foo";
+      tailf:meta-data bar {
+        tailf:meta-value "something";
+      }
+      tailf:meta-data baz {
+        tailf:meta-value "";
+      }
+      type empty;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+module ytest {
+  namespace "http://tail-f.com/test/ytest";
+  prefix ytest;
+
+  import types {
+    prefix types;
+  }
+
+  revision 2009-12-01;
+
+  identity des {
+    base types:crypto-alg;
+  }
+
+  container obu {
+    list entry {
+      ordered-by user;
+      key key;
+      leaf key {
+        type int32;
+      }
+      leaf value {
+        type int32;
+      }
+    }
+  }
+}
