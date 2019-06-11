@@ -1,0 +1,75 @@
+<?php
+function array_to_xml( $data, &$xml_data ) {
+    foreach( $data as $key => $value ) {
+        if( is_array($value) ) {
+            if( is_numeric($key) ){
+                $key = 'Policy_enterprise';
+            }
+            $subnode = $xml_data->addChild($key);
+            array_to_xml($value, $subnode);
+        } else {
+            $xml_data->addChild($key, htmlspecialchars($value));
+        }
+    }
+}
+
+$user_name = $_POST['userName'];
+$start_user_ip = $_POST['startUserIP'];
+$end_user_ip = $_POST['endUserIP'];
+$device_name = $_POST['deviceName'];
+$start_dev_ip = $_POST['startDevIP'];
+$end_dev_ip = $_POST['endDevIP'];
+
+
+$userIP = array("start-ip-address" => $start_user_ip, "end-ip-address" => $end_user_ip);
+$userInfo = array("name" => $user_name, "range-ip-address" => [$userIP]);
+$userGroup = $userInfo;
+$devIP = array("start-ip-address" => $start_dev_ip, "end-ip-address" => $end_dev_ip);
+$devInfo = array("name" => $device_name, "range-ip-address" => [$devIP]);
+$devGroup = $devInfo;
+$endGroup["endpoint-group"] = array("user-group" => [$userGroup], "device-group" => [$devGroup]);
+$groupData["ietf-i2nsf-cfi-policy:policy"] = $endGroup;
+file_put_contents("regi.json", json_encode($groupData, JSON_PRETTY_PRINT));
+
+$CLIENT_CERT = "/home/ubuntu/works/jetconf/data/example-client.pem";
+$POST_DATA = "@regi.json";
+$URL = "https://localhost:8443/restconf/data/ietf-i2nsf-cfi-policy:i2nsf-cfi";
+$log = shell_exec("curl --ipv4 --http2 -k --cert-type PEM -E $CLIENT_CERT -X POST -d $POST_DATA $URL");
+
+// Creating an XML File //
+$data_str = file_get_contents('regi.json');
+ 
+$xml_data = new SimpleXMLElement('<?xml version="1.0"?><I2NSF></I2NSF>');
+array_to_xml(json_decode($data_str, true), $xml_data);
+$result = $xml_data -> asXML();
+ 
+header('Content-Type: text/xml; charset=UTF-8');
+print_r($result);
+
+
+#mysqli_close($conn);
+
+//$url="http://192.168.115.130:8000/restconf/config/sc/nsf/firewall/policy/testPolicy/".$jsond;
+//header('Location:'.$url);
+
+//Connect to a local server //
+#$host = "127.0.0.1";
+#$TCP_PORT = 6000;
+#$output= "enterprise-mode,create,".$result;
+#$socket = socket_create(AF_INET, SOCK_STREAM,0);
+#socket_connect ($socket , $host,$TCP_PORT );
+#socket_write($socket, $output, strlen ($output));
+#socket_close($socket);
+header( "refresh:3;url=enterprise.php" );
+// Creating a text log file //
+
+//$date = date_create("NOW");
+//$file = 'log.txt';
+//$test = date_format($date,"Y/m/d H:i:s") . '-' . $_POST["Rule_name"] . '-' . $_POST["Position"] . '-' . $_POST["Website"] . '-' . $_POST["Starting_Time"] . '-' . $_POST["Ending_Time"] . '-' . $_POST["Action"] . "\n";
+//$ret = file_put_contents($file, $test, FILE_APPEND | LOCK_EX);
+
+
+//header("refresh:0;url=qfc2.php/api/Policy_web");
+  
+
+?>

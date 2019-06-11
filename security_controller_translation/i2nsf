@@ -1,0 +1,8 @@
+#!/bin/bash
+
+service mysql restart
+#python test.py
+python initializeDB.py
+#tail -f server.py
+python server.py
+

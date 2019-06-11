@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-controller-svc
+spec:
+  selector:
+    app: security-controller
+  ports:
+          - name: registration
+            port: 2022
+            targetPort: 2022
+          - name: web
+            port: 80
+            targetPort: 80
+          - name: translation-1
+            port: 3306
+            targetPort: 3306
+          - name: translation-2
+            port: 55552
+            targetPort: 55552
+          - name: tranlsation-3
+            port: 55560
+            targetPort: 55560
+          - name: translation-4
+            port: 12345
+            targetPort: 12345
+          - name: restconf
+            port: 8443
+            targetPort: 8443
+  type: NodePort

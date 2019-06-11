@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: security-controller-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: security-controller
+    spec:
+      containers:
+      - name: security-controller-registration
+        image: timkim0930/registration
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 2022
+      - name: security-controller-web
+        image: timkim0930/web
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      - name: security-controller-translation
+        image: timkim0930/translation
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+          containerPort: 55552
+          containerPort: 55560
+          containerPort: 12345
+      - name: security-controller-restconf
+        image: timkim0930/restconf
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443

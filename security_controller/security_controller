@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd /home/ubuntu/registration
+sudo docker run -d -p 2022:2022 registration
+
+cd /home/ubuntu/restconf
+sudo docker run -d -p 8443:8443 restconf
+
+cd /home/ubuntu/web
+sudo docker run -d -p 80:80 web
+
+cd /home/ubuntu/translation
+sudo docker run -d -p 3306:3306 -p 55552:55552 -p 55560:55560 -p 12345:12345 translation
