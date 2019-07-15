@@ -1,0 +1,60 @@
+Metadata-Version: 1.1
+Name: jetconf
+Version: 0.1.2.dev85+g5deb717.d20170823
+Summary: Pure Python implementation of RESTCONF server
+Home-page: https://gitlab.labs.nic.cz/labs/jetconf
+Author: Pavel Spirek
+Author-email: pavel.spirek@nic.cz
+License: UNKNOWN
+Description: .. |date| date::
+        
+        *******
+        JetConf
+        *******
+        
+        :Author: Pavel Špírek <pavel.spirek@nic.cz>
+        :Date: |date|
+        
+        *JetConf* is an implementation of the RESTCONF_ protocol written in
+        Python 3. Main features:
+        
+        * HTTP/2 over TLS, certificate-based authentication of clients
+        
+        * JSON data encoding
+        
+        * Per-user candidate datastores with transactions
+        
+        * Support for NACM_
+        
+        Installation
+        ============
+        
+        ::
+        
+           python -m pip install jetconf
+        
+        Note that *JetConf* requires Python 3.5.
+        
+        Links
+        =====
+        
+        * `Git repository`_
+        
+        * `Documentation`_
+        
+        .. _RESTCONF: https://tools.ietf.org/html/draft-ietf-netconf-restconf-18
+        .. _NACM: https://datatracker.ietf.org/doc/rfc6536/
+        .. _Git repository: https://github.com/CZ-NIC/jetconf
+        .. _Documentation: https://gitlab.labs.nic.cz/labs/jetconf/wikis/home
+        
+Keywords: RESTCONF,yang,data model,configuration,json
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: System Administrators
+Classifier: Intended Audience :: Telecommunications Industry
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: System :: Monitoring
+Classifier: Topic :: System :: Systems Administration
