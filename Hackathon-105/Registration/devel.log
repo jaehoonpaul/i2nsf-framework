@@ -1,0 +1,16 @@
+<INFO> 5-Jul-2019::15:18:09.052 skku-sc confd[52835]: confd embedded apps in early_phase0:
+	[]
+<INFO> 5-Jul-2019::15:18:09.431 skku-sc confd[52835]: confd mmap_schema handle_info got msg: timeout
+<INFO> 5-Jul-2019::15:18:09.488 skku-sc confd[52835]: confd embedded apps in phase0:
+	[]
+<INFO> 5-Jul-2019::15:18:09.802 skku-sc confd[52835]: devel-cdb init files found in ./confd-cdb: aaa_init.xml
+<INFO> 5-Jul-2019::15:18:09.916 skku-sc confd[52835]: devel-cdb Compacted CDB journal file: 3 ms (93 nodes in memory, disk size 1.44 KiB -> 1.39 KiB)
+<INFO> 5-Jul-2019::15:18:09.929 skku-sc confd[52835]: confd embedded apps in phase1:
+	[]
+<ERR> 5-Jul-2019::15:18:09.998 skku-sc confd[52835]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 5-Jul-2019::15:18:10.017 skku-sc confd[52835]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 5-Jul-2019::15:18:10.030 skku-sc confd[52835]: confd embedded apps in phase2:
+	[]
+<INFO> 5-Jul-2019::15:19:21.168 skku-sc confd[52835]: devel-cdb Compacted CDB journal file: 3 ms (154 nodes in memory, disk size 2.08 KiB -> 1.99 KiB)
+<INFO> 5-Jul-2019::15:21:02.824 skku-sc confd[52835]: devel-cdb Compacted CDB journal file: 3 ms (241 nodes in memory, disk size 3.03 KiB -> 2.87 KiB)

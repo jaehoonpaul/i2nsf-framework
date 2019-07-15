@@ -1,0 +1,20 @@
+<INFO> 5-Jul-2019::15:18:38.933 skku-sc confd[52835]: audit user: admin/0 local authentication succeeded via netconf from 192.168.120.151:38482 with ssh, member of groups: admin
+<INFO> 5-Jul-2019::15:18:38.934 skku-sc confd[52835]: audit user: admin/0 logged in via netconf from 192.168.120.151:38482 with ssh using local authentication
+<INFO> 5-Jul-2019::15:18:38.957 skku-sc confd[52835]: audit user: admin/28 assigned to groups: admin
+<INFO> 5-Jul-2019::15:18:39.147 skku-sc confd[52835]: audit user: admin/0 logged out <local> user
+<INFO> 5-Jul-2019::15:19:21.117 skku-sc confd[52835]: audit user: admin/0 local authentication succeeded via netconf from 192.168.120.151:38512 with ssh, member of groups: admin
+<INFO> 5-Jul-2019::15:19:21.117 skku-sc confd[52835]: audit user: admin/0 logged in via netconf from 192.168.120.151:38512 with ssh using local authentication
+<INFO> 5-Jul-2019::15:19:21.138 skku-sc confd[52835]: audit user: admin/29 assigned to groups: admin
+<INFO> 5-Jul-2019::15:19:21.198 skku-sc confd[52835]: audit user: admin/0 logged out <local> user
+<INFO> 5-Jul-2019::15:20:52.501 skku-sc confd[52835]: audit user: admin/0 local authentication succeeded via netconf from 192.168.120.151:38530 with ssh, member of groups: admin
+<INFO> 5-Jul-2019::15:20:52.501 skku-sc confd[52835]: audit user: admin/0 logged in via netconf from 192.168.120.151:38530 with ssh using local authentication
+<INFO> 5-Jul-2019::15:20:52.522 skku-sc confd[52835]: audit user: admin/30 assigned to groups: admin
+<INFO> 5-Jul-2019::15:20:52.676 skku-sc confd[52835]: audit user: admin/0 logged out <local> user
+<INFO> 5-Jul-2019::15:20:57.425 skku-sc confd[52835]: audit user: admin/0 local authentication succeeded via netconf from 192.168.120.151:38536 with ssh, member of groups: admin
+<INFO> 5-Jul-2019::15:20:57.426 skku-sc confd[52835]: audit user: admin/0 logged in via netconf from 192.168.120.151:38536 with ssh using local authentication
+<INFO> 5-Jul-2019::15:20:57.451 skku-sc confd[52835]: audit user: admin/31 assigned to groups: admin
+<INFO> 5-Jul-2019::15:20:57.520 skku-sc confd[52835]: audit user: admin/0 logged out <local> user
+<INFO> 5-Jul-2019::15:21:02.769 skku-sc confd[52835]: audit user: admin/0 local authentication succeeded via netconf from 192.168.120.151:38542 with ssh, member of groups: admin
+<INFO> 5-Jul-2019::15:21:02.769 skku-sc confd[52835]: audit user: admin/0 logged in via netconf from 192.168.120.151:38542 with ssh using local authentication
+<INFO> 5-Jul-2019::15:21:02.797 skku-sc confd[52835]: audit user: admin/32 assigned to groups: admin
+<INFO> 5-Jul-2019::15:21:02.948 skku-sc confd[52835]: audit user: admin/0 logged out <local> user
