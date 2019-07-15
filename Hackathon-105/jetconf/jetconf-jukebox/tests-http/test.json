@@ -1,0 +1,27 @@
+{
+    "i2nsf:rule": {
+        "rule-id": "2",
+        "rule-name": "seungjin",
+        "event": [
+            {
+                "time-information": [
+                    {
+                        "start-time": "01:00",
+                        "end-time": "09:00"
+                    }
+                ]
+            }
+        ],
+        "condition": [
+            {
+                "source": "President",
+                "destination": "www.google.com"
+            }
+        ],
+        "action": [
+            {
+                "action-name": "alert"
+            }
+        ]
+    }
+}

@@ -1,0 +1,204 @@
+module ietf-i2nsf-cf-interface-nac{
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-i2nsf-cf-interface-nac";
+  prefix
+    cf-interface;
+
+
+  import ietf-inet-types{
+    prefix inet;
+  }
+  import ietf-yang-types{
+    prefix yang;
+  }
+
+  organization
+    "IETF I2NSF (Interface to Network Security Functions)
+     Working Group";
+
+  contact
+    "WG Web: <http://tools.ietf.org/wg/i2nsf>
+     WG List: <mailto:i2nsf@ietf.org>
+
+     WG Chair: Adrian Farrel
+     <mailto:Adrain@olddog.co.uk>
+
+     WG Chair: Linda Dunbar
+     <mailto:Linda.duhbar@huawei.com>
+
+     Editor: Jaehoon Paul Jeong
+     <mailto:pauljeong@skku.edu>";
+
+  description
+    "This module defines a YANG data module for consumer-facing
+     interface to security controller.";
+
+  revision "2017-07-17"{
+    description "Initial revision";
+    reference
+      "draft-kumar-i2nsf-client-facing-interface-im-02";
+  }
+
+  //Groupings
+  container policy {
+  container threat-prevention{
+	list threat-feed {
+	  key "threat-feed-id";
+	  leaf threat-feed-id {
+	    type uint16;
+	  }
+	}
+  }
+  container policy-endpoint-groups{
+	list user-group {
+	  key "user-group-id";
+	  leaf user-group-id {
+	    type uint16;
+	  }
+	}
+  }
+  container security-policy-instance {
+        list policy-rule {
+          key "policy-rule-id";
+          leaf policy-rule-id {
+            type uint16;
+          }
+          leaf name {
+            type string;
+          }
+          leaf date {
+            type yang:date-and-time;
+          }
+          leaf source {
+            type yang:mac-address;
+          }
+          leaf destination {
+            type inet:ipv4-prefix;
+	  }
+	  leaf event {
+	    type leafref{
+		path "/cf-interface:policy/security-policy-instance/event/event-id";
+	    }
+	  }
+	  leaf condition {
+	    type leafref{
+		path "/cf-interface:policy/security-policy-instance/condition/condition-id";
+	    }
+	  }
+	  leaf action {
+	    type leafref{
+		path "/cf-interface:policy/security-policy-instance/action/action-id";
+	    }
+	  }
+          leaf exception {
+            type boolean;
+          }
+          leaf exception-detail{
+            type string;
+          }
+	}      
+
+        list action {
+          key "action-id";
+          leaf action-id {
+            type uint16;
+            mandatory true;
+          }
+          leaf name {
+            type string;
+          }
+          leaf date {
+            type yang:date-and-time;
+          }
+
+          leaf primary-action {
+            type string;
+          }
+
+          leaf secondary-action {
+            type string;
+          }
+        }
+
+        list precedence {
+          key "precedence-id";
+          leaf precedence-id{
+            type uint16;
+            mandatory true;
+          }
+          leaf rule-exist {
+            type boolean;
+          }
+        }
+
+        list event {
+          key "event-id";
+          leaf event-id {
+            type uint16;
+            mandatory true;
+          }
+          leaf security-event {
+            type string;
+          }
+          leaf threat-map {
+            type string;
+          }
+          leaf mac-match {
+            type boolean;
+          }
+        }
+
+        list condition {
+          key "condition-id";
+          leaf condition-id {
+            type uint16;
+          }
+          list service {
+            key "service-id";
+            leaf service-id {
+              type uint16;
+            }
+            leaf name {
+              type string;
+            }
+          }
+          list nac-source {
+            key "source-id";
+            leaf source-id {
+              type uint16;
+            }
+            leaf source-id-mac {
+              type yang:mac-address;
+            }
+          }
+          list nac-destination {
+            key "destination-id";
+            leaf destination-id {
+              type uint16;
+            }
+            leaf destination-id-mac {
+              type yang:mac-address;
+            }
+         }
+        }
+
+        list policy-instance {
+	  key "policy-instance-id";
+	  leaf policy-instance-id {
+	    type uint16;
+	  }
+	  leaf name {
+	    type string;
+	  }
+	  leaf date {
+	    type yang:date-and-time;
+	  }
+	  leaf rules {
+	    type leafref {
+		path "/cf-interface:policy/security-policy-instance/policy-rule/policy-rule-id";
+	    }
+	  }
+        }
+   }
+}
+}

@@ -1,0 +1,29 @@
+Metadata-Version: 1.1
+Name: jetconf-jukebox
+Version: 0.1.dev8+gbdb3132
+Summary: JetConf example Jukebox backend
+Home-page: https://gitlab.labs.nic.cz/labs/jetconf-jukebox
+Author: Pavel Spirek
+Author-email: pavel.spirek@nic.cz
+License: UNKNOWN
+Description: .. |date| date::
+        
+        *******
+        JetConf example Jukebox backend
+        *******
+        
+        :Author: Pavel Špírek <pavel.spirek@nic.cz>
+        :Date: |date|
+        
+        
+Keywords: RESTCONF,yang,data model,Jetconf
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: System Administrators
+Classifier: Intended Audience :: Telecommunications Industry
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: System :: Monitoring
+Classifier: Topic :: System :: Systems Administration

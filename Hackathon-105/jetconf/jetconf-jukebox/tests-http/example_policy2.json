@@ -1,0 +1,11 @@
+{
+	"i2nsf:Policy_web":{
+				"Rule_id": 2,
+				"Rule_name": "example",
+				"Position": "admin",
+				"Web": "www.google.com",
+				"Start_time": "2017-10-10T10:00:00Z",
+				"End_time": "2017-10-10T18:00:00Z",
+				"Action": "Deny"
+	}
+}

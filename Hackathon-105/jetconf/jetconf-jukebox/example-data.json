@@ -1,0 +1,12 @@
+{
+    "ietf-netconf-acm:nacm":{
+		"enable-nacm":false
+    },
+
+    "i2nsf:Policy":{
+		"rule":[]
+    },
+
+    "ietf-i2nsf-cfi-policy:i2nsf-cfi":{
+    }
+}
