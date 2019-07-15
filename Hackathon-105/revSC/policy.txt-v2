@@ -1,0 +1,17 @@
+<ietf-i2nsf-cfi-policy:policy>
+	<endpoint-group>
+		<user-group>
+			<range-ip-address>
+				<start-ip-address>
+					221.159.112.1
+				</start-ip-address>
+				<end-ip-address>
+					221.159.112.90
+				</end-ip-address>
+			</range-ip-address>
+			<name>
+				employees
+			</name>
+		</user-group>
+	</endpoint-group>
+</ietf-i2nsf-cfi-policy:policy>
