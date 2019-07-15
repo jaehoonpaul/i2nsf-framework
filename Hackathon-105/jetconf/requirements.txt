@@ -1,0 +1,10 @@
+colorlog
+h2==3.0.1
+hpack==2.3.0
+hyperframe==5.0.0
+pyaml==16.12.2
+pytz
+PyXB==1.2.5
+PyYAML
+yangson
+-e .
