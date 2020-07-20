@@ -1,0 +1,47 @@
+tosca_definitions_version: tosca_simple_profile_for_nfv_1_0_0
+
+description: Sample VNFFG template
+
+topology_template:
+  node_templates:
+
+    Forwarding_path1:
+      type: tosca.nodes.nfv.FP.TackerV2
+      description: demo chain
+      properties:
+        id: 51
+        policy:
+          type: ACL
+          criteria:
+            - name: block_icmp
+              classifier:
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                ip_proto: 1
+            - name: block_tcp
+              classifier:
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                ip_proto: 6
+            - name: block_udp
+              classifier:
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                ip_proto: 17
+
+
+        path:
+          - forwarder: time_based_firewall_vnfd
+            capability: CP1
+          - forwarder: url_filtering_vnfd
+            capability: CP2
+
+  groups:
+    VNFFG1:
+      type: tosca.groups.nfv.VNFFG
+      description: Traffic to server
+      properties:
+        vendor: tacker
+        version: 1.0
+        number_of_endpoints: 2
+        dependent_virtual_link: [VL1,VL2]
+        connection_point: [CP1,CP2]
+        constituent_vnfs: [time_based_firewall_vnfd,url_filtering_vnfd]
+      members: [Forwarding_path1]
