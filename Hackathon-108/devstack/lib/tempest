@@ -102,6 +102,14 @@ function remove_disabled_extensions {
     remove_disabled_services "$extensions_list" "$disabled_exts"
 }
 
+# image_size_in_gib - converts an image size from bytes to GiB, rounded up
+# Takes an image ID parameter as input
+function image_size_in_gib {
+    local size
+    size=$(openstack image show $1 -c size -f value)
+    echo $size | python3 -c "import math; print(int(math.ceil(float(int(input()) / 1024.0 ** 3))))"
+}
+
 # configure_tempest() - Set config files, create data dirs, etc
 function configure_tempest {
     if [[ "$INSTALL_TEMPEST" == "True" ]]; then
@@ -122,9 +130,12 @@ function configure_tempest {
     local available_flavors
     local flavors_ref
     local flavor_lines
+    local flavor_ref_size
+    local flavor_ref_alt_size
     local public_network_id
     local public_router_id
     local ssh_connect_method="floating"
+    local disk
 
     # Save IFS
     ifs=$IFS
@@ -190,11 +201,15 @@ function configure_tempest {
         available_flavors=$(nova flavor-list)
         if  [[ -z "$DEFAULT_INSTANCE_TYPE" ]]; then
             if [[ ! ( $available_flavors =~ 'm1.nano' ) ]]; then
-                openstack flavor create --id 42 --ram 64 --disk 0 --vcpus 1 m1.nano
+                # Determine the flavor disk size based on the image size.
+                disk=$(image_size_in_gib $image_uuid)
+                openstack flavor create --id 42 --ram 128 --disk $disk --vcpus 1 --property hw_rng:allowed=True m1.nano
             fi
             flavor_ref=42
             if [[ ! ( $available_flavors =~ 'm1.micro' ) ]]; then
-                openstack flavor create --id 84 --ram 128 --disk 0 --vcpus 1 m1.micro
+                # Determine the alt flavor disk size based on the alt image size.
+                disk=$(image_size_in_gib $image_uuid_alt)
+                openstack flavor create --id 84 --ram 192 --disk $disk --vcpus 1 --property hw_rng:allowed=True m1.micro
             fi
             flavor_ref_alt=84
         else
@@ -220,11 +235,24 @@ function configure_tempest {
             fi
             flavor_ref=${flavors[0]}
             flavor_ref_alt=$flavor_ref
+            flavor_ref_size=$(openstack flavor show --format value --column disk "${flavor_ref}")
 
             # Ensure ``flavor_ref`` and ``flavor_ref_alt`` have different values.
             # Some resize instance in tempest tests depends on this.
             for f in ${flavors[@]:1}; do
                 if [[ "$f" != "$flavor_ref" ]]; then
+                    #
+                    # NOTE(sdatko): Resize is only possible when target flavor
+                    #               is not smaller than the original one. For
+                    #               Tempest tests, in case there was a bigger
+                    #               flavor selected as default, e.g. m1.small,
+                    #               we need to perform additional check.
+                    #
+                    flavor_ref_alt_size=$(openstack flavor show --format value --column disk "${f}")
+                    if [[ "${flavor_ref_alt_size}" -lt "${flavor_ref_size}" ]]; then
+                        continue
+                    fi
+
                     flavor_ref_alt=$f
                     break
                 fi
@@ -242,6 +270,9 @@ function configure_tempest {
     # and the public_network_id should not be set.
     if [[ "$NEUTRON_CREATE_INITIAL_NETWORKS" == "True" ]] && is_networking_extension_supported 'external-net'; then
         public_network_id=$(openstack network show -f value -c id $PUBLIC_NETWORK_NAME)
+        # make sure shared network presence does not confuses the tempest tests
+        openstack network create --share shared
+        openstack subnet create --description shared-subnet --subnet-range ${TEMPEST_SHARED_POOL:-192.168.233.0/24} --network shared shared-subnet
     fi
 
     iniset $TEMPEST_CONFIG DEFAULT use_syslog $SYSLOG
@@ -263,8 +294,6 @@ function configure_tempest {
     iniset $TEMPEST_CONFIG identity user_lockout_failure_attempts $KEYSTONE_LOCKOUT_FAILURE_ATTEMPTS
     iniset $TEMPEST_CONFIG identity user_lockout_duration $KEYSTONE_LOCKOUT_DURATION
     iniset $TEMPEST_CONFIG identity user_unique_last_password_count $KEYSTONE_UNIQUE_LAST_PASSWORD_COUNT
-    # Use domain scoped tokens for admin v3 tests, v3 dynamic credentials of v3 account generation
-    iniset $TEMPEST_CONFIG identity admin_domain_scope True
     if [[ "$TEMPEST_HAS_ADMIN" == "True" ]]; then
         iniset $TEMPEST_CONFIG auth admin_username $admin_username
         iniset $TEMPEST_CONFIG auth admin_password "$password"
@@ -303,6 +332,10 @@ function configure_tempest {
     # as this is supported in Queens and beyond.
     iniset $TEMPEST_CONFIG identity-feature-enabled project_tags True
 
+    # In Queens and later, application credentials are enabled by default
+    # so remove this once Tempest no longer supports Pike.
+    iniset $TEMPEST_CONFIG identity-feature-enabled application_credentials True
+
     # Image
     # We want to be able to override this variable in the gate to avoid
     # doing an external HTTP fetch for this test.
@@ -313,18 +346,13 @@ function configure_tempest {
         iniset $TEMPEST_CONFIG image disk_formats "ami,ari,aki,vhd,raw,iso"
     fi
 
-    # Image Features
-    if [ "$GLANCE_V1_ENABLED" != "True" ]; then
-        iniset $TEMPEST_CONFIG image-feature-enabled api_v1 False
-    fi
-
     # Compute
     iniset $TEMPEST_CONFIG compute image_ref $image_uuid
     iniset $TEMPEST_CONFIG compute image_ref_alt $image_uuid_alt
     iniset $TEMPEST_CONFIG compute flavor_ref $flavor_ref
     iniset $TEMPEST_CONFIG compute flavor_ref_alt $flavor_ref_alt
     iniset $TEMPEST_CONFIG validation connect_method $ssh_connect_method
-    if ! is_service_enabled n-cell && ! is_service_enabled neutron; then
+    if ! is_service_enabled neutron; then
         iniset $TEMPEST_CONFIG compute fixed_network_name $PRIVATE_NETWORK_NAME
     fi
 
@@ -343,7 +371,7 @@ function configure_tempest {
     # NOTE- To avoid microversion tests failure on stable branch, we need to change "tempest_compute_max_microversion"
     #       for stable branch on each release which should be changed from "latest" to max supported version of that release.
     local tempest_compute_min_microversion=${TEMPEST_COMPUTE_MIN_MICROVERSION:-None}
-    local tempest_compute_max_microversion=${TEMPEST_COMPUTE_MAX_MICROVERSION:-"2.60"}
+    local tempest_compute_max_microversion=${TEMPEST_COMPUTE_MAX_MICROVERSION:-"latest"}
     # Reset microversions to None where v2.0 is running which does not support microversion.
     # Both "None" means no microversion testing.
     if [[ "$TEMPEST_COMPUTE_TYPE" == "compute_legacy" ]]; then
@@ -368,22 +396,9 @@ function configure_tempest {
     iniset $TEMPEST_CONFIG compute-feature-enabled block_migration_for_live_migration ${USE_BLOCK_MIGRATION_FOR_LIVE_MIGRATION:-False}
     iniset $TEMPEST_CONFIG compute-feature-enabled live_migrate_back_and_forth ${LIVE_MIGRATE_BACK_AND_FORTH:-False}
     iniset $TEMPEST_CONFIG compute-feature-enabled attach_encrypted_volume ${ATTACH_ENCRYPTED_VOLUME_AVAILABLE:-True}
-    if is_service_enabled n-cell; then
-        # Cells doesn't support shelving/unshelving
-        iniset $TEMPEST_CONFIG compute-feature-enabled shelve False
-        # Cells doesn't support hot-plugging virtual interfaces.
-        iniset $TEMPEST_CONFIG compute-feature-enabled interface_attach False
-        # Cells v1 doesn't support the rescue/unrescue tests in Tempest
-        iniset $TEMPEST_CONFIG compute-feature-enabled rescue False
 
-        if  [[ -z "$DEFAULT_INSTANCE_TYPE" ]]; then
-            # Cells supports resize but does not currently work with devstack
-            # because of the custom flavors created for Tempest runs which are
-            # not in the cells database.
-            # TODO(mriedem): work on adding a nova-manage command to sync
-            # flavors into the cells database.
-            iniset $TEMPEST_CONFIG compute-feature-enabled resize False
-        fi
+    if [[ -n "$NOVA_FILTERS" ]]; then
+        iniset $TEMPEST_CONFIG compute-feature-enabled scheduler_enabled_filters ${NOVA_FILTERS}
     fi
 
     if [[ $ENABLE_VOLUME_MULTIATTACH == "True" ]]; then
@@ -413,8 +428,7 @@ function configure_tempest {
         SCENARIO_IMAGE_DIR=${SCENARIO_IMAGE_DIR:-$FILES}
         SCENARIO_IMAGE_FILE=$DEFAULT_IMAGE_FILE_NAME
     fi
-    iniset $TEMPEST_CONFIG scenario img_dir $SCENARIO_IMAGE_DIR
-    iniset $TEMPEST_CONFIG scenario img_file $SCENARIO_IMAGE_FILE
+    iniset $TEMPEST_CONFIG scenario img_file $SCENARIO_IMAGE_DIR/$SCENARIO_IMAGE_FILE
 
     # If using provider networking, use the physical network for validation rather than private
     TEMPEST_SSH_NETWORK_NAME=$PRIVATE_NETWORK_NAME
@@ -429,6 +443,13 @@ function configure_tempest {
     iniset $TEMPEST_CONFIG validation network_for_ssh $TEMPEST_SSH_NETWORK_NAME
 
     # Volume
+    # Set the service catalog entry for Tempest to run on. Typically
+    # used to try different Volume API version targets. The tempest
+    # default it to 'volumev3'(v3 APIs endpoint) , so only set this
+    # if you want to change it.
+    if [[ -n "$TEMPEST_VOLUME_TYPE" ]]; then
+        iniset $TEMPEST_CONFIG volume catalog_type $TEMPEST_VOLUME_TYPE
+    fi
     # Only turn on TEMPEST_VOLUME_MANAGE_SNAPSHOT by default for "lvm" backends
     if [[ "$CINDER_ENABLED_BACKENDS" == *"lvm"* ]]; then
         TEMPEST_VOLUME_MANAGE_SNAPSHOT=${TEMPEST_VOLUME_MANAGE_SNAPSHOT:-True}
@@ -445,11 +466,19 @@ function configure_tempest {
         TEMPEST_EXTEND_ATTACHED_VOLUME=${TEMPEST_EXTEND_ATTACHED_VOLUME:-True}
     fi
     iniset $TEMPEST_CONFIG volume-feature-enabled extend_attached_volume $(trueorfalse False TEMPEST_EXTEND_ATTACHED_VOLUME)
-    # TODO(ameade): Remove the api_v3 flag when Mitaka and Liberty are end of life.
-    iniset $TEMPEST_CONFIG volume-feature-enabled api_v3 True
-    iniset $TEMPEST_CONFIG volume-feature-enabled api_v1 $(trueorfalse False TEMPEST_VOLUME_API_V1)
+    # Only turn on TEMPEST_VOLUME_REVERT_TO_SNAPSHOT by default for "lvm" backends
+    if [[ "$CINDER_ENABLED_BACKENDS" == *"lvm"* ]]; then
+        TEMPEST_VOLUME_REVERT_TO_SNAPSHOT=${TEMPEST_VOLUME_REVERT_TO_SNAPSHOT:-True}
+    fi
+    iniset $TEMPEST_CONFIG volume-feature-enabled volume_revert $(trueorfalse False TEMPEST_VOLUME_REVERT_TO_SNAPSHOT)
     local tempest_volume_min_microversion=${TEMPEST_VOLUME_MIN_MICROVERSION:-None}
-    local tempest_volume_max_microversion=${TEMPEST_VOLUME_MAX_MICROVERSION:-"3.50"}
+    local tempest_volume_max_microversion=${TEMPEST_VOLUME_MAX_MICROVERSION:-"latest"}
+    # Reset microversions to None where v2 is running which does not support microversion.
+    # Both "None" means no microversion testing.
+    if [[ "$TEMPEST_VOLUME_TYPE" == "volumev2" ]]; then
+        tempest_volume_min_microversion=None
+        tempest_volume_max_microversion=None
+    fi
     if [ "$tempest_volume_min_microversion" == "None" ]; then
         inicomment $TEMPEST_CONFIG volume min_microversion
     else
@@ -498,6 +527,24 @@ function configure_tempest {
         iniset $TEMPEST_CONFIG volume storage_protocol "$TEMPEST_STORAGE_PROTOCOL"
     fi
 
+    # Placement Features
+    # Set the microversion range for placement.
+    # Setting [None, latest] range of microversion which allow Tempest to run all microversions tests.
+    # NOTE- To avoid microversion tests failure on stable branch, we need to change "tempest_placement_max_microversion"
+    #       for stable branch on each release which should be changed from "latest" to max supported version of that release.
+    local tempest_placement_min_microversion=${TEMPEST_PLACEMENT_MIN_MICROVERSION:-None}
+    local tempest_placement_max_microversion=${TEMPEST_PLACEMENT_MAX_MICROVERSION:-"latest"}
+    if [ "$tempest_placement_min_microversion" == "None" ]; then
+        inicomment $TEMPEST_CONFIG placement min_microversion
+    else
+        iniset $TEMPEST_CONFIG placement min_microversion $tempest_placement_min_microversion
+    fi
+    if [ "$tempest_placement_max_microversion" == "None" ]; then
+        inicomment $TEMPEST_CONFIG placement max_microversion
+    else
+        iniset $TEMPEST_CONFIG placement max_microversion $tempest_placement_max_microversion
+    fi
+
     # Baremetal
     if [ "$VIRT_DRIVER" = "ironic" ] ; then
         iniset $TEMPEST_CONFIG compute-feature-enabled change_password False
@@ -521,19 +568,23 @@ function configure_tempest {
             iniset $TEMPEST_CONFIG compute-feature-enabled shelve False
             iniset $TEMPEST_CONFIG compute-feature-enabled snapshot False
             iniset $TEMPEST_CONFIG compute-feature-enabled suspend False
-        elif ! is_service_enabled n-cell; then
-            # cells v1 does not support swapping volumes
+        else
+            iniset $TEMPEST_CONFIG compute-feature-enabled stable_rescue True
             iniset $TEMPEST_CONFIG compute-feature-enabled swap_volume True
         fi
     fi
 
     # ``service_available``
     #
-    # this tempest service list needs to be all the services that
-    # tempest supports, otherwise we can have an erroneous set of
+    # this tempest service list needs to be the services that
+    # tempest own, otherwise we can have an erroneous set of
     # defaults (something defaulting true in Tempest, but not listed here).
+    # services tested by tempest plugins needs to be set on service devstack
+    # plugin side as devstack cannot keep track of all the tempest plugins
+    # services. Refer Bug#1743688 for more details.
+    # 'horizon' is also kept here as no devtack plugin for horizon.
     local service
-    local tempest_services="key,glance,nova,neutron,cinder,swift,heat,ceilometer,horizon,sahara,ironic,trove"
+    local tempest_services="key,glance,nova,neutron,cinder,swift,horizon"
     for service in ${tempest_services//,/ }; do
         if is_service_enabled $service ; then
             iniset $TEMPEST_CONFIG service_available $service "True"
@@ -559,16 +610,20 @@ function configure_tempest {
         tox -revenv-tempest --notest
     fi
 
-    # NOTE(gmann): Use branch constraint because Tempest is pinned to the branch release instead of using master.
-    tox -evenv-tempest -- pip install -c $REQUIREMENTS_DIR/upper-constraints.txt -r requirements.txt
+    # The requirements might be on a different branch, while tempest needs master requirements.
+    local tmp_u_c_m
+    tmp_u_c_m=$(mktemp -t tempest_u_c_m.XXXXXXXXXX)
+    (cd $REQUIREMENTS_DIR && git show origin/master:upper-constraints.txt) > $tmp_u_c_m
+    tox -evenv-tempest -- pip install -c $tmp_u_c_m -r requirements.txt
+    rm -f $tmp_u_c_m
 
     # Auth:
-    iniset $TEMPEST_CONFIG auth tempest_roles "Member"
+    iniset $TEMPEST_CONFIG auth tempest_roles "member"
     if [[ $TEMPEST_USE_TEST_ACCOUNTS == "True" ]]; then
         if [[ $TEMPEST_HAS_ADMIN == "True" ]]; then
-            tox -evenv-tempest -- tempest-account-generator -c $TEMPEST_CONFIG --os-username $admin_username --os-password "$password" --os-tenant-name $admin_project_name -r $TEMPEST_CONCURRENCY --with-admin etc/accounts.yaml
+            tox -evenv-tempest -- tempest account-generator -c $TEMPEST_CONFIG --os-username $admin_username --os-password "$password" --os-project-name $admin_project_name -r $TEMPEST_CONCURRENCY --with-admin etc/accounts.yaml
         else
-            tox -evenv-tempest -- tempest-account-generator -c $TEMPEST_CONFIG --os-username $admin_username --os-password "$password" --os-tenant-name $admin_project_name -r $TEMPEST_CONCURRENCY etc/accounts.yaml
+            tox -evenv-tempest -- tempest account-generator -c $TEMPEST_CONFIG --os-username $admin_username --os-password "$password" --os-project-name $admin_project_name -r $TEMPEST_CONCURRENCY etc/accounts.yaml
         fi
         iniset $TEMPEST_CONFIG auth use_dynamic_credentials False
         iniset $TEMPEST_CONFIG auth test_accounts_file "etc/accounts.yaml"
@@ -596,17 +651,7 @@ function configure_tempest {
         DISABLE_NETWORK_API_EXTENSIONS+=", l3_agent_scheduler"
     fi
 
-    DEFAULT_NET_EXT="address-scope,agent,allowed-address-pairs,auto-allocated-topology"
-    DEFAULT_NET_EXT+=",availability_zone,binding,default-subnetpools,dhcp_agent_scheduler"
-    DEFAULT_NET_EXT+=",dvr,ext-gw-mode,external-net,extra_dhcp_opt,extraroute,flavors"
-    DEFAULT_NET_EXT+=",l3-flavors,l3-ha,l3_agent_scheduler,multi-provider,net-mtu"
-    DEFAULT_NET_EXT+=",network-ip-availability,network_availability_zone,pagination"
-    DEFAULT_NET_EXT+=",port-security,project-id,provider,quotas,quota_details,rbac-policies"
-    DEFAULT_NET_EXT+=",revision-if-match,router,router_availability_zone,security-group,service-type,sorting"
-    DEFAULT_NET_EXT+=",standard-attr-description,standard-attr-revisions,standard-attr-tag,standard-attr-timestamp"
-    DEFAULT_NET_EXT+=",subnet-service-types,subnet_allocation,net-mtu-writable,ip-substring-filtering"
-    local network_api_extensions=${NETWORK_API_EXTENSIONS:-$DEFAULT_NET_EXT}
-
+    local network_api_extensions=${NETWORK_API_EXTENSIONS:-"all"}
     if [[ ! -z "$DISABLE_NETWORK_API_EXTENSIONS" ]]; then
         # Enabled extensions are either the ones explicitly specified or those available on the API endpoint
         network_api_extensions=${NETWORK_API_EXTENSIONS:-$(iniget $tmp_cfg_file network-feature-enabled api_extensions | tr -d " ")}
@@ -618,10 +663,7 @@ function configure_tempest {
     fi
     iniset $TEMPEST_CONFIG network-feature-enabled api_extensions $network_api_extensions
     # Swift API Extensions
-    DEFAULT_SWIFT_OPT="account_quotas,bulk_delete,bulk_upload,container_quotas"
-    DEFAULT_SWIFT_OPT+=",container_sync,crossdomain,formpost,ratelimit,slo"
-    DEFAULT_SWIFT_OPT+=",staticweb,tempauth,tempurl,versioned_writes"
-    local object_storage_api_extensions=${OBJECT_STORAGE_API_EXTENSIONS:-$DEFAULT_SWIFT_OPT}
+    local object_storage_api_extensions=${OBJECT_STORAGE_API_EXTENSIONS:-"all"}
     if [[ ! -z "$DISABLE_OBJECT_STORAGE_API_EXTENSIONS" ]]; then
         # Enabled extensions are either the ones explicitly specified or those available on the API endpoint
         object_storage_api_extensions=${OBJECT_STORAGE_API_EXTENSIONS:-$(iniget $tmp_cfg_file object-storage-feature-enabled discoverable_apis | tr -d " ")}
@@ -630,19 +672,7 @@ function configure_tempest {
     fi
     iniset $TEMPEST_CONFIG object-storage-feature-enabled discoverable_apis $object_storage_api_extensions
     # Cinder API Extensions
-    DEFAULT_VOL_EXT="OS-SCH-HNT,backups,capabilities,cgsnapshots,consistencygroups"
-    DEFAULT_VOL_EXT+=",encryption,os-admin-actions,os-availability-zone"
-    DEFAULT_VOL_EXT+=",os-extended-services,os-extended-snapshot-attributes"
-    DEFAULT_VOL_EXT+=",os-hosts,os-image-create,os-quota-class-sets,os-quota-sets"
-    DEFAULT_VOL_EXT+=",os-services,os-snapshot-actions,os-snapshot-manage"
-    DEFAULT_VOL_EXT+=",os-snapshot-unmanage,os-types-extra-specs,os-types-manage"
-    DEFAULT_VOL_EXT+=",os-used-limits,os-vol-host-attr,os-vol-image-meta"
-    DEFAULT_VOL_EXT+=",os-vol-mig-status-attr,os-vol-tenant-attr,os-volume-actions"
-    DEFAULT_VOL_EXT+=",os-volume-encryption-metadata,os-volume-manage"
-    DEFAULT_VOL_EXT+=",os-volume-transfer,os-volume-type-access"
-    DEFAULT_VOL_EXT+=",os-volume-unmanage,qos-specs,scheduler-stats"
-    local volume_api_extensions=${VOLUME_API_EXTENSIONS:-$DEFAULT_VOL_EXT}
-
+    local volume_api_extensions=${VOLUME_API_EXTENSIONS:-"all"}
     if [[ ! -z "$DISABLE_VOLUME_API_EXTENSIONS" ]]; then
         # Enabled extensions are either the ones explicitly specified or those available on the API endpoint
         volume_api_extensions=${VOLUME_API_EXTENSIONS:-$(iniget $tmp_cfg_file volume-feature-enabled api_extensions | tr -d " ")}
@@ -665,12 +695,6 @@ function install_tempest {
     # TEMPEST_DIR already exist until RECLONE is true.
     git checkout $TEMPEST_BRANCH
 
-    # NOTE(gmann): Use branch constraint because Tempest is pinned to the branch release
-    # instead of using master. We need to export it via env var UPPER_CONSTRAINTS_FILE
-    # so that initial creation of tempest tox use stable branch constraint
-    # instead of master constraint as defined in tempest/tox.ini
-    export UPPER_CONSTRAINTS_FILE=$REQUIREMENTS_DIR/upper-constraints.txt
-
     tox -r --notest -efull
     # NOTE(mtreinish) Respect constraints in the tempest full venv, things that
     # are using a tox job other than full will not be respecting constraints but
@@ -684,9 +708,12 @@ function install_tempest {
 function install_tempest_plugins {
     pushd $TEMPEST_DIR
     if [[ $TEMPEST_PLUGINS != 0 ]] ; then
-        # NOTE(gmann): Use branch constraint because Tempest is pinned to the branch release
-        # instead of using master.
-        tox -evenv-tempest -- pip install -c $REQUIREMENTS_DIR/upper-constraints.txt $TEMPEST_PLUGINS
+        # The requirements might be on a different branch, while tempest & tempest plugins needs master requirements.
+        local tmp_u_c_m
+        tmp_u_c_m=$(mktemp -t tempest_u_c_m.XXXXXXXXXX)
+        (cd $REQUIREMENTS_DIR && git show origin/master:upper-constraints.txt) > $tmp_u_c_m
+        tox -evenv-tempest -- pip install -c $tmp_u_c_m $TEMPEST_PLUGINS
+        rm -f $tmp_u_c_m
         echo "Checking installed Tempest plugins:"
         tox -evenv-tempest -- tempest list-plugins
     fi

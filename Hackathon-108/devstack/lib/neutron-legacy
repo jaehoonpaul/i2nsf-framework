@@ -50,8 +50,6 @@
 # See "Neutron Network Configuration" below for additional variables
 # that must be set in localrc for connectivity across hosts with
 # Neutron.
-#
-# With Neutron networking the NETWORK_MANAGER variable is ignored.
 
 # Settings
 # --------
@@ -59,8 +57,6 @@
 
 # Neutron Network Configuration
 # -----------------------------
-
-deprecated "Using lib/neutron-legacy is deprecated, and it will be removed in the future"
 
 if is_service_enabled tls-proxy; then
     Q_PROTOCOL="https"
@@ -73,7 +69,6 @@ GITDIR["python-neutronclient"]=$DEST/python-neutronclient
 
 NEUTRON_DIR=$DEST/neutron
 NEUTRON_FWAAS_DIR=$DEST/neutron-fwaas
-NEUTRON_AUTH_CACHE_DIR=${NEUTRON_AUTH_CACHE_DIR:-/var/cache/neutron}
 
 # Support entry points installation of console scripts
 if [[ -d $NEUTRON_DIR/bin/neutron-server ]]; then
@@ -85,6 +80,15 @@ fi
 NEUTRON_CONF_DIR=/etc/neutron
 NEUTRON_CONF=$NEUTRON_CONF_DIR/neutron.conf
 export NEUTRON_TEST_CONFIG_FILE=${NEUTRON_TEST_CONFIG_FILE:-"$NEUTRON_CONF_DIR/debug.ini"}
+
+# NEUTRON_DEPLOY_MOD_WSGI defines how neutron is deployed, allowed values:
+# - False (default) : Run neutron under Eventlet
+# - True : Run neutron under uwsgi
+# TODO(annp): Switching to uwsgi in next cycle if things turn out to be stable
+# enough
+NEUTRON_DEPLOY_MOD_WSGI=$(trueorfalse False NEUTRON_DEPLOY_MOD_WSGI)
+
+NEUTRON_UWSGI_CONF=$NEUTRON_CONF_DIR/neutron-api-uwsgi.ini
 
 # Agent binaries.  Note, binary paths for other agents are set in per-service
 # scripts in lib/neutron_plugins/services/
@@ -111,7 +115,7 @@ Q_HOST=${Q_HOST:-$SERVICE_HOST}
 # Default protocol
 Q_PROTOCOL=${Q_PROTOCOL:-$SERVICE_PROTOCOL}
 # Default listen address
-Q_LISTEN_ADDRESS=${Q_LISTEN_ADDRESS:-$SERVICE_LISTEN_ADDRESS}
+Q_LISTEN_ADDRESS=${Q_LISTEN_ADDRESS:-$(ipv6_unquote $SERVICE_LISTEN_ADDRESS)}
 # Default admin username
 Q_ADMIN_USERNAME=${Q_ADMIN_USERNAME:-neutron}
 # Default auth strategy
@@ -121,7 +125,7 @@ Q_OVS_USE_VETH=${Q_OVS_USE_VETH:-False}
 Q_USE_ROOTWRAP=${Q_USE_ROOTWRAP:-True}
 Q_USE_ROOTWRAP_DAEMON=$(trueorfalse True Q_USE_ROOTWRAP_DAEMON)
 # Meta data IP
-Q_META_DATA_IP=${Q_META_DATA_IP:-$SERVICE_HOST}
+Q_META_DATA_IP=${Q_META_DATA_IP:-$(ipv6_unquote $SERVICE_HOST)}
 # Allow Overlapping IP among subnets
 Q_ALLOW_OVERLAPPING_IP=${Q_ALLOW_OVERLAPPING_IP:-True}
 Q_NOTIFY_NOVA_PORT_STATUS_CHANGES=${Q_NOTIFY_NOVA_PORT_STATUS_CHANGES:-True}
@@ -366,31 +370,26 @@ function configure_mutnauq {
 }
 
 function create_nova_conf_neutron {
-    iniset $NOVA_CONF DEFAULT use_neutron True
-    iniset $NOVA_CONF neutron auth_type "password"
-    iniset $NOVA_CONF neutron auth_url "$KEYSTONE_AUTH_URI"
-    iniset $NOVA_CONF neutron username "$Q_ADMIN_USERNAME"
-    iniset $NOVA_CONF neutron password "$SERVICE_PASSWORD"
-    iniset $NOVA_CONF neutron user_domain_name "$SERVICE_DOMAIN_NAME"
-    iniset $NOVA_CONF neutron project_name "$SERVICE_PROJECT_NAME"
-    iniset $NOVA_CONF neutron project_domain_name "$SERVICE_DOMAIN_NAME"
-    iniset $NOVA_CONF neutron auth_strategy "$Q_AUTH_STRATEGY"
-    iniset $NOVA_CONF neutron region_name "$REGION_NAME"
-
-    if [[ "$Q_USE_SECGROUP" == "True" ]]; then
-        LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
-        iniset $NOVA_CONF DEFAULT firewall_driver $LIBVIRT_FIREWALL_DRIVER
-    fi
+    local conf=${1:-$NOVA_CONF}
+    iniset $conf neutron auth_type "password"
+    iniset $conf neutron auth_url "$KEYSTONE_SERVICE_URI"
+    iniset $conf neutron username "$Q_ADMIN_USERNAME"
+    iniset $conf neutron password "$SERVICE_PASSWORD"
+    iniset $conf neutron user_domain_name "$SERVICE_DOMAIN_NAME"
+    iniset $conf neutron project_name "$SERVICE_PROJECT_NAME"
+    iniset $conf neutron project_domain_name "$SERVICE_DOMAIN_NAME"
+    iniset $conf neutron auth_strategy "$Q_AUTH_STRATEGY"
+    iniset $conf neutron region_name "$REGION_NAME"
 
     # optionally set options in nova_conf
-    neutron_plugin_create_nova_conf
+    neutron_plugin_create_nova_conf $conf
 
     if is_service_enabled q-meta; then
-        iniset $NOVA_CONF neutron service_metadata_proxy "True"
+        iniset $conf neutron service_metadata_proxy "True"
     fi
 
-    iniset $NOVA_CONF DEFAULT vif_plugging_is_fatal "$VIF_PLUGGING_IS_FATAL"
-    iniset $NOVA_CONF DEFAULT vif_plugging_timeout "$VIF_PLUGGING_TIMEOUT"
+    iniset $conf DEFAULT vif_plugging_is_fatal "$VIF_PLUGGING_IS_FATAL"
+    iniset $conf DEFAULT vif_plugging_timeout "$VIF_PLUGGING_TIMEOUT"
 }
 
 # create_mutnauq_accounts() - Set up common required neutron accounts
@@ -401,6 +400,13 @@ function create_nova_conf_neutron {
 
 # Migrated from keystone_data.sh
 function create_mutnauq_accounts {
+    local neutron_url
+    if [ "$NEUTRON_DEPLOY_MOD_WSGI" == "True" ]; then
+        neutron_url=$Q_PROTOCOL://$SERVICE_HOST/networking/
+    else
+        neutron_url=$Q_PROTOCOL://$SERVICE_HOST:$Q_PORT/
+    fi
+
     if [[ "$ENABLED_SERVICES" =~ "q-svc" ]]; then
 
         create_service_user "neutron"
@@ -408,8 +414,7 @@ function create_mutnauq_accounts {
         get_or_create_service "neutron" "network" "Neutron Service"
         get_or_create_endpoint \
             "network" \
-            "$REGION_NAME" \
-            "$Q_PROTOCOL://$SERVICE_HOST:$Q_PORT/"
+            "$REGION_NAME" "$neutron_url"
     fi
 }
 
@@ -459,6 +464,7 @@ function start_neutron_service_and_check {
     local service_port=$Q_PORT
     local service_protocol=$Q_PROTOCOL
     local cfg_file_options
+    local neutron_url
 
     cfg_file_options="$(determine_config_files neutron-server)"
 
@@ -467,16 +473,24 @@ function start_neutron_service_and_check {
         service_protocol="http"
     fi
     # Start the Neutron service
-    run_process q-svc "$NEUTRON_BIN_DIR/neutron-server $cfg_file_options"
+    if [ "$NEUTRON_DEPLOY_MOD_WSGI" == "True" ]; then
+        enable_service neutron-api
+        run_process neutron-api "$(which uwsgi) --procname-prefix neutron-api --ini $NEUTRON_UWSGI_CONF"
+        neutron_url=$Q_PROTOCOL://$Q_HOST/networking/
+        enable_service neutron-rpc-server
+        run_process neutron-rpc-server "$NEUTRON_BIN_DIR/neutron-rpc-server $cfg_file_options"
+    else
+        run_process q-svc "$NEUTRON_BIN_DIR/neutron-server $cfg_file_options"
+        neutron_url=$service_protocol://$Q_HOST:$service_port
+        # Start proxy if enabled
+        if is_service_enabled tls-proxy; then
+            start_tls_proxy neutron '*' $Q_PORT $Q_HOST $Q_PORT_INT
+        fi
+    fi
     echo "Waiting for Neutron to start..."
 
-    local testcmd="wget ${ssl_ca} --no-proxy -q -O- $service_protocol://$Q_HOST:$service_port"
+    local testcmd="wget ${ssl_ca} --no-proxy -q -O- $neutron_url"
     test_with_retry "$testcmd" "Neutron did not start" $SERVICE_TIMEOUT
-
-    # Start proxy if enabled
-    if is_service_enabled tls-proxy; then
-        start_tls_proxy neutron '*' $Q_PORT $Q_HOST $Q_PORT_INT
-    fi
 }
 
 # Control of the l2 agent is separated out to make it easier to test partial
@@ -531,7 +545,12 @@ function stop_mutnauq_other {
         [ ! -z "$pid" ] && sudo kill -9 $pid
     fi
 
-    stop_process q-svc
+    if [ "$NEUTRON_DEPLOY_MOD_WSGI" == "True" ]; then
+        stop_process neutron-rpc-server
+        stop_process neutron-api
+    else
+        stop_process q-svc
+    fi
 
     if is_service_enabled q-l3; then
         sudo pkill -f "radvd -C $DATA_DIR/neutron/ra"
@@ -603,7 +622,7 @@ function _move_neutron_addresses_route {
             IP_UP="sudo ip link set $to_intf up"
             if [[ "$af" == "inet" ]]; then
                 IP=$(echo $IP_BRD | awk '{ print $1; exit }' | grep -o -E '(.*)/' | cut -d "/" -f1)
-                ARP_CMD="arping -A -c 3 -w 4.5 -I $to_intf $IP "
+                ARP_CMD="sudo arping -A -c 3 -w 5 -I $to_intf $IP "
             fi
         fi
 
@@ -669,10 +688,15 @@ function _configure_neutron_common {
     cp $NEUTRON_DIR/etc/neutron.conf.sample $NEUTRON_CONF
 
     Q_POLICY_FILE=$NEUTRON_CONF_DIR/policy.json
-    cp $NEUTRON_DIR/etc/policy.json $Q_POLICY_FILE
 
     # allow neutron user to administer neutron to match neutron account
-    sed -i 's/"context_is_admin":  "role:admin"/"context_is_admin":  "role:admin or user_name:neutron"/g' $Q_POLICY_FILE
+    # NOTE(amotoki): This is required for nova works correctly with neutron.
+    if [ -f $NEUTRON_DIR/etc/policy.json ]; then
+        cp $NEUTRON_DIR/etc/policy.json $Q_POLICY_FILE
+        sed -i 's/"context_is_admin":  "role:admin"/"context_is_admin":  "role:admin or user_name:neutron"/g' $Q_POLICY_FILE
+    else
+        echo '{"context_is_admin":  "role:admin or user_name:neutron"}' > $Q_POLICY_FILE
+    fi
 
     # Set plugin-specific variables ``Q_DB_NAME``, ``Q_PLUGIN_CLASS``.
     # For main plugin config file, set ``Q_PLUGIN_CONF_PATH``, ``Q_PLUGIN_CONF_FILENAME``.
@@ -714,7 +738,7 @@ function _configure_neutron_common {
     # Format logging
     setup_logging $NEUTRON_CONF
 
-    if is_service_enabled tls-proxy; then
+    if is_service_enabled tls-proxy && [ "$NEUTRON_DEPLOY_MOD_WSGI" == "False" ]; then
         # Set the service port for a proxy to take the original
         iniset $NEUTRON_CONF DEFAULT bind_port "$Q_PORT_INT"
         iniset $NEUTRON_CONF oslo_middleware enable_proxy_headers_parsing True
@@ -808,13 +832,13 @@ function _configure_neutron_service {
     iniset $NEUTRON_CONF DEFAULT allow_overlapping_ips $Q_ALLOW_OVERLAPPING_IP
 
     iniset $NEUTRON_CONF DEFAULT auth_strategy $Q_AUTH_STRATEGY
-    _neutron_setup_keystone $NEUTRON_CONF keystone_authtoken
+    configure_keystone_authtoken_middleware $NEUTRON_CONF $Q_ADMIN_USERNAME
 
     # Configuration for neutron notifications to nova.
     iniset $NEUTRON_CONF DEFAULT notify_nova_on_port_status_changes $Q_NOTIFY_NOVA_PORT_STATUS_CHANGES
     iniset $NEUTRON_CONF DEFAULT notify_nova_on_port_data_changes $Q_NOTIFY_NOVA_PORT_DATA_CHANGES
 
-    configure_auth_token_middleware $NEUTRON_CONF nova $NEUTRON_AUTH_CACHE_DIR nova
+    configure_keystone_authtoken_middleware $NEUTRON_CONF nova nova
 
     # Configure plugin
     neutron_plugin_configure_service
@@ -900,15 +924,6 @@ function _neutron_setup_rootwrap {
     fi
 }
 
-# Configures keystone integration for neutron service
-function _neutron_setup_keystone {
-    local conf_file=$1
-    local section=$2
-
-    create_neutron_cache_dir
-    configure_auth_token_middleware $conf_file $Q_ADMIN_USERNAME $NEUTRON_AUTH_CACHE_DIR $section
-}
-
 function _neutron_setup_interface_driver {
 
     # ovs_use_veth needs to be set before the plugin configuration
@@ -928,7 +943,7 @@ function delete_probe {
 }
 
 function _get_net_id {
-    neutron --os-cloud devstack-admin --os-region "$REGION_NAME" --os-tenant-name admin --os-username admin --os-password $ADMIN_PASSWORD net-list | grep $1 | awk '{print $2}'
+    openstack --os-cloud devstack-admin --os-region-name="$REGION_NAME" --os-project-name admin --os-username admin --os-password $ADMIN_PASSWORD network list | grep $1 | awk '{print $2}'
 }
 
 function _get_probe_cmd_prefix {

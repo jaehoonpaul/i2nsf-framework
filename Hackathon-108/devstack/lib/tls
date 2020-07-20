@@ -37,7 +37,7 @@
 
 if is_service_enabled tls-proxy; then
     # TODO(dtroyer): revisit this below after the search for HOST_IP has been done
-    TLS_IP=${TLS_IP:-$SERVICE_IP}
+    TLS_IP=${TLS_IP:-$(ipv6_unquote $SERVICE_HOST)}
 fi
 
 DEVSTACK_HOSTNAME=$(hostname -f)
@@ -67,9 +67,9 @@ function configure_CA {
     # build common config file
 
     # Verify ``TLS_IP`` is good
-    if [[ -n "$HOST_IP" && "$HOST_IP" != "$TLS_IP" ]]; then
+    if [[ -n "$SERVICE_HOST" && "$(ipv6_unquote $SERVICE_HOST)" != "$TLS_IP" ]]; then
         # auto-discover has changed the IP
-        TLS_IP=$HOST_IP
+        TLS_IP=$(ipv6_unquote $SERVICE_HOST)
     fi
 }
 
@@ -227,8 +227,10 @@ function init_CA {
 function init_cert {
     if [[ ! -r $DEVSTACK_CERT ]]; then
         if [[ -n "$TLS_IP" ]]; then
-            # Lie to let incomplete match routines work
-            TLS_IP="DNS:$TLS_IP,IP:$TLS_IP"
+            TLS_IP="IP:$TLS_IP"
+            if [[ -n "$HOST_IPV6" ]]; then
+                TLS_IP="$TLS_IP,IP:$HOST_IPV6"
+            fi
         fi
         make_cert $INT_CA_DIR $DEVSTACK_CERT_NAME $DEVSTACK_HOSTNAME "$TLS_IP"
 
@@ -246,13 +248,12 @@ function make_cert {
     local alt_names=$4
 
     if [ "$common_name" != "$SERVICE_HOST" ]; then
-        if [[ -z "$alt_names" ]]; then
-            alt_names="DNS:$SERVICE_HOST"
-        else
-            alt_names="$alt_names,DNS:$SERVICE_HOST"
-        fi
         if is_ipv4_address "$SERVICE_HOST" ; then
-            alt_names="$alt_names,IP:$SERVICE_HOST"
+            if [[ -z "$alt_names" ]]; then
+                alt_names="IP:$SERVICE_HOST"
+            else
+                alt_names="$alt_names,IP:$SERVICE_HOST"
+            fi
         fi
     fi
 
@@ -366,8 +367,7 @@ function deploy_int_CA {
 function fix_system_ca_bundle_path {
     if is_service_enabled tls-proxy; then
         local capath
-        local python_cmd=${1:-python}
-        capath=$($python_cmd -c $'try:\n from requests import certs\n print (certs.where())\nexcept ImportError: pass')
+        capath=$(python3 -c $'try:\n from requests import certs\n print (certs.where())\nexcept ImportError: pass')
 
         if [[ ! $capath == "" && ! $capath =~ ^/etc/.* && ! -L $capath ]]; then
             if is_fedora; then
@@ -547,6 +547,9 @@ $listen_string
     LimitRequestFieldSize $f_header_size
     RequestHeader set X-Forwarded-Proto "https"
 
+    # Avoid races (at the cost of performance) to re-use a pooled connection
+    # where the connection is closed (bug 1807518).
+    SetEnv proxy-initial-not-pooled
     <Location />
         ProxyPass http://$b_host:$b_port/ retry=0 nocanon
         ProxyPassReverse http://$b_host:$b_port/

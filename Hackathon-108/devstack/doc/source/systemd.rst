@@ -152,6 +152,19 @@ Invoke the command manually::
 
   /usr/local/bin/nova-scheduler --config-file /etc/nova/nova.conf
 
+Some executables, such as :program:`nova-compute`, will need to be executed
+with a particular group. This will be shown in the systemd unit file::
+
+  sudo systemctl cat devstack@n-cpu.service | grep Group
+
+::
+
+  Group = libvirt
+
+Use the :program:`sg` tool to execute the command as this group::
+
+  sg libvirt -c '/usr/local/bin/nova-compute --config-file /etc/nova/nova-cpu.conf'
+
 Using remote-pdb
 ----------------
 
@@ -181,7 +194,7 @@ Telnet to that port to enter the pdb session::
 
 See the `remote-pdb`_ home page for more options.
 
-.. _`remote-pdb`: https://pypi.python.org/pypi/remote-pdb
+.. _`remote-pdb`: https://pypi.org/project/remote-pdb/
 
 Known Issues
 ============
@@ -195,7 +208,8 @@ into the ``systemd`` namespace, which can cause some issues.
   the one you want.
 - ``systemd`` - a python 3 only library, not what you want.
 - ``python-systemd`` - another library you don't want. Installing it
-  on a system will break ansible's ability to run.
+  on a system will break ansible's ability to run. The package has now
+  been renamed to ``cysystemd``, which avoids the namespace collision.
 
 
 If we were using user units, the ``[Service]`` - ``Group=`` parameter

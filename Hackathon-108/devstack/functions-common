@@ -27,7 +27,6 @@
 # - ``RECLONE``
 # - ``REQUIREMENTS_DIR``
 # - ``STACK_USER``
-# - ``TRACK_DEPENDS``
 # - ``http_proxy``, ``https_proxy``, ``no_proxy``
 #
 
@@ -44,12 +43,11 @@ declare -A -g GITREPO
 declare -A -g GITBRANCH
 declare -A -g GITDIR
 
-TRACK_DEPENDS=${TRACK_DEPENDS:-False}
 KILL_PATH="$(which kill)"
 
 # Save these variables to .stackenv
 STACK_ENV_VARS="BASE_SQL_CONN DATA_DIR DEST ENABLED_SERVICES HOST_IP \
-    KEYSTONE_AUTH_URI KEYSTONE_SERVICE_URI \
+    KEYSTONE_SERVICE_URI \
     LOGFILE OS_CACERT SERVICE_HOST STACK_USER TLS_IP \
     HOST_IPV6 SERVICE_IP_VERSION"
 
@@ -92,7 +90,6 @@ function write_clouds_yaml {
         --file $CLOUDS_YAML \
         --os-cloud devstack \
         --os-region-name $REGION_NAME \
-        --os-identity-api-version 3 \
         $CA_CERT_ARG \
         --os-auth-url $KEYSTONE_SERVICE_URI \
         --os-username demo \
@@ -104,7 +101,6 @@ function write_clouds_yaml {
         --file $CLOUDS_YAML \
         --os-cloud devstack-alt \
         --os-region-name $REGION_NAME \
-        --os-identity-api-version 3 \
         $CA_CERT_ARG \
         --os-auth-url $KEYSTONE_SERVICE_URI \
         --os-username alt_demo \
@@ -116,12 +112,27 @@ function write_clouds_yaml {
         --file $CLOUDS_YAML \
         --os-cloud devstack-admin \
         --os-region-name $REGION_NAME \
-        --os-identity-api-version 3 \
         $CA_CERT_ARG \
         --os-auth-url $KEYSTONE_SERVICE_URI \
         --os-username admin \
         --os-password $ADMIN_PASSWORD \
         --os-project-name admin
+
+    # admin with a system-scoped token -> devstack-system
+    $PYTHON $TOP_DIR/tools/update_clouds_yaml.py \
+        --file $CLOUDS_YAML \
+        --os-cloud devstack-system-admin \
+        --os-region-name $REGION_NAME \
+        $CA_CERT_ARG \
+        --os-auth-url $KEYSTONE_SERVICE_URI \
+        --os-username admin \
+        --os-password $ADMIN_PASSWORD \
+        --os-system-scope all
+
+    cat >> $CLOUDS_YAML <<EOF
+functional:
+  image_name: $DEFAULT_IMAGE_NAME
+EOF
 
     # CLean up any old clouds.yaml files we had laying around
     rm -f $(eval echo ~"$STACK_USER")/.config/openstack/clouds.yaml
@@ -228,9 +239,9 @@ function err {
     xtrace=$(set +o | grep xtrace)
     set +o xtrace
     local msg="[ERROR] ${BASH_SOURCE[2]}:$1 $2"
-    echo $msg 1>&2;
+    echo "$msg" 1>&2;
     if [[ -n ${LOGDIR} ]]; then
-        echo $msg >> "${LOGDIR}/error.log"
+        echo "$msg" >> "${LOGDIR}/error.log"
     fi
     $xtrace
     return $exitcode
@@ -283,7 +294,7 @@ function warn {
     xtrace=$(set +o | grep xtrace)
     set +o xtrace
     local msg="[WARNING] ${BASH_SOURCE[2]}:$1 $2"
-    echo $msg
+    echo "$msg"
     $xtrace
     return $exitcode
 }
@@ -323,9 +334,6 @@ function _ensure_lsb_release {
         sudo zypper -n install lsb-release
     elif [[ -x $(command -v dnf 2>/dev/null) ]]; then
         sudo dnf install -y redhat-lsb-core
-    elif [[ -x $(command -v yum 2>/dev/null) ]]; then
-        # all rh patforms (fedora, centos, rhel) have this pkg
-        sudo yum install -y redhat-lsb-core
     else
         die $LINENO "Unable to find or auto-install lsb_release"
     fi
@@ -371,9 +379,14 @@ function GetDistro {
     elif [[ "$os_VENDOR" =~ (Fedora) ]]; then
         # For Fedora, just use 'f' and the release
         DISTRO="f$os_RELEASE"
-    elif [[ "$os_VENDOR" =~ (openSUSE) ]]; then
+    elif is_opensuse; then
         DISTRO="opensuse-$os_RELEASE"
-    elif [[ "$os_VENDOR" =~ (SUSE LINUX) ]]; then
+        # Tumbleweed uses "n/a" as a codename, and the release is a datestring
+        # like 20180218, so not very useful. Leap however uses a release
+        # with a "dot", so for example 15.0
+        [ "$os_CODENAME" = "n/a" -a "$os_RELEASE" = "${os_RELEASE/\./}" ] && \
+            DISTRO="opensuse-tumbleweed"
+    elif is_suse_linux_enterprise; then
         # just use major release
         DISTRO="sle${os_RELEASE%.*}"
     elif [[ "$os_VENDOR" =~ (Red.*Hat) || \
@@ -447,11 +460,30 @@ function is_fedora {
 # (openSUSE, SLE).
 # is_suse
 function is_suse {
+    is_opensuse || is_suse_linux_enterprise
+}
+
+
+# Determine if current distribution is an openSUSE distribution
+# is_opensuse
+function is_opensuse {
     if [[ -z "$os_VENDOR" ]]; then
         GetOSVersion
     fi
 
-    [[ "$os_VENDOR" =~ (openSUSE) || "$os_VENDOR" == "SUSE LINUX" ]]
+    [[ "$os_VENDOR" =~ (openSUSE) ]]
+}
+
+
+# Determine if current distribution is a SUSE Linux Enterprise (SLE)
+# distribution
+# is_suse_linux_enterprise
+function is_suse_linux_enterprise {
+    if [[ -z "$os_VENDOR" ]]; then
+        GetOSVersion
+    fi
+
+    [[ "$os_VENDOR" =~ (^SUSE) ]]
 }
 
 
@@ -1243,6 +1275,30 @@ function get_plugin_packages {
     $xtrace
 }
 
+# Search plugins for a bindep.txt file
+#
+# Uses globals ``BINDEP_CMD``, ``GITDIR``, ``DEVSTACK_PLUGINS``
+#
+# Note this is only valid after BINDEP_CMD is setup in stack.sh, and
+# is thus not really intended to be called externally.
+function _get_plugin_bindep_packages {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
+    local bindep_file
+    local packages
+
+    for plugin in ${DEVSTACK_PLUGINS//,/ }; do
+        bindep_file=${GITDIR[$plugin]}/devstack/files/bindep.txt
+        if [[ -f ${bindep_file} ]]; then
+            packages+=$($BINDEP_CMD -b --file ${bindep_file} || true)
+        fi
+    done
+    echo "${packages}"
+    $xtrace
+}
+
 # Distro-agnostic package installer
 # Uses globals ``NO_UPDATE_REPOS``, ``REPOS_UPDATED``, ``RETRY_UPDATE``
 # install_package package [package ...]
@@ -1307,7 +1363,7 @@ function uninstall_package {
     if is_ubuntu; then
         apt_get purge "$@"
     elif is_fedora; then
-        sudo ${YUM:-yum} remove -y "$@" ||:
+        sudo dnf remove -y "$@" ||:
     elif is_suse; then
         sudo zypper remove -y "$@" ||:
     else
@@ -1315,8 +1371,11 @@ function uninstall_package {
     fi
 }
 
-# Wrapper for ``yum`` to set proxy environment variables
-# Uses globals ``OFFLINE``, ``*_proxy``, ``YUM``
+# Wrapper for ``dnf`` to set proxy environment variables
+# Uses globals ``OFFLINE``, ``*_proxy``
+# The name is kept for backwards compatability with external
+# callers, despite none of our supported platforms using yum
+# any more.
 # yum_install package [package ...]
 function yum_install {
     local result parse_yum_result
@@ -1324,44 +1383,8 @@ function yum_install {
     [[ "$OFFLINE" = "True" ]] && return
 
     time_start "yum_install"
-
-    # This is a bit tricky, because yum -y assumes missing or failed
-    # packages are OK (see [1]).  We want devstack to stop if we are
-    # installing missing packages.
-    #
-    # Thus we manually match on the output (stack.sh runs in a fixed
-    # locale, so lang shouldn't change).
-    #
-    # If yum returns !0, we echo the result as "YUM_FAILED" and return
-    # that from the awk (we're subverting -e with this trick).
-    # Otherwise we use awk to look for failure strings and return "2"
-    # to indicate a terminal failure.
-    #
-    # [1] https://bugzilla.redhat.com/show_bug.cgi?id=965567
-    parse_yum_result='              \
-        BEGIN { result=0 }          \
-        /^YUM_FAILED/ { result=$2 } \
-        /^No package/ { result=2 }  \
-        /^Failed:/    { result=2 }  \
-        //{ print }                 \
-        END { exit result }'
-    (sudo_with_proxies "${YUM:-yum}" install -y "$@" 2>&1 || echo YUM_FAILED $?) \
-        | awk "$parse_yum_result" && result=$? || result=$?
-
+    sudo_with_proxies dnf install -y "$@"
     time_stop "yum_install"
-
-    # if we return 1, then the wrapper functions will run an update
-    # and try installing the package again as a defense against bad
-    # mirrors.  This can hide failures, especially when we have
-    # packages that are in the "Failed:" section because their rpm
-    # install scripts failed to run correctly (in this case, the
-    # package looks installed, so when the retry happens we just think
-    # the package is OK, and incorrectly continue on).
-    if [ "$result" == 2 ]; then
-        die "Detected fatal package install failure"
-    fi
-
-    return "$result"
 }
 
 # zypper wrapper to set arguments correctly
@@ -1373,7 +1396,36 @@ function zypper_install {
     [[ "$(id -u)" = "0" ]] && sudo="env"
     $sudo http_proxy="${http_proxy:-}" https_proxy="${https_proxy:-}" \
         no_proxy="${no_proxy:-}" \
-        zypper --non-interactive install --auto-agree-with-licenses "$@"
+        zypper --non-interactive install --auto-agree-with-licenses --no-recommends "$@"
+}
+
+# Run bindep and install packages it outputs
+#
+# Usage:
+#  install_bindep <path-to-bindep.txt> [profile,profile]
+#
+# Note unlike the bindep command itself, profile(s) specified should
+# be a single, comma-separated string, no spaces.
+function install_bindep {
+    local file=$1
+    local profiles=${2:-""}
+    local pkgs
+
+    if [[ ! -f $file ]]; then
+        die $LINENO "Can not find bindep file: $file"
+    fi
+
+    # converting here makes it much easier to work with passing
+    # arguments
+    profiles=${profiles/,/ /}
+
+    # Note bindep returns 1 when packages need to be installed, so we
+    # have to ignore it's return for "-e"
+    pkgs=$($DEST/bindep-venv/bin/bindep -b --file $file $profiles || true)
+
+    if [[ -n "${pkgs}" ]]; then
+        install_package ${pkgs}
+    fi
 }
 
 function write_user_unit_file {
@@ -1436,24 +1488,24 @@ function _common_systemd_pitfalls {
     # do some sanity checks on $cmd to see things we don't expect to work
 
     if [[ "$cmd" =~ "sudo" ]]; then
-        local msg=<<EOF
+        read -r -d '' msg << EOF || true  # read returns 1 for EOF, but it is ok here
 You are trying to use run_process with sudo, this is not going to work under systemd.
 
-If you need to run a service as a user other than $STACK_USER call it with:
+If you need to run a service as a user other than \$STACK_USER call it with:
 
    run_process \$name \$cmd \$group \$user
 EOF
-        die $LINENO $msg
+        die $LINENO "$msg"
     fi
 
     if [[ ! "$cmd" =~ ^/ ]]; then
-        local msg=<<EOF
+        read -r -d '' msg << EOF || true  # read returns 1 for EOF, but it is ok here
 The cmd="$cmd" does not start with an absolute path. It will fail to
 start under systemd.
 
 Please update your run_process stanza to have an absolute path.
 EOF
-        die $LINENO $msg
+        die $LINENO "$msg"
     fi
 
 }
@@ -1868,10 +1920,6 @@ function enable_service {
 #   For backward compatibility if we have **swift** in ENABLED_SERVICES all the
 #   **s-** services will be enabled. This will be deprecated in the future.
 #
-# Cells within nova is enabled if **n-cell** is in ``ENABLED_SERVICES``.
-# We also need to make sure to treat **n-cell-region** and **n-cell-child**
-# as enabled in this case.
-#
 # Uses global ``ENABLED_SERVICES``
 # is_service_enabled service [service ...]
 function is_service_enabled {
@@ -1894,7 +1942,6 @@ function is_service_enabled {
         # TODO(dtroyer): Remove these legacy special-cases after the is_XXX_enabled()
         #                are implemented
 
-        [[ ${service} == n-cell-* && ,${ENABLED_SERVICES} =~ ,"n-cell" ]] && enabled=0
         [[ ${service} == n-cpu-* && ,${ENABLED_SERVICES} =~ ,"n-cpu" ]] && enabled=0
         [[ ${service} == "nova" && ,${ENABLED_SERVICES} =~ ,"n-" ]] && enabled=0
         [[ ${service} == "glance" && ,${ENABLED_SERVICES} =~ ,"g-" ]] && enabled=0
@@ -1995,11 +2042,7 @@ function _safe_permission_operation {
         return 0
     fi
 
-    if [[ $TRACK_DEPENDS = True ]]; then
-        sudo_cmd="env"
-    else
-        sudo_cmd="sudo"
-    fi
+    sudo_cmd="sudo"
 
     $xtrace
     $sudo_cmd $@
@@ -2047,6 +2090,11 @@ function is_ipv4_address {
     else
         return 1
     fi
+}
+
+# Remove "[]" around urlquoted IPv6 addresses
+function ipv6_unquote {
+    echo $1 | tr -d []
 }
 
 # Gracefully cp only if source file/dir exists
@@ -2125,7 +2173,7 @@ function python_version {
 function python3_version {
     local python3_version
     python3_version=$(_get_python_version python3)
-    echo "python${python_version}"
+    echo "python${python3_version}"
 }
 
 
@@ -2269,6 +2317,10 @@ function time_stop {
 }
 
 function oscwrap {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
     local out
     local rc
     local start
@@ -2283,6 +2335,7 @@ function oscwrap {
     echo $((end - start)) >> $OSCWRAP_TIMER_FILE
 
     echo "$out"
+    $xtrace
     return $rc
 }
 
@@ -2301,12 +2354,7 @@ function install_oscwrap {
 
 function cleanup_oscwrap {
     local total=0
-    if python3_enabled ; then
-        local python=python3
-    else
-        local python=python
-    fi
-    total=$(cat $OSCWRAP_TIMER_FILE | $python -c "import sys; print(sum(int(l) for l in sys.stdin))")
+    total=$(cat $OSCWRAP_TIMER_FILE | $PYTHON -c "import sys; print(sum(int(l) for l in sys.stdin))")
     _TIME_TOTAL["osc"]=$total
     rm $OSCWRAP_TIMER_FILE
 }

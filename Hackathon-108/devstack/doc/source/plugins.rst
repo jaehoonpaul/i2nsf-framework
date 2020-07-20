@@ -58,7 +58,7 @@ directory. Inside this directory there can be 3 files.
   plugin's name, which is the name that should be used by users on
   "enable_plugin" lines.  It should generally be the last component of
   the git repo path (e.g., if the plugin's repo is
-  openstack/devstack-foo, then the name here should be "foo") ::
+  openstack/foo, then the name here should be "foo") ::
 
     define_plugin <YOUR PLUGIN>
 
@@ -99,7 +99,7 @@ They are added in the following format::
 
 An example would be as follows::
 
-  enable_plugin ec2-api https://git.openstack.org/openstack/ec2-api
+  enable_plugin ec2-api https://opendev.org/openstack/ec2-api
 
 plugin.sh contract
 ==================
@@ -148,7 +148,7 @@ An example plugin would look something as follows.
 
 ``devstack/settings``::
 
-    # settings file for template
+  # settings file for template
   enable_service template
 
 
@@ -222,14 +222,20 @@ dependency mechanism is beyond the scope of the current work.
 System Packages
 ===============
 
-Devstack provides a framework for getting packages installed at an early
-phase of its execution. These packages may be defined in a plugin as files
-that contain new-line separated lists of packages required by the plugin
 
-Supported packaging systems include apt and yum across multiple distributions.
-To enable a plugin to hook into this and install package dependencies, packages
-may be listed at the following locations in the top-level of the plugin
-repository:
+
+Devstack based
+--------------
+
+Devstack provides a custom framework for getting packages installed at
+an early phase of its execution.  These packages may be defined in a
+plugin as files that contain new-line separated lists of packages
+required by the plugin
+
+Supported packaging systems include apt and yum across multiple
+distributions.  To enable a plugin to hook into this and install
+package dependencies, packages may be listed at the following
+locations in the top-level of the plugin repository:
 
 - ``./devstack/files/debs/$plugin_name`` - Packages to install when running
   on Ubuntu, Debian or Linux Mint.
@@ -239,6 +245,42 @@ repository:
 
 - ``./devstack/files/rpms-suse/$plugin_name`` - Packages to install when
   running on SUSE Linux or openSUSE.
+
+Although there a no plans to remove this method of installing
+packages, plugins should consider it deprecated for ``bindep`` support
+described below.
+
+bindep
+------
+
+The `bindep <https://docs.openstack.org/infra/bindep>`__ project has
+become the defacto standard for OpenStack projects to specify binary
+dependencies.
+
+A plugin may provide a ``./devstack/files/bindep.txt`` file, which
+will be called with the *default* profile to install packages.  For
+details on the syntax, etc. see the bindep documentation.
+
+It is also possible to use the ``bindep.txt`` of projects that are
+being installed from source with the ``-bindep`` flag available in
+install functions.  For example
+
+.. code-block:: bash
+
+  if use_library_from_git "diskimage-builder"; then
+     GITREPO["diskimage-builder"]=$DISKIMAGE_BUILDER_REPO_URL
+     GITDIR["diskimage-builder"]=$DEST/diskimage-builder
+     GITBRANCH["diskimage-builder"]=$DISKIMAGE_BUILDER_REPO_REF
+     git_clone_by_name "diskimage-builder"
+     setup_dev_lib -bindep "diskimage-builder"
+  fi
+
+will result in any packages required by the ``bindep.txt`` of the
+``diskimage-builder`` project being installed.  Note however that jobs
+that switch projects between source and released/pypi installs
+(e.g. with a ``foo-dsvm`` and a ``foo-dsvm-src`` test to cover both
+released dependencies and master versions) will have to deal with
+``bindep.txt`` being unavailable without the source directory.
 
 
 Using Plugins in the OpenStack Gate
@@ -264,10 +306,12 @@ integration of alternate RPC systems (e.g. zmq, qpid). In these cases
 the best practice is to build a dedicated
 ``openstack/devstack-plugin-FOO`` project.
 
+Legacy project-config jobs
+--------------------------
+
 To enable a plugin to be used in a gate job, the following lines will
 be needed in your ``jenkins/jobs/<project>.yaml`` definition in
-`project-config
-<http://git.openstack.org/cgit/openstack-infra/project-config/>`_::
+`project-config <https://opendev.org/openstack/project-config/>`_::
 
   # Because we are testing a non standard project, add the
   # our project repository. This makes zuul do the right
@@ -277,12 +321,17 @@ be needed in your ``jenkins/jobs/<project>.yaml`` definition in
   # note the actual url here is somewhat irrelevant because it
   # caches in nodepool, however make it a valid url for
   # documentation purposes.
-  export DEVSTACK_LOCAL_CONFIG="enable_plugin ec2-api https://git.openstack.org/openstack/ec2-api"
+  export DEVSTACK_LOCAL_CONFIG="enable_plugin ec2-api https://opendev.org/openstack/ec2-api"
+
+Zuul v3 jobs
+------------
+
+See the ``devstack_plugins`` example in :doc:`zuul_ci_jobs_migration`.
 
 See Also
 ========
 
 For additional inspiration on devstack plugins you can check out the
-`Plugin Registry <plugin-registry.html>`_.
+:doc:`Plugin Registry <plugin-registry>`.
 
 .. _service types authority: https://specs.openstack.org/openstack/service-types-authority/

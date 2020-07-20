@@ -99,8 +99,15 @@ function _create_lvm_volume_group {
     if ! sudo vgs $vg; then
         # Only create if the file doesn't already exists
         [[ -f $backing_file ]] || truncate -s $size $backing_file
+
+        local directio=""
+        # Check to see if we can do direct-io
+        if losetup -h | grep -q direct-io; then
+            directio="--direct-io=on"
+        fi
+
         local vg_dev
-        vg_dev=`sudo losetup -f --show $backing_file`
+        vg_dev=$(sudo losetup -f --show $directio $backing_file)
 
         # Only create volume group if it doesn't already exist
         if ! sudo vgs $vg; then
@@ -117,13 +124,15 @@ function init_lvm_volume_group {
     local vg=$1
     local size=$2
 
-    # Start the lvmetad and tgtd services
-    if is_fedora || is_suse; then
+    # Start the lvmetad on f30 (dropped from f31) or SUSE
+    if [[ $DISTRO =~ f30 ]] || is_suse; then
         # services is not started by default
         start_service lvm2-lvmetad
-        if [ "$CINDER_ISCSI_HELPER" = "tgtadm" ]; then
-            start_service tgtd
-        fi
+    fi
+
+    # Start the tgtd service on Fedora and SUSE if tgtadm is used
+    if  is_fedora || is_suse  && [[ "$CINDER_ISCSI_HELPER" = "tgtadm" ]]; then
+        start_service tgtd
     fi
 
     # Start with a clean volume group

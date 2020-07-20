@@ -39,14 +39,12 @@ function cleanup_nova_hypervisor {
 function configure_nova_hypervisor {
     configure_libvirt
     iniset $NOVA_CONF libvirt virt_type "$LIBVIRT_TYPE"
-    iniset $NOVA_CONF libvirt cpu_mode "none"
+    iniset $NOVA_CONF libvirt cpu_mode "$LIBVIRT_CPU_MODE"
     # Do not enable USB tablet input devices to avoid QEMU CPU overhead.
     iniset $NOVA_CONF DEFAULT pointer_model "ps2mouse"
     iniset $NOVA_CONF libvirt live_migration_uri "qemu+ssh://$STACK_USER@%s/system"
     iniset $NOVA_CONF DEFAULT default_ephemeral_format "ext4"
     iniset $NOVA_CONF DEFAULT compute_driver "libvirt.LibvirtDriver"
-    LIBVIRT_FIREWALL_DRIVER=${LIBVIRT_FIREWALL_DRIVER:-"nova.virt.libvirt.firewall.IptablesFirewallDriver"}
-    iniset $NOVA_CONF DEFAULT firewall_driver "$LIBVIRT_FIREWALL_DRIVER"
     # Power architecture currently does not support graphical consoles.
     if is_arch "ppc64"; then
         iniset $NOVA_CONF vnc enabled "false"
@@ -54,8 +52,6 @@ function configure_nova_hypervisor {
 
     # arm64-specific configuration
     if is_arch "aarch64"; then
-        # arm64 architecture currently does not support graphical consoles.
-        iniset $NOVA_CONF vnc enabled "false"
         iniset $NOVA_CONF libvirt cpu_mode "host-passthrough"
     fi
 
@@ -119,7 +115,7 @@ function install_nova_hypervisor {
             # Workaround for missing dependencies in python-libguestfs
             install_package python-libguestfs guestfs-data augeas augeas-lenses
         elif is_fedora; then
-            install_package python-libguestfs
+            install_package python3-libguestfs
         fi
     fi
 }

@@ -1,19 +1,14 @@
 conntrack-tools
 curl
-dnsmasq # for nova-network
+dnsmasq # for q-dhcp
 dnsmasq-utils # for dhcp_release
 ebtables
 gawk
 genisoimage # required for config_drive
 iptables
 iputils
-kernel-modules # dist:f25,f26,f27
+kernel-modules
 kpartx
-libxml2-python
-m2crypto
-mysql-devel
-mysql-server # NOPRIME
-numpy # needed by websockify for spice console
 parted
 polkit
 rabbitmq-server # NOPRIME

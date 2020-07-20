@@ -24,9 +24,6 @@ set +o xtrace
 # Defaults
 # --------
 
-# Allow ``build_domU.sh`` to specify the flat network bridge via kernel args
-FLAT_NETWORK_BRIDGE_DEFAULT=$(sed -e 's/.* flat_network_bridge=\([[:alnum:]]*\).*$/\1/g' /proc/cmdline)
-
 VNCSERVER_PROXYCLIENT_ADDRESS=${VNCSERVER_PROXYCLIENT_ADDRESS=169.254.0.1}
 
 
@@ -59,15 +56,11 @@ function configure_nova_hypervisor {
         die $LINENO "os-xenapi plugin is not specified. Please enable this plugin in local.conf"
     fi
 
-    read_password XENAPI_PASSWORD "ENTER A PASSWORD TO USE FOR XEN."
     iniset $NOVA_CONF DEFAULT compute_driver "xenapi.XenAPIDriver"
     iniset $NOVA_CONF xenserver connection_url "$XENAPI_CONNECTION_URL"
     iniset $NOVA_CONF xenserver connection_username "$XENAPI_USER"
     iniset $NOVA_CONF xenserver connection_password "$XENAPI_PASSWORD"
     iniset $NOVA_CONF DEFAULT flat_injected "False"
-    # Need to avoid crash due to new firewall support
-    XEN_FIREWALL_DRIVER=${XEN_FIREWALL_DRIVER:-"nova.virt.firewall.IptablesFirewallDriver"}
-    iniset $NOVA_CONF DEFAULT firewall_driver "$XEN_FIREWALL_DRIVER"
 
     local dom0_ip
     dom0_ip=$(echo "$XENAPI_CONNECTION_URL" | cut -d "/" -f 3-)

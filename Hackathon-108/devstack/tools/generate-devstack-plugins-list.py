@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # Copyright 2016 Hewlett Packard Enterprise Development Company, L.P.
 #
@@ -19,17 +19,21 @@
 #
 # In order to function correctly, the environment in which the
 # script runs must have
-#   * network access to the review.openstack.org Gerrit API
+#   * network access to the review.opendev.org Gerrit API
 #     working directory
-#   * network access to https://git.openstack.org/cgit
+#   * network access to https://opendev.org/
 
+import functools
 import logging
 import json
 import requests
 
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
 logging.basicConfig(level=logging.DEBUG)
 
-url = 'https://review.openstack.org/projects/'
+url = 'https://review.opendev.org/projects/'
 
 # This is what a project looks like
 '''
@@ -39,26 +43,41 @@ url = 'https://review.openstack.org/projects/'
   },
 '''
 
-def is_in_openstack_namespace(proj):
-    # only interested in openstack namespace (e.g. not retired
-    # stackforge, etc)
-    return proj.startswith('openstack/')
+def is_in_wanted_namespace(proj):
+    # only interested in openstack or x namespace (e.g. not retired
+    # stackforge, etc).
+    #
+    # openstack/openstack "super-repo" of openstack projects as
+    # submodules, that can cause gitea to 500 timeout and thus stop
+    # this script.  Skip it.
+    if proj.startswith('stackforge/') or \
+       proj.startswith('stackforge-attic/') or \
+       proj == "openstack/openstack":
+        return False
+    else:
+        return True
 
 # Check if this project has a plugin file
-def has_devstack_plugin(proj):
+def has_devstack_plugin(session, proj):
     # Don't link in the deb packaging repos
     if "openstack/deb-" in proj:
         return False
-    r = requests.get("https://git.openstack.org/cgit/%s/plain/devstack/plugin.sh" % proj)
+    r = session.get("https://opendev.org/%s/raw/branch/master/devstack/plugin.sh" % proj)
     return r.status_code == 200
 
 logging.debug("Getting project list from %s" % url)
 r = requests.get(url)
-projects = sorted(filter(is_in_openstack_namespace, json.loads(r.text[4:])))
+projects = sorted(filter(is_in_wanted_namespace, json.loads(r.text[4:])))
 logging.debug("Found %d projects" % len(projects))
 
-found_plugins = filter(has_devstack_plugin, projects)
+s = requests.Session()
+# sometimes gitea gives us a 500 error; retry sanely
+#  https://stackoverflow.com/a/35636367
+retries = Retry(total=3, backoff_factor=1,
+                status_forcelist=[ 500 ])
+s.mount('https://', HTTPAdapter(max_retries=retries))
+
+found_plugins = filter(functools.partial(has_devstack_plugin, s), projects)
 
 for project in found_plugins:
-    # strip of openstack/
-    print(project[10:])
+    print(project)

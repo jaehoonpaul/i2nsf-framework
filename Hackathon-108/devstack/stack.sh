@@ -12,7 +12,7 @@
 # a multi-node developer install.
 
 # To keep this script simple we assume you are running on a recent **Ubuntu**
-# (16.04 Xenial or newer), **Fedora** (F24 or newer), or **CentOS/RHEL**
+# (Bionic or newer), **Fedora** (F24 or newer), or **CentOS/RHEL**
 # (7 or newer) machine. (It may work on other platforms but support for those
 # platforms is left to those who added them to DevStack.) It should work in
 # a VM or physical server. Additionally, we maintain a list of ``deb`` and
@@ -32,7 +32,7 @@ unset GREP_OPTIONS
 # Devstack is written in bash, and many functions used throughout
 # devstack process text coming off a command (like the ip command)
 # and do transforms using grep, sed, cut, awk on the strings that are
-# returned. Many of these programs are interationalized, which is
+# returned. Many of these programs are internationalized, which is
 # great for end users, but means that the strings that devstack
 # functions depend upon might not be there in other locales. We thus
 # need to pin the world to an english basis during the runs.
@@ -59,6 +59,9 @@ unset LANG
 unset LANGUAGE
 LC_ALL=en_US.utf8
 export LC_ALL
+
+# Clear all OpenStack related envvars
+unset `env | grep -E '^OS_' | cut -d = -f 1`
 
 # Make sure umask is sane
 umask 022
@@ -164,9 +167,6 @@ LAST_SPINNER_PID=""
 # Import common functions
 source $TOP_DIR/functions
 
-# Import config functions
-source $TOP_DIR/inc/meta-config
-
 # Import 'public' stack.sh functions
 source $TOP_DIR/lib/stack
 
@@ -221,7 +221,7 @@ write_devstack_version
 
 # Warn users who aren't on an explicitly supported distro, but allow them to
 # override check and attempt installation with ``FORCE=yes ./stack``
-if [[ ! ${DISTRO} =~ (xenial|zesty|artful|stretch|jessie|f25|f26|f27|f28|opensuse-42.2|opensuse-42.3|rhel7) ]]; then
+if [[ ! ${DISTRO} =~ (bionic|focal|f30|f31|opensuse-15.0|opensuse-15.1|opensuse-tumbleweed|rhel8) ]]; then
     echo "WARNING: this script has not been tested on $DISTRO"
     if [[ "$FORCE" != "yes" ]]; then
         die $LINENO "If you wish to run this script anyway run with FORCE=yes"
@@ -244,7 +244,7 @@ disable_negated_services
 # --------------
 
 # We're not as **root** so make sure ``sudo`` is available
-is_package_installed sudo || install_package sudo
+is_package_installed sudo || is_package_installed sudo-ldap || install_package sudo
 
 # UEC images ``/etc/sudoers`` does not have a ``#includedir``, add one
 sudo grep -q "^#includedir.*/etc/sudoers.d" /etc/sudoers ||
@@ -283,67 +283,20 @@ fi
 # to pick up required packages.
 
 function _install_epel {
-    # NOTE: We always remove and install latest -- some environments
-    # use snapshot images, and if EPEL version updates they break
-    # unless we update them to latest version.
-    if sudo yum repolist enabled epel | grep -q 'epel'; then
-        uninstall_package epel-release || true
-    fi
+    # epel-release is in extras repo which is enabled by default
+    install_package epel-release
 
-    # This trick installs the latest epel-release from a bootstrap
-    # repo, then removes itself (as epel-release installed the
-    # "real" repo).
-    #
-    # You would think that rather than this, you could use
-    # $releasever directly in .repo file we create below.  However
-    # RHEL gives a $releasever of "6Server" which breaks the path;
-    # see https://bugzilla.redhat.com/show_bug.cgi?id=1150759
-    cat <<EOF | sudo tee /etc/yum.repos.d/epel-bootstrap.repo
-[epel-bootstrap]
-name=Bootstrap EPEL
-mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-7&arch=\$basearch
-failovermethod=priority
-enabled=0
-gpgcheck=0
-EOF
-    # Enable a bootstrap repo.  It is removed after finishing
-    # the epel-release installation.
-    is_package_installed yum-utils || install_package yum-utils
-    sudo yum-config-manager --enable epel-bootstrap
-    yum_install epel-release || \
-        die $LINENO "Error installing EPEL repo, cannot continue"
-    sudo rm -f /etc/yum.repos.d/epel-bootstrap.repo
+    # RDO repos are not tested with epel and may have incompatibilities so
+    # let's limit the packages fetched from epel to the ones not in RDO repos.
+    sudo dnf config-manager --save --setopt=includepkgs=debootstrap,dpkg epel
 }
 
 function _install_rdo {
-    # There are multiple options for this, including using CloudSIG
-    # repositories (centos-release-*), trunk versions, etc.  Since
-    # we're not interested in the actual openstack distributions
-    # (since we're using git to run!) but only peripherial packages
-    # like kvm or ovs, this has been reliable.
-
-    # TODO(ianw): figure out how to best mirror -- probably use infra
-    # mirror RDO reverse proxy.  We could either have test
-    # infrastructure set it up disabled like EPEL, or fiddle it here.
-    # Per the point above, it's a bunch of repos so starts getting a
-    # little messy...
-    if ! is_package_installed rdo-release ; then
-        if [[ "$TARGET_BRANCH" == "master" ]]; then
-            yum_install https://rdoproject.org/repos/rdo-release.rpm
-        else
-            # Get latest rdo-release-$rdo_release RPM package version
-            rdo_release=$(echo $TARGET_BRANCH | sed "s|stable/||g")
-            yum_install https://rdoproject.org/repos/openstack-$rdo_release/rdo-release-$rdo_release.rpm
-        fi
-    fi
-
-    # Also enable optional for RHEL7 proper.  Note this is a silent
-    # no-op on other platforms.
-    sudo yum-config-manager --enable rhel-7-server-optional-rpms
-
-    if is_oraclelinux; then
-        sudo yum-config-manager --enable ol7_optional_latest ol7_addons ol7_MySQL56
-    fi
+    # NOTE(ianw) 2020-04-30 : when we have future branches, we
+    # probably want to install the relevant branch RDO release as
+    # well.  But for now it's all master.
+    sudo dnf -y install https://rdoproject.org/repos/rdo-release.el8.rpm
+    sudo dnf -y update
 }
 
 
@@ -355,9 +308,12 @@ DEST=${DEST:-/opt/stack}
 
 # Create the destination directory and ensure it is writable by the user
 # and read/executable by everybody for daemons (e.g. apache run for horizon)
-sudo mkdir -p $DEST
-safe_chown -R $STACK_USER $DEST
-safe_chmod 0755 $DEST
+# If directory exists do not modify the permissions.
+if [[ ! -d $DEST ]]; then
+    sudo mkdir -p $DEST
+    safe_chown -R $STACK_USER $DEST
+    safe_chmod 0755 $DEST
+fi
 
 # Destination path for devstack logs
 if [[ -n ${LOGDIR:-} ]]; then
@@ -366,15 +322,17 @@ fi
 
 # Destination path for service data
 DATA_DIR=${DATA_DIR:-${DEST}/data}
-sudo mkdir -p $DATA_DIR
-safe_chown -R $STACK_USER $DATA_DIR
-safe_chmod 0755 $DATA_DIR
+if [[ ! -d $DATA_DIR ]]; then
+    sudo mkdir -p $DATA_DIR
+    safe_chown -R $STACK_USER $DATA_DIR
+    safe_chmod 0755 $DATA_DIR
+fi
 
 # Configure proper hostname
 # Certain services such as rabbitmq require that the local hostname resolves
 # correctly.  Make sure it exists in /etc/hosts so that is always true.
 LOCAL_HOSTNAME=`hostname -s`
-if [ -z "`grep ^127.0.0.1 /etc/hosts | grep $LOCAL_HOSTNAME`" ]; then
+if ! fgrep -qwe "$LOCAL_HOSTNAME" /etc/hosts; then
     sudo sed -i "s/\(^127.0.0.1.*\)/\1 $LOCAL_HOSTNAME/" /etc/hosts
 fi
 
@@ -383,14 +341,18 @@ fi
 # to speed things up
 SKIP_EPEL_INSTALL=$(trueorfalse False SKIP_EPEL_INSTALL)
 
-if [[ $DISTRO == "rhel7" ]]; then
+if [[ $DISTRO == "rhel8" ]]; then
     # If we have /etc/ci/mirror_info.sh assume we're on a OpenStack CI
     # node, where EPEL is installed (but disabled) and already
     # pointing at our internal mirror
     if [[ -f /etc/ci/mirror_info.sh ]]; then
         SKIP_EPEL_INSTALL=True
-        sudo yum-config-manager --enable epel
+        sudo dnf config-manager --set-enabled epel
     fi
+
+    # PowerTools repo provides libyaml-devel required by devstack itself and
+    # EPEL packages assume that the PowerTools repository is enable.
+    sudo dnf config-manager --set-enabled PowerTools
 
     if [[ ${SKIP_EPEL_INSTALL} != True ]]; then
         _install_epel
@@ -399,11 +361,17 @@ if [[ $DISTRO == "rhel7" ]]; then
     # available in RDO repositories (e.g. OVS, or later versions of
     # kvm) to run.
     _install_rdo
+
+    # NOTE(cgoncalves): workaround RHBZ#1154272
+    # dnf fails for non-privileged users when expired_repos.json doesn't exist.
+    # RHBZ: https://bugzilla.redhat.com/show_bug.cgi?id=1154272
+    # Patch: https://github.com/rpm-software-management/dnf/pull/1448
+    echo "[]" | sudo tee /var/cache/dnf/expired_repos.json
 fi
 
 # Ensure python is installed
 # --------------------------
-is_package_installed python || install_package python
+install_python
 
 
 # Configure Logging
@@ -411,6 +379,7 @@ is_package_installed python || install_package python
 
 # Set up logging level
 VERBOSE=$(trueorfalse True VERBOSE)
+VERBOSE_NO_TIMESTAMP=$(trueorfalse False VERBOSE)
 
 # Draw a spinner so the user knows something is happening
 function spinner {
@@ -476,15 +445,19 @@ if [[ -n "$LOGFILE" ]]; then
     # stdout later.
     exec 3>&1
     if [[ "$VERBOSE" == "True" ]]; then
+        _of_args="-v"
+        if [[ "$VERBOSE_NO_TIMESTAMP" == "True" ]]; then
+            _of_args="$_of_args --no-timestamp"
+        fi
         # Set fd 1 and 2 to write the log file
-        exec 1> >( $TOP_DIR/tools/outfilter.py -v -o "${LOGFILE}" ) 2>&1
+        exec 1> >( $PYTHON $TOP_DIR/tools/outfilter.py $_of_args -o "${LOGFILE}" ) 2>&1
         # Set fd 6 to summary log file
-        exec 6> >( $TOP_DIR/tools/outfilter.py -o "${SUMFILE}" )
+        exec 6> >( $PYTHON $TOP_DIR/tools/outfilter.py -o "${SUMFILE}" )
     else
         # Set fd 1 and 2 to primary logfile
-        exec 1> >( $TOP_DIR/tools/outfilter.py -o "${LOGFILE}" ) 2>&1
+        exec 1> >( $PYTHON $TOP_DIR/tools/outfilter.py -o "${LOGFILE}" ) 2>&1
         # Set fd 6 to summary logfile and stdout
-        exec 6> >( $TOP_DIR/tools/outfilter.py -v -o "${SUMFILE}" >&3 )
+        exec 6> >( $PYTHON $TOP_DIR/tools/outfilter.py -v -o "${SUMFILE}" >&3 )
     fi
 
     echo_summary "stack.sh log $LOGFILE"
@@ -501,7 +474,7 @@ else
         exec 1>/dev/null 2>&1
     fi
     # Always send summary fd to original stdout
-    exec 6> >( $TOP_DIR/tools/outfilter.py -v >&3 )
+    exec 6> >( $PYTHON $TOP_DIR/tools/outfilter.py -v >&3 )
 fi
 
 # Basic test for ``$DEST`` path permissions (fatal on error unless skipped)
@@ -537,9 +510,9 @@ function exit_trap {
             generate-subunit $DEVSTACK_START_TIME $SECONDS 'fail' >> ${SUBUNIT_OUTPUT}
         fi
         if [[ -z $LOGDIR ]]; then
-            $TOP_DIR/tools/worlddump.py
+            ${PYTHON} $TOP_DIR/tools/worlddump.py
         else
-            $TOP_DIR/tools/worlddump.py -d $LOGDIR
+            ${PYTHON} $TOP_DIR/tools/worlddump.py -d $LOGDIR
         fi
     else
         # If we error before we've installed os-testr, this will fail.
@@ -608,6 +581,7 @@ source $TOP_DIR/lib/swift
 source $TOP_DIR/lib/neutron
 source $TOP_DIR/lib/ldap
 source $TOP_DIR/lib/dstat
+source $TOP_DIR/lib/tcpdump
 source $TOP_DIR/lib/etcd3
 
 # Extras Source
@@ -685,7 +659,14 @@ function read_password {
 # The available database backends are listed in ``DATABASE_BACKENDS`` after
 # ``lib/database`` is sourced. ``mysql`` is the default.
 
-initialize_database_backends && echo "Using $DATABASE_TYPE database backend" || echo "No database enabled"
+if initialize_database_backends; then
+    echo "Using $DATABASE_TYPE database backend"
+    # Last chance for the database password. This must be handled here
+    # because read_password is not a library function.
+    read_password DATABASE_PASSWORD "ENTER A PASSWORD TO USE FOR THE DATABASE."
+else
+    echo "No database enabled"
+fi
 
 
 # Queue Configuration
@@ -720,6 +701,16 @@ if is_service_enabled keystone; then
     if is_service_enabled ldap; then
         read_password LDAP_PASSWORD "ENTER A PASSWORD TO USE FOR LDAP"
     fi
+fi
+
+
+# Nova
+# -----
+
+if is_service_enabled nova && [[ "$VIRT_DRIVER" == 'xenserver' ]]; then
+    # Look for the backend password here because read_password
+    # is not a library function.
+    read_password XENAPI_PASSWORD "ENTER A PASSWORD TO USE FOR XEN."
 fi
 
 
@@ -761,39 +752,36 @@ if [[ "$OFFLINE" != "True" ]]; then
     PYPI_ALTERNATIVE_URL=${PYPI_ALTERNATIVE_URL:-""} $TOP_DIR/tools/install_pip.sh
 fi
 
-# Install subunit for the subunit output stream
-pip_install -U os-testr
-
-TRACK_DEPENDS=${TRACK_DEPENDS:-False}
-
-# Install Python packages into a virtualenv so that we can track them
-if [[ $TRACK_DEPENDS = True ]]; then
-    echo_summary "Installing Python packages into a virtualenv $DEST/.venv"
-    pip_install -U virtualenv
-
-    rm -rf $DEST/.venv
-    virtualenv --system-site-packages $DEST/.venv
-    source $DEST/.venv/bin/activate
-    $DEST/.venv/bin/pip freeze > $DEST/requires-pre-pip
-fi
-
 # Do the ugly hacks for broken packages and distros
 source $TOP_DIR/tools/fixup_stuff.sh
 fixup_all
 
-if [[ "$USE_SYSTEMD" == "True" ]]; then
-    pip_install_gr systemd-python
-    # the default rate limit of 1000 messages / 30 seconds is not
-    # sufficient given how verbose our logging is.
-    iniset -sudo /etc/systemd/journald.conf "Journal" "RateLimitBurst" "0"
-    sudo systemctl restart systemd-journald
-fi
+# Install subunit for the subunit output stream
+pip_install -U os-testr
+
+pip_install_gr systemd-python
+# the default rate limit of 1000 messages / 30 seconds is not
+# sufficient given how verbose our logging is.
+iniset -sudo /etc/systemd/journald.conf "Journal" "RateLimitBurst" "0"
+sudo systemctl restart systemd-journald
 
 # Virtual Environment
 # -------------------
 
 # Install required infra support libraries
 install_infra
+
+# Install bindep
+$VIRTUALENV_CMD $DEST/bindep-venv
+# TODO(ianw) : optionally install from zuul checkout?
+$DEST/bindep-venv/bin/pip install bindep
+export BINDEP_CMD=${DEST}/bindep-venv/bin/bindep
+
+# Install packages as defined in plugin bindep.txt files
+pkgs="$( _get_plugin_bindep_packages )"
+if [[ -n "${pkgs}" ]]; then
+    install_package ${pkgs}
+fi
 
 # Extras Pre-install
 # ------------------
@@ -821,6 +809,25 @@ if is_service_enabled etcd3; then
     install_etcd3
 fi
 
+# Setup TLS certs
+# ---------------
+
+# Do this early, before any webservers are set up to ensure
+# we don't run into problems with missing certs when apache
+# is restarted.
+if is_service_enabled tls-proxy; then
+    configure_CA
+    init_CA
+    init_cert
+fi
+
+# Dstat
+# -----
+
+# Install dstat services prerequisites
+install_dstat
+
+
 # Check Out and Install Source
 # ----------------------------
 
@@ -830,7 +837,7 @@ echo_summary "Installing OpenStack project source"
 install_libs
 
 # Install uwsgi
-# install_apache_uwsgi
+install_apache_uwsgi
 
 # Install client libraries
 install_keystoneauth
@@ -843,13 +850,6 @@ if is_service_enabled swift glance horizon; then
 fi
 if is_service_enabled neutron nova horizon; then
     install_neutronclient
-fi
-
-# Setup TLS certs
-if is_service_enabled tls-proxy; then
-    configure_CA
-    init_CA
-    init_cert
 fi
 
 # Install middleware
@@ -869,12 +869,10 @@ if is_service_enabled swift; then
     stack_install_service swift
     configure_swift
 
-    # swift3 middleware to provide S3 emulation to Swift
-    if is_service_enabled swift3; then
+    # s3api middleware to provide S3 emulation to Swift
+    if is_service_enabled s3api; then
         # Replace the nova-objectstore port by the swift port
         S3_SERVICE_PORT=8080
-        git_clone $SWIFT3_REPO $SWIFT3_DIR $SWIFT3_BRANCH
-        setup_develop $SWIFT3_DIR
     fi
 fi
 
@@ -924,9 +922,6 @@ fi
 
 if is_service_enabled tls-proxy; then
     fix_system_ca_bundle_path
-    if python3_enabled ; then
-        fix_system_ca_bundle_path python3
-    fi
 fi
 
 # Extras Install
@@ -947,34 +942,21 @@ fi
 # osc commands. Alias dies with stack.sh.
 install_oscwrap
 
-if [[ $TRACK_DEPENDS = True ]]; then
-    $DEST/.venv/bin/pip freeze > $DEST/requires-post-pip
-    if ! diff -Nru $DEST/requires-pre-pip $DEST/requires-post-pip > $DEST/requires.diff; then
-        echo "Detect some changes for installed packages of pip, in depend tracking mode"
-        cat $DEST/requires.diff
-    fi
-    echo "Ran stack.sh in depend tracking mode, bailing out now"
-    exit 0
-fi
-
-
 # Syslog
 # ------
 
 if [[ $SYSLOG != "False" ]]; then
     if [[ "$SYSLOG_HOST" = "$HOST_IP" ]]; then
         # Configure the master host to receive
-        cat <<EOF >/tmp/90-stack-m.conf
+        cat <<EOF | sudo tee /etc/rsyslog.d/90-stack-m.conf >/dev/null
 \$ModLoad imrelp
 \$InputRELPServerRun $SYSLOG_PORT
 EOF
-        sudo mv /tmp/90-stack-m.conf /etc/rsyslog.d
     else
         # Set rsyslog to send to remote host
-        cat <<EOF >/tmp/90-stack-s.conf
+        cat <<EOF | sudo tee /etc/rsyslog.d/90-stack-s.conf >/dev/null
 *.*		:omrelp:$SYSLOG_HOST:$SYSLOG_PORT
 EOF
-        sudo mv /tmp/90-stack-s.conf /etc/rsyslog.d
     fi
 
     RSYSLOGCONF="/etc/rsyslog.conf"
@@ -1044,6 +1026,12 @@ fi
 # A better kind of sysstat, with the top process per time slice
 start_dstat
 
+# Run a background tcpdump for debugging
+# Note: must set TCPDUMP_ARGS with the enabled service
+if is_service_enabled tcpdump; then
+    start_tcpdump
+fi
+
 # Etcd
 # -----
 
@@ -1065,7 +1053,7 @@ cat > $TOP_DIR/userrc_early <<EOF
 
 # Set up password auth credentials now that Keystone is bootstrapped
 export OS_IDENTITY_API_VERSION=3
-export OS_AUTH_URL=$KEYSTONE_AUTH_URI
+export OS_AUTH_URL=$KEYSTONE_SERVICE_URI
 export OS_USERNAME=admin
 export OS_USER_DOMAIN_ID=default
 export OS_PASSWORD=$ADMIN_PASSWORD
@@ -1125,7 +1113,8 @@ fi
 # Glance
 # ------
 
-if is_service_enabled g-reg; then
+# NOTE(yoctozepto): limited to node hosting the database which is the controller
+if is_service_enabled $DATABASE_BACKENDS && is_service_enabled glance; then
     echo_summary "Configuring Glance"
     init_glance
 fi
@@ -1138,16 +1127,18 @@ if is_service_enabled neutron; then
     echo_summary "Configuring Neutron"
 
     configure_neutron
+
     # Run init_neutron only on the node hosting the Neutron API server
     if is_service_enabled $DATABASE_BACKENDS && is_service_enabled neutron; then
         init_neutron
     fi
 fi
 
+
 # Nova
 # ----
 
-if is_service_enabled n-net q-dhcp; then
+if is_service_enabled q-dhcp; then
     # Delete traces of nova networks from prior runs
     # Do not kill any dnsmasq instance spawned by NetworkManager
     netman_pid=$(pidof NetworkManager || true)
@@ -1158,12 +1149,6 @@ if is_service_enabled n-net q-dhcp; then
     fi
 
     clean_iptables
-
-    if is_service_enabled n-net; then
-        rm -rf ${NOVA_STATE_PATH}/networks
-        sudo mkdir -p ${NOVA_STATE_PATH}/networks
-        safe_chown -R ${STACK_USER} ${NOVA_STATE_PATH}/networks
-    fi
 
     # Force IP forwarding on, just in case
     sudo sysctl -w net.ipv4.ip_forward=1
@@ -1187,6 +1172,13 @@ if is_service_enabled cinder; then
     init_cinder
 fi
 
+# Placement Service
+# ---------------
+
+if is_service_enabled placement; then
+    echo_summary "Configuring placement"
+    init_placement
+fi
 
 # Compute Service
 # ---------------
@@ -1196,18 +1188,11 @@ if is_service_enabled nova; then
     init_nova
 
     # Additional Nova configuration that is dependent on other services
+    # TODO(stephenfin): Is it possible for neutron to *not* be enabled now? If
+    # not, remove the if here
     if is_service_enabled neutron; then
         configure_neutron_nova
-    elif is_service_enabled n-net; then
-        create_nova_conf_nova_network
     fi
-
-    init_nova_cells
-fi
-
-if is_service_enabled placement; then
-    echo_summary "Configuring placement"
-    init_placement
 fi
 
 
@@ -1254,8 +1239,8 @@ fi
 # scripts as userdata.
 # See https://help.ubuntu.com/community/CloudInit for more on ``cloud-init``
 
-if is_service_enabled g-reg; then
-
+# NOTE(yoctozepto): limited to node hosting the database which is the controller
+if is_service_enabled $DATABASE_BACKENDS && is_service_enabled glance; then
     echo_summary "Uploading images"
 
     for image_url in ${IMAGE_URLS//,/ }; do
@@ -1263,16 +1248,17 @@ if is_service_enabled g-reg; then
     done
 fi
 
-# Create a randomized default value for the key manager's fixed_key
-# NOTE(lyarwood): This is currently set to 36 as a workaround to the following
-# libvirt bug that incorrectly pads passphrases that are a multiple of 16 bytes
-# in length.
-# Unable to use LUKS passphrase that is exactly 16 bytes long
-# https://bugzilla.redhat.com/show_bug.cgi?id=1447297
+# NOTE(lyarwood): By default use a single hardcoded fixed_key across devstack
+# deployments.  This ensures the keys match across nova and cinder across all
+# hosts.
+FIXED_KEY=${FIXED_KEY:-bae3516cc1c0eb18b05440eba8012a4a880a2ee04d584a9c1579445e675b12defdc716ec}
 if is_service_enabled nova; then
-    key=$(generate_hex_string 36)
-    iniset $NOVA_CONF key_manager fixed_key "$key"
-    iniset $NOVA_CPU_CONF key_manager fixed_key "$key"
+    iniset $NOVA_CONF key_manager fixed_key "$FIXED_KEY"
+    iniset $NOVA_CPU_CONF key_manager fixed_key "$FIXED_KEY"
+fi
+
+if is_service_enabled cinder; then
+    iniset $CINDER_CONF key_manager fixed_key "$FIXED_KEY"
 fi
 
 # Launch the nova-api and wait for it to answer before continuing
@@ -1288,20 +1274,6 @@ elif is_service_enabled q-svc; then
     echo_summary "Starting Neutron"
     configure_neutron_after_post_config
     start_neutron_service_and_check
-elif is_service_enabled $DATABASE_BACKENDS && is_service_enabled n-net; then
-    NM_CONF=${NOVA_CONF}
-    if is_service_enabled n-cell; then
-        NM_CONF=${NOVA_CELLS_CONF}
-    fi
-
-    # Create a small network
-    $NOVA_BIN_DIR/nova-manage --config-file $NM_CONF network create "$PRIVATE_NETWORK_NAME" $FIXED_RANGE 1 $FIXED_NETWORK_SIZE $NETWORK_CREATE_ARGS
-
-    # Create some floating ips
-    $NOVA_BIN_DIR/nova-manage --config-file $NM_CONF floating create $FLOATING_RANGE --pool=$PUBLIC_NETWORK_NAME
-
-    # Create a second pool
-    $NOVA_BIN_DIR/nova-manage --config-file $NM_CONF floating create --ip_range=$TEST_FLOATING_RANGE --pool=$TEST_FLOATING_POOL
 fi
 
 # Start placement before any of the service that are likely to want
@@ -1317,7 +1289,14 @@ fi
 # Once neutron agents are started setup initial network elements
 if is_service_enabled q-svc && [[ "$NEUTRON_CREATE_INITIAL_NETWORKS" == "True" ]]; then
     echo_summary "Creating initial neutron network elements"
-    create_neutron_initial_network
+    # Here's where plugins can wire up their own networks instead
+    # of the code in lib/neutron_plugins/services/l3
+    if type -p neutron_plugin_create_initial_networks > /dev/null; then
+        neutron_plugin_create_initial_networks
+    else
+        create_neutron_initial_network
+    fi
+
 fi
 
 if is_service_enabled nova; then
@@ -1387,15 +1366,6 @@ run_phase stack extra
 merge_config_group $TOP_DIR/local.conf post-extra
 
 
-# Run local script
-# ----------------
-
-# Run ``local.sh`` if it exists to perform user-managed tasks
-if [[ -x $TOP_DIR/local.sh ]]; then
-    echo "Running user script $TOP_DIR/local.sh"
-    $TOP_DIR/local.sh
-fi
-
 # Sanity checks
 # =============
 
@@ -1423,13 +1393,31 @@ if is_service_enabled n-api; then
         # environment is up.
         echo_summary "SKIPPING Cell setup because n-cpu is not enabled. You will have to do this manually before you have a working environment."
     fi
+    # Run the nova-status upgrade check command which can also be used
+    # to verify the base install. Note that this is good enough in a
+    # single node deployment, but in a multi-node setup it won't verify
+    # any subnodes - that would have to be driven from whatever tooling
+    # is deploying the subnodes, e.g. the zuul v3 devstack-multinode job.
+    $NOVA_BIN_DIR/nova-status --config-file $NOVA_CONF upgrade check
+fi
+
+# Run local script
+# ----------------
+
+# Run ``local.sh`` if it exists to perform user-managed tasks
+if [[ -x $TOP_DIR/local.sh ]]; then
+    echo "Running user script $TOP_DIR/local.sh"
+    $TOP_DIR/local.sh
 fi
 
 # Bash completion
 # ===============
 
 # Prepare bash completion for OSC
-openstack complete | sudo tee /etc/bash_completion.d/osc.bash_completion > /dev/null
+# Note we use "command" to avoid the timing wrapper
+# which isn't relevant here and floods logs
+command openstack complete \
+    | sudo tee /etc/bash_completion.d/osc.bash_completion > /dev/null
 
 # If cinder is configured, set global_filter for PV devices
 if is_service_enabled cinder; then
@@ -1499,14 +1487,11 @@ if [[ -n "$DEPRECATED_TEXT" ]]; then
     echo
 fi
 
-# If USE_SYSTEMD is enabled, tell the user about using it.
-if [[ "$USE_SYSTEMD" == "True" ]]; then
-    echo
-    echo "Services are running under systemd unit files."
-    echo "For more information see: "
-    echo "https://docs.openstack.org/devstack/latest/systemd.html"
-    echo
-fi
+echo
+echo "Services are running under systemd unit files."
+echo "For more information see: "
+echo "https://docs.openstack.org/devstack/latest/systemd.html"
+echo
 
 # Useful info on current state
 cat /etc/devstack-version

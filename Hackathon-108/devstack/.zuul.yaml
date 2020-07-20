@@ -9,6 +9,76 @@
           - controller
 
 - nodeset:
+    name: openstack-single-node-focal
+    nodes:
+      - name: controller
+        label: ubuntu-focal
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: openstack-single-node-bionic
+    nodes:
+      - name: controller
+        label: ubuntu-bionic
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: openstack-single-node-xenial
+    nodes:
+      - name: controller
+        label: ubuntu-xenial
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: devstack-single-node-centos-7
+    nodes:
+      - name: controller
+        label: centos-7
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: devstack-single-node-centos-8
+    nodes:
+      - name: controller
+        label: centos-8
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: devstack-single-node-opensuse-15
+    nodes:
+      - name: controller
+        label: opensuse-15
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: devstack-single-node-fedora-latest
+    nodes:
+      - name: controller
+        label: fedora-31
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
     name: openstack-two-node
     nodes:
       - name: controller
@@ -37,6 +107,166 @@
       - name: peers
         nodes:
           - compute1
+
+- nodeset:
+    name: openstack-two-node-focal
+    nodes:
+      - name: controller
+        label: ubuntu-focal
+      - name: compute1
+        label: ubuntu-focal
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+
+- nodeset:
+    name: openstack-two-node-bionic
+    nodes:
+      - name: controller
+        label: ubuntu-bionic
+      - name: compute1
+        label: ubuntu-bionic
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+
+- nodeset:
+    name: openstack-two-node-xenial
+    nodes:
+      - name: controller
+        label: ubuntu-xenial
+      - name: compute1
+        label: ubuntu-xenial
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+
+- nodeset:
+    name: openstack-three-node-focal
+    nodes:
+      - name: controller
+        label: ubuntu-focal
+      - name: compute1
+        label: ubuntu-focal
+      - name: compute2
+        label: ubuntu-focal
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+          - compute2
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+          - compute2
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+          - compute2
+
+- nodeset:
+    name: openstack-three-node-bionic
+    nodes:
+      - name: controller
+        label: ubuntu-bionic
+      - name: compute1
+        label: ubuntu-bionic
+      - name: compute2
+        label: ubuntu-bionic
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+          - compute2
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+          - compute2
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+          - compute2
 
 - job:
     name: devstack-base
@@ -71,14 +301,11 @@
         LOGFILE: /opt/stack/logs/devstacklog.txt
         LOG_COLOR: false
         VERBOSE: true
+        VERBOSE_NO_TIMESTAMP: true
         NOVNC_FROM_PACKAGE: true
         ERROR_ON_CLONE: true
-        # Gate jobs can't deal with nested virt. Disable it.
-        LIBVIRT_TYPE: qemu
-        # NOTE(dims): etcd 3.x is not available in debian/ubuntu
-        # etc. As a stop gap measure, devstack uses wget to download
-        # from the location below for all the CI jobs.
-        ETCD_DOWNLOAD_URL: http://tarballs.openstack.org/etcd/
+        # Gate jobs can't deal with nested virt. Disable it by default.
+        LIBVIRT_TYPE: '{{ devstack_libvirt_type | default("qemu") }}'
       devstack_services:
         # Ignore any default set by devstack. Emit a "disable_all_services".
         base: false
@@ -90,6 +317,8 @@
         '{{ devstack_log_dir }}/dstat-csv.log': logs
         '{{ devstack_log_dir }}/devstacklog.txt': logs
         '{{ devstack_log_dir }}/devstacklog.txt.summary': logs
+        '{{ devstack_log_dir }}/tcpdump.pcap': logs
+        '{{ devstack_log_dir }}/worlddump-latest.txt': logs
         '{{ devstack_full_log}}': logs
         '{{ stage_dir }}/verify_tempest_conf.log': logs
         '{{ stage_dir }}/apache': logs
@@ -97,8 +326,7 @@
         '{{ stage_dir }}/etc': logs
         /var/log/rabbitmq: logs
         /var/log/postgresql: logs
-        /var/log/mysql.err: logs
-        /var/log/mysql.log: logs
+        /var/log/mysql: logs
         /var/log/libvirt: logs
         /etc/sudoers: logs
         /etc/sudoers.d: logs
@@ -111,6 +339,7 @@
         '{{ stage_dir }}/core': logs
         '{{ stage_dir }}/listen53.txt': logs
         '{{ stage_dir }}/deprecations.log': logs
+        '{{ stage_dir }}/audit.log': logs
         /var/log/ceph: logs
         /var/log/openvswitch: logs
         /var/log/glusterfs: logs
@@ -125,7 +354,6 @@
         auto: true
     group-vars:
       subnode:
-        test_matrix_role: subnode
         devstack_localrc:
           DATABASE_PASSWORD: secretdatabase
           RABBIT_PASSWORD: secretrabbit
@@ -143,7 +371,6 @@
           NOVNC_FROM_PACKAGE: true
           ERROR_ON_CLONE: true
           LIBVIRT_TYPE: qemu
-          ETCD_DOWNLOAD_URL: http://tarballs.openstack.org/etcd/
         devstack_services:
           base: false
     pre-run: playbooks/pre.yaml
@@ -164,7 +391,7 @@
     description: |
       Minimal devstack base job, intended for use by jobs that need
       less than the normal minimum set of required-projects.
-    nodeset: openstack-single-node
+    nodeset: openstack-single-node-bionic
     required-projects:
       - opendev.org/openstack/requirements
     vars:
@@ -172,25 +399,25 @@
         # Multinode specific settings
         SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
         HOST_IP: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
-        PUBLIC_BRIDGE_MTU: "{{ external_bridge_mtu }}"
+        PUBLIC_BRIDGE_MTU: '{{ external_bridge_mtu }}'
       devstack_services:
         # Shared services
         dstat: true
-        etcd3: false
+        etcd3: true
+        memory_tracker: true
         mysql: true
-        peakmem_tracker: true
         rabbit: true
     group-vars:
       subnode:
         devstack_services:
           # Shared services
           dstat: true
-          peakmem_tracker: true
+          memory_tracker: true
         devstack_localrc:
           # Multinode specific settings
           HOST_IP: "{{ hostvars[inventory_hostname]['nodepool']['private_ipv4'] }}"
           SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
-          PUBLIC_BRIDGE_MTU: "{{ external_bridge_mtu }}"
+          PUBLIC_BRIDGE_MTU: '{{ external_bridge_mtu }}'
           # Subnode specific settings
           DATABASE_TYPE: mysql
           RABBIT_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
@@ -204,36 +431,90 @@
       Base devstack job for integration gate.
 
       This base job can be used for single node and multinode devstack jobs.
-    nodeset: openstack-single-node
+
+      With a single node nodeset, this job sets up an "all-in-one" (aio)
+      devstack with the seven OpenStack services included in the devstack tree:
+      keystone, glance, cinder, neutron, nova, placement, and swift.
+
+      With a two node nodeset, this job sets up an aio + compute node.
+      The controller can be customised using host-vars.controller, the
+      sub-nodes can be customised using group-vars.subnode.
+
+      Descendent jobs can enable / disable services, add devstack configuration
+      options, enable devstack plugins, configure log files or directories to be
+      transferred to the log server.
+
+      The job assumes that there is only one controller node. The number of
+      subnodes can be scaled up seamlessly by setting a custom nodeset in
+      job.nodeset.
+
+      The run playbook consists of a single role, so it can be easily rewritten
+      and extended.
     required-projects:
       - opendev.org/openstack/cinder
       - opendev.org/openstack/glance
       - opendev.org/openstack/keystone
       - opendev.org/openstack/neutron
       - opendev.org/openstack/nova
+      - opendev.org/openstack/placement
       - opendev.org/openstack/swift
     timeout: 7200
     vars:
-      test_matrix_configs: [neutron, tlsproxy]
       devstack_localrc:
         # Common OpenStack services settings
         SWIFT_REPLICAS: 1
         SWIFT_START_ALL_SERVICES: false
         SWIFT_HASH: 1234123412341234
-        CINDER_PERIODIC_INTERVAL: 10
         DEBUG_LIBVIRT_COREDUMPS: true
         NOVA_VNC_ENABLED: true
-        VNCSERVER_LISTEN: 0.0.0.0
-        VNCSERVER_PROXYCLIENT_ADDRESS: $HOST_IP
       devstack_local_conf:
         post-config:
           $NEUTRON_CONF:
             DEFAULT:
               global_physnet_mtu: '{{ external_bridge_mtu }}'
       devstack_services:
-        base: true
-        # We need this explicitly here to trigger the sync of the CA data
+        # Core services enabled for this branch.
+        # This list replaces the test-matrix.
+        # Shared services
+        dstat: true
+        etcd3: true
+        memory_tracker: true
+        mysql: true
+        rabbit: true
         tls-proxy: true
+        # Keystone services
+        key: true
+        # Glance services
+        g-api: true
+        # Nova services
+        n-api: true
+        n-api-meta: true
+        n-cond: true
+        n-cpu: true
+        n-novnc: true
+        n-sch: true
+        # Placement service
+        placement-api: true
+        # Neutron services
+        q-agt: true
+        q-dhcp: true
+        q-l3: true
+        q-meta: true
+        q-metering: true
+        q-svc: true
+        # Swift services
+        s-account: true
+        s-container: true
+        s-object: true
+        s-proxy: true
+        # Cinder services
+        c-api: true
+        c-bak: true
+        c-sch: true
+        c-vol: true
+        cinder: true
+        # Services we don't need.
+        # This section is not really needed, it's for readability.
         horizon: false
         tempest: false
         # Test matrix emits ceilometer but ceilomenter is not installed in the
@@ -242,24 +523,98 @@
     group-vars:
       subnode:
         devstack_services:
-          base: true
-          # We need this explicitly here to trigger the sync of the CA data
+          # Core services enabled for this branch.
+          # This list replaces the test-matrix.
+          # Shared services
+          dstat: true
+          memory_tracker: true
           tls-proxy: true
+          # Nova services
+          n-cpu: true
+          # Placement services
+          placement-client: true
+          # Neutron services
+          q-agt: true
+          # Cinder services
+          c-bak: true
+          c-vol: true
+          # Services we don't run at all on subnode.
+          # This section is not really needed, it's for readability.
+          # keystone: false
+          # s-*: false
+          horizon: false
+          tempest: false
+          # Test matrix emits ceilometer but ceilometer is not installed in the
+          # integrated gate, so specifying the services has not effect.
+          # ceilometer-*: false
         devstack_localrc:
           # Subnode specific settings
           GLANCE_HOSTPORT: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}:9292"
           Q_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
           NOVA_VNC_ENABLED: true
-          VNCSERVER_LISTEN: 0.0.0.0
-          VNCSERVER_PROXYCLIENT_ADDRESS: $HOST_IP
+
+- job:
+    name: devstack-ipv6
+    parent: devstack
+    description: |
+      Devstack single node job for integration gate with IPv6.
+    vars:
+      devstack_localrc:
+        SERVICE_IP_VERSION: 6
+        SERVICE_HOST: ""
 
 - job:
     name: devstack-multinode
     parent: devstack
-    nodeset: openstack-two-node
+    nodeset: openstack-two-node-bionic
     description: |
       Simple multinode test to verify multinode functionality on devstack side.
       This is not meant to be used as a parent job.
+
+# NOTE(ianw) Platform tests have traditionally been non-voting because
+# we often have to rush things through devstack to stabilise the gate,
+# and these platforms don't have the round-the-clock support to avoid
+# becoming blockers in that situation.
+- job:
+    name: devstack-platform-centos-8
+    parent: tempest-full-py3
+    description: Centos 8 platform test
+    nodeset: devstack-single-node-centos-8
+    voting: false
+    timeout: 9000
+
+- job:
+    name: devstack-platform-opensuse-15
+    parent: tempest-full-py3
+    description: openSUSE 15.x platform test
+    nodeset: devstack-single-node-opensuse-15
+    voting: false
+
+- job:
+    name: devstack-platform-focal
+    parent: tempest-full-py3
+    description: Ubuntu Focal Fossa platform test
+    nodeset: openstack-single-node-focal
+    vars:
+      tempest_black_regex: "(tempest.api.compute.volumes.test_attach_volume.AttachVolumeMultiAttachTest.test_resize_server_with_multiattached_volume|tempest.api.compute.servers.test_server_rescue_negative.ServerRescueNegativeTestJSON|tempest.api.compute.servers.test_server_rescue.ServerStableDeviceRescueTest.test_stable_device_rescue_disk_virtio_with_volume_attached)"
+    voting: false
+
+- job:
+    name: devstack-platform-fedora-latest
+    parent: tempest-full-py3
+    description: Fedora latest platform test
+    nodeset: devstack-single-node-fedora-latest
+    voting: false
+
+- job:
+    name: devstack-platform-fedora-latest-virt-preview
+    parent: tempest-full-py3
+    description: Fedora latest platform test using the virt-preview repo.
+    nodeset: devstack-single-node-fedora-latest
+    voting: false
+    vars:
+      devstack_localrc:
+        ENABLE_FEDORA_VIRT_PREVIEW_REPO: true
 
 - job:
     name: devstack-tox-base
@@ -326,23 +681,30 @@
 
 - project:
     templates:
-      - integrated-gate
-      - integrated-gate-py35
-      - publish-openstack-sphinx-docs
+      - integrated-gate-py3
+      - publish-openstack-docs-pti
     check:
       jobs:
         - devstack
+        - devstack-ipv6
+        - devstack-platform-opensuse-15
+        - devstack-platform-fedora-latest
+        - devstack-platform-centos-8
+        - devstack-platform-focal
         - devstack-multinode
         - devstack-unit-tests
         - openstack-tox-bashate
-        - ironic-tempest-dsvm-ipa-wholedisk-bios-agent_ipmitool-tinyipa:
+        - ironic-tempest-ipa-wholedisk-bios-agent_ipmitool-tinyipa:
             voting: false
         - swift-dsvm-functional:
             voting: false
-            irrelevant-files:
+            irrelevant-files: &dsvm-irrelevant-files
               - ^.*\.rst$
               - ^doc/.*$
-        - neutron-grenade:
+        - swift-dsvm-functional-py3:
+            voting: false
+            irrelevant-files: *dsvm-irrelevant-files
+        - grenade:
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
@@ -354,7 +716,29 @@
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
-        - tempest-multinode-full:
+        - neutron-ovn-tempest-ovs-release:
+            voting: false
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - tempest-multinode-full-py3:
+            voting: false
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - openstacksdk-functional-devstack:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - tempest-ipv6-only:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        # NOTE(gmann): Remove this job from devstack pipeline once it is
+        # migrated to zuulv3 native. This is legacy job and rely on
+        # devstack-gate + devstack setting so any change in devstack can
+        # break it.
+        - nova-live-migration:
             voting: false
             irrelevant-files:
               - ^.*\.rst$
@@ -362,6 +746,8 @@
     gate:
       jobs:
         - devstack
+        - devstack-ipv6
+        - devstack-multinode
         - devstack-unit-tests
         - openstack-tox-bashate
         - neutron-grenade-multinode:
@@ -372,16 +758,47 @@
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
-        - neutron-grenade:
+        - grenade:
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
+        - openstacksdk-functional-devstack:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - tempest-ipv6-only:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+    # Please add a note on each job and conditions for the job not
+    # being experimental any more, so we can keep this list somewhat
+    # pruned.
+    #
+    # * nova-next: maintained by nova for unreleased/undefaulted
+    #    things
+    # * neutron-fullstack-with-uwsgi: maintained by neutron for fullstack test
+    #    when neutron-api is served by uwsgi, it's in exprimental for testing.
+    #    the next cycle we can remove this  job if things turn out to be
+    #    stable enough.
+    # * neutron-functional-with-uwsgi: maintained by neutron for functional
+    #    test. Next cycle we can remove this one if things turn out to be
+    #    stable engouh with uwsgi.
+    # * neutron-tempest-with-uwsgi: maintained by neutron for tempest test.
+    #    Next cycle we can remove this if everything run out stable enough.
+    # * nova-multi-cell: maintained by nova and currently non-voting in the
+    #    check queue for nova changes but relies on devstack configuration
+    # * devstack-platform-fedora-latest-virt-preview: Maintained by lyarwood
+    #    for Nova to allow early testing of the latest versions of Libvirt and
+    #    QEMU. Should only graduate out of experimental if it ever moves into
+    #    the check queue for Nova.
+
     experimental:
       jobs:
-        - devstack-plugin-ceph-tempest:
-            irrelevant-files:
-              - ^.*\.rst$
-              - ^doc/.*$
+        - nova-multi-cell
+        - nova-next
+        - neutron-fullstack-with-uwsgi
+        - neutron-functional-with-uwsgi
+        - neutron-tempest-with-uwsgi
         - devstack-plugin-ceph-tempest-py3:
             irrelevant-files:
               - ^.*\.rst$
@@ -402,7 +819,8 @@
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
-        - legacy-tempest-dsvm-neutron-pg-full:
+        - tempest-pg-full:
             irrelevant-files:
               - ^.*\.rst$
               - ^doc/.*$
+        - devstack-platform-fedora-latest-virt-preview

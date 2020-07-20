@@ -37,6 +37,7 @@ fi
 
 # Set up default directories
 GITDIR["python-swiftclient"]=$DEST/python-swiftclient
+SWIFT_DIR=$DEST/swift
 
 # Swift virtual environment
 if [[ ${USE_VENV} = True ]]; then
@@ -46,17 +47,13 @@ else
     SWIFT_BIN_DIR=$(get_python_exec_prefix)
 fi
 
-
-SWIFT_DIR=$DEST/swift
-SWIFT_AUTH_CACHE_DIR=${SWIFT_AUTH_CACHE_DIR:-/var/cache/swift}
 SWIFT_APACHE_WSGI_DIR=${SWIFT_APACHE_WSGI_DIR:-/var/www/swift}
-SWIFT3_DIR=$DEST/swift3
 
 SWIFT_SERVICE_PROTOCOL=${SWIFT_SERVICE_PROTOCOL:-$SERVICE_PROTOCOL}
 SWIFT_DEFAULT_BIND_PORT=${SWIFT_DEFAULT_BIND_PORT:-8080}
 SWIFT_DEFAULT_BIND_PORT_INT=${SWIFT_DEFAULT_BIND_PORT_INT:-8081}
 SWIFT_SERVICE_LOCAL_HOST=${SWIFT_SERVICE_LOCAL_HOST:-$SERVICE_LOCAL_HOST}
-SWIFT_SERVICE_LISTEN_ADDRESS=${SWIFT_SERVICE_LISTEN_ADDRESS:-$SERVICE_LISTEN_ADDRESS}
+SWIFT_SERVICE_LISTEN_ADDRESS=${SWIFT_SERVICE_LISTEN_ADDRESS:-$(ipv6_unquote $SERVICE_LISTEN_ADDRESS)}
 
 # TODO: add logging to different location.
 
@@ -69,8 +66,8 @@ SWIFT_DISK_IMAGE=${SWIFT_DATA_DIR}/drives/images/swift.img
 # Default is ``/etc/swift``.
 SWIFT_CONF_DIR=${SWIFT_CONF_DIR:-/etc/swift}
 
-if is_service_enabled s-proxy && is_service_enabled swift3; then
-    # If we are using ``swift3``, we can default the S3 port to swift instead
+if is_service_enabled s-proxy && is_service_enabled s3api; then
+    # If we are using ``s3api``, we can default the S3 port to swift instead
     # of nova-objectstore
     S3_SERVICE_PORT=${S3_SERVICE_PORT:-$SWIFT_DEFAULT_BIND_PORT}
 fi
@@ -341,7 +338,7 @@ function configure_swift {
     local user_group
 
     # Make sure to kill all swift processes first
-    swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
+    $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
 
     sudo install -d -o ${STACK_USER} ${SWIFT_CONF_DIR}
     sudo install -d -o ${STACK_USER} ${SWIFT_CONF_DIR}/{object,container,account}-server
@@ -369,6 +366,7 @@ function configure_swift {
 
     SWIFT_CONFIG_PROXY_SERVER=${SWIFT_CONF_DIR}/proxy-server.conf
     cp ${SWIFT_DIR}/etc/proxy-server.conf-sample ${SWIFT_CONFIG_PROXY_SERVER}
+    cp ${SWIFT_DIR}/etc/internal-client.conf-sample ${SWIFT_CONF_DIR}/internal-client.conf
 
     # To run container sync feature introduced in Swift ver 1.12.0,
     # container sync "realm" is added in container-sync-realms.conf
@@ -423,16 +421,22 @@ function configure_swift {
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:proxy-logging reveal_sensitive_prefix ${SWIFT_LOG_TOKEN_LENGTH}
 
     # By default Swift will be installed with Keystone and tempauth middleware
-    # and add the swift3 middleware if its configured for it. The token for
+    # and add the s3api middleware if its configured for it. The token for
     # tempauth would be prefixed with the reseller_prefix setting `TEMPAUTH_` the
     # token for keystoneauth would have the standard reseller_prefix `AUTH_`
-    if is_service_enabled swift3;then
-        swift_pipeline+=" swift3 s3token "
+    if is_service_enabled s3api;then
+        swift_pipeline+=" s3api"
+    fi
+    if is_service_enabled keystone; then
+        swift_pipeline+=" authtoken"
+        if is_service_enabled s3api;then
+            swift_pipeline+=" s3token"
+            iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:s3token auth_uri ${KEYSTONE_AUTH_URI_V3}
+            iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:s3token delay_auth_decision true
+        fi
+        swift_pipeline+=" keystoneauth"
     fi
 
-    if is_service_enabled keystone; then
-        swift_pipeline+=" authtoken keystoneauth"
-    fi
     swift_pipeline+=" tempauth "
 
     sed -i "/^pipeline/ { s/tempauth/${swift_pipeline} ${SWIFT_EXTRAS_MIDDLEWARE}/ ;}" ${SWIFT_CONFIG_PROXY_SERVER}
@@ -450,7 +454,7 @@ function configure_swift {
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:authtoken log_name swift
 
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:authtoken paste.filter_factory keystonemiddleware.auth_token:filter_factory
-    configure_auth_token_middleware $SWIFT_CONFIG_PROXY_SERVER swift $SWIFT_AUTH_CACHE_DIR filter:authtoken
+    configure_keystone_authtoken_middleware $SWIFT_CONFIG_PROXY_SERVER swift filter:authtoken
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:authtoken delay_auth_decision 1
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:authtoken cache swift.cache
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:authtoken include_service_catalog False
@@ -466,22 +470,6 @@ function configure_swift {
 
     # Allow both reseller prefixes to be used with domain_remap
     iniset ${SWIFT_CONFIG_PROXY_SERVER} filter:domain_remap reseller_prefixes "AUTH, TEMPAUTH"
-
-    if is_service_enabled swift3; then
-        cat <<EOF >>${SWIFT_CONFIG_PROXY_SERVER}
-[filter:s3token]
-paste.filter_factory = keystonemiddleware.s3_token:filter_factory
-auth_uri = ${KEYSTONE_AUTH_URI}
-cafile = ${SSL_BUNDLE_FILE}
-admin_user = swift
-admin_tenant_name = ${SERVICE_PROJECT_NAME}
-admin_password = ${SERVICE_PASSWORD}
-
-[filter:swift3]
-use = egg:swift3#swift3
-location = ${REGION_NAME}
-EOF
-    fi
 
     cp ${SWIFT_DIR}/etc/swift.conf-sample ${SWIFT_CONF_DIR}/swift.conf
     iniset ${SWIFT_CONF_DIR}/swift.conf swift-hash swift_hash_path_suffix ${SWIFT_HASH}
@@ -539,7 +527,7 @@ EOF
         else
             iniset ${testfile} func_test auth_port 80
         fi
-        iniset ${testfile} func_test auth_uri ${KEYSTONE_AUTH_URI}
+        iniset ${testfile} func_test auth_uri ${KEYSTONE_SERVICE_URI}
         if [[ "$auth_vers" == "3" ]]; then
             iniset ${testfile} func_test auth_prefix /identity/v3/
         else
@@ -557,7 +545,11 @@ EOF
 
     local swift_log_dir=${SWIFT_DATA_DIR}/logs
     sudo rm -rf ${swift_log_dir}
-    sudo install -d -o ${STACK_USER} -g adm ${swift_log_dir}/hourly
+    local swift_log_group=adm
+    if is_suse; then
+        swift_log_group=root
+    fi
+    sudo install -d -o ${STACK_USER} -g ${swift_log_group} ${swift_log_dir}/hourly
 
     if [[ $SYSLOG != "False" ]]; then
         sed "s,%SWIFT_LOGDIR%,${swift_log_dir}," $FILES/swift/rsyslog.conf | sudo \
@@ -603,7 +595,7 @@ function create_swift_disk {
     # Mount the disk with mount options to make it as efficient as possible
     mkdir -p ${SWIFT_DATA_DIR}/drives/sdb1
     if ! egrep -q ${SWIFT_DATA_DIR}/drives/sdb1 /proc/mounts; then
-        sudo mount -t xfs -o loop,noatime,nodiratime,nobarrier,logbufs=8  \
+        sudo mount -t xfs -o loop,noatime,nodiratime,logbufs=8  \
             ${SWIFT_DISK_IMAGE} ${SWIFT_DATA_DIR}/drives/sdb1
     fi
 
@@ -700,7 +692,7 @@ function create_swift_accounts {
 function init_swift {
     local node_number
     # Make sure to kill all swift processes first
-    swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
+    $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
 
     # Forcibly re-create the backing filesystem
     create_swift_disk
@@ -711,9 +703,9 @@ function init_swift {
 
         rm -f *.builder *.ring.gz backups/*.builder backups/*.ring.gz
 
-        swift-ring-builder object.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
-        swift-ring-builder container.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
-        swift-ring-builder account.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
+        $SWIFT_BIN_DIR/swift-ring-builder object.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
+        $SWIFT_BIN_DIR/swift-ring-builder container.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
+        $SWIFT_BIN_DIR/swift-ring-builder account.builder create ${SWIFT_PARTITION_POWER_SIZE} ${SWIFT_REPLICAS} 1
 
         # The ring will be created on each node, and because the order of
         # nodes is identical we can use a seed for rebalancing, making it
@@ -724,31 +716,27 @@ function init_swift {
             node_number=1
 
             for node in ${SWIFT_STORAGE_IPS}; do
-                swift-ring-builder object.builder add z${node_number}-${node}:${OBJECT_PORT_BASE}/sdb1 1
-                swift-ring-builder container.builder add z${node_number}-${node}:${CONTAINER_PORT_BASE}/sdb1 1
-                swift-ring-builder account.builder add z${node_number}-${node}:${ACCOUNT_PORT_BASE}/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder object.builder add z${node_number}-${node}:${OBJECT_PORT_BASE}/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder container.builder add z${node_number}-${node}:${CONTAINER_PORT_BASE}/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder account.builder add z${node_number}-${node}:${ACCOUNT_PORT_BASE}/sdb1 1
                 let "node_number=node_number+1"
             done
 
         else
 
             for node_number in ${SWIFT_REPLICAS_SEQ}; do
-                swift-ring-builder object.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( OBJECT_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
-                swift-ring-builder container.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( CONTAINER_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
-                swift-ring-builder account.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( ACCOUNT_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder object.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( OBJECT_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder container.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( CONTAINER_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
+                $SWIFT_BIN_DIR/swift-ring-builder account.builder add z${node_number}-${SWIFT_SERVICE_LOCAL_HOST}:$(( ACCOUNT_PORT_BASE + 10 * (node_number - 1) ))/sdb1 1
             done
         fi
 
         # We use a seed for rebalancing. Doing this allows us to create
         # identical rings on multiple nodes if SWIFT_STORAGE_IPS is the same
-        swift-ring-builder object.builder rebalance 42
-        swift-ring-builder container.builder rebalance 42
-        swift-ring-builder account.builder rebalance 42
+        $SWIFT_BIN_DIR/swift-ring-builder object.builder rebalance 42
+        $SWIFT_BIN_DIR/swift-ring-builder container.builder rebalance 42
+        $SWIFT_BIN_DIR/swift-ring-builder account.builder rebalance 42
     } && popd >/dev/null
-
-    # Create cache dir
-    sudo install -d -o ${STACK_USER} $SWIFT_AUTH_CACHE_DIR
-    rm -f $SWIFT_AUTH_CACHE_DIR/*
 }
 
 function install_swift {
@@ -799,7 +787,7 @@ function start_swift {
         # Apache should serve the "PACO" a.k.a "main" services
         restart_apache_server
         # The rest of the services should be started in backgroud
-        swift-init --run-dir=${SWIFT_DATA_DIR}/run rest start
+        $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run rest start
         return 0
     fi
 
@@ -823,15 +811,16 @@ function start_swift {
         done
 
         if [[ "$SWIFT_START_ALL_SERVICES" == "True" ]]; then
-            swift-init --run-dir=${SWIFT_DATA_DIR}/run rest start
+            $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run rest start
         else
             # The container-sync daemon is strictly needed to pass the container
             # sync Tempest tests.
-            swift-init --run-dir=${SWIFT_DATA_DIR}/run container-sync start
+            enable_service s-container-sync
+            run_process s-container-sync "$SWIFT_BIN_DIR/swift-container-sync ${SWIFT_CONF_DIR}/container-server/1.conf"
         fi
     else
-        swift-init --run-dir=${SWIFT_DATA_DIR}/run all restart || true
-        swift-init --run-dir=${SWIFT_DATA_DIR}/run proxy stop || true
+        $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run all restart || true
+        $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run proxy stop || true
     fi
 
     if is_service_enabled tls-proxy; then
@@ -858,12 +847,12 @@ function stop_swift {
     local type
 
     if [ "$SWIFT_USE_MOD_WSGI" == "True" ]; then
-        swift-init --run-dir=${SWIFT_DATA_DIR}/run rest stop && return 0
+        $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run rest stop && return 0
     fi
 
     # screen normally killed by ``unstack.sh``
-    if type -p swift-init >/dev/null; then
-        swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
+    if type -p $SWIFT_BIN_DIR/swift-init >/dev/null; then
+        $SWIFT_BIN_DIR/swift-init --run-dir=${SWIFT_DATA_DIR}/run all stop || true
     fi
     # Dump all of the servers
     # Maintain the iteration as stop_process() has some desirable side-effects

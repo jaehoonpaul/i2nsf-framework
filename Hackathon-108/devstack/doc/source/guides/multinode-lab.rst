@@ -103,7 +103,7 @@ Grab the latest version of DevStack:
 
 ::
 
-    git clone https://git.openstack.org/openstack-dev/devstack
+    git clone https://opendev.org/openstack/devstack
     cd devstack
 
 Up to this point all of the steps apply to each node in the cluster.
@@ -120,11 +120,8 @@ cluster controller's DevStack in ``local.conf``:
 
     [[local|localrc]]
     HOST_IP=192.168.42.11
-    FLAT_INTERFACE=eth0
     FIXED_RANGE=10.4.128.0/20
-    FIXED_NETWORK_SIZE=4096
     FLOATING_RANGE=192.168.42.128/25
-    MULTI_HOST=1
     LOGFILE=/opt/stack/logs/stack.sh.log
     ADMIN_PASSWORD=labstack
     DATABASE_PASSWORD=supersecret
@@ -160,11 +157,8 @@ machines, create a ``local.conf`` with:
 
     [[local|localrc]]
     HOST_IP=192.168.42.12 # change this per compute node
-    FLAT_INTERFACE=eth0
     FIXED_RANGE=10.4.128.0/20
-    FIXED_NETWORK_SIZE=4096
     FLOATING_RANGE=192.168.42.128/25
-    MULTI_HOST=1
     LOGFILE=/opt/stack/logs/stack.sh.log
     ADMIN_PASSWORD=labstack
     DATABASE_PASSWORD=supersecret
@@ -175,16 +169,11 @@ machines, create a ``local.conf`` with:
     MYSQL_HOST=$SERVICE_HOST
     RABBIT_HOST=$SERVICE_HOST
     GLANCE_HOSTPORT=$SERVICE_HOST:9292
-    ENABLED_SERVICES=n-cpu,q-agt,n-api-meta,c-vol,placement-client
+    ENABLED_SERVICES=n-cpu,q-agt,c-vol,placement-client
     NOVA_VNC_ENABLED=True
-    NOVNCPROXY_URL="http://$SERVICE_HOST:6080/vnc_auto.html"
+    NOVNCPROXY_URL="http://$SERVICE_HOST:6080/vnc_lite.html"
     VNCSERVER_LISTEN=$HOST_IP
     VNCSERVER_PROXYCLIENT_ADDRESS=$VNCSERVER_LISTEN
-
-**Note:** the ``n-api-meta`` service is a version of the api server
-that only serves the metadata service. It's needed because the
-computes created won't have a routing path to the metadata service on
-the controller.
 
 Fire up OpenStack:
 
@@ -240,8 +229,8 @@ this when it runs but there are times it needs to still be done by hand:
     sudo rm -rf /etc/libvirt/qemu/inst*
     sudo virsh list | grep inst | awk '{print $1}' | xargs -n1 virsh destroy
 
-Options pimp your stack
-=======================
+Going further
+=============
 
 Additional Users
 ----------------
@@ -302,10 +291,10 @@ Volumes
 
 DevStack will automatically use an existing LVM volume group named
 ``stack-volumes`` to store cloud-created volumes. If ``stack-volumes``
-doesn't exist, DevStack will set up a 10Gb loop-mounted file to contain
-it. This obviously limits the number and size of volumes that can be
-created inside OpenStack. The size can be overridden by setting
-``VOLUME_BACKING_FILE_SIZE`` in ``local.conf``.
+doesn't exist, DevStack will set up a loop-mounted file to contain
+it.  If the default size is insufficient for the number and size of volumes
+required, it can be overridden by setting ``VOLUME_BACKING_FILE_SIZE`` in
+``local.conf`` (sizes given in ``truncate`` compatible format, e.g. ``24G``).
 
 ``stack-volumes`` can be pre-created on any physical volume supported by
 Linux's LVM. The name of the volume group can be changed by setting
@@ -368,17 +357,6 @@ To pull glance, OpenStack Image service, from an experimental fork:
 
 Notes stuff you might need to know
 ==================================
-
-Reset the Bridge
-----------------
-
-How to reset the bridge configuration:
-
-::
-
-    sudo brctl delif br100 eth0.926
-    sudo ip link set dev br100 down
-    sudo brctl delbr br100
 
 Set MySQL Password
 ------------------

@@ -45,31 +45,37 @@ We need to add a user to install DevStack. (if you created a user during
 install you can skip this step and just give the user sudo privileges
 below)
 
-::
+.. code-block:: console
 
-    useradd -s /bin/bash -d /opt/stack -m stack
+    $ sudo useradd -s /bin/bash -d /opt/stack -m stack
 
 Since this user will be making many changes to your system, it will need
 to have sudo privileges:
 
-::
+.. code-block:: console
 
-    apt-get install sudo -y || yum install -y sudo
-    echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    $ apt-get install sudo -y || yum install -y sudo
+    $ echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+.. note:: On some systems you may need to use ``sudo visudo``.
 
 From here on you should use the user you created. **Logout** and
-**login** as that user.
+**login** as that user:
+
+.. code-block:: console
+
+    $ sudo su stack && cd ~
 
 Download DevStack
 -----------------
 
 We'll grab the latest version of DevStack via https:
 
-::
+.. code-block:: console
 
-    sudo apt-get install git -y || sudo yum install -y git
-    git clone https://git.openstack.org/openstack-dev/devstack
-    cd devstack
+    $ sudo apt-get install git -y || sudo yum install -y git
+    $ git clone https://opendev.org/openstack/devstack
+    $ cd devstack
 
 Run DevStack
 ------------
@@ -81,11 +87,8 @@ do the following:
 -  Set ``FLOATING_RANGE`` to a range not used on the local network, i.e.
    192.168.1.224/27. This configures IP addresses ending in 225-254 to
    be used as floating IPs.
--  Set ``FIXED_RANGE`` and ``FIXED_NETWORK_SIZE`` to configure the
-   internal address space used by the instances.
--  Set ``FLAT_INTERFACE`` to the Ethernet interface that connects the
-   host to your local network. This is the interface that should be
-   configured with the static IP address mentioned above.
+-  Set ``FIXED_RANGE`` to configure the internal address space used by the
+   instances.
 -  Set the administrative password. This password is used for the
    **admin** and **demo** accounts set up as OpenStack users.
 -  Set the MySQL administrative password. The default here is a random
@@ -97,23 +100,24 @@ do the following:
 
 ``local.conf`` should look something like this:
 
-::
+.. code-block:: ini
 
     [[local|localrc]]
     FLOATING_RANGE=192.168.1.224/27
     FIXED_RANGE=10.11.12.0/24
-    FIXED_NETWORK_SIZE=256
-    FLAT_INTERFACE=eth0
     ADMIN_PASSWORD=supersecret
     DATABASE_PASSWORD=iheartdatabases
     RABBIT_PASSWORD=flopsymopsy
     SERVICE_PASSWORD=iheartksl
 
+.. note:: There is a sample :download:`local.conf </assets/local.conf>` file
+    under the *samples* directory in the devstack repository.
+
 Run DevStack:
 
-::
+.. code-block:: console
 
-    ./stack.sh
+    $ ./stack.sh
 
 A seemingly endless stream of activity ensues. When complete you will
 see a summary of ``stack.sh``'s work, including the relevant URLs,
@@ -127,7 +131,3 @@ computers on the local network. In this example that would be
 http://192.168.1.201/ for the dashboard (aka Horizon). Launch VMs and if
 you give them floating IPs and security group access those VMs will be
 accessible from other machines on your network.
-
-Some examples of using the OpenStack command-line clients ``nova`` and
-``glance`` are in the shakedown scripts in ``devstack/exercises``.
-``exercise.sh`` will run all of those scripts and report on the results.

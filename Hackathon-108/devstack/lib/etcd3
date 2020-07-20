@@ -27,7 +27,10 @@ set +o xtrace
 ETCD_DATA_DIR="$DATA_DIR/etcd"
 ETCD_SYSTEMD_SERVICE="devstack@etcd.service"
 ETCD_BIN_DIR="$DEST/bin"
-ETCD_PORT=2379
+# Option below will mount ETCD_DATA_DIR as ramdisk, which is useful to run
+# etcd-heavy services in the gate VM's, e.g. Kubernetes.
+ETCD_USE_RAMDISK=$(trueorfalse True ETCD_USE_RAMDISK)
+ETCD_RAMDISK_MB=${ETCD_RAMDISK_MB:-512}
 
 if is_ubuntu ; then
     UBUNTU_RELEASE_BASE_NUM=`lsb_release -r | awk '{print $2}' | cut -d '.' -f 1`
@@ -38,15 +41,18 @@ function start_etcd3 {
     local cmd="$ETCD_BIN_DIR/etcd"
     cmd+=" --name $HOSTNAME --data-dir $ETCD_DATA_DIR"
     cmd+=" --initial-cluster-state new --initial-cluster-token etcd-cluster-01"
-    cmd+=" --initial-cluster $HOSTNAME=http://$SERVICE_HOST:2380"
-    cmd+=" --initial-advertise-peer-urls http://$SERVICE_HOST:2380"
+    cmd+=" --initial-cluster $HOSTNAME=http://$SERVICE_HOST:$ETCD_PEER_PORT"
+    cmd+=" --initial-advertise-peer-urls http://$SERVICE_HOST:$ETCD_PEER_PORT"
     cmd+=" --advertise-client-urls http://$SERVICE_HOST:$ETCD_PORT"
     if [ "$SERVICE_LISTEN_ADDRESS" == "::" ]; then
-        cmd+=" --listen-peer-urls http://[::]:2380 "
+        cmd+=" --listen-peer-urls http://[::]:$ETCD_PEER_PORT "
     else
-        cmd+=" --listen-peer-urls http://0.0.0.0:2380 "
+        cmd+=" --listen-peer-urls http://0.0.0.0:$ETCD_PEER_PORT "
     fi
     cmd+=" --listen-client-urls http://$SERVICE_HOST:$ETCD_PORT"
+    if [ "$ENABLE_DEBUG_LOG_LEVEL" == "True" ]; then
+        cmd+=" --debug"
+    fi
 
     local unitfile="$SYSTEMD_DIR/$ETCD_SYSTEMD_SERVICE"
     write_user_unit_file $ETCD_SYSTEMD_SERVICE "$cmd" "" "root"
@@ -87,6 +93,9 @@ function cleanup_etcd3 {
 
     $SYSTEMCTL daemon-reload
 
+    if [[ "$ETCD_USE_RAMDISK" == "True" ]]; then
+        sudo umount $ETCD_DATA_DIR
+    fi
     sudo rm -rf $ETCD_DATA_DIR
 }
 
@@ -96,6 +105,9 @@ function install_etcd3 {
     # Create the necessary directories
     sudo mkdir -p $ETCD_BIN_DIR
     sudo mkdir -p $ETCD_DATA_DIR
+    if [[ "$ETCD_USE_RAMDISK" == "True" ]]; then
+        sudo mount -t tmpfs -o nodev,nosuid,size=${ETCD_RAMDISK_MB}M tmpfs $ETCD_DATA_DIR
+    fi
 
     # Download and cache the etcd tgz for subsequent use
     local etcd_file

@@ -244,7 +244,7 @@ The host `devstack-2` has a very minimal `local.conf`.
 
     ## Neutron options
     PUBLIC_INTERFACE=eth0
-    ENABLED_SERVICES=n-cpu,rabbit,q-agt
+    ENABLED_SERVICES=n-cpu,rabbit,q-agt,placement-client
 
 Network traffic from `eth0` on the compute nodes is then NAT'd by the
 controller node that runs Neutron's `neutron-l3-agent` and provides L3
@@ -376,8 +376,8 @@ controller node.
 
         ## Neutron options
         Q_USE_SECGROUP=True
-        ENABLE_PROJECT_VLANS=True
-        PROJECT_VLAN_RANGE=3001:4000
+        ENABLE_TENANT_VLANS=True
+        TENANT_VLAN_RANGE=3001:4000
         PHYSICAL_NETWORK=default
         OVS_PHYSICAL_BRIDGE=br-ex
 
@@ -396,7 +396,7 @@ controller node.
 
 In this configuration we are defining IPV4_ADDRS_SAFE_TO_USE to be a
 publicly routed IPv4 subnet. In this specific instance we are using
-the special TEST-NET-3 subnet defined in `RFC 5737 <http://tools.ietf.org/html/rfc5737>`_,
+the special TEST-NET-3 subnet defined in `RFC 5737 <https://tools.ietf.org/html/rfc5737>`_,
 which is used for documentation.  In your DevStack setup, IPV4_ADDRS_SAFE_TO_USE
 would be a public IP address range that you or your organization has
 allocated to you, so that you could access your instances from the
@@ -567,7 +567,7 @@ you do not require them.
     Q_ML2_PLUGIN_MECHANISM_DRIVERS=macvtap
     Q_USE_PROVIDER_NETWORKING=True
 
-    enable_plugin neutron https://git.openstack.org/openstack/neutron
+    enable_plugin neutron https://opendev.org/openstack/neutron
 
     ## MacVTap agent options
     Q_AGENT=macvtap
@@ -622,7 +622,7 @@ For the MacVTap compute node, use this local.conf:
 
     # Services that a compute node runs
     disable_all_services
-    enable_plugin neutron https://git.openstack.org/openstack/neutron
+    enable_plugin neutron https://opendev.org/openstack/neutron
     ENABLED_SERVICES+=n-cpu,q-agt
 
     ## MacVTap agent options

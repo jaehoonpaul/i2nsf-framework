@@ -29,6 +29,7 @@ source $RC_DIR/stackrc
 # Load the last env variables if available
 if [[ -r $RC_DIR/.stackenv ]]; then
     source $RC_DIR/.stackenv
+    export OS_CACERT
 fi
 
 # Get some necessary configuration
@@ -86,9 +87,9 @@ export OS_AUTH_TYPE=password
 
 # If you don't have a working .stackenv, this is the backup position
 KEYSTONE_BACKUP=$SERVICE_PROTOCOL://$SERVICE_HOST:5000
-KEYSTONE_AUTH_URI=${KEYSTONE_AUTH_URI:-$KEYSTONE_BACKUP}
+KEYSTONE_SERVICE_URI=${KEYSTONE_SERVICE_URI:-$KEYSTONE_BACKUP}
 
-export OS_AUTH_URL=${OS_AUTH_URL:-$KEYSTONE_AUTH_URI}
+export OS_AUTH_URL=${OS_AUTH_URL:-$KEYSTONE_SERVICE_URI}
 
 # Currently, in order to use openstackclient with Identity API v3,
 # we need to set the domain which the user and project belong to.
@@ -108,5 +109,5 @@ fi
 
 # Currently cinderclient needs you to specify the *volume api* version. This
 # needs to match the config of your catalog returned by Keystone.
-export CINDER_VERSION=${CINDER_VERSION:-2}
+export CINDER_VERSION=${CINDER_VERSION:-3}
 export OS_VOLUME_API_VERSION=${OS_VOLUME_API_VERSION:-$CINDER_VERSION}

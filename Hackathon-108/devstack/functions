@@ -18,6 +18,7 @@ declare -r -g _DEVSTACK_FUNCTIONS=1
 FUNC_DIR=$(cd $(dirname "${BASH_SOURCE:-$0}") && pwd)
 source ${FUNC_DIR}/functions-common
 source ${FUNC_DIR}/inc/ini-config
+source ${FUNC_DIR}/inc/meta-config
 source ${FUNC_DIR}/inc/python
 source ${FUNC_DIR}/inc/rootwrap
 
@@ -76,6 +77,52 @@ function get_extra_file {
     fi
 }
 
+# Generate image property arguments for OSC
+#
+# Arguments: properties, one per, like propname=value
+#
+# Result is --property propname1=value1 --property propname2=value2
+function _image_properties_to_arg {
+    local result=""
+    for property in $*; do
+        result+=" --property $property"
+    done
+    echo $result
+}
+
+# Upload an image to glance using the configured mechanism
+#
+# Arguments:
+#  image name
+#  container format
+#  disk format
+#  path to image file
+#  optional properties (format of propname=value)
+#
+function _upload_image {
+    local image_name="$1"
+    shift
+    local container="$1"
+    shift
+    local disk="$1"
+    shift
+    local image="$1"
+    shift
+    local properties
+    local useimport
+
+    properties=$(_image_properties_to_arg $*)
+
+    if [[ "$GLANCE_USE_IMPORT_WORKFLOW" == "True" ]]; then
+        if [[ "$GLANCE_STANDALONE" == "True" ]]; then
+            useimport="--import"
+        else
+            echo "*** Unable to use glance import workflow because glance is not standalone! ***"
+        fi
+    fi
+
+    openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" --public --container-format "$container" --disk-format "$disk" $useimport $properties < "${image}"
+}
 
 # Retrieve an image from a URL and upload into Glance.
 # Uses the following variables:
@@ -117,7 +164,7 @@ function upload_image {
     # OpenVZ-format images are provided as .tar.gz, but not decompressed prior to loading
     if [[ "$image_url" =~ 'openvz' ]]; then
         image_name="${image_fname%.tar.gz}"
-        openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" --public --container-format ami --disk-format ami < "${image}"
+        _upload_image "$image_name" ami ami "$image"
         return
     fi
 
@@ -231,7 +278,8 @@ function upload_image {
         vmdk_adapter_type="${props[1]:-$vmdk_adapter_type}"
         vmdk_net_adapter="${props[2]:-$vmdk_net_adapter}"
 
-        openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" --public --container-format bare --disk-format vmdk --property vmware_disktype="$vmdk_disktype" --property vmware_adaptertype="$vmdk_adapter_type" --property hw_vif_model="$vmdk_net_adapter" < "${image}"
+        _upload_image "$image_name" bare vmdk "$image" vmware_disktype="$vmdk_disktype" vmware_adaptertype="$vmdk_adapter_type" hw_vif_model="$vmdk_net_adapter"
+
         return
     fi
 
@@ -245,14 +293,9 @@ function upload_image {
             # Nova defaults to PV for all VHD images, but
             # the glance setting is needed for booting
             # directly from volume.
-            force_vm_mode="--property vm_mode=xen"
+            force_vm_mode="vm_mode=xen"
         fi
-        openstack \
-            --os-cloud=devstack-admin --os-region-name="$REGION_NAME" \
-            image create \
-            "$image_name" --public \
-            --container-format=ovf --disk-format=vhd \
-            $force_vm_mode < "${image}"
+        _upload_image "$image_name" ovf vhd "$image" $force_vm_mode
         return
     fi
 
@@ -261,12 +304,7 @@ function upload_image {
     # Setting metadata, so PV mode is used.
     if [[ "$image_url" =~ '.xen-raw.tgz' ]]; then
         image_name="${image_fname%.xen-raw.tgz}"
-        openstack \
-            --os-cloud=devstack-admin --os-region-name="$REGION_NAME" \
-            image create \
-            "$image_name" --public \
-            --container-format=tgz --disk-format=raw \
-            --property vm_mode=xen < "${image}"
+        _upload_image "$image_name" tgz raw "$image" vm_mode=xen
         return
     fi
 
@@ -277,13 +315,7 @@ function upload_image {
             die $LINENO "Unknown vm_mode=${vm_mode} for Virtuozzo image"
         fi
 
-        openstack \
-            --os-cloud=devstack-admin --os-region-name="$REGION_NAME" \
-            image create \
-            "$image_name" --public \
-            --container-format=bare --disk-format=ploop \
-            --property hypervisor_type=vz \
-            --property vm_mode=$vm_mode < "${image}"
+        _upload_image "$image_name" bare ploop "$image" vm_mode=$vm_mode
         return
     fi
 
@@ -293,6 +325,15 @@ function upload_image {
     local container_format=""
     local unpack=""
     local img_property=""
+
+    # NOTE(danms): If we're on libvirt/qemu or libvirt/kvm, set the hw_rng_model
+    # to libvirt in the image properties.
+    if [[ "$VIRT_DRIVER" == "libvirt" ]]; then
+        if [[ "$LIBVIRT_TYPE" == "qemu" || "$LIBVIRT_TYPE" == "kvm" ]]; then
+            img_property="hw_rng_model=virtio"
+        fi
+    fi
+
     case "$image_fname" in
         *.tar.gz|*.tgz)
             # Extract ami and aki files
@@ -341,6 +382,12 @@ function upload_image {
             disk_format=qcow2
             container_format=bare
             ;;
+        *.qcow2.xz)
+            image_name=$(basename "$image" ".qcow2.xz")
+            disk_format=qcow2
+            container_format=bare
+            unpack=unxz
+            ;;
         *.raw)
             image_name=$(basename "$image" ".raw")
             disk_format=raw
@@ -364,20 +411,30 @@ function upload_image {
     esac
 
     if is_arch "ppc64le" || is_arch "ppc64" || is_arch "ppc"; then
-        img_property="--property hw_cdrom_bus=scsi --property os_command_line=console=hvc0"
+        img_property="$img_property hw_cdrom_bus=scsi os_command_line=console=hvc0"
     fi
 
     if is_arch "aarch64"; then
-        img_property="--property hw_machine_type=virt --property hw_cdrom_bus=scsi --property hw_scsi_model=virtio-scsi --property os_command_line='console=ttyAMA0'"
+        img_property="$img_property hw_machine_type=virt hw_cdrom_bus=scsi hw_scsi_model=virtio-scsi os_command_line='console=ttyAMA0'"
     fi
 
     if [ "$container_format" = "bare" ]; then
         if [ "$unpack" = "zcat" ]; then
-            openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" $img_property --public --container-format=$container_format --disk-format $disk_format < <(zcat --force "${image}")
+            _upload_image "$image_name" $container_format $disk_format <(zcat --force "$image") $img_property
         elif [ "$unpack" = "bunzip2" ]; then
-            openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" $img_property --public --container-format=$container_format --disk-format $disk_format < <(bunzip2 -cdk "${image}")
+            _upload_image "$image_name" $container_format $disk_format <(bunzip2 -cdk "$image") $img_property
+        elif [ "$unpack" = "unxz" ]; then
+            # NOTE(brtknr): unxz the file first and cleanup afterwards to
+            # prevent timeout while Glance tries to upload image (e.g. to Swift).
+            local tmp_dir
+            local image_path
+            tmp_dir=$(mktemp -d)
+            image_path="$tmp_dir/$image_name"
+            unxz -cv "${image}" > "$image_path"
+            _upload_image "$image_name" $container_format $disk_format "$image_path" $img_property
+            rm -rf $tmp_dir
         else
-            openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name" $img_property --public --container-format=$container_format --disk-format $disk_format < "${image}"
+            _upload_image "$image_name" $container_format $disk_format "$image" $img_property
         fi
     else
         # Use glance client to add the kernel the root filesystem.
@@ -385,12 +442,12 @@ function upload_image {
         # kernel for use when uploading the root filesystem.
         local kernel_id="" ramdisk_id="";
         if [ -n "$kernel" ]; then
-            kernel_id=$(openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name-kernel" $img_property --public --container-format aki --disk-format aki < "$kernel" | grep ' id ' | get_field 2)
+            kernel_id=$(openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name-kernel" $(_image_properties_to_arg $img_property) --public --container-format aki --disk-format aki < "$kernel" | grep ' id ' | get_field 2)
         fi
         if [ -n "$ramdisk" ]; then
-            ramdisk_id=$(openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name-ramdisk" $img_property --public --container-format ari --disk-format ari < "$ramdisk" | grep ' id ' | get_field 2)
+            ramdisk_id=$(openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "$image_name-ramdisk" $(_image_properties_to_arg $img_property) --public --container-format ari --disk-format ari < "$ramdisk" | grep ' id ' | get_field 2)
         fi
-        openstack --os-cloud=devstack-admin --os-region-name="$REGION_NAME" image create "${image_name%.img}" $img_property --public --container-format ami --disk-format ami ${kernel_id:+--property kernel_id=$kernel_id} ${ramdisk_id:+--property ramdisk_id=$ramdisk_id} < "${image}"
+        _upload_image "${image_name%.img}" ami ami "$image" ${kernel_id:+ kernel_id=$kernel_id} ${ramdisk_id:+ ramdisk_id=$ramdisk_id} $img_property
     fi
 }
 
@@ -441,12 +498,22 @@ EOF
 function wait_for_compute {
     local timeout=$1
     local rval=0
+    local compute_hostname
     time_start "wait_for_service"
+    compute_hostname=$(iniget $NOVA_CONF DEFAULT host)
+    if [[ -z $compute_hostname ]]; then
+        compute_hostname=$(hostname)
+    fi
     timeout $timeout bash -x <<EOF || rval=$?
         ID=""
         while [[ "\$ID" == "" ]]; do
             sleep 1
-            ID=\$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" compute service list --host `hostname` --service nova-compute -c ID -f value)
+            if [[ "$VIRT_DRIVER" = 'fake' ]]; then
+                # When using the fake driver the compute hostnames have a suffix of 1 to NUMBER_FAKE_NOVA_COMPUTE
+                ID=\$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" compute service list --host `hostname`1 --service nova-compute -c ID -f value)
+            else
+                ID=\$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" compute service list --host "$compute_hostname" --service nova-compute -c ID -f value)
+            fi
         done
 EOF
     time_stop "wait_for_service"
@@ -460,7 +527,7 @@ EOF
 
 
 # ping check
-# Uses globals ``ENABLED_SERVICES``, ``TOP_DIR``, ``MULTI_HOST``, ``PRIVATE_NETWORK``
+# Uses globals ``ENABLED_SERVICES``, ``TOP_DIR``, ``PRIVATE_NETWORK``
 # ping_check <ip> [boot-timeout] [from_net] [expected]
 function ping_check {
     local ip=$1
@@ -474,12 +541,9 @@ function ping_check {
     # if we don't specify a from_net we're expecting things to work
     # fine from our local box.
     if [[ -n "$from_net" ]]; then
+        # TODO(stephenfin): Is there any way neutron could be disabled now?
         if is_service_enabled neutron; then
             ping_cmd="$TOP_DIR/tools/ping_neutron.sh $from_net"
-        elif [[ "$MULTI_HOST" = "True" && "$from_net" = "$PRIVATE_NETWORK_NAME" ]]; then
-            # there is no way to address the multihost / private case, bail here for compatibility.
-            # TODO: remove this cruft and redo code to handle this at the caller level.
-            return
         fi
     fi
 
@@ -628,40 +692,29 @@ function vercmp {
 # This sets up defaults we like in devstack for logging for tracking
 # down issues, and makes sure everything is done the same between
 # projects.
+# NOTE(jh): Historically this function switched between three different
+# functions: setup_systemd_logging, setup_colorized_logging and
+# setup_standard_logging_identity. Since we always run with systemd now,
+# this could be cleaned up, but the other functions may still be in use
+# by plugins. Since deprecations haven't worked in the past, we'll just
+# leave them in place.
 function setup_logging {
-    local conf_file=$1
-    local other_cond=${2:-"False"}
-    if [[ "$USE_SYSTEMD" == "True" ]]; then
-        setup_systemd_logging $conf_file
-    elif [ "$LOG_COLOR" == "True" ] && [ "$SYSLOG" == "False" ] && [ "$other_cond" == "False" ]; then
-        setup_colorized_logging $conf_file
-    else
-        setup_standard_logging_identity $conf_file
-    fi
+    setup_systemd_logging $1
 }
 
 # This function sets log formatting options for colorizing log
 # output to stdout. It is meant to be called by lib modules.
-# The last two parameters are optional and can be used to specify
-# non-default value for project and user format variables.
-# Defaults are respectively 'project_name' and 'user_name'
-#
-# setup_colorized_logging something.conf SOMESECTION
 function setup_colorized_logging {
     local conf_file=$1
-    local conf_section="DEFAULT"
-    local project_var="project_name"
-    local user_var="user_name"
     # Add color to logging output
-    iniset $conf_file $conf_section logging_context_format_string "%(asctime)s.%(msecs)03d %(color)s%(levelname)s %(name)s [[01;36m%(request_id)s [00;36m%("$project_var")s %("$user_var")s%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
-    iniset $conf_file $conf_section logging_default_format_string "%(asctime)s.%(msecs)03d %(color)s%(levelname)s %(name)s [[00;36m-%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
-    iniset $conf_file $conf_section logging_debug_format_suffix "[00;33mfrom (pid=%(process)d) %(funcName)s %(pathname)s:%(lineno)d[00m"
-    iniset $conf_file $conf_section logging_exception_prefix "%(color)s%(asctime)s.%(msecs)03d TRACE %(name)s [01;35m%(instance)s[00m"
+    iniset $conf_file DEFAULT logging_context_format_string "%(asctime)s.%(msecs)03d %(color)s%(levelname)s %(name)s [[01;36m%(request_id)s [00;36m%(project_name)s %(user_name)s%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
+    iniset $conf_file DEFAULT logging_default_format_string "%(asctime)s.%(msecs)03d %(color)s%(levelname)s %(name)s [[00;36m-%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
+    iniset $conf_file DEFAULT logging_debug_format_suffix "[00;33mfrom (pid=%(process)d) %(funcName)s %(pathname)s:%(lineno)d[00m"
+    iniset $conf_file DEFAULT logging_exception_prefix "%(color)s%(asctime)s.%(msecs)03d TRACE %(name)s [01;35m%(instance)s[00m"
 }
 
 function setup_systemd_logging {
     local conf_file=$1
-    local conf_section="DEFAULT"
     # NOTE(sdague): this is a nice to have, and means we're using the
     # native systemd path, which provides for things like search on
     # request-id. However, there may be an eventlet interaction here,
@@ -669,16 +722,16 @@ function setup_systemd_logging {
     USE_JOURNAL=$(trueorfalse False USE_JOURNAL)
     local pidstr=""
     if [[ "$USE_JOURNAL" == "True" ]]; then
-        iniset $conf_file $conf_section use_journal "True"
+        iniset $conf_file DEFAULT use_journal "True"
         # if we are using the journal directly, our process id is already correct
     else
         pidstr="(pid=%(process)d) "
     fi
-    iniset $conf_file $conf_section logging_debug_format_suffix "[00;33m{{${pidstr}%(funcName)s %(pathname)s:%(lineno)d}}[00m"
+    iniset $conf_file DEFAULT logging_debug_format_suffix "[00;33m{{${pidstr}%(funcName)s %(pathname)s:%(lineno)d}}[00m"
 
-    iniset $conf_file $conf_section logging_context_format_string "%(color)s%(levelname)s %(name)s [[01;36m%(global_request_id)s %(request_id)s [00;36m%(project_name)s %(user_name)s%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
-    iniset $conf_file $conf_section logging_default_format_string "%(color)s%(levelname)s %(name)s [[00;36m-%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
-    iniset $conf_file $conf_section logging_exception_prefix "ERROR %(name)s [01;35m%(instance)s[00m"
+    iniset $conf_file DEFAULT logging_context_format_string "%(color)s%(levelname)s %(name)s [[01;36m%(global_request_id)s %(request_id)s [00;36m%(project_name)s %(user_name)s%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
+    iniset $conf_file DEFAULT logging_default_format_string "%(color)s%(levelname)s %(name)s [[00;36m-%(color)s] [01;35m%(instance)s%(color)s%(message)s[00m"
+    iniset $conf_file DEFAULT logging_exception_prefix "ERROR %(name)s [01;35m%(instance)s[00m"
 }
 
 function setup_standard_logging_identity {
@@ -712,7 +765,7 @@ function create_disk {
     # Create a loopback disk and format it to XFS.
     if [[ -e ${disk_image} ]]; then
         if egrep -q ${storage_data_dir} /proc/mounts; then
-            sudo umount ${storage_data_dir}/drives/sdb1
+            sudo umount ${storage_data_dir}
             sudo rm -f ${disk_image}
         fi
     fi
@@ -730,7 +783,7 @@ function create_disk {
 
     # Mount the disk with mount options to make it as efficient as possible
     if ! egrep -q ${storage_data_dir} /proc/mounts; then
-        sudo mount -t xfs -o loop,noatime,nodiratime,nobarrier,logbufs=8  \
+        sudo mount -t xfs -o loop,noatime,nodiratime,logbufs=8  \
             ${disk_image} ${storage_data_dir}
     fi
 }
@@ -805,13 +858,11 @@ function get_random_port {
 #
 # Write out various useful state information to /etc/devstack-version
 function write_devstack_version {
-    cat - > /tmp/devstack-version <<EOF
+    cat - <<EOF | sudo tee /etc/devstack-version >/dev/null
 DevStack Version: ${DEVSTACK_SERIES}
 Change: $(git log --format="%H %s %ci" -1)
 OS Version: ${os_VENDOR} ${os_RELEASE} ${os_CODENAME}
 EOF
-    sudo install -m 644 /tmp/devstack-version /etc/devstack-version
-    rm /tmp/devstack-version
 }
 
 # Restore xtrace

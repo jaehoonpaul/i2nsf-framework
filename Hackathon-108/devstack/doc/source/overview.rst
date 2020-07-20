@@ -64,7 +64,8 @@ Services
 
 The default services configured by DevStack are Identity (keystone),
 Object Storage (swift), Image Service (glance), Block Storage
-(cinder), Compute (nova), Networking (neutron), Dashboard (horizon)
+(cinder), Compute (nova), Placement (placement),
+Networking (neutron), Dashboard (horizon).
 
 Additional services not included directly in DevStack can be tied in to
 ``stack.sh`` using the :doc:`plugin mechanism <plugins>` to call
@@ -75,11 +76,3 @@ Node Configurations
 
 -  single node
 -  multi-node configurations as are tested by the gate
-
-Exercises
----------
-
-The DevStack exercise scripts are no longer used as integration and gate
-testing as that job has transitioned to Tempest. They are still
-maintained as a demonstrations of using OpenStack from the command line
-and for quick operational testing.

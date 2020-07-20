@@ -5,16 +5,6 @@
 # fixup_stuff.sh
 #
 # All distro and package specific hacks go in here
-#
-# - prettytable 0.7.2 permissions are 600 in the package and
-#   pip 1.4 doesn't fix it (1.3 did)
-#
-# - httplib2 0.8 permissions are 600 in the package and
-#   pip 1.4 doesn't fix it (1.3 did)
-#
-# - Fedora:
-#   - set selinux not enforcing
-#   - uninstall firewalld (f20 only)
 
 
 # If ``TOP_DIR`` is set we're being sourced rather than running stand-alone
@@ -69,47 +59,29 @@ function fixup_keystone {
     fi
 }
 
-# Ubuntu Cloud Archive
-#---------------------
-# We've found that Libvirt on Xenial is flaky and crashes enough to be
-# a regular top e-r bug. Opt into Ubuntu Cloud Archive if on Xenial to
-# get newer Libvirt.
-# Make it possible to switch this based on an environment variable as
-# libvirt 2.5.0 doesn't handle nested virtualization quite well and this
-# is required for the trove development environment.
-# The Pike UCA has qemu 2.10 but libvirt 3.6, therefore if
-# ENABLE_VOLUME_MULTIATTACH is True, we can't use the Pike UCA
-# because multiattach won't work with those package versions.
-# We can remove this check when the UCA has libvirt>=3.10.
-function fixup_uca {
-    if [[ "${ENABLE_UBUNTU_CLOUD_ARCHIVE}" == "False" || "$DISTRO" != "xenial" || \
-            "${ENABLE_VOLUME_MULTIATTACH}" == "True" ]]; then
+# Ubuntu Repositories
+#--------------------
+# Enable universe for bionic since it is missing when installing from ISO.
+function fixup_ubuntu {
+    if [[ "$DISTRO" != "bionic" ]]; then
         return
     fi
 
     # This pulls in apt-add-repository
     install_package "software-properties-common"
-    # Use UCA for newer libvirt. Should give us libvirt 2.5.0.
-    if [[ -f /etc/ci/mirror_info.sh ]] ; then
-        # If we are on a nodepool provided host and it has told us about where
-        # we can find local mirrors then use that mirror.
-        source /etc/ci/mirror_info.sh
 
-        sudo apt-add-repository -y "deb $NODEPOOL_UCA_MIRROR xenial-updates/pike main"
-    else
-        # Otherwise use upstream UCA
-        sudo add-apt-repository -y cloud-archive:pike
-    fi
+    # Enable universe
+    sudo add-apt-repository -y universe
 
-    # Disable use of libvirt wheel since a cached wheel build might be
-    # against older libvirt binary.  Particularly a problem if using
-    # the openstack wheel mirrors, but can hit locally too.
-    # TODO(clarkb) figure out how to use upstream wheel again.
-    iniset -sudo /etc/pip.conf "global" "no-binary" "libvirt-python"
-
-    # Force update our APT repos, since we added UCA above.
-    REPOS_UPDATED=False
-    apt_get_update
+    # Since pip10, pip will refuse to uninstall files from packages
+    # that were created with distutils (rather than more modern
+    # setuptools).  This is because it technically doesn't have a
+    # manifest of what to remove.  However, in most cases, simply
+    # overwriting works.  So this hacks around those packages that
+    # have been dragged in by some other system dependency
+    sudo rm -rf /usr/lib/python3/dist-packages/httplib2-*.egg-info
+    sudo rm -rf /usr/lib/python3/dist-packages/pyasn1_modules-*.egg-info
+    sudo rm -rf /usr/lib/python3/dist-packages/PyYAML-*.egg-info
 }
 
 # Python Packages
@@ -119,32 +91,6 @@ function fixup_uca {
 function get_package_path {
     local package=$1
     echo $(python -c "import os; import $package; print(os.path.split(os.path.realpath($package.__file__))[0])")
-}
-
-
-# Pre-install affected packages so we can fix the permissions
-# These can go away once we are confident that pip 1.4.1+ is available everywhere
-
-function fixup_python_packages {
-    # Fix prettytable 0.7.2 permissions
-    # Don't specify --upgrade so we use the existing package if present
-    pip_install 'prettytable>=0.7'
-    PACKAGE_DIR=$(get_package_path prettytable)
-    # Only fix version 0.7.2
-    dir=$(echo $PACKAGE_DIR/prettytable-0.7.2*)
-    if [[ -d $dir ]]; then
-        sudo chmod +r $dir/*
-    fi
-
-    # Fix httplib2 0.8 permissions
-    # Don't specify --upgrade so we use the existing package if present
-    pip_install httplib2
-    PACKAGE_DIR=$(get_package_path httplib2)
-    # Only fix version 0.8
-    dir=$(echo $PACKAGE_DIR-0.8*)
-    if [[ -d $dir ]]; then
-        sudo chmod +r $dir/*
-    fi
 }
 
 function fixup_fedora {
@@ -207,46 +153,63 @@ function fixup_fedora {
             # install requests with the bundled urllib3 to avoid conflicts
             pip_install --upgrade --force-reinstall requests
         fi
+
     fi
+
+    # Since pip10, pip will refuse to uninstall files from packages
+    # that were created with distutils (rather than more modern
+    # setuptools).  This is because it technically doesn't have a
+    # manifest of what to remove.  However, in most cases, simply
+    # overwriting works.  So this hacks around those packages that
+    # have been dragged in by some other system dependency
+    sudo rm -rf /usr/lib/python2.7/site-packages/enum34*.egg-info
+    sudo rm -rf /usr/lib/python2.7/site-packages/ipaddress*.egg-info
+    sudo rm -rf /usr/lib/python2.7/site-packages/ply-*.egg-info
+    sudo rm -rf /usr/lib/python2.7/site-packages/typing-*.egg-info
 }
 
-# The version of pip(1.5.4) supported by python-virtualenv(1.11.4) has
-# connection issues under proxy so re-install the latest version using
-# pip. To avoid having pip's virtualenv overwritten by the distro's
-# package (e.g. due to installing a distro package with a dependency
-# on python-virtualenv), first install the distro python-virtualenv
-# to satisfy any dependencies then use pip to overwrite it.
-
-# ... but, for infra builds, the pip-and-virtualenv [1] element has
-# already done this to ensure the latest pip, virtualenv and
-# setuptools on the base image for all platforms.  It has also added
-# the packages to the yum/dnf ignore list to prevent them being
-# overwritten with old versions.  F26 and dnf 2.0 has changed
-# behaviour that means re-installing python-virtualenv fails [2].
-# Thus we do a quick check if we're in the infra environment by
-# looking for the mirror config script before doing this, and just
-# skip it if so.
-
-# [1] https://git.openstack.org/cgit/openstack/diskimage-builder/tree/ \
-#        diskimage_builder/elements/pip-and-virtualenv/ \
-#            install.d/pip-and-virtualenv-source-install/04-install-pip
-# [2] https://bugzilla.redhat.com/show_bug.cgi?id=1477823
-
-# TODO(jh): virtualenv 20.0.1 is breaking things in a yet unknown way.
-# Install previous virtualenv over what infra preinstalls as a hotfix.
-function fixup_virtualenv {
-    if [[ ! -f /etc/ci/mirror_info.sh ]]; then
-        install_package python-virtualenv
-        pip_install -U --force-reinstall 'virtualenv<20'
-    else
-        pip_install -U --force-reinstall 'virtualenv<20'
+function fixup_suse {
+    if ! is_suse; then
+        return
     fi
+
+    # Deactivate and disable apparmor profiles in openSUSE and SLE
+    # distros to avoid issues with haproxy and dnsmasq.  In newer
+    # releases, systemctl stop apparmor is actually a no-op, so we
+    # have to use aa-teardown to make sure we've deactivated the
+    # profiles:
+    #
+    # https://www.suse.com/releasenotes/x86_64/SUSE-SLES/15/#fate-325343
+    # https://gitlab.com/apparmor/apparmor/merge_requests/81
+    # https://build.opensuse.org/package/view_file/openSUSE:Leap:15.2/apparmor/apparmor.service?expand=1
+    if sudo systemctl is-active -q apparmor; then
+        sudo systemctl stop apparmor
+    fi
+    if [ -x /usr/sbin/aa-teardown ]; then
+        sudo /usr/sbin/aa-teardown
+    fi
+    if sudo systemctl is-enabled -q apparmor; then
+        sudo systemctl disable apparmor
+    fi
+
+    # Since pip10, pip will refuse to uninstall files from packages
+    # that were created with distutils (rather than more modern
+    # setuptools).  This is because it technically doesn't have a
+    # manifest of what to remove.  However, in most cases, simply
+    # overwriting works.  So this hacks around those packages that
+    # have been dragged in by some other system dependency
+    sudo rm -rf /usr/lib/python3.6/site-packages/ply-*.egg-info
+    sudo rm -rf /usr/lib/python3.6/site-packages/six-*.egg-info
+
+    # Ensure trusted CA certificates are up to date
+    # See https://bugzilla.suse.com/show_bug.cgi?id=1154871
+    # May be removed once a new opensuse-15 image is available in nodepool
+    sudo zypper up -y p11-kit ca-certificates-mozilla
 }
 
 function fixup_all {
     fixup_keystone
-    fixup_uca
-    fixup_python_packages
+    fixup_ubuntu
     fixup_fedora
-    fixup_virtualenv
+    fixup_suse
 }

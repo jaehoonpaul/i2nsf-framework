@@ -24,17 +24,14 @@ DEBUG_LIBVIRT=$(trueorfalse True DEBUG_LIBVIRT)
 # Currently fairly specific to OpenStackCI hosts
 DEBUG_LIBVIRT_COREDUMPS=$(trueorfalse False DEBUG_LIBVIRT_COREDUMPS)
 
-# Only Xenial is left with libvirt-bin.  Everywhere else is libvirtd
-if is_ubuntu && [ ${DISTRO} == "xenial" ]; then
-    LIBVIRT_DAEMON=libvirt-bin
-else
-    LIBVIRT_DAEMON=libvirtd
-fi
+# Enable the Fedora Virtualization Preview Copr repo that provides the latest
+# rawhide builds of QEMU, Libvirt and other virt tools.
+ENABLE_FEDORA_VIRT_PREVIEW_REPO=$(trueorfalse False ENABLE_FEDORA_VIRT_PREVIEW_REPO)
 
 # Enable coredumps for libvirt
 #  Bug: https://bugs.launchpad.net/nova/+bug/1643911
 function _enable_coredump {
-    local confdir=/etc/systemd/system/${LIBVIRT_DAEMON}.service.d
+    local confdir=/etc/systemd/system/libvirtd.service.d
     local conffile=${confdir}/coredump.conf
 
     # Create a coredump directory, and instruct the kernel to save to
@@ -61,17 +58,21 @@ EOF
 function install_libvirt {
 
     if is_ubuntu; then
-        install_package qemu-system
-        if [[ ${DISTRO} == "xenial" ]]; then
-            install_package libvirt-bin libvirt-dev
-        else
-            install_package libvirt-clients libvirt-daemon-system libvirt-dev
+        install_package qemu-system libvirt-clients libvirt-daemon-system libvirt-dev
+        if is_arch "aarch64"; then
+            install_package qemu-efi
         fi
         # uninstall in case the libvirt version changed
         pip_uninstall libvirt-python
         pip_install_gr libvirt-python
         #pip_install_gr <there-si-no-guestfs-in-pypi>
     elif is_fedora || is_suse; then
+
+        # Optionally enable the virt-preview repo when on Fedora
+        if [[ $DISTRO =~ f[0-9][0-9] ]] && [[ ${ENABLE_FEDORA_VIRT_PREVIEW_REPO} == "True" ]]; then
+            # https://copr.fedorainfracloud.org/coprs/g/virtmaint-sig/virt-preview/
+            sudo dnf copr enable -y @virtmaint-sig/virt-preview
+        fi
 
         # Note that in CentOS/RHEL this needs to come from the RDO
         # repositories (qemu-kvm-ev ... which provides this package)
@@ -80,6 +81,10 @@ function install_libvirt {
         install_package qemu-kvm
 
         install_package libvirt libvirt-devel
+        if is_arch "aarch64"; then
+            install_package edk2.git-aarch64
+        fi
+
         pip_uninstall libvirt-python
         pip_install_gr libvirt-python
     fi
@@ -150,20 +155,24 @@ EOF
     fi
 
     if is_nova_console_proxy_compute_tls_enabled ; then
-        if is_service_enabled n-novnc ; then
-            echo "vnc_tls = 1" | sudo tee -a $QEMU_CONF
-            echo "vnc_tls_x509_verify = 1" | sudo tee -a $QEMU_CONF
+        echo "vnc_tls = 1" | sudo tee -a $QEMU_CONF
+        echo "vnc_tls_x509_verify = 1" | sudo tee -a $QEMU_CONF
 
-            sudo mkdir -p /etc/pki/libvirt-vnc
-            sudo chown libvirt-qemu:libvirt-qemu /etc/pki/libvirt-vnc
-            deploy_int_CA /etc/pki/libvirt-vnc/ca-cert.pem
-            deploy_int_cert /etc/pki/libvirt-vnc/server-cert.pem /etc/pki/libvirt-vnc/server-key.pem
-        fi
+        sudo mkdir -p /etc/pki/libvirt-vnc
+        deploy_int_CA /etc/pki/libvirt-vnc/ca-cert.pem
+        deploy_int_cert /etc/pki/libvirt-vnc/server-cert.pem /etc/pki/libvirt-vnc/server-key.pem
+        # OpenSSL 1.1.0 generates the key file with permissions: 600, by
+        # default and the deploy_int* methods use 'sudo cp' to copy the
+        # files, making them owned by root:root.
+        # Change ownership of everything under /etc/pki/libvirt-vnc to
+        # libvirt-qemu:libvirt-qemu so that libvirt-qemu can read the key
+        # file.
+        sudo chown -R libvirt-qemu:libvirt-qemu /etc/pki/libvirt-vnc
     fi
 
     # Service needs to be started on redhat/fedora -- do a restart for
     # sanity after fiddling the config.
-    restart_service $LIBVIRT_DAEMON
+    restart_service libvirtd
 
     # Restart virtlogd companion service to ensure it is running properly
     #  https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1577455

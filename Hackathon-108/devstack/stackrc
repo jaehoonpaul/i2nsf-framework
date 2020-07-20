@@ -15,7 +15,7 @@ source $RC_DIR/functions
 
 # Set the target branch. This is used so that stable branching
 # does not need to update each repo below.
-TARGET_BRANCH=stable/queens
+TARGET_BRANCH=master
 
 # Cycle trailing projects need to branch later than the others.
 TRAILING_TARGET_BRANCH=master
@@ -65,11 +65,11 @@ if ! isset ENABLED_SERVICES ; then
     # Keystone - nothing works without keystone
     ENABLED_SERVICES=key
     # Nova - services to support libvirt based openstack clouds
-    ENABLED_SERVICES+=,n-api,n-cpu,n-cond,n-sch,n-novnc,n-cauth,n-api-meta
+    ENABLED_SERVICES+=,n-api,n-cpu,n-cond,n-sch,n-novnc,n-api-meta
     # Placement service needed for Nova
     ENABLED_SERVICES+=,placement-api,placement-client
     # Glance services needed for Nova
-    ENABLED_SERVICES+=,g-api,g-reg
+    ENABLED_SERVICES+=,g-api
     # Cinder
     ENABLED_SERVICES+=,c-sch,c-api,c-vol
     # Neutron
@@ -89,6 +89,15 @@ ENABLE_HTTPD_MOD_WSGI_SERVICES=True
 # Set the default Nova APIs to enable
 NOVA_ENABLED_APIS=osapi_compute,metadata
 
+# allow local overrides of env variables, including repo config
+if [[ -f $RC_DIR/localrc ]]; then
+    # Old-style user-supplied config
+    source $RC_DIR/localrc
+elif [[ -f $RC_DIR/.localrc.auto ]]; then
+    # New-style user-supplied config extracted from local.conf
+    source $RC_DIR/.localrc.auto
+fi
+
 # CELLSV2_SETUP - how we should configure services with cells v2
 #
 # - superconductor - this is one conductor for the api services, and
@@ -100,9 +109,7 @@ CELLSV2_SETUP=${CELLSV2_SETUP:-"superconductor"}
 # Set the root URL for Horizon
 HORIZON_APACHE_ROOT="/dashboard"
 
-# Whether to use SYSTEMD to manage services, we only do this from
-# Queens forward.
-USE_SYSTEMD="True"
+# Whether to use user specific units for running services or global ones.
 USER_UNITS=$(trueorfalse False USER_UNITS)
 if [[ "$USER_UNITS" == "True" ]]; then
     SYSTEMD_DIR="$HOME/.local/share/systemd/user"
@@ -127,36 +134,17 @@ if [[ -r $RC_DIR/.localrc.password ]]; then
 fi
 
 # Control whether Python 3 should be used at all.
-export USE_PYTHON3=$(trueorfalse False USE_PYTHON3)
+# TODO(frickler): Drop this when all consumers are fixed
+export USE_PYTHON3=True
 
-# Control whether Python 3 is enabled for specific services by the
-# base name of the directory from which they are installed. See
-# enable_python3_package to edit this variable and use_python3_for to
-# test membership.
-export ENABLED_PYTHON3_PACKAGES="nova,glance,cinder,uwsgi,python-openstackclient,python-openstacksdk"
-
-# Explicitly list services not to run under Python 3. See
-# disable_python3_package to edit this variable.
-export DISABLED_PYTHON3_PACKAGES=""
-
-# When Python 3 is supported by an application, adding the specific
-# version of Python 3 to this variable will install the app using that
-# version of the interpreter instead of 2.7.
+# Adding the specific version of Python 3 to this variable will install
+# the app using that version of the interpreter instead of just 3.
 _DEFAULT_PYTHON3_VERSION="$(_get_python_version python3)"
-export PYTHON3_VERSION=${PYTHON3_VERSION:-${_DEFAULT_PYTHON3_VERSION:-3.5}}
+export PYTHON3_VERSION=${PYTHON3_VERSION:-${_DEFAULT_PYTHON3_VERSION:-3}}
 
-# Just to be more explicit on the Python 2 version to use.
-_DEFAULT_PYTHON2_VERSION="$(_get_python_version python2)"
-export PYTHON2_VERSION=${PYTHON2_VERSION:-${_DEFAULT_PYTHON2_VERSION:-2.7}}
-
-# allow local overrides of env variables, including repo config
-if [[ -f $RC_DIR/localrc ]]; then
-    # Old-style user-supplied config
-    source $RC_DIR/localrc
-elif [[ -f $RC_DIR/.localrc.auto ]]; then
-    # New-style user-supplied config extracted from local.conf
-    source $RC_DIR/.localrc.auto
-fi
+# Create a virtualenv with this
+# Use the built-in venv to avoid more dependencies
+export VIRTUALENV_CMD="python3 -m venv"
 
 # Default for log coloring is based on interactive-or-not.
 # Baseline assumption is that non-interactive invocations are for CI,
@@ -236,11 +224,10 @@ WSGI_MODE=${WSGI_MODE:-"uwsgi"}
 # ------------
 
 # Base GIT Repo URL
-# Another option is https://git.openstack.org
-GIT_BASE=${GIT_BASE:-https://git.openstack.org}
+GIT_BASE=${GIT_BASE:-https://opendev.org}
 
 # The location of REQUIREMENTS once cloned
-REQUIREMENTS_DIR=$DEST/requirements
+REQUIREMENTS_DIR=${REQUIREMENTS_DIR:-$DEST/requirements}
 
 # Which libraries should we install from git instead of using released
 # versions on pypi?
@@ -258,7 +245,7 @@ REQUIREMENTS_DIR=$DEST/requirements
 # Setting the variable to 'ALL' will activate the download for all
 # libraries.
 
-DEVSTACK_SERIES="queens"
+DEVSTACK_SERIES="victoria"
 
 ##############
 #
@@ -286,10 +273,6 @@ KEYSTONE_BRANCH=${KEYSTONE_BRANCH:-$TARGET_BRANCH}
 NEUTRON_REPO=${NEUTRON_REPO:-${GIT_BASE}/openstack/neutron.git}
 NEUTRON_BRANCH=${NEUTRON_BRANCH:-$TARGET_BRANCH}
 
-# neutron fwaas service
-NEUTRON_FWAAS_REPO=${NEUTRON_FWAAS_REPO:-${GIT_BASE}/openstack/neutron-fwaas.git}
-NEUTRON_FWAAS_BRANCH=${NEUTRON_FWAAS_BRANCH:-$TARGET_BRANCH}
-
 # compute service
 NOVA_REPO=${NOVA_REPO:-${GIT_BASE}/openstack/nova.git}
 NOVA_BRANCH=${NOVA_BRANCH:-$TARGET_BRANCH}
@@ -297,6 +280,10 @@ NOVA_BRANCH=${NOVA_BRANCH:-$TARGET_BRANCH}
 # object storage service
 SWIFT_REPO=${SWIFT_REPO:-${GIT_BASE}/openstack/swift.git}
 SWIFT_BRANCH=${SWIFT_BRANCH:-$TARGET_BRANCH}
+
+# placement service
+PLACEMENT_REPO=${PLACEMENT_REPO:-${GIT_BASE}/openstack/placement.git}
+PLACEMENT_BRANCH=${PLACEMENT_BRANCH:-$TARGET_BRANCH}
 
 ##############
 #
@@ -310,9 +297,7 @@ REQUIREMENTS_BRANCH=${REQUIREMENTS_BRANCH:-$TARGET_BRANCH}
 
 # Tempest test suite
 TEMPEST_REPO=${TEMPEST_REPO:-${GIT_BASE}/openstack/tempest.git}
-# Use Tempest tag 21.0.0 which is Queens supported version.
-# https://docs.openstack.org/releasenotes/tempest/v21.0.0.html
-TEMPEST_BRANCH=${TEMPEST_BRANCH:-21.0.0}
+TEMPEST_BRANCH=${TEMPEST_BRANCH:-$BRANCHLESS_TARGET_BRANCH}
 
 
 ##############
@@ -496,8 +481,8 @@ GITREPO["tooz"]=${TOOZ_REPO:-${GIT_BASE}/openstack/tooz.git}
 GITBRANCH["tooz"]=${TOOZ_BRANCH:-$TARGET_BRANCH}
 
 # pbr drives the setuptools configs
-GITREPO["pbr"]=${PBR_REPO:-${GIT_BASE}/openstack-dev/pbr.git}
-GITBRANCH["pbr"]=${PBR_BRANCH:-$TARGET_BRANCH}
+GITREPO["pbr"]=${PBR_REPO:-${GIT_BASE}/openstack/pbr.git}
+GITBRANCH["pbr"]=${PBR_BRANCH:-$BRANCHLESS_TARGET_BRANCH}
 
 
 ##################
@@ -518,14 +503,14 @@ GITBRANCH["glance_store"]=${GLANCE_STORE_BRANCH:-$TARGET_BRANCH}
 GITREPO["keystonemiddleware"]=${KEYSTONEMIDDLEWARE_REPO:-${GIT_BASE}/openstack/keystonemiddleware.git}
 GITBRANCH["keystonemiddleware"]=${KEYSTONEMIDDLEWARE_BRANCH:-$TARGET_BRANCH}
 
-# s3 support for swift
-SWIFT3_REPO=${SWIFT3_REPO:-${GIT_BASE}/openstack/swift3.git}
-SWIFT3_BRANCH=${SWIFT3_BRANCH:-$TARGET_BRANCH}
-
 # ceilometer middleware
 GITREPO["ceilometermiddleware"]=${CEILOMETERMIDDLEWARE_REPO:-${GIT_BASE}/openstack/ceilometermiddleware.git}
 GITBRANCH["ceilometermiddleware"]=${CEILOMETERMIDDLEWARE_BRANCH:-$TARGET_BRANCH}
 GITDIR["ceilometermiddleware"]=$DEST/ceilometermiddleware
+
+# openstacksdk OpenStack Python SDK
+GITREPO["openstacksdk"]=${OPENSTACKSDK_REPO:-${GIT_BASE}/openstack/openstacksdk.git}
+GITBRANCH["openstacksdk"]=${OPENSTACKSDK_BRANCH:-$TARGET_BRANCH}
 
 # os-brick library to manage local volume attaches
 GITREPO["os-brick"]=${OS_BRICK_REPO:-${GIT_BASE}/openstack/os-brick.git}
@@ -544,10 +529,6 @@ GITBRANCH["os-vif"]=${OS_VIF_BRANCH:-$TARGET_BRANCH}
 GITREPO["osc-lib"]=${OSC_LIB_REPO:-${GIT_BASE}/openstack/osc-lib.git}
 GITBRANCH["osc-lib"]=${OSC_LIB_BRANCH:-$TARGET_BRANCH}
 
-# python-openstacksdk OpenStack Python SDK
-GITREPO["python-openstacksdk"]=${OPENSTACKSDK_REPO:-${GIT_BASE}/openstack/python-openstacksdk.git}
-GITBRANCH["python-openstacksdk"]=${OPENSTACKSDK_BRANCH:-$TARGET_BRANCH}
-
 # ironic common lib
 GITREPO["ironic-lib"]=${IRONIC_LIB_REPO:-${GIT_BASE}/openstack/ironic-lib.git}
 GITBRANCH["ironic-lib"]=${IRONIC_LIB_BRANCH:-$TARGET_BRANCH}
@@ -556,7 +537,7 @@ GITDIR["ironic-lib"]=$DEST/ironic-lib
 
 # diskimage-builder tool
 GITREPO["diskimage-builder"]=${DIB_REPO:-${GIT_BASE}/openstack/diskimage-builder.git}
-GITBRANCH["diskimage-builder"]=${DIB_BRANCH:-$TARGET_BRANCH}
+GITBRANCH["diskimage-builder"]=${DIB_BRANCH:-$BRANCHLESS_TARGET_BRANCH}
 GITDIR["diskimage-builder"]=$DEST/diskimage-builder
 
 # neutron-lib library containing neutron stable non-REST interfaces
@@ -605,7 +586,7 @@ IRONIC_PYTHON_AGENT_BRANCH=${IRONIC_PYTHON_AGENT_BRANCH:-$TARGET_BRANCH}
 
 # a websockets/html5 or flash powered VNC console for vm instances
 NOVNC_REPO=${NOVNC_REPO:-https://github.com/novnc/noVNC.git}
-NOVNC_BRANCH=${NOVNC_BRANCH:-stable/v0.6}
+NOVNC_BRANCH=${NOVNC_BRANCH:-v1.1.0}
 
 # a websockets/html5 or flash powered SPICE console for vm instances
 SPICE_REPO=${SPICE_REPO:-http://anongit.freedesktop.org/git/spice/spice-html5.git}
@@ -627,12 +608,8 @@ VIRT_DRIVER=${VIRT_DRIVER:-$DEFAULT_VIRT_DRIVER}
 case "$VIRT_DRIVER" in
     ironic|libvirt)
         LIBVIRT_TYPE=${LIBVIRT_TYPE:-kvm}
-        # If ENABLE_VOLUME_MULTIATTACH is True, the Ubuntu Cloud Archive can't
-        # be used until it provides libvirt>=3.10, and with older versions of
-        # Ubuntu the group is "libvirtd".
-        # TODO(mriedem): Remove the ENABLE_VOLUME_MULTIATTACH check when
-        # UCA has libvirt>=3.10.
-        if [[ "$os_VENDOR" =~ (Debian|Ubuntu) && "${ENABLE_VOLUME_MULTIATTACH}" == "False" ]]; then
+        LIBVIRT_CPU_MODE=${LIBVIRT_CPU_MODE:-none}
+        if [[ "$os_VENDOR" =~ (Debian|Ubuntu) ]]; then
             # The groups change with newer libvirt. Older Ubuntu used
             # 'libvirtd', but now uses libvirt like Debian. Do a quick check
             # to see if libvirtd group already exists to handle grenade's case.
@@ -663,9 +640,6 @@ case "$VIRT_DRIVER" in
         ;;
 esac
 
-# By default, devstack will use Ubuntu Cloud Archive.
-ENABLE_UBUNTU_CLOUD_ARCHIVE=$(trueorfalse True ENABLE_UBUNTU_CLOUD_ARCHIVE)
-
 # Images
 # ------
 
@@ -688,7 +662,7 @@ ENABLE_UBUNTU_CLOUD_ARCHIVE=$(trueorfalse True ENABLE_UBUNTU_CLOUD_ARCHIVE)
 #IMAGE_URLS="http://smoser.brickies.net/ubuntu/ttylinux-uec/ttylinux-uec-amd64-11.2_2.6.35-15_1.tar.gz" # old ttylinux-uec image
 #IMAGE_URLS="http://download.cirros-cloud.net/${CIRROS_VERSION}/cirros-${CIRROS_VERSION}-${CIRROS_ARCH}-disk.img" # cirros full disk image
 
-CIRROS_VERSION=${CIRROS_VERSION:-"0.3.5"}
+CIRROS_VERSION=${CIRROS_VERSION:-"0.5.1"}
 CIRROS_ARCH=${CIRROS_ARCH:-"x86_64"}
 
 # Set default image based on ``VIRT_DRIVER`` and ``LIBVIRT_TYPE``, either of
@@ -739,11 +713,11 @@ fi
 EXTRA_CACHE_URLS=""
 
 # etcd3 defaults
-ETCD_VERSION=${ETCD_VERSION:-v3.1.10}
-ETCD_SHA256_AMD64=${ETCD_SHA256_AMD64:-"2d335f298619c6fb02b1124773a56966e448ad9952b26fea52909da4fe80d2be"}
-# NOTE(sdague): etcd v3.1.10 doesn't have anything for these architectures, though 3.2.x does.
-ETCD_SHA256_ARM64=${ETCD_SHA256_ARM64:-""}
-ETCD_SHA256_PPC64=${ETCD_SHA256_PPC64:-""}
+ETCD_VERSION=${ETCD_VERSION:-v3.3.12}
+ETCD_SHA256_AMD64=${ETCD_SHA256_AMD64:-"dc5d82df095dae0a2970e4d870b6929590689dd707ae3d33e7b86da0f7f211b6"}
+ETCD_SHA256_ARM64=${ETCD_SHA256_ARM64:-"170b848ac1a071fe7d495d404a868a2c0090750b2944f8a260ef1c6125b2b4f4"}
+ETCD_SHA256_PPC64=${ETCD_SHA256_PPC64:-"77f807b1b51abbf51e020bb05bdb8ce088cb58260fcd22749ea32eee710463d3"}
+# etcd v3.2.x doesn't have anything for s390x
 ETCD_SHA256_S390X=${ETCD_SHA256_S390X:-""}
 # Make sure etcd3 downloads the correct architecture
 if is_arch "x86_64"; then
@@ -768,17 +742,18 @@ elif is_arch "s390x"; then
 else
     exit_distro_not_supported "invalid hardware type - $ETCD_ARCH"
 fi
-ETCD_DOWNLOAD_URL=${ETCD_DOWNLOAD_URL:-https://github.com/coreos/etcd/releases/download}
+ETCD_PORT=${ETCD_PORT:-2379}
+ETCD_PEER_PORT=${ETCD_PEER_PORT:-2380}
+ETCD_DOWNLOAD_URL=${ETCD_DOWNLOAD_URL:-https://github.com/etcd-io/etcd/releases/download}
 ETCD_NAME=etcd-$ETCD_VERSION-linux-$ETCD_ARCH
 ETCD_DOWNLOAD_FILE=$ETCD_NAME.tar.gz
 ETCD_DOWNLOAD_LOCATION=$ETCD_DOWNLOAD_URL/$ETCD_VERSION/$ETCD_DOWNLOAD_FILE
 # etcd is always required, so place it into list of pre-cached downloads
-if is_arch "x86_64"; then
-    # NOTE(pabelanger): Only v3.2.x of ETCD has support for multiarch. This
-    # means on stable branches our version is too old to try and cache and will
-    # 404 DIBs for nodpeool.
-    EXTRA_CACHE_URLS+=",$ETCD_DOWNLOAD_LOCATION"
-fi
+EXTRA_CACHE_URLS+=",$ETCD_DOWNLOAD_LOCATION"
+
+# Cache settings
+CACHE_BACKEND=${CACHE_BACKEND:-"dogpile.cache.memcached"}
+MEMCACHE_SERVERS=${MEMCACHE_SERVERS:-"localhost:11211"}
 
 # Detect duplicate values in IMAGE_URLS
 for image_url in ${IMAGE_URLS//,/ }; do
@@ -810,12 +785,7 @@ SERVICE_PROTOCOL=${SERVICE_PROTOCOL:-http}
 # the memory used where there are a large number of CPUs present
 # (the default number of workers for many services is the number of CPUs)
 # Also sets the minimum number of workers to 2.
-if [[ "$VIRT_DRIVER" = 'fake' ]]; then
-    # we need more workers for the large ops job
-    API_WORKERS=${API_WORKERS:=$(( ($(nproc)/2)<2 ? 2 : ($(nproc)/2) ))}
-else
-    API_WORKERS=${API_WORKERS:=$(( ($(nproc)/4)<2 ? 2 : ($(nproc)/4) ))}
-fi
+API_WORKERS=${API_WORKERS:=$(( ($(nproc)/4)<2 ? 2 : ($(nproc)/4) ))}
 
 # Service startup timeout
 SERVICE_TIMEOUT=${SERVICE_TIMEOUT:-60}
@@ -828,15 +798,6 @@ SERVICE_GRACEFUL_SHUTDOWN_TIMEOUT=${SERVICE_GRACEFUL_SHUTDOWN_TIMEOUT:-5}
 
 # Service graceful shutdown timeout
 WORKER_TIMEOUT=${WORKER_TIMEOUT:-90}
-
-# Choose DNF on RedHat/Fedora platforms with it, or otherwise default
-# to YUM.  Can remove this when only dnf is supported (i.e. centos7
-# disappears)
-if [[ -e /usr/bin/dnf ]]; then
-    YUM=${YUM:-dnf}
-else
-    YUM=${YUM:-yum}
-fi
 
 # Common Configuration
 # --------------------
@@ -861,7 +822,6 @@ ENABLE_DEBUG_LOG_LEVEL=$(trueorfalse True ENABLE_DEBUG_LOG_LEVEL)
 FLOATING_RANGE=${FLOATING_RANGE:-172.24.4.0/24}
 IPV4_ADDRS_SAFE_TO_USE=${IPV4_ADDRS_SAFE_TO_USE:-10.0.0.0/22}
 FIXED_RANGE=${FIXED_RANGE:-$IPV4_ADDRS_SAFE_TO_USE}
-FIXED_NETWORK_SIZE=${FIXED_NETWORK_SIZE:-256}
 HOST_IP_IFACE=${HOST_IP_IFACE:-}
 HOST_IP=${HOST_IP:-}
 HOST_IPV6=${HOST_IPV6:-}
@@ -902,10 +862,10 @@ if [[ "$SERVICE_IP_VERSION" == 6 ]]; then
 
     DEF_SERVICE_HOST=[$HOST_IPV6]
     DEF_SERVICE_LOCAL_HOST=::1
-    DEF_SERVICE_LISTEN_ADDRESS=::
+    DEF_SERVICE_LISTEN_ADDRESS="[::]"
 fi
 
-# This is either 0.0.0.0 for IPv4 or :: for IPv6
+# This is either 0.0.0.0 for IPv4 or [::] for IPv6
 SERVICE_LISTEN_ADDRESS=${SERVICE_LISTEN_ADDRESS:-${DEF_SERVICE_LISTEN_ADDRESS}}
 
 # Allow the use of an alternate hostname (such as localhost/127.0.0.1) for
@@ -957,7 +917,6 @@ if [[ -z "${LOGDIR:-}" ]]; then
 fi
 
 # ``LOGDIR`` is always set at this point so it is not useful as a 'enable' for service logs
-# ``SCREEN_LOGDIR`` may be set, it is useful to enable the compat symlinks
 
 # System-wide ulimit file descriptors override
 ULIMIT_NOFILE=${ULIMIT_NOFILE:-2048}

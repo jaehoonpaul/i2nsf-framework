@@ -11,7 +11,7 @@ Shell script was chosen because it best illustrates the steps used to
 set up and interact with OpenStack components.
 
 DevStack's official repository is located on git.openstack.org at
-https://git.openstack.org/openstack-dev/devstack.  Besides the master branch that
+https://opendev.org/openstack/devstack.  Besides the master branch that
 tracks the OpenStack trunk branches a separate branch is maintained for all
 OpenStack releases starting with Diablo (stable/diablo).
 
@@ -26,7 +26,7 @@ __ lp_
 .. _lp: https://launchpad.net/~devstack
 
 The `Gerrit review
-queue <https://review.openstack.org/#/q/project:openstack-dev/devstack,n,z>`__
+queue <https://review.opendev.org/#/q/project:openstack/devstack>`__
 is used for all commits.
 
 The primary script in DevStack is ``stack.sh``, which performs the bulk of the
@@ -47,12 +47,7 @@ The DevStack repo generally keeps all of the primary scripts at the root
 level.
 
 ``doc`` - Contains the Sphinx source for the documentation.
-``tools/build_docs.sh`` is used to generate the HTML versions of the
-DevStack scripts.  A complete doc build can be run with ``tox -edocs``.
-
-``exercises`` - Contains the test scripts used to sanity-check and
-demonstrate some OpenStack functions. These scripts know how to exit
-early or skip services that are not enabled.
+A complete doc build can be run with ``tox -edocs``.
 
 ``extras.d`` - Contains the dispatch scripts called by the hooks in
 ``stack.sh``, ``unstack.sh`` and ``clean.sh``. See :doc:`the plugins
@@ -150,8 +145,8 @@ follows:
 * Global configuration that may be referenced in ``local.conf``, i.e. ``DEST``, ``DATA_DIR``
 * Global service configuration like ``ENABLED_SERVICES``
 * Variables used by multiple services that do not have a clear owner, i.e.
-  ``VOLUME_BACKING_FILE_SIZE`` (nova-compute, nova-volumes and cinder) or
-  ``PUBLIC_NETWORK_NAME`` (nova-network and neutron)
+  ``VOLUME_BACKING_FILE_SIZE`` (nova-compute and cinder) or
+  ``PUBLIC_NETWORK_NAME`` (only neutron but formerly nova-network too)
 * Variables that can not be cleanly declared in a project file due to
   dependency ordering, i.e. the order of sourcing the project files can
   not be changed for other reasons but the earlier file needs to dereference a
@@ -183,88 +178,6 @@ The complete docs build is also handled with <code>tox -edocs</code> per the
 OpenStack project standard.
 
 
-Exercises
----------
-
-The scripts in the exercises directory are meant to 1) perform basic operational
-checks on certain aspects of OpenStack; and b) document the use of the
-OpenStack command-line clients.
-
-In addition to the guidelines above, exercise scripts MUST follow the structure
-outlined here.  ``swift.sh`` is perhaps the clearest example of these guidelines.
-These scripts are executed serially by ``exercise.sh`` in testing situations.
-
-* Begin and end with a banner that stands out in a sea of script logs to aid
-  in debugging failures, particularly in automated testing situations.  If the
-  end banner is not displayed, the script ended prematurely and can be assumed
-  to have failed.
-
-  ::
-
-    echo "**************************************************"
-    echo "Begin DevStack Exercise: $0"
-    echo "**************************************************"
-    ...
-    set +o xtrace
-    echo "**************************************************"
-    echo "End DevStack Exercise: $0"
-    echo "**************************************************"
-
-* The scripts will generally have the shell ``xtrace`` attribute set to display
-  the actual commands being executed, and the ``errexit`` attribute set to exit
-  the script on non-zero exit codes::
-
-    # This script exits on an error so that errors don't compound and you see
-    # only the first error that occurred.
-    set -o errexit
-
-    # Print the commands being run so that we can see the command that triggers
-    # an error.  It is also useful for following as the install occurs.
-    set -o xtrace
-
-* Settings and configuration are stored in ``exerciserc``, which must be
-  sourced after ``openrc`` or ``stackrc``::
-
-    # Import exercise configuration
-    source $TOP_DIR/exerciserc
-
-* There are a couple of helper functions in the common ``functions`` sub-script
-  that will check for non-zero exit codes and unset environment variables and
-  print a message and exit the script.  These should be called after most client
-  commands that are not otherwise checked to short-circuit long timeouts
-  (instance boot failure, for example)::
-
-    swift post $CONTAINER
-    die_if_error "Failure creating container $CONTAINER"
-
-    FLOATING_IP=`euca-allocate-address | cut -f2`
-    die_if_not_set FLOATING_IP "Failure allocating floating IP"
-
-* If you want an exercise to be skipped when for example a service wasn't
-  enabled for the exercise to be run, you can exit your exercise with the
-  special exitcode 55 and it will be detected as skipped.
-
-* The exercise scripts should only use the various OpenStack client binaries to
-  interact with OpenStack.  This specifically excludes any ``*-manage`` tools
-  as those assume direct access to configuration and databases, as well as direct
-  database access from the exercise itself.
-
-* If specific configuration needs to be present for the exercise to complete,
-  it should be staged in ``stack.sh``, or called from ``stack.sh``.
-
-* The ``OS_*`` environment variables should be the only ones used for all
-  authentication to OpenStack clients as documented in the CLIAuth_ wiki page.
-
-.. _CLIAuth: https://wiki.openstack.org/CLIAuth
-
-* The exercise MUST clean up after itself if successful.  If it is not successful,
-  it is assumed that state will be left behind; this allows a chance for developers
-  to look around and attempt to debug the problem.  The exercise SHOULD clean up
-  or graciously handle possible artifacts left over from previous runs if executed
-  again.  It is acceptable to require a reboot or even a re-install of DevStack
-  to restore a clean test environment.
-
-
 Bash Style Guidelines
 ~~~~~~~~~~~~~~~~~~~~~
 DevStack defines a bash set of best practices for maintaining large
@@ -276,7 +189,7 @@ to enforce basic guidelines, similar to pep8 and flake8 tools for Python. The
 list below is not complete for what bashate checks, nor is it all checked
 by bashate.  So many lines of code, so little time.
 
-.. _bashate: https://pypi.python.org/pypi/bashate
+.. _bashate: https://pypi.org/project/bashate/
 
 Whitespace Rules
 ----------------

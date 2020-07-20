@@ -9,12 +9,21 @@
 
 # ``stack.sh`` calls the entry points in this order:
 #
+# - install_dstat
 # - start_dstat
 # - stop_dstat
 
 # Save trace setting
 _XTRACE_DSTAT=$(set +o | grep xtrace)
 set +o xtrace
+
+# install_dstat() - Install prerequisites for dstat services
+function install_dstat {
+    if is_service_enabled memory_tracker; then
+        # Install python libraries required by tools/mlock_report.py
+        pip_install_gr psutil
+    fi
+}
 
 # start_dstat() - Start running processes
 function start_dstat {
@@ -26,10 +35,10 @@ function start_dstat {
     # to your localrc
     run_process memory_tracker "$TOP_DIR/tools/memory_tracker.sh" "" "root"
 
-    # remove support for the old name when it's no longer used (sometime in Queens)
+    # TODO(jh): Fail when using the old service name otherwise consumers might
+    # never notice that is has been removed.
     if is_service_enabled peakmem_tracker; then
-        deprecated "Use of peakmem_tracker in devstack is deprecated, use memory_tracker instead"
-        run_process peakmem_tracker "$TOP_DIR/tools/memory_tracker.sh" "" "root"
+        die $LINENO "The peakmem_tracker service has been removed, use memory_tracker instead"
     fi
 }
 

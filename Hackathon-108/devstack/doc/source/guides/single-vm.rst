@@ -60,7 +60,7 @@ passed as the user-data file when booting the VM.
             DEBIAN_FRONTEND=noninteractive sudo apt-get install -qqy git || sudo yum install -qy git
             sudo chown stack:stack /home/stack
             cd /home/stack
-            git clone https://git.openstack.org/openstack-dev/devstack
+            git clone https://opendev.org/openstack/devstack
             cd devstack
             echo '[[local|localrc]]' > local.conf
             echo ADMIN_PASSWORD=password >> local.conf
@@ -78,7 +78,7 @@ As DevStack will refuse to run as root, this configures ``cloud-init``
 to create a non-root user and run the ``start.sh`` script as that user.
 
 If you are using cloud-init and you have not
-`enabled custom logging <../configuration.html#enable-logging>`_ of the stack
+:ref:`enabled custom logging <enable_logging>` of the stack
 output, then the stack output can be found in
 ``/var/log/cloud-init-output.log`` by default.
 

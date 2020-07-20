@@ -38,7 +38,7 @@ ALL_LIBS+=" oslo.versionedobjects oslo.vmware keystonemiddleware"
 ALL_LIBS+=" oslo.serialization"
 ALL_LIBS+=" python-openstackclient osc-lib osc-placement"
 ALL_LIBS+=" os-client-config oslo.rootwrap"
-ALL_LIBS+=" oslo.i18n oslo.utils python-openstacksdk python-swiftclient"
+ALL_LIBS+=" oslo.i18n oslo.utils openstacksdk python-swiftclient"
 ALL_LIBS+=" python-neutronclient tooz ceilometermiddleware oslo.policy"
 ALL_LIBS+=" debtcollector os-brick os-traits automaton futurist oslo.service"
 ALL_LIBS+=" oslo.cache oslo.reports osprofiler cursive"
@@ -95,7 +95,19 @@ function test_libs_exist {
     echo "test_libs_exist PASSED"
 }
 
+function test_branch_master {
+    for lib in $ALL_LIBS; do
+        if [[ ${GITBRANCH[$lib]} != "master" ]]; then
+            echo "GITBRANCH for $lib not master (${GITBRANCH[$lib]})"
+            exit 1
+        fi
+    done
+
+    echo "test_branch_master PASSED"
+}
+
 set -o errexit
 
 test_libs_exist
+test_branch_master
 test_all_libs_upto_date
