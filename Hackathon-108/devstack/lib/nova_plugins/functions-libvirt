@@ -1,0 +1,181 @@
+#!/bin/bash
+#
+# lib/nova_plugins/functions-libvirt
+# Common libvirt configuration functions
+
+# Dependencies:
+# ``functions`` file
+# ``STACK_USER`` has to be defined
+
+# Save trace setting
+_XTRACE_NOVA_FN_LIBVIRT=$(set +o | grep xtrace)
+set +o xtrace
+
+# Defaults
+# --------
+
+# Turn on selective debug log filters for libvirt.
+# (NOTE: Enabling this by default, because the log filters enabled in
+# 'configure_libvirt' function further below are _selective_ and not
+# extremely verbose.)
+DEBUG_LIBVIRT=$(trueorfalse True DEBUG_LIBVIRT)
+
+# Try to enable coredumps for libvirt
+# Currently fairly specific to OpenStackCI hosts
+DEBUG_LIBVIRT_COREDUMPS=$(trueorfalse False DEBUG_LIBVIRT_COREDUMPS)
+
+# Only Xenial is left with libvirt-bin.  Everywhere else is libvirtd
+if is_ubuntu && [ ${DISTRO} == "xenial" ]; then
+    LIBVIRT_DAEMON=libvirt-bin
+else
+    LIBVIRT_DAEMON=libvirtd
+fi
+
+# Enable coredumps for libvirt
+#  Bug: https://bugs.launchpad.net/nova/+bug/1643911
+function _enable_coredump {
+    local confdir=/etc/systemd/system/${LIBVIRT_DAEMON}.service.d
+    local conffile=${confdir}/coredump.conf
+
+    # Create a coredump directory, and instruct the kernel to save to
+    # here
+    sudo mkdir -p /var/core
+    sudo chmod a+wrx /var/core
+    echo '/var/core/core.%e.%p.%h.%t' | \
+        sudo tee /proc/sys/kernel/core_pattern
+
+    # Drop a config file to up the core ulimit
+    sudo mkdir -p ${confdir}
+    sudo tee ${conffile} <<EOF
+[Service]
+LimitCORE=infinity
+EOF
+
+    # Tell systemd to reload the unit (service restarts later after
+    # config anyway)
+    sudo systemctl daemon-reload
+}
+
+
+# Installs required distro-specific libvirt packages.
+function install_libvirt {
+
+    if is_ubuntu; then
+        install_package qemu-system
+        if [[ ${DISTRO} == "xenial" ]]; then
+            install_package libvirt-bin libvirt-dev
+        else
+            install_package libvirt-clients libvirt-daemon-system libvirt-dev
+        fi
+        # uninstall in case the libvirt version changed
+        pip_uninstall libvirt-python
+        pip_install_gr libvirt-python
+        #pip_install_gr <there-si-no-guestfs-in-pypi>
+    elif is_fedora || is_suse; then
+
+        # Note that in CentOS/RHEL this needs to come from the RDO
+        # repositories (qemu-kvm-ev ... which provides this package)
+        # as the base system version is too old.  We should have
+        # pre-installed these
+        install_package qemu-kvm
+
+        install_package libvirt libvirt-devel
+        pip_uninstall libvirt-python
+        pip_install_gr libvirt-python
+    fi
+
+    if [[ $DEBUG_LIBVIRT_COREDUMPS == True ]]; then
+        _enable_coredump
+    fi
+}
+
+# Configures the installed libvirt system so that is accessible by
+# STACK_USER via qemu:///system with management capabilities.
+function configure_libvirt {
+    if is_service_enabled neutron && ! sudo grep -q '^cgroup_device_acl' $QEMU_CONF; then
+        # Add /dev/net/tun to cgroup_device_acls, needed for type=ethernet interfaces
+        cat <<EOF | sudo tee -a $QEMU_CONF
+cgroup_device_acl = [
+    "/dev/null", "/dev/full", "/dev/zero",
+    "/dev/random", "/dev/urandom",
+    "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+    "/dev/rtc", "/dev/hpet","/dev/net/tun",
+    "/dev/vfio/vfio",
+]
+EOF
+    fi
+
+    if is_fedora || is_suse; then
+        # Starting with fedora 18 and opensuse-12.3 enable stack-user to
+        # virsh -c qemu:///system by creating a policy-kit rule for
+        # stack-user using the new Javascript syntax
+        rules_dir=/etc/polkit-1/rules.d
+        sudo mkdir -p $rules_dir
+        cat <<EOF | sudo tee $rules_dir/50-libvirt-$STACK_USER.rules
+polkit.addRule(function(action, subject) {
+    if (action.id == 'org.libvirt.unix.manage' &&
+        subject.user == '$STACK_USER') {
+        return polkit.Result.YES;
+    }
+});
+EOF
+        unset rules_dir
+    fi
+
+    # The user that nova runs as needs to be member of **libvirtd** group otherwise
+    # nova-compute will be unable to use libvirt.
+    if ! getent group $LIBVIRT_GROUP >/dev/null; then
+        sudo groupadd $LIBVIRT_GROUP
+    fi
+    add_user_to_group $STACK_USER $LIBVIRT_GROUP
+
+    # Enable server side traces for libvirtd
+    if [[ "$DEBUG_LIBVIRT" = "True" ]] ; then
+        if is_ubuntu; then
+            # Unexpectedly binary package builds in ubuntu get fully qualified
+            # source file paths, not relative paths. This screws with the matching
+            # of '1:libvirt' making everything turn on. So use libvirt.c for now.
+            # This will have to be re-visited when Ubuntu ships libvirt >= 1.2.3
+            local log_filters="1:libvirt.c 1:qemu 1:conf 1:security 3:object 3:event 3:json 3:file 1:util 1:cpu"
+        else
+            local log_filters="1:libvirt 1:qemu 1:conf 1:security 3:object 3:event 3:json 3:file 1:util 1:cpu"
+        fi
+        local log_outputs="1:file:/var/log/libvirt/libvirtd.log"
+        if ! sudo grep -q "^log_filters=\"$log_filters\"" /etc/libvirt/libvirtd.conf; then
+            echo "log_filters=\"$log_filters\"" | sudo tee -a /etc/libvirt/libvirtd.conf
+        fi
+        if ! sudo grep -q "^log_outputs=\"$log_outputs\"" /etc/libvirt/libvirtd.conf; then
+            echo "log_outputs=\"$log_outputs\"" | sudo tee -a /etc/libvirt/libvirtd.conf
+        fi
+    fi
+
+    if is_nova_console_proxy_compute_tls_enabled ; then
+        if is_service_enabled n-novnc ; then
+            echo "vnc_tls = 1" | sudo tee -a $QEMU_CONF
+            echo "vnc_tls_x509_verify = 1" | sudo tee -a $QEMU_CONF
+
+            sudo mkdir -p /etc/pki/libvirt-vnc
+            sudo chown libvirt-qemu:libvirt-qemu /etc/pki/libvirt-vnc
+            deploy_int_CA /etc/pki/libvirt-vnc/ca-cert.pem
+            deploy_int_cert /etc/pki/libvirt-vnc/server-cert.pem /etc/pki/libvirt-vnc/server-key.pem
+        fi
+    fi
+
+    # Service needs to be started on redhat/fedora -- do a restart for
+    # sanity after fiddling the config.
+    restart_service $LIBVIRT_DAEMON
+
+    # Restart virtlogd companion service to ensure it is running properly
+    #  https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/1577455
+    #  https://bugzilla.redhat.com/show_bug.cgi?id=1290357
+    # (not all platforms have it; libvirt 1.3+ only, thus the ignore)
+    restart_service virtlogd || true
+}
+
+
+# Restore xtrace
+$_XTRACE_NOVA_FN_LIBVIRT
+
+# Local variables:
+# mode: shell-script
+# End:

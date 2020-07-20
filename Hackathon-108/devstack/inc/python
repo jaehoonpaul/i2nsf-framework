@@ -1,0 +1,621 @@
+#!/bin/bash
+#
+# **inc/python** - Python-related functions
+#
+# Support for pip/setuptools interfaces and virtual environments
+#
+# External functions used:
+# - GetOSVersion
+# - is_fedora
+# - is_suse
+# - safe_chown
+
+# Save trace setting
+INC_PY_TRACE=$(set +o | grep xtrace)
+set +o xtrace
+
+
+# Global Config Variables
+
+# PROJECT_VENV contains the name of the virtual environment for each
+# project.  A null value installs to the system Python directories.
+declare -A -g PROJECT_VENV
+
+
+# Python Functions
+# ================
+
+# Get the path to the pip command.
+# get_pip_command
+function get_pip_command {
+    local version="$1"
+    # NOTE(dhellmann): I don't know if we actually get a pip3.4-python
+    # under any circumstances.
+    which pip${version} || which pip${version}-python
+
+    if [ $? -ne 0 ]; then
+        die $LINENO "Unable to find pip${version}; cannot continue"
+    fi
+}
+
+# Get the path to the directory where python executables are installed.
+# get_python_exec_prefix
+function get_python_exec_prefix {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+    if [[ -z "$os_PACKAGE" ]]; then
+        GetOSVersion
+    fi
+    $xtrace
+
+    if python3_enabled && [ "$os_VENDOR" = "Fedora" -a $os_RELEASE -gt 26 ]; then
+        # Default Python 3 install prefix changed to /usr/local in Fedora 27:
+        # https://fedoraproject.org/wiki/Changes/Making_sudo_pip_safe
+        echo "/usr/local/bin"
+    elif is_fedora || is_suse; then
+        echo "/usr/bin"
+    else
+        echo "/usr/local/bin"
+    fi
+}
+
+# Wrapper for ``pip install`` that only installs versions of libraries
+# from the global-requirements specification.
+#
+# Uses globals ``REQUIREMENTS_DIR``
+#
+# pip_install_gr packagename
+function pip_install_gr {
+    local name=$1
+    local clean_name
+    clean_name=$(get_from_global_requirements $name)
+    pip_install $clean_name
+}
+
+# Wrapper for ``pip install`` that only installs versions of libraries
+# from the global-requirements specification with extras.
+#
+# Uses globals ``REQUIREMENTS_DIR``
+#
+# pip_install_gr_extras packagename extra1,extra2,...
+function pip_install_gr_extras {
+    local name=$1
+    local extras=$2
+    local clean_name
+    clean_name=$(get_from_global_requirements $name)
+    pip_install $clean_name[$extras]
+}
+
+# Determine the python versions supported by a package
+function get_python_versions_for_package {
+    local name=$1
+    cd $name && python setup.py --classifiers \
+        | grep 'Language' | cut -f5 -d: | grep '\.' | tr '\n' ' '
+}
+
+# Check for python3 classifier in local directory
+function check_python3_support_for_package_local {
+    local name=$1
+    cd $name
+    set +e
+    classifier=$(python setup.py --classifiers \
+        | grep 'Programming Language :: Python :: 3$')
+    set -e
+    echo $classifier
+}
+
+# Check for python3 classifier on pypi
+function check_python3_support_for_package_remote {
+    local name=$1
+    set +e
+    classifier=$(curl -s -L "https://pypi.python.org/pypi/$name/json" \
+        | grep '"Programming Language :: Python :: 3"')
+    set -e
+    echo $classifier
+}
+
+# python3_enabled_for() checks if the service(s) specified as arguments are
+# enabled by the user in ``ENABLED_PYTHON3_PACKAGES``.
+#
+# Multiple services specified as arguments are ``OR``'ed together; the test
+# is a short-circuit boolean, i.e it returns on the first match.
+#
+# Uses global ``ENABLED_PYTHON3_PACKAGES``
+# python3_enabled_for dir [dir ...]
+function python3_enabled_for {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
+    local enabled=1
+    local dirs=$@
+    local dir
+    for dir in ${dirs}; do
+        [[ ,${ENABLED_PYTHON3_PACKAGES}, =~ ,${dir}, ]] && enabled=0
+    done
+
+    $xtrace
+    return $enabled
+}
+
+# python3_disabled_for() checks if the service(s) specified as arguments are
+# disabled by the user in ``DISABLED_PYTHON3_PACKAGES``.
+#
+# Multiple services specified as arguments are ``OR``'ed together; the test
+# is a short-circuit boolean, i.e it returns on the first match.
+#
+# Uses global ``DISABLED_PYTHON3_PACKAGES``
+# python3_disabled_for dir [dir ...]
+function python3_disabled_for {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
+    local enabled=1
+    local dirs=$@
+    local dir
+    for dir in ${dirs}; do
+        [[ ,${DISABLED_PYTHON3_PACKAGES}, =~ ,${dir}, ]] && enabled=0
+    done
+
+    $xtrace
+    return $enabled
+}
+
+# enable_python3_package() adds the repositories passed as argument to the
+# ``ENABLED_PYTHON3_PACKAGES`` list, if they are not already present.
+#
+# For example:
+#   enable_python3_package nova
+#
+# Uses global ``ENABLED_PYTHON3_PACKAGES``
+# enable_python3_package dir [dir ...]
+function enable_python3_package {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
+    local tmpsvcs="${ENABLED_PYTHON3_PACKAGES}"
+    local python3
+    for dir in $@; do
+        if [[ ,${DISABLED_PYTHON3_PACKAGES}, =~ ,${dir}, ]]; then
+            warn $LINENO "Attempt to enable_python3_package ${dir} when it has been disabled"
+            continue
+        fi
+        if ! python3_enabled_for $dir; then
+            tmpsvcs+=",$dir"
+        fi
+    done
+    ENABLED_PYTHON3_PACKAGES=$(_cleanup_service_list "$tmpsvcs")
+
+    $xtrace
+}
+
+# disable_python3_package() prepares the services passed as argument to be
+# removed from the ``ENABLED_PYTHON3_PACKAGES`` list, if they are present.
+#
+# For example:
+#   disable_python3_package swift
+#
+# Uses globals ``ENABLED_PYTHON3_PACKAGES`` and ``DISABLED_PYTHON3_PACKAGES``
+# disable_python3_package dir [dir ...]
+function disable_python3_package {
+    local xtrace
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+
+    local disabled_svcs="${DISABLED_PYTHON3_PACKAGES}"
+    local enabled_svcs=",${ENABLED_PYTHON3_PACKAGES},"
+    local dir
+    for dir in $@; do
+        disabled_svcs+=",$dir"
+        if python3_enabled_for $dir; then
+            enabled_svcs=${enabled_svcs//,$dir,/,}
+        fi
+    done
+    DISABLED_PYTHON3_PACKAGES=$(_cleanup_service_list "$disabled_svcs")
+    ENABLED_PYTHON3_PACKAGES=$(_cleanup_service_list "$enabled_svcs")
+
+    $xtrace
+}
+
+# Wrapper for ``pip install`` to set cache and proxy environment variables
+# Uses globals ``OFFLINE``, ``PIP_VIRTUAL_ENV``,
+# ``PIP_UPGRADE``, ``TRACK_DEPENDS``, ``*_proxy``,
+# Usage:
+#  pip_install pip_arguments
+function pip_install {
+    local xtrace result
+    xtrace=$(set +o | grep xtrace)
+    set +o xtrace
+    local upgrade=""
+    local offline=${OFFLINE:-False}
+    if [[ "$offline" == "True" || -z "$@" ]]; then
+        $xtrace
+        return
+    fi
+
+    time_start "pip_install"
+
+    PIP_UPGRADE=$(trueorfalse False PIP_UPGRADE)
+    if [[ "$PIP_UPGRADE" = "True" ]] ; then
+        upgrade="--upgrade"
+    fi
+
+    if [[ -z "$os_PACKAGE" ]]; then
+        GetOSVersion
+    fi
+
+    # Try to extract the path of the package we are installing into
+    # package_dir.  We need this to check for test-requirements.txt,
+    # at least.
+    #
+    # ${!#} expands to the last positional argument to this function.
+    # With "extras" syntax included, our arguments might be something
+    # like:
+    #  -e /path/to/fooproject[extra]
+    # Thus this magic line grabs just the path without extras
+    #
+    # Note that this makes no sense if this is a pypi (rather than
+    # local path) install; ergo you must check this path exists before
+    # use.  Also, if we had multiple or mixed installs, we would also
+    # likely break.  But for historical reasons, it's basically only
+    # the other wrapper functions in here calling this to install
+    # local packages, and they do so with single call per install.  So
+    # this works (for now...)
+    local package_dir=${!#%\[*\]}
+
+    if [[ $TRACK_DEPENDS = True && ! "$@" =~ virtualenv ]]; then
+        # TRACK_DEPENDS=True installation creates a circular dependency when
+        # we attempt to install virtualenv into a virtualenv, so we must global
+        # that installation.
+        source $DEST/.venv/bin/activate
+        local cmd_pip=$DEST/.venv/bin/pip
+        local sudo_pip="env"
+    else
+        if [[ -n ${PIP_VIRTUAL_ENV:=} && -d ${PIP_VIRTUAL_ENV} ]]; then
+            local cmd_pip=$PIP_VIRTUAL_ENV/bin/pip
+            local sudo_pip="env"
+        else
+            local cmd_pip
+            cmd_pip=$(get_pip_command $PYTHON2_VERSION)
+            local sudo_pip="sudo -H"
+            if python3_enabled; then
+                # Look at the package classifiers to find the python
+                # versions supported, and if we find the version of
+                # python3 we've been told to use, use that instead of the
+                # default pip
+                local python_versions
+
+                # Special case some services that have experimental
+                # support for python3 in progress, but don't claim support
+                # in their classifier
+                echo "Check python version for : $package_dir"
+                if python3_disabled_for ${package_dir##*/}; then
+                    echo "Explicitly using $PYTHON2_VERSION version to install $package_dir based on DISABLED_PYTHON3_PACKAGES"
+                elif python3_enabled_for ${package_dir##*/}; then
+                    echo "Explicitly using $PYTHON3_VERSION version to install $package_dir based on ENABLED_PYTHON3_PACKAGES"
+                    sudo_pip="$sudo_pip LC_ALL=en_US.UTF-8"
+                    cmd_pip=$(get_pip_command $PYTHON3_VERSION)
+                elif [[ -d "$package_dir" ]]; then
+                    python_versions=$(get_python_versions_for_package $package_dir)
+                    if [[ $python_versions =~ $PYTHON3_VERSION ]]; then
+                        echo "Automatically using $PYTHON3_VERSION version to install $package_dir based on classifiers"
+                        sudo_pip="$sudo_pip LC_ALL=en_US.UTF-8"
+                        cmd_pip=$(get_pip_command $PYTHON3_VERSION)
+                    else
+                        # The package may not have yet advertised python3.5
+                        # support so check for just python3 classifier and log
+                        # a warning.
+                        python3_classifier=$(check_python3_support_for_package_local $package_dir)
+                        if [[ ! -z "$python3_classifier" ]]; then
+                            echo "Automatically using $PYTHON3_VERSION version to install $package_dir based on local package settings"
+                            sudo_pip="$sudo_pip LC_ALL=en_US.UTF-8"
+                            cmd_pip=$(get_pip_command $PYTHON3_VERSION)
+                        fi
+                    fi
+                else
+                    # Check pypi as we don't have the package on disk
+                    package=$(echo $package_dir | grep -o '^[.a-zA-Z0-9_-]*')
+                    python3_classifier=$(check_python3_support_for_package_remote $package)
+                    if [[ ! -z "$python3_classifier" ]]; then
+                        echo "Automatically using $PYTHON3_VERSION version to install $package based on remote package settings"
+                        sudo_pip="$sudo_pip LC_ALL=en_US.UTF-8"
+                        cmd_pip=$(get_pip_command $PYTHON3_VERSION)
+                    fi
+                fi
+            fi
+        fi
+    fi
+
+    cmd_pip="$cmd_pip install"
+    # Always apply constraints
+    cmd_pip="$cmd_pip -c $REQUIREMENTS_DIR/upper-constraints.txt"
+
+    # FIXME(dhellmann): Need to force multiple versions of pip for
+    # packages like setuptools?
+    local pip_version
+    pip_version=$(python -c "import pip; \
+                        print(pip.__version__.split('.')[0])")
+    if (( pip_version<6 )); then
+        die $LINENO "Currently installed pip version ${pip_version} does not" \
+            "meet minimum requirements (>=6)."
+    fi
+
+    $xtrace
+
+    # Also install test requirements
+    local install_test_reqs=""
+    local test_req="${package_dir}/test-requirements.txt"
+    if [[ -e "$test_req" ]]; then
+        install_test_reqs="-r $test_req"
+    fi
+
+    # adding SETUPTOOLS_SYS_PATH_TECHNIQUE is a workaround to keep
+    # the same behaviour of setuptools before version 25.0.0.
+    # related issue: https://github.com/pypa/pip/issues/3874
+    $sudo_pip \
+        http_proxy="${http_proxy:-}" \
+        https_proxy="${https_proxy:-}" \
+        no_proxy="${no_proxy:-}" \
+        PIP_FIND_LINKS=$PIP_FIND_LINKS \
+        SETUPTOOLS_SYS_PATH_TECHNIQUE=rewrite \
+        $cmd_pip $upgrade $install_test_reqs \
+        $@
+    result=$?
+
+    time_stop "pip_install"
+    return $result
+}
+
+function pip_uninstall {
+    # Skip uninstall if offline
+    [[ "${OFFLINE}" = "True" ]] && return
+
+    local name=$1
+    if [[ -n ${PIP_VIRTUAL_ENV:=} && -d ${PIP_VIRTUAL_ENV} ]]; then
+        local cmd_pip=$PIP_VIRTUAL_ENV/bin/pip
+        local sudo_pip="env"
+    else
+        local cmd_pip
+        cmd_pip=$(get_pip_command $PYTHON2_VERSION)
+        local sudo_pip="sudo -H"
+    fi
+    # don't error if we can't uninstall, it might not be there
+    $sudo_pip $cmd_pip uninstall -y $name || /bin/true
+}
+
+# get version of a package from global requirements file
+# get_from_global_requirements <package>
+function get_from_global_requirements {
+    local package=$1
+    local required_pkg
+    required_pkg=$(grep -i -h ^${package} $REQUIREMENTS_DIR/global-requirements.txt | cut -d\# -f1)
+    if [[ $required_pkg == ""  ]]; then
+        die $LINENO "Can't find package $package in requirements"
+    fi
+    echo $required_pkg
+}
+
+# should we use this library from their git repo, or should we let it
+# get pulled in via pip dependencies.
+function use_library_from_git {
+    local name=$1
+    local enabled=1
+    [[ ${LIBS_FROM_GIT} = 'ALL' ]] || [[ ,${LIBS_FROM_GIT}, =~ ,${name}, ]] && enabled=0
+    return $enabled
+}
+
+# determine if a package was installed from git
+function lib_installed_from_git {
+    local name=$1
+    local safe_name
+    # TODO(mordred) This is a special case for python-openstacksdk, where the
+    # repo name and the pip name do not match. We should either add systemic
+    # support for providing aliases, or we should rename the git repo.
+    if [[ $name == 'python-openstacksdk' ]] ; then
+        name=openstacksdk
+    fi
+    safe_name=$(python -c "from pkg_resources import safe_name; \
+        print(safe_name('${name}'))")
+    # Note "pip freeze" doesn't always work here, because it tries to
+    # be smart about finding the remote of the git repo the package
+    # was installed from.  This doesn't work with zuul which clones
+    # repos with no remote.
+    #
+    # The best option seems to be to use "pip list" which will tell
+    # you the path an editable install was installed from; for example
+    # in response to something like
+    #  pip install -e 'git+http://git.openstack.org/openstack-dev/bashate#egg=bashate'
+    # pip list --format columns shows
+    #  bashate 0.5.2.dev19 /tmp/env/src/bashate
+    # Thus we check the third column to see if we're installed from
+    # some local place.
+    [[ -n $(pip list --format=columns 2>/dev/null | awk "/^$safe_name/ {print \$3}") ]]
+}
+
+# setup a library by name. If we are trying to use the library from
+# git, we'll do a git based install, otherwise we'll punt and the
+# library should be installed by a requirements pull from another
+# project.
+function setup_lib {
+    local name=$1
+    local dir=${GITDIR[$name]}
+    setup_install $dir
+}
+
+# setup a library by name in editable mode. If we are trying to use
+# the library from git, we'll do a git based install, otherwise we'll
+# punt and the library should be installed by a requirements pull from
+# another project.
+#
+# use this for non namespaced libraries
+function setup_dev_lib {
+    local name=$1
+    local dir=${GITDIR[$name]}
+    if python3_enabled; then
+        # Turn off Python 3 mode and install the package again,
+        # forcing a Python 2 installation. This ensures that all libs
+        # being used for development are installed under both versions
+        # of Python.
+        echo "Installing $name again without Python 3 enabled"
+        USE_PYTHON3=False
+        setup_develop $dir
+        USE_PYTHON3=True
+    fi
+    setup_develop $dir
+}
+
+# this should be used if you want to install globally, all libraries should
+# use this, especially *oslo* ones
+#
+# setup_install project_dir [extras]
+# project_dir: directory of project repo (e.g., /opt/stack/keystone)
+# extras: comma-separated list of optional dependencies to install
+#         (e.g., ldap,memcache).
+#         See https://docs.openstack.org/pbr/latest/user/using.html#extra-requirements
+# The command is like "pip install <project_dir>[<extras>]"
+function setup_install {
+    local project_dir=$1
+    local extras=$2
+    _setup_package_with_constraints_edit $project_dir "" $extras
+}
+
+# this should be used for projects which run services, like all services
+#
+# setup_develop project_dir [extras]
+# project_dir: directory of project repo (e.g., /opt/stack/keystone)
+# extras: comma-separated list of optional dependencies to install
+#         (e.g., ldap,memcache).
+#         See https://docs.openstack.org/pbr/latest/user/using.html#extra-requirements
+# The command is like "pip install -e <project_dir>[<extras>]"
+function setup_develop {
+    local project_dir=$1
+    local extras=$2
+    _setup_package_with_constraints_edit $project_dir -e $extras
+}
+
+# determine if a project as specified by directory is in
+# projects.txt. This will not be an exact match because we throw away
+# the namespacing when we clone, but it should be good enough in all
+# practical ways.
+function is_in_projects_txt {
+    local project_dir=$1
+    local project_name
+    project_name=$(basename $project_dir)
+    grep -q "/$project_name\$" $REQUIREMENTS_DIR/projects.txt
+}
+
+# ``pip install -e`` the package, which processes the dependencies
+# using pip before running `setup.py develop`
+#
+# Updates the constraints from REQUIREMENTS_DIR to reflect the
+# future installed state of this package. This ensures when we
+# install this package we get the from source version.
+#
+# Uses globals ``REQUIREMENTS_DIR``
+# _setup_package_with_constraints_edit project_dir flags [extras]
+# project_dir: directory of project repo (e.g., /opt/stack/keystone)
+# flags: pip CLI options/flags
+# extras: comma-separated list of optional dependencies to install
+#         (e.g., ldap,memcache).
+#         See https://docs.openstack.org/pbr/latest/user/using.html#extra-requirements
+# The command is like "pip install <flags> <project_dir>[<extras>]"
+function _setup_package_with_constraints_edit {
+    local project_dir=$1
+    local flags=$2
+    local extras=$3
+
+    # Normalize the directory name to avoid
+    # "installation from path or url cannot be constrained to a version"
+    # error.
+    # REVISIT(yamamoto): Remove this when fixed in pip.
+    # https://github.com/pypa/pip/pull/3582
+    project_dir=$(cd $project_dir && pwd)
+
+    if [ -n "$REQUIREMENTS_DIR" ]; then
+        # Constrain this package to this project directory from here on out.
+        local name
+        name=$(awk '/^name.*=/ {print $3}' $project_dir/setup.cfg)
+        $REQUIREMENTS_DIR/.venv/bin/edit-constraints \
+            $REQUIREMENTS_DIR/upper-constraints.txt -- $name \
+            "$flags file://$project_dir#egg=$name"
+    fi
+
+    setup_package $project_dir "$flags" $extras
+
+    # If this project is in LIBS_FROM_GIT, verify it was actually installed
+    # correctly.  This helps catch errors caused by constraints mismatches.
+    if use_library_from_git "$project_dir"; then
+        if ! lib_installed_from_git "$project_dir"; then
+            die $LINENO "The following LIBS_FROM_GIT was not installed correctly: $project_dir"
+        fi
+    fi
+}
+
+# ``pip install -e`` the package, which processes the dependencies
+# using pip before running `setup.py develop`
+#
+# Uses globals ``STACK_USER``
+# setup_package project_dir [flags] [extras]
+# project_dir: directory of project repo (e.g., /opt/stack/keystone)
+# flags: pip CLI options/flags
+# extras: comma-separated list of optional dependencies to install
+#         (e.g., ldap,memcache).
+#         See https://docs.openstack.org/pbr/latest/user/using.html#extra-requirements
+# The command is like "pip install <flags> <project_dir>[<extras>]"
+function setup_package {
+    local project_dir=$1
+    local flags=$2
+    local extras=$3
+
+    # if the flags variable exists, and it doesn't look like a flag,
+    # assume it's actually the extras list.
+    if [[ -n "$flags" && -z "$extras" && ! "$flags" =~ ^-.* ]]; then
+        extras=$flags
+        flags=""
+    fi
+
+    if [[ ! -z "$extras" ]]; then
+        extras="[$extras]"
+    fi
+
+    pip_install $flags "$project_dir$extras"
+    # ensure that further actions can do things like setup.py sdist
+    if [[ "$flags" == "-e" ]]; then
+        safe_chown -R $STACK_USER $1/*.egg-info
+    fi
+}
+
+# Report whether python 3 should be used
+function python3_enabled {
+    if [[ $USE_PYTHON3 == "True" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Install python3 packages
+function install_python3 {
+    if is_ubuntu; then
+        apt_get install python${PYTHON3_VERSION} python${PYTHON3_VERSION}-dev
+    elif is_suse; then
+        install_package python3-devel python3-dbm
+    fi
+}
+
+function install_devstack_tools {
+    # intentionally old to ensure devstack-gate has control
+    local dstools_version=${DSTOOLS_VERSION:-0.1.2}
+    install_python3
+    sudo pip3 install -U devstack-tools==${dstools_version}
+}
+
+# Restore xtrace
+$INC_PY_TRACE
+
+# Local variables:
+# mode: shell-script
+# End:

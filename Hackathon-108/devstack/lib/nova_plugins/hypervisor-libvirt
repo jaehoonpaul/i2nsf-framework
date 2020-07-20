@@ -1,0 +1,145 @@
+#!/bin/bash
+#
+# lib/nova_plugins/hypervisor-libvirt
+# Configure the libvirt hypervisor
+
+# Enable with:
+# VIRT_DRIVER=libvirt
+
+# Dependencies:
+# ``functions`` file
+# ``nova`` configuration
+
+# install_nova_hypervisor - install any external requirements
+# configure_nova_hypervisor - make configuration changes, including those to other services
+# start_nova_hypervisor - start any external services
+# stop_nova_hypervisor - stop any external services
+# cleanup_nova_hypervisor - remove transient data and cache
+
+# Save trace setting
+_XTRACE_NOVA_LIBVIRT=$(set +o | grep xtrace)
+set +o xtrace
+
+source $TOP_DIR/lib/nova_plugins/functions-libvirt
+
+# Defaults
+# --------
+
+
+# Entry Points
+# ------------
+
+# clean_nova_hypervisor - Clean up an installation
+function cleanup_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+# configure_nova_hypervisor - Set config files, create data dirs, etc
+function configure_nova_hypervisor {
+    configure_libvirt
+    iniset $NOVA_CONF libvirt virt_type "$LIBVIRT_TYPE"
+    iniset $NOVA_CONF libvirt cpu_mode "none"
+    # Do not enable USB tablet input devices to avoid QEMU CPU overhead.
+    iniset $NOVA_CONF DEFAULT pointer_model "ps2mouse"
+    iniset $NOVA_CONF libvirt live_migration_uri "qemu+ssh://$STACK_USER@%s/system"
+    iniset $NOVA_CONF DEFAULT default_ephemeral_format "ext4"
+    iniset $NOVA_CONF DEFAULT compute_driver "libvirt.LibvirtDriver"
+    LIBVIRT_FIREWALL_DRIVER=${LIBVIRT_FIREWALL_DRIVER:-"nova.virt.libvirt.firewall.IptablesFirewallDriver"}
+    iniset $NOVA_CONF DEFAULT firewall_driver "$LIBVIRT_FIREWALL_DRIVER"
+    # Power architecture currently does not support graphical consoles.
+    if is_arch "ppc64"; then
+        iniset $NOVA_CONF vnc enabled "false"
+    fi
+
+    # arm64-specific configuration
+    if is_arch "aarch64"; then
+        # arm64 architecture currently does not support graphical consoles.
+        iniset $NOVA_CONF vnc enabled "false"
+        iniset $NOVA_CONF libvirt cpu_mode "host-passthrough"
+    fi
+
+    if isset ENABLE_FILE_INJECTION; then
+        if [ "$ENABLE_FILE_INJECTION" == "True" ]; then
+            # -1 means use libguestfs to inspect the guest OS image for the
+            # root partition to use for file injection.
+            iniset $NOVA_CONF libvirt inject_partition '-1'
+        fi
+    fi
+
+    if [[ "$LIBVIRT_TYPE" = "parallels" ]]; then
+        iniset $NOVA_CONF libvirt connection_uri "parallels+unix:///system"
+        iniset $NOVA_CONF libvirt images_type "ploop"
+        iniset $NOVA_CONF DEFAULT force_raw_images  "False"
+        iniset $NOVA_CONF vnc server_proxyclient_address  $HOST_IP
+        iniset $NOVA_CONF vnc server_listen $HOST_IP
+        iniset $NOVA_CONF vnc keymap
+    elif [[ "$NOVA_BACKEND" == "LVM" ]]; then
+        iniset $NOVA_CONF libvirt images_type "lvm"
+        iniset $NOVA_CONF libvirt images_volume_group $DEFAULT_VOLUME_GROUP_NAME
+        if isset LVM_VOLUME_CLEAR; then
+            iniset $NOVA_CONF libvirt volume_clear "$LVM_VOLUME_CLEAR"
+        fi
+    fi
+}
+
+# install_nova_hypervisor() - Install external components
+function install_nova_hypervisor {
+    install_libvirt
+
+    # Install and configure **LXC** if specified.  LXC is another approach to
+    # splitting a system into many smaller parts.  LXC uses cgroups and chroot
+    # to simulate multiple systems.
+    if [[ "$LIBVIRT_TYPE" == "lxc" ]]; then
+        if is_ubuntu; then
+            if [[ "$DISTRO" > natty ]]; then
+                install_package cgroup-lite
+            fi
+        else
+            ### FIXME(dtroyer): figure this out
+            echo "RPM-based cgroup not implemented yet"
+            yum_install libcgroup-tools
+        fi
+    fi
+
+    if [[ "$ENABLE_FILE_INJECTION" == "True" ]] ; then
+        if is_ubuntu; then
+            install_package python-guestfs
+            # NOTE(andreaf) Ubuntu kernel can only be read by root, which breaks libguestfs:
+            # https://bugs.launchpad.net/ubuntu/+source/linux/+bug/759725)
+            INSTALLED_KERNELS="$(ls /boot/vmlinuz-*)"
+            for kernel in $INSTALLED_KERNELS; do
+                STAT_OVERRIDE="root root 644 ${kernel}"
+                # unstack won't remove the statoverride, so make this idempotent
+                if [[ ! $(dpkg-statoverride --list | grep "$STAT_OVERRIDE") ]]; then
+                    sudo dpkg-statoverride --add --update $STAT_OVERRIDE
+                fi
+            done
+        elif is_suse; then
+            # Workaround for missing dependencies in python-libguestfs
+            install_package python-libguestfs guestfs-data augeas augeas-lenses
+        elif is_fedora; then
+            install_package python-libguestfs
+        fi
+    fi
+}
+
+# start_nova_hypervisor - Start any required external services
+function start_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+# stop_nova_hypervisor - Stop any external services
+function stop_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+
+# Restore xtrace
+$_XTRACE_NOVA_LIBVIRT
+
+# Local variables:
+# mode: shell-script
+# End:

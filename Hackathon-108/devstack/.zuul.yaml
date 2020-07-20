@@ -1,0 +1,408 @@
+- nodeset:
+    name: openstack-single-node
+    nodes:
+      - name: controller
+        label: ubuntu-xenial
+    groups:
+      - name: tempest
+        nodes:
+          - controller
+
+- nodeset:
+    name: openstack-two-node
+    nodes:
+      - name: controller
+        label: ubuntu-xenial
+      - name: compute1
+        label: ubuntu-xenial
+    groups:
+      # Node where tests are executed and test results collected
+      - name: tempest
+        nodes:
+          - controller
+      # Nodes running the compute service
+      - name: compute
+        nodes:
+          - controller
+          - compute1
+      # Nodes that are not the controller
+      - name: subnode
+        nodes:
+          - compute1
+      # Switch node for multinode networking setup
+      - name: switch
+        nodes:
+          - controller
+      # Peer nodes for multinode networking setup
+      - name: peers
+        nodes:
+          - compute1
+
+- job:
+    name: devstack-base
+    parent: multinode
+    abstract: true
+    description: |
+      Base abstract Devstack job.
+
+      Defines plays and base variables, but it does not include any project
+      and it does not run any service by default. This is a common base for
+      all single Devstack jobs, single or multinode.
+      Variables are defined in job.vars, which is what is then used by single
+      node jobs and by multi node jobs for the controller, as well as in
+      job.group-vars.peers, which is what is used by multi node jobs for subnode
+      nodes (everything but the controller).
+    required-projects:
+      - opendev.org/openstack/devstack
+    roles:
+      - zuul: opendev.org/openstack/devstack-gate
+      - zuul: opendev.org/openstack/openstack-zuul-jobs
+    vars:
+      devstack_localrc:
+        DATABASE_PASSWORD: secretdatabase
+        RABBIT_PASSWORD: secretrabbit
+        ADMIN_PASSWORD: secretadmin
+        SERVICE_PASSWORD: secretservice
+        NETWORK_GATEWAY: 10.1.0.1
+        FIXED_RANGE: 10.1.0.0/20
+        IPV4_ADDRS_SAFE_TO_USE: 10.1.0.0/20
+        FLOATING_RANGE: 172.24.5.0/24
+        PUBLIC_NETWORK_GATEWAY: 172.24.5.1
+        LOGFILE: /opt/stack/logs/devstacklog.txt
+        LOG_COLOR: false
+        VERBOSE: true
+        NOVNC_FROM_PACKAGE: true
+        ERROR_ON_CLONE: true
+        # Gate jobs can't deal with nested virt. Disable it.
+        LIBVIRT_TYPE: qemu
+        # NOTE(dims): etcd 3.x is not available in debian/ubuntu
+        # etc. As a stop gap measure, devstack uses wget to download
+        # from the location below for all the CI jobs.
+        ETCD_DOWNLOAD_URL: http://tarballs.openstack.org/etcd/
+      devstack_services:
+        # Ignore any default set by devstack. Emit a "disable_all_services".
+        base: false
+      zuul_copy_output:
+        '{{ devstack_conf_dir }}/local.conf': logs
+        '{{ devstack_conf_dir }}/localrc': logs
+        '{{ devstack_conf_dir }}/.localrc.auto': logs
+        '{{ devstack_conf_dir }}/.stackenv': logs
+        '{{ devstack_log_dir }}/dstat-csv.log': logs
+        '{{ devstack_log_dir }}/devstacklog.txt': logs
+        '{{ devstack_log_dir }}/devstacklog.txt.summary': logs
+        '{{ devstack_full_log}}': logs
+        '{{ stage_dir }}/verify_tempest_conf.log': logs
+        '{{ stage_dir }}/apache': logs
+        '{{ stage_dir }}/apache_config': logs
+        '{{ stage_dir }}/etc': logs
+        /var/log/rabbitmq: logs
+        /var/log/postgresql: logs
+        /var/log/mysql.err: logs
+        /var/log/mysql.log: logs
+        /var/log/libvirt: logs
+        /etc/sudoers: logs
+        /etc/sudoers.d: logs
+        '{{ stage_dir }}/iptables.txt': logs
+        '{{ stage_dir }}/df.txt': logs
+        '{{ stage_dir }}/pip2-freeze.txt': logs
+        '{{ stage_dir }}/pip3-freeze.txt': logs
+        '{{ stage_dir }}/dpkg-l.txt': logs
+        '{{ stage_dir }}/rpm-qa.txt': logs
+        '{{ stage_dir }}/core': logs
+        '{{ stage_dir }}/listen53.txt': logs
+        '{{ stage_dir }}/deprecations.log': logs
+        /var/log/ceph: logs
+        /var/log/openvswitch: logs
+        /var/log/glusterfs: logs
+        /etc/glusterfs/glusterd.vol: logs
+        /etc/resolv.conf: logs
+        /var/log/unbound.log: logs
+      extensions_to_txt:
+        conf: true
+        log: true
+        localrc: true
+        stackenv: true
+        auto: true
+    group-vars:
+      subnode:
+        test_matrix_role: subnode
+        devstack_localrc:
+          DATABASE_PASSWORD: secretdatabase
+          RABBIT_PASSWORD: secretrabbit
+          ADMIN_PASSWORD: secretadmin
+          SERVICE_PASSWORD: secretservice
+          NETWORK_GATEWAY: 10.1.0.1
+          FIXED_RANGE: 10.1.0.0/20
+          IPV4_ADDRS_SAFE_TO_USE: 10.1.0.0/20
+          FLOATING_RANGE: 172.24.5.0/24
+          PUBLIC_NETWORK_GATEWAY: 172.24.5.1
+          LOGFILE: /opt/stack/logs/devstacklog.txt
+          LOG_COLOR: false
+          VERBOSE: true
+          VERBOSE_NO_TIMESTAMP: true
+          NOVNC_FROM_PACKAGE: true
+          ERROR_ON_CLONE: true
+          LIBVIRT_TYPE: qemu
+          ETCD_DOWNLOAD_URL: http://tarballs.openstack.org/etcd/
+        devstack_services:
+          base: false
+    pre-run: playbooks/pre.yaml
+    run: playbooks/devstack.yaml
+    post-run: playbooks/post.yaml
+    irrelevant-files:
+      # Documentation related
+      - ^.*\.rst$
+      - ^api-ref/.*$
+      - ^doc/.*$
+      - ^releasenotes/.*$
+      # Translations
+      - ^.*/locale/.*po$
+
+- job:
+    name: devstack-minimal
+    parent: devstack-base
+    description: |
+      Minimal devstack base job, intended for use by jobs that need
+      less than the normal minimum set of required-projects.
+    nodeset: openstack-single-node
+    required-projects:
+      - opendev.org/openstack/requirements
+    vars:
+      devstack_localrc:
+        # Multinode specific settings
+        SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        HOST_IP: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+        PUBLIC_BRIDGE_MTU: "{{ external_bridge_mtu }}"
+      devstack_services:
+        # Shared services
+        dstat: true
+        etcd3: false
+        mysql: true
+        peakmem_tracker: true
+        rabbit: true
+    group-vars:
+      subnode:
+        devstack_services:
+          # Shared services
+          dstat: true
+          peakmem_tracker: true
+        devstack_localrc:
+          # Multinode specific settings
+          HOST_IP: "{{ hostvars[inventory_hostname]['nodepool']['private_ipv4'] }}"
+          SERVICE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+          PUBLIC_BRIDGE_MTU: "{{ external_bridge_mtu }}"
+          # Subnode specific settings
+          DATABASE_TYPE: mysql
+          RABBIT_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+          DATABASE_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+
+
+- job:
+    name: devstack
+    parent: devstack-minimal
+    description: |
+      Base devstack job for integration gate.
+
+      This base job can be used for single node and multinode devstack jobs.
+    nodeset: openstack-single-node
+    required-projects:
+      - opendev.org/openstack/cinder
+      - opendev.org/openstack/glance
+      - opendev.org/openstack/keystone
+      - opendev.org/openstack/neutron
+      - opendev.org/openstack/nova
+      - opendev.org/openstack/swift
+    timeout: 7200
+    vars:
+      test_matrix_configs: [neutron, tlsproxy]
+      devstack_localrc:
+        # Common OpenStack services settings
+        SWIFT_REPLICAS: 1
+        SWIFT_START_ALL_SERVICES: false
+        SWIFT_HASH: 1234123412341234
+        CINDER_PERIODIC_INTERVAL: 10
+        DEBUG_LIBVIRT_COREDUMPS: true
+        NOVA_VNC_ENABLED: true
+        VNCSERVER_LISTEN: 0.0.0.0
+        VNCSERVER_PROXYCLIENT_ADDRESS: $HOST_IP
+      devstack_local_conf:
+        post-config:
+          $NEUTRON_CONF:
+            DEFAULT:
+              global_physnet_mtu: '{{ external_bridge_mtu }}'
+      devstack_services:
+        base: true
+        # We need this explicitly here to trigger the sync of the CA data
+        tls-proxy: true
+        horizon: false
+        tempest: false
+        # Test matrix emits ceilometer but ceilomenter is not installed in the
+        # integrated gate, so specifying the services has not effect.
+        # ceilometer-*: false
+    group-vars:
+      subnode:
+        devstack_services:
+          base: true
+          # We need this explicitly here to trigger the sync of the CA data
+          tls-proxy: true
+        devstack_localrc:
+          # Subnode specific settings
+          GLANCE_HOSTPORT: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}:9292"
+          Q_HOST: "{{ hostvars['controller']['nodepool']['private_ipv4'] }}"
+          NOVA_VNC_ENABLED: true
+          VNCSERVER_LISTEN: 0.0.0.0
+          VNCSERVER_PROXYCLIENT_ADDRESS: $HOST_IP
+
+- job:
+    name: devstack-multinode
+    parent: devstack
+    nodeset: openstack-two-node
+    description: |
+      Simple multinode test to verify multinode functionality on devstack side.
+      This is not meant to be used as a parent job.
+
+- job:
+    name: devstack-tox-base
+    parent: devstack
+    description: |
+      Base job for devstack-based functional tests that use tox.
+
+      This job is not intended to be run directly. It's just here
+      for organizational purposes for devstack-tox-functional and
+      devstack-tox-functional-consumer.
+    post-run: playbooks/tox/post.yaml
+    vars:
+      tox_envlist: functional
+      tox_install_siblings: false
+
+- job:
+    name: devstack-tox-functional
+    parent: devstack-tox-base
+    description: |
+      Base job for devstack-based functional tests that use tox.
+
+      Runs devstack, then runs the tox ``functional`` environment,
+      then collects tox/testr build output like normal tox jobs.
+
+      Turns off tox sibling installation. Projects may be involved
+      in the devstack deployment and so may be in the required-projects
+      list, but may not want to test against master of the other
+      projects in their tox env. Child jobs can set tox_install_siblings
+      to True to re-enable sibling processing.
+    run: playbooks/tox/run-both.yaml
+
+- job:
+    name: devstack-tox-functional-consumer
+    parent: devstack
+    description: |
+      Base job for devstack-based functional tests for projects that
+      consume the devstack cloud.
+
+      This base job should only be used by projects that are not involved
+      in the devstack deployment step, but are instead projects that are using
+      devstack to get a cloud against which they can test things.
+
+      Runs devstack in pre-run, then runs the tox ``functional`` environment,
+      then collects tox/testr build output like normal tox jobs.
+
+      Turns off tox sibling installation. Projects may be involved
+      in the devstack deployment and so may be in the required-projects
+      list, but may not want to test against master of the other
+      projects in their tox env. Child jobs can set tox_install_siblings
+      to True to re-enable sibling processing.
+    pre-run:
+      - playbooks/devstack.yaml
+      - playbooks/tox/pre.yaml
+    run: playbooks/tox/run.yaml
+
+- job:
+    name: devstack-unit-tests
+    description: |
+      Runs unit tests on devstack project.
+
+      It runs  ``run_tests.sh``.
+    pre-run: playbooks/unit-tests/pre.yaml
+    run: playbooks/unit-tests/run.yaml
+
+- project:
+    templates:
+      - integrated-gate
+      - integrated-gate-py35
+      - publish-openstack-sphinx-docs
+    check:
+      jobs:
+        - devstack
+        - devstack-multinode
+        - devstack-unit-tests
+        - openstack-tox-bashate
+        - ironic-tempest-dsvm-ipa-wholedisk-bios-agent_ipmitool-tinyipa:
+            voting: false
+        - swift-dsvm-functional:
+            voting: false
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-grenade:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-grenade-multinode:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-tempest-linuxbridge:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - tempest-multinode-full:
+            voting: false
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+    gate:
+      jobs:
+        - devstack
+        - devstack-unit-tests
+        - openstack-tox-bashate
+        - neutron-grenade-multinode:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-tempest-linuxbridge:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-grenade:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+    experimental:
+      jobs:
+        - devstack-plugin-ceph-tempest:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - devstack-plugin-ceph-tempest-py3:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-tempest-dvr:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - legacy-tempest-dsvm-neutron-dvr-multinode-full:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - neutron-tempest-dvr-ha-multinode-full:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - legacy-tempest-dsvm-lvm-multibackend:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
+        - legacy-tempest-dsvm-neutron-pg-full:
+            irrelevant-files:
+              - ^.*\.rst$
+              - ^doc/.*$
