@@ -2,7 +2,7 @@
 function array_to_xml( $data, &$xml_data ) {
     foreach( $data as $key => $value ) {
         if( is_array($value) ) {
-            if( is_numeric($key) ){
+            if( is_numeric($key) ){https://github.com/jaehoonpaul/i2nsf-framework/blob/master/security_controller_web-v2/html/%5C
                 $key = 'Policy_web';
             }
             $subnode = $xml_data->addChild($key);
