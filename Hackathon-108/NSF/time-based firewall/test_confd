@@ -1,2 +1,0 @@
-sleep 15
-python /home/ubuntu/init_send_ip.py

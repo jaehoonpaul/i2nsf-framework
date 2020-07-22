@@ -1,3 +1,0 @@
-sleep 10
-cd /home/ubuntu/Firewall/
-sudo make clean all start &
