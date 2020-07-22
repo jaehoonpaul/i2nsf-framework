@@ -1,10 +1,9 @@
 import os
 import time
 
-os.system("tacker vnf-create --vnfd-name time_based_firewall_vnfd time_based_firewall_vnf")
+os.system("tacker vnfd-create --vnfd-file time_based_firewall_vnfd.yaml time_based_firewall_vnfd")
 time.sleep(5)
 
-os.system("tacker vnf-create --vnfd-name url_filtering_vnfd url_filtering_vnf")
+os.system("tacker vnfd-create --vnfd-file url_filtering_vnfd.yaml url_filtering_vnfd")
 time.sleep(5)
 
-os.system("tacker vnffg-create --vnffgd-template vnffg_test.yaml block_sns")
