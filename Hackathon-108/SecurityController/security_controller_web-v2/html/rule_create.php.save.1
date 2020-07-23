@@ -69,8 +69,6 @@ a:hover + #image {
 .error {color: #FF0000;}
 
 </style>
-<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-
 </head>
 <body>
 
@@ -164,54 +162,11 @@ function test_input($data) {
 	</select>
 -->
    <label>Frequency</label> <br>
-   <select name="frequency" id="frequency">
-	<option value="only-once">only-once</option>
-        <option value="daily">daily</option>
-	<option value="weekly">weekly</option>
-        <option value="monthly">monthly</option>
-	<option value="yearly">yearly</option>
-   </select><br>
-<label id="Day">Day <br>
-        <label><input type="checkbox" value="monday">Monday</label>
-        <label><input type="checkbox" value="tuesday">Tuesday</label>
-        <label><input type="checkbox" value="wednesday">Wednesday</label>
-        <label><input type="checkbox" value="thursday">Thursday</label>
-        <label><input type="checkbox" value="friday">Friday</label>
-	<label><input type="checkbox" value="saturday">Saturday</label>
-	<label><input type="checkbox" value="sunday">Sunday</label>
-</label>
-<label id="Date">Date (ex: 1,2,3,10,31)
-    <input type="text" name="extra" />
-</label>
-<label id="Month">Month (MM-DD ex: 07-23,08-23,12-22)
-    <input type="text" name="extra" />
-</label>
-<script>
-$("#Day").hide();
-$("#Date").hide();
-$("#Month").hide();
-
-$("#frequency").change(function(){
-        if( $(this).val() == "weekly"){
-                $("#Day").show();
-                $("#Date").hide();
-                $("#Month").hide();
-        }else if( $(this).val() == "monthly") {
-                $("#Date").show();
-                $("#Day").hide();
-                $("#Month").hide();
-        }else if( $(this).val() == "yearly") {
-        	$("#Month").show();
-        	$("#Date").hide();
-                $("#Day").hide();
-        }else{
-		$("#Day").hide();
-		$("#Date").hide();
-		$("#Month").hide();
-	}
-});
-</script>
-</fieldset>
+    <input type="radio" id="only-once" name="frequency" value="only-once" checked/>Only Once
+    <input type="radio" id="daily" name="frequency" value="daily"> Daily
+    <input type="radio" id="monthly" name="frequency" value="monthly"> Monthly
+    <input type="radio" id="yearly" name="frequency" value="yearly"> Yearly <br><br>
+ </fieldset>
  <fieldset id = "action">
    <label>Actions<label><br></br>
    <select name="act" id="act">
@@ -230,3 +185,7 @@ $("#frequency").change(function(){
 </html>
 
 
+<?php
+$period
+
+?>
