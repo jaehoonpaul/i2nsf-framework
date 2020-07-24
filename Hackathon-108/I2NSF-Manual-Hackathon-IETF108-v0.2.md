@@ -56,7 +56,8 @@ $ ./stack.sh
 ```
 
 8. Wait until installation finish
-![img]
+
+![Demonstration of command line when installing](./Installation4.png)
 
 9. Download source code
 ```
@@ -316,17 +317,19 @@ $ python openstack_server.py
 
 \#password: secu   
 
-![image]()
+![Login page](./Login.png)
+
+![OpenStack instances](./OpenStackInstances.png)
 
 5. Register User-group and URL-Websites
 
-![image]()
+![User IP registration](./UserIPRegistration.png)
 
-![image]()
+![URL registration](./URLRegistration.png)
 
 6. Enter the configuration
 
-![image]()
+![Policy configuration](./Policy.png)
 
 7. Open employee web browser and try connect to SNS websites
 
