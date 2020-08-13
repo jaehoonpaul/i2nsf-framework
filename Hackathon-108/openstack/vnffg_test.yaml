@@ -15,15 +15,15 @@ topology_template:
           criteria:
             - name: block_icmp
               classifier:
-                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065 #EDIT WITH EMPLOYEE PORT ID
                 ip_proto: 1
             - name: block_tcp
               classifier:
-                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065 #EDIT WITH EMPLOYEE PORT ID
                 ip_proto: 6
             - name: block_udp
               classifier:
-                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065
+                network_src_port_id: 2762a84d-f1e1-44a1-ba96-b630b456e065 #EDIT WITH EMPLOYEE PORT ID
                 ip_proto: 17
 
 
