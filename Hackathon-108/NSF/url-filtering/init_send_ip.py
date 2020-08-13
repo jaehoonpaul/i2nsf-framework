@@ -3,11 +3,11 @@ import socket
 import sys
 from time import ctime
 
-HOST = '10.0.0.6' #Change to DMS IP address
+HOST = '10.0.0.6' #EDIT to your DMS IP address
 PORT = 55561
 ADDR = (HOST,PORT)
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(('115.145.178.180',0)) #Change to Openstack IP address
+s.connect(('115.145.178.180',0)) #EDIT to your Openstack IP address
 print (socket.gethostname())
 print (s.getsockname()[0])
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
