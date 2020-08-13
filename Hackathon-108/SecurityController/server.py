@@ -25,8 +25,8 @@ dataconverter.initializeDB()
 #print('NSF Database is constructed')
 
 # connect with DMS
-registration_interface = threading.Thread(target=socketAPI.openRegistrationInterface, args=('10.0.0.27', 55552, dataconverter))
-tacker_interface = threading.Thread(target=socketAPI.receive_nsf_ip, args=('10.0.0.27', 55560))
+registration_interface = threading.Thread(target=socketAPI.openRegistrationInterface, args=('10.0.0.27', 55552, dataconverter)) #EDIT WITH YOUR SECURITY_CONTROLLER IP
+tacker_interface = threading.Thread(target=socketAPI.receive_nsf_ip, args=('10.0.0.27', 55560)) #EDIT WITH YOUR SECURITY_CONTROLLER IP
 
 #registration_interface = socketAPI.SocketThread(target=socketAPI.openRegistrationInterface, args=('127.0.0.1', 55552, dataconverter))
 #tacker_interface = socketAPI.SocketThread(target=socketAPI.receive_nsf_ip, args=('10.0.0.7', 55560))
@@ -37,7 +37,7 @@ tacker_interface.start()
 while True:
 	server_socket = socket.socket()
 	server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	server_socket.bind(('10.0.0.27', 55570))
+	server_socket.bind(('10.0.0.27', 55570)) #EDIT WITH YOUR SECURITY_CONTROLLER IP
 	server_socket.listen(5)
 	client_socket, addr = server_socket.accept()
 	data = client_socket.recv(1024)
@@ -53,7 +53,7 @@ while True:
 	print('Policy provisioning...')
 	# policy provisioning
 	dataconverter.constructDecisionTree()
-	dataconverter.policyprovisioning(cfglist, '10.0.0.6', 55560)
+	dataconverter.policyprovisioning(cfglist, '10.0.0.6', 55560) #EDIT WITH YOUR DMS IP
 
 registration_interface.exit()
 registration_interface.join()
