@@ -363,7 +363,7 @@ static int read_conf(struct sockaddr_in *addr)
 
         client_fd = socket(PF_INET, SOCK_STREAM, 0);
 
-        client_addr.sin_addr.s_addr = inet_addr("10.0.0.27");
+        client_addr.sin_addr.s_addr = inet_addr("10.0.0.27"); /* EDIT THE IP ADDRESS WITH YOUR SECURITY CONTROLLER */
         client_addr.sin_family = AF_INET;
         client_addr.sin_port = htons(55552);
 
