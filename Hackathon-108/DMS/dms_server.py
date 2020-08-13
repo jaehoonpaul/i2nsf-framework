@@ -10,24 +10,17 @@ created_NSF_num = 0
 print("DEBUG1")
 # Security Controller -> DMS -> Stack User
 
-#def register_nsf():
-#	os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.7 /home/ubuntu/xml_files/general_firewall.xml")
-#	os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.7 /home/ubuntu/xml_files/time_based_firewall.xml")
-#	os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.7 /home/ubuntu/xml_files/web_filter.xml")
-#	os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.7 /home/ubuntu/xml_files/voip_volte_filter.xml")
-#	os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.7 /home/ubuntu/xml_files/http_and_https_flood_mitigation.xml")
-
 def receive_nsf_request():
 	global NSF_num
 	global clock_bool
         while True:
 		server_socket = socket.socket()
 		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		server_socket.bind(('10.0.0.6', 55560))
+		server_socket.bind(('10.0.0.6', 55560)) #EDIT TO YOUR DMS IP ADDRESS
 		server_socket.listen(5)
                 client_socket, addr = server_socket.accept()
                 data = client_socket.recv(1024)
-		HOST = '115.145.178.180'
+		HOST = '115.145.178.180'  #EDIT TO YOUR OPENSTACK IP ADDRESS
 		PORT = 55560
 		ADDR = (HOST,PORT)
 		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,12 +45,12 @@ def receive_nsf_ip():
 	while True:
 		server_socket = socket.socket()
 		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		server_socket.bind(('10.0.0.6', 55561))
+		server_socket.bind(('10.0.0.6', 55561))  #EDIT TO YOUR DMS IP ADDRESS
 		server_socket.listen(5)
                 client_socket, addr = server_socket.accept()
 		data = client_socket.recv(1024)
 		temp_data = data.split(",")
-		HOST = '10.0.0.27'
+		HOST = '10.0.0.27'  #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
 		PORT = 55560
 		ADDR = (HOST,PORT)
 		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -94,11 +87,11 @@ def create_clock():
 			temp_time = 0	
 
 print("DEBUG2")
-os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/general_firewall.xml")
-os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/time_based_firewall.xml")
-os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/web_filter.xml")
-os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/voip_volte_filter.xml")
-os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/http_and_https_flood_mitigation.xml")
+os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/general_firewall.xml")  #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
+os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/time_based_firewall.xml")  #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
+os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/web_filter.xml") #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
+os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/voip_volte_filter.xml") #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
+os.system("sudo /home/ubuntu/confd-6.6/bin/netconf-console --host 10.0.0.27 /home/ubuntu/xml_files/http_and_https_flood_mitigation.xml") #EDIT TO YOUR SECURITY CONTROLLER IP ADDRESS
 
 
 threading._start_new_thread(receive_nsf_request, ())
