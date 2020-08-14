@@ -3,9 +3,12 @@ sudo apt-get update
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:oisf/suricata-stable
 sudo apt-get update
-sudo apt-get install -y gcc make python-minimal python3 zip
+sudo apt-get install -y gcc make python-minimal python3 zip python-pip
 sudo chmod +x test_confd init_confd init_suricata
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
 
+pip install paramiko
 unzip Firewall.zip
 unzip confd-basic-6.6.linux.x86_64.zip
 
