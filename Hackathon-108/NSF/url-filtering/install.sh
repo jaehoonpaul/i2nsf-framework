@@ -10,6 +10,7 @@ unzip Webfilter.zip
 unzip confd-basic-6.6.linux.x86_64.zip
 
 ./confd-basic-6.6.linux.x86_64/confd-basic-6.6.linux.x86_64.installer.bin /home/ubuntu/confd-6.6
+sudo apt-get install -y suricata
 
 echo '#!'"/bin/sh -e" > /etc/rc.local
 echo "#
