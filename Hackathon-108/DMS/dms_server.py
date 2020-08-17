@@ -16,7 +16,7 @@ def receive_nsf_request():
         while True:
 		server_socket = socket.socket()
 		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		server_socket.bind(('127.0.0.1', 55560))
+		server_socket.bind(('10.0.0.6', 55560)) #EDIT TO YOUR DMS IP ADDRESS
 		server_socket.listen(5)
                 client_socket, addr = server_socket.accept()
                 data = client_socket.recv(1024)
@@ -45,7 +45,7 @@ def receive_nsf_ip():
 	while True:
 		server_socket = socket.socket()
 		server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		server_socket.bind(('127.0.0.1', 55561)) 
+		server_socket.bind(('10.0.0.6', 55561))  #EDIT TO YOUR DMS IP ADDRESS 
 		server_socket.listen(5)
                 client_socket, addr = server_socket.accept()
 		data = client_socket.recv(1024)
