@@ -1,0 +1,136 @@
+#!/bin/bash
+#
+# lib/etcd3
+#
+# Functions to control the installation and configuration of etcd 3.x
+# that provides a key-value store (and possibly other functions).
+
+# Dependencies:
+#
+# - ``functions`` file
+
+# ``stack.sh`` calls the entry points in this order:
+#
+# - start_etcd3
+# - stop_etcd3
+# - cleanup_etcd3
+
+# Save trace setting
+_XTRACE_ETCD3=$(set +o | grep xtrace)
+set +o xtrace
+
+
+# Defaults
+# --------
+
+# Set up default values for etcd
+ETCD_DATA_DIR="$DATA_DIR/etcd"
+ETCD_SYSTEMD_SERVICE="devstack@etcd.service"
+ETCD_BIN_DIR="$DEST/bin"
+# Option below will mount ETCD_DATA_DIR as ramdisk, which is useful to run
+# etcd-heavy services in the gate VM's, e.g. Kubernetes.
+ETCD_USE_RAMDISK=$(trueorfalse True ETCD_USE_RAMDISK)
+ETCD_RAMDISK_MB=${ETCD_RAMDISK_MB:-512}
+
+if is_ubuntu ; then
+    UBUNTU_RELEASE_BASE_NUM=`lsb_release -r | awk '{print $2}' | cut -d '.' -f 1`
+fi
+
+# start_etcd3() - Starts to run the etcd process
+function start_etcd3 {
+    local cmd="$ETCD_BIN_DIR/etcd"
+    cmd+=" --name $HOSTNAME --data-dir $ETCD_DATA_DIR"
+    cmd+=" --initial-cluster-state new --initial-cluster-token etcd-cluster-01"
+    cmd+=" --initial-cluster $HOSTNAME=http://$SERVICE_HOST:$ETCD_PEER_PORT"
+    cmd+=" --initial-advertise-peer-urls http://$SERVICE_HOST:$ETCD_PEER_PORT"
+    cmd+=" --advertise-client-urls http://$SERVICE_HOST:$ETCD_PORT"
+    if [ "$SERVICE_LISTEN_ADDRESS" == "::" ]; then
+        cmd+=" --listen-peer-urls http://[::]:$ETCD_PEER_PORT "
+    else
+        cmd+=" --listen-peer-urls http://0.0.0.0:$ETCD_PEER_PORT "
+    fi
+    cmd+=" --listen-client-urls http://$SERVICE_HOST:$ETCD_PORT"
+    if [ "$ENABLE_DEBUG_LOG_LEVEL" == "True" ]; then
+        cmd+=" --debug"
+    fi
+
+    local unitfile="$SYSTEMD_DIR/$ETCD_SYSTEMD_SERVICE"
+    write_user_unit_file $ETCD_SYSTEMD_SERVICE "$cmd" "" "root"
+
+    iniset -sudo $unitfile "Unit" "After" "network.target"
+    iniset -sudo $unitfile "Service" "Type" "notify"
+    iniset -sudo $unitfile "Service" "Restart" "on-failure"
+    iniset -sudo $unitfile "Service" "LimitNOFILE" "65536"
+    if is_arch "aarch64"; then
+        iniset -sudo $unitfile "Service" "Environment" "ETCD_UNSUPPORTED_ARCH=arm64"
+    fi
+
+    $SYSTEMCTL daemon-reload
+    $SYSTEMCTL enable $ETCD_SYSTEMD_SERVICE
+    $SYSTEMCTL start $ETCD_SYSTEMD_SERVICE
+}
+
+# stop_etcd3() stops the etcd3 process
+function stop_etcd3 {
+    # Don't install in sub nodes (multinode scenario)
+    if [ "$SERVICE_HOST" != "$HOST_IP" ]; then
+        return
+    fi
+
+    $SYSTEMCTL stop $ETCD_SYSTEMD_SERVICE
+}
+
+function cleanup_etcd3 {
+    # Don't install in sub nodes (multinode scenario)
+    if [ "$SERVICE_HOST" != "$HOST_IP" ]; then
+        return
+    fi
+
+    $SYSTEMCTL disable $ETCD_SYSTEMD_SERVICE
+
+    local unitfile="$SYSTEMD_DIR/$ETCD_SYSTEMD_SERVICE"
+    sudo rm -f $unitfile
+
+    $SYSTEMCTL daemon-reload
+
+    if [[ "$ETCD_USE_RAMDISK" == "True" ]]; then
+        sudo umount $ETCD_DATA_DIR
+    fi
+    sudo rm -rf $ETCD_DATA_DIR
+}
+
+function install_etcd3 {
+    echo "Installing etcd"
+
+    # Create the necessary directories
+    sudo mkdir -p $ETCD_BIN_DIR
+    sudo mkdir -p $ETCD_DATA_DIR
+    if [[ "$ETCD_USE_RAMDISK" == "True" ]]; then
+        sudo mount -t tmpfs -o nodev,nosuid,size=${ETCD_RAMDISK_MB}M tmpfs $ETCD_DATA_DIR
+    fi
+
+    # Download and cache the etcd tgz for subsequent use
+    local etcd_file
+    etcd_file="$(get_extra_file $ETCD_DOWNLOAD_LOCATION)"
+    if [ ! -f "$FILES/etcd-$ETCD_VERSION-linux-$ETCD_ARCH/etcd" ]; then
+        echo "${ETCD_SHA256} $etcd_file" > $FILES/etcd.sha256sum
+        # NOTE(yuanke wei): rm the damaged file when checksum fails
+        sha256sum -c $FILES/etcd.sha256sum || (sudo rm -f $etcd_file; exit 1)
+
+        tar xzvf $etcd_file -C $FILES
+        sudo cp $FILES/$ETCD_NAME/etcd $ETCD_BIN_DIR/etcd
+        sudo cp $FILES/$ETCD_NAME/etcdctl $ETCD_BIN_DIR/etcdctl
+    fi
+    if [ ! -f "$ETCD_BIN_DIR/etcd" ]; then
+        sudo cp $FILES/$ETCD_NAME/etcd $ETCD_BIN_DIR/etcd
+        sudo cp $FILES/$ETCD_NAME/etcdctl $ETCD_BIN_DIR/etcdctl
+    fi
+}
+
+# Restore xtrace
+$_XTRACE_ETCD3
+
+# Tell emacs to use shell-script-mode
+## Local variables:
+## mode: shell-script
+## End:

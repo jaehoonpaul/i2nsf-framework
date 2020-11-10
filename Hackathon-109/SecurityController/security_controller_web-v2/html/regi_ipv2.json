@@ -1,0 +1,20 @@
+{
+    "ietf-i2nsf-cfi-policy:i2nsf-cfi": {
+	"policy": [{
+	    	"policy-name": "Test2",
+		"endpoint-group": {
+			"user-group": [
+                		{
+					"name": "employees",
+					"range-ip-address": [
+		                        {
+                	       			"start-ip-address": "221.159.112.1",
+						"end-ip-address": "221.159.112.90"
+                        		}
+					]
+                		}
+            		]
+		}
+	}]
+    }
+}

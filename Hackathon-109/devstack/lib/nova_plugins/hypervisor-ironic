@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# lib/nova_plugins/hypervisor-ironic
+# Configure the ironic hypervisor
+
+# Enable with:
+# VIRT_DRIVER=ironic
+
+# Dependencies:
+# ``functions`` file
+# ``nova`` configuration
+
+# install_nova_hypervisor - install any external requirements
+# configure_nova_hypervisor - make configuration changes, including those to other services
+# start_nova_hypervisor - start any external services
+# stop_nova_hypervisor - stop any external services
+# cleanup_nova_hypervisor - remove transient data and cache
+
+# Save trace setting
+_XTRACE_HYP_IRONIC=$(set +o | grep xtrace)
+set +o xtrace
+
+source $TOP_DIR/lib/nova_plugins/functions-libvirt
+
+# Defaults
+# --------
+
+# Entry Points
+# ------------
+
+# clean_nova_hypervisor - Clean up an installation
+function cleanup_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+# configure_nova_hypervisor - Set config files, create data dirs, etc
+function configure_nova_hypervisor {
+    if ! is_ironic_hardware; then
+        configure_libvirt
+    fi
+
+    iniset $NOVA_CONF DEFAULT compute_driver ironic.IronicDriver
+
+    # ironic section
+    iniset $NOVA_CONF ironic auth_type password
+    iniset $NOVA_CONF ironic username admin
+    iniset $NOVA_CONF ironic password $ADMIN_PASSWORD
+    iniset $NOVA_CONF ironic auth_url $KEYSTONE_SERVICE_URI
+    iniset $NOVA_CONF ironic project_domain_id default
+    iniset $NOVA_CONF ironic user_domain_id default
+    iniset $NOVA_CONF ironic project_name demo
+    iniset $NOVA_CONF ironic region_name $REGION_NAME
+
+    # These are used with crufty legacy ironicclient
+    iniset $NOVA_CONF ironic api_max_retries 300
+    iniset $NOVA_CONF ironic api_retry_interval 5
+    # These are used with shiny new openstacksdk
+    iniset $NOVA_CONF ironic connect_retries 300
+    iniset $NOVA_CONF ironic connect_retry_delay 5
+    iniset $NOVA_CONF ironic status_code_retries 300
+    iniset $NOVA_CONF ironic status_code_retry_delay 5
+}
+
+# install_nova_hypervisor() - Install external components
+function install_nova_hypervisor {
+    if is_ironic_hardware; then
+        return
+    fi
+    install_libvirt
+}
+
+# start_nova_hypervisor - Start any required external services
+function start_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+# stop_nova_hypervisor - Stop any external services
+function stop_nova_hypervisor {
+    # This function intentionally left blank
+    :
+}
+
+
+# Restore xtrace
+$_XTRACE_HYP_IRONIC
+
+# Local variables:
+# mode: shell-script
+# End:

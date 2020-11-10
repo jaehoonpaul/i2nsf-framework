@@ -1,0 +1,232 @@
+module: ietf-i2nsf-policy-rule-for-nsf
+  +--rw i2nsf-security-policy
+     +--rw system-policy* [system-policy-name]
+        +--rw system-policy-name     string
+        +--rw priority-usage?        identityref
+        +--rw resolution-strategy?   identityref
+        +--rw default-action?        identityref
+        +--rw rules* [rule-name]
+           +--rw rule-name                     string
+           +--rw rule-description?             string
+           +--rw rule-priority?                uint8
+           +--rw rule-enable?                  boolean
+           +--rw time-zone
+           |  +--rw absolute-time-zone
+           |  |  +--rw start-time?   start-time-type
+           |  |  +--rw end-time?     end-time-type
+           |  +--rw periodic-time-zone
+           |     +--rw day
+           |     |  +--rw every-day?      boolean
+           |     |  +--rw specific-day*   day-type
+           |     +--rw month
+           |        +--rw every-month?      boolean
+           |        +--rw specific-month*   month-type
+           +--rw event-clause-container
+           |  +--rw event-clause-description?   string
+           |  +--rw event-clauses
+           |     +--rw system-event*   identityref
+           |     +--rw system-alarm*   identityref
+           +--rw condition-clause-container
+           |  +--rw condition-clause-description?      string
+           |  +--rw packet-security-ipv4-condition
+           |  |  +--rw pkt-sec-ipv4-header-length
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-header-length*         uint8
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-header-length* [start-ipv4-header-length end-ipv4-header-length]
+           |  |  |           +--rw start-ipv4-header-length    uint8
+           |  |  |           +--rw end-ipv4-header-length      uint8
+           |  |  +--rw pkt-sec-ipv4-tos*               identityref
+           |  |  +--rw pkt-sec-ipv4-total-length
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-total-length*         uint16
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-total-length* [start-ipv4-total-length end-ipv4-total-length]
+           |  |  |           +--rw start-ipv4-total-length    uint16
+           |  |  |           +--rw end-ipv4-total-length      uint16
+           |  |  +--rw pkt-sec-ipv4-id*                uint16
+           |  |  +--rw pkt-sec-ipv4-fragment-flags*    identityref
+           |  |  +--rw pkt-sec-ipv4-fragment-offset
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-fragment-offset*         uint16
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-fragment-offset* [start-ipv4-fragment-offset end-ipv4-fragment-offset]
+           |  |  |           +--rw start-ipv4-fragment-offset    uint16
+           |  |  |           +--rw end-ipv4-fragment-offset      uint16
+           |  |  +--rw pkt-sec-ipv4-ttl
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-ttl*         uint8
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-ttl* [start-ipv4-ttl end-ipv4-ttl]
+           |  |  |           +--rw start-ipv4-ttl    uint8
+           |  |  |           +--rw end-ipv4-ttl      uint8
+           |  |  +--rw pkt-sec-ipv4-protocol*          identityref
+           |  |  +--rw pkt-sec-ipv4-src
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-address* [ipv4]
+           |  |  |     |     +--rw ipv4                   inet:ipv4-address
+           |  |  |     |     +--rw (subnet)?
+           |  |  |     |        +--:(prefix-length)
+           |  |  |     |        |  +--rw prefix-length?   uint8
+           |  |  |     |        +--:(netmask)
+           |  |  |     |           +--rw netmask?         yang:dotted-quad
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-address* [start-ipv4-address end-ipv4-address]
+           |  |  |           +--rw start-ipv4-address    inet:ipv4-address
+           |  |  |           +--rw end-ipv4-address      inet:ipv4-address
+           |  |  +--rw pkt-sec-ipv4-dest
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv4-address* [ipv4]
+           |  |  |     |     +--rw ipv4                   inet:ipv4-address
+           |  |  |     |     +--rw (subnet)?
+           |  |  |     |        +--:(prefix-length)
+           |  |  |     |        |  +--rw prefix-length?   uint8
+           |  |  |     |        +--:(netmask)
+           |  |  |     |           +--rw netmask?         yang:dotted-quad
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv4-address* [start-ipv4-address end-ipv4-address]
+           |  |  |           +--rw start-ipv4-address    inet:ipv4-address
+           |  |  |           +--rw end-ipv4-address      inet:ipv4-address
+           |  |  +--rw pkt-sec-ipv4-ipopts*            identityref
+           |  |  +--rw pkt-sec-ipv4-sameip?            boolean
+           |  |  +--rw pkt-sec-ipv4-geoip*             string
+           |  +--rw packet-security-ipv6-condition
+           |  |  +--rw pkt-sec-ipv6-traffic-class*    identityref
+           |  |  +--rw pkt-sec-ipv6-flow-label
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv6-flow-label*         uint32
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv6-flow-label* [start-ipv6-flow-label end-ipv6-flow-label]
+           |  |  |           +--rw start-ipv6-flow-label    uint32
+           |  |  |           +--rw end-ipv6-flow-label      uint32
+           |  |  +--rw pkt-sec-ipv6-payload-length
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv6-payload-length*         uint16
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv6-payload-length* [start-ipv6-payload-length end-ipv6-payload-length]
+           |  |  |           +--rw start-ipv6-payload-length    uint16
+           |  |  |           +--rw end-ipv6-payload-length      uint16
+           |  |  +--rw pkt-sec-ipv6-next-header*      identityref
+           |  |  +--rw pkt-sec-ipv6-hop-limit
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv6-hop-limit*         uint8
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv6-hop-limit* [start-ipv6-hop-limit end-ipv6-hop-limit]
+           |  |  |           +--rw start-ipv6-hop-limit    uint8
+           |  |  |           +--rw end-ipv6-hop-limit      uint8
+           |  |  +--rw pkt-sec-ipv6-src
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw ipv6-address* [ipv6]
+           |  |  |     |     +--rw ipv6             inet:ipv6-address
+           |  |  |     |     +--rw prefix-length?   uint8
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-ipv6-address* [start-ipv6-address end-ipv6-address]
+           |  |  |           +--rw start-ipv6-address    inet:ipv6-address
+           |  |  |           +--rw end-ipv6-address      inet:ipv6-address
+           |  |  +--rw pkt-sec-ipv6-dest
+           |  |     +--rw (match-type)?
+           |  |        +--:(exact-match)
+           |  |        |  +--rw ipv6-address* [ipv6]
+           |  |        |     +--rw ipv6             inet:ipv6-address
+           |  |        |     +--rw prefix-length?   uint8
+           |  |        +--:(range-match)
+           |  |           +--rw range-ipv6-address* [start-ipv6-address end-ipv6-address]
+           |  |              +--rw start-ipv6-address    inet:ipv6-address
+           |  |              +--rw end-ipv6-address      inet:ipv6-address
+           |  +--rw packet-security-tcp-condition
+           |  |  +--rw pkt-sec-tcp-src-port-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw port-num*         inet:port-number
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-port-num* [start-port-num end-port-num]
+           |  |  |           +--rw start-port-num    inet:port-number
+           |  |  |           +--rw end-port-num      inet:port-number
+           |  |  +--rw pkt-sec-tcp-dest-port-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw port-num*         inet:port-number
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-port-num* [start-port-num end-port-num]
+           |  |  |           +--rw start-port-num    inet:port-number
+           |  |  |           +--rw end-port-num      inet:port-number
+           |  |  +--rw pkt-sec-tcp-seq-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw tcp-seq-num*         uint32
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-tcp-seq-num* [start-tcp-seq-num end-tcp-seq-num]
+           |  |  |           +--rw start-tcp-seq-num    uint32
+           |  |  |           +--rw end-tcp-seq-num      uint32
+           |  |  +--rw pkt-sec-tcp-ack-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw tcp-ack-num*         uint32
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-tcp-ack-num* [start-tcp-ack-num end-tcp-ack-num]
+           |  |  |           +--rw start-tcp-ack-num    uint32
+           |  |  |           +--rw end-tcp-ack-num      uint32
+           |  |  +--rw pkt-sec-tcp-window-size
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw tcp-window-size*         uint16
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-tcp-window-size* [start-tcp-window-size end-tcp-window-size]
+           |  |  |           +--rw start-tcp-window-size    uint16
+           |  |  |           +--rw end-tcp-window-size      uint16
+           |  |  +--rw pkt-sec-tcp-flags*           identityref
+           |  +--rw packet-security-udp-condition
+           |  |  +--rw pkt-sec-udp-src-port-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw port-num*         inet:port-number
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-port-num* [start-port-num end-port-num]
+           |  |  |           +--rw start-port-num    inet:port-number
+           |  |  |           +--rw end-port-num      inet:port-number
+           |  |  +--rw pkt-sec-udp-dest-port-num
+           |  |  |  +--rw (match-type)?
+           |  |  |     +--:(exact-match)
+           |  |  |     |  +--rw port-num*         inet:port-number
+           |  |  |     +--:(range-match)
+           |  |  |        +--rw range-port-num* [start-port-num end-port-num]
+           |  |  |           +--rw start-port-num    inet:port-number
+           |  |  |           +--rw end-port-num      inet:port-number
+           |  |  +--rw pkt-sec-udp-total-length
+           |  |     +--rw (match-type)?
+           |  |        +--:(exact-match)
+           |  |        |  +--rw udp-total-length*         uint32
+           |  |        +--:(range-match)
+           |  |           +--rw range-udp-total-length* [start-udp-total-length end-udp-total-length]
+           |  |              +--rw start-udp-total-length    uint32
+           |  |              +--rw end-udp-total-length      uint32
+           |  +--rw packet-security-icmp-condition
+           |  |  +--rw pkt-sec-icmp-type-and-code*   identityref
+           |  +--rw packet-security-http-condition
+           |  |  +--rw pkt-sec-uri-content*   string
+           |  |  +--rw pkt-sec-url-content*   string
+           |  +--rw packet-security-voice-condition
+           |  |  +--rw pkt-sec-src-voice-id*    string
+           |  |  +--rw pkt-sec-dest-voice-id*   string
+           |  |  +--rw pkt-sec-user-agent*      string
+           |  +--rw packet-security-ddos-condition
+           |     +--rw pkt-sec-alert-rate?   uint32
+           +--rw action-clause-container
+              +--rw action-clause-description?   string
+              +--rw packet-action
+              |  +--rw ingress-action?   identityref
+              |  +--rw egress-action?    identityref
+              |  +--rw log-action?       identityref
+              +--rw advanced-action
+                 +--rw content-security-control*    identityref
+                 +--rw attack-mitigation-control*   identityref

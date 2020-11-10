@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<capabilities>
+ <capability>urn:ietf:params:netconf:base:1.0</capability>
+</capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="1" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<edit-config>
+ <target>
+  <running />
+  </target>
+  <config>
+      <i2nsf-nsf-registrations
+        xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-reg-interface"
+          xmlns:capa="urn:ietf:params:xml:ns:yang:ietf-i2nsf-capability">
+        <i2nsf-nsf-capability-registration>
+          <nsf-name>voip_volte_filter</nsf-name>
+          <nsf-capability-info>
+            <i2nsf-capability>
+              <condition-capabilities>
+                <advanced-nsf-capabilities>
+                  <voip-volte-capa>capa:voice-id</voip-volte-capa>
+                </advanced-nsf-capabilities>
+              </condition-capabilities>
+              <action-capabilities>
+                <ingress-action-capa>capa:pass</ingress-action-capa>
+                <ingress-action-capa>capa:drop</ingress-action-capa>
+                <ingress-action-capa>capa:alert</ingress-action-capa>
+                <egress-action-capa>capa:pass</egress-action-capa>
+                <egress-action-capa>capa:drop</egress-action-capa>
+                <egress-action-capa>capa:alert</egress-action-capa>
+              </action-capabilities>
+            </i2nsf-capability>
+            <nsf-performance-capability>
+            <processing>
+              <processing-average>1000</processing-average>
+              <processing-peak>5000</processing-peak>
+            </processing>
+            <bandwidth>
+              <outbound>
+                <outbound-average>1000</outbound-average>
+                <outbound-peak>5000</outbound-peak>
+              </outbound>
+              <inbound>
+                <inbound-average>1000</inbound-average>
+                <inbound-peak>5000</inbound-peak>
+              </inbound>
+            </bandwidth>
+          </nsf-performance-capability>
+        </nsf-capability-info>
+      </i2nsf-nsf-capability-registration>
+    </i2nsf-nsf-registrations>
+  </config>
+</edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="2" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<close-session />
+</rpc>
+]]>]]>

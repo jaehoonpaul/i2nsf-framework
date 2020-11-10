@@ -1,0 +1,19 @@
+<ietf-i2nsf-cfi-policy:policy>
+  <policy-name>security_policy_for_ddos_attacks</policy-name>
+  <rule>
+    <rule-name>100_packets_per_second</rule-name>
+    <condition>
+      <ddos-condition>
+        <destination-target>
+          <dest-target>webservers</dest-target>
+        </destination-target>
+        <rate-limit>
+          <packet-per-second>100</packet-per-second>
+        </rate-limit>
+      </ddos-condition>
+    </condition>
+    <action>
+      <primary-action>drop</primary-action>
+    </action>
+  </rule>
+</ietf-i2nsf-cfi-policy:policy>
