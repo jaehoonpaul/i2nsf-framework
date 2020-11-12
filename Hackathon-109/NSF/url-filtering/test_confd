@@ -1,2 +1,3 @@
 sleep 15
 python /home/ubuntu/init_send_ip.py
+sudo python /home/ubuntu/rest_server.py
