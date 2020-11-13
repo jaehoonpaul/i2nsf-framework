@@ -359,18 +359,20 @@ $ python openstack_server.py
 
 8. Employee instance should not be able to connect to facebook and instagram
 
-9. For Monitoring access the web-based monitoring with browser and enter the URL of monitoring
+9. For Monitoring, access the web-based monitoring
+\#Use a web browser and enter
 ```
 http://<Analyzer-IP-address>:5000/
+username: admin
+password: secu 
 ```
-
-10. Login with Username: admin and Password: secu
 
 11. Enter the name of the NSF and submit
 
 ## Termination
 
 1. Security Controller
+
 \#In JETCONF console, press ctrl + c
 
 \#Go to /home/ubuntu directory and enter
@@ -383,6 +385,7 @@ $ ./clean_security_controller
 \#In DMS Console, press ctrl + c
 
 3. Openstack
+
 \#In openstack console, press ctrl + c and enter
  ```
 $ python clean.py
