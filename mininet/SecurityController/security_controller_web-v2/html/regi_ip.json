@@ -1,0 +1,18 @@
+{
+    "ietf-i2nsf-cfi-policy:i2nsf-cfi-policy": [
+        {
+            "policy-name": "Registration-Policy",
+            "endpoint-groups": {
+                "user-group": [
+                    {
+                        "name": "employees",
+                        "range-ipv4-address": {
+                            "start-ipv4-address": "10.0.0.3",
+                            "end-ipv4-address": "10.0.0.40"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

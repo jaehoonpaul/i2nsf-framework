@@ -1,0 +1,102 @@
+version: '3.4'
+services:
+  apache2:
+    image: i2nsfapache:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile_apache2
+    container_name: "i2nsfapache"
+    network_mode: host
+    ports:
+      - '80:80'
+    restart: always
+
+  jetconf:
+    image: i2nsfjetconf:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile_jetconf
+    container_name: "i2nsfjetconf"
+    depends_on:
+      - mysqldb
+    restart: always
+    network_mode: host
+    ports:
+      - '8443:8443'
+
+  mysqldb:
+    image: mysql:5.7
+    container_name: "i2nsfmysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: secu
+      MYSQL_DATABASE: nsfdb
+    restart: always
+    network_mode: host
+    ports:
+      - '3306:3306'
+
+  translator:
+    image: i2nsftranslator:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile_translator
+    container_name: "i2nsftranslator"
+    depends_on:
+      - mysqldb
+      - registration
+      - jetconf
+    restart: always
+    network_mode: host
+    ports:
+      - '55552:55552'
+      - '55560:55560'
+      - '55570:55570'
+
+  registration:
+    image: i2nsfregistration:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile_registration
+    container_name: "i2nsfregistration"
+    restart: always
+    network_mode: host
+    ports:
+      - '2022:2022'
+
+  dms:
+    image: i2nsfdms:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile_dms
+    container_name: "i2nsfdms"
+    depends_on:
+      - registration
+      - translator
+      - mysqldb
+      - jetconf
+    restart: always
+    network_mode: host
+    ports:
+      - '55561:55561'
+      - '55562:55562'
+
+        #  mininet:
+        #    image: i2nsfmininet:latest
+        #    build:
+        #      context: .
+        #      dockerfile: ./Dockerfile_mininet
+        #    container_name: "i2nsfmininet"
+        #    pid: 'host'
+        #    privileged: true
+        #    depends_on:
+        #      - registration
+        #      - dms
+        #      - translator
+        #      - mysqldb
+        #      - jetconf
+        #    restart: always
+        #    network_mode: host
+        #    ports:
+        #      - '55564:55564'
+        #    volumes: 
+        #      - /var/run/docker.sock:/var/run/docker.sock

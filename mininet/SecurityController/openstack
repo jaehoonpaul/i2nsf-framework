@@ -1,0 +1,9 @@
+# Set up password auth credentials now that Keystone is bootstrapped
+export OS_IDENTITY_API_VERSION=3
+export OS_AUTH_URL=http://115.145.178.180/identity
+export OS_USERNAME=admin
+export OS_USER_DOMAIN_ID=default
+export OS_PASSWORD=devstack
+export OS_PROJECT_NAME=admin
+export OS_PROJECT_DOMAIN_ID=default
+export OS_REGION_NAME=RegionOne

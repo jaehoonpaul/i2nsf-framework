@@ -1,0 +1,38 @@
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update && apt-get -y install software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get -y update && apt-get -y upgrade && \ 
+    apt-get install -y python python-pip python-mysqldb python-dev \
+    libmysqlclient-dev mysql-client-core-5.7 libxml2-utils mysql-server \
+    python3.6 python3-pip libxml2-utils \
+    libssl-dev make git
+
+RUN pip install numpy MySQL-python paramiko --user
+
+#ADD ./jetconf.tar /home/ubuntu/works/
+#ADD ./html /var/www/html
+
+ADD ./DMS /home/ubuntu
+
+# confd
+RUN /home/ubuntu/confd-basic-6.6.linux.x86_64/confd-basic-6.6.linux.x86_64.installer.bin /home/ubuntu/confd-6.6
+RUN ["/bin/bash", "-c", "source /home/ubuntu/confd-6.6/confdrc"]
+
+# JETCONF
+# Test jetconf with curl request
+# curl --http2 -k --cert-type PEM -E ~/example-client.pem -X GET https://localhost:8443/restconf/data
+ADD ./SecurityController/security_controller_web-v2/jetconf.tar /home/ubuntu/works/
+
+WORKDIR /home/ubuntu/works/jetconf
+RUN pip install -r requirements.txt
+RUN python3 -m pip install .
+
+EXPOSE 55561
+EXPOSE 55562
+
+WORKDIR /home/ubuntu
+
+CMD python dms_server.py

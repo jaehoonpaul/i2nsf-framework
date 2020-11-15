@@ -1,0 +1,193 @@
+#!/bin/bash
+#
+# lib/rpc_backend
+# Interface for installing RabbitMQ on the system
+
+# Dependencies:
+#
+# - ``functions`` file
+# - ``RABBIT_{HOST|PASSWORD|USERID}`` must be defined when RabbitMQ is used
+
+# ``stack.sh`` calls the entry points in this order:
+#
+# - check_rpc_backend
+# - install_rpc_backend
+# - restart_rpc_backend
+# - iniset_rpc_backend (stable interface)
+#
+# Note: if implementing an out of tree plugin for an RPC backend, you
+# should install all services through normal plugin methods, then
+# redefine ``iniset_rpc_backend`` in your code. That's the one portion
+# of this file which is a standard interface.
+
+# Save trace setting
+_XTRACE_RPC_BACKEND=$(set +o | grep xtrace)
+set +o xtrace
+
+RABBIT_USERID=${RABBIT_USERID:-stackrabbit}
+if is_service_enabled rabbit; then
+    RABBIT_HOST=${RABBIT_HOST:-$SERVICE_HOST}
+fi
+
+# Functions
+# ---------
+
+# clean up after rpc backend - eradicate all traces so changing backends
+# produces a clean switch
+function cleanup_rpc_backend {
+    if is_service_enabled rabbit; then
+        # Obliterate rabbitmq-server
+        uninstall_package rabbitmq-server
+        # in case it's not actually running, /bin/true at the end
+        sudo killall epmd || sudo killall -9 epmd || /bin/true
+        if is_ubuntu; then
+            # And the Erlang runtime too
+            apt_get purge -y erlang*
+        fi
+    fi
+}
+
+# install rpc backend
+function install_rpc_backend {
+    if is_service_enabled rabbit; then
+        # Install rabbitmq-server
+        install_package rabbitmq-server
+        if is_suse; then
+            install_package rabbitmq-server-plugins
+            # the default systemd socket activation only listens on the loopback interface
+            # which causes rabbitmq to try to start its own epmd
+            sudo mkdir -p /etc/systemd/system/epmd.socket.d
+            cat <<EOF | sudo tee /etc/systemd/system/epmd.socket.d/ports.conf >/dev/null
+[Socket]
+ListenStream=
+ListenStream=[::]:4369
+EOF
+            sudo systemctl daemon-reload
+            sudo systemctl restart epmd.socket epmd.service
+        fi
+        if is_fedora || is_suse; then
+            # NOTE(jangutter): If rabbitmq is not running (as in a fresh
+            # install) then rabbit_setuser triggers epmd@0.0.0.0.socket with
+            # socket activation. This fails the first time and does not get
+            # cleared. It is benign, but the workaround is to start rabbitmq a
+            # bit earlier for RPM based distros.
+            sudo systemctl --now enable rabbitmq-server
+        fi
+    fi
+}
+
+# restart the rpc backend
+function restart_rpc_backend {
+    if is_service_enabled rabbit; then
+        # Start rabbitmq-server
+        echo_summary "Starting RabbitMQ"
+        # NOTE(bnemec): Retry initial rabbitmq configuration to deal with
+        # the fact that sometimes it fails to start properly.
+        # Reference: https://bugzilla.redhat.com/show_bug.cgi?id=1144100
+        # NOTE(tonyb): Extend the original retry logic to only restart rabbitmq
+        # every second time around the loop.
+        # See: https://bugs.launchpad.net/devstack/+bug/1449056 for details on
+        # why this is needed.  This can bee seen on vivid and Debian unstable
+        # (May 2015)
+        # TODO(tonyb): Remove this when Debian and Ubuntu have a fixed systemd
+        # service file.
+        local i
+        for i in `seq 20`; do
+            local rc=0
+
+            [[ $i -eq "20" ]] && die $LINENO "Failed to set rabbitmq password"
+
+            if [[ $(( i % 2 )) == "0" ]] ; then
+                restart_service rabbitmq-server
+            fi
+
+            rabbit_setuser "$RABBIT_USERID" "$RABBIT_PASSWORD" || rc=$?
+            if [ $rc -ne 0 ]; then
+                continue
+            fi
+
+            # change the rabbit password since the default is "guest"
+            sudo rabbitmqctl change_password \
+                $RABBIT_USERID $RABBIT_PASSWORD || rc=$?
+            if [ $rc -ne 0 ]; then
+                continue;
+            fi
+
+            break
+        done
+        # NOTE(frickler): Remove the default guest user
+        sudo rabbitmqctl delete_user guest || true
+    fi
+}
+
+# adds a vhost to the rpc backend
+function rpc_backend_add_vhost {
+    local vhost="$1"
+    if is_service_enabled rabbit; then
+        if [ -z `sudo rabbitmqctl list_vhosts | grep $vhost` ]; then
+            sudo rabbitmqctl add_vhost $vhost
+            sudo rabbitmqctl set_permissions -p $vhost $RABBIT_USERID ".*" ".*" ".*"
+        fi
+    else
+        echo 'RPC backend does not support vhosts'
+        return 1
+    fi
+}
+
+# Returns the address of the RPC backend in URL format.
+function get_transport_url {
+    local virtual_host=$1
+    if is_service_enabled rabbit || { [ -n "$RABBIT_HOST" ] && [ -n "$RABBIT_PASSWORD" ]; }; then
+        echo "rabbit://$RABBIT_USERID:$RABBIT_PASSWORD@$RABBIT_HOST:5672/$virtual_host"
+    fi
+}
+
+# Returns the address of the Notification backend in URL format.  This
+# should be used to set the transport_url option in the
+# oslo_messaging_notifications group.
+function get_notification_url {
+    local virtual_host=$1
+    if is_service_enabled rabbit || { [ -n "$RABBIT_HOST" ] && [ -n "$RABBIT_PASSWORD" ]; }; then
+        echo "rabbit://$RABBIT_USERID:$RABBIT_PASSWORD@$RABBIT_HOST:5672/$virtual_host"
+    fi
+}
+
+# iniset configuration
+function iniset_rpc_backend {
+    local package=$1
+    local file=$2
+    local section=${3:-DEFAULT}
+    local virtual_host=$4
+    if is_service_enabled rabbit || { [ -n "$RABBIT_HOST" ] && [ -n "$RABBIT_PASSWORD" ]; }; then
+        iniset $file $section transport_url $(get_transport_url "$virtual_host")
+        if [ -n "$RABBIT_HEARTBEAT_TIMEOUT_THRESHOLD" ]; then
+            iniset $file oslo_messaging_rabbit heartbeat_timeout_threshold $RABBIT_HEARTBEAT_TIMEOUT_THRESHOLD
+        fi
+        if [ -n "$RABBIT_HEARTBEAT_RATE" ]; then
+            iniset $file oslo_messaging_rabbit heartbeat_rate $RABBIT_HEARTBEAT_RATE
+        fi
+    fi
+}
+
+function rabbit_setuser {
+    local user="$1" pass="$2" found="" out=""
+    out=$(sudo rabbitmqctl list_users) ||
+        { echo "failed to list users" 1>&2; return 1; }
+    found=$(echo "$out" | awk '$1 == user { print $1 }' "user=$user")
+    if [ "$found" = "$user" ]; then
+        sudo rabbitmqctl change_password "$user" "$pass" ||
+            { echo "failed changing pass for '$user'" 1>&2; return 1; }
+    else
+        sudo rabbitmqctl add_user "$user" "$pass" ||
+            { echo "failed changing pass for $user"; return 1; }
+    fi
+    sudo rabbitmqctl set_permissions "$user" ".*" ".*" ".*"
+}
+
+# Restore xtrace
+$_XTRACE_RPC_BACKEND
+
+# Tell emacs to use shell-script-mode
+## Local variables:
+## mode: shell-script
+## End:

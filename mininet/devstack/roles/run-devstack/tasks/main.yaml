@@ -1,0 +1,11 @@
+- name: Run devstack
+  shell:
+    cmd: |
+      ./stack.sh 2>&1
+      rc=$?
+      echo "*** FINISHED ***"
+      exit $rc
+  args:
+    chdir: "{{devstack_base_dir}}/devstack"
+  become: true
+  become_user: stack

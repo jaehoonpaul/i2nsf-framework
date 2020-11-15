@@ -1,0 +1,33 @@
+{
+        "ietf-i2nsf-cfi-policy:policy": {
+                "policy-name": "security_policy_for_blocking_sns",
+                "rule":[{
+                        "rule-name": "block_access_to_sns_during_office_hours",
+
+                        "condition": {
+                                "firewall-condition": {
+                                        "source-target": {
+                                                "src-target": "employees"
+                                        }
+                                },
+                                "custom-condition": {
+                                        "destination-target": {
+                                                "dest-target": "sns-websites"
+                                        }
+                                }
+                        },
+                        "event":
+                            {
+                                "time-information": {
+                                        "begin-time": "04:00",
+                                        "end-time": "16:00"
+                                }
+                            }
+                                 ,
+                        "action": {
+                                  "primary-action": "Reject"
+                        }
+
+                }]
+        }
+}
