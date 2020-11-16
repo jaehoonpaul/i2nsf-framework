@@ -1,0 +1,27 @@
+<ietf-i2nsf-cfi-policy:policy>
+  <policy-name>security_policy_for_blocking_sns</policy-name>
+  <rule>
+    <rule-name>block_access_to_sns_during_office_hours</rule-name>
+    <condition>
+      <firewall-condition>
+        <source-target>
+          <src-target>employees</src-target>
+        </source-target>
+      </firewall-condition>
+      <custom-condition>
+        <destination-target>
+          <dest-target>sns-websites</dest-target>
+        </destination-target>
+      </custom-condition>
+    </condition>
+    <event>
+      <time-information>
+        <begin-time>09:00</begin-time>
+        <end-time>18:00</end-time>
+      </time-information>
+    </event>
+    <action>
+      <primary-action>drop</primary-action>
+    </action>
+  </rule>
+</ietf-i2nsf-cfi-policy:policy>

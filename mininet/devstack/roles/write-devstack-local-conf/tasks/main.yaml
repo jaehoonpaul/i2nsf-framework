@@ -1,0 +1,14 @@
+- name: Write a job-specific local_conf file
+  become: true
+  become_user: stack
+  devstack_local_conf:
+    path: "{{ devstack_local_conf_path }}"
+    plugins: "{{ devstack_plugins|default(omit) }}"
+    base_services: "{{ devstack_base_services|default(omit) }}"
+    services: "{{ devstack_services|default(omit) }}"
+    localrc: "{{ devstack_localrc|default(omit) }}"
+    local_conf: "{{ devstack_local_conf|default(omit) }}"
+    base_dir: "{{ devstack_base_dir|default(omit) }}"
+    projects: "{{ zuul.projects }}"
+    project: "{{ zuul.project }}"
+    tempest_plugins: "{{ tempest_plugins|default(omit) }}"

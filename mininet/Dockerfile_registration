@@ -1,0 +1,40 @@
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update && apt-get -y install software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get -y update && apt-get -y upgrade && \ 
+    apt-get install -y python python-pip python-mysqldb \
+    curl python-dev libmysqlclient-dev mysql-client-core-5.7 \
+    libxml2-utils apache2 php-pear libapache2-mod-php \
+    # mysql-server \
+    php-mysql php-fpm php-cli php-mysqlnd php-pgsql php-sqlite3 \
+    php-redis php-apcu php-intl php-imagick php-json php-gd php-curl \
+    python3.6 python3-pip build-essential nghttp2 libnghttp2-dev \
+    libssl-dev make git
+
+RUN pip install numpy==1.14.6 MySQL-python
+
+ADD ./SecurityController /home/ubuntu/
+
+# confd
+RUN /home/ubuntu/confd-basic-6.6.linux.x86_64/confd-basic-6.6.linux.x86_64.installer.bin /home/ubuntu/confd-6.6
+RUN ["/bin/bash", "-c", "source /home/ubuntu/confd-6.6/confdrc"]
+
+# JETCONF
+# Test jetconf with curl request
+# curl --http2 -k --cert-type PEM -E ~/example-client.pem -X GET https://localhost:8443/restconf/data
+ADD ./SecurityController/security_controller_web-v2/jetconf.tar /home/ubuntu/works/
+
+WORKDIR /home/ubuntu/works/jetconf
+RUN pip install -r requirements.txt
+RUN python3 -m pip install .
+
+# Registration
+WORKDIR /home/ubuntu/Registration
+RUN make clean all
+
+EXPOSE 2022
+
+CMD make start 
