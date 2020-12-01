@@ -55,6 +55,7 @@ address in local.conf
 $ ./stack.sh
 # Use FORCE=yes if asked
 $ FORCE=yes ./stack.sh
+NOTE: In this manual database password is "devstack"
 ```
 
 8. Wait until installation finish
