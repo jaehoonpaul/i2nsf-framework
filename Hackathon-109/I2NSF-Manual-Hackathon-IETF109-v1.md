@@ -33,7 +33,7 @@ $ sudo su - stack
 ```
 3. Download source code for from the github link    
 ```
-$ git clone https://opendev.org/openstack/devstack
+$ git clone https://opendev.org/openstack/devstack -b stable/queens
 ```
 4. Go to devstack folder
 ```
