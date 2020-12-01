@@ -53,6 +53,8 @@ address in local.conf
 7. Run stack.sh
 ```
 $ ./stack.sh
+# Use FORCE=yes if asked
+$ FORCE=yes ./stack.sh
 ```
 
 8. Wait until installation finish
