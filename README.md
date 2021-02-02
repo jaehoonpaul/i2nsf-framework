@@ -39,3 +39,11 @@ The programs in this repository are related to the following documents
  
    - This document describes a possible means by which a high level policy (e.g. prevent access to particular types of websites) 
    can be translated to low level policy implementations.
+   
+* Monitoring Interface YANG Data Model
+ [draft-ietf-i2nsf-nsf-monitoring-data-model-04](https://datatracker.ietf.org/doc/draft-ietf-i2nsf-nsf-monitoring-data-model/)
+ 
+   - This document proposes an information model and the corresponding YANG data model for monitoring Network Security Functions 
+   (NSFs) in the Interface to Network Security Functions (I2NSF) framework.
+   
+
