@@ -32,7 +32,7 @@ The programs in this repository are related to the following documents
 * Registration Interface YANG Data Model
  [draft-ietf-i2nsf-registration-interface-dm-08](https://datatracker.ietf.org/doc/draft-ietf-i2nsf-registration-interface-dm/)
  
-  - This document allows for querying of the hardware capabilities (bandwidth, CPU speed, ports ...) from a single interface.
+  - This document allows for querying of the NSF capabilities from a single interface.
 
 * Security Policy Translation in I2NSF
  [draft-yang-i2nsf-security-policy-translation-06](https://datatracker.ietf.org/doc/draft-yang-i2nsf-security-policy-translation/)
