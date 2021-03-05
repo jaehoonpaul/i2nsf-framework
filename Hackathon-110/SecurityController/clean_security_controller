@@ -1,0 +1,5 @@
+sudo killall -9 make
+sudo killall -9 python
+sudo killall -9 sc-server
+make clean
+

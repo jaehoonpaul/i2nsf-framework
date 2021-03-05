@@ -1,0 +1,40 @@
+{
+  "ietf-i2nsf-cfi-policy:i2nsf-cfi-policy": [
+    {
+      "policy-name": "security",
+      "rules": {
+        "rule": [
+          {
+            "rule-name": "block_access_to_sns_during_office_hours",
+            "event": {
+              "time-information": {
+                "start-date-time": "2020-07-15T09:00:00Z",
+                "end-date-time": "2020-07-15T18:00:00Z"
+              }
+            },
+            "condition": {
+              "firewall-condition": {
+                "source": "employees"
+              }
+            },
+            "actions": {
+              "primary-action": "drop"
+            }
+          }
+        ]
+      },
+      "endpoint-groups": {
+        "user-group": [
+          {
+            "name": "employees",
+            "range-ipv4-address": {
+              "start-ipv4-address": "10.0.0.3",
+              "end-ipv4-address": "10.0.0.40"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+

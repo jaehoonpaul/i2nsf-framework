@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<config><i2nsf-cfi-policy><policy-name>Registration-Policy</policy-name><endpoint-groups><user-group><name>Test</name><range-ipv4-address><start-ipv4-address>115.145.178.185</start-ipv4-address><end-ipv4-address>115.145.178.190</end-ipv4-address></range-ipv4-address></user-group></endpoint-groups></i2nsf-cfi-policy></config>

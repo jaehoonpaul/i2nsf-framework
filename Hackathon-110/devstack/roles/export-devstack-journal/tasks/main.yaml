@@ -1,0 +1,54 @@
+# NOTE(andreaf) This bypasses the stage-output role
+- name: Ensure {{ stage_dir }}/logs exists
+  become: true
+  file:
+    path: "{{ stage_dir }}/logs"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: Export legacy stack screen log files
+  become: true
+  shell:
+    cmd: |
+      u=""
+      name=""
+      for u in $(systemctl list-unit-files | grep devstack | awk '{print $1}'); do
+        name=$(echo $u | sed 's/devstack@/screen-/' | sed 's/\.service//')
+        journalctl -o short-precise --unit $u  > {{ stage_dir }}/logs/$name.txt
+      done
+
+- name: Export legacy syslog.txt
+  become: true
+  shell:
+    # The journal contains everything running under systemd, we'll
+    # build an old school version of the syslog with just the
+    # kernel and sudo messages.
+    cmd: |
+      journalctl \
+          -t kernel \
+          -t sudo \
+          --no-pager \
+          --since="$(cat {{ devstack_base_dir }}/log-start-timestamp.txt)" \
+         > {{ stage_dir }}/logs/syslog.txt
+
+# TODO: convert this to ansible
+#  - make a list of the above units
+#  - iterate the list here
+- name: Export journal
+  become: true
+  shell:
+    # Export the journal in export format to make it downloadable
+    # for later searching. It can then be rewritten to a journal native
+    # format locally using systemd-journal-remote. This makes a class of
+    # debugging much easier. We don't do the native conversion here as
+    # some distros do not package that tooling.
+    cmd: |
+      journalctl -o export \
+          --since="$(cat {{ devstack_base_dir }}/log-start-timestamp.txt)" \
+        | xz --threads=0 - > {{ stage_dir }}/logs/devstack.journal.xz
+
+- name: Save journal README
+  become: true
+  template:
+    src: devstack.journal.README.txt.j2
+    dest: '{{ stage_dir }}/logs/devstack.journal.README.txt'

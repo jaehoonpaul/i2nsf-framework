@@ -1,0 +1,439 @@
+#!/bin/bash
+# Subnet IP version
+IP_VERSION=${IP_VERSION:-"4+6"}
+# Validate IP_VERSION
+if [[ $IP_VERSION != "4" ]] && [[ $IP_VERSION != "6" ]] && [[ $IP_VERSION != "4+6" ]]; then
+    die $LINENO "IP_VERSION must be either 4, 6, or 4+6"
+fi
+# Specify if the initial private and external networks should be created
+NEUTRON_CREATE_INITIAL_NETWORKS=${NEUTRON_CREATE_INITIAL_NETWORKS:-True}
+
+## Provider Network Information
+PROVIDER_SUBNET_NAME=${PROVIDER_SUBNET_NAME:-"provider_net"}
+IPV6_PROVIDER_SUBNET_NAME=${IPV6_PROVIDER_SUBNET_NAME:-"provider_net_v6"}
+IPV6_PROVIDER_FIXED_RANGE=${IPV6_PROVIDER_FIXED_RANGE:-}
+IPV6_PROVIDER_NETWORK_GATEWAY=${IPV6_PROVIDER_NETWORK_GATEWAY:-}
+
+PUBLIC_BRIDGE=${PUBLIC_BRIDGE:-br-ex}
+PUBLIC_BRIDGE_MTU=${PUBLIC_BRIDGE_MTU:-1500}
+
+# If Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE=True, assign the gateway IP of the public
+# subnet to the public bridge interface even if Q_USE_PROVIDERNET_FOR_PUBLIC is
+# used.
+Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE=${Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE:-True}
+
+# The name of the default router
+Q_ROUTER_NAME=${Q_ROUTER_NAME:-router1}
+
+# If Q_USE_PUBLIC_VETH=True, create and use a veth pair instead of
+# PUBLIC_BRIDGE.  This is intended to be used with
+# Q_USE_PROVIDERNET_FOR_PUBLIC=True.
+Q_USE_PUBLIC_VETH=${Q_USE_PUBLIC_VETH:-False}
+Q_PUBLIC_VETH_EX=${Q_PUBLIC_VETH_EX:-veth-pub-ex}
+Q_PUBLIC_VETH_INT=${Q_PUBLIC_VETH_INT:-veth-pub-int}
+
+# The next variable is configured by plugin
+# e.g.  _configure_neutron_l3_agent or lib/neutron_plugins/*
+#
+# L3 routers exist per tenant
+Q_L3_ROUTER_PER_TENANT=${Q_L3_ROUTER_PER_TENANT:-True}
+
+
+# Use providernet for public network
+#
+# If Q_USE_PROVIDERNET_FOR_PUBLIC=True, use a provider network
+# for external interface of neutron l3-agent.  In that case,
+# PUBLIC_PHYSICAL_NETWORK specifies provider:physical_network value
+# used for the network.  In case of ofagent, you should add the
+# corresponding entry to your OFAGENT_PHYSICAL_INTERFACE_MAPPINGS.
+# For openvswitch agent, you should add the corresponding entry to
+# your OVS_BRIDGE_MAPPINGS.
+#
+# eg.  (ofagent)
+#    Q_USE_PROVIDERNET_FOR_PUBLIC=True
+#    Q_USE_PUBLIC_VETH=True
+#    PUBLIC_PHYSICAL_NETWORK=public
+#    OFAGENT_PHYSICAL_INTERFACE_MAPPINGS=public:veth-pub-int
+#
+# eg.  (openvswitch agent)
+#    Q_USE_PROVIDERNET_FOR_PUBLIC=True
+#    PUBLIC_PHYSICAL_NETWORK=public
+#    OVS_BRIDGE_MAPPINGS=public:br-ex
+#
+# The provider-network-type defaults to flat, however, the values
+# PUBLIC_PROVIDERNET_TYPE and PUBLIC_PROVIDERNET_SEGMENTATION_ID could
+# be set to specify the parameters for an alternate network type.
+Q_USE_PROVIDERNET_FOR_PUBLIC=${Q_USE_PROVIDERNET_FOR_PUBLIC:-True}
+PUBLIC_PHYSICAL_NETWORK=${PUBLIC_PHYSICAL_NETWORK:-public}
+
+# Generate 40-bit IPv6 Global ID to comply with RFC 4193
+IPV6_GLOBAL_ID=`uuidgen | sed s/-//g | cut -c 23- | sed -e "s/\(..\)\(....\)\(....\)/\1:\2:\3/"`
+
+# IPv6 gateway and subnet defaults, in case they are not customized in localrc
+IPV6_RA_MODE=${IPV6_RA_MODE:-slaac}
+IPV6_ADDRESS_MODE=${IPV6_ADDRESS_MODE:-slaac}
+IPV6_PUBLIC_SUBNET_NAME=${IPV6_PUBLIC_SUBNET_NAME:-ipv6-public-subnet}
+IPV6_PRIVATE_SUBNET_NAME=${IPV6_PRIVATE_SUBNET_NAME:-ipv6-private-subnet}
+IPV6_ADDRS_SAFE_TO_USE=${IPV6_ADDRS_SAFE_TO_USE:-fd$IPV6_GLOBAL_ID::/56}
+# if we got larger than a /64 safe to use, we only use the first /64 to
+# avoid side effects outlined in rfc7421
+FIXED_RANGE_V6=${FIXED_RANGE_V6:-$(echo $IPV6_ADDRS_SAFE_TO_USE | awk -F '/' '{ print $1"/"($2>63 ? $2 : 64) }')}
+IPV6_PRIVATE_NETWORK_GATEWAY=${IPV6_PRIVATE_NETWORK_GATEWAY:-}
+IPV6_PUBLIC_RANGE=${IPV6_PUBLIC_RANGE:-2001:db8::/64}
+IPV6_PUBLIC_NETWORK_GATEWAY=${IPV6_PUBLIC_NETWORK_GATEWAY:-2001:db8::2}
+IPV6_ROUTER_GW_IP=${IPV6_ROUTER_GW_IP:-2001:db8::1}
+
+# Gateway and subnet defaults, in case they are not customized in localrc
+NETWORK_GATEWAY=${NETWORK_GATEWAY:-}
+PUBLIC_NETWORK_GATEWAY=${PUBLIC_NETWORK_GATEWAY:-}
+PRIVATE_SUBNET_NAME=${PRIVATE_SUBNET_NAME:-"private-subnet"}
+PUBLIC_SUBNET_NAME=${PUBLIC_SUBNET_NAME:-"public-subnet"}
+
+# Subnetpool defaults
+USE_SUBNETPOOL=${USE_SUBNETPOOL:-True}
+SUBNETPOOL_NAME_V4=${SUBNETPOOL_NAME:-"shared-default-subnetpool-v4"}
+SUBNETPOOL_NAME_V6=${SUBNETPOOL_NAME:-"shared-default-subnetpool-v6"}
+
+SUBNETPOOL_PREFIX_V4=${SUBNETPOOL_PREFIX_V4:-$IPV4_ADDRS_SAFE_TO_USE}
+SUBNETPOOL_PREFIX_V6=${SUBNETPOOL_PREFIX_V6:-$IPV6_ADDRS_SAFE_TO_USE}
+
+SUBNETPOOL_SIZE_V4=${SUBNETPOOL_SIZE_V4:-26}
+SUBNETPOOL_SIZE_V6=${SUBNETPOOL_SIZE_V6:-64}
+
+default_v4_route_devs=$(ip -4 route | grep ^default | awk '{print $5}')
+die_if_not_set $LINENO default_v4_route_devs "Failure retrieving default IPv4 route devices"
+
+default_v6_route_devs=$(ip -6 route list match default table all | grep via | awk '{print $5}')
+
+function _determine_config_l3 {
+    local opts="--config-file $NEUTRON_CONF --config-file $Q_L3_CONF_FILE"
+    echo "$opts"
+}
+
+function _configure_neutron_l3_agent {
+
+    cp $NEUTRON_DIR/etc/l3_agent.ini.sample $Q_L3_CONF_FILE
+
+    iniset $Q_L3_CONF_FILE DEFAULT debug $ENABLE_DEBUG_LOG_LEVEL
+    iniset $Q_L3_CONF_FILE AGENT root_helper "$Q_RR_COMMAND"
+    if [[ "$Q_USE_ROOTWRAP_DAEMON" == "True" ]]; then
+        iniset $Q_L3_CONF_FILE AGENT root_helper_daemon "$Q_RR_DAEMON_COMMAND"
+    fi
+
+    _neutron_setup_interface_driver $Q_L3_CONF_FILE
+
+    neutron_plugin_configure_l3_agent $Q_L3_CONF_FILE
+
+    # If we've given a PUBLIC_INTERFACE to take over, then we assume
+    # that we can own the whole thing, and privot it into the OVS
+    # bridge. If we are not, we're probably on a single interface
+    # machine, and we just setup NAT so that fixed guests can get out.
+    if [[ -n "$PUBLIC_INTERFACE" ]]; then
+        _move_neutron_addresses_route "$PUBLIC_INTERFACE" "$OVS_PHYSICAL_BRIDGE" True False "inet"
+
+        if [[ $(ip -f inet6 a s dev "$PUBLIC_INTERFACE" | grep -c 'global') != 0 ]]; then
+            _move_neutron_addresses_route "$PUBLIC_INTERFACE" "$OVS_PHYSICAL_BRIDGE" False False "inet6"
+        fi
+    else
+        for d in $default_v4_route_devs; do
+            sudo iptables -t nat -A POSTROUTING -o $d -s $FLOATING_RANGE -j MASQUERADE
+        done
+    fi
+}
+
+# Explicitly set router id in l3 agent configuration
+function _neutron_set_router_id {
+    if [[ "$Q_L3_ROUTER_PER_TENANT" == "False" ]]; then
+        iniset $Q_L3_CONF_FILE DEFAULT router_id $ROUTER_ID
+    fi
+}
+
+# Get ext_gw_interface depending on value of Q_USE_PUBLIC_VETH
+function _neutron_get_ext_gw_interface {
+    if [[ "$Q_USE_PUBLIC_VETH" == "True" ]]; then
+        echo $Q_PUBLIC_VETH_EX
+    else
+        # Disable in-band as we are going to use local port
+        # to communicate with VMs
+        sudo ovs-vsctl set Bridge $PUBLIC_BRIDGE \
+            other_config:disable-in-band=true
+        echo $PUBLIC_BRIDGE
+    fi
+}
+
+function create_neutron_initial_network {
+    local project_id
+    project_id=$(openstack project list | grep " demo " | get_field 1)
+    die_if_not_set $LINENO project_id "Failure retrieving project_id for demo"
+
+    # Allow drivers that need to create an initial network to do so here
+    if type -p neutron_plugin_create_initial_network_profile > /dev/null; then
+        neutron_plugin_create_initial_network_profile $PHYSICAL_NETWORK
+    fi
+
+    if is_networking_extension_supported "auto-allocated-topology"; then
+        if [[ "$USE_SUBNETPOOL" == "True" ]]; then
+            if [[ "$IP_VERSION" =~ 4.* ]]; then
+                SUBNETPOOL_V4_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet pool create $SUBNETPOOL_NAME_V4 --default-prefix-length $SUBNETPOOL_SIZE_V4 --pool-prefix $SUBNETPOOL_PREFIX_V4 --share --default -f value -c id)
+            fi
+            if [[ "$IP_VERSION" =~ .*6 ]]; then
+                SUBNETPOOL_V6_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet pool create $SUBNETPOOL_NAME_V6 --default-prefix-length $SUBNETPOOL_SIZE_V6 --pool-prefix $SUBNETPOOL_PREFIX_V6 --share --default -f value -c id)
+            fi
+        fi
+    fi
+
+    if is_provider_network; then
+        die_if_not_set $LINENO PHYSICAL_NETWORK "You must specify the PHYSICAL_NETWORK"
+        die_if_not_set $LINENO PROVIDER_NETWORK_TYPE "You must specify the PROVIDER_NETWORK_TYPE"
+        NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create $PHYSICAL_NETWORK --project $project_id --provider-network-type $PROVIDER_NETWORK_TYPE --provider-physical-network "$PHYSICAL_NETWORK" ${SEGMENTATION_ID:+--provider-segment $SEGMENTATION_ID} --share | grep ' id ' | get_field 2)
+        die_if_not_set $LINENO NET_ID "Failure creating NET_ID for $PHYSICAL_NETWORK $project_id"
+
+        if [[ "$IP_VERSION" =~ 4.* ]]; then
+            if [ -z $SUBNETPOOL_V4_ID ]; then
+                fixed_range_v4=$FIXED_RANGE
+            fi
+            SUBNET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create --project $project_id --ip-version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} $PROVIDER_SUBNET_NAME --gateway $NETWORK_GATEWAY ${SUBNETPOOL_V4_ID:+--subnet-pool $SUBNETPOOL_V4_ID} --network $NET_ID ${fixed_range_v4:+--subnet-range $fixed_range_v4} | grep ' id ' | get_field 2)
+            die_if_not_set $LINENO SUBNET_ID "Failure creating SUBNET_ID for $PROVIDER_SUBNET_NAME $project_id"
+        fi
+
+        if [[ "$IP_VERSION" =~ .*6 ]]; then
+            die_if_not_set $LINENO IPV6_PROVIDER_FIXED_RANGE "IPV6_PROVIDER_FIXED_RANGE has not been set, but Q_USE_PROVIDER_NETWORKING is true and IP_VERSION includes 6"
+            die_if_not_set $LINENO IPV6_PROVIDER_NETWORK_GATEWAY "IPV6_PROVIDER_NETWORK_GATEWAY has not been set, but Q_USE_PROVIDER_NETWORKING is true and IP_VERSION includes 6"
+            if [ -z $SUBNETPOOL_V6_ID ]; then
+                fixed_range_v6=$IPV6_PROVIDER_FIXED_RANGE
+            fi
+            IPV6_SUBNET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create --project $project_id --ip-version 6 --gateway $IPV6_PROVIDER_NETWORK_GATEWAY $IPV6_PROVIDER_SUBNET_NAME ${SUBNETPOOL_V6_ID:+--subnet-pool $SUBNETPOOL_V6_ID} --network $NET_ID ${fixed_range_v6:+--subnet-range $fixed_range_v6} | grep ' id ' | get_field 2)
+            die_if_not_set $LINENO IPV6_SUBNET_ID "Failure creating IPV6_SUBNET_ID for $IPV6_PROVIDER_SUBNET_NAME $project_id"
+        fi
+
+        if [[ $Q_AGENT == "openvswitch" ]]; then
+            sudo ip link set $OVS_PHYSICAL_BRIDGE up
+            sudo ip link set br-int up
+            sudo ip link set $PUBLIC_INTERFACE up
+        fi
+    else
+        NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create --project $project_id "$PRIVATE_NETWORK_NAME" | grep ' id ' | get_field 2)
+        die_if_not_set $LINENO NET_ID "Failure creating NET_ID for $PRIVATE_NETWORK_NAME $project_id"
+
+        if [[ "$IP_VERSION" =~ 4.* ]]; then
+            # Create IPv4 private subnet
+            SUBNET_ID=$(_neutron_create_private_subnet_v4 $project_id)
+        fi
+
+        if [[ "$IP_VERSION" =~ .*6 ]]; then
+            # Create IPv6 private subnet
+            IPV6_SUBNET_ID=$(_neutron_create_private_subnet_v6 $project_id)
+        fi
+    fi
+
+    if is_networking_extension_supported "router" && is_networking_extension_supported "external-net"; then
+        # Create a router, and add the private subnet as one of its interfaces
+        if [[ "$Q_L3_ROUTER_PER_TENANT" == "True" ]]; then
+            # create a tenant-owned router.
+            ROUTER_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router create --project $project_id $Q_ROUTER_NAME | grep ' id ' | get_field 2)
+            die_if_not_set $LINENO ROUTER_ID "Failure creating ROUTER_ID for $project_id $Q_ROUTER_NAME"
+        else
+            # Plugin only supports creating a single router, which should be admin owned.
+            ROUTER_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router create $Q_ROUTER_NAME | grep ' id ' | get_field 2)
+            die_if_not_set $LINENO ROUTER_ID "Failure creating ROUTER_ID for $Q_ROUTER_NAME"
+        fi
+
+        EXTERNAL_NETWORK_FLAGS="--external"
+        if is_networking_extension_supported "auto-allocated-topology"; then
+            EXTERNAL_NETWORK_FLAGS="$EXTERNAL_NETWORK_FLAGS --default"
+        fi
+        # Create an external network, and a subnet. Configure the external network as router gw
+        if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" = "True" ]; then
+            EXT_NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create "$PUBLIC_NETWORK_NAME" $EXTERNAL_NETWORK_FLAGS --provider-network-type ${PUBLIC_PROVIDERNET_TYPE:-flat} ${PUBLIC_PROVIDERNET_SEGMENTATION_ID:+--provider-segment $PUBLIC_PROVIDERNET_SEGMENTATION_ID} --provider-physical-network ${PUBLIC_PHYSICAL_NETWORK} | grep ' id ' | get_field 2)
+        else
+            EXT_NET_ID=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" network create "$PUBLIC_NETWORK_NAME" $EXTERNAL_NETWORK_FLAGS | grep ' id ' | get_field 2)
+        fi
+        die_if_not_set $LINENO EXT_NET_ID "Failure creating EXT_NET_ID for $PUBLIC_NETWORK_NAME"
+
+        if [[ "$IP_VERSION" =~ 4.* ]]; then
+            # Configure router for IPv4 public access
+            _neutron_configure_router_v4
+        fi
+
+        if [[ "$IP_VERSION" =~ .*6 ]]; then
+            # Configure router for IPv6 public access
+            _neutron_configure_router_v6
+        fi
+    fi
+}
+
+# Create private IPv4 subnet
+function _neutron_create_private_subnet_v4 {
+    local project_id=$1
+    if [ -z $SUBNETPOOL_V4_ID ]; then
+        fixed_range_v4=$FIXED_RANGE
+    fi
+    local subnet_params="--project $project_id "
+    subnet_params+="--ip-version 4 "
+    if [[ -n "$NETWORK_GATEWAY" ]]; then
+        subnet_params+="--gateway $NETWORK_GATEWAY "
+    fi
+    subnet_params+="${SUBNETPOOL_V4_ID:+--subnet-pool $SUBNETPOOL_V4_ID} "
+    subnet_params+="${fixed_range_v4:+--subnet-range $fixed_range_v4} "
+    subnet_params+="--network $NET_ID $PRIVATE_SUBNET_NAME"
+    local subnet_id
+    subnet_id=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep ' id ' | get_field 2)
+    die_if_not_set $LINENO subnet_id "Failure creating private IPv4 subnet for $project_id"
+    echo $subnet_id
+}
+
+# Create private IPv6 subnet
+function _neutron_create_private_subnet_v6 {
+    local project_id=$1
+    die_if_not_set $LINENO IPV6_RA_MODE "IPV6 RA Mode not set"
+    die_if_not_set $LINENO IPV6_ADDRESS_MODE "IPV6 Address Mode not set"
+    local ipv6_modes="--ipv6-ra-mode $IPV6_RA_MODE --ipv6-address-mode $IPV6_ADDRESS_MODE"
+    if [ -z $SUBNETPOOL_V6_ID ]; then
+        fixed_range_v6=$FIXED_RANGE_V6
+    fi
+    local subnet_params="--project $project_id "
+    subnet_params+="--ip-version 6 "
+    if [[ -n "$IPV6_PRIVATE_NETWORK_GATEWAY" ]]; then
+        subnet_params+="--gateway $IPV6_PRIVATE_NETWORK_GATEWAY "
+    fi
+    subnet_params+="${SUBNETPOOL_V6_ID:+--subnet-pool $SUBNETPOOL_V6_ID} "
+    subnet_params+="${fixed_range_v6:+--subnet-range $fixed_range_v6} "
+    subnet_params+="$ipv6_modes --network $NET_ID $IPV6_PRIVATE_SUBNET_NAME "
+    local ipv6_subnet_id
+    ipv6_subnet_id=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep ' id ' | get_field 2)
+    die_if_not_set $LINENO ipv6_subnet_id "Failure creating private IPv6 subnet for $project_id"
+    echo $ipv6_subnet_id
+}
+
+# Create public IPv4 subnet
+function _neutron_create_public_subnet_v4 {
+    local subnet_params="--ip-version 4 "
+    subnet_params+="${Q_FLOATING_ALLOCATION_POOL:+--allocation-pool $Q_FLOATING_ALLOCATION_POOL} "
+    if [[ -n "$PUBLIC_NETWORK_GATEWAY" ]]; then
+        subnet_params+="--gateway $PUBLIC_NETWORK_GATEWAY "
+    fi
+    subnet_params+="--network $EXT_NET_ID --subnet-range $FLOATING_RANGE --no-dhcp "
+    subnet_params+="$PUBLIC_SUBNET_NAME"
+    local id_and_ext_gw_ip
+    id_and_ext_gw_ip=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep -e 'gateway_ip' -e ' id ')
+    die_if_not_set $LINENO id_and_ext_gw_ip "Failure creating public IPv4 subnet"
+    echo $id_and_ext_gw_ip
+}
+
+# Create public IPv6 subnet
+function _neutron_create_public_subnet_v6 {
+    local subnet_params="--ip-version 6 "
+    subnet_params+="--gateway $IPV6_PUBLIC_NETWORK_GATEWAY "
+    subnet_params+="--network $EXT_NET_ID --subnet-range $IPV6_PUBLIC_RANGE --no-dhcp "
+    subnet_params+="$IPV6_PUBLIC_SUBNET_NAME"
+    local ipv6_id_and_ext_gw_ip
+    ipv6_id_and_ext_gw_ip=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" subnet create $subnet_params | grep -e 'gateway_ip' -e ' id ')
+    die_if_not_set $LINENO ipv6_id_and_ext_gw_ip "Failure creating an IPv6 public subnet"
+    echo $ipv6_id_and_ext_gw_ip
+}
+
+# Configure neutron router for IPv4 public access
+function _neutron_configure_router_v4 {
+    openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router add subnet $ROUTER_ID $SUBNET_ID
+    # Create a public subnet on the external network
+    local id_and_ext_gw_ip
+    id_and_ext_gw_ip=$(_neutron_create_public_subnet_v4 $EXT_NET_ID)
+    local ext_gw_ip
+    ext_gw_ip=$(echo $id_and_ext_gw_ip  | get_field 2)
+    PUB_SUBNET_ID=$(echo $id_and_ext_gw_ip | get_field 5)
+    # Configure the external network as the default router gateway
+    openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router set --external-gateway $EXT_NET_ID $ROUTER_ID
+
+    # This logic is specific to using the l3-agent for layer 3
+    if is_service_enabled q-l3 || is_service_enabled neutron-l3;  then
+        # Configure and enable public bridge
+        local ext_gw_interface="none"
+        if is_neutron_ovs_base_plugin; then
+            ext_gw_interface=$(_neutron_get_ext_gw_interface)
+        elif [[ "$Q_AGENT" = "linuxbridge" ]]; then
+            # Get the device the neutron router and network for $FIXED_RANGE
+            # will be using.
+            if [ "$Q_USE_PROVIDERNET_FOR_PUBLIC" = "True" ]; then
+                # in provider nets a bridge mapping uses the public bridge directly
+                ext_gw_interface=$PUBLIC_BRIDGE
+            else
+                # e.x. brq3592e767-da for NET_ID 3592e767-da66-4bcb-9bec-cdb03cd96102
+                ext_gw_interface=brq${EXT_NET_ID:0:11}
+            fi
+        fi
+        if [[ "$ext_gw_interface" != "none" ]]; then
+            local cidr_len=${FLOATING_RANGE#*/}
+            local testcmd="ip -o link | grep -q $ext_gw_interface"
+            test_with_retry "$testcmd" "$ext_gw_interface creation failed"
+            if [[ $(ip addr show dev $ext_gw_interface | grep -c $ext_gw_ip) == 0 && ( $Q_USE_PROVIDERNET_FOR_PUBLIC == "False" || $Q_USE_PUBLIC_VETH == "True" || $Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE == "True" ) ]]; then
+                sudo ip addr add $ext_gw_ip/$cidr_len dev $ext_gw_interface
+                sudo ip link set $ext_gw_interface up
+            fi
+            ROUTER_GW_IP=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" port list -c 'Fixed IP Addresses' --device-owner network:router_gateway | awk -F'ip_address'  '{ print $2 }' | cut -f2 -d\' | tr '\n' ' ')
+            die_if_not_set $LINENO ROUTER_GW_IP "Failure retrieving ROUTER_GW_IP"
+        fi
+        _neutron_set_router_id
+    fi
+}
+
+# Configure neutron router for IPv6 public access
+function _neutron_configure_router_v6 {
+    openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router add subnet $ROUTER_ID $IPV6_SUBNET_ID
+    # Create a public subnet on the external network
+    local ipv6_id_and_ext_gw_ip
+    ipv6_id_and_ext_gw_ip=$(_neutron_create_public_subnet_v6 $EXT_NET_ID)
+    local ipv6_ext_gw_ip
+    ipv6_ext_gw_ip=$(echo $ipv6_id_and_ext_gw_ip | get_field 2)
+    local ipv6_pub_subnet_id
+    ipv6_pub_subnet_id=$(echo $ipv6_id_and_ext_gw_ip | get_field 5)
+
+    # If the external network has not already been set as the default router
+    # gateway when configuring an IPv4 public subnet, do so now
+    if [[ "$IP_VERSION" == "6" ]]; then
+        openstack --os-cloud devstack-admin --os-region "$REGION_NAME" router set --external-gateway $EXT_NET_ID $ROUTER_ID
+    fi
+
+    # This logic is specific to using the l3-agent for layer 3
+    if is_service_enabled q-l3 || is_service_enabled neutron-l3; then
+        # if the Linux host considers itself to be a router then it will
+        # ignore all router advertisements
+        # Ensure IPv6 RAs are accepted on interfaces with a default route.
+        # This is needed for neutron-based devstack clouds to work in
+        # IPv6-only clouds in the gate. Please do not remove this without
+        # talking to folks in Infra.
+        for d in $default_v6_route_devs; do
+            # Slashes must be used in this sysctl command because route devices
+            # can have dots in their names. If dots were used, dots in the
+            # device name would be reinterpreted as a slash, causing an error.
+            sudo sysctl -w net/ipv6/conf/$d/accept_ra=2
+        done
+        # Ensure IPv6 forwarding is enabled on the host
+        sudo sysctl -w net.ipv6.conf.all.forwarding=1
+        # Configure and enable public bridge
+        # Override global IPV6_ROUTER_GW_IP with the true value from neutron
+        IPV6_ROUTER_GW_IP=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" port list -c 'Fixed IP Addresses' | grep $ipv6_pub_subnet_id | awk -F'ip_address' '{ print $2 }' | cut -f2 -d\' | tr '\n' ' ')
+        die_if_not_set $LINENO IPV6_ROUTER_GW_IP "Failure retrieving IPV6_ROUTER_GW_IP"
+
+        if is_neutron_ovs_base_plugin; then
+            local ext_gw_interface
+            ext_gw_interface=$(_neutron_get_ext_gw_interface)
+            local ipv6_cidr_len=${IPV6_PUBLIC_RANGE#*/}
+
+            # Configure interface for public bridge
+            sudo ip -6 addr replace $ipv6_ext_gw_ip/$ipv6_cidr_len dev $ext_gw_interface
+            local replace_range=${SUBNETPOOL_PREFIX_V6}
+            if [[ -z "${SUBNETPOOL_V6_ID}" ]]; then
+                replace_range=${FIXED_RANGE_V6}
+            fi
+            sudo ip -6 route replace $replace_range via $IPV6_ROUTER_GW_IP dev $ext_gw_interface
+        fi
+        _neutron_set_router_id
+    fi
+}
+
+function is_networking_extension_supported {
+    local extension=$1
+    # TODO(sc68cal) cache this instead of calling every time
+    EXT_LIST=$(openstack --os-cloud devstack-admin --os-region "$REGION_NAME" extension list --network -c Alias -f value)
+    [[ $EXT_LIST =~ $extension ]] && return 0
+}

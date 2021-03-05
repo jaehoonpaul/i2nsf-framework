@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Neutron Open vSwitch L2 agent
+# -----------------------------
+
+# Save trace setting
+_XTRACE_NEUTRON_OVSL2=$(set +o | grep xtrace)
+set +o xtrace
+
+source $TOP_DIR/lib/neutron_plugins/ovs_base
+
+function neutron_plugin_create_nova_conf {
+    _neutron_ovs_base_configure_nova_vif_driver
+}
+
+function neutron_plugin_install_agent_packages {
+    _neutron_ovs_base_install_agent_packages
+}
+
+function neutron_plugin_configure_dhcp_agent {
+    local conf_file=$1
+    :
+}
+
+function neutron_plugin_configure_l3_agent {
+    local conf_file=$1
+    _neutron_ovs_base_configure_l3_agent
+}
+
+function neutron_plugin_configure_plugin_agent {
+    # Setup integration bridge
+    _neutron_ovs_base_setup_bridge $OVS_BRIDGE
+    _neutron_ovs_base_configure_firewall_driver
+
+    # Setup agent for tunneling
+    if [[ "$OVS_ENABLE_TUNNELING" == "True" ]]; then
+        iniset /$Q_PLUGIN_CONF_FILE ovs local_ip $TUNNEL_ENDPOINT_IP
+        iniset /$Q_PLUGIN_CONF_FILE ovs tunnel_bridge $OVS_TUNNEL_BRIDGE
+    fi
+
+    # Setup physical network bridge mappings.  Override
+    # ``OVS_VLAN_RANGES`` and ``OVS_BRIDGE_MAPPINGS`` in ``localrc`` for more
+    # complex physical network configurations.
+    if [[ "$PHYSICAL_NETWORK" != "" ]] && [[ "$OVS_PHYSICAL_BRIDGE" != "" ]]; then
+        if [[ "$OVS_BRIDGE_MAPPINGS" == "" ]]; then
+            OVS_BRIDGE_MAPPINGS=$PHYSICAL_NETWORK:$OVS_PHYSICAL_BRIDGE
+        fi
+
+        # Configure bridge manually with physical interface as port for multi-node
+        _neutron_ovs_base_add_bridge $OVS_PHYSICAL_BRIDGE
+    fi
+    if [[ "$OVS_BRIDGE_MAPPINGS" != "" ]]; then
+        iniset /$Q_PLUGIN_CONF_FILE ovs bridge_mappings $OVS_BRIDGE_MAPPINGS
+    fi
+    AGENT_BINARY="$NEUTRON_BIN_DIR/neutron-openvswitch-agent"
+
+    iniset /$Q_PLUGIN_CONF_FILE agent tunnel_types $Q_TUNNEL_TYPES
+    iniset /$Q_PLUGIN_CONF_FILE ovs datapath_type $OVS_DATAPATH_TYPE
+}
+
+function neutron_plugin_setup_interface_driver {
+    local conf_file=$1
+    iniset $conf_file DEFAULT interface_driver openvswitch
+}
+
+function neutron_plugin_check_adv_test_requirements {
+    is_service_enabled q-agt && is_service_enabled q-dhcp && return 0
+}
+
+# Restore xtrace
+$_XTRACE_NEUTRON_OVSL2
