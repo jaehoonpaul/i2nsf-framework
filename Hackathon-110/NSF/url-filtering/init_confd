@@ -1,3 +1,0 @@
-sleep 10
-cd /home/ubuntu/Webfilter/
-sudo make clean all start &
