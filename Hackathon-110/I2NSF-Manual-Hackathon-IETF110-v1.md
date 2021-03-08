@@ -299,13 +299,6 @@ $ cp -r i2nsf-framework/Hackathon-110/Analyzer/* \
     /home/ubuntu
 ```
 
-4. Run web_monitor.py
-```
-$ python web_monitor.py
-```
-
-
-
 ## Operation
 
 1. Start Security Controller
