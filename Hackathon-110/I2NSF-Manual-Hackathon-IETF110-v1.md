@@ -377,7 +377,6 @@ $ python3 subscribe-url-filtering.py
 ```
 # In Time Based Firewall or URL Filtering
 $ stress --cpu 2 --vm 6 --timeout 5s
-
 ```
 
 ## Termination
