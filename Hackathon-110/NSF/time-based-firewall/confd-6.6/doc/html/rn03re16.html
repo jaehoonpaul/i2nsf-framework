@@ -1,0 +1,2330 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>clispec</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn03.html" title="ConfD man-pages, Volume 5"><link rel="prev" href="rn03.html" title="ConfD man-pages, Volume 5"><link rel="next" href="rn03re17.html" title="confd.conf"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">clispec</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn03.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 5</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn03re17.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.5.clispec"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.5.clispec.name"></a><h2>Name</h2><p>clispec &#8212; CLI specification file format</p></div><div class="refsect1"><a name="man.5.clispec.description"></a><h2>DESCRIPTION</h2><p>This manual page describes the syntax and semantics of a
+  ConfD CLI specification file (from now on called "clispec"). A
+  clispec is an XML configuration file describing commands to be
+  added to the automatically rendered Juniper and Cisco style
+  ConfD CLI. It also makes it possible to modify the behavior of
+  standard/built-in commands, using move/delete operations and
+  customizable confirmation prompts.  In Cisco style custom
+  mode-specific commands can be added by specifying a mount point
+  relating to the specified mode.</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>In the ConfD distribution there is an Emacs mode suitable
+    for clispec editing.</p></div><p>A clispec file (with a .cli suffix) is to be compiled using
+  the <span class="command"><strong>confdc</strong></span> compiler into an internal representation (with a .ccl
+  suffix), ready to be loaded by the ConfD daemon on startup. Like
+  this:</p><pre class="screen">
+    $ confdc -c commands.cli
+    $ ls commands.ccl
+    commands.ccl
+  </pre><p>
+    The .ccl file should be put in the ConfD daemon loadPath as
+    described in
+    <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>
+    
+    When the
+    ConfD daemon is started the clispec is loaded accordingly.
+  </p><p>
+    The ConfD daemon loads all .ccl files it finds on startup.  Ie,
+    you can have one or more clispec files for Cisco XR (C) style CLI
+    emulation, one or more for Cisco IOS (I), and one or more for
+    Juniper (J) style emulation. If you drop several .ccl files in the
+    loadPath all will be loaded. The standard commands are defined in
+    <span class="phrase">confd</span>.cli (available in the ConfD distribution). The intention is
+    that we use <span class="phrase">confd</span>.cli as a starting point, i.e. first we delete,
+    reorder and replace built-in commands (if needed) and we then
+    proceed to add our own custom commands.
+  </p></div><div class="refsect1"><a name="man.5.clispec.example"></a><h2>EXAMPLE</h2><p>
+    The <span class="phrase">confd</span>-light.cli example is a light version of the
+    standard <span class="phrase">confd</span>.cli. It adds one operational mode command and one
+    configure mode command, implemented by two OS executables, it also
+    removes the 'save' command from the pipe commands.
+  </p><div class="example"><a name="d5e37413"></a><p class="title"><b>Example&nbsp;161.&nbsp;<span class="phrase">confd</span>-light.cli</b></p><div class="example-contents"><pre class="programlisting">&lt;clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="j"&gt;
+  &lt;operationalMode&gt;
+    &lt;modifications&gt;
+      &lt;delete src="file"/&gt;
+      &lt;confirmText src="quit"&gt;
+        Are you really sure you want to quit?
+      &lt;/confirmText&gt;
+      &lt;help src="configure private"&gt;Edit a private copy of the configuration&lt;/help&gt;
+      &lt;info src="configure private"&gt;Edit a private copy of the configuration&lt;/info&gt;
+    &lt;/modifications&gt;
+
+    &lt;cmd name="copy" mount="file"&gt;
+      &lt;info&gt;Copy a file&lt;/info&gt;
+      &lt;help&gt;Copy a file in the file system.&lt;/help&gt;
+      &lt;callback&gt;
+        &lt;exec&gt;
+          &lt;osCommand&gt;cp&lt;/osCommand&gt;
+          &lt;options&gt;
+            &lt;uid&gt;confd&lt;/uid&gt;
+          &lt;/options&gt;
+        &lt;/exec&gt;
+      &lt;/callback&gt;
+      &lt;params&gt;
+        &lt;param&gt;
+          &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+          &lt;info&gt;&amp;lt;source file&amp;gt;&lt;/info&gt;
+        &lt;/param&gt;
+        &lt;param&gt;
+          &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+          &lt;info&gt;&amp;lt;destination&amp;gt;&lt;/info&gt;
+        &lt;/param&gt;
+      &lt;/params&gt;
+    &lt;/cmd&gt;
+  &lt;/operationalMode&gt;
+
+  &lt;configureMode&gt;
+    &lt;cmd name="adduser" mount="wizard"&gt;
+      &lt;info&gt;Create a user&lt;/info&gt;
+      &lt;help&gt;Create a user and assign him/her to a group.&lt;/help&gt;
+      &lt;callback&gt;
+        &lt;exec&gt;
+          &lt;osCommand&gt;adduser.sh&lt;/osCommand&gt;
+        &lt;/exec&gt;
+      &lt;/callback&gt;
+    &lt;/cmd&gt;
+  &lt;/configureMode&gt;
+
+  &lt;pipeCmds&gt;
+    &lt;modifications&gt;
+      &lt;delete src="save"/&gt;
+    &lt;/modifications&gt;
+  &lt;/pipeCmds&gt;
+&lt;/clispec&gt;
+      </pre></div></div><br class="example-break"><p><span class="phrase">confd</span>-light.cli achieves the following:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Adds a confirmation prompt to the standard operation
+        "delete" command.</p></li><li class="listitem"><p>Deletes the standard "file" command.</p></li><li class="listitem"><p>Adds the operational mode command "copy" and mounts it under
+        the standard "file" command.</p></li><li class="listitem"><p>The "copy" command is implemented using the OS executable
+        "/usr/bin/cp".</p></li><li class="listitem"><p>The executable is called with parameters as defined by the
+        "params" element.</p></li><li class="listitem"><p>The executable runs as the same user id as ConfD as defined
+        by the "uid" element.</p></li><li class="listitem"><p>Adds the configure command "adduser" and mounts it under the
+        standard "wizard" command.</p></li></ul></div><p>
+      Below we present the gory details when it comes to constructs in a
+      clispec.
+    </p></div><div class="refsect1"><a name="man.5.clispec.elements_and_attributes"></a><h2>ELEMENTS AND ATTRIBUTES</h2><p>
+  This section lists all clispec elements and their attributes including
+  their type (within parentheses) and default values (within square
+  brackets). Elements are written using a path notation to make it
+  easier to see how they relate to each other.
+</p><p><span class="emphasis"><em>Note:</em></span>
+$MODE is either "operationalMode", "configureMode" or "pipeCmds".</p><div class="refsect2"><a name="d5e37440"></a><h3><code class="filename">/clispec</code></h3><p>
+      This is the top level element which contains (in order) zero or more
+      "operationalMode" elements, zero or more "configureMode" element, and
+      zero or more "pipeCmds" elements.
+    </p><p>
+      It has a style attribute which can have the value "j", "i" or "c".
+      If no style attribute is specified it defaults to "j".
+    </p></div><div class="refsect2"><a name="d5e37445"></a><h3><code class="filename">/clispec/$MODE</code></h3><p>
+  The $MODE ("operationalMode", "configureMode", or "pipeCmds") element contains (in
+  order) zero or one "modifications" elements, zero or more "start"
+elements, zero or more "show" elements, and zero or more "cmd" elements.</p><p>The "show" elements are only used in the C-style CLI.</p><p>It has a name attribute which is used to create a named custom
+mode. A custom command can be defined for entering custom modes.
+See the cmd/callback/mode elements below.
+</p></div><div class="refsect2"><a name="d5e37451"></a><h3><code class="filename">/clispec/$MODE/modifications</code></h3><p>
+    The "modifications" element describes which operations to apply to the
+    built-in commands. It contains (in any order) zero or more "delete",
+    "move", "paginate", "info", "paraminfo", "help", "paramhelp", "confirmText",
+    "defaultConfirmOption", "dropElem", "compactElem", "compactStatsElem",
+    "columnStats", "multiValue", "columnWidth", "columnAlign", "defaultColumnAlign",
+    "noKeyCompletion",
+    "noMatchCompletion", "modeName", "suppressMode", "suppressTable", "enforceTable",
+    "showTemplate", "showTemplateLegend", "showTemplateEnter", "showTemplateFooter",
+    "runTemplate", "runTemplateLegend", "runTemplateEnter", "runTemplateFooter",
+    "addMode", "autocommitDelay", "keymap", "pipeFlags", "addPipeFlags",
+    "negPipeFlags",
+    "legend", "footer", "suppressKeyAbbrev", "allowKeyAbbrev",
+    "hasRange", "suppressRange", "allowWildcard", "suppressWildcard",
+    "suppressValidationWarningPrompt", "displayEmptyConfig", "displayWhen",
+    "customRange", "completion", "suppressKeySort" and  "simpleType" elements.
+</p></div><div class="refsect2"><a name="d5e37455"></a><h3><code class="filename">/clispec/$MODE/modifications/paginate</code></h3><p>The "paginate" element can be used to change the default
+    paginate behavior for a built-in command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (cmdpathType)</span></dt><dd><p>The "path" attribute is mandatory. It specifies which command to
+change. cmdpathType is a space-separated list of commands, pointing out
+a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>value</em></span> (true|false)</span></dt><dd><p>The "value" attribute is mandatory. It specifies whether the
+paginate attribute should be enabled or disabled by default.</p></dd></dl></div></div><div class="refsect2"><a name="d5e37471"></a><h3><code class="filename">/clispec/$MODE/modifications/displayWhen</code></h3><p>The "displayWhen" element can be used to add a displayWhen
+xpath condition to a command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (cmdpathType)</span></dt><dd><p>The "path" attribute is mandatory. It specifies which command to
+change. cmdpathType is a space-separated list of commands, pointing out
+a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>expr</em></span> (xpath expression)</span></dt><dd><p>The "expr" attribute is mandatory. It specifies an xpath
+expression. If the expression evaluates to true then the command
+is available, otherwise not.</p></dd><dt><span class="term"><span class="emphasis"><em>ctx</em></span> (path)</span></dt><dd><p>
+        The "ctx" attribute is optional. If not specified the current
+        editpath/mode-path is used as context node for the xpath
+        evaluation.  Note that the xpath expression will automatically
+        evaluate to false if a display when expression is used for a
+        top-level command and no ctx is specified. The path may
+        contain variables defined in the dict.
+      </p></dd></dl></div></div><div class="refsect2"><a name="d5e37492"></a><h3><code class="filename">/clispec/$MODE/modifications/move</code></h3><p>The "move" element can be used to move (rename) a built-in
+command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+move. cmdpathType is a space-separated list of commands, pointing out
+a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>dest</em></span> (cmdpathType)</span></dt><dd><p>The "dest" attribute is mandatory. It specifies where to move the
+command specified by the "src" attribute. cmdpathType is a
+space-separated list of commands, pointing out a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>inclSubCmds</em></span> (xs:boolean)</span></dt><dd><p>
+          The "inclSubCmds" attribute is optional. If specified and set to true
+          then all commands to which the 'src' command is a prefix command will
+          be included in the move operation.
+        </p><p>
+          An example:
+        </p><pre class="programlisting">
+        &lt;configureMode&gt;
+          &lt;modifications&gt;
+            &lt;move src="load" dest="xload" inclSubCmds="true"/&gt;
+          &lt;/modifications&gt;
+        &lt;/configureMode&gt;
+        </pre><p>
+          would in the C-style CLI move 'load', 'load merge', 'load override'
+          and 'load replace' to 'xload', 'xload merge', 'xload override' and
+          'xload replace', respectively.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e37516"></a><h3><code class="filename">/clispec/$MODE/modifications/copy</code></h3><p>The "copy" element can be used to copy a built-in command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+copy. cmdpathType is a space-separated list of commands, pointing out
+a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>dest</em></span> (cmdpathType)</span></dt><dd><p>The "dest" attribute is mandatory. It specifies where to copy the
+command specified by the "src" attribute. cmdpathType is a
+space-separated list of commands, pointing out a specific sub-command.</p></dd><dt><span class="term"><span class="emphasis"><em>inclSubCmds</em></span> (xs:boolean)</span></dt><dd><p>
+          The "inclSubCmds" attribute is optional. If specified and set to true
+          then all commands to which the 'src' command is a prefix command will
+          be included in the copy operation.
+        </p><p>
+          An example:
+        </p><pre class="programlisting">
+        &lt;configureMode&gt;
+          &lt;modifications&gt;
+            &lt;copy src="load" dest="xload" inclSubCmds="true"/&gt;
+          &lt;/modifications&gt;
+        &lt;/configureMode&gt;
+        </pre><p>
+          would in the C-style CLI copy 'load', 'load merge', 'load override'
+          and 'load replace' to 'xload', 'xload merge', 'xload override' and
+          'xload replace', respectively.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e37540"></a><h3><code class="filename">/clispec/$MODE/modifications/delete</code></h3><p>
+      The "delete" element makes it possible to delete a built-in command.
+      Note that commands that are auto-rendered from the data model cannot
+      be removed using this modification. To remove an auto-rendered command
+      use the 'tailf:hidden' element in the data model.
+    </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+delete. cmdpathType is a space-separated list of commands, pointing
+out a specific sub-command.</p></dd></dl></div></div><div class="refsect2"><a name="d5e37551"></a><h3><code class="filename">/clispec/$MODE/modifications/pipeFlags</code></h3><p>
+      The "pipeFlags" element makes it possible to modify the pipe flags
+      of the builtin commands. The argument is a space separated list of
+      pipe flags. It will replace the builtin list.
+    </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+modify. cmdpathType is a space-separated list of commands, pointing
+out a specific sub-command.</p></dd></dl></div></div><div class="refsect2"><a name="d5e37562"></a><h3><code class="filename">/clispec/$MODE/modifications/addPipeFlags</code></h3><p>
+      The "addPipeFlags" element makes it possible to add pipe flags to
+      the existing list of pipe flags for a builtin command. The argument
+      is a space separated list of pipe flags.
+    </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+modify. cmdpathType is a space-separated list of commands, pointing
+out a specific sub-command.</p></dd></dl></div></div><div class="refsect2"><a name="d5e37573"></a><h3><code class="filename">/clispec/$MODE/modifications/negPipeFlags</code></h3><p>
+      The "negPipeFlags" element makes it possible to modify the neg pipe flags
+      of the builtin commands. The argument is a space separated list of
+      neg pipe flags. It will replace the builtin list.
+    </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+modify. cmdpathType is a space-separated list of commands, pointing
+out a specific sub-command.</p></dd></dl></div></div><div class="refsect2"><a name="d5e37584"></a><h3><code class="filename">/clispec/$MODE/modifications/dropElem</code></h3><p>
+    The "dropElem" element makes it possible to drop node in the
+    data model from paths in the Cisco style CLIs. If you drop a child
+    node to a list node we recommend that you also use suppressMode on that
+    list node, otherwise the CLI will be very confusing. For example,
+    for the alias command in the CLI. If we only dropped the
+    expansion node but did not suppress the automatic mode creation
+    for the alias node, when you typed the alias command you would
+    end up in the alias submode, but since you have dropped the
+    expansion node you end up specifying the expansion directly
+    without typing any command. Quite confusing.
+  </p><p>
+    Note that dropped nodes to not appear in match completions.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          drop. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-drop-node-name YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37597"></a><h3><code class="filename">/clispec/$MODE/modifications/compactElem</code></h3><p>
+    The "compactElem" element tells the C- and I-style CLIs 'show
+    running-configuration' command to use the compact representation
+    for this path. The compact representation means that all leaf
+    elements are shown on a single line.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          make compact. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-compact-syntax YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37609"></a><h3><code class="filename">/clispec/$MODE/modifications/compactStatsElem</code></h3><p>
+    The "compactStatsElem" element tells the show command in the C- and
+    I-style CLIs to use the compact representation for this path.  The
+    compact representation means that all leaf elements are shown on a
+    single line.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          make compact. pathType is a space-separated list of elements, pointing
+          out a specific element.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>wrap</em></span> (xs:boolean)</span></dt><dd><p>
+          The "wrap" attribute is optional. It specified whether the line
+          should be wrapped at screen-width or not.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>delimiter</em></span> (xs:string)</span></dt><dd><p>
+          The "delimiter" attribute is optional. It specified which string
+          to use between the element name and the value when displaying
+          leaf values.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>prettify</em></span>(xs:boolean)</span></dt><dd><p>
+          The "prettify" attribute is optional. If set to 'true' then dash:es
+          and underscores will be replaced by spaces in leaf element names.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>spacer</em></span> (xs:string)</span></dt><dd><p>
+          The "spacer" attribute is optional. It specified which string
+          to use between the elements when displayed in compact format.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>width</em></span> (xs:positiveInteger)</span></dt><dd><p>
+          The "width" attribute is optional. It specified a fixed terminal
+          width to use before wrapping line. It is only used when wrap is
+          set to 'true'. If width is not specified the line is wrapped
+          when the terminal width is reached.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-compact-stats YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37646"></a><h3><code class="filename">/clispec/$MODE/modifications/columnWidth</code></h3><p>
+    The "columnWidth" element can be used to set fixed
+    widths for specific columns in auto-rendered tables.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          set the column width for. pathType is a space-separated list of
+          node names, pointing out a specific data model node.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>width</em></span> (xs:positiveInteger)</span></dt><dd><p>
+          The "width" attribute is mandatory. It specified a fixed column
+          width.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-column-width YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37663"></a><h3><code class="filename">/clispec/$MODE/modifications/columnAlign</code></h3><p>
+    The "columnAlign" element can be used to specify the
+    alignment of the data in specific columns in auto-rendered tables.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          set the column alignment for. pathType is a space-separated list of
+          node names, pointing out a specific data model node.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>align</em></span> (left|right|center)</span></dt><dd><p>The "align" attribute is mandatory.</p></dd></dl></div><p>
+    Note that the tailf:cli-column-align YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37680"></a><h3><code class="filename">/clispec/$MODE/modifications/defaultColumnAlign</code></h3><p>
+    The "defaultColumnAlign" element can be used to specify a default
+    alignment of a simpletype when used in auto-rendered tables.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>namespace</em></span> (xs:string)</span></dt><dd><p>
+          The "namespace" attribute is required. It specifies in which namespace
+          the type is found. It can be either the namespace URI or the namespace
+          prefix.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (xs:string)</span></dt><dd><p>
+          The "name" attribute is required. It specifies the name of the type
+          in the given namespace.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>align</em></span> (left|right|center)</span></dt><dd><p>
+          The "align" attribute is mandatory.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e37701"></a><h3><code class="filename">/clispec/$MODE/modifications/multiLinePrompt</code></h3><p>
+    The "multiLinePrompt" element can be used to specify that
+    the CLI should automatically enter multi-line prompt mode when
+    prompting for values of the given type.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>namespace</em></span> (xs:string)</span></dt><dd><p>
+          The "namespace" attribute is required. It specifies in which namespace
+          the type is found. It can be either the namespace URI or the namespace
+          prefix.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (xs:string)</span></dt><dd><p>
+          The "name" attribute is required. It specifies the name of the type
+          in the given namespace.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e37717"></a><h3><code class="filename">/clispec/$MODE/modifications/columnStats</code></h3><p>
+    The "columnStats" element tells the Cisco style CLIs show
+    command to display elements in a container as a column, ie
+    to not repeat the name of the container element on each line
+    but instead indent each leaf under the container.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path
+          to make display as a column. pathType is a space-separated
+          list of elements, pointing out a specific container
+          element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-column-stats YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37729"></a><h3><code class="filename">/clispec/$MODE/modifications/showTemplate</code></h3><p>
+    The "showTemplate" element is used for specifying a template
+  to use by the show command in the J-, C- and I-style CLIs.</p><p>
+    Show templates are associated with YANG nodes and are
+    used by the CLI when the 'show' command is given for a
+    path in operational mode. It is primarily intended for displaying
+    "config false" data but "config true" data may be included in
+    the template as well.
+  </p><p>
+    The template may contain a mix of text and expandable
+    entries. Expandable entries all start with $( and end
+    with a matching ). Parentheses and dollar signes
+    needs to be quoted in plain-text.
+  </p><p>Expansion:</p><p>
+    Parameter is either a relative or absolute path
+    to a leaf (eg /foo/bar, foo/bar), or one of the
+    builtin variables: .selected, .entered, .legend_shown, .user,
+    .groups, .ip, .display_groups, .path, .ipath or .licounter.
+    In addition the variables "spath" and  "ispath" are
+    available when a command is executed from a show path.
+  </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>.selected</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.selected</em></span> variable contains the list
+          of selected paths to be shown. The show template can inspect
+          this element to determine if a given element should be displayed
+          or not. For example:
+        </p><pre class="programlisting">$(.selected~=hwaddr?HW Address)
+        
+        </pre></dd><dt><span class="term"><span class="emphasis"><em>.entered</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.entered</em></span> variable is true if the
+          "entered" text has been displayed (either the auto generated
+          text or a showTemplateEnter). This is useful when having a
+          non-table template where each instance should have a text.
+        </p><pre class="programlisting">$(.entered?:host $(name))
+        
+        </pre></dd><dt><span class="term"><span class="emphasis"><em>.legend_shown</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.legend_shown</em></span> variable is true if the
+          "legend" text has been displayed (either the auto generated
+          table header or a showTemplateLegend). This is useful to inspect
+          when displaying a table row. If the user enteres the path
+          to a specific instance the builtin table header will not be
+          displayed and the showTemplateLegend will not be invoked and
+          it may be useful to render the legend specifically for this
+          instance.
+        </p><pre class="programlisting">$(.legend_shown!=true?Address         Interface)
+        
+        </pre></dd><dt><span class="term"><span class="emphasis"><em>.user</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.user</em></span> variable contains the name of the
+          current user. This can be used for differentiating the content
+          displayed for a specific user, or in paths. For example:
+        </p><pre class="programlisting">$(user{$(.user)}/settings)
+        
+        </pre></dd><dt><span class="term"><span class="emphasis"><em>.groups</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.groups</em></span> variable contains the a list of
+          groups that the user belongs to.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.display_groups</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.display_groups</em></span> variable contains
+          a list of selected display groups. This can be used to
+          display different content depending on the selected display
+          group. For example:
+        </p><pre class="programlisting">$(.display_groups~=details?details...)
+        
+        </pre></dd><dt><span class="term"><span class="emphasis"><em>.ip</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.ip</em></span> variable contains the ip address
+          that the user connected from.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.path</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.path</em></span> variable contains the
+          path to the entry, formatted in CLI style.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.ipath</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.ipath</em></span> variable contains the
+          path to the entry, formatted in template style.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.spath</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.spath</em></span> variable contains the
+          show path, formatted in CLI style.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.ispath</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.ipath</em></span> variable contains the
+          show path, formatted in template style.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.licounter</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.licounter</em></span> variable contains a
+          counter that is incremented for each instance in a
+          list. This means that it will be 0 in the legend, contain
+          the total number of list instances in the footer and
+          something in between in the basic show template.
+        </p></dd></dl></div><p><span class="emphasis"><em>$(parameter)</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>The value of parameter is substituted.
+  </p></blockquote></div><p><span class="emphasis"><em>$(cond?word1:word2)</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+      The expansion of word1 is substituted if the value of
+      cond evaluates to true, otherwise the expansion of
+      word2 is substituted.
+    </p><p>cond may be one of</p><p><span class="emphasis"><em>parameter</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Evaluates to true if the node exists.
+    </p></blockquote></div><p><span class="emphasis"><em>parameter == &lt;value&gt;</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Evaluates to true if the value of the parameter
+        equals &lt;value&gt;
+    </p></blockquote></div><p><span class="emphasis"><em>parameter != &lt;value&gt;</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Evaluates to true if the value of the parameter
+        does not equal &lt;value&gt;
+    </p></blockquote></div><p><span class="emphasis"><em>parameter ~= &lt;value&gt;</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Provided that parameters value is a list then
+        this expression evaluates to true if &lt;value&gt;
+        is a member of the list.
+    </p></blockquote></div></blockquote></div><p><span class="emphasis"><em>$(parameter|filter)</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+      The value of parameter processed by filter is
+      substituted. Filters may be either one of the
+      built-ins or a customized filter defined in a
+      callback. See /confdConfig/cli/templateFilter.
+      A built-in filter may be one of</p><p><span class="emphasis"><em>capfirst</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Capitalizes the first character of the value.
+    </p></blockquote></div><p><span class="emphasis"><em>filesizeformat</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Format the value in a 'human-readable' format
+        (i.e. '13 KB', '4.1 MB' '102 bytes' etc), where
+        K means 1024, M means 1024*1024 etc.
+    </p><p>
+      When used without argument the default number of
+      decimals displayed is 2. When used with a numeric
+      integer argument, filesizeformat will display the
+      given number of decimal places.
+    </p></blockquote></div><p><span class="emphasis"><em>humanreadable</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Similar to filesizeformat except no bytes suffix is added.
+        (i.e. '13.13 k', '4.2 M' '102' etc), where k means 1000,
+        M means 1000*1000 etc.
+    </p><p>
+      When used without argument the default number of
+      decimals displayed is 2. When used with a numeric
+      integer argument, humanreadable will display the
+      given number of decimal places.
+    </p></blockquote></div><p><span class="emphasis"><em>commasep</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Separate the numerical values into groups of three
+        digits using a comma (e.g., 1234567 -&gt; 1,234,567)
+      </p></blockquote></div><p><span class="emphasis"><em>hex</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Display integer as hex number. An argument can be
+        used to indicate how many digits should be used in
+        the output. If the hex number is too long it will
+        be truncated at the front, if it is too short it will
+        be padded with zeros at the front. If the width is
+        a negative number then at most that number of digits
+        will be used, but short numbers will not be padded
+        with zeroes. For example:
+      </p><div class="literallayout"><p><br>
+value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hex&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3039<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hex:2&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;39<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hex:8&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00003039<br>
+</p></div></blockquote></div><p><span class="emphasis"><em>hexlist</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Display integer as hex number with : between pairs.
+        An argument can be used to indicate how many digits
+        should be used in the output. If the hex number is
+        too long it will be truncated at the front, if it
+        is too short it will be padded with zeros at the
+        front. If the width is a negative number then at
+        most that number of digits will be used, but short
+        numbers will not be padded with zeroes.For example:
+      </p><div class="literallayout"><p><br>
+value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hexlist&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30:39<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hexlist:2&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;39<br>
+12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|hexlist:8&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;00:00:30:39<br>
+</p></div></blockquote></div><p><span class="emphasis"><em>floatformat</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Used for type 'float' in tailf-xsd-types. We
+        recommend that the YANG built-in type
+        'decimal64' is used instead of 'float'.
+      </p><p>
+        When used without an argument, rounds a
+        floating-point number to one decimal place --
+        but only if there's a decimal part to be
+        displayed. For example:
+      </p><div class="literallayout"><p><br>
+value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output<br>
+34.23234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.2<br>
+34.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34<br>
+34.26000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.3<br>
+</p></div><p>
+        If used with a numeric integer argument,
+        floatformat rounds a number to that many
+        decimal places. For example:
+      </p><div class="literallayout"><p><br>
+value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output<br>
+34.23234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.232<br>
+34.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.000<br>
+34.26000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.260<br>
+</p></div><p>
+        If the argument passed to floatformat is
+        negative, it will round a number to that many
+        decimal places -- but only if there's a
+        decimal part to be displayed. For example:
+      </p><div class="literallayout"><p><br>
+value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Template&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output<br>
+34.23234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:-3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.232<br>
+34.00000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:-3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34<br>
+34.26000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{&nbsp;value|floatformat:-3&nbsp;}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.260<br>
+</p></div><p>
+        Using floatformat with no argument is
+        equivalent to using floatformat with an
+        argument of -1.
+      </p></blockquote></div><p><span class="emphasis"><em>ljust:width</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Left-align the value given a width.
+      </p></blockquote></div><p><span class="emphasis"><em>rjust:width</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Right-align the value given a width.
+      </p></blockquote></div><p><span class="emphasis"><em>trunc:width</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Truncate value to a given width.
+      </p></blockquote></div><p><span class="emphasis"><em>lower</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Convert the value into lowercase.
+      </p></blockquote></div><p><span class="emphasis"><em>upper</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Convert the value into uppercase.
+      </p></blockquote></div><p><span class="emphasis"><em>show:&lt;dictionary&gt;</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Substitutes the result of invoking the default display
+        function for the parameter. The dictionary can be used
+        for introducing own variables that can be accessed in
+        the same manner as builtin variables. The user defined
+        variables overrides builtin variables. The dictionary
+        is specified as a string on the following form:
+
+</p><pre class="programlisting">
+              (key=value)(:key=value)*
+</pre><p> 
+
+            For example, with the following expression:
+
+</p><pre class="programlisting">
+              $(foo|show:myvar1=true:myvar2=Interface)
+</pre><p> 
+
+            the user defined variables can be accessed like this:
+
+</p><pre class="programlisting">
+              $(.myvar1!=true?Address) $(.myvar2)
+</pre><p> 
+
+      </p></blockquote></div><p><span class="emphasis"><em>dict:&lt;dictionary&gt;</em></span></p><div class="blockquote"><blockquote class="blockquote"><p>
+        Translate the value using the dictionary. Can for example
+        be used for displaying on/off instead of
+        true/false.
+      </p><p>For example</p><pre class="programlisting">
+$(foo|dict:true=on:false=off)
+</pre></blockquote></div></blockquote></div><p>
+        Nested invocations are allowed, ie it is possible to have
+        expressions like $((state|dict:yes=Yes:no=No)|rjust:14), or
+        $(/foo{$(../bar)}).
+    </p><p>An example:</p><pre class="programlisting">
+&lt;modifications&gt;
+  &lt;showTemplate path="interfaces"&gt;$(name) is administratively $(status), line protocol is $(line/status)
+  Hardware is $(hw), address is $(port_address) (bia $(bia))
+  Internet address is $(address)
+  MTU $(mtu) bytes, BW $(bw|humanreadable)bit, DLY $(dly) usec,
+     reliability $(reliability), txload $(txload), rxload $(rxload)
+  Encapsulation $(encapsulation|upper), $(loopback?:loopback not set)
+  Keepalive $(keepalive?set to \($(keepalive) sec\):not set)
+  ARP type: $(arpType), ARP Timeout $(arpTimeout)
+  Last input $(lastInput), output $(output), output hang $(outputHang)
+  Last clearing of "show interface" counters $(lastClear)
+  Queuing strategy: $(queingSrategy)
+  Output queue $(output/queue), $(output/drops) drops; input queue $(input/queue), $(input/drops) drops
+  5 minute input rate $(input/rate) bits/sec, $(input/packetRate) packets/sec
+  5 minute output rate $(output/rate) bits/sec, $(output/packetRate) packets/sec
+     $(input/packets) packets input, $(input/bytes) bytes, $(input/buffer) no buffer
+     Received $(input/receivedBroadcasts) broadcasts, $(input/runts) runts, $(input/giants) giants, $(input/throttle) throttles
+     $(input/errors) input errors, $(input/crc) CRC, $(input/frame) frame, $(input/overrun) overrun, $(input/ignore) ignored
+     $(input/dribble) input packets with dribble condition detected
+     $(output/packets) packets output, $(output/bytes) bytes, $(output/underruns) underruns
+     $(output/errors) output errors, $(output/collisions) collisions, $(output/resets) interface resets
+     $(output/babbles) babbles, $(output/lateCollision) late collision, $(output/deferred) deferred
+     $(lostCarrier) lost carrier, $(noCarrier) no carrier
+     $(output/bufferFails) output buffer failures, $(output/bufferSwapped) output buffers swapped out
+&lt;/showTemplate&gt;
+&lt;/modifications&gt;
+</pre><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+The "path" attribute is mandatory. It specifies on which path to
+apply the show template. pathType is a space-separated list of elements,
+pointing out a specific container element.
+</p></dd></dl></div><p>
+    Note that the tailf:cli-show-template YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37927"></a><h3><code class="filename">/clispec/$MODE/modifications/showTemplateLegend</code></h3><p>
+    The "showTemplateLegend" element is used for specifying a template
+    to use by the show command in the J-, C- and I-style CLIs when
+    displaying a set of list nodes as a legend.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path to
+          apply the show template. pathType is a space-separated list of elements,
+          pointing out a specific container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-show-template-legend YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37939"></a><h3><code class="filename">/clispec/$MODE/modifications/showTemplateEnter</code></h3><p>
+    The "showTemplateEnter" element is used for specifying a template
+    to use by the show command in the J-, C- and I-style CLIs when
+    displaying a set of list element nodes before displaying each instance.
+  </p><p>
+    In addition to the builtin variables in ordinary templates there
+    are two additional variables available: .prefix_str and .key_str.
+  </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>.prefix_str</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.prefix_str</em></span> variable contains the
+          text displayed before the key values when auto-rendering
+          an enter text.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.key_str</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.key_str</em></span> variable contains the
+          keys as a text
+        </p></dd></dl></div><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to apply the show template. pathType is a
+          space-separated list of elements, pointing out a specific
+          container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-show-template-enter YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37965"></a><h3><code class="filename">/clispec/$MODE/modifications/showTemplateFooter</code></h3><p>
+    The "showTemplateFooter" element is used for specifying a template
+    to use by the show command in the J-, C- and I-style CLIs after
+    a set of list nodes has been displayed as a table.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path to
+          apply the show template. pathType is a space-separated list of elements,
+          pointing out a specific container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-show-template-footer YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37977"></a><h3><code class="filename">/clispec/$MODE/modifications/runTemplate</code></h3><p>
+    The "run" element is used for specifying a template
+  to use by the "show running-config" command in the C- and I-style CLIs.
+  The syntax is the same as for the showTemplate above. The template is only
+  used if it is associated with a leaf element. Containers and lists cannot
+  have runTemplates.
+  </p><p>
+    Note that extreme care must be taken when using this feature if the result
+    should be paste:able into the CLI again.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+The "path" attribute is mandatory. It specifies on which path to
+apply the show running-config template. pathType is a space-separated
+list of elements, pointing out a specific container element.
+</p></dd></dl></div><p>
+    Note that the tailf:cli-run-template YANG extension can be used to the
+    same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e37990"></a><h3><code class="filename">/clispec/$MODE/modifications/runTemplateLegend</code></h3><p>
+    The "runTemplateLegend" element is used for specifying a template
+    to use by the show running-config command in the C- and I-style CLIs when
+    displaying a set of list nodes as a legend.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path to
+          apply the show running-config template. pathType is a space-separated
+          list of elements, pointing out a specific container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-run-template-legend YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38002"></a><h3><code class="filename">/clispec/$MODE/modifications/runTemplateEnter</code></h3><p>
+    The "runTemplateEnter" element is used for specifying a template
+    to use by the show running-config command in the C- and I-style CLIs when
+    displaying a set of list element nodes before displaying each instance.
+  </p><p>
+    In addition to the builtin variables in ordinary templates there
+    are two additional variables available: .prefix_str and .key_str.
+  </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>.prefix_str</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.prefix_str</em></span> variable contains the
+          text displayed before the key values when auto-rendering
+          an enter text.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>.key_str</em></span></span></dt><dd><p>
+          The <span class="emphasis"><em>.key_str</em></span> variable contains the
+          keys as a text
+        </p></dd></dl></div><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to apply the show running-config template. pathType is a
+          space-separated list of elements, pointing out a specific
+          container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-run-template-enter YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38028"></a><h3><code class="filename">/clispec/$MODE/modifications/runTemplateFooter</code></h3><p>
+    The "runTemplateFooter" element is used for specifying a template
+    to use by the show running-config command in the C- and I-style CLIs after
+    a set of list nodes has been displayed as a table.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path to
+          apply the show running-config template. pathType is a space-separated
+          list of elements, pointing out a specific container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-run-template-footer YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38040"></a><h3><code class="filename">/clispec/$MODE/modifications/hasRange</code></h3><p>
+    The "hasRange" element is used for specifying that a given
+    non-integer key element should allow range expressions
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to allow range expressions. pathType is a
+          space-separated list of elements, pointing out a specific
+          list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-allow-range YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38052"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressRange</code></h3><p>
+    The "suppressRange" element is used for specifying that
+    a given integer key element should not allow range expressions
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to suppress range expressions. pathType is a
+          space-separated list of elements, pointing out a specific
+          list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-range YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38064"></a><h3><code class="filename">/clispec/$MODE/modifications/customRange</code></h3><p>
+    The "customRange" element is used for specifying that
+    a given list element should support ranges. A type matching
+    the range expression must be supplied, as well as a callback to
+    use to determine if a given instance is covered by a given range
+    expression. It contains one or more "rangeType" elements and
+    one "callback" element.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to apply the custom range. pathType is a
+          space-separated list of elements, pointing out a specific
+          list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-custom-range YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38076"></a><h3><code class="filename">/clispec/$MODE/modifications/customRange/callback</code></h3><p>
+      The "callback" element is used for specifying which callback
+      to invoke for checking if a list element instance belongs to a range. It
+      contains a "capi" element.
+    </p><p>
+    Note that the tailf:cli-custom-range-actionpoint YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38081"></a><h3><code class="filename">/clispec/$MODE/modifications/customRange/callback/capi</code></h3><p>
+    The "capi" element is used for specifying the name of the callback
+    to invoke for checking if a list element instance belongs to a range.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>id</em></span> (string)</span></dt><dd><p>
+          The "id" attribute is optional. It specifies a string which is
+          passed to the callback when invoked to check if a value belongs in
+          a range. This makes it possible to use the same callback at several
+          locations and still keep track of which point it is invoked from.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38092"></a><h3><code class="filename">/clispec/$MODE/modifications/customRange/rangeType</code></h3><p>
+    The "rangeType" element is used for specifying which key element
+    of a list element should support range expressions. It is also used for
+    specifying a matching type. All range expressions must belong to the
+    specified type, and a valid key element must not be a valid element of
+    this type.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>key</em></span> (string)</span></dt><dd><p>
+          The "key" attribute is mandatory. It specifies which key
+          element of the list that the rangeType applies to.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>namespace</em></span> (string)</span></dt><dd><p>
+          The "namespace" attribute is mandatory. It specifies which
+          namespace the type belongs to.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (string)</span></dt><dd><p>
+          The "name" attribute is mandatory. It specifies the name of
+          the range type.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-range-type YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38114"></a><h3><code class="filename">/clispec/$MODE/modifications/allowWildcard</code></h3><p>
+    The "allowWildcard" element is used for specifying that
+    a given list element should allow wildcard expressions in
+    the show pattern
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which
+          path to allow wildcard expressions. pathType is a
+          space-separated list of elements, pointing out a specific
+          list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-allow-wildcard YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38126"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressWildcard</code></h3><p>
+    The "suppressWildcard" element is used for specifying that
+    a given list element should not allow wildcard expressions in
+    the show pattern
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path
+          to suppress wildcard expressions. pathType is a
+          space-separated list of elements, pointing out a specific list
+          element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-wildcard YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38138"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressValidationWarningPrompt</code></h3><p>
+    The "suppressValidationWarningPrompt" element is used for specifying that
+    for a given path a validate warning should not result in a prompt to
+    the user. The warning is displayed but without blocking the commit
+    operation.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies on which path
+          to suppress the validation warning prompt. pathType is a
+          space-separated list of elements, pointing out a specific list
+          element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-validate-warning-prompt
+    YANG extension can be used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38150"></a><h3><code class="filename">/clispec/$MODE/modifications/errorMessageRewrite</code></h3><p>
+    The "errorMessageRewrite" element is used for specifying that
+    a callback should be invoked for possibly rewriting error messages
+    before displaying them.
+  </p></div><div class="refsect2"><a name="d5e38154"></a><h3><code class="filename">/clispec/$MODE/modifications/errorMessageRewrite/callback</code></h3><p>
+    The "callback" element is used for specifying which callback
+    to invoke for rewriting a message. It contains a "capi" element.
+  </p></div><div class="refsect2"><a name="d5e38158"></a><h3><code class="filename">/clispec/$MODE/modifications/errorMessageRewrite/callback/capi</code></h3><p>
+    The "capi" element is used for specifying the name of the callback
+    to invoke for rewriting a message.
+  </p></div><div class="refsect2"><a name="d5e38162"></a><h3><code class="filename">/clispec/$MODE/modifications/showPathRewrite</code></h3><p>
+    The "showPathRewrite" element is used for specifying that
+    a callback should be invoked for possibly rewriting the show path
+    before executing a show command. The callback is invoked by the
+    builtin show command.
+  </p></div><div class="refsect2"><a name="d5e38166"></a><h3><code class="filename">/clispec/$MODE/modifications/showPathRewrite/callback</code></h3><p>
+    The "callback" element is used for specifying which callback
+    to invoke for rewriting the show path. It contains a "capi" element.
+  </p></div><div class="refsect2"><a name="d5e38170"></a><h3><code class="filename">/clispec/$MODE/modifications/showPathRewrite/callback/capi</code></h3><p>
+    The "capi" element is used for specifying the name of the callback
+    to invoke for rewriting the show path.
+  </p></div><div class="refsect2"><a name="d5e38174"></a><h3><code class="filename">/clispec/$MODE/modifications/noKeyCompletion</code></h3><p>
+    The "noKeyCompletion" element tells the CLI to not
+    perform completion for key elements for a given path. This is
+    to avoid querying the data provider for all existing keys.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          make not do completion for. pathType is a space-separated list
+          of elements, pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-no-key-completion extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38186"></a><h3><code class="filename">/clispec/$MODE/modifications/noMatchCompletion</code></h3><p>
+    The "noMatchCompletion" element tells the CLI to not
+    provide match completion for a given element path for
+    show commands.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          make not do match completion for. pathType is a space-separated list
+          of elements, pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-no-match-completion YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38198"></a><h3><code class="filename">/clispec/$MODE/modifications/incompleteShowPath</code></h3><p>
+    The "incompleteShowPath" element makes it possible to specify that
+    a path to the show command in the C and I-style CLIs is considered
+    incomplete. It can also be used to specify that a minimum number of
+    keys needs to be specified.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path
+          to consider incomplete. pathType is a space-separated list
+          of elements, pointing out a specific list element.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>minKeys</em></span> (positiveInteger)</span></dt><dd><p>
+          The "minKeys" attribute is optional. For paths leading to a
+          list element it is possible to specify the minimum number of
+          required keys.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-incomplete-show-path YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38215"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressShowPath</code></h3><p>
+    The "suppressShowPath" element makes it possible to specify that
+    a path to the show command should not be available. This only
+    applies to I- and C- style CLI.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-show-path YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38227"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressShowMatch</code></h3><p>
+    The "suppressShowMatch" element makes it possible to specify that
+    a specific completion match (ie a filter match that appear at
+    list element nodes as an alternative to specifying a single instance)
+    to the show command should not be available.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-show-match YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38239"></a><h3><code class="filename">/clispec/$MODE/modifications/incompleteCommand</code></h3><p>
+    The "incompleteCommand" element makes it possible to specify that
+    an auto-rendered command in C- and I-mode should be considered
+    incomplete. It can be used to prevent &lt;cr&gt; from appearing in
+    the completion list for optional internal nodes.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          consider incomplete. pathType is a space-separated list of elements,
+          pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-incomplete-command YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38251"></a><h3><code class="filename">/clispec/$MODE/modifications/sequenceCommands</code></h3><p>
+    The "sequenceCommands" element makes it possible to specify that
+    an auto-rendered command in C- and I-mode should only accept
+    arguments in the same order as they are specified in the YANG module.
+    This, in combination with dropElem, can be used to create
+    CLI commands for setting multiple leafs in a container
+    without having to specify the leaf names.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          make into an argument sequence. pathType is a space-separated list of elements,
+          pointing out a specific container element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-sequence-commands YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38263"></a><h3><code class="filename">/clispec/$MODE/modifications/fullCommand</code></h3><p>
+    The "fullCommand" element makes it possible to specify that
+    an auto-rendered command in C- and I-mode should be considered
+    full. It can be used to prevent further command stacking.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          consider full. pathType is a space-separated list of elements,
+          pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-full-command YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38275"></a><h3><code class="filename">/clispec/$MODE/modifications/fullShowPath</code></h3><p>
+    The "fullShowPath" element makes it possible to specify that
+    a path to the show command in the C and I-style CLIs is considered
+    complete. No further elements can be added to the path.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path
+          to consider complete. pathType is a space-separated list of
+          elements, pointing out a specific list element.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>maxKeys</em></span> (positiveInteger)</span></dt><dd><p>
+          The "maxKeys" attribute is optional. For paths leading to a
+          list element it is possible to specify the maximum number of
+          allowed keys.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-full-show-path YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38292"></a><h3><code class="filename">/clispec/$MODE/modifications/multiValue</code></h3><p>
+    The "multiValue" element tells the parser for the C- and I- style
+    CLIs that a specific leaf element should get its value from
+    the rest of the command line. If this modification is used
+    for a given leaf it will not be possible to enter any more
+    leaf values on the same command line.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          make a multiline input item by default. pathType is a
+          space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-multi-value YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38304"></a><h3><code class="filename">/clispec/$MODE/modifications/enforceTable</code></h3><p>
+    The "enforceTable" element makes it possible to force the
+    generation of a table for a list element node regardless of whether the
+    table will be too wide or not. This applies to the tables generated by
+    the auto-rendered show commands for config="false" data in the C- and
+    I- style CLIs.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          enforce. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-enforce-table YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38316"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressTable</code></h3><p>
+    The "suppressTable" element makes it possible to suppress an automatically
+    generated table in the C- and I- style CLIs when using the show command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-table YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38328"></a><h3><code class="filename">/clispec/$MODE/modifications/preformatted</code></h3><p>
+    The "preformatted" element makes it possible to suppress quoting of
+    stats elements when displaying them. Newlines will be preserved in strings
+    etc
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          consider preformatted. pathType is a space-separated list of
+          elements, pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-preformatted YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38340"></a><h3><code class="filename">/clispec/$MODE/modifications/exposeKeyName</code></h3><p>
+    The "exposeKeyName" element makes it possible to force the C- and I-style
+    CLIs to expose the key name to the CLI user. The user will be required
+    to enter the name of the key and the key name will be displayed when
+    showing the configuration.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which leaf to expose.
+          pathType is a space-separated list of elements, pointing out a
+          specific list key element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-expose-key-name YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38352"></a><h3><code class="filename">/clispec/$MODE/modifications/displayEmptyConfig</code></h3><p>
+    The "displayEmptyConfig" element makes it possible to tell confd to display
+    empty configuration list elements when displaying stats data in J-style
+    CLI, provided that the list element has at least one optional
+    config="false" element.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          apply the mod to. pathType is a space-separated list of elements,
+          pointing out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-display-empty-config YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38364"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressKeyAbbrev</code></h3><p>
+    The "suppressKeyAbbrev" element makes it possible to suppress the
+    use of abbreviations for specific key elements.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-key-abbreviation YANG extension
+    can be used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38376"></a><h3><code class="filename">/clispec/$MODE/modifications/allowKeyAbbrev</code></h3><p>
+    The "allowKeyAbbrev" element makes it possible to allow the
+    use of abbreviations for specific key elements.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:allow-key-abbreviation YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38388"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressMode</code></h3><p>
+    The "suppressMode" element makes it possible to suppress an automatically
+    generated mode in C- and I- style CLI.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which path to
+          suppress. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-mode YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38400"></a><h3><code class="filename">/clispec/$MODE/modifications/addMode</code></h3><p>
+    The "addMode" element makes it possible to create a mode at
+    a non-list element. Only applicable in C- and I- style CLI.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies for which
+          path to create the mode. pathType is a space-separated list
+          of elements, pointing out a specific non-list, non-leaf
+          element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-add-mode YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38412"></a><h3><code class="filename">/clispec/$MODE/modifications/modeName</code></h3><p>
+    The "modeName" element makes it possible to specify a custom
+    mode name in the C- and I- style CLI. It contains one of the elements
+    "fixed" or "capi".
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (pathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies for which path the
+          custom mode name should apply. pathType is a space-separated list
+          of elements, pointing out a path to a mode.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38423"></a><h3><code class="filename">/clispec/$MODE/modifications/modeName/fixed  (xs:string)</code></h3><p>
+    Specifies a fixed mode name.
+  </p><p>
+    Note that the tailf:cli-mode-name YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38428"></a><h3><code class="filename">/clispec/$MODE/modifications/modeName/capi</code></h3><p>
+    Specifies that the mode name should be calculated through a
+    callback function. It contains exactly one "cmdpoint" element.
+  </p><p>
+    Note that the tailf:cli-mode-name-actionpoint YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38433"></a><h3><code class="filename">/clispec/$MODE/modifications/modeName/capi/cmdpoint  (xs:string)</code></h3><p>
+    Specifies the callpoint name of the mode name function.
+  </p></div><div class="refsect2"><a name="d5e38437"></a><h3><code class="filename">/clispec/$MODE/modifications/autocommitDelay</code></h3><p>
+    The "autocommitDelay" element makes it possible to enable
+    transactions while in a specific submode (or submode of that mode).
+    The modifications performed in that mode will not take effect until
+    the user exits that submode.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path
+          to delay autocommit for. pathType is a space-separated list
+          of elements, pointing out a specific non-list, non-leaf
+          element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-delayed-auto-commit YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38449"></a><h3><code class="filename">/clispec/$MODE/modifications/simpleType</code></h3><p>
+    The "simpleType" element makes it possible to customize the handling
+    of a type. A type is typically attached to each leaf
+    in a YANG module or to command parameters. The "simpleType"
+    element makes it possible to customize both builtin and derived
+    types.  For
+    now the only handling that can be customized is how CLI completion is
+    to be performed.
+  </p><p>
+    The "simpleType" element contains a single element "capi".
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>namespace</em></span> (string)</span></dt><dd><p>
+          The "namespace" attribute is mandatory. It specifies the namespace URI
+          whereas the type to be modified has been defined.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (string)</span></dt><dd><p>
+          The "name" attribute is mandatory. It specifies the name of the type
+          to be customized
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38466"></a><h3><code class="filename">/clispec/$MODE/modifications/simpleType/capi</code></h3><p>
+    Specifies that the simpleType customization should be calculated
+    through a callback function. It contains exactly one "completionpoint"
+    element.
+  </p></div><div class="refsect2"><a name="d5e38470"></a><h3><code class="filename">/clispec/$MODE/modifications/simpleType/capi/completionpoint  (xs:string)</code></h3><p>
+  Specifies the callpoint name of the completion function.
+</p></div><div class="refsect2"><a name="d5e38474"></a><h3><code class="filename">/clispec/$MODE/modifications/completion</code></h3><p>
+    The "completion" element makes it possible to customize the completion
+    of a specific path.
+  </p><p>
+    The "completion" element contains a single element "capi" enclosed in the
+    "callback" element.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (cmdpathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies for which
+          path the completion callback should be applied
+          to. cmdpathType is a space-separated list of commands.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-completion-actionpoint YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38487"></a><h3><code class="filename">/clispec/$MODE/modifications/completion/callback/capi</code></h3><p>
+    Specifies that the completion customization should be calculated
+    through a callback function. It contains exactly one "completionpoint"
+    element.
+  </p></div><div class="refsect2"><a name="d5e38491"></a><h3><code class="filename">/clispec/$MODE/modifications/completion/callback/capi/completionpoint  (xs:string)</code></h3><p>
+    Specifies the callpoint name of the completion function.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>id</em></span> (string)</span></dt><dd><p>The "id" attribute is optional. It specifies a string which is
+        passed to the callback when invoked. This makes it possible to use
+        the same callback at several locations and still keep track of which
+        point it is invoked from.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38502"></a><h3><code class="filename">/clispec/$MODE/modifications/suppressKeySort</code></h3><p>
+    The "suppressKeySort" element makes it possible to suppress sorting of
+    key-values in the completion list. Instead the values will be displayed
+    in the same order as they are provided by the data-provider (external
+    or CDB).
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (pathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies which path to
+          not sort. pathType is a space-separated list of elements, pointing
+          out a specific list element.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-suppress-key-sort YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38514"></a><h3><code class="filename">/clispec/$MODE/modifications/legend</code> (xs:string)</h3><p>
+    The "legend" element makes it possible to add a custom legend
+    to be displayed when before printing a table. The legend is
+    specified as a template string.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (cmdpathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies for which path
+          the legend should be printed. cmdpathType is a space-separated
+          list of commands.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-legend YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38526"></a><h3><code class="filename">/clispec/$MODE/modifications/footer</code> (xs:string)</h3><p>
+    The "footer" element makes it possible to specify a template that will
+    be displayed after printing a table.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (cmdpathType)</span></dt><dd><p>
+          The "path" attribute is mandatory. It specifies for which path
+          the footer should be printed. cmdpathType is a space-separated
+          list of commands.
+        </p></dd></dl></div><p>
+    Note that the tailf:cli-footer YANG extension can be
+    used to the same effect directly in YANG file.
+  </p></div><div class="refsect2"><a name="d5e38538"></a><h3><code class="filename">/clispec/$MODE/modifications/help</code> (xs:string)</h3><p>
+    The "help" element makes it possible to add a custom help text
+    to the specified built-in command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>The "src" attribute is mandatory. It specifies which command to
+        add the text to. cmdpathType is a space-separated list of commands,
+        pointing out a specific sub-command.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38549"></a><h3><code class="filename">/clispec/$MODE/modifications/paramhelp</code> (xs:string)</h3><p>
+    The "paramhelp" element makes it possible to add a custom help text
+    to a parameter to a specified built-in command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          add the text to. cmdpathType is a space-separated list of commands,
+          pointing out a specific sub-command.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>nr</em></span> (positiveInteger)</span></dt><dd><p>
+          The "nr" attribute is mandatory. It specifies which parameter of
+          the command to
+          add the text to.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38565"></a><h3><code class="filename">/clispec/$MODE/modifications/typehelp</code> (xs:string)</h3><p>
+    The "typehelp" element makes it possible to add a custom help text
+    for the built-in primitive types, e.g. to change the default
+    type name in the CLI. For example, to display "&lt;integer&gt;"
+    instead of "&lt;unsignedShort&gt;".
+  </p><p>
+    The built-in primitive types are: string, atom, normalizedString,
+    boolean, float, decimal, double, hexBinary, base64Binary, anyURI,
+    anySimpleType, QName, NOTATION, token, integer, nonPositiveInteger,
+    negativeInteger, long, int, short, byte, nonNegativeInteger,
+    unsignedLong, positiveInteger, unsignedInt, unsignedShort,
+    unsignedByte, dateTime, date, gYearMonth, gDay, gYear, time,
+    gMonthDay, gMonth, duration, inetAddress, inetAddressIPv4,
+    inetAddressIP, inetAddressIPv6, inetAddressDNS, inetPortNumber, size,
+    MD5DigestString, DES3CBCEncryptedString, AESCFB128EncryptedString,
+    objectRef, bits_type_32, bits_type_64, hexValue, hexList, octetList,
+    Gauge32, Counter32, Counter64, and oid.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>type</em></span> (xs:Name)</span></dt><dd><p>The "type" attribute is mandatory. It specifies which primitive
+        type to modify.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38577"></a><h3><code class="filename">/clispec/$MODE/modifications/info</code> (xs:string)</h3><p>
+    The "info" element makes it possible to add a custom info text
+    to the specified built-in command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          hide. cmdpathType is a space-separated list of commands,
+          pointing out a specific sub-command.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38588"></a><h3><code class="filename">/clispec/$MODE/modifications/paraminfo</code> (xs:string)</h3><p>
+    The "paraminfo" element makes it possible to add a custom info text
+    to a parameter to a specified built-in command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command
+          to add the text to. cmdpathType is a space-separated list of
+          commands, pointing out a specific sub-command.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>nr</em></span> (positiveInteger)</span></dt><dd><p>
+          The "nr" attribute is mandatory. It specifies which
+          parameter of the command to add the text to.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38604"></a><h3><code class="filename">/clispec/$MODE/modifications/timeout</code> (xs:integer|infinity)</h3><p>
+    The "timeout" element makes it possible to add a custom command
+    timeout (in seconds) to the specified built-in command.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command
+          to add the timeout to. cmdpathType is a space-separated list
+          of commands, pointing out a specific sub-command.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38615"></a><h3><code class="filename">/clispec/$MODE/modifications/hide</code></h3><p>
+    The "hide" element makes it possible to hide a built-in command
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          hide. cmdpathType is a space-separated list of commands,
+          pointing out a specific sub-command.
+        </p><p>An example:</p><pre class="programlisting">
+        &lt;modifications&gt;
+        &lt;hide src="file show"/&gt;
+        &lt;/modifications&gt;
+        </pre></dd></dl></div></div><div class="refsect2"><a name="d5e38628"></a><h3><code class="filename">/clispec/$MODE/modifications/hideGroup</code></h3><p>
+    The "hideGroup" element makes it possible to hide a built-in command
+    under a hide group.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          hide. cmdpathType is a space-separated list of commands,
+          pointing out a specific sub-command.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (xs:string)</span></dt><dd><p>
+          The "name" attribute is mandatory. It specifies which hide group
+          to hide the command.
+        </p><p>An example:</p><pre class="programlisting">
+&lt;modifications&gt;
+  &lt;hideGroup src="file show" name="debug"/&gt;
+&lt;/modifications&gt;
+</pre></dd></dl></div></div><div class="refsect2"><a name="d5e38646"></a><h3><code class="filename">/clispec/$MODE/modifications/submodeCommand</code></h3><p>
+    The "submodeCommand" element makes it possible to make a command
+    visible in the completion lists of all submodes.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          make available. cmdpathType is a space-separated list of commands,
+          pointing out a specific sub-command.
+        </p><p>An example:</p><pre class="programlisting">
+&lt;modifications&gt;
+  &lt;submodeCommand src="clear"/&gt;
+&lt;/modifications&gt;
+</pre></dd></dl></div></div><div class="refsect2"><a name="d5e38659"></a><h3><code class="filename">/clispec/$MODE/modifications/confirmText</code> (xs:string)</h3><p>
+    The "confirmText" element makes it possible to add a confirmation text
+    to the specified command, i.e. the CLI user is prompted whenever this
+    command is executed. The prompt to be used is given as a body to the
+    element as seen in <span class="phrase">confd</span>-light.cli above. The valid answers are "yes"
+    and "no" - the text " [yes, no]" will automatically be added to the
+    given confirmation text.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>src</em></span> (cmdpathType)</span></dt><dd><p>
+          The "src" attribute is mandatory. It specifies which command to
+          add a confirmation prompt to. cmdpathType is a space-separated list of
+          commands, pointing out a specific sub-command.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>defaultOption</em></span> (yes|no)</span></dt><dd><p>
+          The "defaultOption" attribute is optional. It makes it possible to
+          customize if "yes" or "no" should be the default option, i.e. if the
+          user just hits ENTER. If this element is not defined it defaults to
+          whatever is specified by the
+          /clispec/$MODE/modifications/defaultConfirmOption element.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e38676"></a><h3><code class="filename">/clispec/$MODE/modifications/defaultConfirmOption</code> (yes|no)</h3><p>
+    The "defaultConfirmOption" element makes it possible to customize if
+    "yes" or "no" should be the default option, i.e. if the user just hits
+    ENTER, for the confirmation text added by the "confirmText" element.
+  </p><p>
+    If this element is not defined it defaults to "yes".
+  </p><p>
+    This element affects both /clispec/$MODE/modifications/confirmText and
+    /clispec/$MODE/cmd/confirmText if they have not defined their
+    "defaultOption" attributes.
+  </p></div><div class="refsect2"><a name="d5e38682"></a><h3><code class="filename">/clispec/$MODE/modifications/keymap</code></h3><p>
+    The "keymap" element makes it possible to modify the key bindings
+    in the command line editor.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>key</em></span> (xs:string)</span></dt><dd><p>
+          The "key" attribute is mandatory. It specifies which sequence
+          of keystrokes to modify.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>action</em></span> (keymapActionType)</span></dt><dd><p>
+          The "action" attribute is mandatory. It specifies what should happen
+          when the specified key sequence is executed. Possible values are:
+          "unset", "new", "exist", "start_of_line", "back", "abort", "tab",
+          "delete_forward", "delete_forward_no_eof", "end_of_line", "forward",
+          "kill_rest", "redraw", "redraw_clear", "newline", "insert(chars)",
+          "history_next", "history_prev", "isearch_back", "transpose",
+          "kill_line", "quote", "word_delete_back", "yank", "end_mode",
+          "delete", "word_delete_forward", "beginning_of_line", "delete",
+          "end_of_line", "word_forward", "word_back", "end_of_line",
+          "beginning_of_line", "word_back", "word_forward", "word_capitalize",
+          "word_lowercase", "word_uppercase", "word_delete_back",
+          "word_delete_forward", "multiline_mode", "yank_killring", and "quot".
+          To remove a default binding use the action "remove_binding".
+        </p><p>The default keymap is:</p><pre class="programlisting">      &lt;keymap key="\^A" action="start_of_line"/&gt;
+      &lt;keymap key="\^B" action="back"/&gt;
+      &lt;keymap key="\^C" action="abort"/&gt;
+      &lt;keymap key="\^D" action="delete_forward"/&gt;
+      &lt;keymap key="\^E" action="end_of_line"/&gt;
+      &lt;keymap key="\^F" action="forward"/&gt;
+      &lt;keymap key="\^J" action="newline"/&gt;
+      &lt;keymap key="\^K" action="kill_rest"/&gt;
+      &lt;keymap key="\^L" action="redraw_clear"/&gt;
+      &lt;keymap key="\^M" action="newline"/&gt;
+      &lt;keymap key="\^N" action="history_next"/&gt;
+      &lt;keymap key="\^P" action="history_prev"/&gt;
+      &lt;keymap key="\^R" action="isearch_back"/&gt;
+      &lt;keymap key="\^T" action="transpose"/&gt;
+      &lt;keymap key="\^U" action="kill_line"/&gt;
+      &lt;keymap key="\^V" action="quote"/&gt;
+      &lt;keymap key="\^W" action="word_delete_back"/&gt;
+      &lt;keymap key="\^X" action="kill_line"/&gt;
+      &lt;keymap key="\^Y" action="yank"/&gt;
+      &lt;keymap key="\^Z" action="end_mode"/&gt;
+      &lt;keymap key="\d" action="delete"/&gt;
+      &lt;keymap key="\t" action="tab"/&gt;
+      &lt;keymap key="\b" action="delete"/&gt;
+      &lt;keymap key="\ed" action="word_delete_forward"/&gt;
+      &lt;keymap key="\e[Z" action="tab"/&gt;
+      &lt;keymap key="\e[A" action="history_prev"/&gt;
+      &lt;keymap key="\e[1~" action="beginning_of_line"/&gt;
+      &lt;keymap key="\e[3~" action="delete"/&gt;
+      &lt;keymap key="\e[4~" action="end_of_line"/&gt;
+      &lt;keymap key="\eOA" action="history_prev"/&gt;
+      &lt;keymap key="\eOB" action="history_next"/&gt;
+      &lt;keymap key="\eOC" action="forward"/&gt;
+      &lt;keymap key="\eOD" action="back"/&gt;
+      &lt;keymap key="\eOM" action="newline"/&gt;
+      &lt;keymap key="\eOp" action="insert(0)"/&gt;
+      &lt;keymap key="\eOq" action="insert(1)"/&gt;
+      &lt;keymap key="\eOr" action="insert(2)"/&gt;
+      &lt;keymap key="\eOs" action="insert(3)"/&gt;
+      &lt;keymap key="\eOt" action="insert(4)"/&gt;
+      &lt;keymap key="\eOu" action="insert(5)"/&gt;
+      &lt;keymap key="\eOv" action="insert(6)"/&gt;
+      &lt;keymap key="\eOw" action="insert(7)"/&gt;
+      &lt;keymap key="\eOx" action="insert(8)"/&gt;
+      &lt;keymap key="\eOy" action="insert(9)"/&gt;
+      &lt;keymap key="\eOm" action="insert(-)"/&gt;
+      &lt;keymap key="\eOl" action="insert(*)"/&gt;
+      &lt;keymap key="\eOn" action="insert(.)"/&gt;
+      &lt;keymap key="\e[5C" action="word_forward"/&gt;
+      &lt;keymap key="\e[5D" action="word_back"/&gt;
+      &lt;keymap key="\e[1;5C" action="word_forward"/&gt;
+      &lt;keymap key="\e[1;5D" action="word_back"/&gt;
+      &lt;keymap key="\e[B" action="history_next"/&gt;
+      &lt;keymap key="\e[C" action="forward"/&gt;
+      &lt;keymap key="\e[D" action="back"/&gt;
+      &lt;keymap key="\e[F" action="end_of_line"/&gt;
+      &lt;keymap key="\e[H" action="beginning_of_line"/&gt;
+      &lt;keymap key="\eb" action="word_back"/&gt;
+      &lt;keymap key="\ef" action="word_forward"/&gt;
+      &lt;keymap key="\ec" action="word_capitalize"/&gt;
+      &lt;keymap key="\el" action="word_lowercase"/&gt;
+      &lt;keymap key="\eu" action="word_uppercase"/&gt;
+      &lt;keymap key="\e\b" action="word_delete_back"/&gt;
+      &lt;keymap key="\e\d" action="word_delete_back"/&gt;
+      &lt;keymap key="\ed" action="word_delete_forward"/&gt;
+      &lt;keymap key="\em" action="multiline_mode"/&gt;
+      &lt;keymap key="\ey" action="yank_killring"/&gt;
+      &lt;keymap key="\eq" action="quote"/&gt;
+</pre><p>
+  The default keymap for I-style differs with the following mapping:
+</p><pre class="programlisting">  &lt;keymap key="\^D" action="delete_forward_no_eof"/&gt;</pre></dd></dl></div></div><div class="refsect2"><a name="d5e38702"></a><h3><code class="filename">/clispec/$MODE/show</code></h3><p>
+    The "show" element overrides the built-in show command, in the C-style
+    CLI, for a givenpath defined by the "path" attribute. It contains
+    (in order) zero or one "callback" elements, and zero or one
+    "options" elements.
+  </p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>path</em></span> (showpathType) []</span></dt><dd><p>
+          The "path" attribute is required. It specifies for which path
+          the command should be invoked.
+        </p><p>An example:</p><pre class="programlisting">
+&lt;show path="aaa authentication users user"&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;./show_aaa_auth.sh&lt;/osCommand&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+&lt;/show&gt;
+</pre></dd></dl></div></div><div class="refsect2"><a name="d5e38715"></a><h3><code class="filename">/clispec/$MODE/show/callback</code></h3><p>The "callback" element specifies how the command is implemented,
+e.g. as a OS executable or a CAPI callback. It contains one of the
+elements "capi", and "exec".
+
+    </p></div><div class="refsect2"><a name="d5e38719"></a><h3><code class="filename">/clispec/$MODE/show/callback/mode</code></h3><p>The "mode" element specifies that the command is used for entering
+a custom mode. It contains one "name"  and one "datastore" element.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;mode&gt;
+    &lt;name&gt;debug&lt;/name&gt;
+    &lt;datastore&gt;private&lt;/name&gt;
+  &lt;/mode&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e38725"></a><h3><code class="filename">/clispec/$MODE/show/callback/mode/name</code> (xs:NCName)</h3><p>The "name" element specifies the name of the custom mode.
+For this to work, a custom mode with that name must be declared.
+    </p></div><div class="refsect2"><a name="d5e38729"></a><h3><code class="filename">/clispec/$MODE/show/callback/mode/datastore</code><span class="emphasis"><em>[private]</em></span></h3><p>The "datastore" element must be one of "private", "shared" and
+"exclusive". It is ignored for operational custom modes and when
+entering a configure mode from within another configure mode.
+It is only used when going from operational mode to configure
+mode.
+    </p></div><div class="refsect2"><a name="d5e38734"></a><h3><code class="filename">/clispec/$MODE/show/callback/capi</code></h3><p>The "capi" element specifies that the command is implemented using
+<span class="phrase">C-API</span> using the same API as for actions. It contains one "cmdpoint"
+element and one or zero "args" element.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;capi&gt;
+    &lt;cmdpoint&gt;adduser&lt;/cmdpoint&gt;
+  &lt;/capi&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e38741"></a><h3><code class="filename">/clispec/$MODE/show/callback/capi/args</code> (argsType)</h3><p>The "args" element specifies the arguments to use when executing the
+command specified by the "callpoint" element. argsType is a
+space-separated list of argument strings.</p><p>The string may contain a number of built-in variables which are expanded
+on execution. The built-in variables are: "cwd", "user", "groups", "ip",
+"maapi", "uid", "gid", "tty", "ssh_connection", "opaque", "path", "cpath", "ipath"
+and "licounter". In addition the variables "spath" and  "ispath" are
+available when a command is executed from a show path. For example:</p><pre class="programlisting">
+&lt;args&gt;$(user)&lt;/args&gt;
+</pre><p>Will expand to the username.
+    </p></div><div class="refsect2"><a name="d5e38748"></a><h3><code class="filename">/clispec/$MODE/show/callback/capi/cmdpoint</code> (xs:NCName)</h3><p>The "cmdpoint" element specifies the name of the <span class="phrase">C-API</span> action
+to be called. For this to work, a actionpoint must be registered
+with the ConfD daemon at startup.
+    </p></div><div class="refsect2"><a name="d5e38753"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec</code></h3><p>The "exec" element specifies how the command is implemented using
+an executable or a shell script. It contains (in order) one
+"osCommand" element,  zero or one "args" elements and zero or one
+"options" elements.</p><p>An example:</p><div class="informalexample"><pre class="programlisting">&lt;callback&gt;
+  &lt;exec&gt;
+    &lt;osCommand&gt;cp&lt;/osCommand&gt;
+    &lt;options&gt;
+      &lt;uid&gt;&lt;phrase condition="confd"&gt;confd&lt;/phrase&gt;&lt;phrase condition="ncs"&gt;ncs&lt;/phrase&gt;&lt;/uid&gt;
+      &lt;wd&gt;/var/tmp&lt;/wd&gt;
+      ...
+    &lt;/options&gt;
+  &lt;/exec&gt;
+&lt;/callback&gt;</pre></div></div><div class="refsect2"><a name="d5e38760"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/osCommand</code> (xs:token)</h3><p>The "osCommand" element specifies the path to the executable or
+shell script to be called. If the command is in the $PATH (as
+specified when we start the
+ConfD
+ daemon) the path may just be the name of the command.</p><p>The "osCommand" and "args" for "show" differs a bit from the
+ones for "cmd". For "show" there are a few built-in arguments that
+always are given to the "osCommand". These are appended to "args".
+The built-in arguments are "0", the keypath (ispath) and an optional
+filter. Like this: "0 /prefix:keypath *".</p><p>The command is not paginated by default in the CLI and will only
+do so if it is piped to more.</p><div class="informalexample"><pre class="programlisting">
+    joe@io&gt; example_os_command | more
+  </pre></div><p>The command is invoked as if it had been executed by exec(3),
+i.e. not in a shell environment such as "/bin/sh -c ...".
+    </p></div><div class="refsect2"><a name="d5e38769"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/args</code> (argsType)</h3><p>The "args" element specifies additional arguments to use when
+executing the command specified by the "osCommand" element. The "args"
+arguments are prepended to the mandatory ones listed in
+"osCommand". argsType is a space-separated list of argument
+strings.</p><p>The string may contain a number of built-in variables which are expanded
+on execution. The built-in variables are: "cwd", "user", "groups", "ip",
+"maapi", "uid", "gid", "tty", "ssh_connection", "opaque", "path", "cpath", "ipath"
+and "licounter". In addition the variables "spath" and  "ispath" are
+available when a command is executed from a show path. For example:</p><pre class="programlisting">
+&lt;args&gt;$(user)&lt;/args&gt;
+</pre><p>Will expand to the username and the three built-in arguments. For example:
+"admin 0 /prefix:keypath *".
+    </p></div><div class="refsect2"><a name="d5e38776"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options</code></h3><p>The "options" element specifies how the command is be executed. It
+contains (in any order) zero or one "uid" elements, zero or one "gid"
+elements, zero or one "wd" elements, zero or one "batch" elements,
+zero or one "pty" element,
+zero or one of "interrupt" elements, zero or one of "noInput",
+zero or one "raw" elements,
+and zero or one "ignoreExitValue" elements.
+    </p></div><div class="refsect2"><a name="d5e38780"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/uid</code> (idType) [confd]</h3><p>The "uid" element specifies which user id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same user id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same user id as the user logged
+in to the CLI, i.e. we have to make sure that this user id exists
+as an actual user id on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;uid&gt;</em></span> (the numerical user <span class="emphasis"><em>&lt;uid&gt;</em></span>)</span></dt><dd><p>The command is run as the user id &lt;uid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If uid is set to either "user", "root" or "&lt;uid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the showptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38808"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/gid</code> (idType) [confd]</h3><p>The "gid" element specifies which group id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same group id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same group id as the user logged
+in to the CLI, i.e. we have to make sure that this group id exists
+as an actual group on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;gid&gt;</em></span> (the numerical group <span class="emphasis"><em>&lt;gid&gt;</em></span>)</span></dt><dd><p>The command is run as the group id &lt;gid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If gid is set to either "user", "root" or "&lt;gid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the showptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38836"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/wd</code> (xs:token)</h3><p>The "wd" element specifies which working directory to use when
+executing the command. If not given, the command is executed from
+the location of the CLI.
+    </p></div><div class="refsect2"><a name="d5e38840"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/pty</code> (xs:boolean)</h3><p>The "pty" element specifies weather a pty should be allocated when
+executing the command. The default is to allocate a pty for
+operational and configure osCommands, but not for osCommands
+executing as a pipe command. This behavior can be overridden
+with this parameter.
+    </p></div><div class="refsect2"><a name="d5e38844"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/interrupt</code> (interruptType) [sigkill]</h3><p>The "interrupt" element specifies what should happen when the user
+enters ctrl-c in the CLI. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>sigkill</em></span> (default)</span></dt><dd><p>The command is terminated by sending the sigkill signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigint</em></span></span></dt><dd><p>The command is interrupted by the sigint signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigterm</em></span></span></dt><dd><p>The command is interrupted by the sigterm signal.</p></dd><dt><span class="term"><span class="emphasis"><em>ctrlc</em></span></span></dt><dd><p>The command is sent the ctrl-c character which is interpreted
+by the pty.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38869"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/ignoreExitValue</code></h3><p>The "ignoreExitValue" element specifies that the CLI engine should
+ignore the fact that the command returns a non-zero value. Normally it
+signals an error on stdout if a non-zero value is returned.
+    </p></div><div class="refsect2"><a name="d5e38873"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/raw</code></h3><p>The "raw" element specifies that the CLI engine should set the
+pty in raw mode when executing the command. This prevents normal
+output processing like converting \n to \n\r.
+
+    </p></div><div class="refsect2"><a name="d5e38877"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/globalNoDuplicate</code> (xs:token)</h3><p>The "globalNoDuplicate" element specifies that only one instance with the
+same name can be run at any one time in the system. The command can be
+started either from the CLI, the Web UI or through NETCONF.
+
+    </p></div><div class="refsect2"><a name="d5e38881"></a><h3><code class="filename">/clispec/$MODE/show/callback/exec/options/noInput</code> (xs:token)</h3><p>The "noInput" element specifies that the command should not grab
+the input stream and consume freely from that. This option should
+be used if the command should not consume input characters. If not
+used then the command will eath all data from the input stream and
+cut-and-paste may not work as intended.
+    </p></div><div class="refsect2"><a name="d5e38885"></a><h3><code class="filename">/clispec/$MODE/show/options</code></h3><p>The "options" element specifies under what circumstances the CLI
+command should execute. It contains (in any order) zero or one
+"notInterruptible" elements, zero or one of "displayWhen" elements,
+ and zero or one "paginate" elements.
+    </p></div><div class="refsect2"><a name="d5e38889"></a><h3><code class="filename">/clispec/$MODE/show/options/notInterruptible</code></h3><p>The "notInterruptible" element disables &lt;ctrl-c&gt; and the execution of
+the CLI command can thus not be interrupted.
+    </p></div><div class="refsect2"><a name="d5e38893"></a><h3><code class="filename">/clispec/$MODE/show/options/paginate</code></h3><p>The "paginate" element enables a filter for paging through CLI command
+output text one screen at a time.
+    </p></div><div class="refsect2"><a name="d5e38897"></a><h3><code class="filename">/clispec/$MODE/show/options/displayWhen</code></h3><p>The "displayWhen" element can be used to add a displayWhen
+xpath condition to a command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>expr</em></span> (xpath expression)</span></dt><dd><p>The "expr" attribute is mandatory. It specifies an xpath
+expression. If the expression evaluates to true then the command
+is available, otherwise not.</p></dd><dt><span class="term"><span class="emphasis"><em>ctx</em></span> (path)</span></dt><dd><p>
+        The "ctx" attribute is optional. If not specified the current
+        editpath/mode-path is used as context node for the xpath
+        evaluation.  Note that the xpath expression will automatically
+        evaluate to false if a display when expression is used for a
+        top-level command and no ctx is specified. The path may
+        contain variables defined in the dict.
+      </p></dd></dl></div></div><div class="refsect2"><a name="d5e38913"></a><h3><code class="filename">/clispec/operationalMode/start</code></h3><p>The "start" command is executed when the CLI is started. It can be
+used to, for example, remind the user to change an expired password.
+It contains (in order) zero or one "callback" elements, and zero or
+one "options" elements.</p><p>This element must occur after the &lt;modifications&gt; section and before
+any &lt;cmd&gt; entries.</p><p>An example:</p><pre class="programlisting">
+&lt;start&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;./startup.sh&lt;/osCommand&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+&lt;/start&gt;
+</pre></div><div class="refsect2"><a name="d5e38920"></a><h3><code class="filename">/clispec/operationalMode/start/callback</code></h3><p>The "callback" element specifies how the command is implemented,
+e.g. as a OS executable or an API callback. It contains one of the
+elements "capi", and "exec".
+
+    </p></div><div class="refsect2"><a name="d5e38924"></a><h3><code class="filename">/clispec/operationalMode/start/callback/capi</code></h3><p>The "capi" element specifies that the command is implemented using
+<span class="phrase">C-API</span> using the same API as for actions. It contains one "cmdpoint"
+element.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;capi&gt;
+    &lt;cmdpoint&gt;adduser&lt;/cmdpoint&gt;
+  &lt;/capi&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e38931"></a><h3><code class="filename">/clispec/operationalMode/start/callback/capi/cmdpoint</code> (xs:NCName)</h3><p>The "cmdpoint" element specifies the name of the <span class="phrase">C-API</span> action
+to be called. For this to work, a actionpoint must be registered
+with the ConfD daemon at startup.
+    </p></div><div class="refsect2"><a name="d5e38936"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec</code></h3><p>The "exec" element specifies how the command is implemented using
+an executable or a shell script. It contains (in order) one
+"osCommand" element,  zero or one "args" elements and zero or one
+"options" elements.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;exec&gt;
+    &lt;osCommand&gt;cp&lt;/osCommand&gt;
+    &lt;options&gt;
+      &lt;uid&gt;confd&lt;/uid&gt;
+      &lt;wd&gt;/var/tmp&lt;/wd&gt;
+      ...
+    &lt;/options&gt;
+  &lt;/exec&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e38942"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/osCommand</code> (xs:token)</h3><p>The "osCommand" element specifies the path to the executable or shell
+script to be called. If the command is in the $PATH (as specified
+when we start the ConfD daemon) the path may just be the name of the command.</p><p>The command is invoked as if it had been executed by exec(3),
+i.e. not in a shell environment such as "/bin/sh -c ...".
+    </p></div><div class="refsect2"><a name="d5e38947"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/args</code> (argsType)</h3><p>The "args" element specifies the arguments to use when executing the
+command specified by the "osCommand" element. argsType is a
+space-separated list of argument strings.
+The built-in variables are: "cwd", "user", "groups", "ip",
+"maapi", "uid", "gid", "tty", "ssh_connection", "opaque", "path", "cpath", "ipath"
+and "licounter". In addition the variables "spath" and  "ispath" are
+available when a command is executed from a show path. For example:</p><pre class="programlisting">
+&lt;args&gt;$(user)&lt;/args&gt;
+</pre><p>Will expand to the username.
+    </p></div><div class="refsect2"><a name="d5e38953"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options</code></h3><p>The "options" element specifies how the command is be executed. It
+contains (in any order) zero or one "uid" elements, zero or one "gid"
+elements, zero or one "wd" elements, zero or one "batch" elements,
+zero or one of "interrupt" elements, and zero or one "ignoreExitValue"
+elements.
+    </p></div><div class="refsect2"><a name="d5e38957"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/uid</code> (idType) [confd]</h3><p>The "uid" element specifies which user id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same user id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same user id as the user logged
+in to the CLI, i.e. we have to make sure that this user id exists
+as an actual user id on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;uid&gt;</em></span> (the numerical user <span class="emphasis"><em>&lt;uid&gt;</em></span>)</span></dt><dd><p>The command is run as the user id &lt;uid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If uid is set to either "user", "root" or "&lt;uid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the startptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e38985"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/gid</code> (idType) [confd]</h3><p>The "gid" element specifies which group id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same group id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same group id as the user logged
+in to the CLI, i.e. we have to make sure that this group id exists
+as an actual group on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;gid&gt;</em></span> (the numerical group <span class="emphasis"><em>&lt;gid&gt;</em></span>)</span></dt><dd><p>The command is run as the group id &lt;gid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If gid is set to either "user", "root" or "&lt;gid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the startptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39013"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/wd</code> (xs:token)</h3><p>The "wd" element specifies which working directory to use when
+executing the command. If not given, the command is executed from
+the location of the CLI.
+    </p></div><div class="refsect2"><a name="d5e39017"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/globalNoDuplicate</code> (xs:token)</h3><p>The "globalNoDuplicate" element specifies that only one instance with the
+same name can be run at any one time in the system. The command can be
+started either from the CLI, the Web UI or through NETCONF.
+
+    </p></div><div class="refsect2"><a name="d5e39021"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/interrupt</code> (interruptType) [sigkill]</h3><p>The "interrupt" element specifies what should happen when the user
+enters ctrl-c in the CLI. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>sigkill</em></span> (default)</span></dt><dd><p>The command is terminated by sending the sigkill signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigint</em></span></span></dt><dd><p>The command is interrupted by the sigint signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigterm</em></span></span></dt><dd><p>The command is interrupted by the sigterm signal.</p></dd><dt><span class="term"><span class="emphasis"><em>ctrlc</em></span></span></dt><dd><p>The command is sent the ctrl-c character which is interpreted
+by the pty.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39046"></a><h3><code class="filename">/clispec/operationalMode/start/callback/exec/options/ignoreExitValue</code>(xs:boolean) [false]</h3><p>The "ignoreExitValue" element specifies if the CLI engine should
+ignore the fact that the command returns a non-zero value. Normally it
+signals an error on stdout if a non-zero value is returned.
+    </p></div><div class="refsect2"><a name="d5e39050"></a><h3><code class="filename">/clispec/operationalMode/start/options</code></h3><p>The "options" element specifies under what circumstances the CLI
+command should execute. It contains (in any order) zero or one
+"notInterruptible" elements, and zero or one "paginate" elements.
+    </p></div><div class="refsect2"><a name="d5e39054"></a><h3><code class="filename">/clispec/operationalMode/start/options/notInterruptible</code></h3><p>The "notInterruptible" element disables &lt;ctrl-c&gt; and the execution of
+the CLI command can thus not be interrupted.
+    </p></div><div class="refsect2"><a name="d5e39058"></a><h3><code class="filename">/clispec/operationalMode/start/options/paginate</code></h3><p>The "paginate" element enables a filter for paging through CLI command
+output text one screen at a time.
+    </p></div><div class="refsect2"><a name="d5e39062"></a><h3><code class="filename">/clispec/$MODE/cmd</code></h3><p>The "cmd" element adds a new command to the CLI hierarchy as defined by
+its "mount" and "mode" attributes. It contains (in order) one
+"info" element, one
+"help" element, zero or one "confirmText" element, zero or one
+"callback" elements, zero or one "params" elements, zero or one
+"options" elements and finally zero or more "cmd" elements
+(recursively).</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>name</em></span> (xs:NCName)</span></dt><dd><p>The "name" attribute is mandatory. It specifies the name of the
+command.</p></dd><dt><span class="term"><span class="emphasis"><em>mode</em></span> (cmdpathType) []</span></dt><dd><p>The "mode" attribute is optional. It specifies that the command
+should be mounted in a specific submode. The attribute is only
+applicable in the C- and I-style CLIs. If no "mode" attribute
+is given the command is mounted in the topmost mode.</p></dd><dt><span class="term"><span class="emphasis"><em>extend</em></span> (xs:boolean) [false]</span></dt><dd><p>
+          The "extend" attribute is optional. It specifies that the command
+          should be mounted on top of an existing command, ie with the exact
+          same name as an existing command but with different parameters.
+          Which command is executed depends on which parameters are supplied
+          when the command is invoked. This can be used to overlay an
+          existing command.
+        </p></dd><dt><span class="term"><span class="emphasis"><em>mount</em></span> (cmdpathType) []</span></dt><dd><p>The "mount" attribute is optional. It specifies where in the
+command hierarchy of built-in commands this command should be
+mounted. If no mount attribute is given, or if it is empty (""),  the
+command is mounted on the top-level of the CLI hierarchy.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="copy" mount="file"&gt;
+  &lt;info&gt;Copy a file&lt;/info&gt;
+  &lt;help&gt;Copy a file from in the file system.&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;cp&lt;/osCommand&gt;
+      &lt;options&gt;
+        &lt;uid&gt;confd&lt;/uid&gt;
+      &lt;/options&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+      &lt;info&gt;&amp;amp;lt;source file&amp;amp;gt;&lt;/info&gt;
+    &lt;/param&gt;
+    &lt;param&gt;
+      &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+      &lt;info&gt;&amp;amp;lt;destination&amp;amp;gt;&lt;/info&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+
+  &lt;cmd ...&gt;
+    ...
+    &lt;cmd ...&gt;
+      ...
+    &lt;/cmd&gt;
+  &lt;/cmd&gt;
+
+  &lt;cmd ...&gt;
+    ...
+  &lt;/cmd&gt;
+&lt;/cmd&gt;
+</pre></dd></dl></div></div><div class="refsect2"><a name="d5e39090"></a><h3><code class="filename">/clispec/$MODE/cmd/info (xs:string)</code></h3><p>The "info" element is a single text line describing the command.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="start"&gt;
+  &lt;info&gt;Start displaying the system log or trace a file&lt;/info&gt;
+  ...
+</pre><p>and when we do the following in the CLI we get:</p><pre class="programlisting">
+joe@xev&gt; monitor st&lt;TAB&gt;
+Possible completions:
+  start - Start displaying the system log or trace a file
+  stop  - Stop displaying the system log or trace a file
+joe@xev&gt; monitor st
+</pre></div><div class="refsect2"><a name="d5e39098"></a><h3><code class="filename">/clispec/$MODE/cmd/help (xs:string)</code></h3><p>The "help" element is a multi-line text string describing the
+command. This text is shown when we use the "help" command.</p><p>An example:</p><pre class="programlisting">
+joe@xev&gt; help monitor start
+Help for command: monitor start
+Start displaying the system log or trace a file in the background.
+We can abort the logging using the "monitor stop" command.
+joe@xev&gt;
+</pre></div><div class="refsect2"><a name="d5e39104"></a><h3><code class="filename">/clispec/$MODE/cmd/timeout (xs:integer|infinity)</code></h3><p>The "timeout" element is a timeout for the command in seconds. Default is infinity.
+    </p></div><div class="refsect2"><a name="d5e39108"></a><h3><code class="filename">/clispec/$MODE/cmd/confirmText</code></h3><p>See /clispec/$MODE/modifications/confirmText
+    </p></div><div class="refsect2"><a name="d5e39112"></a><h3><code class="filename">/clispec/$MODE/cmd/callback</code></h3><p>The "callback" element specifies how the command is implemented,
+e.g. as a OS executable or a CAPI callback. It contains one of the
+elements "capi", "exec", "table" or "execStop".</p><p><span class="emphasis"><em>Note:</em></span>
+A command which has a callback defined may not have recursive
+sub-commands. Likewise, a command which has recursive sub-commands may
+not have a callback defined. A command without sub-commands
+must have a callback defined.
+    </p></div><div class="refsect2"><a name="d5e39118"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table</code></h3><p>The "table" element specifies that the command should display parts
+of the configuration in the form of a table.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;table&gt;
+    &lt;root&gt;/all:config/hosts/host&lt;/root&gt;
+    &lt;item&gt;
+      &lt;width&gt;20&lt;/width&gt;
+      &lt;header&gt;NAME&lt;/header&gt;
+      &lt;path&gt;name&lt;/path&gt;
+      &lt;align&gt;lefg&lt;/align&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+      &lt;header&gt;DOMAIN&lt;/header&gt;
+      &lt;path&gt;domain&lt;/path&gt;
+    &lt;/item&gt;
+    &lt;item&gt;
+      &lt;header&gt;IP&lt;/header&gt;
+      &lt;path&gt;interfaces/interface/ip&lt;/path&gt;
+      &lt;align&gt;right&lt;/align&gt;
+    &lt;/item&gt;
+  &lt;/table&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e39124"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/root</code> (xs:string)</h3><p>Should be a path to a list element. All item paths in the
+table are relative to this path.
+    </p></div><div class="refsect2"><a name="d5e39128"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/legend</code> (xs:string)</h3><p>Should be a legend template to display before showing the table.
+    </p></div><div class="refsect2"><a name="d5e39132"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/footer</code> (xs:string)</h3><p>Should be a footer template to display after showing the table.
+    </p></div><div class="refsect2"><a name="d5e39136"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/item</code></h3><p>Specifies a column in the table. It contains a "header"
+element and a "path" element, and optionally a "width" element.
+    </p></div><div class="refsect2"><a name="d5e39140"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/item/header</code> (xs:string)</h3><p>Header of this column in the table.
+    </p></div><div class="refsect2"><a name="d5e39144"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/item/path</code> (xs:string)</h3><p>Path to the element in this column.
+    </p></div><div class="refsect2"><a name="d5e39148"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/item/width</code> (xs:integer)</h3><p>The width in characters of this column.
+    </p></div><div class="refsect2"><a name="d5e39152"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/table/item/align</code> (left|right|center)</h3><p>The data alignment of this column.
+    </p></div><div class="refsect2"><a name="d5e39156"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/capi</code></h3><p>The "capi" element specifies that the command is implemented using
+<span class="phrase">C-API</span> using the same API as for actions. It contains one "cmdpoint"
+element.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;capi&gt;
+    &lt;cmdpoint&gt;adduser&lt;/cmdpoint&gt;
+  &lt;/capi&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e39163"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/capi/cmdpoint</code> (xs:NCName)</h3><p>The "cmdpoint" element specifies the name of the <span class="phrase">C-API</span> action
+to be called. For this to work, a actionpoint must be registered
+with the ConfD daemon at startup.
+    </p></div><div class="refsect2"><a name="d5e39168"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec</code></h3><p>The "exec" element specifies how the command is implemented using
+an executable or a shell script. It contains (in order) one
+"osCommand" element,  zero or one "args" elements and zero or one
+"options" elements.</p><p>An example:</p><pre class="programlisting">
+&lt;callback&gt;
+  &lt;exec&gt;
+    &lt;osCommand&gt;cp&lt;/osCommand&gt;
+    &lt;options&gt;
+      &lt;uid&gt;confd&lt;/uid&gt;
+      &lt;wd&gt;/var/tmp&lt;/wd&gt;
+      ...
+    &lt;/options&gt;
+  &lt;/exec&gt;
+&lt;/callback&gt;
+</pre></div><div class="refsect2"><a name="d5e39174"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/osCommand</code> (xs:token)</h3><p>The "osCommand" element specifies the path to the executable or shell
+script to be called. If the command is in the $PATH (as specified
+when we start the ConfD daemon) the path may just be the name of the command.</p><p>The command is invoked as if it had been executed by exec(3),
+i.e. not in a shell environment such as "/bin/sh -c ...".
+    </p></div><div class="refsect2"><a name="d5e39179"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/args</code> (argsType)</h3><p>The "args" element specifies the arguments to use when executing the
+command specified by the "osCommand" element. argsType is a
+space-separated list of argument strings.
+The built-in variables are: "cwd", "user", "groups", "ip",
+"maapi", "uid", "gid", "tty", "ssh_connection", "opaque", "path", "cpath", "ipath" and "licounter". The variable "pipecmd_XYZ" can be used to determine whether a certain builtin pipe command has been run together with the command. Here XYZ is the name of the pipe command. An example of such a variable is "pipecmd_include". In addition the variables "spath" and  "ispath" are
+available when a command is executed from a show path. For example:</p><pre class="programlisting">
+&lt;args&gt;$(user)&lt;/args&gt;
+</pre><p>Will expand to the username.
+    </p></div><div class="refsect2"><a name="d5e39185"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options</code></h3><p>The "options" element specifies how the command is be executed. It
+contains (in any order) zero or one "uid" elements, zero or one "gid"
+elements, zero or one "wd" elements, zero or one "batch" elements,
+zero or one of "interrupt" elements, and zero or one "ignoreExitValue"
+elements.
+    </p></div><div class="refsect2"><a name="d5e39189"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/uid</code> (idType) [confd]</h3><p>The "uid" element specifies which user id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same user id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same user id as the user logged
+in to the CLI, i.e. we have to make sure that this user id exists
+as an actual user id on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;uid&gt;</em></span> (the numerical user <span class="emphasis"><em>&lt;uid&gt;</em></span>)</span></dt><dd><p>The command is run as the user id &lt;uid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If uid is set to either "user", "root" or "&lt;uid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the cmdptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39217"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/gid</code> (idType) [confd]</h3><p>The "gid" element specifies which group id to use when executing the
+command. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>confd</em></span> (default)</span></dt><dd><p>The command is run as the same group id as the ConfD daemon.</p></dd><dt><span class="term"><span class="emphasis"><em>user</em></span></span></dt><dd><p>The command is run as the same group id as the user logged
+in to the CLI, i.e. we have to make sure that this group id exists
+as an actual group on the device.</p></dd><dt><span class="term"><span class="emphasis"><em>root</em></span></span></dt><dd><p>The command is run as root.</p></dd><dt><span class="term"><span class="emphasis"><em>&lt;gid&gt;</em></span> (the numerical group <span class="emphasis"><em>&lt;gid&gt;</em></span>)</span></dt><dd><p>The command is run as the group id &lt;gid&gt;.</p><p><span class="emphasis"><em>Note:</em></span>
+If gid is set to either "user", "root" or "&lt;gid&gt;" the the ConfD daemon
+must have been started as root (or setuid), or the cmdptywrapper must
+have setuid root permissions.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39245"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/wd</code> (xs:token)</h3><p>The "wd" element specifies which working directory to use when
+executing the command. If not given, the command is executed from
+the location of the CLI.
+    </p></div><div class="refsect2"><a name="d5e39249"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/pty</code> (xs:boolean)</h3><p>The "pty" element specifies weather a pty should be allocated when
+executing the command. The default is to allocate a pty for
+operational and configure osCommands, but not for osCommands
+executing as a pipe command. This behavior can be overridden
+with this parameter.
+    </p></div><div class="refsect2"><a name="d5e39253"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/globalNoDuplicate</code> (xs:token)</h3><p>The "globalNoDuplicate" element specifies that only one instance with the
+same name can be run at any one time in the system. The command can be
+started either from the CLI, the Web UI or through NETCONF.
+
+    </p></div><div class="refsect2"><a name="d5e39257"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/noInput</code> (xs:token)</h3><p>The "noInput" element specifies that the command should not grab
+the input stream and consume freely from that. This option should
+be used if the command should not consume input characters. If not
+used then the command will eath all data from the input stream and
+cut-and-paste may not work as intended.
+    </p></div><div class="refsect2"><a name="d5e39261"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/batch</code></h3><p>The "batch" element makes it possible to specify that a command
+returns immediately but still runs in the background, optionally
+generating output on stdout. An example of such a command is the
+standard "monitor start" command, which prints additional data appended to a
+(log) file:</p><pre class="programlisting">
+joe@io&gt; monitor start /var/log/messages
+joe@io&gt;
+log: Apr 10 11:59:32 earth ntpd[530]: kernel time sync enabled 2001
+</pre><p><span class="emphasis"><em>Ten seconds later...</em></span></p><pre class="programlisting">
+log: Apr 12 01:59:02 earth sshd[26847]: error: PAM: auth error for cathy
+joe@io&gt; monitor stop /var/log/messages
+joe@io&gt;
+</pre><p>The "batch" element contains (in order) one "group" element, an
+optional "prefix" element, and an optional "noDuplicate" element. The
+prefix defaults to the empty string.</p><p>An example from <span class="phrase">confd</span>
+.cli implementing the monitor functionality:</p><pre class="programlisting">
+&lt;cmd name="start"&gt;
+  ...
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;tail&lt;/osCommand&gt;
+      &lt;args&gt;-f -n 0&lt;/args&gt;
+      &lt;options&gt;
+        ...
+        &lt;batch&gt;
+          &lt;group&gt;monitor_file&lt;/group&gt;
+          &lt;prefix&gt;log:&lt;/prefix&gt;
+          &lt;noDuplicate/&gt;
+        &lt;/batch&gt;
+      &lt;/options&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  ...
+&lt;/cmd&gt;
+</pre><p>The batch group is used to kill the command as exemplified in the
+"execStop" element description below. "noDuplicate" indicates that a
+specific file is not allowed to be monitored by several commands in
+parallel.
+    </p></div><div class="refsect2"><a name="d5e39274"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/batch/group</code> (xs:NCName)</h3><p>The "group" element attaches a group label to the command. The group
+label is used when defining a "stop" command whose job it is to kill the
+background command. Take a look at the monitor example above for
+better understanding.</p><p>The stop command is defined using a "execStop" element as described
+below.
+    </p></div><div class="refsect2"><a name="d5e39279"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/batch/prefix</code> (xs:NCName)</h3><p>The "prefix" element specifies a string to prepend to all lines
+printed by the background command. In the monitor example above,
+"log:" is the chosen prefix.
+    </p></div><div class="refsect2"><a name="d5e39283"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/batch/noDuplicate</code></h3><p>The "noDuplicate" element specifies that only a single instance of
+this batch command, including the given/specified parameters, can run
+in the background.
+    </p></div><div class="refsect2"><a name="d5e39287"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/interrupt</code> (interruptType) [sigkill]</h3><p>The "interrupt" element specifies what should happen when the user
+enters ctrl-c in the CLI. Possible values are:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>sigkill</em></span> (default)</span></dt><dd><p>The command is terminated by sending the sigkill signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigint</em></span></span></dt><dd><p>The command is interrupted by the sigint signal.</p></dd><dt><span class="term"><span class="emphasis"><em>sigterm</em></span></span></dt><dd><p>The command is interrupted by the sigterm signal.</p></dd><dt><span class="term"><span class="emphasis"><em>ctrlc</em></span></span></dt><dd><p>The command is sent the ctrl-c character which is interpreted
+by the pty.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39312"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/exec/options/ignoreExitValue</code>(xs:boolean) [false]</h3><p>The "ignoreExitValue" element specifies if the CLI engine should
+ignore the fact that the command returns a non-zero value. Normally it
+signals an error on stdout if a non-zero value is returned.
+    </p></div><div class="refsect2"><a name="d5e39316"></a><h3><code class="filename">/clispec/$MODE/cmd/callback/execStop</code></h3><p>The "execStop" element specifies that a command defined by an "exec"
+element is to be killed.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>batchGroup</em></span> (xs:NCName)</span></dt><dd><p>The "batchGroup" attribute is mandatory. It specifies a background
+command to kill. It corresponds to a group label defined by another
+"exec" command using the "batch" element.</p><p>An example from <span class="phrase">confd</span>.cli which kills a background monitor session:</p><pre class="programlisting">
+&lt;cmd name="stop"&gt;
+  ...
+  &lt;callback&gt;
+    &lt;execStop batchGroup="monitor_file"/&gt;
+  &lt;/callback&gt;
+  ...
+&lt;/cmd&gt;
+</pre></dd></dl></div></div><div class="refsect2"><a name="d5e39330"></a><h3><code class="filename">/clispec/$MODE/cmd/params</code></h3><p>The "params" element lists which parameters the CLI should prompt
+for. These parameters are then used as arguments to either the
+CAPI callback or the OS executable command (as specified by the
+"capi" element or the "exec" element, respectively). If an "args" element
+as well as a "params" element has been specified, all of them are used
+as arguments: first the "args" arguments and then the "params"
+values are passed to the CAPI callback or executable.</p><p>The "params" element contains (in order) zero or more "param" elements
+and zero or one "any" elements.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>mode</em></span> (list|choice)</span></dt><dd><p>This is an optional attribute. If it is "choice" then at least
+"min" and at most "max" params must be given by the user. If
+it is "list" then all non-optional parameters must be given
+the command in the order they appear in the list.</p></dd><dt><span class="term"><span class="emphasis"><em>min</em></span> (xs:nonNegativeInteger)</span></dt><dd><p>This optional attribute defines the minumun number of parameters
+from the body of the "params" element that the user
+must supply with the command. It is only applicable if the mode
+attribute has been set to "choice". The default value is "1".
+</p></dd><dt><span class="term"><span class="emphasis"><em>max</em></span> (xs:nonNegativeInteger | unlimited)</span></dt><dd><p>
+            This optional attribute defines the maximum number of parameters
+            from the body of the "params" element that the user
+            may supply with the command. It is only applicable if the mode
+            attribute has been set to "choice". The default value is "1"
+            unless multi is specified, in which case the default is
+            "unlimited".
+          </p></dd><dt><span class="term"><span class="emphasis"><em>multi</em></span> (xs:boolean)</span></dt><dd><p>
+            This optional attribute controls if each parameters should
+            be allowed to be entered more than once. If set to "true"
+            then each parameter may occur multiple times. The default is
+            "false".
+          </p></dd></dl></div><p>An example from <span class="phrase">confd</span>.cli which copies one file to another:</p><pre class="programlisting">
+&lt;params&gt;
+  &lt;param&gt;
+    &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+    ...
+  &lt;/param&gt;
+  &lt;param&gt;
+    &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+    ...
+   &lt;/param&gt;
+   ...
+&lt;/params&gt;
+</pre></div><div class="refsect2"><a name="d5e39360"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param</code></h3><p>The "param" element defines the nature of a single parameter which the
+CLI should prompt for. It contains (in any order) zero or one "type"
+element, zero or one "info" element, zero or one "help" element,
+zero or one "optional" element, zero or one "name" element,
+zero or one "params" element, zero or one "auditLogHide" element,
+zero or one "prefix" element, zero or one "flag" element,
+zero or one "id" element,
+zero or one "hideGroup" element,
+ and zero or one "simpleType" element and zero
+or one "completionId" element.
+  </p></div><div class="refsect2"><a name="d5e39364"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type</code></h3><p>The "type" element is optional and defines the parameter type. It
+contains either a "enums", "enumerate", "void", "keypath", "file", "url_file",
+"simpleType", "xpath", "url_directory_file", "directory_file", "url_directory" or
+a "directory" element. If the "type" element is not
+present, the value entered by the user is passed unmodified to the
+callback.
+  </p></div><div class="refsect2"><a name="d5e39368"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/enums</code> (enumsType)</h3><p>The "enums" element defines a list of allowed enum values for
+the parameter. enumsType is a space-separated list of string
+enums.</p><p>An example:</p><pre class="programlisting">
+&lt;enums&gt;for bar baz&lt;/enums&gt;
+</pre></div><div class="refsect2"><a name="d5e39374"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/enumerate</code></h3><p>The "enumerate" is used to define a set of values with info text.
+It can contain one of more of the element "elem".
+  </p></div><div class="refsect2"><a name="d5e39378"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/enumerate/enum</code></h3><p>The "enum" is used to define an enumeration value with help text.
+It must contain the element "name" and optionally an "info" element and
+a "hideGroup" element.
+  </p></div><div class="refsect2"><a name="d5e39382"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/enumerate/enum/name</code>(xs:token)</h3><p>
+    The "name" is used to define the name of an enumeration.
+  </p></div><div class="refsect2"><a name="d5e39386"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/enumerate/enum/info</code>(xs:string)</h3><p>The "info" is used to define the info that is displayed during
+completion in the CLI. The element is optional.
+  </p></div><div class="refsect2"><a name="d5e39390"></a><p>
+    <code class="filename">/clispec/$MODE/cmd/params/param/type/enumerate/enum/hideGroup</code>(xs:string)
+  </p><p>
+    The "hideGroup" element makes an enum value invisible and it cannot
+    be used even if a user knows about its existence. The enum value will
+    become visible when the hide group is 'unhidden' using the unhide
+    command.
+  </p></div><div class="refsect2"><a name="d5e39394"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/void</code></h3><p>The "void" element is used to indicate that this parameter should
+not prompt for a value. It can only be used when the "name" element
+is used.
+  </p></div><div class="refsect2"><a name="d5e39398"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/keypath</code> (keypathType)</h3><p>The "keypath" element specifies that the parameter must be a keypath
+pointing to a configuration value. Valid keypath values are:
+<span class="emphasis"><em>new</em></span>
+or
+<span class="emphasis"><em>exist</em></span>:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>new</em></span></span></dt><dd><p>The keypath is either an already existing configuration value or an
+instance value to be created.</p></dd><dt><span class="term"><span class="emphasis"><em>exist</em></span></span></dt><dd><p>The keypath must be an already existing configuration value.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39415"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/key</code> (path)</h3><p>
+    The "key" element specifies that the parameter is an
+    instance identifier, either an existing instance or
+    a new. If the list has multiple key elements then they will
+  be entered with a space in between. </p><p>
+    The path should point to a list element, not the actual key
+    leaf. If the list has multiple keys then they user will be requested
+    to enter all keys of an instance. The path may be either absolute
+    or relative to the current submode path. Also variables referring
+    to key elements in the current submode path may be used, where the
+    closes key is named $(key-1-1), $(key-1-2) etc. Eg
+  </p><pre class="programlisting">
+/foo{key-2-1,key-2-2}/bar{key-1-1,key-1-2}/...
+</pre><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>mode</em></span> (keypathType)</span></dt><dd><p>
+          The "mode" attribute is mandatory. It specifies if the parameter
+          refers to an existing (exist) instance or a new (new) instance.
+        </p></dd></dl></div></div><div class="refsect2"><a name="d5e39428"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/pattern</code> (patternType)</h3><p>The "pattern" element specifies that the parameter must be a show
+command pattern. Valid pattern values are:
+<span class="emphasis"><em>stats</em></span>
+or
+<span class="emphasis"><em>config</em></span>
+or
+<span class="emphasis"><em>all</em></span>:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>stats</em></span></span></dt><dd><p>The pattern is only related to "config false" nodes in the data model.
+Note that CLI modifications such as fullShowPath, incompleteShowPath etc
+are applied to this pattern.</p></dd><dt><span class="term"><span class="emphasis"><em>config</em></span></span></dt><dd><p>The pattern is only related to "config true" elements in the data model.</p></dd><dt><span class="term"><span class="emphasis"><em>all</em></span></span></dt><dd><p>The pattern spans over all visible nodes in the data model.</p></dd></dl></div></div><div class="refsect2"><a name="d5e39451"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/file</code></h3><p>The "file" element specifies that the parameter is a file on
+disk. The CLI automatically enables tab completion to help the user to
+choose the correct file.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>wd</em></span> (xs:token)</span></dt><dd><p>The "wd" attribute is optional. It specifies a working directory to be
+used as the root for the tab completion algorithm. If no "wd"
+attribute is specified, the working directory is as defined for
+the "/clispec/$MODE/cmd/callback/exec/options/wd" element.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;file wd="/var/log/"/&gt;
+</pre></div><div class="refsect2"><a name="d5e39464"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/url_file</code></h3><p>The "url_file" element specifies that the parameter is a file on
+disk or an URL. The CLI automatically enables tab completion to help the
+user to choose the correct file.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>wd</em></span> (xs:token)</span></dt><dd><p>The "wd" attribute is optional. It specifies a working directory to be
+used as the root for the tab completion algorithm. If no "wd"
+attribute is specified, the working directory is as defined for
+the "/clispec/$MODE/cmd/callback/exec/options/wd" element.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;file wd="/var/log/"/&gt;
+</pre></div><div class="refsect2"><a name="d5e39477"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/simpleType</code></h3><p>The "simpleType" element specifies that the parameter should conform
+to some specific simpleType specified in a namespace.
+It can contain zero or one "info" element</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>namespace</em></span> (xs:string)</span></dt><dd><p>The "namespace" attribute is required. It specifies in which namespace
+the type is found. It can be either the namespace URI or the namespace
+prefix.</p></dd><dt><span class="term"><span class="emphasis"><em>name</em></span> (xs:string)</span></dt><dd><p>The "name" attribute is required. It specifies the name of the type
+in the given namespace.</p></dd><dt><span class="term"><span class="emphasis"><em>disallowValue</em></span> (xs:string)</span></dt><dd><p>The "disallowValue" attribute is optional. It specifies a regular expression
+of unaccepted values.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;simpleType namespace="&lt;ulink url='http://tail-f.com/ns/confd/1.0'&gt;http://tail-f.com/ns/confd/1.0&lt;/ulink&gt;"
+            name="inetAddressIP"/&gt;
+</pre></div><div class="refsect2"><a name="d5e39500"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/simpleType/info</code></h3><p>The "info" element contains a single line describing the simpleType that will appear during auto-completion. Note that this will override any other info texts provided by this type.
+  </p></div><div class="refsect2"><a name="d5e39504"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/xpath</code></h3><p>The "xpath" element specifies that the parameter should conform
+to one of the values returned by the xpath expression given as attribute.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>expr</em></span> (xs:string)</span></dt><dd><p>The "expr" attribute is required. It specifies an xpath expression
+that returns a set of valid values for this parameter. The expression may
+        contain variables defined in the dict.</p></dd><dt><span class="term"><span class="emphasis"><em>ctx</em></span> (xs:string)</span></dt><dd><p>The "ctx" attribute is optional. It specifies the context for the
+evaluation of the xpath expression. The path may
+        contain variables defined in the dict.</p></dd><dt><span class="term"><span class="emphasis"><em>lax</em></span> (xs:boolean)</span></dt><dd><p>The "lax" attribute is optional. It specifies if the given
+value should be checked against the values given by the xpath expression.
+The default is "true" which means that tab completion will present
+the values given by the xpath expression but the parser will accept
+any value. This makes parsing a bit faster. When lax is set to "false"
+a syntax error will be generated if an unexisting value is given
+as parameter.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;params&gt;
+  &lt;param&gt;
+    &lt;name&gt;host&lt;/name&gt;
+    &lt;type&gt;
+      &lt;xpath expr="/simpleObjects/hosts/host/name" lax="false" /&gt;
+    &lt;/type&gt;
+    &lt;flag&gt;--host&lt;/flag&gt;
+    &lt;id&gt;hostname&lt;/id&gt;
+  &lt;/param&gt;
+  &lt;param&gt;
+    &lt;name&gt;server&lt;/name&gt;
+    &lt;type&gt;
+      &lt;xpath expr="servers/server/name"
+             ctx="/simpleObjects/hosts/host{$(hostname)}"/&gt;
+    &lt;/type&gt;
+    &lt;flag&gt;--server&lt;/flag&gt;
+  &lt;/param&gt;
+&lt;/params&gt;
+</pre></div><div class="refsect2"><a name="d5e39527"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/directory</code></h3><p>The "directory" element specifies that the parameter is a directory on
+disk. The CLI automatically enables tab completion to help the user
+choose the correct directory.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>wd</em></span> (xs:token)</span></dt><dd><p>The "wd" attribute is optional. It specifies a working directory to be
+used as the root for the tab completion algorithm. If no "wd"
+attribute is specified, the working directory is as defined for the
+"wd" element.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;directory wd="/var/log/"/&gt;
+</pre></div><div class="refsect2"><a name="d5e39540"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/url_directory</code></h3><p>The "url_directory" element specifies that the parameter is a directory on
+disk or an URL. The CLI automatically enables tab completion to help the user
+choose the correct directory.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>wd</em></span> (xs:token)</span></dt><dd><p>The "wd" attribute is optional. It specifies a working directory to be
+used as the root for the tab completion algorithm. If no "wd"
+attribute is specified, the working directory is as defined for the
+"wd" element.</p></dd></dl></div><p>An example:</p><pre class="programlisting">
+&lt;directory wd="/var/log/"/&gt;
+</pre></div><div class="refsect2"><a name="d5e39553"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/directory_file</code></h3><p>The "directory_file" element specifies that the parameter is a directory
+or a file on disk. The CLI automatically enables tab completion to help the user
+choose the correct directory or file.</p><p>An example:</p><pre class="programlisting">
+&lt;directory_file/&gt;
+</pre></div><div class="refsect2"><a name="d5e39559"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/type/url_directory_file</code></h3><p>The "url_directory_file" element specifies that the parameter is a directory
+or a file on disk or an URL. The CLI automatically enables tab completion to help the user
+choose the correct directory or file.</p><p>An example:</p><pre class="programlisting">
+&lt;directory_file/&gt;
+</pre></div><div class="refsect2"><a name="d5e39565"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/info (xs:string)</code></h3><p>The "info" element is a single text line describing the parameter.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="id" mount=""&gt;
+  &lt;info&gt;Find uid and groups of a user&lt;/info&gt;
+  &lt;help&gt;Find uid and groups of a user, using the id program&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;id&lt;/osCommand&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;info&gt;User name&lt;/info&gt;
+      &lt;help&gt;User name&lt;/help&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>and when we do the following in the CLI we get:</p><pre class="programlisting">
+joe@x15&gt; id &lt;TAB&gt;
+User name
+joe@x15&gt; id snmp
+uid=108(snmp) gid=65534(nogroup) groups=65534(nogroup)
+[ok][2006-08-30 14:51:28]
+</pre><p><span class="emphasis"><em>Note:</em></span>
+This description is
+<span class="emphasis"><em>only</em></span>
+shown if the "type" element is left out.
+  </p></div><div class="refsect2"><a name="d5e39576"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/help (xs:string)</code></h3><p>The "help" element is a multi-line text string describing the
+parameter. This text is shown when we use the '?' character.
+
+  </p></div><div class="refsect2"><a name="d5e39580"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/hideGroup (xs:string)</code></h3><p>The "hideGroup" element makes a CLI parameter invisible and it cannot
+be used even if a user knows about its existence. The parameter will
+become visible when the hide group is 'unhidden' using the unhide
+command.</p><p>This mechanism correspond to the 'tailf:hidden' statement in a YANG
+module.
+  </p></div><div class="refsect2"><a name="d5e39585"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/name (xs:token)</code></h3><p>The "name" element is a token which has to be entered by the
+user before entering the actual parameter value. It is used
+to get named parameters.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="copy" mount="file"&gt;
+  &lt;info&gt;Copy a file&lt;/info&gt;
+  &lt;help&gt;Copy a file from one location to another in the file system&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;cp&lt;/osCommand&gt;
+      &lt;options&gt;
+        &lt;uid&gt;user&lt;/uid&gt;
+      &lt;/options&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+      &lt;info&gt;&amp;amp;lt;source file&amp;amp;gt;&lt;/info&gt;
+      &lt;help&gt;source file&lt;/help&gt;
+      &lt;name&gt;from&lt;/name&gt;
+    &lt;/param&gt;
+    &lt;param&gt;
+      &lt;type&gt;&lt;file/&gt;&lt;/type&gt;
+      &lt;info&gt;&amp;amp;lt;destination file&amp;amp;gt;&gt;&lt;/info&gt;
+      &lt;help&gt;destination file&lt;/help&gt;
+      &lt;name&gt;to&lt;/name&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>The result is that the user has to enter</p><pre class="programlisting">
+file copy from /tmp/orig to /tmp/copy
+</pre></div><div class="refsect2"><a name="d5e39593"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/prefix (xs:string)</code></h3><p>The "prefix" element is a string that is prepended to the
+argument before calling the osCommand. This can be used
+to add Unix style command flags in front of the supplied
+parameters.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="ssh"&gt;
+  &lt;info&gt;Open a secure shell on another host&lt;/info&gt;
+  &lt;help&gt;Open a secure shell on another host&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;ssh&lt;/osCommand&gt;
+      &lt;options&gt;
+        &lt;uid&gt;user&lt;/uid&gt;
+        &lt;interrupt&gt;ctrlc&lt;/interrupt&gt;
+      &lt;/options&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;info&gt;&amp;amp;lt;login&amp;amp;gt;&lt;/info&gt;
+      &lt;help&gt;Users login name on host&lt;/help&gt;
+      &lt;name&gt;user&lt;/name&gt;
+      &lt;prefix&gt;--login=&lt;/prefix&gt;
+    &lt;/param&gt;
+    &lt;param&gt;
+      &lt;info&gt;&amp;amp;lt;host&amp;amp;gt;&lt;/info&gt;
+      &lt;help&gt;host name or IP&lt;/help&gt;
+      &lt;name&gt;host&lt;/name&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>The user would enter for example</p><pre class="programlisting">
+ssh user joe host router.intranet.net
+</pre><p>and the resulting call to the ssh executable would become</p><pre class="programlisting">
+ssh --login=joe router.intranet.net
+</pre></div><div class="refsect2"><a name="d5e39603"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/flag (xs:string)</code></h3><p>The "flag" element is a string that is prepended to the
+argument before calling the osCommand. In contrast to the prefix
+element it will not be appended to the current parameter, but
+instead appear as a separate argument, ie instead of adding
+a unix style flag as "--foo=" (prefix) you add arguments in
+the style of "-f &lt;param&gt;" where -f is one arg and &lt;param&gt;
+is another. Both &lt;prefix&gt; and &lt;flag&gt; can be used at the
+same time.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="ssh"&gt;
+  &lt;info&gt;Open a secure shell on another host&lt;/info&gt;
+  &lt;help&gt;Open a secure shell on another host&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;ssh&lt;/osCommand&gt;
+      &lt;options&gt;
+        &lt;uid&gt;user&lt;/uid&gt;
+        &lt;interrupt&gt;ctrlc&lt;/interrupt&gt;
+      &lt;/options&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;info&gt;&amp;amp;lt;login&amp;amp;gt;&lt;/info&gt;
+      &lt;help&gt;Users login name on host&lt;/help&gt;
+      &lt;name&gt;user&lt;/name&gt;
+      &lt;flag&gt;-l&lt;/flag&gt;
+    &lt;/param&gt;
+    &lt;param&gt;
+      &lt;info&gt;&amp;amp;lt;host&amp;amp;gt;&lt;/info&gt;
+      &lt;help&gt;host name or IP&lt;/help&gt;
+      &lt;name&gt;host&lt;/name&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>The user would enter for example</p><pre class="programlisting">
+ssh user joe host router.intranet.net
+</pre><p>and the resulting call to the ssh executable would become</p><pre class="programlisting">
+ssh -l joe router.intranet.net
+</pre></div><div class="refsect2"><a name="d5e39613"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/id (xs:string)</code></h3><p>The "id" is used for identifying the value of the parameter and can
+be used as a variable in the value of a key parameter.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="test"&gt;
+  &lt;info/&gt;
+  &lt;help/&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;/bin/echo&lt;/osCommand&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;param&gt;
+      &lt;name&gt;host&lt;/name&gt;
+      &lt;id&gt;h&lt;/id&gt;
+      &lt;type&gt;&lt;key mode="exist"&gt;/host&lt;/key&gt;&lt;/type&gt;
+    &lt;/param&gt;
+    &lt;param&gt;
+      &lt;name&gt;interface&lt;/name&gt;
+      &lt;type&gt;&lt;key mode="exist"&gt;/host{$(h)}/interface&lt;/key&gt;&lt;/type&gt;
+    &lt;/param&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>
+There are also three builtin variables: user, uid and gid. The id and the
+builtin variables can be used in when specifying the path value of a
+key parameter, and also when specifying the wd attribute of the
+file, url_file, directory, and url_directory.
+</p></div><div class="refsect2"><a name="d5e39620"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/callback/capi</code></h3><p>Specifies that the parameter completion should be calculated
+through a callback function. It contains exactly one "completionpoint"
+element.
+  </p></div><div class="refsect2"><a name="d5e39624"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/callback/capi/completionpoint</code> (xs:string)</h3><p>
+Specifies the callpoint name of the completion function.
+</p></div><div class="refsect2"><a name="d5e39628"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/auditLogHide</code></h3><p>The "auditLogHide" element specifies that the parameter
+should be obfuscated in the audit log. This is suitable when
+clear text passwords are passed as command parameters.
+  </p></div><div class="refsect2"><a name="d5e39632"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/optional</code></h3><p>The "optional" element specifies that the parameter is optional and
+not required. It contains zero or one "default" element. It cannot be
+used inside a params of type "choice".
+  </p></div><div class="refsect2"><a name="d5e39636"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/optional/default</code></h3><p>The "default" element makes it possible to specify a default value,
+should the parameter be left out.</p><p>An example:</p><pre class="programlisting">
+&lt;optional&gt;
+    &lt;default&gt;42&lt;/default&gt;
+&lt;/optional&gt;
+</pre></div><div class="refsect2"><a name="d5e39642"></a><h3><code class="filename">/clispec/$MODE/cmd/params/param/completionId</code> xs:string</h3><p>The "completionId" element makes it possible to identify a specific
+parameter whenever it is referred to from a completion callback,
+i.e. a completion callback takes an optional completion ID parameter
+as input. Read more about completion callbacks in the <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>
+manual page and in the "The CLI agent" User Guide chapter.
+  </p></div><div class="refsect2"><a name="d5e39647"></a><h3><code class="filename">/clispec/$MODE/cmd/params/any</code></h3><p>The "any" element specifies that any number of parameters are
+allowed. It contains (in any order) one "info" element and one "help"
+element.
+  </p></div><div class="refsect2"><a name="d5e39651"></a><h3><code class="filename">/clispec/$MODE/cmd/params/any/info (xs:string)</code></h3><p>The "info" element is a single text line describing the parameter(s)
+expected.</p><p>An example:</p><pre class="programlisting">
+&lt;cmd name="evaluate" mount=""&gt;
+  &lt;info&gt;Evaluate an arithmetic expression&lt;/info&gt;
+  &lt;help&gt;Evaluate an arithmetic expression, using the expr program&lt;/help&gt;
+  &lt;callback&gt;
+    &lt;exec&gt;
+      &lt;osCommand&gt;expr&lt;/osCommand&gt;
+    &lt;/exec&gt;
+  &lt;/callback&gt;
+  &lt;params&gt;
+    &lt;any&gt;
+      &lt;info&gt;Arithmetic expression&lt;/info&gt;
+      &lt;help&gt;Arithmetic expression&lt;/help&gt;
+    &lt;/any&gt;
+  &lt;/params&gt;
+&lt;/cmd&gt;
+</pre><p>and when we do the following in the CLI we get:</p><pre class="programlisting">
+joe@xev&gt; eva&lt;TAB&gt;
+joe@xev&gt; evaluate &lt;TAB&gt;
+Arithmetic expression
+joe@xev&gt; evaluate 2 + 5
+7
+[ok][2006-08-30 14:47:17]
+</pre></div><div class="refsect2"><a name="d5e39659"></a><h3><code class="filename">/clispec/$MODE/cmd/params/any/help (xs:string)</code></h3><p>The "help" element is a multi-line text string describing these
+anonymous parameters. This text is shown we use the '?' character.
+
+  </p></div><div class="refsect2"><a name="d5e39663"></a><h3><code class="filename">/clispec/$MODE/cmd/options</code></h3><p>The "options" element specifies under what circumstances the CLI
+command should execute. It contains (in any order) zero or one
+"hidden" element, zero or one "hideGroup" element,
+zero or one "denyRunAccess" element, zero or one "notInterruptible" element,
+zero or one "pipeFlags" element, zero or one "negPipeFlags" element,
+zero or one of "submodeCommand" and "topModeCommand",
+zero or one of "displayWhen" element,  and zero or one "paginate" element.
+  </p></div><div class="refsect2"><a name="d5e39667"></a><h3><code class="filename">/clispec/$MODE/cmd/options/hidden</code></h3><p>The "hidden" element makes a CLI command invisible even though it can
+be evaluated if we know about its existence. This comes handy for
+commands which are used for debugging or are in pre-release state.
+  </p></div><div class="refsect2"><a name="d5e39671"></a><h3><code class="filename">/clispec/$MODE/cmd/options/hideGroup (xs:string)</code></h3><p>The "hideGroup" element makes a CLI command invisible and it cannot
+be used even if a user knows about its existence. The command will
+become visible when the hide group is 'unhidden' using the unhide
+command.</p><p>This mechanism correspond to the 'tailf:hidden' statement in a YANG
+module.
+  </p></div><div class="refsect2"><a name="d5e39676"></a><h3><code class="filename">/clispec/operationalMode/cmd/options/denyRunAccess</code></h3><p>The "denyRunAccess" element is used to restrict the possibility to run
+an operational mode command from configure mode.</p><p><span class="emphasis"><em>Comment:</em></span>
+The built-in "run" command is used to execute operational mode
+commands from configure mode.
+  </p></div><div class="refsect2"><a name="d5e39682"></a><h3><code class="filename">/clispec/$MODE/cmd/options/displayWhen</code></h3><p>The "displayWhen" element can be used to add a displayWhen
+XPath condition to a command.</p><p>Attributes:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="emphasis"><em>expr</em></span> (xpath expression)</span></dt><dd><p>The "expr" attribute is mandatory. It specifies an xpath
+expression. If the expression evaluates to true then the command
+is available, otherwise not.</p></dd><dt><span class="term"><span class="emphasis"><em>ctx</em></span> (path)</span></dt><dd><p>
+        The "ctx" attribute is optional. If not specified the current
+        editpath/mode-path is used as context node for the xpath
+        evaluation.  Note that the xpath expression will automatically
+        evaluate to false if a display when expression is used for a
+        top-level command and no ctx is specified. The path may
+        contain variables defined in the dict.
+      </p></dd></dl></div></div><div class="refsect2"><a name="d5e39698"></a><h3><code class="filename">/clispec/$MODE/cmd/options/notInterruptible</code></h3><p>The "notInterruptible" element disables &lt;ctrl-c&gt; and the execution of
+the CLI command can thus not be interrupted.
+  </p></div><div class="refsect2"><a name="d5e39702"></a><h3><code class="filename">/clispec/$MODE/cmd/options/submodeCommand</code></h3><p>The "submodeCommand" element makes a CLI command visible in all
+submodes.
+  </p></div><div class="refsect2"><a name="d5e39706"></a><h3><code class="filename">/clispec/$MODE/cmd/options/topModeCommand</code></h3><p>The "topModeCommand" element prevents a command mounted under a
+top mode command from being visible in all submodes.
+  </p></div><div class="refsect2"><a name="d5e39710"></a><h3><code class="filename">/clispec/$MODE/cmd/options/pipeFlags</code></h3><p>The "pipeFlags" element is used to signal that certain pipe
+commands should be made available if this command is entered.
+  </p></div><div class="refsect2"><a name="d5e39714"></a><h3><code class="filename">/clispec/$MODE/cmd/options/negPipeFlags</code></h3><p>The "negPipeFlags" element is used to signal that certain pipe
+commands should not be made available if this command is entered, ie it
+is used to block out specific pipe commands.
+  </p></div><div class="refsect2"><a name="d5e39718"></a><h3><code class="filename">/clispec/$MODE/cmd/options/paginate</code></h3><p>The "paginate" element enables a filter for paging through CLI command
+output text one screen at a time.
+  </p></div></div><div class="refsect1"><a name="man.5.clispec.see_also"></a><h2>SEE ALSO</h2><p>The ConfD User Guide
+
+<span class="citerefentry"><span class="refentrytitle">confdc</span>(1)</span> - Confdc compiler
+
+<span class="citerefentry"><span class="refentrytitle">confd_lib_dp</span>(3)</span> - callback library for connecting to ConfD
+
+confd.cli - The standard ConfD CLI commands.
+
+clispec.xsd - A W3C XML schema (<code class="uri">http://tail-f.com/ns/clispec/1.0</code>)
+describing a clispec.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn03.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn03.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn03re17.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">ConfD man-pages, Volume 5&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;confd.conf</td></tr></table></div></body></html>

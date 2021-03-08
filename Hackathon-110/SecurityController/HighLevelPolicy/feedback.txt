@@ -1,0 +1,23 @@
+<ietf-i2nsf-cfi-policy:policy>
+  <policy-name>security_policy_for_ddos_attack</policy-name>
+  <rule>
+    <rule-name>ddos_attack_rule</rule-name>
+    <condition>
+      <firewall-condition>
+        <source-target>
+          <src-target>ddos-attacker</src-target>
+        </source-target>
+      </firewall-condition>
+    </condition>
+    <event>
+      <time-information>
+        <begin-time>09:00</begin-time>
+        <end-time>18:00</end-time>
+      </time-information>
+    </event>
+    <action>
+      <primary-action>drop</primary-action>
+    </action>
+  </rule>
+</ietf-i2nsf-cfi-policy:policy>
+

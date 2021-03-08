@@ -1,0 +1,16 @@
+This is the erlang API to ConfD
+To build and use - erl, erlc, confd and confdc must be in the
+user PATH
+
+# make
+
+in this topdir will build and make econfd. 
+
+econfd is meant to be dropped into an existing otp lib structure.
+
+examples are found in the 'examples' dir.
+
+documentation is written in edoc, and the generated html is found in
+the 'doc' directory.
+
+

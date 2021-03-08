@@ -1,0 +1,730 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module _confd.cdb</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="_confd.html"><font color="#ffffff">_confd</font></a>.cdb</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Low&nbsp;level&nbsp;module&nbsp;for&nbsp;connecting&nbsp;to&nbsp;ConfD&nbsp;built-in&nbsp;XML&nbsp;database&nbsp;(CDB).<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;the&nbsp;ConfD&nbsp;built-in&nbsp;XML&nbsp;database,&nbsp;CDB.<br>
+The&nbsp;purpose&nbsp;of&nbsp;this&nbsp;API&nbsp;is&nbsp;to&nbsp;provide&nbsp;a&nbsp;read&nbsp;and&nbsp;subscription&nbsp;API&nbsp;to&nbsp;CDB.<br>
+&nbsp;<br>
+CDB&nbsp;owns&nbsp;and&nbsp;stores&nbsp;the&nbsp;configuration&nbsp;data&nbsp;and&nbsp;the&nbsp;user&nbsp;of&nbsp;the&nbsp;API&nbsp;wants<br>
+to&nbsp;read&nbsp;that&nbsp;configuration&nbsp;data&nbsp;and&nbsp;also&nbsp;get&nbsp;notified&nbsp;when&nbsp;someone&nbsp;through<br>
+either&nbsp;NETCONF,&nbsp;SNMP,&nbsp;the&nbsp;CLI,&nbsp;the&nbsp;Web&nbsp;UI&nbsp;or&nbsp;the&nbsp;MAAPI&nbsp;modifies&nbsp;the&nbsp;data<br>
+so&nbsp;that&nbsp;the&nbsp;application&nbsp;can&nbsp;re-read&nbsp;the&nbsp;configuration&nbsp;data&nbsp;and&nbsp;act<br>
+accordingly.<br>
+&nbsp;<br>
+CDB&nbsp;can&nbsp;also&nbsp;store&nbsp;operational&nbsp;data,&nbsp;i.e.&nbsp;data&nbsp;which&nbsp;is&nbsp;designated&nbsp;with&nbsp;a<br>
+"config&nbsp;false"&nbsp;statement&nbsp;in&nbsp;the&nbsp;YANG&nbsp;data&nbsp;model.&nbsp;Operational&nbsp;data&nbsp;can&nbsp;be<br>
+both&nbsp;read&nbsp;and&nbsp;written&nbsp;by&nbsp;the&nbsp;applications,&nbsp;but&nbsp;NETCONF&nbsp;and&nbsp;the&nbsp;other<br>
+northbound&nbsp;agents&nbsp;can&nbsp;only&nbsp;read&nbsp;the&nbsp;operational&nbsp;data.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_cdb(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-cd"><strong>cd</strong></a>(...)</dt><dd><tt><a href="#-cd">cd</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Changes&nbsp;the&nbsp;working&nbsp;directory&nbsp;according&nbsp;to&nbsp;the&nbsp;format&nbsp;path.&nbsp;Note&nbsp;that<br>
+this&nbsp;function&nbsp;can&nbsp;not&nbsp;be&nbsp;used&nbsp;as&nbsp;an&nbsp;existence&nbsp;test.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;cd&nbsp;to</tt></dd></dl>
+ <dl><dt><a name="-cli_diff_iterate"><strong>cli_diff_iterate</strong></a>(...)</dt><dd><tt>Function&nbsp;is&nbsp;deprecated.</tt></dd></dl>
+ <dl><dt><a name="-close"><strong>close</strong></a>(...)</dt><dd><tt><a href="#-close">close</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Closes&nbsp;the&nbsp;socket.&nbsp;<a href="#-end_session">end_session</a>()&nbsp;should&nbsp;be&nbsp;called&nbsp;before&nbsp;calling&nbsp;this<br>
+function.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-connect"><strong>connect</strong></a>(...)</dt><dd><tt><a href="#-connect">connect</a>(sock,&nbsp;type,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+The&nbsp;application&nbsp;has&nbsp;to&nbsp;connect&nbsp;to&nbsp;NCS&nbsp;before&nbsp;it&nbsp;can&nbsp;interact.&nbsp;There&nbsp;are&nbsp;two<br>
+different&nbsp;types&nbsp;of&nbsp;connections&nbsp;identified&nbsp;by&nbsp;the&nbsp;type&nbsp;argument&nbsp;-<br>
+DATA_SOCKET&nbsp;and&nbsp;SUBSCRIPTION_SOCKET.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+type&nbsp;--&nbsp;DATA_SOCKET&nbsp;or&nbsp;SUBSCRIPTION_SOCKET<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional).</tt></dd></dl>
+ <dl><dt><a name="-connect_name"><strong>connect_name</strong></a>(...)</dt><dd><tt><a href="#-connect_name">connect_name</a>(sock,&nbsp;type,&nbsp;name,&nbsp;ip,&nbsp;port,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;we&nbsp;use&nbsp;<a href="#-connect">connect</a>()&nbsp;to&nbsp;create&nbsp;a&nbsp;connection&nbsp;to&nbsp;NCS/CDB,&nbsp;the&nbsp;name<br>
+argument&nbsp;passed&nbsp;to&nbsp;the&nbsp;library&nbsp;initialization&nbsp;function&nbsp;confd_init()&nbsp;(see<br>
+confd_lib_lib(3))&nbsp;is&nbsp;used&nbsp;to&nbsp;identify&nbsp;the&nbsp;connection&nbsp;in&nbsp;status&nbsp;reports&nbsp;and<br>
+logs.&nbsp;I&nbsp;we&nbsp;want&nbsp;different&nbsp;names&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;different&nbsp;connections&nbsp;from<br>
+the&nbsp;same&nbsp;application&nbsp;process,&nbsp;we&nbsp;can&nbsp;use&nbsp;<a href="#-connect_name">connect_name</a>()&nbsp;with&nbsp;the&nbsp;wanted<br>
+name&nbsp;instead&nbsp;of&nbsp;<a href="#-connect">connect</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+type&nbsp;--&nbsp;DATA_SOCKET&nbsp;or&nbsp;SUBSCRIPTION_SOCKET<br>
+name&nbsp;--&nbsp;the&nbsp;name<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;(optional)<br>
+path&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional).</tt></dd></dl>
+ <dl><dt><a name="-create"><strong>create</strong></a>(...)</dt><dd><tt><a href="#-create">create</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Create&nbsp;a&nbsp;new&nbsp;list&nbsp;entry,&nbsp;presence&nbsp;container,&nbsp;or&nbsp;leaf&nbsp;of&nbsp;type&nbsp;empty.&nbsp;Note<br>
+that&nbsp;for&nbsp;list&nbsp;entries&nbsp;and&nbsp;containers,&nbsp;sub-elements&nbsp;will&nbsp;not&nbsp;exist&nbsp;until<br>
+created&nbsp;or&nbsp;set&nbsp;via&nbsp;some&nbsp;of&nbsp;the&nbsp;other&nbsp;functions,&nbsp;thus&nbsp;doing&nbsp;implicit<br>
+create&nbsp;via&nbsp;<a href="#-set_object">set_object</a>()&nbsp;or&nbsp;<a href="#-set_values">set_values</a>()&nbsp;may&nbsp;be&nbsp;preferred&nbsp;in&nbsp;this&nbsp;case.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;item&nbsp;to&nbsp;create&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-delete"><strong>delete</strong></a>(...)</dt><dd><tt><a href="#-delete">delete</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Delete&nbsp;a&nbsp;list&nbsp;entry,&nbsp;presence&nbsp;container,&nbsp;or&nbsp;leaf&nbsp;of&nbsp;type&nbsp;empty,&nbsp;and&nbsp;all<br>
+its&nbsp;child&nbsp;elements&nbsp;(if&nbsp;any).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;item&nbsp;to&nbsp;delete&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-diff_iterate"><strong>diff_iterate</strong></a>(...)</dt><dd><tt><a href="#-diff_iterate">diff_iterate</a>(sock,&nbsp;subid,&nbsp;iter,&nbsp;flags,&nbsp;initstate)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+After&nbsp;reading&nbsp;the&nbsp;subscription&nbsp;socket&nbsp;the&nbsp;<a href="#-diff_iterate">diff_iterate</a>()&nbsp;function&nbsp;can&nbsp;be<br>
+used&nbsp;to&nbsp;iterate&nbsp;over&nbsp;the&nbsp;changes&nbsp;made&nbsp;in&nbsp;CDB&nbsp;data&nbsp;that&nbsp;matched&nbsp;the<br>
+particular&nbsp;subscription&nbsp;point&nbsp;given&nbsp;by&nbsp;subid.<br>
+&nbsp;<br>
+The&nbsp;user&nbsp;defined&nbsp;function&nbsp;iter()&nbsp;will&nbsp;be&nbsp;called&nbsp;for&nbsp;each&nbsp;element&nbsp;that&nbsp;has<br>
+been&nbsp;modified&nbsp;and&nbsp;matches&nbsp;the&nbsp;subscription.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;will&nbsp;return&nbsp;the&nbsp;last&nbsp;return&nbsp;value&nbsp;from&nbsp;the&nbsp;iter()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+subid&nbsp;--&nbsp;the&nbsp;subcscription&nbsp;id<br>
+iter&nbsp;--&nbsp;iterator&nbsp;function&nbsp;(see&nbsp;below)<br>
+initstate&nbsp;--&nbsp;opaque&nbsp;passed&nbsp;to&nbsp;iter&nbsp;function<br>
+&nbsp;<br>
+The&nbsp;user&nbsp;defined&nbsp;function&nbsp;iter()&nbsp;will&nbsp;be&nbsp;called&nbsp;for&nbsp;each&nbsp;element&nbsp;that&nbsp;has<br>
+been&nbsp;modified&nbsp;and&nbsp;matches&nbsp;the&nbsp;subscription.&nbsp;It&nbsp;must&nbsp;have&nbsp;the&nbsp;following<br>
+signature:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;iter_fn(kp,&nbsp;op,&nbsp;oldv,&nbsp;newv,&nbsp;state)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kp&nbsp;-&nbsp;a&nbsp;HKeypathRef&nbsp;or&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;op&nbsp;-&nbsp;the&nbsp;operation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;oldv&nbsp;-&nbsp;the&nbsp;old&nbsp;value&nbsp;or&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;newv&nbsp;-&nbsp;the&nbsp;new&nbsp;value&nbsp;or&nbsp;None<br>
+&nbsp;&nbsp;&nbsp;&nbsp;state&nbsp;-&nbsp;the&nbsp;initstate&nbsp;object</tt></dd></dl>
+ <dl><dt><a name="-diff_iterate_resume"><strong>diff_iterate_resume</strong></a>(...)</dt><dd><tt><a href="#-diff_iterate_resume">diff_iterate_resume</a>(sock,&nbsp;reply,&nbsp;iter,&nbsp;resumestate)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+The&nbsp;application&nbsp;must&nbsp;call&nbsp;this&nbsp;function&nbsp;whenever&nbsp;an&nbsp;iterator&nbsp;function&nbsp;has<br>
+returned&nbsp;ITER_SUSPEND&nbsp;to&nbsp;finish&nbsp;up&nbsp;the&nbsp;iteration.&nbsp;If&nbsp;the&nbsp;application&nbsp;does<br>
+not&nbsp;wish&nbsp;to&nbsp;continue&nbsp;iteration&nbsp;it&nbsp;must&nbsp;at&nbsp;least&nbsp;call<br>
+<a href="#-diff_iterate_resume">diff_iterate_resume</a>(sock,&nbsp;ITER_STOP,&nbsp;None,&nbsp;None)&nbsp;to&nbsp;clean&nbsp;up&nbsp;the&nbsp;state.<br>
+The&nbsp;reply&nbsp;parameter&nbsp;is&nbsp;what&nbsp;the&nbsp;iterator&nbsp;function&nbsp;would&nbsp;have&nbsp;returned<br>
+(i.e.&nbsp;normally&nbsp;ITER_RECURSE&nbsp;or&nbsp;ITER_CONTINUE)&nbsp;if&nbsp;it&nbsp;hadn't&nbsp;returned<br>
+ITER_SUSPEND.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;will&nbsp;return&nbsp;the&nbsp;last&nbsp;return&nbsp;value&nbsp;from&nbsp;the&nbsp;iter()&nbsp;callback.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+reply&nbsp;--&nbsp;the&nbsp;reply&nbsp;value<br>
+iter&nbsp;--&nbsp;iterator&nbsp;function&nbsp;(see&nbsp;<a href="#-diff_iterate">diff_iterate</a>())<br>
+resumestate&nbsp;--&nbsp;opaque&nbsp;passed&nbsp;to&nbsp;iter&nbsp;function</tt></dd></dl>
+ <dl><dt><a name="-diff_match"><strong>diff_match</strong></a>(...)</dt><dd><tt>Function&nbsp;not&nbsp;yet&nbsp;implemented.</tt></dd></dl>
+ <dl><dt><a name="-end_session"><strong>end_session</strong></a>(...)</dt><dd><tt><a href="#-end_session">end_session</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+We&nbsp;use&nbsp;<a href="#-connect">connect</a>()&nbsp;to&nbsp;establish&nbsp;a&nbsp;read&nbsp;socket&nbsp;to&nbsp;CDB.&nbsp;When&nbsp;the&nbsp;socket&nbsp;is<br>
+closed,&nbsp;the&nbsp;read&nbsp;session&nbsp;is&nbsp;ended.&nbsp;We&nbsp;can&nbsp;reuse&nbsp;the&nbsp;same&nbsp;socket&nbsp;for&nbsp;another<br>
+read&nbsp;session,&nbsp;but&nbsp;we&nbsp;must&nbsp;then&nbsp;end&nbsp;the&nbsp;session&nbsp;and&nbsp;create&nbsp;another&nbsp;session<br>
+using&nbsp;<a href="#-start_session">start_session</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-exists"><strong>exists</strong></a>(...)</dt><dd><tt><a href="#-exists">exists</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+Leafs&nbsp;in&nbsp;the&nbsp;data&nbsp;model&nbsp;may&nbsp;be&nbsp;optional,&nbsp;and&nbsp;presence&nbsp;containers&nbsp;and&nbsp;list<br>
+entries&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;exist.&nbsp;This&nbsp;function&nbsp;checks&nbsp;whether&nbsp;a&nbsp;node&nbsp;exists<br>
+in&nbsp;CDB.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;check&nbsp;for&nbsp;existence</tt></dd></dl>
+ <dl><dt><a name="-get"><strong>get</strong></a>(...)</dt><dd><tt><a href="#-get">get</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;_lib.Value<br>
+&nbsp;<br>
+This&nbsp;reads&nbsp;a&nbsp;a&nbsp;value&nbsp;from&nbsp;the&nbsp;path&nbsp;and&nbsp;returns&nbsp;the&nbsp;result.&nbsp;The&nbsp;path&nbsp;must<br>
+lead&nbsp;to&nbsp;a&nbsp;leaf&nbsp;element&nbsp;in&nbsp;the&nbsp;XML&nbsp;data&nbsp;tree.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;leaf</tt></dd></dl>
+ <dl><dt><a name="-get_case"><strong>get_case</strong></a>(...)</dt><dd><tt><a href="#-get_case">get_case</a>(sock,&nbsp;choice,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;we&nbsp;use&nbsp;the&nbsp;YANG&nbsp;choice&nbsp;statement&nbsp;in&nbsp;the&nbsp;data&nbsp;model,&nbsp;this&nbsp;function<br>
+can&nbsp;be&nbsp;used&nbsp;to&nbsp;find&nbsp;the&nbsp;currently&nbsp;selected&nbsp;case,&nbsp;avoiding&nbsp;useless<br>
+<a href="#-get">get</a>()&nbsp;etc&nbsp;requests&nbsp;for&nbsp;elements&nbsp;that&nbsp;belong&nbsp;to&nbsp;other&nbsp;cases.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+choice&nbsp;--&nbsp;the&nbsp;choice&nbsp;(string)<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;container&nbsp;or&nbsp;list&nbsp;entry&nbsp;where&nbsp;choice&nbsp;is&nbsp;defined&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-get_modifications"><strong>get_modifications</strong></a>(...)</dt><dd><tt><a href="#-get_modifications">get_modifications</a>(sock,&nbsp;subid,&nbsp;flags,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+The&nbsp;<a href="#-get_modifications">get_modifications</a>()&nbsp;function&nbsp;can&nbsp;be&nbsp;called&nbsp;after&nbsp;reception&nbsp;of&nbsp;a<br>
+subscription&nbsp;notification&nbsp;to&nbsp;retrieve&nbsp;all&nbsp;the&nbsp;changes&nbsp;that&nbsp;caused&nbsp;the<br>
+subscription&nbsp;notification.&nbsp;The&nbsp;socket&nbsp;sock&nbsp;is&nbsp;the&nbsp;subscription&nbsp;socket.&nbsp;The<br>
+subscription&nbsp;id&nbsp;must&nbsp;also&nbsp;be&nbsp;provided.&nbsp;Optionally&nbsp;a&nbsp;path&nbsp;can&nbsp;be&nbsp;used&nbsp;to<br>
+limit&nbsp;what&nbsp;is&nbsp;returned&nbsp;further&nbsp;(only&nbsp;changes&nbsp;below&nbsp;the&nbsp;supplied&nbsp;path&nbsp;will<br>
+be&nbsp;returned),&nbsp;if&nbsp;this&nbsp;isn't&nbsp;needed&nbsp;path&nbsp;can&nbsp;be&nbsp;set&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+subid&nbsp;--&nbsp;subscription&nbsp;id<br>
+flags&nbsp;--&nbsp;the&nbsp;flags<br>
+path&nbsp;--&nbsp;a&nbsp;path&nbsp;in&nbsp;string&nbsp;format&nbsp;or&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-get_modifications_cli"><strong>get_modifications_cli</strong></a>(...)</dt><dd><tt><a href="#-get_modifications_cli">get_modifications_cli</a>(sock,&nbsp;subid,&nbsp;flags)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+The&nbsp;<a href="#-get_modifications_cli">get_modifications_cli</a>()&nbsp;function&nbsp;can&nbsp;be&nbsp;called&nbsp;after&nbsp;reception&nbsp;of<br>
+a&nbsp;subscription&nbsp;notification&nbsp;to&nbsp;retrieve&nbsp;all&nbsp;the&nbsp;changes&nbsp;that&nbsp;caused&nbsp;the<br>
+subscription&nbsp;notification&nbsp;as&nbsp;a&nbsp;string&nbsp;in&nbsp;Cisco&nbsp;CLI&nbsp;format.&nbsp;The&nbsp;socket&nbsp;sock<br>
+is&nbsp;the&nbsp;subscription&nbsp;socket.&nbsp;The&nbsp;subscription&nbsp;id&nbsp;must&nbsp;also&nbsp;be&nbsp;provided.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+subid&nbsp;--&nbsp;subscription&nbsp;id<br>
+flags&nbsp;--&nbsp;the&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-get_modifications_iter"><strong>get_modifications_iter</strong></a>(...)</dt><dd><tt><a href="#-get_modifications_iter">get_modifications_iter</a>(sock,&nbsp;flags)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+The&nbsp;<a href="#-get_modifications_iter">get_modifications_iter</a>()&nbsp;is&nbsp;basically&nbsp;a&nbsp;convenient&nbsp;short-hand&nbsp;of<br>
+the&nbsp;<a href="#-get_modifications">get_modifications</a>()&nbsp;function&nbsp;intended&nbsp;to&nbsp;be&nbsp;used&nbsp;from&nbsp;within&nbsp;a<br>
+iteration&nbsp;function&nbsp;started&nbsp;by&nbsp;<a href="#-diff_iterate">diff_iterate</a>().&nbsp;In&nbsp;this&nbsp;case&nbsp;no&nbsp;subscription<br>
+id&nbsp;is&nbsp;needed,&nbsp;and&nbsp;the&nbsp;path&nbsp;is&nbsp;implicitly&nbsp;the&nbsp;current&nbsp;position&nbsp;in&nbsp;the<br>
+iteration.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+flags&nbsp;--&nbsp;the&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-get_object"><strong>get_object</strong></a>(...)</dt><dd><tt><a href="#-get_object">get_object</a>(sock,&nbsp;n,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;reads&nbsp;at&nbsp;most&nbsp;n&nbsp;values&nbsp;from&nbsp;the&nbsp;container&nbsp;or&nbsp;list&nbsp;entry<br>
+specified&nbsp;by&nbsp;the&nbsp;path,&nbsp;and&nbsp;returns&nbsp;them&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;Value's.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+n&nbsp;--&nbsp;max&nbsp;number&nbsp;of&nbsp;values&nbsp;to&nbsp;read<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;a&nbsp;list&nbsp;entry&nbsp;or&nbsp;a&nbsp;container&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-get_objects"><strong>get_objects</strong></a>(...)</dt><dd><tt><a href="#-get_objects">get_objects</a>(sock,&nbsp;n,&nbsp;ix,&nbsp;nobj,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Similar&nbsp;to&nbsp;<a href="#-get_object">get_object</a>(),&nbsp;but&nbsp;reads&nbsp;multiple&nbsp;entries&nbsp;of&nbsp;a&nbsp;list&nbsp;based<br>
+on&nbsp;the&nbsp;"instance&nbsp;integer"&nbsp;otherwise&nbsp;given&nbsp;within&nbsp;square&nbsp;brackets&nbsp;in&nbsp;the<br>
+path&nbsp;-&nbsp;here&nbsp;the&nbsp;path&nbsp;must&nbsp;specify&nbsp;the&nbsp;list&nbsp;without&nbsp;the&nbsp;instance&nbsp;integer.<br>
+At&nbsp;most&nbsp;n&nbsp;values&nbsp;from&nbsp;each&nbsp;of&nbsp;nobj&nbsp;entries,&nbsp;starting&nbsp;at&nbsp;entry&nbsp;ix,&nbsp;are<br>
+read&nbsp;and&nbsp;placed&nbsp;in&nbsp;the&nbsp;values&nbsp;array.&nbsp;The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;objects<br>
+where&nbsp;each&nbsp;object&nbsp;is&nbsp;represented&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;Values.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+n&nbsp;--&nbsp;max&nbsp;number&nbsp;of&nbsp;values&nbsp;to&nbsp;read&nbsp;from&nbsp;each&nbsp;object<br>
+ix&nbsp;--&nbsp;start&nbsp;index<br>
+nobj&nbsp;--&nbsp;number&nbsp;of&nbsp;objects&nbsp;to&nbsp;read<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;a&nbsp;list&nbsp;entry&nbsp;or&nbsp;a&nbsp;container&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-get_phase"><strong>get_phase</strong></a>(...)</dt><dd><tt><a href="#-get_phase">get_phase</a>(sock)&nbsp;-&gt;&nbsp;dict<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;start-phase&nbsp;that&nbsp;CDB&nbsp;is&nbsp;currently&nbsp;in.&nbsp;The&nbsp;return&nbsp;value&nbsp;is&nbsp;a<br>
+dict&nbsp;of&nbsp;the&nbsp;form:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'phase':&nbsp;phase,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'flags':&nbsp;flags,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'init':&nbsp;init,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'upgrade':&nbsp;upgrade<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+In&nbsp;this&nbsp;dict&nbsp;'phase'&nbsp;and&nbsp;'flags'&nbsp;are&nbsp;integers,&nbsp;while&nbsp;'init'&nbsp;and&nbsp;'upgrade'<br>
+are&nbsp;booleans.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-get_replay_txids"><strong>get_replay_txids</strong></a>(...)</dt><dd><tt><a href="#-get_replay_txids">get_replay_txids</a>(sock)&nbsp;-&gt;&nbsp;list(tuple)<br>
+&nbsp;<br>
+When&nbsp;the&nbsp;subscriptionReplay&nbsp;functionality&nbsp;is&nbsp;enabled&nbsp;in&nbsp;confd.conf&nbsp;this<br>
+function&nbsp;returns&nbsp;the&nbsp;list&nbsp;of&nbsp;available&nbsp;transactions&nbsp;that&nbsp;CDB&nbsp;can&nbsp;replay.<br>
+The&nbsp;current&nbsp;transaction&nbsp;id&nbsp;will&nbsp;be&nbsp;the&nbsp;first&nbsp;in&nbsp;the&nbsp;list,&nbsp;the&nbsp;second&nbsp;at<br>
+txid[1]&nbsp;and&nbsp;so&nbsp;on.&nbsp;In&nbsp;case&nbsp;there&nbsp;are&nbsp;no&nbsp;replay&nbsp;transactions&nbsp;available&nbsp;(the<br>
+feature&nbsp;isn't&nbsp;enabled&nbsp;or&nbsp;there&nbsp;hasn't&nbsp;been&nbsp;any&nbsp;transactions&nbsp;yet)&nbsp;only&nbsp;one<br>
+(the&nbsp;current)&nbsp;transaction&nbsp;id&nbsp;is&nbsp;returned.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;list&nbsp;contains&nbsp;tuples&nbsp;with&nbsp;the&nbsp;form&nbsp;(s1,&nbsp;s2,&nbsp;s3,&nbsp;master)&nbsp;where<br>
+s1,&nbsp;s2&nbsp;and&nbsp;s3&nbsp;are&nbsp;unsigned&nbsp;integers&nbsp;and&nbsp;master&nbsp;is&nbsp;either&nbsp;a&nbsp;string&nbsp;or&nbsp;None.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-get_transaction_handle"><strong>get_transaction_handle</strong></a>(...)</dt><dd><tt><a href="#-get_transaction_handle">get_transaction_handle</a>(sock)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;transaction&nbsp;handle&nbsp;for&nbsp;the&nbsp;transaction&nbsp;that&nbsp;triggered&nbsp;the<br>
+current&nbsp;subscription&nbsp;notification.&nbsp;This&nbsp;function&nbsp;uses&nbsp;a&nbsp;subscription<br>
+socket,&nbsp;and&nbsp;can&nbsp;only&nbsp;be&nbsp;called&nbsp;when&nbsp;a&nbsp;subscription&nbsp;notification&nbsp;for<br>
+configuration&nbsp;data&nbsp;has&nbsp;been&nbsp;received&nbsp;on&nbsp;that&nbsp;socket,&nbsp;before<br>
+<a href="#-sync_subscription_socket">sync_subscription_socket</a>()&nbsp;has&nbsp;been&nbsp;called.&nbsp;Additionally,&nbsp;it&nbsp;is&nbsp;not<br>
+possible&nbsp;to&nbsp;call&nbsp;this&nbsp;function&nbsp;from&nbsp;the&nbsp;iter()&nbsp;function&nbsp;passed&nbsp;to<br>
+<a href="#-diff_iterate">diff_iterate</a>().<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;CDB&nbsp;client&nbsp;is&nbsp;not&nbsp;expected&nbsp;to&nbsp;access&nbsp;the&nbsp;ConfD&nbsp;transaction&nbsp;store<br>
+&nbsp;&nbsp;&nbsp;&nbsp;directly&nbsp;-&nbsp;this&nbsp;function&nbsp;should&nbsp;only&nbsp;be&nbsp;used&nbsp;for&nbsp;logging&nbsp;or&nbsp;debugging<br>
+&nbsp;&nbsp;&nbsp;&nbsp;purposes.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;the&nbsp;ConfD&nbsp;High&nbsp;Availability&nbsp;functionality&nbsp;is&nbsp;used,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;transaction&nbsp;information&nbsp;is&nbsp;not&nbsp;available&nbsp;on&nbsp;slave&nbsp;nodes.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-get_txid"><strong>get_txid</strong></a>(...)</dt><dd><tt><a href="#-get_txid">get_txid</a>(sock)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Read&nbsp;the&nbsp;last&nbsp;transaction&nbsp;id&nbsp;from&nbsp;CDB.&nbsp;This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;if&nbsp;we&nbsp;are<br>
+forced&nbsp;to&nbsp;reconnect&nbsp;to&nbsp;CDB.&nbsp;If&nbsp;the&nbsp;transaction&nbsp;id&nbsp;we&nbsp;read&nbsp;is&nbsp;identical&nbsp;to<br>
+the&nbsp;last&nbsp;id&nbsp;we&nbsp;had&nbsp;prior&nbsp;to&nbsp;loosing&nbsp;the&nbsp;CDB&nbsp;sockets&nbsp;we&nbsp;don't&nbsp;have&nbsp;to&nbsp;reload<br>
+our&nbsp;managed&nbsp;object&nbsp;data.&nbsp;See&nbsp;the&nbsp;User&nbsp;Guide&nbsp;for&nbsp;full&nbsp;explanation.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;tuple&nbsp;has&nbsp;the&nbsp;form&nbsp;(s1,&nbsp;s2,&nbsp;s3,&nbsp;master)&nbsp;where&nbsp;s1,&nbsp;s2&nbsp;and&nbsp;s3<br>
+are&nbsp;unsigned&nbsp;integers&nbsp;and&nbsp;master&nbsp;is&nbsp;either&nbsp;a&nbsp;string&nbsp;or&nbsp;None.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-get_user_session"><strong>get_user_session</strong></a>(...)</dt><dd><tt><a href="#-get_user_session">get_user_session</a>(sock)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;user&nbsp;session&nbsp;id&nbsp;for&nbsp;the&nbsp;transaction&nbsp;that&nbsp;triggered&nbsp;the<br>
+current&nbsp;subscription&nbsp;notification.&nbsp;This&nbsp;function&nbsp;uses&nbsp;a&nbsp;subscription<br>
+socket,&nbsp;and&nbsp;can&nbsp;only&nbsp;be&nbsp;called&nbsp;when&nbsp;a&nbsp;subscription&nbsp;notification&nbsp;for<br>
+configuration&nbsp;data&nbsp;has&nbsp;been&nbsp;received&nbsp;on&nbsp;that&nbsp;socket,&nbsp;before<br>
+<a href="#-sync_subscription_socket">sync_subscription_socket</a>()&nbsp;has&nbsp;been&nbsp;called.&nbsp;Additionally,&nbsp;it&nbsp;is&nbsp;not<br>
+possible&nbsp;to&nbsp;call&nbsp;this&nbsp;function&nbsp;from&nbsp;the&nbsp;iter()&nbsp;function&nbsp;passed&nbsp;to<br>
+<a href="#-diff_iterate">diff_iterate</a>().&nbsp;To&nbsp;retrieve&nbsp;full&nbsp;information&nbsp;about&nbsp;the&nbsp;user&nbsp;session,<br>
+use&nbsp;_maapi.<a href="#-get_user_session">get_user_session</a>()&nbsp;(see&nbsp;confd_lib_maapi(3)).<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;the&nbsp;ConfD&nbsp;High&nbsp;Availability&nbsp;functionality&nbsp;is&nbsp;used,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;session&nbsp;information&nbsp;is&nbsp;not&nbsp;available&nbsp;on&nbsp;slave&nbsp;nodes.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-get_values"><strong>get_values</strong></a>(...)</dt><dd><tt><a href="#-get_values">get_values</a>(sock,&nbsp;values,&nbsp;path)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+Read&nbsp;an&nbsp;arbitrary&nbsp;set&nbsp;of&nbsp;sub-elements&nbsp;of&nbsp;a&nbsp;container&nbsp;or&nbsp;list&nbsp;entry.&nbsp;The<br>
+values&nbsp;list&nbsp;must&nbsp;be&nbsp;pre-populated&nbsp;with&nbsp;a&nbsp;number&nbsp;of&nbsp;TagValue&nbsp;instances.<br>
+&nbsp;<br>
+TagValues&nbsp;passed&nbsp;in&nbsp;the&nbsp;values&nbsp;list&nbsp;will&nbsp;be&nbsp;updated&nbsp;with&nbsp;the&nbsp;corresponding<br>
+values&nbsp;read&nbsp;and&nbsp;a&nbsp;new&nbsp;values&nbsp;list&nbsp;will&nbsp;be&nbsp;returned.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;TagValue&nbsp;instances<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;a&nbsp;list&nbsp;entry&nbsp;or&nbsp;a&nbsp;container&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-getcwd"><strong>getcwd</strong></a>(...)</dt><dd><tt><a href="#-getcwd">getcwd</a>(sock)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;current&nbsp;position&nbsp;as&nbsp;previously&nbsp;set&nbsp;by&nbsp;<a href="#-cd">cd</a>(),&nbsp;<a href="#-pushd">pushd</a>(),&nbsp;or&nbsp;<a href="#-popd">popd</a>()<br>
+as&nbsp;a&nbsp;string&nbsp;path.&nbsp;Note&nbsp;that&nbsp;what&nbsp;is&nbsp;returned&nbsp;is&nbsp;a&nbsp;pretty-printed&nbsp;version&nbsp;of<br>
+the&nbsp;internal&nbsp;representation&nbsp;of&nbsp;the&nbsp;current&nbsp;position.&nbsp;It&nbsp;will&nbsp;be&nbsp;the&nbsp;shortest<br>
+unique&nbsp;way&nbsp;to&nbsp;print&nbsp;the&nbsp;path&nbsp;but&nbsp;it&nbsp;might&nbsp;not&nbsp;exactly&nbsp;match&nbsp;the&nbsp;string&nbsp;given<br>
+to&nbsp;<a href="#-cd">cd</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-getcwd_kpath"><strong>getcwd_kpath</strong></a>(...)</dt><dd><tt><a href="#-getcwd_kpath">getcwd_kpath</a>(sock)&nbsp;-&gt;&nbsp;_lib.HKeypathRef<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;current&nbsp;position&nbsp;like&nbsp;<a href="#-getcwd">getcwd</a>(),&nbsp;but&nbsp;as&nbsp;a&nbsp;_lib.HKeypathRef<br>
+instead&nbsp;of&nbsp;as&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-index"><strong>index</strong></a>(...)</dt><dd><tt><a href="#-index">index</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Given&nbsp;a&nbsp;path&nbsp;to&nbsp;a&nbsp;list&nbsp;entry&nbsp;<a href="#-index">index</a>()&nbsp;returns&nbsp;its&nbsp;position&nbsp;(starting&nbsp;from&nbsp;0).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;list&nbsp;entry</tt></dd></dl>
+ <dl><dt><a name="-initiate_journal_compaction"><strong>initiate_journal_compaction</strong></a>(...)</dt><dd><tt><a href="#-initiate_journal_compaction">initiate_journal_compaction</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Normally&nbsp;CDB&nbsp;handles&nbsp;journal&nbsp;compaction&nbsp;of&nbsp;the&nbsp;config&nbsp;datastore<br>
+automatically.&nbsp;If&nbsp;this&nbsp;has&nbsp;been&nbsp;turned&nbsp;off&nbsp;(in&nbsp;the&nbsp;configuration&nbsp;file)<br>
+then&nbsp;the&nbsp;A.cdb&nbsp;file&nbsp;will&nbsp;grow&nbsp;indefinitely&nbsp;unless&nbsp;this&nbsp;API&nbsp;function&nbsp;is<br>
+called&nbsp;periodically&nbsp;to&nbsp;initiate&nbsp;compaction.&nbsp;This&nbsp;function&nbsp;initiates&nbsp;a<br>
+compaction&nbsp;and&nbsp;returns&nbsp;immediately&nbsp;(if&nbsp;the&nbsp;datastore&nbsp;is&nbsp;locked,&nbsp;the<br>
+compaction&nbsp;will&nbsp;be&nbsp;delayed,&nbsp;but&nbsp;eventually&nbsp;compaction&nbsp;will&nbsp;take&nbsp;place).<br>
+Calling&nbsp;this&nbsp;function&nbsp;when&nbsp;journal&nbsp;compaction&nbsp;is&nbsp;configured&nbsp;to&nbsp;be&nbsp;automatic<br>
+has&nbsp;no&nbsp;effect.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-is_default"><strong>is_default</strong></a>(...)</dt><dd><tt><a href="#-is_default">is_default</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;bool<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;returns&nbsp;True&nbsp;for&nbsp;a&nbsp;leaf&nbsp;which&nbsp;has&nbsp;a&nbsp;default&nbsp;value&nbsp;defined&nbsp;in<br>
+the&nbsp;data&nbsp;model&nbsp;when&nbsp;no&nbsp;value&nbsp;has&nbsp;been&nbsp;set,&nbsp;i.e.&nbsp;when&nbsp;the&nbsp;default&nbsp;value&nbsp;is<br>
+in&nbsp;effect.&nbsp;It&nbsp;returns&nbsp;False&nbsp;for&nbsp;other&nbsp;existing&nbsp;leafs.<br>
+There&nbsp;is&nbsp;normally&nbsp;no&nbsp;need&nbsp;to&nbsp;call&nbsp;this&nbsp;function,&nbsp;since&nbsp;CDB&nbsp;automatically<br>
+provides&nbsp;the&nbsp;default&nbsp;value&nbsp;as&nbsp;needed&nbsp;when&nbsp;<a href="#-get">get</a>()&nbsp;etc&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;leaf</tt></dd></dl>
+ <dl><dt><a name="-load_file"><strong>load_file</strong></a>(...)</dt><dd><tt><a href="#-load_file">load_file</a>(sock,&nbsp;filename,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Load&nbsp;operational&nbsp;data&nbsp;from&nbsp;filename&nbsp;into&nbsp;CDB&nbsp;operational.&nbsp;The&nbsp;file&nbsp;must<br>
+be&nbsp;in&nbsp;xml&nbsp;format,&nbsp;and&nbsp;sock&nbsp;must&nbsp;be&nbsp;connected&nbsp;to&nbsp;CDB&nbsp;operational&nbsp;(i.e.<br>
+<a href="#-start_session">start_session</a>()&nbsp;or&nbsp;<a href="#-start_session2">start_session2</a>()&nbsp;must&nbsp;have&nbsp;been&nbsp;called&nbsp;with<br>
+OPERATIONAL).&nbsp;If&nbsp;the&nbsp;file&nbsp;contains&nbsp;config&nbsp;data,&nbsp;or&nbsp;operational&nbsp;data<br>
+not&nbsp;residing&nbsp;in&nbsp;CDB,&nbsp;that&nbsp;data&nbsp;will&nbsp;be&nbsp;silently&nbsp;ignored.&nbsp;If&nbsp;the&nbsp;name&nbsp;of<br>
+the&nbsp;file&nbsp;ends&nbsp;in&nbsp;.gz&nbsp;(or&nbsp;.Z)&nbsp;then&nbsp;the&nbsp;file&nbsp;is&nbsp;assumed&nbsp;to&nbsp;be&nbsp;gzipped,&nbsp;and<br>
+will&nbsp;be&nbsp;uncompressed&nbsp;as&nbsp;it&nbsp;is&nbsp;loaded.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Note:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;you&nbsp;use&nbsp;a&nbsp;relative&nbsp;pathname&nbsp;for&nbsp;filename,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;relative<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;the&nbsp;working&nbsp;directory&nbsp;of&nbsp;the&nbsp;ConfD&nbsp;daemon,&nbsp;i.e.&nbsp;the&nbsp;directory<br>
+&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;the&nbsp;daemon&nbsp;was&nbsp;started.<br>
+&nbsp;<br>
+Note&nbsp;that&nbsp;there&nbsp;are&nbsp;no&nbsp;transactions&nbsp;in&nbsp;CDB&nbsp;operational,&nbsp;so&nbsp;there&nbsp;will&nbsp;not<br>
+be&nbsp;any&nbsp;validation&nbsp;or&nbsp;transactional&nbsp;commit&nbsp;of&nbsp;the&nbsp;file.&nbsp;However&nbsp;the&nbsp;file<br>
+will&nbsp;be&nbsp;completely&nbsp;parsed&nbsp;before&nbsp;CDB&nbsp;tries&nbsp;to&nbsp;set&nbsp;the&nbsp;values,&nbsp;with&nbsp;the<br>
+result&nbsp;that&nbsp;any&nbsp;errors&nbsp;in&nbsp;the&nbsp;file&nbsp;will&nbsp;abort&nbsp;the&nbsp;operation&nbsp;without<br>
+changing&nbsp;anything&nbsp;in&nbsp;CDB&nbsp;operational.<br>
+&nbsp;<br>
+The&nbsp;flags&nbsp;parameter&nbsp;is&nbsp;currently&nbsp;not&nbsp;used,&nbsp;and&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+filename&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;file<br>
+flags&nbsp;--&nbsp;not&nbsp;used&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0</tt></dd></dl>
+ <dl><dt><a name="-load_str"><strong>load_str</strong></a>(...)</dt><dd><tt><a href="#-load_str">load_str</a>(sock,&nbsp;xml_str,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Load&nbsp;operational&nbsp;data&nbsp;from&nbsp;the&nbsp;string&nbsp;xml_str&nbsp;into&nbsp;CDB&nbsp;operational.&nbsp;I.e.<br>
+instead&nbsp;of&nbsp;having&nbsp;the&nbsp;xml&nbsp;data&nbsp;read&nbsp;from&nbsp;a&nbsp;file&nbsp;as&nbsp;for&nbsp;<a href="#-load_file">load_file</a>(),<br>
+it&nbsp;is&nbsp;passed&nbsp;as&nbsp;a&nbsp;string&nbsp;to&nbsp;the&nbsp;function.&nbsp;Besides&nbsp;this,&nbsp;the&nbsp;function<br>
+works&nbsp;the&nbsp;same&nbsp;as&nbsp;<a href="#-load_file">load_file</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+xml_str&nbsp;--&nbsp;name&nbsp;data<br>
+flags&nbsp;--&nbsp;not&nbsp;used&nbsp;-&nbsp;should&nbsp;be&nbsp;set&nbsp;to&nbsp;0</tt></dd></dl>
+ <dl><dt><a name="-mandatory_subscriber"><strong>mandatory_subscriber</strong></a>(...)</dt><dd><tt><a href="#-mandatory_subscriber">mandatory_subscriber</a>(sock,&nbsp;name)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Attaches&nbsp;a&nbsp;mandatory&nbsp;attribute&nbsp;and&nbsp;a&nbsp;mandatory&nbsp;name&nbsp;to&nbsp;the&nbsp;subscriber<br>
+identified&nbsp;by&nbsp;sock.&nbsp;The&nbsp;name&nbsp;argument&nbsp;is&nbsp;distinct&nbsp;from&nbsp;the&nbsp;name&nbsp;argument<br>
+in&nbsp;<a href="#-connect_name">connect_name</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+name&nbsp;--&nbsp;the&nbsp;name</tt></dd></dl>
+ <dl><dt><a name="-next_index"><strong>next_index</strong></a>(...)</dt><dd><tt><a href="#-next_index">next_index</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Given&nbsp;a&nbsp;path&nbsp;to&nbsp;a&nbsp;list&nbsp;entry&nbsp;<a href="#-next_index">next_index</a>()&nbsp;returns&nbsp;the&nbsp;position<br>
+(starting&nbsp;from&nbsp;0)&nbsp;of&nbsp;the&nbsp;next&nbsp;entry&nbsp;(regardless&nbsp;of&nbsp;whether&nbsp;the&nbsp;path<br>
+exists&nbsp;or&nbsp;not).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;list&nbsp;entry</tt></dd></dl>
+ <dl><dt><a name="-num_instances"><strong>num_instances</strong></a>(...)</dt><dd><tt><a href="#-num_instances">num_instances</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Returns&nbsp;the&nbsp;number&nbsp;of&nbsp;instances&nbsp;in&nbsp;a&nbsp;list.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;list&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-oper_subscribe"><strong>oper_subscribe</strong></a>(...)</dt><dd><tt><a href="#-oper_subscribe">oper_subscribe</a>(sock,&nbsp;nspace,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Sets&nbsp;up&nbsp;a&nbsp;CDB&nbsp;subscription&nbsp;for&nbsp;changes&nbsp;in&nbsp;the&nbsp;operational&nbsp;database.<br>
+Similar&nbsp;to&nbsp;the&nbsp;subscriptions&nbsp;for&nbsp;configuration&nbsp;data,&nbsp;we&nbsp;can&nbsp;be&nbsp;notified<br>
+of&nbsp;changes&nbsp;to&nbsp;the&nbsp;operational&nbsp;data&nbsp;stored&nbsp;in&nbsp;CDB.&nbsp;Note&nbsp;that&nbsp;there&nbsp;are<br>
+several&nbsp;differences&nbsp;from&nbsp;the&nbsp;subscriptions&nbsp;for&nbsp;configuration&nbsp;data.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+nspace&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-popd"><strong>popd</strong></a>(...)</dt><dd><tt><a href="#-popd">popd</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Pops&nbsp;the&nbsp;top&nbsp;element&nbsp;from&nbsp;the&nbsp;directory&nbsp;stack&nbsp;and&nbsp;changes&nbsp;directory&nbsp;to<br>
+previous&nbsp;directory.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-pushd"><strong>pushd</strong></a>(...)</dt><dd><tt><a href="#-pushd">pushd</a>(sock,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Similar&nbsp;to&nbsp;<a href="#-cd">cd</a>()&nbsp;but&nbsp;pushes&nbsp;the&nbsp;previous&nbsp;current&nbsp;directory&nbsp;on&nbsp;a&nbsp;stack.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;cd&nbsp;to</tt></dd></dl>
+ <dl><dt><a name="-read_subscription_socket"><strong>read_subscription_socket</strong></a>(...)</dt><dd><tt><a href="#-read_subscription_socket">read_subscription_socket</a>(sock)&nbsp;-&gt;&nbsp;list<br>
+&nbsp;<br>
+This&nbsp;call&nbsp;will&nbsp;return&nbsp;a&nbsp;list&nbsp;of&nbsp;integer&nbsp;values&nbsp;containing&nbsp;subscription<br>
+points&nbsp;earlier&nbsp;acquired&nbsp;through&nbsp;calls&nbsp;to&nbsp;<a href="#-subscribe">subscribe</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-read_subscription_socket2"><strong>read_subscription_socket2</strong></a>(...)</dt><dd><tt><a href="#-read_subscription_socket2">read_subscription_socket2</a>(sock)&nbsp;-&gt;&nbsp;tuple<br>
+&nbsp;<br>
+Another&nbsp;version&nbsp;of&nbsp;<a href="#-read_subscription_socket">read_subscription_socket</a>()&nbsp;which&nbsp;will&nbsp;return&nbsp;a&nbsp;3-tuple<br>
+in&nbsp;the&nbsp;form&nbsp;(type,&nbsp;flags,&nbsp;subpoints).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-replay_subscriptions"><strong>replay_subscriptions</strong></a>(...)</dt><dd><tt><a href="#-replay_subscriptions">replay_subscriptions</a>(sock,&nbsp;txid,&nbsp;sub_points)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;replay&nbsp;the&nbsp;subscription&nbsp;events&nbsp;for&nbsp;the<br>
+last&nbsp;configuration&nbsp;change&nbsp;to&nbsp;some&nbsp;or&nbsp;all&nbsp;CDB&nbsp;subscribers.&nbsp;This&nbsp;call&nbsp;is<br>
+useful&nbsp;in&nbsp;a&nbsp;number&nbsp;of&nbsp;recovery&nbsp;scenarios,&nbsp;where&nbsp;some&nbsp;CDB&nbsp;subscribers&nbsp;lost<br>
+connection&nbsp;to&nbsp;ConfD&nbsp;before&nbsp;having&nbsp;received&nbsp;all&nbsp;the&nbsp;changes&nbsp;in&nbsp;a<br>
+transaction.&nbsp;The&nbsp;replay&nbsp;functionality&nbsp;is&nbsp;only&nbsp;available&nbsp;if&nbsp;it&nbsp;has&nbsp;been<br>
+enabled&nbsp;in&nbsp;confd.conf.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+txid&nbsp;--&nbsp;a&nbsp;4-tuple&nbsp;of&nbsp;the&nbsp;form&nbsp;(s1,&nbsp;s2,&nbsp;s3,&nbsp;master)<br>
+sub_points&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;subscription&nbsp;points</tt></dd></dl>
+ <dl><dt><a name="-set_case"><strong>set_case</strong></a>(...)</dt><dd><tt><a href="#-set_case">set_case</a>(sock,&nbsp;choice,&nbsp;scase,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;we&nbsp;use&nbsp;the&nbsp;YANG&nbsp;choice&nbsp;statement&nbsp;in&nbsp;the&nbsp;data&nbsp;model,&nbsp;this&nbsp;function<br>
+can&nbsp;be&nbsp;used&nbsp;to&nbsp;select&nbsp;the&nbsp;current&nbsp;case.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+choice&nbsp;--&nbsp;the&nbsp;choice&nbsp;(string)<br>
+scase&nbsp;--&nbsp;the&nbsp;case&nbsp;(string)<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;container&nbsp;or&nbsp;list&nbsp;entry&nbsp;where&nbsp;choice&nbsp;is&nbsp;defined&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-set_elem"><strong>set_elem</strong></a>(...)</dt><dd><tt><a href="#-set_elem">set_elem</a>(sock,&nbsp;value,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;single&nbsp;leaf.&nbsp;The&nbsp;value&nbsp;may&nbsp;be&nbsp;either&nbsp;a&nbsp;Value&nbsp;instance&nbsp;or<br>
+a&nbsp;string.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+value&nbsp;--&nbsp;the&nbsp;value&nbsp;to&nbsp;set<br>
+path&nbsp;--&nbsp;a&nbsp;string&nbsp;pointing&nbsp;to&nbsp;a&nbsp;single&nbsp;leaf</tt></dd></dl>
+ <dl><dt><a name="-set_namespace"><strong>set_namespace</strong></a>(...)</dt><dd><tt><a href="#-set_namespace">set_namespace</a>(sock,&nbsp;hashed_ns)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+If&nbsp;we&nbsp;want&nbsp;to&nbsp;access&nbsp;data&nbsp;in&nbsp;CDB&nbsp;where&nbsp;the&nbsp;toplevel&nbsp;element&nbsp;name&nbsp;is&nbsp;not<br>
+unique,&nbsp;we&nbsp;need&nbsp;to&nbsp;set&nbsp;the&nbsp;namespace.&nbsp;We&nbsp;are&nbsp;reading&nbsp;data&nbsp;related&nbsp;to&nbsp;a<br>
+specific&nbsp;.fxs&nbsp;file.&nbsp;confdc&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;generate&nbsp;a&nbsp;.py&nbsp;file&nbsp;with&nbsp;a&nbsp;class<br>
+for&nbsp;the&nbsp;namespace,&nbsp;by&nbsp;the&nbsp;flag&nbsp;--emit-python&nbsp;to&nbsp;confdc&nbsp;(see&nbsp;confdc(1)).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+hashed_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash</tt></dd></dl>
+ <dl><dt><a name="-set_object"><strong>set_object</strong></a>(...)</dt><dd><tt><a href="#-set_object">set_object</a>(sock,&nbsp;values,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;all&nbsp;elements&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;complete&nbsp;contents&nbsp;of&nbsp;a&nbsp;container&nbsp;or<br>
+list&nbsp;entry,&nbsp;except&nbsp;for&nbsp;sub-lists.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;Value:s<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;container&nbsp;or&nbsp;list&nbsp;entry&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-set_timeout"><strong>set_timeout</strong></a>(...)</dt><dd><tt><a href="#-set_timeout">set_timeout</a>(sock,&nbsp;timeout_secs)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+A&nbsp;timeout&nbsp;for&nbsp;client&nbsp;actions&nbsp;can&nbsp;be&nbsp;specified&nbsp;via<br>
+/confdConfig/cdb/clientTimeout&nbsp;in&nbsp;confd.conf,&nbsp;see&nbsp;the&nbsp;confd.conf(5)<br>
+manual&nbsp;page.&nbsp;This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;dynamically&nbsp;extend&nbsp;(or&nbsp;shorten)<br>
+the&nbsp;timeout&nbsp;for&nbsp;the&nbsp;current&nbsp;action.&nbsp;Thus&nbsp;it&nbsp;is&nbsp;possible&nbsp;to&nbsp;configure&nbsp;a<br>
+restrictive&nbsp;timeout&nbsp;in&nbsp;confd.conf,&nbsp;but&nbsp;still&nbsp;allow&nbsp;specific&nbsp;actions&nbsp;to<br>
+have&nbsp;a&nbsp;longer&nbsp;execution&nbsp;time.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+timeout_secs&nbsp;--&nbsp;timeout&nbsp;in&nbsp;seconds</tt></dd></dl>
+ <dl><dt><a name="-set_values"><strong>set_values</strong></a>(...)</dt><dd><tt><a href="#-set_values">set_values</a>(sock,&nbsp;values,&nbsp;path)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Set&nbsp;arbitrary&nbsp;sub-elements&nbsp;of&nbsp;a&nbsp;container&nbsp;or&nbsp;list&nbsp;entry.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+values&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;TagValue:s<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;container&nbsp;or&nbsp;list&nbsp;entry&nbsp;(string)</tt></dd></dl>
+ <dl><dt><a name="-start_session"><strong>start_session</strong></a>(...)</dt><dd><tt><a href="#-start_session">start_session</a>(sock,&nbsp;db)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Starts&nbsp;a&nbsp;new&nbsp;session&nbsp;on&nbsp;an&nbsp;already&nbsp;established&nbsp;socket&nbsp;to&nbsp;CDB.&nbsp;The&nbsp;db<br>
+parameter&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;RUNNING,&nbsp;PRE_COMMIT_RUNNING,&nbsp;STARTUP&nbsp;and<br>
+OPERATIONAL.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+db&nbsp;--&nbsp;the&nbsp;database</tt></dd></dl>
+ <dl><dt><a name="-start_session2"><strong>start_session2</strong></a>(...)</dt><dd><tt><a href="#-start_session2">start_session2</a>(sock,&nbsp;db,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;may&nbsp;be&nbsp;used&nbsp;instead&nbsp;of&nbsp;<a href="#-start_session">start_session</a>()&nbsp;if&nbsp;it&nbsp;is&nbsp;considered<br>
+necessary&nbsp;to&nbsp;have&nbsp;more&nbsp;detailed&nbsp;control&nbsp;over&nbsp;some&nbsp;aspects&nbsp;of&nbsp;the&nbsp;CDB<br>
+session&nbsp;-&nbsp;if&nbsp;in&nbsp;doubt,&nbsp;use&nbsp;<a href="#-start_session">start_session</a>()&nbsp;instead.&nbsp;The&nbsp;sock&nbsp;and&nbsp;db<br>
+arguments&nbsp;are&nbsp;the&nbsp;same&nbsp;as&nbsp;for&nbsp;<a href="#-start_session">start_session</a>(),&nbsp;and&nbsp;these&nbsp;values&nbsp;can&nbsp;be&nbsp;used<br>
+for&nbsp;flags&nbsp;(ORed&nbsp;together&nbsp;if&nbsp;more&nbsp;than&nbsp;one).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+db&nbsp;--&nbsp;the&nbsp;database<br>
+flags&nbsp;-&nbsp;the&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-sub_abort_trans"><strong>sub_abort_trans</strong></a>(...)</dt><dd><tt><a href="#-sub_abort_trans">sub_abort_trans</a>(sock,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;reason)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;to&nbsp;be&nbsp;called&nbsp;instead&nbsp;of&nbsp;<a href="#-sync_subscription_socket">sync_subscription_socket</a>()<br>
+when&nbsp;the&nbsp;subscriber&nbsp;wishes&nbsp;to&nbsp;abort&nbsp;the&nbsp;current&nbsp;transaction.&nbsp;It&nbsp;is&nbsp;only<br>
+valid&nbsp;to&nbsp;call&nbsp;after&nbsp;<a href="#-read_subscription_socket2">read_subscription_socket2</a>()&nbsp;has&nbsp;returned&nbsp;with<br>
+type&nbsp;set&nbsp;to&nbsp;CDB_SUB_PREPARE.&nbsp;The&nbsp;arguments&nbsp;after&nbsp;sock&nbsp;are&nbsp;the&nbsp;same&nbsp;as&nbsp;to<br>
+X_seterr_extended()&nbsp;and&nbsp;give&nbsp;the&nbsp;caller&nbsp;a&nbsp;way&nbsp;of&nbsp;indicating&nbsp;the<br>
+reason&nbsp;for&nbsp;the&nbsp;failure.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+code&nbsp;--&nbsp;the&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash<br>
+apptag_tag&nbsp;--&nbsp;the&nbsp;tag&nbsp;hash<br>
+reason&nbsp;--&nbsp;reason&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-sub_abort_trans_info"><strong>sub_abort_trans_info</strong></a>(...)</dt><dd><tt><a href="#-sub_abort_trans_info">sub_abort_trans_info</a>(sock,&nbsp;code,&nbsp;apptag_ns,&nbsp;apptag_tag,&nbsp;error_info,&nbsp;reason)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Same&nbsp;a&nbsp;<a href="#-sub_abort_trans">sub_abort_trans</a>()&nbsp;but&nbsp;also&nbsp;fills&nbsp;in&nbsp;the&nbsp;NETCONF&nbsp;&lt;error-info&gt;&nbsp;element.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+code&nbsp;--&nbsp;the&nbsp;error&nbsp;code<br>
+apptag_ns&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash<br>
+apptag_tag&nbsp;--&nbsp;the&nbsp;tag&nbsp;hash<br>
+error_info&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;TagValue&nbsp;instances<br>
+reason&nbsp;--&nbsp;reason&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-sub_progress"><strong>sub_progress</strong></a>(...)</dt><dd><tt><a href="#-sub_progress">sub_progress</a>(sock,&nbsp;msg)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+After&nbsp;receiving&nbsp;a&nbsp;subscription&nbsp;notification&nbsp;(using<br>
+<a href="#-read_subscription_socket">read_subscription_socket</a>())&nbsp;but&nbsp;before&nbsp;acknowledging&nbsp;it&nbsp;(or&nbsp;aborting,<br>
+in&nbsp;the&nbsp;case&nbsp;of&nbsp;prepare&nbsp;subscriptions),&nbsp;it&nbsp;is&nbsp;possible&nbsp;to&nbsp;send&nbsp;progress<br>
+reports&nbsp;back&nbsp;to&nbsp;ConfD&nbsp;using&nbsp;the&nbsp;<a href="#-sub_progress">sub_progress</a>()&nbsp;function.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+msg&nbsp;--&nbsp;the&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-subscribe"><strong>subscribe</strong></a>(...)</dt><dd><tt><a href="#-subscribe">subscribe</a>(sock,&nbsp;prio,&nbsp;nspace,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+Sets&nbsp;up&nbsp;a&nbsp;CDB&nbsp;subscription&nbsp;so&nbsp;that&nbsp;we&nbsp;are&nbsp;notified&nbsp;when&nbsp;CDB&nbsp;configuration<br>
+data&nbsp;changes.&nbsp;There&nbsp;can&nbsp;be&nbsp;multiple&nbsp;subscription&nbsp;points&nbsp;from&nbsp;different<br>
+sources,&nbsp;that&nbsp;is&nbsp;a&nbsp;single&nbsp;client&nbsp;daemon&nbsp;can&nbsp;have&nbsp;many&nbsp;subscriptions&nbsp;and<br>
+there&nbsp;can&nbsp;be&nbsp;many&nbsp;client&nbsp;daemons.&nbsp;The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;subscription&nbsp;point<br>
+used&nbsp;to&nbsp;identify&nbsp;this&nbsp;particular&nbsp;subscription.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+prio&nbsp;--&nbsp;priority<br>
+nspace&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-subscribe2"><strong>subscribe2</strong></a>(...)</dt><dd><tt><a href="#-subscribe2">subscribe2</a>(sock,&nbsp;type,&nbsp;flags,&nbsp;prio,&nbsp;nspace,&nbsp;path)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;supersedes&nbsp;the&nbsp;current&nbsp;<a href="#-subscribe">subscribe</a>()&nbsp;and&nbsp;<a href="#-oper_subscribe">oper_subscribe</a>()&nbsp;as<br>
+well&nbsp;as&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;use&nbsp;the&nbsp;new&nbsp;two&nbsp;phase&nbsp;subscription&nbsp;method.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+type&nbsp;--&nbsp;subscription&nbsp;type<br>
+flags&nbsp;--&nbsp;flags<br>
+prio&nbsp;--&nbsp;priority<br>
+nspace&nbsp;--&nbsp;the&nbsp;namespace&nbsp;hash<br>
+path&nbsp;--&nbsp;path&nbsp;to&nbsp;node</tt></dd></dl>
+ <dl><dt><a name="-subscribe_done"><strong>subscribe_done</strong></a>(...)</dt><dd><tt><a href="#-subscribe_done">subscribe_done</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+When&nbsp;a&nbsp;client&nbsp;is&nbsp;done&nbsp;registering&nbsp;all&nbsp;its&nbsp;subscriptions&nbsp;on&nbsp;a&nbsp;particular<br>
+subscription&nbsp;socket&nbsp;it&nbsp;must&nbsp;call&nbsp;<a href="#-subscribe_done">subscribe_done</a>().&nbsp;No&nbsp;notifications&nbsp;will&nbsp;be<br>
+delivered&nbsp;until&nbsp;then.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-sync_subscription_socket"><strong>sync_subscription_socket</strong></a>(...)</dt><dd><tt><a href="#-sync_subscription_socket">sync_subscription_socket</a>(sock,&nbsp;st)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Once&nbsp;we&nbsp;have&nbsp;read&nbsp;the&nbsp;subscription&nbsp;notification&nbsp;through&nbsp;a&nbsp;call&nbsp;to<br>
+<a href="#-read_subscription_socket">read_subscription_socket</a>()&nbsp;and&nbsp;optionally&nbsp;used&nbsp;the&nbsp;<a href="#-diff_iterate">diff_iterate</a>()<br>
+to&nbsp;iterate&nbsp;through&nbsp;the&nbsp;changes&nbsp;as&nbsp;well&nbsp;as&nbsp;acted&nbsp;on&nbsp;the&nbsp;changes&nbsp;to&nbsp;CDB,&nbsp;we<br>
+must&nbsp;synchronize&nbsp;with&nbsp;CDB&nbsp;so&nbsp;that&nbsp;CDB&nbsp;can&nbsp;continue&nbsp;and&nbsp;deliver&nbsp;further<br>
+subscription&nbsp;messages&nbsp;to&nbsp;subscribers&nbsp;with&nbsp;higher&nbsp;priority&nbsp;numbers.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+st&nbsp;--&nbsp;sync&nbsp;type&nbsp;(int)</tt></dd></dl>
+ <dl><dt><a name="-trigger_oper_subscriptions"><strong>trigger_oper_subscriptions</strong></a>(...)</dt><dd><tt><a href="#-trigger_oper_subscriptions">trigger_oper_subscriptions</a>(sock,&nbsp;sub_points,&nbsp;flags)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;works&nbsp;like&nbsp;<a href="#-trigger_subscriptions">trigger_subscriptions</a>(),&nbsp;but&nbsp;for&nbsp;CDB<br>
+subscriptions&nbsp;to&nbsp;operational&nbsp;data.&nbsp;The&nbsp;caller&nbsp;will&nbsp;trigger&nbsp;all<br>
+subscription&nbsp;points&nbsp;passed&nbsp;in&nbsp;the&nbsp;sub_points&nbsp;list&nbsp;(or&nbsp;all&nbsp;operational<br>
+data&nbsp;subscribers&nbsp;if&nbsp;the&nbsp;list&nbsp;is&nbsp;empty),&nbsp;and&nbsp;the&nbsp;call&nbsp;will&nbsp;not&nbsp;return&nbsp;until<br>
+the&nbsp;last&nbsp;subscriber&nbsp;has&nbsp;called&nbsp;<a href="#-sync_subscription_socket">sync_subscription_socket</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+sub_points&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;subscription&nbsp;points<br>
+flags&nbsp;--&nbsp;the&nbsp;flags</tt></dd></dl>
+ <dl><dt><a name="-trigger_subscriptions"><strong>trigger_subscriptions</strong></a>(...)</dt><dd><tt><a href="#-trigger_subscriptions">trigger_subscriptions</a>(sock,&nbsp;sub_points)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;trigger&nbsp;CDB&nbsp;subscriptions&nbsp;for<br>
+configuration&nbsp;data&nbsp;even&nbsp;though&nbsp;the&nbsp;configuration&nbsp;has&nbsp;not&nbsp;been&nbsp;modified.<br>
+The&nbsp;caller&nbsp;will&nbsp;trigger&nbsp;all&nbsp;subscription&nbsp;points&nbsp;passed&nbsp;in&nbsp;the&nbsp;sub_points<br>
+list&nbsp;(or&nbsp;all&nbsp;subscribers&nbsp;if&nbsp;the&nbsp;list&nbsp;is&nbsp;empty)&nbsp;in&nbsp;priority&nbsp;order,&nbsp;and&nbsp;the<br>
+call&nbsp;will&nbsp;not&nbsp;return&nbsp;until&nbsp;the&nbsp;last&nbsp;subscriber&nbsp;has&nbsp;called<br>
+<a href="#-sync_subscription_socket">sync_subscription_socket</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket<br>
+sub_points&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;subscription&nbsp;points</tt></dd></dl>
+ <dl><dt><a name="-wait_start"><strong>wait_start</strong></a>(...)</dt><dd><tt><a href="#-wait_start">wait_start</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;call&nbsp;waits&nbsp;until&nbsp;CDB&nbsp;has&nbsp;completed&nbsp;start-phase&nbsp;1&nbsp;and&nbsp;is&nbsp;available,<br>
+when&nbsp;it&nbsp;is&nbsp;CONFD_OK&nbsp;is&nbsp;returned.&nbsp;If&nbsp;CDB&nbsp;already&nbsp;is&nbsp;available&nbsp;(i.e.<br>
+start-phase&nbsp;&gt;=&nbsp;1)&nbsp;the&nbsp;call&nbsp;returns&nbsp;immediately.&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;by&nbsp;a&nbsp;CDB<br>
+client&nbsp;who&nbsp;is&nbsp;not&nbsp;synchronously&nbsp;started&nbsp;and&nbsp;only&nbsp;wants&nbsp;to&nbsp;wait&nbsp;until&nbsp;it<br>
+can&nbsp;read&nbsp;its&nbsp;configuration.&nbsp;The&nbsp;call&nbsp;can&nbsp;be&nbsp;used&nbsp;after&nbsp;<a href="#-connect">connect</a>().<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;CDB&nbsp;socket</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DATA_SOCKET</strong> = 2<br>
+<strong>DONE_OPERATIONAL</strong> = 4<br>
+<strong>DONE_PRIORITY</strong> = 1<br>
+<strong>DONE_SOCKET</strong> = 2<br>
+<strong>DONE_TRANSACTION</strong> = 3<br>
+<strong>FLAG_INIT</strong> = 1<br>
+<strong>FLAG_UPGRADE</strong> = 2<br>
+<strong>GET_MODS_INCLUDE_LISTS</strong> = 1<br>
+<strong>GET_MODS_REVERSE</strong> = 2<br>
+<strong>GET_MODS_SUPPRESS_DEFAULTS</strong> = 4<br>
+<strong>LOCK_PARTIAL</strong> = 8<br>
+<strong>LOCK_REQUEST</strong> = 4<br>
+<strong>LOCK_SESSION</strong> = 2<br>
+<strong>LOCK_WAIT</strong> = 1<br>
+<strong>OPERATIONAL</strong> = 3<br>
+<strong>PRE_COMMIT_RUNNING</strong> = 4<br>
+<strong>READ_SOCKET</strong> = 0<br>
+<strong>RUNNING</strong> = 1<br>
+<strong>STARTUP</strong> = 2<br>
+<strong>SUBSCRIPTION_SOCKET</strong> = 1<br>
+<strong>SUB_ABORT</strong> = 3<br>
+<strong>SUB_COMMIT</strong> = 2<br>
+<strong>SUB_FLAG_HA_IS_SLAVE</strong> = 16<br>
+<strong>SUB_FLAG_HA_SYNC</strong> = 8<br>
+<strong>SUB_FLAG_IS_LAST</strong> = 1<br>
+<strong>SUB_FLAG_REVERT</strong> = 4<br>
+<strong>SUB_FLAG_TRIGGER</strong> = 2<br>
+<strong>SUB_OPER</strong> = 4<br>
+<strong>SUB_OPERATIONAL</strong> = 3<br>
+<strong>SUB_PREPARE</strong> = 1<br>
+<strong>SUB_RUNNING</strong> = 1<br>
+<strong>SUB_RUNNING_TWOPHASE</strong> = 2<br>
+<strong>SUB_WANT_ABORT_ON_ABORT</strong> = 1</td></tr></table>
+</body></html>

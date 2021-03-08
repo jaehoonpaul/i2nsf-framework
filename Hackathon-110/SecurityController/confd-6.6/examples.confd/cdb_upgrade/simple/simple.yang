@@ -1,0 +1,51 @@
+/* Copyright 2005-2009 Tail-f Systems AB */
+module simple {
+  namespace "http://tail-f.com/ns/example/simple";
+  prefix simple;
+
+  revision 2009-04-01 {
+    description "initial version";
+  }
+
+  typedef myType1 {
+    type int32 {
+      range "0 .. 7";
+    }
+  }
+  container simple {
+    leaf color {
+      type string;
+      mandatory true;
+    }
+    leaf value1 {
+      type myType1;
+      mandatory true;
+    }
+    leaf value2 {
+      type int16;
+      mandatory true;
+    }
+    leaf value3 {
+      type int32;
+      mandatory true;
+    }
+    leaf value4 {
+      type int64;
+      default 31415926;
+    }
+    leaf value5 {
+      type uint8;
+      default 42;
+    }
+    leaf value6 {
+      type int16;
+      mandatory true;
+    }
+    leaf value7 {
+      type int32;
+    }
+    leaf value8 {
+      type int8;
+    }
+  }
+}

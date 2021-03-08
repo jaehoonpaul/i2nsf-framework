@@ -1,0 +1,1285 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;6.&nbsp;Operational Data</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database"><link rel="next" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;6.&nbsp;Operational Data</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.opdata"></a>Chapter&nbsp;6.&nbsp;Operational Data</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch06.html#d5e1542">6.1. Introduction to Operational Data</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1556">6.2. Reading Statistics Data</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1578">6.3. Callpoints and Callbacks</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1616">6.4. Data Callbacks</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1692">6.5. User Sessions and ConfD Transactions</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1715">6.6. C Example with Operational Data</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1922">6.7. The Protocol and a Library Threads Discussion</a></span></dt><dt><span class="sect1"><a href="ch06.html#ug.opdata.cdb">6.8. Operational data in CDB</a></span></dt><dt><span class="sect1"><a href="ch06.html#d5e1995">6.9. Delayed Replies</a></span></dt><dt><span class="sect1"><a href="ch06.html#ug.opdata.caching">6.10. Caching Operational Data</a></span></dt><dt><span class="sect1"><a href="ch06.html#ug.opdata.without_keys">6.11. Operational data lists without keys</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1542"></a>6.1.&nbsp;Introduction to Operational Data</h2></div></div></div><p>
+          In <a class="xref" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language">Chapter&nbsp;3, <i>The YANG Data Modeling Language</i></a> we showed how to define
+          data models in YANG. In <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a> we
+          showed how to use CDB and also how to interface CDB to
+          external daemons.  In this chapter, we show how to write
+          instrumentation code for read-only operational and
+          statistics data.
+        </p><p>
+          Operational data is typically not kept in a database but
+          read at runtime by instrumentation functions. This would
+          for example be statistics counters contained inside the
+          managed objects themselves.  In this chapter we will show
+          how to write such instrumentation functions in C.
+        </p><p>
+          An alternative approach to runtime operational data is to
+          store the operational in CDB using a write interface.  This
+          will be described in <a class="xref" href="ch06.html#ug.opdata.cdb" title="6.8.&nbsp;Operational data in CDB">Section&nbsp;6.8, &#8220;Operational data in CDB&#8221;</a>.
+        </p><p>
+          The configuration of the network device is modeled by a
+          YANG module. This
+          describes the data model of the device. We also need to
+          write YANG modules for our operational data.
+        </p><p>
+          In the YANG data model, there can be restrictions on valid
+          operational data.  For example, a list might have a
+          "max-elements" constraint, or a "must" expression associated
+          with it.  For performance reasons, ConfD does not check
+          these constraints.  It is assumed that the application code
+          that generates operational data enforces the constraints.
+        </p><p>
+          Normally, operational data is strictly read-only.  If the
+          operational state of the device needs to be modified, it is
+          typically done through special operations (rpc or actions in
+          NETCONF, or special commands in the CLI).  But this imposes
+          a problem with protocols like SNMP, that do not have a
+          mechanism to invoke arbitrary operations.  In SNMP, this is
+          solved by writing values to special objects, called
+          <span class="emphasis"><em>writable operational</em></span> objects.  These
+          objects are implemented in the same way as writable
+          configuration data, described in <a class="xref" href="ch07.html#ug.ext_data.writable_operational" title="7.8.&nbsp;Writable operational data">Section&nbsp;7.8, &#8220;Writable operational data&#8221;</a>, and <a class="xref" href="ch17.html#ug.snmpa.access.writable" title="Writable MIB objects">the section called &#8220;Writable MIB objects&#8221;</a>.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1556"></a>6.2.&nbsp;Reading Statistics Data</h2></div></div></div><p>
+          A very common situation is that we wish to expose statistics
+          data from the device. Consider for example the output of the
+          <span class="command"><strong>netstat -i</strong></span> command.
+        </p><div class="informalexample"><pre class="screen">#root netstat -i
+Iface  MTU   Met   RX-OK RX-ERR RX-DRP TX-OK TX-ERR TX-DRP Flg
+eth0   1500   0  212684      0      0  142470     0      0 BMRU
+lo     16436  0    2077      0      0    2077     0      0 LRU</pre></div><p>
+         This is useful information to expose to the Web UI, the CLI
+         or a management application running NETCONF.
+       </p><p>
+         To address this we must do two things; the statistics
+         information must be modeled in a YANG module:
+       </p><div class="example"><a name="d5e1564"></a><p class="title"><b>Example&nbsp;6.1.&nbsp;netstat.yang</b></p><div class="example-contents"><pre class="programlisting">container ifaces {
+  config false;
+  list iface {
+    key name;
+    max-elements 1024;
+    leaf name {
+      type string;
+    }
+    leaf mtu {
+      type uint32;
+    }
+    leaf metric {
+      type uint64;
+    }
+    leaf rx_ok {
+      type uint64;
+    }
+    leaf rx_err {
+      type uint64;
+    }
+    leaf rx_drp {
+      type uint64;
+    }
+    leaf tx_ok {
+      type uint64;
+    }
+    leaf tx_err {
+      type uint64;
+    }
+    leaf tx_drop {
+      type uint64;
+    }
+    leaf flag {
+      type string;
+    }
+  }
+}</pre></div></div><br class="example-break"><p>
+         The above simple one-to-one mapping of the <span class="command"><strong>netstat -i</strong></span>
+         output and a YANG data model might suffice for our needs. It can be
+         refined later.
+       </p><p>
+         The second thing that must be done is to write C code that
+         parses the <span class="command"><strong>netstat -i</strong></span> output. Finally we must connect
+         that C code to ConfD. That procedure will be fully described
+         in this chapter.
+       </p><p>Thus we need to:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Write a YANG module describing our operational
+         data (see <a class="xref" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language">Chapter&nbsp;3, <i>The YANG Data Modeling Language</i></a>).</p></li><li class="listitem"><p>Write a mapping between the data model and the
+         operational data as represented on the target device.  The
+         mapping is specified inside the data model itself, using
+         callbacks to C.</p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1578"></a>6.3.&nbsp;Callpoints and Callbacks</h2></div></div></div><p>
+         The data model indicates where to invoke callbacks by
+         annotation with <code class="code">callpoints</code>. A callpoint has a name
+         which later can be used by an external program to connect to
+         that named point.
+       </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>We can always define callpoints in a separate YANG
+       module by using the <code class="code">tailf:annotate</code> extension as
+       described in the <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a> manual page.
+       This way we can keep the data model free from implementation
+       specific details.</p></div><p>
+         Assume that we wish to model the ARP table of the host:
+       </p><div class="example"><a name="d5e1587"></a><p class="title"><b>Example&nbsp;6.2.&nbsp;ARP table YANG module</b></p><div class="example-contents"><pre class="programlisting"><strong class="hl-keyword">module</strong> arpe {
+  <strong class="hl-keyword">namespace</strong> <strong class="hl-string"><em style="color:red">"http://tail-f.com/ns/example/arpe"</em></strong>;
+  <strong class="hl-keyword">prefix</strong> arpe;
+
+  <strong class="hl-keyword">import</strong> ietf-inet-types {
+    <strong class="hl-keyword">prefix</strong> inet;
+  }
+  <strong class="hl-keyword">import</strong> tailf-common {
+    <strong class="hl-keyword">prefix</strong> tailf;
+  }
+
+  <strong class="hl-keyword">container</strong> arpentries {
+    <strong class="hl-keyword">config</strong> false;
+    tailf:callpoint arpe;
+    <strong class="hl-keyword">list</strong> arpe {
+      <strong class="hl-keyword">key</strong> <strong class="hl-string"><em style="color:red">"ip ifname"</em></strong>;
+      max-elements <span class="hl-number">1024</span>;
+      <strong class="hl-keyword">leaf</strong> ip {
+        <strong class="hl-keyword">type</strong> inet:ip-address;
+      }
+      <strong class="hl-keyword">leaf</strong> ifname {
+        <strong class="hl-keyword">type</strong> string;
+      }
+      <strong class="hl-keyword">leaf</strong> hwaddr {
+        <strong class="hl-keyword">type</strong> string;
+        <strong class="hl-keyword">mandatory</strong> true;
+      }
+      <strong class="hl-keyword">leaf</strong> permanent {
+        <strong class="hl-keyword">type</strong> boolean;
+        <strong class="hl-keyword">mandatory</strong> true;
+      }
+      <strong class="hl-keyword">leaf</strong> published {
+        <strong class="hl-keyword">type</strong> boolean;
+        <strong class="hl-keyword">mandatory</strong> true;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>
+        The <code class="code">arpe</code> callpoint will invoke callbacks in external
+        programs that has registered itself with the name "arpe".  The
+        programs use the API in the <code class="filename">libconfd.so</code> library to
+        register themselves under different callpoints.
+      </p><p>
+        The <code class="code">config false;</code> statement instructs ConfD that the
+        entire <code class="sgmltag-element">arpentries</code> container is non-configuration
+        data. Data below that point is not part of the configuration;
+        rather it should be viewed as ephemeral read-only data.
+      </p><p>
+        Assume we have the above YANG module loaded in ConfD. Furthermore
+        that ConfD receives a NETCONF "get" request like:
+      </p><div class="informalexample"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;get/&gt;
+&lt;/rpc&gt;</pre></div><p>
+       ConfD is configured to accept a number of <code class="sgmltag-element">arpe</code> list
+       entries contained inside an <code class="sgmltag-element">arpentries</code> container. It
+       does not know which <code class="sgmltag-element">arpe</code> entries reside on the device
+       though. With the above NETCONF request, the task for ConfD is
+       to produce an XML structure containing all the <code class="sgmltag-element">arpe</code>
+       entries on the device.
+     </p><p>
+       This is solved by letting the application register itself with
+       a set of callback C functions under the callpoint. The callback
+       C functions do things like <code class="function">get_next()</code>,
+       <code class="function">get_elem()</code> and so forth.
+     </p><p>
+       There can be several different C programs on the same device
+       which register themselves under different callpoints.
+       These C programs that register with ConfD are referred to as
+       <code class="literal">daemons</code>.
+     </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="531"><tr><td align="center"><img src="pics/daemon_arch.png" align="middle" width="531"></td></tr></table><div class="caption"><p>Daemons using libconfd.so to connect to ConfD.</p></div></div><p>
+       In the above picture we show how two separate C programs
+       (daemons) connect to ConfD using the <code class="filename">libconfd.so</code>
+       shared library.
+     </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1616"></a>6.4.&nbsp;Data Callbacks</h2></div></div></div><p>
+           Each callpoint in a YANG module must have an associated set of
+           callback functions. The following data callback functions
+           are required for operational data:
+         </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="function">get_next()</code></span></dt><dd><p>
+               This callback is invoked
+               repeatedly to find out which keys exist for a certain
+               list.  ConfD will invoke the callback as a means to
+               iterate through all entries of the list, in
+               this case all <code class="sgmltag-element">arpe</code> entries.  For example,
+               assume that the ARP table on the device looks as:
+             </p><div class="example"><a name="d5e1626"></a><p class="title"><b>Example&nbsp;6.3.&nbsp;Populated ARP table</b></p><div class="example-contents"><pre class="programlisting">&lt;arpe:arpentries xmlns:arpe="http://tail-f.com/ns/example/arpe/1.0"&gt;
+  &lt;arpe:arpe&gt;
+    &lt;arpe:ip&gt;192.168.1.1&lt;/arpe:ip&gt;
+    &lt;arpe:ifname&gt;eth0&lt;/arpe:ifname&gt;
+    &lt;arpe:hwaddr&gt;00:30:48:88:1F:E2&lt;/arpe:hwaddr&gt;
+    &lt;arpe:permanent&gt;false&lt;/arpe:permanent&gt;
+    &lt;arpe:published&gt;false&lt;/arpe:published&gt;
+  &lt;/arpe:arpe&gt;
+  &lt;arpe:arpe&gt;
+    &lt;arpe:ip&gt;192.168.1.42&lt;/arpe:ip&gt;
+    &lt;arpe:ifname&gt;eth0&lt;/arpe:ifname&gt;
+    &lt;arpe:hwaddr&gt;00:30:48:88:1F:C5&lt;/arpe:hwaddr&gt;
+    &lt;arpe:permanent&gt;false&lt;/arpe:permanent&gt;
+    &lt;arpe:published&gt;false&lt;/arpe:published&gt;
+  &lt;/arpe:arpe&gt;
+&lt;/arpe:arpentries&gt;</pre></div></div><br class="example-break"><p>
+               The job of the <code class="function">get_next()</code> callback would be to
+               return the first key on the first invocation, namely
+               the pair "192.168.1.1", "eth0" and then subsequently
+               the remaining keys until there are no more keys. (The
+               data model says that we have two keys, <code class="sgmltag-element">ip</code> and
+               <code class="sgmltag-element">ifname</code>.)
+             </p></dd><dt><span class="term"><code class="function">get_elem()</code></span></dt><dd><p>This callback is invoked by ConfD when ConfD needs to
+             read the actual value of a leaf element. We must
+             also implement the <code class="function">get_elem()</code> callback for the
+             keys. ConfD invokes <code class="function">get_elem()</code> on a key as an
+             existence test.</p></dd><dt><span class="term"><code class="function">exists_optional()</code></span></dt><dd><p>
+               This callback is called for all typeless and optional
+               elements, i.e. <code class="code">presence</code> containers and leafs
+               of type <code class="code">empty</code>. For example the YANG module
+               fragment:
+             </p><div class="informalexample"><pre class="programlisting">container bs {
+  presence "bs";
+  config false;
+  tailf:callpoint bcp;
+  leaf foo {
+    type string;
+  }
+}</pre></div><p>
+               If we do not have any typeless optional elements in our
+               data model we need not implement this callback and can
+               set it to NULL. A detailed description of this callback
+               can be found in the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page.
+             </p></dd></dl></div><p>
+           We also have a number of additional optional callbacks that may be
+           implemented for efficiency reasons.
+           The precise usage of these optional callbacks is described
+           in the man page <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>.
+         </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="function">get_object()</code></span></dt><dd><p>If this optional callback is implemented, the work of the callback
+             is to return an entire <code class="literal">object</code>, i.e. a
+             list entry. In this case all the five
+             elements contained in an <code class="sgmltag-element">arpe</code> entry - namely
+             the <code class="sgmltag-element">ip</code>, <code class="sgmltag-element">ifname</code>, <code class="sgmltag-element">hwaddr</code>,
+             <code class="sgmltag-element">permanent</code> and finally <code class="sgmltag-element">published</code>
+             leafs.</p></dd><dt><span class="term"><code class="function">num_instances()</code></span></dt><dd><p>When ConfD needs to figure out how many entries we have
+             for a list, by default ConfD will repeatedly
+             invoke the <code class="function">get_next()</code> callback.  If this callback
+             is registered, it will be called instead.</p></dd><dt><span class="term"><code class="function">get_next_object()</code></span></dt><dd><p>This optional callback combines <code class="function">get_next()</code> and
+             <code class="function">get_object()</code> into a single callback. This callback
+             only needs to be implemented when it is very important to
+             be able to traverse a table fast.</p></dd><dt><span class="term"><code class="function">find_next()</code></span></dt><dd><p>This callback primarily optimizes cases where ConfD
+           wants to start a list traversal at some other point than at
+           the first entry of the list. It is mainly useful for lists
+           with a large number of entries. If it is not registered,
+           ConfD will use a sequence of <code class="function">get_next()</code>
+           calls to find the desired list entry.</p></dd><dt><span class="term"><code class="function">find_next_object()</code></span></dt><dd><p>This callback combines <code class="function">find_next()</code>
+           and <code class="function">get_object()</code> into a single
+           callback.</p></dd></dl></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1692"></a>6.5.&nbsp;User Sessions and ConfD Transactions</h2></div></div></div><p>
+          In this section we will describe a number of new
+          concepts. We will define what we mean by a user session and
+          what ConfD transactions are. This will be further explained
+          in <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>.
+        </p><p>
+          A user session corresponds directly to an SSH/SSL session
+          from a management station to ConfD. A user session is
+          associated with such data as the IP address of the
+          management station and the user name of the user who started
+          the session, independent of northbound agent.
+        </p><p>
+          The user session data is always available to all callback
+          functions.
+        </p><p>
+          A new transaction is started whenever an agent tries to read
+          operational data. For each transaction two user defined
+          callbacks are potentially invoked:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="function">init()</code></span></dt><dd><p>From the daemon's point of view, this callback will be
+            invoked when a transaction starts. However as an optimization,
+            ConfD will delay the invocation for a given daemon until the
+            point where some data needs to be read, i.e. just before the first
+            <code class="function">get_next()</code>, <code class="function">get_elem()</code>, etc callback.</p></dd><dt><span class="term"><code class="function">finish()</code></span></dt><dd><p>This callback gets invoked at the end of the transaction,
+            if <code class="function">init()</code> has been invoked. This is a good place to
+            deallocate any local resources for the transaction.
+            This callback is optional.</p></dd></dl></div><p>
+          The "lazy" invocation of <code class="function">init()</code> means that for a transaction
+          where none of the operational data provided by a given daemon
+          is accessed, that daemon will not have any callbacks at all
+          invoked.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1715"></a>6.6.&nbsp;C Example with Operational Data</h2></div></div></div><p>
+          Assume we want to provide the state of the current ARP table
+          on the device. To do this we need to write a YANG module which
+          models an ARP table, and then write C functions which
+          populates the corresponding XML tree. We use the YANG module
+          from the previous section and save it to a file
+          <code class="filename">arpe.yang</code> and compile the module using the
+          <span class="command"><strong>confdc</strong></span> compiler as:
+        </p><div class="informalexample"><pre class="screen"># confdc -c arpe.yang
+# confdc --emit-h arpe.h arpe.fxs</pre></div><p>
+          The <code class="option">--emit-h</code> option to confdc
+          is used to generate a header
+          file. Thus, in our example the generated file will be
+          called <code class="filename">arpe.h</code>. The generated header file contains
+          a mapping from the strings
+          found in the data model such as <code class="sgmltag-element">ip</code> or
+          <code class="sgmltag-element">permanent</code> to integer values.
+        </p><p>
+          Finally we must instruct ConfD where to find the newly
+          generated schema file. Using the default ConfD
+          configuration, ConfD looks for schema (.fxs) files under
+          <code class="filename">/etc/confd</code>:
+        </p><div class="informalexample"><pre class="screen"># cp arpe.fxs /etc/confd
+# confd</pre></div><p>
+          After loading <code class="filename">arpe.fxs</code>, ConfD runs with the newly
+          generated data model. Next we need to write the C program
+          which provides the ARP data by means of C callback
+          functions.
+        </p><p>
+          An actual running version of this example can be found in
+          the <code class="filename">intro/5-c_stats</code> directory in the examples
+          in the distribution release. We will walk through this C program
+          here.
+        </p><p>
+          First we need to include <code class="filename">confd_lib.h</code> and
+          <code class="filename">confd_dp.h</code> which are part of a
+          ConfD release, as well as the newly generated
+          <code class="filename">arpe.h</code>.
+          See <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a> for details.
+        </p><div class="informalexample"><pre class="programlisting">#include &lt;confd_lib.h&gt;
+#include &lt;confd_dp.h&gt;
+#include "arpe.h"</pre></div><p>
+          We use a couple of global variables as well as a structure
+          which represents an ARP entry.</p><div class="informalexample"><pre class="programlisting">/* Our daemon context as a global variable */
+static struct confd_daemon_ctx *dctx;
+static int ctlsock;
+static int workersock;
+
+
+struct aentry {
+    struct in_addr ip4;
+    char *hwaddr;
+    int perm;
+    int pub;
+    char *iface;
+    struct aentry *next;
+};
+
+struct arpdata {
+    struct aentry *arp_entries;
+    struct timeval lastparse;
+};
+</pre></div><p>
+          The <span class="type">struct confd_daemon_ctx *dctx</span> is a daemon
+          context.  It is a data structure which is passed to
+          virtually all the functions.
+        </p><p>
+          We are ready for the <code class="function">main()</code> function. There we will
+          initialize the library, connect to the ConfD daemon and
+          install a number of callback functions as pointers to C
+          functions. Remember the architecture of this system, ConfD
+          executes as a common daemon, and the program we are writing
+          executes outside the address space of ConfD. Our program
+          links with the ConfD library (<code class="filename">libconfd.so</code>) which
+          manages the protocol between our application and ConfD.
+        </p><div class="informalexample"><pre class="programlisting">int main(int argc, char *argv[])
+{
+    struct sockaddr_in addr;
+    int debuglevel = CONFD_TRACE;
+    struct confd_trans_cbs trans;
+    struct confd_data_cbs data;
+
+    memset(&amp;trans, 0, sizeof (struct confd_trans_cbs));
+    trans.init = s_init;
+    trans.finish = s_finish;
+
+    memset(&amp;data, 0, sizeof (struct confd_data_cbs));
+    data.get_elem = get_elem;
+    data.get_next = get_next;
+    strcpy(data.callpoint, arpe__callpointid_arpe);
+
+    /* initialize confd library */
+    confd_init("arpe_daemon", stderr, debuglevel);
+
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(CONFD_PORT);
+
+    if (confd_load_schemas((struct sockaddr*)&amp;addr,
+                           sizeof (struct sockaddr_in)) != CONFD_OK)
+        confd_fatal("Failed to load schemas from confd\n");
+
+    if ((dctx = confd_init_daemon("arpe_daemon")) == NULL)
+        confd_fatal("Failed to initialize confdlib\n");
+
+    /* Create the first control socket, all requests to */
+    /* create new transactions arrive here */
+
+    if ((ctlsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open ctlsocket\n");
+    if (confd_connect(dctx, ctlsock, CONTROL_SOCKET, (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    /* Also establish a workersocket, this is the most simple */
+    /* case where we have just one ctlsock and one workersock */
+
+    if ((workersock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open workersocket\n");
+    if (confd_connect(dctx, workersock, WORKER_SOCKET,(struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    if (confd_register_trans_cb(dctx, &amp;trans) == CONFD_ERR)
+        confd_fatal("Failed to register trans cb \n");
+
+    if (confd_register_data_cb(dctx, &amp;data) == CONFD_ERR)
+        confd_fatal("Failed to register data cb \n");
+
+    if (confd_register_done(dctx) != CONFD_OK)
+        confd_fatal("Failed to complete registration \n");
+</pre></div><p>
+          At this point we have registered our callback functions for
+          data manipulations under the <code class="code">arpe</code> callpoint. Whenever
+          data needs to manipulated below that callpoint our C
+          callback functions should be invoked. The
+          <code class="function">confd_register_done()</code> call tells ConfD
+          that we are done
+          with the callback registrations - no callbacks will be invoked
+          before we issue this call.
+        </p><p>
+          The <code class="constant">arpe__callpointid_arpe</code> symbol that is
+          used for the <code class="varname">callpoint</code> element in the data
+          callback registration is one of the definitions in the
+          generated <code class="filename">arpe.h</code> file. It just maps to
+          the string <code class="literal">"arpe"</code> that we could have used
+          instead, but by using the symbol we make sure that if the name
+          given with the <code class="code">tailf:callpoint</code> statement in the
+          YANG module is changed, without a corresponding change in the C
+          code, the problem is detected at compile time.
+        </p><p>
+          We have also created one control socket and one worker
+          socket. These are sockets owned by the application and they
+          should be added to the <code class="function">poll()</code> or
+          <code class="function">select()</code> set
+          of the application.
+        </p><p>
+          All new requests that arrive from ConfD arrive on the
+          control socket. As we will see, the
+          <code class="function">init()</code> callback
+          must call the API function
+          <code class="function">confd_trans_set_fd()</code> which
+          will assign a worker socket to the transaction. All further
+          requests and replies for this transaction will be sent on
+          the worker socket. We can have several worker sockets and
+          they can run in different operating system threads than the
+          thread owning the control socket.
+        </p><p>The poll loop could look like:</p><div class="informalexample"><pre class="programlisting">    while(1) {
+        struct pollfd set[2];
+        int ret;
+
+        set[0].fd = ctlsock;
+        set[0].events = POLLIN;
+        set[0].revents = 0;
+
+        set[1].fd = workersock;
+        set[1].events = POLLIN;
+        set[1].revents = 0;
+
+        if (poll(set, sizeof(set)/sizeof(*set), -1) &lt; 0) {
+            perror("Poll failed:");
+            continue;
+        }
+
+        /* Check for I/O */
+        if (set[0].revents &amp; POLLIN) {
+            if ((ret = confd_fd_ready(dctx, ctlsock)) == CONFD_EOF) {
+                confd_fatal("Control socket closed\n");
+            } else if (ret == CONFD_ERR &amp;&amp; confd_errno != CONFD_ERR_EXTERNAL) {
+                confd_fatal("Error on control socket request: %s (%d): %s\n",
+                     confd_strerror(confd_errno), confd_errno, confd_lasterr());
+            }
+        }
+        if (set[1].revents &amp; POLLIN) {
+            if ((ret = confd_fd_ready(dctx, workersock)) == CONFD_EOF) {
+                confd_fatal("Worker socket closed\n");
+            } else if (ret == CONFD_ERR &amp;&amp; confd_errno != CONFD_ERR_EXTERNAL) {
+                confd_fatal("Error on worker socket request: %s (%d): %s\n",
+                     confd_strerror(confd_errno), confd_errno, confd_lasterr());
+            }
+        }
+    }
+</pre></div><p>
+          The crucial function above is <code class="function">confd_fd_ready()</code>. When
+          either of the (in this case, two) sockets from the
+          application to ConfD are ready to read, the application is
+          responsible for invoking the <code class="function">confd_fd_ready()</code>
+          function. This function will read data from the socket,
+          unmarshal that data and invoke the right callback
+          function with the right arguments.
+        </p><p>
+          We have installed two transaction callbacks:
+          <code class="function">init()</code>
+          and <code class="function">finish()</code>, and also two data callbacks:
+          <code class="function">get_next()</code> and <code class="function">get_elem()</code>.
+        </p><p>The two transaction callbacks look like:</p><div class="informalexample"><pre class="programlisting">static int s_init(struct confd_trans_ctx *tctx)
+{
+    struct arpdata *dp;
+
+    if ((dp = malloc(sizeof(struct arpdata))) == NULL)
+        return CONFD_ERR;
+    memset(dp, 0, sizeof(struct arpdata));
+    if (run_arp(dp) == CONFD_ERR) {
+        free(dp);
+        return CONFD_ERR;
+    }
+    tctx-&gt;t_opaque = dp;
+    confd_trans_set_fd(tctx, workersock);
+    return CONFD_OK;
+}
+
+static int s_finish(struct confd_trans_ctx *tctx)
+{
+    struct arpdata *dp = tctx-&gt;t_opaque;
+
+    if (dp != NULL) {
+        free_arp(dp);
+        free(dp);
+    }
+    return CONFD_OK;
+}
+</pre></div><p>
+          The <code class="function">init()</code> callback reads the ARP table calling a
+          function <code class="function">run_arp()</code> and stores a local copy of a parsed
+          ARP table in the transaction context.  This data structure
+          (<span class="type">struct confd_trans_ctx *tctx</span>) is allocated by the
+          library and used throughout the entire transaction.  The
+          <code class="varname">t_opaque</code> field in the transaction context is meant to
+          be used by the application to store transaction local data.
+        </p><p>
+          A naive version of <code class="function">run_arp()</code> could call
+          <code class="function">popen(3)</code> on the command <span class="command"><strong>arp -an</strong></span> and parse the
+          output:
+        </p><div class="informalexample"><pre class="screen"># arp -an
+? (192.168.128.33) at 00:40:63:C9:79:FC [ether] on eth1
+? (217.209.73.1) at 00:02:3B:00:3B:67 [ether] on eth0</pre></div><p>
+          The parsed ARP table created by <code class="function">run_arp()</code>
+          is ordered by increasing key values, since ConfD expects us to
+          return entries in that order when traversing the list.
+        </p><p>
+          There may be several ConfD transactions running in parallel
+          and some transactions may have been initiated from the CLI
+          and the current ARP data may be stale or may be nonexistent.
+        </p><p>
+          The <code class="function">init()</code> callback must also indicate to the library
+          which socket should be used for all future traffic for this
+          transaction. In our case, we have just one option, namely
+          the single worker socket we created. This is done through
+          the call to <code class="function">confd_trans_set_fd()</code>. Also, the
+          <code class="function">init()</code> callback was fed a transaction context
+          parameter. This structure is allocated by the library and
+          fed to each and every callback function executed during the
+          life of the transaction.  The structure is defined in
+          <code class="filename">confd_lib.h</code>.
+        </p><p>Our <code class="function">finish()</code> function cleans up everything.</p><p>The data callbacks look like:</p><div class="informalexample"><pre class="programlisting">static int get_next(struct confd_trans_ctx *tctx,
+                         confd_hkeypath_t *keypath,
+                         long next)
+{
+    struct arpdata *dp = tctx-&gt;t_opaque;
+    struct aentry *curr;
+    confd_value_t v[2];
+
+    if (next == -1) {  /* first call */
+        if (need_arp(dp)) {
+            if (run_arp(dp) == CONFD_ERR)
+                return CONFD_ERR;
+        }
+        curr = dp-&gt;arp_entries;
+    } else {
+        curr = (struct aentry *)next;
+    }
+    if (curr == NULL) {
+        confd_data_reply_next_key(tctx, NULL, -1, -1);
+        return CONFD_OK;
+    }
+
+    /* 2 keys */
+    CONFD_SET_IPV4(&amp;v[0], curr-&gt;ip4);
+    CONFD_SET_STR(&amp;v[1], curr-&gt;iface);
+    confd_data_reply_next_key(tctx, &amp;v[0], 2, (long)curr-&gt;next);
+    return CONFD_OK;
+}
+
+
+struct aentry *find_ae(confd_hkeypath_t *keypath, struct arpdata *dp)
+{
+    struct in_addr ip = CONFD_GET_IPV4(&amp;keypath-&gt;v[1][0]);
+    char *iface = (char*)CONFD_GET_BUFPTR(&amp;keypath-&gt;v[1][1]);
+    struct aentry *ae = dp-&gt;arp_entries;
+
+    while (ae != NULL) {
+        if (ip.s_addr == ae-&gt;ip4.s_addr &amp;&amp;
+            (strcmp(ae-&gt;iface, iface) == 0) )
+            return ae;
+        ae=ae-&gt;next;
+    }
+    return NULL;
+}
+
+/* Keypath example */
+/* /arpentries/arpe{192.168.1.1 eth0}/hwaddr */
+/*    3         2         1             0    */
+
+static int get_elem(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath)
+{
+    confd_value_t v;
+
+    struct aentry *ae = find_ae(keypath, tctx-&gt;t_opaque);
+    if (ae == NULL) {
+        confd_data_reply_not_found(tctx);
+        return CONFD_OK;
+    }
+    switch (CONFD_GET_XMLTAG(&amp;(keypath-&gt;v[0][0]))) {
+    case arpe_hwaddr:
+        if (ae-&gt;hwaddr == NULL) {
+            confd_data_reply_not_found(tctx);
+            return CONFD_OK;
+        }
+        CONFD_SET_STR(&amp;v, ae-&gt;hwaddr);
+        break;
+    case arpe_permanent:
+        CONFD_SET_BOOL(&amp;v, ae-&gt;perm);
+        break;
+    case arpe_published:
+        CONFD_SET_BOOL(&amp;v, ae-&gt;pub);
+        break;
+    case arpe_ip:
+        CONFD_SET_IPV4(&amp;v, ae-&gt;ip4);
+        break;
+    case arpe_ifname:
+        CONFD_SET_STR(&amp;v, ae-&gt;iface);
+        break;
+    default:
+        return CONFD_ERR;
+    }
+    confd_data_reply_value(tctx, &amp;v);
+    return CONFD_OK;
+}
+</pre></div><p>
+          The above code needs a bit of explaining. Before doing this
+          we need to look at how the <span class="type">confd_hkeypath_t</span> data type
+          works.
+        </p><p>
+          All the different data manipulation callbacks get a hashed
+          keypath as a parameter. For example when a daemon gets
+          invoked in <code class="function">get_elem()</code> and ConfD wants to read the
+          published element for a specific arp entry, the textual
+          representation of the hkeypath is
+          <code class="sgmltag-element">/arpentries/arpe{1.2.3.4 eth0}/published</code>.
+        </p><p>
+          The C representation of a hashed keypath is a fixed size
+          array of values, as in:
+        </p><div class="informalexample"><pre class="programlisting">typedef struct confd_hkeypath {
+    confd_value_t v[MAXDEPTH][MAXKEYLEN];
+    int len;
+} confd_hkeypath_t;</pre></div><p>
+          The keypath is fed in the reverse order to the application,
+          thus - when ConfD wants to read
+          <code class="sgmltag-element">/arpentries/arpe{1.2.3.4 eth0}/published</code>,
+          the following holds for the
+          keypath:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="code">keypath-&gt;v[0][0]</code> is the XML element, namely
+            <code class="sgmltag-element">published</code>.</p></li><li class="listitem"><p><code class="code">keypath-&gt;v[1][0]</code> is the first key one step up, in
+            our case the IP address <code class="literal">1.2.3.4</code>.</p></li><li class="listitem"><p><code class="code">keypath-&gt;v[1][1]</code> is the second key one step up,
+            in our case the interface name <code class="literal">eth0</code>.</p></li><li class="listitem"><p><code class="code">keypath-&gt;v[2][0]</code> is the XML element two steps up,
+            namely <code class="sgmltag-element">arpe</code>.</p></li><li class="listitem"><p><code class="code">keypath-&gt;v[3][0]</code> is the XML element three steps up,
+            namely <code class="sgmltag-element">arpentries</code>. The top level element.  This
+            item could also have been obtained through the expression
+            <code class="code">keypath-&gt;v[keypath-&gt;len - 1][0]</code>.</p></li></ul></div><p>
+          The actual values are represented as a union struct defined
+          in <code class="filename">confd_lib.h</code>. The <span class="type">confd_value_t</span> data type can
+          represent all ground data types such as strings, integers,
+          but also slightly more complex data types such as IP
+          addresses and the various date and time data types found in
+          XML schema.
+        </p><p>
+          <code class="filename">confd_lib.h</code> defines a set of macros to set and get the
+          actual values from <span class="type">confd_value_t</span> variables. For
+          example this code sets and gets an individual value:
+        </p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+int i = 99;
+
+CONFD_SET_INT32(&amp;myval, i);
+assert(99 == CONFD_GET_INT32(&amp;myval));</pre></div><p>
+          One important variant of <span class="type">confd_value_t</span> is string.
+          All data values which are of type <code class="code">string</code>, or of a
+          type derived from <code class="code">string</code>,
+          are passed from ConfD to the application as
+          NUL terminated strings. Thus <span class="type">confd_value_t</span> contains
+          a length indicator <span class="emphasis"><em>and</em></span> is NUL terminated.
+        </p><p>
+          All strings consist of an <span class="type">unsigned char*</span> pointer and
+          a length indicator. To copy such a string into a local
+          buffer we need to write code like:
+        </p><div class="informalexample"><pre class="programlisting">char *mybuf = malloc(CONFD_GET_BUFSIZE(someval)+1);
+strcpy(mybuf, (char*)CONFD_GET_BUFPTR(someval));</pre></div><p>
+          On the other hand, when the application needs to reply with
+          a string value to ConfD, the application can choose to use
+          either a NUL terminated string or a buffer with a length
+          indicator using the following macros:
+        </p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+CONFD_SET_STR(&amp;myval, "Frank Zappa");</pre></div><p>or</p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+CONFD_SET_BUF(&amp;myval, buf, buflen);</pre></div><p>
+          XML tags are also represented as
+          <span class="type">confd_value_t</span>. Remember that we said that
+          <code class="code">keypath-&gt;v[0][0]</code> was the actual XML element. Also
+          remember that <span class="command"><strong>confdc</strong></span> generated a .h file. The
+          <code class="filename">arpe.h</code> file, containing all the XML elements from
+          <code class="filename">arpe.yang</code> as integers. The following code uses that
+          to switch on the XML tag:
+        </p><div class="informalexample"><pre class="programlisting">    switch (CONFD_GET_XMLTAG(&amp;(keypath-&gt;v[0][0]))) {
+    case arpe_hwaddr:
+        if (ae-&gt;hwaddr == NULL) {
+            confd_data_reply_not_found(tctx);
+            return CONFD_OK;
+        }
+        CONFD_SET_STR(&amp;v, ae-&gt;hwaddr);
+        break;
+    case arpe_permanent:
+        CONFD_SET_BOOL(&amp;v, ae-&gt;perm);
+        break;
+</pre></div><p>
+          Each keypath has a textual representation, so we can format
+          a keypath by means of the API call <code class="function">confd_pp_kpath()</code>.
+          A hashed keypath, a <span class="type">confd_hkeypath_t</span>, represents a
+          unique path down through the XML tree and it is easy and
+          efficient to walk the path through <code class="code">switch</code> statements
+          since the individual XML elements in the path are integers.
+        </p><p>
+          The purpose of both functions, (<code class="function">get_next()</code> and
+          <code class="function">get_elem()</code>), is to return data back to ConfD.  Data
+          is not returned explicitly through return values from the
+          callback functions, but rather through explicit API calls.
+        </p><p>
+          So when the application gets invoked in <code class="function">get_elem()</code>
+          via a call to <code class="function">confd_fd_ready()</code>, we need to return a
+          single value to ConfD. We do this through the call to
+          <code class="function">confd_data_reply_value()</code>. Thus the following code
+          snippet returns an integer value to ConfD.
+        </p><div class="informalexample"><pre class="programlisting">confd_value_t myval;
+CONFD_SET_INT32(&amp;myval, 7777);
+confd_data_reply_value(tctx, &amp;myval);</pre></div><p>
+          The <code class="function">get_elem()</code> callback is also used as an existence
+          test by ConfD. It may seem redundant to implement the
+          <code class="function">get_elem()</code> callback for a keypath such as:
+          <code class="sgmltag-element">"/arpentries/arpe{1.2.3.4 eth0}/ip"</code> since the only
+          possible reply can be the IP address "1.2.3.4" which is
+          already part of the keypath. However, the user can enter any
+          random path in the CLI and ConfD uses the <code class="function">get_elem()</code>
+          callback to check whether an entry exists or not.
+        </p><p>
+          If the entry does not exist, the callback should call
+          <code class="function">confd_data_reply_not_found()</code> and then return
+          CONFD_OK. This is not an error.
+        </p><p>
+          The API is fully documented in the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page.
+        </p><p>
+          The <code class="function">get_next()</code> callback gets invoked when ConfD needs
+          to read all the keys of a certain list such as
+          our ARP entries. The <em class="parameter"><code>next</code></em> parameter will have the
+          value -1 on the first invocation to <code class="function">get_next()</code>.
+          This invocation needs to return the
+          first key in the ordered list created by
+          <code class="function">run_arp()</code>.
+          In our case, with our ARP entries, we have multiple
+          keys. According to the data model the pair of the interface
+          name and the IP address makes up the key. Thus we need to
+          return two values:
+        </p><div class="informalexample"><pre class="programlisting">    CONFD_SET_IPV4(&amp;v[0], curr-&gt;ip4);
+    CONFD_SET_STR(&amp;v[1], curr-&gt;iface);
+    confd_data_reply_next_key(tctx, &amp;v[0], 2, (long)curr-&gt;next);
+</pre></div><p>
+          The last parameter to <code class="function">confd_data_reply_next_key()</code> is
+          a long integer which will be fed to us as the <em class="parameter"><code>next</code></em>
+          parameter on the subsequent call. We cast the pointer to the
+          next <span class="type">struct aentry*</span> as a long.
+        </p><p>
+          In the above code, we registered a single set of callback C
+          functions on the callpoint. Sometimes we may have different
+          daemons that handle different kinds of data, but under the
+          same callpoint. Say for example that we have a list of
+          interfaces, VLAN interfaces and regular interfaces.  We have
+          different software modules which handle the VLAN interfaces
+          and the regular interfaces. In this case, we may use
+          <code class="function">confd_register_range_data_cb()</code> (See
+          <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>) which makes it
+          possible to install a
+          set of callbacks on a range of keys, for example one set of
+          callbacks for <code class="literal">eth0</code> to
+          <code class="literal">ethX</code> and another set
+          of callbacks in the range from <code class="literal">vlan0</code> to
+          <code class="literal">vlanX</code>.
+        </p><p>
+          Also notable is the consistency of the data. If we use CDB
+          to store our configuration data and we use this external
+          data API to deliver statistics data which is volatile we
+          must choose whether we want to deliver an exact snapshot of
+          the statistics data or not.  ConfD will consecutively call
+          <code class="function">get_next()</code> to gather all the keys for a set of
+          dynamic elements. A moment later ConfD will invoke
+          <code class="function">get_elem()</code> or <code class="function">get_object()</code> to gather the
+          actual data. If this data no longer exists, the application
+          can invoke <code class="function">confd_data_reply_not_found()</code> and all is
+          fine.
+        </p><p>
+          An alternative for the application if we must always return
+          consistent snapshots, is to gather and buffer all the data
+          in the <code class="function">init()</code> callback and then return both
+          <code class="function">get_next()</code> data as well as <code class="function">get_elem()</code> data
+          from those internal data structures. This data can be stored
+          in the <code class="varname">t_opaque</code> field in the transaction context and
+          be released in the <code class="function">finish()</code> callback.
+        </p><p>
+          In our example code above we have chosen the latter
+          approach.  Also notable is the check for age of data at the
+          beginning of <code class="function">get_next()</code>. A NETCONF transaction is
+          typically short lived, whereas a CLI transaction remains
+          live for as long as the user is logged in. Thus we may have
+          to refresh the locally stored ARP table if it is deemed to
+          be too old.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1922"></a>6.7.&nbsp;The Protocol and a Library Threads Discussion</h2></div></div></div><p>
+           We start this section with a picture showing the sequence
+           of events that occur when the user defined callback functions get
+           invoked by the library.
+         </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="602"><tr><td align="center"><img src="pics/Trans.png" align="middle" width="602"></td></tr></table><div class="caption"><p>Event chain that triggers user callbacks</p></div></div><p>
+           On the library side we have one control socket and one or more
+           worker sockets. The idea behind this architecture is that
+           it shall be possible to have a software architecture, whereby
+           a main thread owns the control socket, and we also have
+           a set of worker threads, each owning one or more worker sockets.
+           A request to execute something arrives from ConfD on the
+           control socket, and the thread owning the control socket, the
+           main thread, can then decide to assign a worker thread for
+           that particular activity, be it a validation, a new transaction
+           or the invocation of an action. The owner of the control
+           socket must thus have a mapping between worker sockets
+           and thread workers. This is up to the application to decide.
+         </p><p>
+           The downside of the architecture proposed above is complexity,
+           whereas the upside is that regardless of how long time it takes
+           to execute an individual request from ConfD, the data provider
+           is always ready to accept and serve new callback
+           requests from ConfD.
+         </p><p>
+           The case for a multi threaded dataprovider maybe isn't as
+           strong as one could think. Say that we have a statistics data
+           provider which lists a very long list of statistics items, e.g.
+           a huge routing table. If a CLI user invokes the command to
+           show all routing table entries, there will be a long series
+           of <code class="function">get_next()</code> and <code class="function">get_elem()</code> callback
+           invocations. As long as the application is still polling
+           the control socket, other northbound agents can very well
+           sneak in and execute their operations <span class="emphasis"><em>while</em></span> the routing
+           table is being displayed. For example another CLI user
+           issuing a request to reboot the host, will get his reboot
+           request served at the same time as the first CLI user is
+           displaying the large routing table.
+         </p><p>
+           A data provider with just one thread, one control socket and
+           one worker socket will never hang longer than it takes to
+           execute a single callback invocation, e.g. a single invocation
+           of <code class="function">get_elem()</code>,
+           <code class="function">validate()</code> or
+           <code class="function">action()</code>. In many cases it will still be
+           a good design to use at least one thread for the control
+           socket and one for the worker socket - this will allow for
+           control socket requests to be handled quickly even if the
+           data callbacks require more processing time. If we have
+           long-running action callbacks (e.g. file download),
+           multi-threading may be essential, see <a class="xref" href="ch11.html#ug.actions.threads" title="11.2.2.&nbsp;Using Threads">Section&nbsp;11.2.2, &#8220;Using Threads&#8221;</a>.
+         </p><p>
+           The <code class="filename">intro/9-c_threads</code> example in the
+           ConfD examples collection shows one way to use
+           multi-threading in a daemon that implements both operational
+           data callbacks and action callbacks. It has one thread for
+           the control socket and only a single worker socket/thread for
+           the data callbacks, while multiple worker sockets/threads are
+           used to handle the action callbacks.
+         </p><p>
+           When we use multiple threads, it is important to remember
+           that threads can not "share" socket connections to ConfD. For
+           the data provider API, this is basically fulfilled
+           automatically, as we will not have multiple threads polling
+           the same socket. But when we use e.g. the CDB or MAAPI APIs,
+           the application must make sure that each thread has its own
+           sockets. I.e. the ConfD API functions are thread-safe as
+           such, but multiple threads using them with the same socket
+           will have unpredictable results, just as multiple threads
+           using the read() and write() system calls on the same file
+           descriptor in general will. In the ConfD case, one thread may
+           end up getting the response to a request from another, or
+           even a part of that response, which will result in errors
+           that can be very difficult to debug.
+         </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.opdata.cdb"></a>6.8.&nbsp;Operational data in CDB</h2></div></div></div><p>
+          It is possible to use CDB to store not only the configuration
+          data but also operational data. Depending on the application and
+          the underlying architecture it may be easier for some of the
+          managed objects to write their operational data into CDB.
+          Depending on the type of data, this would typically
+          be done either at regular intervals or whenever there is a change
+          in the data. If this is done, no instrumentation functions
+          need to be written. The operational data then resides in CDB and all
+          the northbound agents can read the operational data automatically
+          from CDB.
+        </p><p>
+          Similar to the CDB read interface, we need to create a CDB socket
+          and also start a CDB session on the socket before we can
+          write data
+        </p><p>
+          The necessary steps are:
+        </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><code class="function">cdb_connect()</code></p></li><li class="listitem"><p><code class="function">cdb_start_session()</code> followed by
+            <code class="function">cdb_set_namespace()</code></p></li><li class="listitem"><p>
+              A series of calls to one or several of the CDB
+              set functions, <code class="function">cdb_set_elem()</code>,
+              <code class="function">cdb_create()</code>,
+              <code class="function">cdb_delete()</code>
+              <code class="function">cdb_set_object()</code> or
+              <code class="function">cdb_set_values()</code>
+            </p><p>These functions are described in detail in the
+            <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a> manual page.
+            </p></li><li class="listitem"><p>
+              A call to <code class="function">cdb_end_session()</code>
+            </p></li></ol></div><p>It is also possible to load operational data from an XML
+        file into CDB using the function <a class="link" href="rn02re09.html#fn.cdb_load_file">
+        <code class="function">cdb_load_file()</code></a>, see the <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a> manual page. A command
+        line utility called <span class="command"><strong>confd_load</strong></span> can also be
+        used, see <a class="xref" href="rn01re05.html" title="confd_load"><span class="refentrytitle"><span class="phrase">confd</span>_load</span>(1)</a>.</p><p>
+          We use the <code class="code">tailf:cdb-oper</code> statement to indicate
+          that operational data should be stored in CDB, see the <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a> manual page.
+          The data can be either persistent,
+          i.e. stored on disc, or volatile, i.e. stored in RAM only -
+          this is controlled by the <code class="code">tailf:persistent</code>
+          substatement to <code class="code">tailf:cdb-oper</code>.
+        </p><p>
+          As a realistic example we model IP traffic statistics in a
+          Linux environment. We have a list of interfaces, stored in
+          CDB and then for each interface we have a statistics part.
+          This example can be found in
+          <code class="filename">cdb_oper/ifstatus</code> in the examples
+          collection. This is what our data model looks like:
+        </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">module</strong> if {
+  <strong class="hl-keyword">namespace</strong> <strong class="hl-string"><em style="color:red">"http://tail-f.com/ns/example/if"</em></strong>;
+  <strong class="hl-keyword">prefix</strong> if;
+
+  <strong class="hl-keyword">import</strong> ietf-inet-types {
+    <strong class="hl-keyword">prefix</strong> inet;
+  }
+  <strong class="hl-keyword">import</strong> tailf-common {
+    <strong class="hl-keyword">prefix</strong> tailf;
+  }
+
+
+  <strong class="hl-keyword">container</strong> interfaces {
+    <strong class="hl-keyword">list</strong> interface {
+      <strong class="hl-keyword">key</strong> name;
+      max-elements <span class="hl-number">1024</span>;
+      <strong class="hl-keyword">leaf</strong> name {
+        <strong class="hl-keyword">type</strong> string;
+      }
+      <strong class="hl-keyword">list</strong> address {
+        <strong class="hl-keyword">key</strong> name;
+        max-elements <span class="hl-number">64</span>;
+        <strong class="hl-keyword">leaf</strong> name {
+          <strong class="hl-keyword">type</strong> inet:ipv4-address;
+        }
+        <strong class="hl-keyword">leaf</strong> <strong class="hl-keyword">prefix</strong>-<strong class="hl-keyword">length</strong> {
+          <strong class="hl-keyword">type</strong> int32;
+          <strong class="hl-keyword">mandatory</strong> true;
+        }
+      }
+      <strong class="hl-keyword">container</strong> <strong class="hl-keyword">status</strong> {
+        <strong class="hl-keyword">config</strong> false;
+        tailf:cdb-oper;
+
+        <strong class="hl-keyword">container</strong> receive {
+          <strong class="hl-keyword">leaf</strong> bytes {
+            <strong class="hl-keyword">type</strong> uint64;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> packets {
+            <strong class="hl-keyword">type</strong> uint64;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> errors {
+            <strong class="hl-keyword">type</strong> uint32;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> dropped {
+            <strong class="hl-keyword">type</strong> uint32;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+        }
+        <strong class="hl-keyword">container</strong> transmit {
+          <strong class="hl-keyword">leaf</strong> bytes {
+            <strong class="hl-keyword">type</strong> uint64;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> packets {
+            <strong class="hl-keyword">type</strong> uint64;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> errors {
+            <strong class="hl-keyword">type</strong> uint32;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> dropped {
+            <strong class="hl-keyword">type</strong> uint32;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+          <strong class="hl-keyword">leaf</strong> collisions {
+            <strong class="hl-keyword">type</strong> uint32;
+            <strong class="hl-keyword">mandatory</strong> true;
+          }
+        }
+      }
+    }
+  }
+}
+</pre></div><p>
+          Note the element <code class="sgmltag-element">/interfaces/interface/status</code>, it
+          has the substatement <code class="code">config false;</code> and below it we find
+          a <code class="code">tailf:cdb-oper;</code> statement. If we had implemented this
+          operational data using the techniques from the previous
+          sections in this chapter, we would have had to write
+          instrumentation callback functions for the above operational
+          data. For example <code class="function">get_elem()</code> which would then be
+          given a path, e.g.
+          <code class="sgmltag-element">/interfaces/interface{eth0}/status/receive/bytes</code>
+          When we use the <code class="code">tailf:cdb-oper;</code> statement these
+          instrumentation callbacks are automatically provided
+          internally by ConfD. The downside is that we must populate
+          the CDB data from the outside.
+        </p><p>
+          A function which reads network traffic statistics data and updates
+          CDB according to the above data model is:
+        </p><div class="informalexample"><pre class="programlisting">#define GET_COUNTER() {                         \
+        if ((p = strtok(NULL, " \t")) == NULL)  \
+            continue;                           \
+        counter = atoll(p);                     \
+    }
+
+static int update_status(int sock)
+{
+    FILE *proc;
+    int ret;
+    char buf[BUFSIZ];
+    char *ifname, *p;
+    long long counter;
+    confd_value_t val[1 + 4 + 1 + 5];
+    int i;
+
+    if ((ret = cdb_start_session(sock, CDB_OPERATIONAL)) != CONFD_OK)
+        return ret;
+    if ((ret = cdb_set_namespace(sock, if__ns)) != CONFD_OK)
+        return ret;
+
+    if ((proc = fopen("/proc/net/dev", "r")) == NULL)
+        return CONFD_ERR;
+    while (ret == CONFD_OK &amp;&amp; fgets(buf, sizeof(buf), proc) != NULL) {
+        if ((p = strchr(buf, ':')) == NULL)
+            continue;
+        *p = ' ';
+        if ((ifname = strtok(buf, " \t")) == NULL)
+            continue;
+
+        i = 0;
+
+        CONFD_SET_XMLTAG(&amp;val[i], if_receive, if__ns); i++;
+        GET_COUNTER();          /* rx bytes */
+        CONFD_SET_UINT64(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* rx packets */
+        CONFD_SET_UINT64(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* rx errs */
+        CONFD_SET_UINT32(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* rx drop  */
+        CONFD_SET_UINT32(&amp;val[i], counter); i++;
+        /* skip remaining rx counters */
+        GET_COUNTER(); GET_COUNTER(); GET_COUNTER(); GET_COUNTER();
+
+        CONFD_SET_XMLTAG(&amp;val[i], if_transmit, if__ns); i++;
+        GET_COUNTER();          /* tx bytes */
+        CONFD_SET_UINT64(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* tx packets */
+        CONFD_SET_UINT64(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* tx errs */
+        CONFD_SET_UINT32(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* tx drop  */
+        CONFD_SET_UINT32(&amp;val[i], counter); i++;
+        GET_COUNTER();          /* skip */
+        GET_COUNTER();          /* tx colls */
+        CONFD_SET_UINT32(&amp;val[i], counter); i++;
+
+        ret = cdb_set_object(sock, val, i,
+                             "/interfaces/interface{%s}/status", ifname);
+        if (ret == CONFD_ERR &amp;&amp; confd_errno == CONFD_ERR_BADPATH)
+            /* assume interface doesn't exist in config */
+            ret = CONFD_OK;
+    }
+    fclose(proc);
+
+    cdb_end_session(sock);
+
+    return ret;
+}
+</pre></div><p>
+          We typically call this function at regular intervals.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1995"></a>6.9.&nbsp;Delayed Replies</h2></div></div></div><p>
+          If the data source is communicated with through some means of
+          IPC it may be inconvenient to hang in the callback functions
+          and wait for the reply from the data source.  The solution to
+          this problem is to return a special return value from the
+          callback and then later explicitly send the response once
+          it is available.
+        </p><p>
+          All the transaction callbacks as well as all the data callbacks
+          can optionally return the value <code class="constant">CONFD_DELAYED_RESPONSE</code>.
+          This means that the callback returns, and we typically end up in
+          our main poll loop again. Once the reply returns it is then up
+          to the application to send the reply back to ConfD.
+        </p><p>
+          The <code class="filename">libconfd</code> library contains a number of routines
+          that can be invoked to convey a delayed response. The callbacks
+          are divided in two groups. The first group is the one where
+          the actual return value from the callback is the value that
+          is sent to ConfD as a response. A good example is the
+          the transaction <code class="function">init()</code> callback or the the data callback
+          <code class="function">set_elem()</code>. In both these case if the callback returns
+          <code class="constant">CONFD_OK</code> a positive ack is sent back to ConfD by the
+          library.  If we instead return <code class="constant">CONFD_DELAYED_RESPONSE</code>
+          the application must - once the reply is available - use either
+          of the functions <code class="function">confd_delayed_reply_ok()</code> or
+          <code class="function">confd_delayed_reply_error()</code> to explicitly send the
+          reply. If no reply is sent within 120 seconds (configurable through
+          <code class="filename">confd.conf</code>) the data provider is considered dead by
+          ConfD and ConfD will close all sockets to the  data provider.
+        </p><p>
+          Another group of callbacks are the callbacks that require the
+          application to explicitly send a reply back to ConfD before
+          returning. A good example is the data callback
+          <code class="function">get_elem()</code>. The application must
+          explicitly call <code class="function">confd_data_reply_value()</code>
+          before returning - unless the
+          <code class="constant">CONFD_DELAYED_RESPONSE</code> value is
+          returned. If so, it is up to the application to later, when
+          the response value is available, explicitly call the
+          <code class="function">confd_data_reply_value()</code> function to send
+          back the return value.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.opdata.caching"></a>6.10.&nbsp;Caching Operational Data</h2></div></div></div><p>
+          For operational data handled by an external data provider (i.e.,
+          using <code class="code">tailf:callpoint</code>), the values of elements may be kept
+          for a certain time in a cache in ConfD. If such an element is
+          accessed, its value will be taken from the cache, and the data
+          provider not called.
+        </p><p>
+          The cache is enabled, and the default time to keep values in
+          the cache configured, with the element
+          <code class="sgmltag-element">/confdConfig/opcache</code> in the
+          <code class="filename">confd.conf</code> file, for example:
+        </p><div class="informalexample"><pre class="programlisting">  &lt;opcache&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;timeout&gt;5&lt;/timeout&gt;
+  &lt;/opcache&gt;</pre></div><p>
+          By default, the cache is disabled.
+          The timeout value is given in seconds, it does not have a default. If
+          <span class="command"><strong>confd --reload</strong></span> is done, the cache will use the new
+          timeout value. If the cache is disabled, the stored values
+          are cleared.
+        </p><p>
+          To indicate that the elements handled by a callpoint are to be
+          saved in the cache, use the <code class="code">tailf:cache</code> statement:
+        </p><div class="informalexample"><pre class="programlisting">leaf packetCounter {
+  type uint64;
+  config false;
+  tailf:callpoint a1 {
+    tailf:cache true;
+  }
+}</pre></div><p>
+          It is also possible to override the cache timeout specified in
+          <code class="filename">confd.conf</code> by using the
+          <code class="code">tailf:timeout</code> substatement with
+          <code class="code">tailf:cache</code> in the data model.
+        </p><div class="informalexample"><pre class="programlisting">leaf packetCounter {
+  type uint64;
+  config false;
+  tailf:callpoint a1 {
+    tailf:cache true {
+      tailf:timeout 7;
+    }
+  }
+}</pre></div><p>
+          The timeout specified this way will be used for the node with
+          the <code class="code">tailf:timeout</code> statement and any descendants
+          of that node, unless another <code class="code">tailf:cache</code>
+          statement is used on a descendant node. Using
+          <code class="code">tailf:cache</code> without a <code class="code">tailf:timeout</code>
+          substatement will cause the timeout to revert to the one
+          specified in <code class="filename">confd.conf</code>.
+        </p><p>
+          The results of <code class="function">get_next()</code> and
+          <code class="function">find_next()</code> operations can not be cached in
+          general, since the <em class="parameter"><code>next</code></em> value returned
+          by the data provider does not necessarily identify a specific
+          list entry (e.g. it could be a fixed pointer to a data
+          structure holding the "next entry" information). However in
+          the special case that the data provider returns
+          <code class="constant">-1</code> for <em class="parameter"><code>next</code></em> the
+          result can be cached, since retrieval of the next entry will
+          then use a <code class="code">find_next</code> operation with the complete
+          set of keys from the previous entry. See the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for further
+          details.
+        </p><p>
+          The cache can be cleared, partially or completely, by means of
+          the <code class="function">maapi_clear_opcache()</code> function - see
+          the <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> manual page.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.opdata.without_keys"></a>6.11.&nbsp;Operational data lists without keys</h2></div></div></div><p>It is possible to define lists for operational data without
+      any keys in the YANG data model, e.g.:</p><div class="informalexample"><pre class="programlisting">list memory-pool {
+  config false;
+  tailf:callpoint memstats;
+  leaf buffer-size {
+    type uint32;
+  }
+  leaf number-of-buffers {
+    type uint32;
+  }
+}</pre></div><p>To support this without having completely separate APIs, we
+      use a "pseudo" key in the ConfD APIs for this type of list. This
+      key is not part of the data model, and completely hidden in the
+      northbound agent interfaces, but is used with e.g. the
+      <code class="function">get_next()</code> and
+      <code class="function">get_elem()</code> callbacks as if it were a normal
+      key.</p><p>This "pseudo" key is always a single signed 64-bit integer,
+      i.e. the <span class="type">confd_value_t</span> type is
+      <code class="literal">C_INT64</code>. The values can be chosen arbitrarily
+      by the application, as long as a key value returned by
+      <code class="function">get_next()</code> can be used to get the data for
+      the corresponding list entry with <code class="function">get_elem()</code>
+      or <code class="function">get_object()</code> as usual. It could e.g. be an
+      index into an array that holds the data, or even a memory address
+      in integer form.</p><p>There are some issues that need to be considered
+      though:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>In some cases ConfD will do an "existence test" for a
+          list entry. For "normal" lists, this is done by requesting the
+          first key leaf via <code class="function">get_elem()</code>, but since
+          there are no key leafs, this can not be done. Instead ConfD
+          will use the <code class="function">exists_optional()</code> callback
+          for this test. I.e. a data provider that has this type of list
+          must implement this callback, and handle a request where the
+          keypath identifies a list entry.</p></li><li class="listitem"><p>In the response to the
+          <code class="function">get_next_object()</code> callback, the data
+          provider is expected to provide the key values along with the
+          other leafs in an array that is populated according to the
+          data model. This must be done also for this type of list, even
+          though the key isn't actually in the data model. The "pseudo"
+          key must always be the first element in the array, and for the
+          <code class="function">confd_data_reply_next_object_tag_value_array()</code>
+          reply function, the tag value 0 should be used. Note that the
+          key should <span class="emphasis"><em>not</em></span> be included in the
+          response to the <code class="function">get_object()</code>
+          callback.</p></li><li class="listitem"><p>The same approach is used when we store operational data
+          in CDB - the path used in the write (and read) functions in
+          the CDB API must include the "pseudo" integer key. If multiple
+          list entries are to be written with a single call to
+          <code class="function">cdb_set_values()</code>, which takes a tagged
+          value array, the key for each entry must be included in the
+          array with a tag value of 0, in the same way as described
+          above. This applies also to reading multiple entries with a
+          single call to <code class="function">cdb_get_values()</code>.</p></li></ul></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;7.&nbsp;The external database API</td></tr></table></div></body></html>

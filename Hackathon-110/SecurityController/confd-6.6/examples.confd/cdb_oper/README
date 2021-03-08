@@ -1,0 +1,9 @@
+
+Examples using CDB operational data store
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. loadhist - persistent storage of history of samples
+
+2. ifstatus - atomic update of multiple values
+
+See the README file in the respective directory for further details.

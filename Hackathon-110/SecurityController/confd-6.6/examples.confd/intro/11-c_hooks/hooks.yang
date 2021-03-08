@@ -1,0 +1,52 @@
+module hooks {
+    namespace "http://tail-f.com/ns/example/hooks";
+    prefix hooks;
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+    import tailf-common {
+        prefix tailf;
+    }
+
+    list hosts {
+        tailf:callpoint trans_hosts {
+            tailf:transaction-hook subtree {
+                tailf:invocation-mode per-transaction;
+            }
+        }
+        key name;
+        leaf name {
+            type string;
+        }
+        leaf ip {
+            tailf:callpoint ip_mask {
+                tailf:set-hook node;
+            }
+            type inet:ipv4-address;
+        }
+        leaf netmask {
+            tailf:callpoint ip_mask {
+                tailf:set-hook node;
+            }
+            type inet:ipv4-address;
+        }
+        leaf gw {
+            type inet:ipv4-address;
+        }
+    }
+
+    list hosts_ipv6 {
+        key name;
+        leaf name {
+            type string;
+        }
+        leaf ip {
+            type inet:ipv6-address;
+        }
+        leaf gw {
+            type inet:ipv6-address;
+        }
+    }
+
+}

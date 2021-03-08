@@ -1,0 +1,74 @@
+module ietf-netconf-notifications-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-netconf-notifications {
+    prefix ncn;
+  }
+
+  description
+    "Annotation module for ietf-netconf-notifications.";
+
+  tailf:annotate-module 'ietf-netconf-notifications' {
+    tailf:annotate-statement 'notification[name="netconf-config-change"]' {
+      tailf:annotate-statement 'leaf[name="datastore"]' {
+        tailf:annotate-statement 'type' {
+          tailf:annotate-statement 'enum[name="running"]' {
+            tailf:code-name "running";
+          }
+          tailf:annotate-statement 'enum[name="startup"]' {
+            tailf:code-name "startup";
+          }
+        }
+      }
+    }
+    tailf:annotate-statement 'notification[name="netconf-session-end"]' {
+      tailf:annotate-statement 'leaf[name="termination-reason"]' {
+        tailf:annotate-statement 'type' {
+          tailf:annotate-statement 'enum[name="closed"]' {
+            tailf:code-name "closed";
+          }
+          tailf:annotate-statement 'enum[name="killed"]' {
+            tailf:code-name "killed";
+          }
+          tailf:annotate-statement 'enum[name="dropped"]' {
+            tailf:code-name "dropped";
+          }
+          tailf:annotate-statement 'enum[name="timeout"]' {
+            tailf:code-name "r_timeout";
+          }
+          tailf:annotate-statement 'enum[name="bad-hello"]' {
+            tailf:code-name "bad_hello";
+          }
+          tailf:annotate-statement 'enum[name="other"]' {
+            tailf:code-name "other";
+          }
+        }
+      }
+    }
+    tailf:annotate-statement 'notification[name="netconf-confirmed-commit"]' {
+      tailf:annotate-statement 'leaf[name="confirm-event"]' {
+        tailf:annotate-statement 'type' {
+          tailf:annotate-statement 'enum[name="start"]' {
+            tailf:code-name "start";
+          }
+          tailf:annotate-statement 'enum[name="cancel"]' {
+            tailf:code-name "cancel";
+          }
+          tailf:annotate-statement 'enum[name="timeout"]' {
+            tailf:code-name "c_timeout";
+          }
+          tailf:annotate-statement 'enum[name="extend"]' {
+            tailf:code-name "extend";
+          }
+          tailf:annotate-statement 'enum[name="complete"]' {
+            tailf:code-name "complete";
+          }
+        }
+      }
+    }
+  }
+}

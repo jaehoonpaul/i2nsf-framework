@@ -1,0 +1,31 @@
+module servers {
+  namespace "http://tail-f.com/ns/example/servers";
+  prefix servers;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  revision 2009-04-01 {
+    description "initial version";
+  }
+
+  /* A set of server structures */
+  container servers {
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+    }
+  }
+}

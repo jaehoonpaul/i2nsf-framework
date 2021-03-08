@@ -1,0 +1,16 @@
+Running application code inside ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The examples in this directory show how to use the Erlang ConfD API
+("econfd") to run Erlang application code internally in the ConfD
+daemon.
+
+  transform     - An implementation of the same transform as in the
+                  misc/aaa_transform example, but written in Erlang and
+                  running inside ConfD.
+
+  user_type     - An Erlang implementation of the callbacks for one of
+                  the user-defined types in the misc/user_type example.
+
+For more information about this, read the section "Running application
+code inside ConfD" in the "Advanced Topics" chapter of the User Guide.

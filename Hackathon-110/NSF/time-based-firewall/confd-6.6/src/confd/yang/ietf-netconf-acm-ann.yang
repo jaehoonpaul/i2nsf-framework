@@ -1,0 +1,25 @@
+module ietf-netconf-acm-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+
+  description
+    "Annotation module for ietf-netconf-acm.
+
+    Adds the callpoints necessary for using this module with ConfD.";
+
+  tailf:annotate "/nacm:nacm" {
+    tailf:info "Access control";
+    tailf:callpoint "ncagent" {
+      tailf:config false;
+      tailf:internal;
+    }
+  }
+}
+

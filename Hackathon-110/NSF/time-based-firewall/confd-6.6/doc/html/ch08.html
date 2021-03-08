@@ -1,0 +1,101 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;8.&nbsp;Configuration Meta-Data</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API"><link rel="next" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Semantic validation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;8.&nbsp;Configuration Meta-Data</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.configdata"></a>Chapter&nbsp;8.&nbsp;Configuration Meta-Data</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch08.html#d5e2483">8.1. Introduction to Configuration Meta-Data</a></span></dt><dt><span class="sect1"><a href="ch08.html#d5e2498">8.2. Meta-Data: <code class="sgmltag-element">annotation</code></a></span></dt><dt><span class="sect1"><a href="ch08.html#d5e2511">8.3. Meta-Data: <code class="sgmltag-element">tag</code></a></span></dt><dt><span class="sect1"><a href="ch08.html#d5e2522">8.4. Meta-Data: <code class="sgmltag-element">inactive</code></a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2483"></a>8.1.&nbsp;Introduction to Configuration Meta-Data</h2></div></div></div><p>
+        In ConfD, meta-data can be associated with configuration data
+        nodes.  The meta-data is stored as <code class="code">attributes</code> on
+        data nodes in the configuration datastore.  Having meta-data
+        is optional, and requires support from the datastore
+        implementation.  CDB (see <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a> fully
+        supports meta-data attributes, but if an external data
+        provider (see <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a> is used for
+        configuration data, it needs to explicitly support meta-data
+        attributes.
+      </p><p>
+        There are three meta-data attributes in ConfD,
+        <code class="sgmltag-element">annotation</code>, <code class="sgmltag-element">tag</code>, and
+        <code class="sgmltag-element">inactive</code>.  Each of these is discussed in the
+        following sections.
+      </p><p>
+        To enable meta-data attributes,
+        <code class="sgmltag-element">/confdConfig/enableAttributes</code> in
+        <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>) must be set to
+        <code class="literal">true</code>.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2498"></a>8.2.&nbsp;Meta-Data: <code class="sgmltag-element">annotation</code></h2></div></div></div><p>
+        Any configuration data node can have at most one
+        <code class="sgmltag-element">annotation</code> attribute.  An annotation is an
+        arbitrary string which acts a comment for the node.
+      </p><p>
+        In the CLI, an annotation is set with the <code class="sgmltag-element">annotate</code>
+        command, and displayed as a comment.  See <a class="xref" href="ch16.html#ug.cli.annotations" title="16.15.&nbsp;Annotations and tags">Section&nbsp;16.15, &#8220;Annotations and tags&#8221;</a> for details.
+      </p><div class="informalexample"><pre class="programlisting">
+admin@host% annotate interface eth0 "mgmt interface"
+
+admin@host% show interface
+/* mgmt interface */
+interface eth0 {
+  ...
+}
+      </pre></div><p>
+        In NETCONF, an annotation is created and display as an XML
+        attribute, see <a class="xref" href="ch15.html#ug.netconf_agent.attributes" title="15.15.&nbsp;Meta-data in Attributes">Section&nbsp;15.15, &#8220;Meta-data in Attributes&#8221;</a> for details.
+      </p><p>
+        Annotations are not visible in the CDB API for CDB subscribers.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2511"></a>8.3.&nbsp;Meta-Data: <code class="sgmltag-element">tag</code></h2></div></div></div><p>
+        Any configuration data node can have a set of <code class="sgmltag-element">tags</code>
+        associated with it.  Tags are set by the user for data
+        organization and filtering purposes.
+      </p><p>
+        In the CLI, tags are administered with the
+        <span class="command"><strong>tag</strong></span> command, and displayed as a comment
+        with special syntax.  It is also possible to filter the
+        configuration based on how it is tagged.  See <a class="xref" href="ch16.html#ug.cli.annotations" title="16.15.&nbsp;Annotations and tags">Section&nbsp;16.15, &#8220;Annotations and tags&#8221;</a> for details.
+      </p><p>
+        In NETCONF, a tag is created and display as an XML attribute,
+        see <a class="xref" href="ch15.html#ug.netconf_agent.attributes" title="15.15.&nbsp;Meta-data in Attributes">Section&nbsp;15.15, &#8220;Meta-data in Attributes&#8221;</a> for
+        details.  Standard XPath filtering can be used to filter the
+        configuration based on how it is tagged.
+      </p><p>
+        Tags are not visible in the CDB API for CDB subscribers.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2522"></a>8.4.&nbsp;Meta-Data: <code class="sgmltag-element">inactive</code></h2></div></div></div><p>
+        Any existing, deletable data node can be marked as
+        <code class="sgmltag-element">inactive</code>.  This has the same effect as deleting the
+        node, except that it is still kept in the configuration data
+        store, marked as being inactive.
+      </p><p>
+        To enable support for inactive nodes,
+        <code class="sgmltag-element">/confdConfig/enableInactive</code> in
+        <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>) must be set to
+        <code class="literal">true</code>.  All configuration data providers
+        must support the <code class="sgmltag-element">inactive</code> attribute.
+      </p><p>
+        In the CLI, the command <span class="command"><strong>deactivate</strong></span> makes
+        a node inactive, and the command <span class="command"><strong>activate</strong></span>
+        activates an inactive node.  See   See <a class="xref" href="ch16.html#ug.cli.inactive" title="16.16.&nbsp;Activate and Deactivate">Section&nbsp;16.16, &#8220;Activate and Deactivate&#8221;</a> for details.
+      </p><p>
+        In NETCONF, a separate capability is used by the server to
+        announce that it supports inactive nodes.  Clients must use
+        special parameters to tell the server that they understand the
+        inactive attribute.  See <a class="xref" href="ch15.html#ug.netconf_agent.inactive" title="15.12.&nbsp;Inactive Capability">Section&nbsp;15.12, &#8220;Inactive Capability&#8221;</a> for
+        details.
+      </p><p>
+        Inactive nodes are not visible in the CDB API for CDB
+        subscribers.  If a node is inactivated, a CDB subscriber will
+        see the node as being deleted, and when it is activated, the
+        CDB subscriber will see it as being created.
+      </p><p>
+        Inactive nodes are not visible in validation code (see <a class="xref" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Semantic validation">Chapter&nbsp;9, <i>Semantic validation</i></a>).  Validation constraints
+        defined in the data model (e.g. <code class="sgmltag-element">max-elements</code> or
+        <code class="sgmltag-element">must</code>) do not take inactive nodes into account.
+      </p><p>
+        Since data providers must support the <code class="sgmltag-element">inactive</code>
+        attribute, all hooks and transforms (see <a class="xref" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks">Chapter&nbsp;10, <i>Transformations, Hooks, Hidden Data and Symlinks</i></a>) will see the inactive nodes
+        being marked as inactive, and must be explicitly coded to
+        handle this attribute.
+      </p><div class="informalexample"><pre class="programlisting">
+admin@host% deactivate interface eth0
+
+admin@host% show interface
+inactive: interface eth-0 {
+  ...
+}
+      </pre></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;7.&nbsp;The external database API&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;9.&nbsp;Semantic validation</td></tr></table></div></body></html>

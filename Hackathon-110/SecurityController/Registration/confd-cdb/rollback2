@@ -1,0 +1,12 @@
+# Created by: admin
+# Date: 2021-03-05 05:06:29
+# Via: netconf
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10002
+
+i2nsf-nsf-registrations {
+    delete:
+    i2nsf-nsf-capability-registration url_filtering;
+}

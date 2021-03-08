@@ -1,0 +1,22 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <kickers xmlns="http://tail-f.com/ns/kicker">
+    <data-kicker>
+      <id>k1</id>
+      <monitor>/example:sys/ifc[name='port-0']</monitor>
+      <trigger-expr>hw/mtu > 100</trigger-expr>
+      <trigger-type>enter</trigger-type>
+      <kick-node xmlns:example="http://tail-f.com/ns/test/example">
+      /example:sys</kick-node>
+      <action-name>kick_me</action-name>
+    </data-kicker>
+    <data-kicker>
+      <id>k2</id>
+      <monitor>/example:sys/ifc</monitor>
+      <trigger-expr>hw/mtu &lt;= 100</trigger-expr>
+      <trigger-type>enter</trigger-type>
+      <kick-node xmlns:example="http://tail-f.com/ns/test/example">
+      /example:sys</kick-node>
+      <action-name>iter_me</action-name>
+    </data-kicker>
+  </kickers>
+</config>

@@ -1,0 +1,9 @@
+<interfaces xmlns="http://tail-f.com/ns/example/if">
+  <interface>
+    <name>lo</name>
+    <address>
+      <name>127.0.0.1</name>
+      <prefix-length>8</prefix-length>
+    </address>
+  </interface>
+</interfaces>

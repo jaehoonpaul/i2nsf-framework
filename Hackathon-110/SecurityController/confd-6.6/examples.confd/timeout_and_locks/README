@@ -1,0 +1,508 @@
+This is a modified version of the intro/1-2-3-start-query-model
+example that aims to show how different timeouts and lock situations
+can be debugged in ConfD.
+
+There are several different type of locks
+
+ - global locks, acquired explicitly by applications on a given data
+   store, ie 'configure exclusive' in the CLI, or lock in NETCONF.
+
+ - partial locks, a special version the global locks.
+
+ - Transaction locks, acquired by the transaction engine during
+   validate and commit.
+
+ - CDB locks, acquired by CDB subscribers and explicit read sessions.
+
+ - Operation CDB data locks, different from CDB lock, only applies to
+   individual operational data leaves.
+
+ - Implicit locks, for example, there can only be one concurrent
+   action per user session
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Global locks
+============
+
+Lets see how the different locks appear in a running system.
+Start by making the example and start confd.
+
+      make all
+      make start
+
+We simulate that a manager has locked the configuration using
+NETCONF. Start a NETCONF session by ssh to the NETCONF port
+
+      ssh -s admin@localhost -p 2022 netconf
+
+You may need to add the HostKeyAlgorithms options, for example
+
+      ssh -o HostKeyAlgorithms=ssh-dss -s admin@localhost -p 2022 netconf
+
+Use the password 'admin'. The NETCONF server will send the
+HELLO message and we respond with a HELLO on our own. Paste
+the following into the ssh session:
+
+    <?Xml version="1.0" encoding="UTF-8"?>
+        <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+          <capabilities>
+            <capability>urn:ietf:params:netconf:base:1.0</capability>
+          </capabilities>
+        </hello>
+    ]]>]]>
+
+We then send the NETCONF rpc for locking the running configuration
+by pasting the following into the ssh session
+
+    <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="1">
+          <lock>
+            <target>
+              <running/>
+            </target>
+          </lock>
+        </rpc>
+    ]]>]]>
+
+
+We should get an ok response from the server.
+
+Now lets inspect the status of the ConfD daemon by running the
+command
+
+        confd --status
+
+in another shell. We should see something like this towards
+the end of the output
+
+    user sessions:
+      sessionId=12 2016-10-11 15:00:41 admin@127.0.0.1 netconf/ssh
+           locks: running
+           no transactions
+
+
+Start the CLI in another shell using the command
+
+      make cli
+
+and enter configuration mode exclusive (ie instruct the CLI
+to grab the global lock). You should see an error message like
+this
+
+    admin connected from 127.0.0.1 using console on kore
+    admin@kore> configure exclusive
+    Error: configuration database locked by:
+    admin ssh (netconf from 127.0.0.1) on since 2016-10-11 15:00:41
+            exclusive
+    Aborted: configuration locked
+    [error][2016-10-11 15:04:00]
+    admin@kore>
+
+
+To see which users are logged on to the system we run the command
+
+   show users
+
+and get the result
+
+    admin@kore> show users
+    SID USER  CTX     FROM      PROTO   LOGIN    CONFIG MODE
+    *13 admin cli     127.0.0.1 console 15:03:57
+     12 admin netconf 127.0.0.1 ssh     15:00:41 exclusive
+    [ok][2016-10-11 15:06:33]
+    admin@kore>
+
+Session 12 is the one with the exclusive lock.
+We terminate the NETCONF session by logging out the user
+
+   request system logout user 12
+
+And we can now grab the log in the CLI using the
+
+    configure exclusive
+
+We do that and again run the 'confd --status' command. The
+CLI session now has the lock both of the running configuration
+and the candidate.
+
+    user sessions:
+      sessionId=13 2016-10-11 15:03:57 admin@127.0.0.1 cli/console
+           locks: running
+           transactions:
+              tid=31 db=running mode=read_write
+              tid=7 db=running mode=read
+
+The CLI will always grab a lock of both to make sure no other
+session modifies the running configuration while the candidate
+is being locked.
+
+If we start another cli session in another terminal it cannot
+run the 'configure exclusive' command. However, it can do
+'configure private'. This will create a private copy of the
+configuration, which it can edit but not commit until the
+global lock has been released. Say we do that and edit a value.
+We get
+
+    make cli
+    admin connected from 127.0.0.1 using console on kore
+    admin@kore> configure private
+    Entering configuration mode private
+    Current configuration users:
+    admin console (cli from 127.0.0.1) on since 2016-10-11 15:03:57
+    exclusive mode
+    [ok][2016-10-11 15:14:52]
+
+    [edit]
+    admin@kore% set dhcp logFacility mail
+    [ok][2016-10-11 15:15:12]
+
+    [edit]
+    admin@kore% commit
+    Aborted: the configuration database is locked by session 13 admin
+    console (cli from 127.0.0.1) on since 2016-10-11 15:03:57
+    [error][2016-10-11 15:15:13]
+
+    [edit]
+    admin@kore%
+
+We then edit the same leaf in the configure exclusive session,
+setting it to kern, commit and exit configuration mode.
+The 'configure private' session may now try to commit its
+changes
+
+    admin@kore% commit
+    Aborted: there are conflicts.
+    --------------------------------------------------------------------------
+    Resolve needed before configuration can be committed. View conflicts with
+    the command 'compare running brief' and execute the command
+    'resolved' when done,
+    or exit configuration mode to abort.
+    Conflicting configuration items are indicated with a leading '!'
+    Conflicting users: admin
+    --------------------------------------------------------------------------
+    [error][2016-10-11 15:17:10]
+
+    [edit]
+    admin@kore%
+
+This triggers the conflict resolution facility since both sessions
+were editing the same value simultaneously. The first session to
+commit will succeed but the second session will get the above error.
+It has to resolve the conflict. This is done by inspecting the
+conflicting settings, deciding if there should be any changes,
+calling the 'resolved' command, and finally committing, ie
+
+    admin@kore% show|comp
+      dhcp {
+    !-    logFacility kern;
+    !+    logFacility mail;
+      }
+    [ok][2016-10-11 15:19:26]
+
+    [edit]
+    admin@kore% resolved
+    [ok][2016-10-11 15:19:30]
+
+    [edit]
+    admin@kore% commit
+    Commit complete.
+    [ok][2016-10-11 15:19:31]
+
+    [edit]
+    admin@kore%
+
+Lines starting with an exclamation mark indicates that there
+is a conflict with some other concurrent session.
+
+
+Transaction locks
+=================
+
+There is a state machine describing the different stages of
+a commit in the Users Guide and in the confd_lib_dp man page.
+It looks like this:
+
+                          +-------+
+                          | START |
+                          +-------+
+                              | init()
+                              |
+                              v
+                 read()   +------+          finish()
+                 ------>  | READ | --------------------> START
+                          +------+
+                            ^  |
+             trans_unlock() |  | trans_lock()
+                            |  v
+                 read()  +----------+       finish()
+                 ------> | VALIDATE | -----------------> START
+                         +----------+
+                              | write_start()
+                              |
+                              v
+                 write()  +-------+          finish()
+                 -------> | WRITE | -------------------> START
+                          +-------+
+                              | prepare()
+                              |
+                              v
+                         +----------+   commit()   +-----------+
+                         | PREPARED | -----------> | COMMITTED |
+                         +----------+              +-----------+
+                              | abort()                  |
+                              |                          | finish()
+                              v                          |
+                          +---------+                    v
+                          | ABORTED |                  START
+                          +---------+
+                              | finish()
+                              |
+                              v
+                            START
+
+
+The transaction lock is acquired when the trans_lock() function
+is called and released at trans_unlock() and finish(). If there
+is a hang in any of the callbacks, for example, in a validation
+callback, a dp callback, or a CDB subscriber callback, progress
+through the state machine will halt at different stages.
+
+It is possible to get some visibility into the state machine
+by enabling commit progress in the confd.conf file. Edit
+the following setting in confd.conf such that false is replaced
+by true and we end up with
+
+   <cli>
+        <showCommitProgress>true</showCommitProgress>
+   </cli>
+
+restart the system and enter the cli end modify a value.
+Commit with the flag | details
+
+    admin connected from 127.0.0.1 using console on kore
+    admin@kore> configure
+    Entering configuration mode private
+    [ok][2016-10-11 15:32:32]
+
+    [edit]
+    admin@kore% set dhcp logFacility local7
+    [ok][2016-10-11 15:32:47]
+
+    [edit]
+    admin@kore% commit | details
+    entering validate phase for running...
+      validate: grabbing transaction lock... ok
+      validate: creating rollback file... ok
+      validate: run transforms and transaction hooks... ok
+      validate: pre validate... ok
+      validate: run validation over the change set...
+      validate: validation over the change set done
+      validate: run dependency-triggered validation...
+      validate: dependency-triggered validation done
+    entering write phase for running...
+      cdb: write_start
+    entering prepare phase for running...
+      cdb: prepare
+    entering commit phase for running...
+      cdb: commit
+      cdb: delivering commit subscription notifications at prio 3
+      cdb: all commit subscription notifications acknowledged
+    Commit complete.
+    [ok][2016-10-11 15:32:53]
+
+    [edit]
+    admin@kore%
+
+
+We get progress printouts that let us see how the commit traverses
+the state machine and how cdb sends out subscriptions to different
+subscribers.
+
+We have broken the dhcp subscriber such that it will sleep for
+the number of seconds that the maxLeaseTime is set to, ie
+
+    {
+        int dur_secs = duration_to_secs(&dur);
+        if (init == 0 && dur_secs > 0 && dur_secs < 3600) {
+            sleep(dur_secs);
+        }
+    }
+
+If we set the maxLeaseTime to, say 30s we will see that the progress
+hangs at the 'deliver commit subscription phase' for 30s.
+
+    admin@kore% set dhcp maxLeaseTime 30s
+    [ok][2016-10-11 15:37:40]
+
+    [edit]
+    admin@kore% commit | details
+    entering validate phase for running...
+      validate: grabbing transaction lock... ok
+      validate: creating rollback file... ok
+      validate: run transforms and transaction hooks... ok
+      validate: pre validate... ok
+      validate: run validation over the change set...
+      validate: validation over the change set done
+      validate: run dependency-triggered validation...
+      validate: dependency-triggered validation done
+    entering write phase for running...
+      cdb: write_start
+    entering prepare phase for running...
+      cdb: prepare
+    entering commit phase for running...
+      cdb: commit
+      cdb: delivering commit subscription notifications at prio 3
+
+If we at the same time executes the 'confd --status' command
+we can see some interesting things
+
+    user sessions:
+      sessionId=12 2016-10-11 15:32:27 admin@127.0.0.1 cli/console
+           no locks set
+           transaction tid=26 has the trans lock on running
+     transactions:
+              tid=26 db=running mode=read_write
+              tid=7 db=running mode=read
+
+We can see that the user session with id 12 has a transaction
+that currently has the trans lock on running. If there is a
+bug this gives us a clue to which editor is responsible for the
+hanging session.
+
+
+If the transaction is created by a Java program there is even
+more information available. We have added an action that creates
+a new transaction, and sets the maxLeaseTime. If we run this
+action it will hang for the given time. Lets do that and run
+the 'confd --status' command while it is hanging
+
+
+    request example a1 sleep-secs 33 system-session true
+
+
+In the confd --status output we see the following
+
+
+    system sessions:
+      ...
+      sessionId=13 2016-10-11 15:46:45 @127.0.0.1 system/tcp slowTrans.setData
+           no locks set
+           transaction tid=55 has the trans lock on running
+     transactions:
+              tid=55 db=running mode=read_write slowTrans.setData
+
+
+It shows that there is a system session with id 13, started from
+slowTrans.setData() that has the transaction lock. This gives us
+good information to start our search for the offender.
+
+CDB Locks
+=========
+The locks that CDB takes are different from both the global locks
+and the transaction locks. There are both read locks and write
+locks. A write lock cannot be taken while there is any read locks,
+and there can only be one write lock at any time, but many read
+locks.
+
+This means that it is important for a CDB reader to quickly
+release the lock since it prevents any writes, ie, a CDB reader
+may effectually block any commits in the system since no CDB
+write lock may be taken, and CDB write locks are taken during
+a transaction (see the write_start() callback in the state
+machine above).
+
+If ConfD hangs we can see if it is due to CDB locks by inspecting
+the output of the confd --status command. If we trigger a lock
+by running the action again, ie
+
+    request example a1 sleep-secs 33 system-session true
+
+
+We can see which CDB subscriber is misbehaving by
+looking at the following lines in the 'confd --status' output.
+
+    cdb:
+      ...
+      waiting for sync-subscription from:
+        ./dhcpd_conf (for event: prio=3 ids=6)
+
+CDB is waiting for dhcpd_conf to confirm that it has seen the
+changes. Below this we can also see that confd_conf has
+a read lock on CDB. As long as there is a read lock, no new
+writing to CDB can take place. There can be many readers
+but only one write, at any given time. And not readers and
+writes at the same time.
+
+    cdb:
+       ...
+       client name: ./dhcpd_conf 3072/4
+          type: client
+          db: running
+          read-lock: true
+
+
+Timeouts
+========
+
+Timeouts are in general a very weak form of control one process has
+over another. The are often both too short and too long at the same
+time. Too short when a system is under heavy load, triggering them
+may lead to the wrong conclusion. They are often too long when a
+real problem occurs, taking too long to notice it. It is often
+unclear in which state the system is left when an operation times
+out.
+
+Never the less, there are a number of timeouts in ConfD. The data
+provider timeouts are set in confd.conf as follows
+
+  <capi>
+    <newSessionTimeout>PT30S</newSessionTimeout>
+    <queryTimeout>PT120S</queryTimeout>
+    <connectTimeout>PT60S</connectTimeout>
+    <objectCacheTimeout>PT2S</objectCacheTimeout>
+    <eventReplyTimeout>PT120S</eventReplyTimeout>
+  </capi>
+
+If we modify the queryTimeout to PT10S and run the action query
+again
+
+
+    admin@kore> request example a1 sleep-secs 30 system-session false
+    Error: application timeout
+    [error][2016-10-12 12:41:27]
+    admin@kore>
+
+The action data provider will time out and we can inspect the logs.
+The devel.log will have an entry that indicates what has happened.
+
+    <ERR> 12-Oct-2016::12:41:27.536 kore confd[9052]: devel-c Worker
+     socket query timed out daemon 'ServerDemonDP3Test' id 1
+    <ERR> 12-Oct-2016::12:41:27.537 kore confd[9052]: devel-c action
+     action() error {external_timeout, ""} for callpoint a1 path /dhcpd:example
+
+When ConfD encounters a data provider that does not respond to
+requests in the given time, it will consider the data provider broken
+and terminate the control socket to the provider. This has
+consequences not only for the ongoing request, but for all ongoing
+requests to the same data provider, thus impacting other sessions
+as well as the requesting session.
+
+There are two solutions to the problem, either make sure a data
+provider never exceeds the query timeout, or the data provider can
+dynamically inform ConfD that it needs more time to complete a
+request. This can be done using one of the following callbacks,
+depending on the query:
+
+    confd_action_set_timeout()
+    confd_data_set_timeout()
+    confd_db_set_timeout()
+    confd_authorization_set_timeout()

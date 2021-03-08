@@ -1,0 +1,67 @@
+module cdbwrite {
+  namespace "http://tail-f.com/ns/example/cdbwrite";
+  prefix cdbwrite;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef enum-type {
+    type enumeration {
+      enum complete;
+      enum incomplete;
+      enum unavailable;
+      enum invalid;
+    }
+  }
+  container cdbw {
+    config false;
+    tailf:cdb-oper {
+    }
+    container items {
+      list item {
+        key name;
+        max-elements 64;
+        leaf name {
+          type string;
+        }
+        leaf val1 {
+          type int32;
+          mandatory true;
+        }
+        leaf e {
+          type enum-type;
+          mandatory true;
+        }
+      }
+    }
+    leaf objref {
+      type instance-identifier {
+        require-instance false;
+      }
+    }
+    container encrypted {
+      leaf des3 {
+        type tailf:des3-cbc-encrypted-string;
+      }
+      leaf aes {
+        type tailf:aes-cfb-128-encrypted-string;
+      }
+    }
+    choice ch {
+      case one {
+        leaf a {
+          type int32;
+        }
+        leaf b {
+          type int32;
+        }
+      }
+      case two {
+        leaf c {
+          type string;
+        }
+      }
+    }
+  }
+}

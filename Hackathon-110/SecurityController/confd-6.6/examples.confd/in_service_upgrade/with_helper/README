@@ -1,0 +1,74 @@
+In-service Upgrade Example with CDB upgrade helper
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example builds on the sibling 'simple' example, please refer to it
+for the basic organization. In this example the data model change from
+v1 to v2 cannot be handled completely by the CDB automatic upgrade,
+since mandatory leafs have been added to the 'server' list. Any list
+entries that exist at the point of the upgrade must have values set for
+these leafs before the upgraded configuration can be committed.
+
+As in the 'simple' example, the upgrade.c program controls the upgrade
+procedure, but it has been extended to look for a program with the name
+"upgrade_helper" in the "package" directory for the new version. If
+found, the program is run before maapi_commit_upgrade() is called. The
+helper program uses MAAPI to modify the configuration database - the
+source code for the helper program is in src/v2/upgrade_helper.c.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Running the Example
+~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing
+
+        $ make all start
+
+Now ConfD is running with package v1. You can inspect the configuration
+e.g. via the CLI by typing
+
+        $ make cli
+
+Try e.g. 'show configuration servers'. You can also enter configure mode
+and add or delete some servers.
+
+ 2. Exit the CLI if you ran it in step 1, or use a second window for
+    this step. Without stopping ConfD, build and "install" package v2:
+
+        $ make pkg_v2
+
+ 3. Now we are ready for the upgrade. In a CLI operational mode session,
+    give the command:
+
+        upgrade to v2
+
+Note the "Running CDB upgrade helper..." - "Helper OK" among the
+progress messages printed. When the success message has been printed,
+ConfD is running package v2.
+
+ 4. Stay in the CLI and give the 'show configuration servers' command
+    again - it will now show the 'enabled' and 'proxy' leafs that were
+    added in the upgrade. You can also enter configure mode and add a
+    server - note that you are required to enter values for the new
+    leafs.
+
+Other things to try
+~~~~~~~~~~~~~~~~~~~
+
+1. Do a "downgrade" after the upgrade by giving the command (again
+   in operational mode in the CLI)
+
+        upgrade to v1
+
+Note that in this case there is no "Running CDB upgrade helper...". Our
+v1 "installation" did not include a "upgrade_helper" program, and none
+is needed, since CDB can of course handle the *removal* of the v2 leafs
+automatically.

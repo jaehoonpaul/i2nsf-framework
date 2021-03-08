@@ -1,0 +1,2719 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;15.&nbsp;The NETCONF Server</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch14.html" title="Chapter&nbsp;14.&nbsp;The AAA infrastructure"><link rel="next" href="ch16.html" title="Chapter&nbsp;16.&nbsp;The CLI agent"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;15.&nbsp;The  NETCONF Server</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch14.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch16.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.netconf_agent"></a>Chapter&nbsp;15.&nbsp;The  NETCONF Server</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch15.html#d5e4672">15.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch15.html#d5e4731">15.2. Capabilities</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.transport">15.3. NETCONF Transport Protocols</a></span></dt><dt><span class="sect1"><a href="ch15.html#d5e5029">15.4. Configuration of the NETCONF Server</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.extend">15.5. Extending the NETCONF Server</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.monitoring">15.6. Monitoring of the NETCONF Server</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.notif">15.7. Notification Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.netconf_console">15.8. Using netconf-console</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.actions">15.9. Actions Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.transactions">15.10. Transactions Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.proxy">15.11. Proxy Forwarding Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.inactive">15.12. Inactive Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.identification-capability">15.13. Tail-f Identification Capability</a></span></dt><dt><span class="sect1"><a href="ch15.html#d5e5706">15.14. The Query API</a></span></dt><dt><span class="sect1"><a href="ch15.html#ug.netconf_agent.attributes">15.15. Meta-data in Attributes</a></span></dt><dt><span class="sect1"><a href="ch15.html#d5e5836">15.16. Namespace for Additional Error Information</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e4672"></a>15.1.&nbsp;Introduction</h2></div></div></div><p>
+      This chapter describes the north bound NETCONF implementation in
+      ConfD.  As of this writing, the server
+      supports the following specifications:
+
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc4741.txt" target="_top">
+              RFC 4741</a> - NETCONF Configuration Protocol
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc4742.txt" target="_top">
+              RFC 4742</a> - Using the NETCONF Configuration Protocol over
+              Secure Shell (SSH)
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc5277.txt" target="_top">
+              RFC 5277</a> - NETCONF Event Notifications
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc5717.txt" target="_top">
+              RFC 5717</a> - Partial Lock Remote Procedure Call (RPC) for
+              NETCONF
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6020.txt" target="_top">
+              RFC 6020</a> - YANG - A Data Modeling Language for
+              the Network Configuration Protocol (NETCONF)
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6021.txt" target="_top">
+              RFC 6021</a> - Common YANG Data Types
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6022.txt" target="_top">
+              RFC 6022</a> - YANG Module for NETCONF Monitoring
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">
+              RFC 6241</a> - Network Configuration Protocol (NETCONF)
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc4742.txt" target="_top">
+              RFC 6242</a> - Using the NETCONF Configuration Protocol over
+              Secure Shell (SSH)
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6243.txt" target="_top">
+              RFC 6243</a> - With-defaults capability for NETCONF
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6470.txt" target="_top">
+              RFC 6470</a> - NETCONF Base Notifications
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6536.txt" target="_top">
+              RFC 6536</a> - NETCONF Access Control Model
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc6991.txt" target="_top">
+              RFC 6991</a> - Common YANG Data Types
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc7895.txt" target="_top">
+              RFC 7895</a> - YANG Module Library
+          </p></li><li class="listitem"><p>
+            <a class="link" href="http://www.ietf.org/rfc/rfc7950.txt" target="_top">
+              RFC 7950</a> - The YANG 1.1 Data Modeling Language
+          </p></li></ul></div><p>
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+      For the &lt;delete-config&gt; operation specified in RFC 4741 / RFC
+      6241, only &lt;url&gt; with scheme "file" is supported for the
+      &lt;target&gt; parameter - i.e. no data stores can be deleted. The
+      concept of deleting a data store is not well defined, and at odds
+      with the transaction-based configuration management of ConfD.
+      To delete the entire <span class="emphasis"><em>contents</em></span> of a data store,
+      with full transactional support, a &lt;copy-config&gt; with an empty
+      &lt;config/&gt; element for the &lt;source&gt; parameter can be used.
+    </p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p> For the &lt;partial-lock&gt; operation, RFC 5717,
+    section 2.4.1 says that f a node in the scope of the lock is
+    deleted by the session owning the lock, it is removed from the
+    scope of the lock.  In ConfD this is not true; the deleted
+    node is kept in the scope of the lock.
+    </p></div><p>
+      ConfD NETCONF north bound API can be used
+      by arbitrary NETCONF clients.  A simple Python based NETCONF
+      client called <code class="code">netconf-console</code> is shipped as source
+      code in the distribution.  See <a class="xref" href="ch15.html#ug.netconf_agent.netconf_console" title="15.8.&nbsp;Using netconf-console">Section&nbsp;15.8, &#8220;Using netconf-console&#8221;</a> for
+      details. Other NETCONF clients will work too, as long as they
+      adhere to the NETCONF protocol.  If you need a Java client, the
+      open source client <a class="link" href="https://github.com/tail-f-systems/JNC" target="_top">JNC</a>
+      can be used.
+    </p><p>
+      When integrating NCS into larger OSS/NMS environments, the
+      NETCONF API is a good choice of integration point.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e4731"></a>15.2.&nbsp;Capabilities</h2></div></div></div><p>
+      The NETCONF server in <span class="phrase">ConfD supports all</span> capabilities in both
+      NETCONF 1.0 (<a class="link" href="http://www.ietf.org/rfc/rfc4741.txt" target="_top">RFC
+      4741</a>) and NETCONF 1.1 (<a class="link" href="http://www.ietf.org/rfc/rfc6241.txt" target="_top">RFC
+      6241</a>).
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>:writable-running</code></em></span></dt><dd><p>
+            This capability is enabled by default.  If the candidate
+            is used, this capability should be disabled in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.  Additionally,
+            <code class="sgmltag-element">/confdConfig/datastores/running/access</code> should
+            be set to <span class="emphasis"><em>writable-through-candidate</em></span>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:candidate</code></em></span></dt><dd><p>
+            The NETCONF server uses the candidate provided by the
+            ConfD backplane. This can either be implemented in an
+            external database, or using the built-in candidate
+            support.
+          </p><p>
+            This capability is enabled by default.  If the candidate
+            is not used, this capability should be disabled in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:confirmed-commit</code></em></span></dt><dd><p>
+            If the <em class="parameter"><code>running</code></em> data store is
+            implemented as an external database, it has to support the
+            <span class="emphasis"><em>checkpoint</em></span> functions (see <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>).  If it doesn't support
+            checkpoints, this capability must be disabled.  The
+            built-in CDB database supports checkpoints, and can thus
+            be used with this capability.
+          </p><p>
+            This capability is enabled by default.  If the candidate
+            is not used, this capability should be disabled in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p><p>
+            ConfD supports both version 1.0 and
+            1.1 of this capability.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:rollback-on-error</code></em></span></dt><dd><p>
+            This capability allows the client to set the
+            <code class="sgmltag-element">&lt;error-option&gt;</code> parameter to
+            <code class="literal">rollback-on-error</code>.  The other permitted
+            values are <code class="literal">stop-on-error</code> (default) and
+            <code class="literal">continue-on-error</code>. Note that the
+            meaning of the word "error" in this context is not defined
+            in the specification. Instead, the meaning of this word
+            must be defined by the data model. Also note that if
+            <code class="literal">stop-on-error</code> or
+            <code class="literal">continue-on-error</code> is triggered by the
+            server, it means that some parts of the edit operation
+            succeeded, and some parts didn't. The error
+            <code class="literal">partial-operation</code> must be returned in
+            this case.  <code class="literal">partial-operation</code> is
+            obsolete and SHOULD NOT be returned by a server.  If some
+            other error occurs (i.e. an error not covered by the
+            meaning of "error" above), the server generates an
+            appropriate error message, and the data store is
+            unaffected by the operation.
+          </p><p>
+            The ConfD server never allows partial
+            configuration changes, since it might result in
+            inconsistent configurations, and recovery from such a
+            state can be very difficult for a client. This means that
+            regardless of the value of the
+            <code class="sgmltag-element">&lt;error-option&gt;</code> parameter, ConfD will
+            always behave as if it
+            had the value <code class="literal">rollback-on-error</code>. So in
+            ConfD, the meaning of the word
+            "error" in <code class="literal">stop-on-error</code> and
+            <code class="literal">continue-on-error</code>, is something which
+            never can happen.
+          </p><p>
+            This capability is enabled by default.  It can be disabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>, but it doesn't
+            affect the server behavior, other than the capability is
+            not advertised.
+          </p><p>
+            It is possible to configure the NETCONF server to generate
+            an <code class="literal">operation-not-supported</code> error if the
+            client asks for the <code class="literal">error-option</code>
+            <code class="literal">continue-on-error</code>.  See <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:validate</code></em></span></dt><dd><p>
+            This capability is enabled by default.  It can be disabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.  The only
+            reason for disabling this capability would be if CDB is
+            not used, and validation constraints are not specified in
+            the YANG data models, and the underlying database does not
+            support any form of validation.
+          </p><p>
+            ConfD supports both version 1.0 and
+            1.1 of this capability.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:startup</code></em></span></dt><dd><p>
+            This capability is disabled by default.  Enable this if
+            <code class="sgmltag-element">/confdConfig/datastores/startup</code> is enabled.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:url</code></em></span></dt><dd><p>
+            The URL schemes supported are <em class="parameter"><code>file</code></em>,
+            <em class="parameter"><code>ftp</code></em>, and
+            <em class="parameter"><code>sftp</code></em> (SSH File Transfer Protocol).
+          </p><p>
+            There is no standard URL syntax for the
+            <em class="parameter"><code>sftp</code></em> scheme, but ConfD supports
+            the syntax used by
+            <code class="code">curl</code>:
+          </p><div class="informalexample"><pre class="programlisting">sftp://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;/&lt;path&gt;</pre></div><p>
+            Note that user name and password must be given for
+            <em class="parameter"><code>sftp</code></em> URLs.
+          </p><p>
+            This capability is disabled by default, but can be enabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p><p>
+            ConfD does not support <code class="sgmltag-element">validate</code> from a url.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:xpath</code></em></span></dt><dd><p>
+            This capability is enabled by default, but can be disabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p><p>
+            The NETCONF server supports XPath according to the W3C
+            XPath 1.0 specification (<a class="link" href="http://www.w3.org/TR/xpath" target="_top">http://www.w3.org/TR/xpath</a>), except for the
+            list given below. There are several reasons for not
+            supporting conventional XPath or for diverging from XPath,
+            including the following:
+          </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+                The operation is performed on an XML database, not an
+                XML document.
+              </p></li><li class="listitem"><p>
+                The implementation context does not support the
+                operation.
+              </p></li><li class="listitem"><p>
+                Immaturity of IETF specifications. This refers to the
+                result returned for some queries.
+              </p></li></ol></div><p>
+            An XPath expression evaluation may terminate without
+            matches or with an error (returned as a NETCONF
+            error). Upon one or more successful matches, the XPath
+            output is returned as an XML tree summarizing the matched
+            database information, similarly to a conventional NETCONF
+            subtree filter.
+          </p><p>
+            The following XPath features are not available:
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                Variables are not supported, since the evaluation
+                context binds no variables.
+              </p></li><li class="listitem"><p>
+                Some location step axes are not supported: preceding,
+                following, preceding-sibling, following-sibling.
+              </p></li><li class="listitem"><p>
+                Some node tests are not supported: comment(),
+                processing-instruction(). Note that these node types
+                are not stored in the database.
+              </p></li><li class="listitem"><p>
+                The XPath root node is not available. Instead,
+                evaluation begins from each exported namespace. This
+                primarily affects the parent and ancestor axes.
+              </p></li><li class="listitem"><p>
+                XPath built-ins:
+              </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="function">id()</code></span></dt><dd><p>
+                      the database does not store unique IDs
+                    </p></dd></dl></div></li></ul></div></dd></dl></div><p>
+      The following list of optional standard capabilities are also
+      supported:
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>:notification</code></em></span></dt><dd><p>
+            ConfD implements the <code class="uri">urn:ietf:params:netconf:capability:notification:1.0</code>
+            capability, including support for the optional replay
+            feature.
+          </p><p>
+            This capability is disabled by default, but can be enabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p><p>
+            See <a class="xref" href="ch15.html#ug.netconf_agent.notif" title="15.7.&nbsp;Notification Capability">Section&nbsp;15.7, &#8220;Notification Capability&#8221;</a> for
+            details.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:interleave</code></em></span></dt><dd><p>
+            ConfD implements the <code class="uri">urn:ietf:params:netconf:capability:interleave:1.0</code>
+            capability, which allows the client to get send RPCs while
+            a notification subscription is active.
+          </p><p>
+            This capability is disabled by default, but can be enabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:partial-lock</code></em></span></dt><dd><p>
+            ConfD implements the <code class="uri">urn:ietf:params:netconf:capability:partial-lock:1.0</code>
+            capability, which allows the client to lock parts of the running
+            data store.
+          </p><p>
+            This capability is disabled by default, but can be enabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:with-defaults</code></em></span></dt><dd><p>
+            ConfD implements the <code class="uri">urn:ietf:params:netconf:capability:with-defaults:1.0</code>
+            capability, which is used by the server to inform the
+            client how default values are handled by the server, and
+            by the client to control whether defaults values should be
+            generated to replies or not.
+          </p><p>
+            This capability is enabled by default, but can be disabled
+            in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>.
+          </p></dd><dt><span class="term"><em class="parameter"><code>:yang-library</code></em></span></dt><dd><p>
+            ConfD implements the <code class="uri">urn:ietf:params:netconf:capability:yang-library:1.0</code>
+            capability, which informs the client that server
+            implements the YANG module library <a class="link" href="http://www.ietf.org/rfc/rfc7895.txt" target="_top">
+              RFC 7895</a>, and informs the client about the
+              current <code class="literal">module-set-id</code>.
+          </p><p>
+            This capability is required by the YANG 1.1 specification <a class="link" href="http://www.ietf.org/rfc/rfc7950.txt" target="_top">
+              RFC 7950</a>, and cannot be disabled.
+          </p></dd></dl></div><p>
+      In addition to the standard capabilities ConfD also includes the
+      following optional, non-standard capabilities. They must be
+      explicitly enabled in <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>) to be used.
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>actions</code></em></span></dt><dd><p>
+            See <a class="xref" href="ch15.html#ug.netconf_agent.actions" title="15.9.&nbsp;Actions Capability">Section&nbsp;15.9, &#8220;Actions Capability&#8221;</a> for
+            details.
+          </p><p>
+            This capability should be enabled if actions are
+            defined in the data model.
+          </p></dd><dt><span class="term"><em class="parameter"><code>transactions</code></em></span></dt><dd><p>
+            See <a class="xref" href="ch15.html#ug.netconf_agent.transactions" title="15.10.&nbsp;Transactions Capability">Section&nbsp;15.10, &#8220;Transactions Capability&#8221;</a>
+            for details.
+          </p><p>
+            This capability should be defined if ConfD runs as a
+            subagent.
+          </p></dd><dt><span class="term"><em class="parameter"><code>proxy forwarding</code></em></span></dt><dd><p>
+            See <a class="xref" href="ch15.html#ug.netconf_agent.proxy" title="15.11.&nbsp;Proxy Forwarding Capability">Section&nbsp;15.11, &#8220;Proxy Forwarding Capability&#8221;</a> for
+            details.  This capability should be defined if ConfD
+            runs as a proxy host.
+          </p></dd><dt><span class="term"><em class="parameter"><code>inactive</code></em></span></dt><dd><p>
+            See <a class="xref" href="ch15.html#ug.netconf_agent.inactive" title="15.12.&nbsp;Inactive Capability">Section&nbsp;15.12, &#8220;Inactive Capability&#8221;</a> for
+            details.
+          </p><p>
+            This capability should be defined if ConfD is configured
+            to use attributes (see
+            <code class="sgmltag-element">/confdConfig/enableAttributes</code> in <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>).
+          </p></dd></dl></div><p>
+      The server reports each data model namespace it has loaded as
+      separate capabilities, according to the YANG specification.
+    </p><p>
+      The user can configure the server to make it report additional
+      capability URIs.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4936"></a>15.2.1.&nbsp;Advertising Capabilities and YANG Modules</h3></div></div></div><p>
+        All enabled NETCONF capabilities are advertised in the hello
+        message that the server sends to the client.
+      </p><p>
+        A YANG module is supported by the NETCONF server if it's fxs
+        file is found in <span class="phrase">ConfD's</span> loadPath, and if the fxs files
+        is exported to NETCONF.
+      </p><p>
+        The following YANG modules are built-in, which means that
+        their fxs files must not be present in the loadPath:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              <code class="literal">ietf-netconf</code>
+            </p></li><li class="listitem"><p>
+              <code class="literal">ietf-netconf-with-defaults</code>
+            </p></li><li class="listitem"><p>
+              <code class="literal">ietf-yang-library</code>
+            </p></li><li class="listitem"><p>
+              <code class="literal">ietf-yang-types</code>
+            </p></li><li class="listitem"><p>
+              <code class="literal">ietf-inet-types</code>
+            </p></li></ul></div><p>
+      </p><p>
+        All built-in modules except
+        <code class="literal">ietf-netconf-with-defaults</code> are always
+        supported by the server.  Support for
+        <code class="literal">ietf-netconf-with-defaults</code> can be
+        controlled by a setting in <code class="filename">confd.conf</code>.
+      </p><p>
+        All YANG version 1 modules supported by the server are
+        advertised in the hello message, according to the rules
+        defined in <a class="link" href="http://www.ietf.org/rfc/rfc6020.txt" target="_top"> RFC
+        6020</a>.
+      </p><p>
+        All YANG version 1 and version 1.1 modules supported by the
+        server are advertised in the <code class="literal">module</code> list
+        defined in <code class="literal">ietf-yang-library</code>.
+      </p><p>
+        If a YANG module (any version) is supported by the server, and
+        its .yang or .yin file is found in the fxs file or in the
+        loadPath, then the module is also advertised in the
+        <code class="literal">schema</code> list defined in
+        <code class="literal">ietf-netconf-monitoring</code>, made available for
+        download with the RPC operation <code class="code">get-schema</code>, and
+        if RESTCONF is enabled, also advertised in the
+        <code class="literal">schema</code> leaf in
+        <code class="literal">ietf-yang-library</code>.  See <a class="xref" href="ch15.html#ug.netconf_agent.monitoring" title="15.6.&nbsp;Monitoring of the NETCONF Server">Section&nbsp;15.6, &#8220;Monitoring of the NETCONF Server&#8221;</a>.
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.transport"></a>15.3.&nbsp;NETCONF Transport Protocols</h2></div></div></div><p>
+      The NETCONF server natively supports the mandatory SSH
+      transport, i.e., SSH is supported without the need for an
+      external SSH daemon (such as sshd). It also supports integration
+      with OpenSSH.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4977"></a>15.3.1.&nbsp;Using OpenSSH</h3></div></div></div><p>
+        ConfD is delivered with a program
+        <span class="command"><strong>netconf-subsys</strong></span> which is an OpenSSH
+        <span class="emphasis"><em>subsystem</em></span> program. It is invoked by the
+        OpenSSH daemon after successful authentication. It functions
+        as a relay between the ssh daemon and ConfD; it reads data
+        from the ssh
+        daemon from standard input, and writes the data to ConfD
+        over a loopback socket, and vice
+        versa. This program is delivered as source code in <code class="filename">$CONFD_DIR/src/confd/netconf/netconf-subsys.c</code>
+        . It
+        can be modified to fit the needs of the application. For
+        example, it could be modified to read the group names for a
+        user from an external LDAP server.
+      </p><p>
+        When using OpenSSH, the users are authenticated by OpenSSH,
+        i.e. the user names are not stored in ConfD. To use
+        OpenSSH, compile the
+        <span class="command"><strong>netconf-subsys</strong></span> program, and put the
+        executable in e.g. <code class="filename">/usr/local/bin</code>. Then
+        add the following line to the ssh daemon's config file,
+        <code class="filename">sshd_config</code>:
+      </p><div class="informalexample"><pre class="programlisting">Subsystem     netconf   /usr/local/bin/netconf-subsys</pre></div><p>
+        The connection from <span class="command"><strong>netconf-subsys</strong></span> to
+        ConfD can be arranged in one of two different ways:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            Make sure ConfD is configured to listen to TCP traffic
+            on localhost, port 2023, and disable SSH in
+            <code class="filename">confd.conf</code>
+             (see
+            <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>
+            ).
+            (Re)start sshd and ConfD. Or:
+          </p></li><li class="listitem"><p>
+            Compile <span class="command"><strong>netconf-subsys</strong></span> to use a
+            connection to the IPC port instead of the NETCONF TCP
+            transport (see the <code class="filename">netconf-subsys.c</code>
+            source for details), and disable both TCP and SSH in
+            <code class="filename">confd.conf</code>
+            .
+            (Re)start sshd and ConfD.
+          </p><p>
+            This method may be preferable, since it makes it possible
+            to use the IPC Access Check (see
+            <a class="xref" href="ch28.html#ug.advanced.confd_ipc.restricting" title="28.6.2.&nbsp;Restricting access to the IPC port">Section&nbsp;28.6.2, &#8220;Restricting access to the IPC port&#8221;</a>
+            )
+            to restrict the unauthenticated access to ConfD that is
+            needed by <span class="command"><strong>netconf-subsys</strong></span>.
+          </p></li></ol></div><p>
+        By default the <span class="command"><strong>netconf-subsys</strong></span> program sends
+        the names of the UNIX groups the authenticated user belongs
+        to. To test this, make sure that ConfD is configured to
+        give access to
+        the group(s) the user belongs to. Easiest for test is to give
+        access to all groups.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5006"></a>15.3.2.&nbsp;Internal TCP Transport</h3></div></div></div><p>
+        The server can also be configured to accept plain TCP
+        traffic. This can be useful during development, for debugging
+        purposes, but it can also be used to plug in any other
+        transport protocol. The way this works is that some other
+        daemon terminates the transport and authenticates the
+        user. Then it connects to the NETCONF server over TCP
+        (preferably over the loopback interface for security reasons)
+        and relays the XML traffic to NETCONF.
+      </p><p>
+        In this case, the transport daemon will have to authenticate
+        the user, and then tell the NETCONF server about it. This
+        should be done as a header sent over the TCP socket before any
+        other bytes are sent. There are two supported variants of this,
+        only differing in encoding of the username. The first with
+        the username in plain text, where the header looks like this:
+      </p><div class="informalexample"><pre class="programlisting">[username;source;proto;uid;gid;subgids;homedir;group-list;]\n</pre></div><p>
+        and the second with the username base64-encoded, where the
+        header looks like this:
+      </p><div class="informalexample"><pre class="programlisting">b64[b64username;source;proto;uid;gid;subgids;homedir;group-list;]\n</pre></div><p>
+        Where <em class="parameter"><code>username</code></em> is the plain text name of
+        the authenticated user. <em class="parameter"><code>b64username</code></em> is
+        the base64-encoded name of the authenticated user.
+        <em class="parameter"><code>source</code></em> is the textual representation of
+        the ipv4 or ipv6 address and port which the user connected
+        from, with address and port separated by '/'
+        (e.g. "10.0.0.1/1234").  <em class="parameter"><code>proto</code></em>
+        is the name of the transport protocol the client used
+        (e.g. "beep" or "ssh"). <em class="parameter"><code>uid</code></em>,
+        <em class="parameter"><code>gid</code></em>, <em class="parameter"><code>supgids</code></em> and
+        <em class="parameter"><code>homedir</code></em> are the UNIX user id, group id,
+        supplementary group ids and home directory for this
+        user. <span class="phrase"> These four parameters are
+        only used if the user invokes a NETCONF RPC which is
+        implemented with an external program (see <a class="xref" href="ch15.html#ug.netconf_agent.extend" title="15.5.&nbsp;Extending the NETCONF Server">Section&nbsp;15.5, &#8220;Extending the NETCONF Server&#8221;</a>).</span>
+        <em class="parameter"><code>group-list</code></em> is a comma-separated list of
+        group names for the user. This list should only be sent if the
+        transport has the capability to determine which groups a user
+        belongs to. If not, an empty list should be sent. In this
+        case, the normal AAA mechanisms are used to determine group
+        membership.
+      </p><p>
+        All NETCONF RPCs sent over this socket must use the framing
+        protocol used by NETCONF over SSH.
+      </p><p>
+        The TCP socket is also used if we want to use a standard SSH
+        daemon such as sshd instead of the built-in SSH
+        implementation. Then we would configure sshd to invoke a
+        special program for the "netconf" subsystem. This special
+        program would connect to the TCP socket as described above.
+        See more below.
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e5029"></a>15.4.&nbsp;Configuration of the NETCONF Server</h2></div></div></div><p>
+      ConfD itself is configured through a
+      configuration file called <code class="filename">confd.conf</code>.  In that
+      file the following items are related to the NETCONF server. For
+      a complete description of these parameters, please see the <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a> man page.
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="sgmltag-element">/confdConfig/logs/netconfLog</code></span></dt><dd><p>
+            This log can be enabled in order to troubleshoot the
+            netconf sessions.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/logs/netconfTraceLog</code></span></dt><dd><p>
+            When this log is enabled, all NETCONF traffic to and from
+            ConfD is stored in a file.  This
+            can be useful in order to understand and troubleshoot the
+            NETCONF protocol interactions.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/aaa/sshServerKeyDir</code></span></dt><dd><p>
+            This is where the built-in SSH server reads its ssh keys.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/aaa/pam/service</code></span></dt><dd><p>
+            This is the name of the PAM service to be used by the
+            built-in SSH server. Used only if PAM is enabled (which
+            means an SSH user can log in with username and password).
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/netconf/enabled</code></span></dt><dd><p>
+            When set to "true", the NETCONF server is started.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/netconf/transport/ssh</code></span></dt><dd><p>
+            Settings for the built-in SSH server, such as listen ip
+            address and port.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/netconf/transport/tcp</code></span></dt><dd><p>
+            Settings for the plain-text TCP transport, such as listen
+            ip address and port.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/netconf/capabilities</code></span></dt><dd><p>
+            Under this parameter, we can control which capabilities
+            are reported by the server.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/netconf/capabilities/capability</code></span></dt><dd><p>
+            This parameter can be given multiple times. It specifies a
+            URI string which the NETCONF server will report as a
+            capability in the hello message sent to the client.
+          </p></dd></dl></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5080"></a>15.4.1.&nbsp;Error Handling</h3></div></div></div><p>
+        When ConfD processes <code class="sgmltag-element">&lt;get&gt;</code>,
+        <code class="sgmltag-element">&lt;get-config&gt;</code>, and
+        <code class="sgmltag-element">&lt;copy-config&gt;</code> requests, the resulting data
+        set can be very large.  To avoid buffering huge amounts of
+        data, ConfD streams the reply to the client
+        as it traverses the data tree and calls data provider
+        functions to retrieve the data.
+      </p><p>
+        If a data provider fails to return the data it is supposed to
+        return, ConfD can take one of two actions.
+        Either it simply closes the NETCONF transport (default), or it
+        can reply with an <span class="emphasis"><em>inline rpc error</em></span> and
+        continue to process the next data element.  This behavior can
+        be controlled with the <span class="phrase">
+        <code class="sgmltag-element">/confdConfig/netconf/rpcErrors</code> configuration
+        parameter (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>).</span>
+        .
+      </p><p>
+        An inline error is always generated as a child element to the
+        parent of the faulty element.  For example, if an error occurs
+        when retrieving the leaf element "mac-address" of an
+        "interface" the error might be:
+      </p><div class="informalexample"><pre class="programlisting">&lt;interface&gt;
+  &lt;name&gt;atm1&lt;/name&gt;
+  &lt;rpc-error xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;error-type&gt;application&lt;/error-type&gt;
+    &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+    &lt;error-severity&gt;error&lt;/error-severity&gt;
+    &lt;error-message xml:lang="en"&gt;Failed to talk to hardware&lt;/error-message&gt;
+    &lt;error-info&gt;
+      &lt;bad-element&gt;mac-address&lt;/bad-element&gt;
+    &lt;/error-info&gt;
+  &lt;/rpc-error&gt;
+  ...
+&lt;/interface&gt;</pre></div><p>
+        If a <code class="function">get_next</code> call fails in the
+        processing of a list, a reply might look
+        like this:
+      </p><div class="informalexample"><pre class="programlisting">&lt;interface&gt;
+  &lt;!-- successfully retrieved list entry --&gt;
+  &lt;name&gt;eth0&lt;/name&gt;
+  &lt;mtu&gt;1500&lt;/mtu&gt;
+  &lt;!-- more leafs here --&gt;
+&lt;/interface&gt;
+&lt;rpc-error xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;error-type&gt;application&lt;/error-type&gt;
+  &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+  &lt;error-severity&gt;error&lt;/error-severity&gt;
+  &lt;error-message xml:lang="en"&gt;Failed to talk to hardware&lt;/error-message&gt;
+  &lt;error-info&gt;
+    &lt;bad-element&gt;interface&lt;/bad-element&gt;
+  &lt;/error-info&gt;
+&lt;/rpc-error&gt;</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.extend"></a>15.5.&nbsp;Extending the NETCONF Server</h2></div></div></div><p>
+      NETCONF is an extensible protocol in the sense that new RPC
+      operations can be defined separately from the standard.  The
+      NETCONF server in ConfD supports this through a simple API.  New
+      operations are typically identified with a new capability.  When
+      a new capability is implemented in this way, the name of the
+      capability should be added to the list of capabilities that the
+      NETCONF server sends in its initial <code class="sgmltag-element">&lt;hello&gt;</code>
+      message.  This list is defined in
+      <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>).
+    </p><p>
+      New RPCs are defined in YANG modules.
+    </p><p>
+      An RPC can be implemented in three different ways:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          As an executable program which is started by ConfD for each
+          new RPC.  The XML is passed as-is from ConfD to the program,
+          and the resulting XML is generated by the program.
+        </p></li><li class="listitem"><p>
+          As an executable program which is started by ConfD for each
+          new RPC.  The XML is parsed by ConfD, and passed (in a
+          certain format) on the command line to the program.  ConfD
+          generates an XML reply based on the result from the program.
+        </p></li><li class="listitem"><p>
+          As a C callback function.  The application registers the
+          callback with ConfD, and ConfD invokes the callback function
+          when the RPC operation is received.  ConfD parses the XML
+          and passes it in a C data structure to the callback.  ConfD
+          generates an XML reply from the return value from the
+          callback.
+        </p></li></ul></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5113"></a>15.5.1.&nbsp;RPC as an Executable, ConfD does not Translate the XML</h3></div></div></div><p>
+          In this case, the RPC is implemented as an ordinary
+          executable program, which communicate with ConfD over
+          stdin/stdout.  When ConfD invokes the program, it will pass
+          the entire XML operation on stdin.  The program is
+          responsible for parsing the operation data and placing its
+          reply on stdout, and then terminate with exit status zero.
+          ConfD wraps this reply in a <code class="sgmltag-element">&lt;rpc-reply&gt;</code>
+          element. Note that ConfD does not interpret the reply XML
+          sent by the program; it merely sends the data as-is to the
+          NETCONF client.  Thus, it is the responsibility of the
+          program to produce a valid NETCONF XML reply. Note that a
+          rpc reply MUST contain one of <code class="sgmltag-element">&lt;ok/&gt;</code>,
+          <code class="sgmltag-element">&lt;data&gt;</code> or <code class="sgmltag-element">&lt;rpc-error&gt;</code>.
+        </p><p>
+          A program can also be run in <span class="emphasis"><em>batch
+          mode</em></span>, which can be used to send asynchronous data
+          to the client.  In this case, the program does not exit
+          after having replied to the original RPC.  Instead it
+          signals that the reply has been sent by sending a NUL byte
+          to ConfD. ConfD will enter its main loop and listen for new
+          requests from the client and data from the external
+          programs.  When data is received from one source, this
+          source is handled, while the others are (potentially)
+          blocked.  The asynchronous data sent by the external program
+          must be a complete self-contained XML chunk, followed by a
+          single NUL byte. The program can exit at any time, the
+          session towards the client is not terminated just because
+          the program exits.
+        </p><p>
+          The maximum number of concurrently running batch processes
+          can be set in <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>) using the parameter
+          <code class="sgmltag-element">/confdConfig/netconf/maxBatchProcesses</code>.  The
+          default is no limit.
+        </p><p>
+          Here's an example of an rpc operation defined in this way:
+        </p><div class="informalexample"><pre class="programlisting">
+module math-rpc {
+  namespace "http://example.com/math/1.0";
+  prefix math;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  rpc math {
+    tailf:exec "/usr/bin/math" {
+      tailf:raw-xml;
+    }
+  }
+}
+</pre></div><p>
+          All these examples are available under
+          <code class="filename">netconf_extensions/simple_rpc</code>
+          in the examples distribution.
+        </p><p>
+          Now suppose that the following rpc is received by the
+          NETCONF server:
+        </p><div class="example"><a name="d5e5132"></a><p class="title"><b>Example&nbsp;15.1.&nbsp;Example math rpc</b></p><div class="example-contents"><pre class="programlisting">&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;math xmlns="http://example.com/math/1.0"&gt;
+    &lt;add&gt;
+      &lt;operand&gt;2&lt;/operand&gt;
+      &lt;operand&gt;3&lt;/operand&gt;
+    &lt;/add&gt;
+  &lt;/math&gt;
+&lt;/rpc&gt;</pre></div></div><br class="example-break"><p>
+            ConfD will invoke <code class="filename">/usr/local/bin/math</code>
+            and pass:
+          </p><div class="informalexample"><pre class="programlisting">&lt;math xmlns="http://example.com/math/1.0"&gt;
+  &lt;add&gt;
+    &lt;operand&gt;2&lt;/operand&gt;
+    &lt;operand&gt;3&lt;/operand&gt;
+  &lt;/add&gt;
+&lt;/math&gt;</pre></div><p>
+            on stdin.  The program will print the rpc-reply to stdout,
+            and ConfD relays this data to the client.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5140"></a>15.5.2.&nbsp;RPC as an Executable, ConfD Translates the XML</h3></div></div></div><p>
+        In this case, the RPC is implemented as an ordinary executable
+        program, with all XML parameters converted by ConfD into
+        command-line arguments to the program. If the program
+        terminates normally without producing any output on stdout,
+        ConfD replies with an <code class="sgmltag-element">&lt;ok/&gt;</code> rpc-reply. If the
+        program terminates normally and also generates data on stdout,
+        ConfD interprets this data and passes it with
+        <code class="sgmltag-element">&lt;data&gt;</code> tags. If the program terminates
+        abnormally without producing any data, a generic
+        <code class="sgmltag-element">operation-failed</code> error is returned. Finally, if the
+        program terminates abnormally and also generates data on
+        stdout, ConfD interprets this data as an rpc-error, and sends
+        the resulting XML to the client.
+      </p><p>
+        Here's an example of the same rpc operation as above defined
+        this way:
+      </p><div class="informalexample"><pre class="programlisting">
+module math-rpc {
+  namespace "http://example.com/math/1.0";
+  prefix math;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  rpc math {
+    tailf:exec "/usr/bin/math";
+    input {
+      choice op {
+        container add {
+          leaf-list operand {
+            type int32;
+            min-elements 2;
+            max-elements 2;
+          }
+        }
+        container sub {
+          leaf-list operand {
+            type int32;
+            min-elements 2;
+            max-elements 2;
+          }
+        }
+      }
+    }
+    output {
+      leaf result {
+        type int32;
+      }
+    }
+  }
+}
+</pre></div><p>
+        Now suppose that the same RPC request as in Code listing 2
+        above is received.  ConfD parses the XML and invokes the
+        command as:
+      </p><div class="informalexample"><pre class="programlisting">/usr/local/bin/math add __BEGIN operand 2 operand 3 add __END</pre></div><p>
+        In general, the XML is flattened, and each XML element
+        generates two strings on the command line. If a container is
+        received, the strings "elem-name" "__BEGIN" is generated. When
+        the corresponding close element is received, "elem-name"
+        "__END" is generated. An element with a value will generate
+        "elem-name" "value". An empty element with no subelements will
+        generate "elem-name" "__LEAF".
+      </p><p>
+        Next, the math program replies by printing on stdout:
+      </p><div class="informalexample"><pre class="programlisting">result 5</pre></div><p>
+        The same translation rules applies to the result, and ConfD
+        thus sends the following reply to the client:
+      </p><div class="informalexample"><pre class="programlisting">&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;data&gt;
+    &lt;result xmlns="http://example.com/math/1.0"&gt;5&lt;/result&gt;
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5159"></a>15.5.3.&nbsp;RPC as a Callback Function</h3></div></div></div><p>
+        In this case, the RPC is implemented as a callback function in
+        C, with all XML parameters converted by ConfD into a C data
+        structure.
+      </p><p>
+        Here's an example of the same rpc operation as above defined
+        this way:
+      </p><div class="informalexample"><pre class="programlisting">
+module math-rpc {
+  namespace "http://example.com/math/1.0";
+  prefix math;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  rpc math {
+    tailf:actionpoint "math";
+    input {
+      choice op {
+        container add {
+          leaf-list operand {
+            type int32;
+            min-elements 2;
+            max-elements 2;
+          }
+        }
+        container sub {
+          leaf-list operand {
+            type int32;
+            min-elements 2;
+            max-elements 2;
+          }
+        }
+      }
+    }
+    output {
+      leaf result {
+        type int32;
+      }
+    }
+  }
+}
+</pre></div><p>
+        The code that implements this looks like this:
+      </p><div class="informalexample"><pre class="programlisting">static void register_math(struct confd_daemon_ctx *dctx)
+{
+    struct confd_action_cbs acb;
+
+    memset(&amp;acb, 0, sizeof(acb));
+    strcpy(acb.actionpoint, "math");
+    acb.init = init_action;  /* this function is not shown here */
+    acb.action = do_math;
+    if (confd_register_action_cbs(dctx, &amp;acb) != CONFD_OK)
+        confd_fatal("Couldn't register action callbacks\n");
+    if (confd_register_done(dctx) != CONFD_OK)
+        confd_fatal("Failed to complete registration \n");
+}
+
+static int do_math(struct confd_user_info *uinfo,
+                   struct xml_tag *name,
+                   confd_hkeypath_t *kp,
+                   confd_tag_value_t *params,
+                   int nparams)
+{
+    confd_tag_value_t reply[1];
+    int op1, op2, result;
+
+    /*
+      we know that we get exactly 4 parameters;
+         add | del BEGIN
+         operand 1
+         operand 2
+         add | del END
+    */
+
+    op1 = CONFD_GET_INT32(CONFD_GET_TAG_VALUE(&amp;params[1]));
+    op2 = CONFD_GET_INT32(CONFD_GET_TAG_VALUE(&amp;params[2]));
+    switch (CONFD_GET_TAG_TAG(&amp;params[0])) {
+    case math_add:
+        result = op1 + op2;
+        break;
+    case math_del:
+        result = op1 - op2;
+        break;
+    }
+
+    CONFD_SET_TAG_INT32(&amp;reply[0], math_result, result);
+    confd_action_reply_values(uinfo, reply, 1);
+
+    return CONFD_OK;
+}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.monitoring"></a>15.6.&nbsp;Monitoring of the NETCONF Server</h2></div></div></div><p>
+      <a class="link" href="http://www.ietf.org/rfc/rfc6022.txt" target="_top">RFC 6022
+      - YANG Module for NETCONF Monitoring</a> defines a YANG
+      module, <code class="code">ietf-netconf-monitoring</code>, for monitoring of
+      the NETCONF server.  It contains statistics objects such as
+      number of RPCs received, status objects such as user sessions,
+      and an operation to retrieve data models from the NETCONF
+      server.
+    </p><p>
+      In order to use this data model with ConfD, the fxs file
+      (<code class="filename">ietf-netconf-monitoring.fxs</code>) must be
+      present in ConfD's loadPath.  This fxs file is present in a
+      development installation of ConfD.
+    </p><p>
+      This data model defines a new RPC operation,
+      <code class="code">get-schema</code>, which is used to retrieve YANG modules
+      from the NETCONF server. ConfD will report the YANG modules
+      for all fxs files that are reported as capabilities, and for
+      which the corresponding YANG or YIN file is stored in the fxs
+      file or found in the loadPath.  If a file is found in the
+      loadPath, it has priority over a file stored in the fxs file.
+      Note that by default, the module and its submodules are stored
+      in the fxs file by the compiler.
+    </p><p>
+      If the YANG (or YIN files) are copied into the loadPath, they
+      can be stored as is or compressed with gzip.  The filename
+      extension MUST be ".yang", ".yin", ".yang.gz", or ".yin.gz".
+    </p><p>
+      Also available is a Tail-f specific data model,
+      <code class="code">tailf-netconf-monitoring</code>, which augments
+      <code class="code">ietf-netconf-monitoring</code> with additional data about
+      files available for usage with the
+      <code class="sgmltag-element">&lt;copy-config&gt;</code> command with a
+      <span class="emphasis"><em>file</em></span> <code class="sgmltag-element">&lt;url&gt;</code> source or
+      target.
+      <span class="phrase">
+        <code class="sgmltag-element">/confdConfig/netconf/capabilities/url/enabled</code> and
+        <code class="sgmltag-element">/confdConfig/netconf/capabilities/url/file/enabled</code>
+      </span>
+      
+      must both be set to true.  If rollbacks are enabled, those files
+      are listed as well, and they can be loaded using
+      <code class="sgmltag-element">&lt;copy-config&gt;</code>.
+    </p><p>
+      This data model also adds data about which notification streams
+      are present in the system, and data about sessions that subscribe to
+      the streams.
+    </p><p>
+      In order to use this data model with ConfD, the fxs file
+      (<code class="filename">tailf-netconf-monitoring.fxs</code>) must be
+      present in ConfD's loadPath.  This fxs file is present in a
+      development installation of ConfD.
+    </p><p>
+      These fxs files are available in the
+      <code class="filename">$CONFD_DIR/etc/confd</code> directory, and the
+      source for them are available in the
+      <code class="filename">$CONFD_DIR/src/confd/yang</code> directory, in the
+      distribution. The <code class="filename">Makefile</code> in the latter
+      directory can be modified as necessary, for example to compile the
+      fxs files with a <em class="parameter"><code>--export</code></em> parameter to
+      <span class="command"><strong>confdc</strong></span>.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.notif"></a>15.7.&nbsp;Notification Capability</h2></div></div></div><p>
+      This section describes how NETCONF notifications are implemented
+      within ConfD, and how the applications generates
+      these events.
+    </p><p>
+      Central to NETCONF notifications is the concept of a
+      <span class="emphasis"><em>stream</em></span>.  The stream serves two purposes.
+      It works like a high-level filtering mechanism for the client.
+      For example, if the client subscribes to notifications on the
+      <code class="literal">security</code> stream, it can expect to get
+      security related notifications only.  Second, each stream may
+      have its own log mechanism.  For example by keeping all debug
+      notifications in a <code class="literal">debug</code> stream, they can be
+      logged separately from the <code class="literal">security</code> stream.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5205"></a>15.7.1.&nbsp;Notification Streams</h3></div></div></div><p>
+        ConfD has built-in support for the well-known stream
+        <code class="literal">NETCONF</code>, defined in <a class="link" href="http://www.ietf.org/rfc/rfc5277.txt" target="_top"> RFC
+        5277</a>.  ConfD supports the notifications defined in
+        <a class="link" href="http://www.ietf.org/rfc/rfc6470.txt" target="_top"> RFC
+        6470 - NETCONF Base Notifications</a> on this stream.  If
+        the application needs to send any additional notifications on
+        this stream, it can do so.
+      </p><p>
+        It is up to the application to define which additional streams
+        it supports.  In ConfD, this is done in
+        <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>).  Each stream must be
+        listed, and whether it supports replay or not.  An example
+        which defines two streams, <code class="literal">security</code> and
+        <code class="literal">debug</code>:
+        </p><div class="informalexample"><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;notifications&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;eventStreams&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;stream&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;name&gt;</strong>security<strong class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;description&gt;</strong>Security related notifications<strong class="hl-tag" style="color: #000096">&lt;/description&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;replaySupport&gt;</strong>true<strong class="hl-tag" style="color: #000096">&lt;/replaySupport&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;builtinReplayStore&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;enabled&gt;</strong>true<strong class="hl-tag" style="color: #000096">&lt;/enabled&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;dir&gt;</strong>/var/log<strong class="hl-tag" style="color: #000096">&lt;/dir&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;maxSize&gt;</strong>S10M<strong class="hl-tag" style="color: #000096">&lt;/maxSize&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;maxFiles&gt;</strong>50<strong class="hl-tag" style="color: #000096">&lt;/maxFiles&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;/builtinReplayStore&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/stream&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;stream&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;name&gt;</strong>debug<strong class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;description&gt;</strong>Debug notifications<strong class="hl-tag" style="color: #000096">&lt;/description&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;replaySupport&gt;</strong>true<strong class="hl-tag" style="color: #000096">&lt;/replaySupport&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/stream&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/eventStreams&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/notifications&gt;</strong></pre></div><p>
+      </p><p>
+        The well-known stream <code class="literal">NETCONF</code> does not have
+        to be listed, but if it isn't listed, it will not support
+        replay.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5220"></a>15.7.2.&nbsp;Automatic Replay</h3></div></div></div><p>
+        ConfD has builtin support for logging
+        of notifications, i.e., if replay support has been enabled for
+        a stream, ConfD automatically stores all
+        notifications on disk ready to be replayed should a NETCONF
+        client ask for logged notifications. In the <code class="filename">confd.conf</code> fragment above the
+        security stream has been setup to use the builtin notification
+        log/replay store. The replay store uses a set of wrapping log
+        files on disk (of a certain number and size) to store the
+        security stream notifications.
+      </p><p>
+        The reason for using a wrap log is to improve replay
+        performance whenever a NETCONF client asks for notifications
+        in a certain time range. Any problems with log files not being
+        properly closed due to hard power failures etc. is also kept
+        to a minimum, i.e., automatically taken care of by ConfD.
+      </p><p>
+        As an alternative to the builtin notification replay store the
+        application can roll its own. This is described in the next
+        sub-section.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5226"></a>15.7.3.&nbsp;Implementing Custom Replay</h3></div></div></div><p>
+        If a stream supports replay, the logging and replay
+        functionality can alternatively be implemented by the
+        application.  In order to do this, the application must
+        register a set of callback functions with ConfD using the
+        function
+        <code class="function">confd_register_notification_stream()</code>.
+        The callbacks are <code class="function">get_log_start_time()</code>
+        and <code class="function">replay()</code>.  The first one is called by
+        ConfD in order to find the earliest event time available in
+        the log.  The second one is invoked whenever a NETCONF client
+        asks for a replay subscription.  For full details on the
+        notification API, please see the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page.
+      </p><p>
+        The following example is available in full source code form in
+        the examples directory.  A single stream
+        <code class="literal">interface</code> is used, and it supports replay.
+      </p><div class="informalexample"><pre class="programlisting"><em class="hl-comment" style="color: silver">/* The notification context (filled in by ConfD) for the live feed */</em>
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">struct</strong> confd_notification_ctx *live_ctx;
+
+
+          <strong class="hl-keyword">struct</strong> confd_notification_stream_cbs ncb;
+
+
+          memset(&amp;ncb, <span class="hl-number">0</span>, <strong class="hl-keyword">sizeof</strong>(ncb));
+    ncb.fd = workersock;
+    ncb.get_log_times = log_times;
+    ncb.replay = start_replay;
+    strcpy(ncb.streamname, <strong class="hl-string"><em style="color:red">"interface"</em></strong>);
+    ncb.cb_opaque = NULL;
+    <strong class="hl-keyword">if</strong> (confd_register_notification_stream(dctx, &amp;ncb, &amp;live_ctx) != CONFD_OK) {
+        confd_fatal(<strong class="hl-string"><em style="color:red">"Couldn't register stream %s\n"</em></strong>, ncb.streamname);
+    }
+    <strong class="hl-keyword">if</strong> (confd_register_done(dctx) != CONFD_OK) {
+        confd_fatal(<strong class="hl-string"><em style="color:red">"Failed to complete registration\n"</em></strong>);
+    }
+</pre></div><p>
+        In this simple example, we keep the replay log in memory, in
+        an array:
+      </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">struct</strong> notif {
+    <strong class="hl-keyword">struct</strong> confd_datetime eventTime;
+    confd_tag_value_t *vals;
+    <strong class="hl-keyword">int</strong> nvals;
+};
+
+<em class="hl-comment" style="color: silver">/* Our replay buffer is kept in memory in this example.  It's a circular
+ * buffer of struct notif.
+ */</em>
+<span class="hl-directive" style="color: maroon">#define MAX_BUFFERED_NOTIFS 4</span>
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">struct</strong> notif replay_buffer[MAX_BUFFERED_NOTIFS];
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> first_replay_idx = <span class="hl-number">0</span>;
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> next_replay_idx = <span class="hl-number">0</span>;
+
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">struct</strong> confd_datetime replay_creation;
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">int</strong> replay_has_aged_out = <span class="hl-number">0</span>;
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">struct</strong> confd_datetime replay_aged_time;
+</pre></div><p>
+        The <code class="function">get_log_start_time()</code> callback simply
+        returns the time of the first notification in the log:
+      </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">static</strong> <strong class="hl-keyword">int</strong> log_times(<strong class="hl-keyword">struct</strong> confd_notification_ctx *nctx)
+{
+    <strong class="hl-keyword">struct</strong> confd_datetime *aged;
+
+    <strong class="hl-keyword">if</strong> (replay_has_aged_out)
+        aged = &amp;replay_aged_time;
+    <strong class="hl-keyword">else</strong>
+        aged = NULL;
+
+    <strong class="hl-keyword">return</strong> confd_notification_reply_log_times(nctx, &amp;replay_creation, aged);
+}
+</pre></div><p>
+        When a client asks for a replay subscription, ConfD invokes
+        the callback <code class="function">replay</code>.  The actual replay
+        notifications must not be sent from the callback.  In this
+        example, the callback allocates a replay structure, and marks
+        it as being active.  The main loop will check for any active
+        replays, and do the sending there.
+      </p><div class="informalexample"><pre class="programlisting">#define MAX_REPLAYS <span class="hl-number">10</span>
+<strong class="hl-keyword">struct</strong> replay {
+    <strong class="hl-keyword">int</strong> active;
+    <strong class="hl-keyword">int</strong> started;
+    <strong class="hl-keyword">unsigned</strong> <strong class="hl-keyword">int</strong> idx;
+    <strong class="hl-keyword">struct</strong> confd_notification_ctx *ctx;
+    <strong class="hl-keyword">struct</strong> confd_datetime start;
+    <strong class="hl-keyword">struct</strong> confd_datetime stop;
+    <strong class="hl-keyword">int</strong> has_stop;
+};
+<em class="hl-comment" style="color: silver">/* Keep tracks of active replays */</em>
+<strong class="hl-keyword">static</strong> <strong class="hl-keyword">struct</strong> replay replay[MAX_REPLAYS];
+
+
+      <strong class="hl-keyword">static</strong> <strong class="hl-keyword">int</strong> start_replay(<strong class="hl-keyword">struct</strong> confd_notification_ctx *nctx,
+                        <strong class="hl-keyword">struct</strong> confd_datetime *start,
+                        <strong class="hl-keyword">struct</strong> confd_datetime *stop)
+{
+    <strong class="hl-keyword">int</strong> rnum;
+
+    <strong class="hl-keyword">for</strong> (rnum = <span class="hl-number">0</span>; rnum &lt; MAX_REPLAYS; rnum++) {
+        <strong class="hl-keyword">if</strong> (!replay[rnum].active) {
+            replay[rnum].active = <span class="hl-number">1</span>;
+            replay[rnum].started = <span class="hl-number">0</span>;
+            replay[rnum].idx = first_replay_idx;
+            replay[rnum].ctx = nctx;
+            replay[rnum].start = *start;
+            <strong class="hl-keyword">if</strong> (stop) {
+                replay[rnum].has_stop = <span class="hl-number">1</span>;
+                replay[rnum].stop = *stop;
+            } <strong class="hl-keyword">else</strong>
+                replay[rnum].has_stop = <span class="hl-number">0</span>; <em class="hl-comment" style="color: silver">/* stop when caught up to live */</em>
+            <strong class="hl-keyword">return</strong> CONFD_OK;
+        }
+    }
+    confd_notification_seterr(nctx, <strong class="hl-string"><em style="color:red">"Max no. of replay requests reached"</em></strong>);
+    <strong class="hl-keyword">return</strong> CONFD_ERR;
+}
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5248"></a>15.7.4.&nbsp;Sending Notifications from an Application</h3></div></div></div><p>
+        Before an application can send a notification, the
+        notification must be defined in a YANG module.  In this example,
+        a notification <code class="literal">link-down</code> is defined.  The
+        notification has a single parameter
+        <em class="parameter"><code>if-index</code></em>:
+      </p><div class="informalexample"><pre class="programlisting">  notification linkDown {
+    leaf ifIndex {
+      type leafref {
+        path <strong class="hl-string"><em style="color:red">"/interfaces/interface/ifIndex"</em></strong>;
+      }
+      mandatory true;
+    }
+  }
+</pre></div><p>
+        When the application sends an application, it uses the
+        function <code class="function">confd_notification_send()</code>.
+      </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">static</strong> <strong class="hl-keyword">void</strong> send_notifdown(<strong class="hl-keyword">int</strong> index)
+{
+    confd_tag_value_t vals[<span class="hl-number">3</span>];
+    <strong class="hl-keyword">int</strong> i = <span class="hl-number">0</span>;
+
+    CONFD_SET_TAG_XMLBEGIN(&amp;vals[i], notif_linkDown,     notif__ns);  i++;
+    CONFD_SET_TAG_UINT32(&amp;vals[i],   notif_ifIndex,      index);      i++;
+    CONFD_SET_TAG_XMLEND(&amp;vals[i],   notif_linkDown,     notif__ns);  i++;
+    send_notification(vals, i);
+}
+
+
+      <strong class="hl-keyword">static</strong> <strong class="hl-keyword">void</strong> send_notification(confd_tag_value_t *vals, <strong class="hl-keyword">int</strong> nvals)
+{
+    <strong class="hl-keyword">int</strong> sz;
+    <strong class="hl-keyword">struct</strong> confd_datetime now;
+    <strong class="hl-keyword">struct</strong> notif *notif;
+
+    getdatetime(&amp;now);
+    notif = &amp;replay_buffer[next_replay_idx];
+    <strong class="hl-keyword">if</strong> (notif-&gt;vals) {
+        <em class="hl-comment" style="color: silver">/* we're aging out this notification */</em>
+        replay_has_aged_out = <span class="hl-number">1</span>;
+        replay_aged_time = notif-&gt;eventTime;
+        first_replay_idx = (first_replay_idx + <span class="hl-number">1</span>) % MAX_BUFFERED_NOTIFS;
+        free(notif-&gt;vals);
+    }
+    notif-&gt;eventTime = now;
+    sz = nvals * <strong class="hl-keyword">sizeof</strong>(confd_tag_value_t);
+    notif-&gt;vals = malloc(sz);
+    memcpy(notif-&gt;vals, vals, sz);
+    notif-&gt;nvals = nvals;
+    next_replay_idx = (next_replay_idx + <span class="hl-number">1</span>) % MAX_BUFFERED_NOTIFS;
+    OK(confd_notification_send(live_ctx,
+                               &amp;notif-&gt;eventTime,
+                               notif-&gt;vals,
+                               notif-&gt;nvals));
+}
+</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.netconf_console"></a>15.8.&nbsp;Using netconf-console</h2></div></div></div><p>
+      The <code class="code">netconf-console</code> program is a simple NETCONF
+      client.  It is delivered as Python source code and can be used
+      as-is or modified.
+    </p><p>
+      When ConfD has been started, we can use
+      <code class="code">netconf-console</code> to query the configuration of the
+      NETCONF Access Control groups:
+    </p><div class="informalexample"><pre class="screen">
+$ netconf-console --get-config -x /nacm/groups
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;data&gt;
+    &lt;nacm xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-acm"&gt;
+      &lt;groups&gt;
+        &lt;group&gt;
+          &lt;name&gt;admin&lt;/name&gt;
+          &lt;user-name&gt;admin&lt;/user-name&gt;
+          &lt;user-name&gt;private&lt;/user-name&gt;
+        &lt;/group&gt;
+        &lt;group&gt;
+          &lt;name&gt;oper&lt;/name&gt;
+          &lt;user-name&gt;oper&lt;/user-name&gt;
+          &lt;user-name&gt;public&lt;/user-name&gt;
+        &lt;/group&gt;
+      &lt;/groups&gt;
+    &lt;/nacm&gt;
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;
+</pre></div><p>
+      With the <code class="code">-x</code> flag an XPath expression can be
+      specified, in order to retrieve only data matching that
+      expression. This is a very convenient way to extract portions of
+      the configuration from the shell or from shell scripts.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.actions"></a>15.9.&nbsp;Actions Capability</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5271"></a>15.9.1.&nbsp;Overview</h3></div></div></div><p>
+This capability introduces one new rpc method which is used to invoke
+actions (methods) defined in the data model.  When an action is
+invoked, the instance on which the action is invoked is explicitly
+identified by an hierarchy of configuration or state data.
+    </p><p>
+Here's a simple example which resets an interface.
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;action xmlns="http://tail-f.com/ns/netconf/actions/1.0"&gt;
+      &lt;data&gt;
+        &lt;interfaces xmlns="http://example.com/interfaces/1.0"&gt;
+          &lt;interface&gt;
+            &lt;name&gt;eth0&lt;/name&gt;
+            &lt;reset/&gt;
+          &lt;/interface&gt;
+        &lt;/interfaces&gt;
+      &lt;/data&gt;
+    &lt;/action&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="101"
+             xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5277"></a>15.9.2.&nbsp;Motivation</h3></div></div></div><p>
+The alternative is to use a specialized rpc method for each action.
+There are a couple of drawbacks with that:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+The name of the action has to be unique within the namespace.  With
+the generic action method, the name of the action is scoped by the
+element where the action is defined.  For example, without a generic
+action, ther might be two rpcs, 'reset-interface' and
+'reset-server'.  With the generic action, there are two 'reset'
+actions, scoped by 'interface' and 'server'.
+</p></li><li class="listitem"><p>Care must be taken to ensure that returned XML is unique within the
+namespace.  Suppose the two methods 'reset-interface' and
+'reset-server' returns a 'status', but of different type.  The
+element must be called something like 'reset-interface-status' and
+'reset-server-status'.
+</p></li><li class="listitem"><p>With the generic action, it is easier to introduce intermediate
+NETCONF peers such as a master agent in a master-sub agent
+deployment.  For example, suppose there are two subagents, one which
+handles interface 'eth0' and one which handles 'atm0'.  When the
+hierarchy is excplicit in the request, the master agent can dispatch
+to the correct subagent without any knowledge about the action
+parameters.  On the other hand, if the master agent gets a rpc
+'reset-interface', it will have to parse the parameters to figure
+out which subagent to send the request to.
+</p></li></ul></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5287"></a>15.9.3.&nbsp;Dependencies</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5290"></a>15.9.4.&nbsp;Capability Identifier</h3></div></div></div><p>
+The actions capability is identified by the following capability
+string:
+    </p><div class="informalexample"><pre class="programlisting">  http://tail-f.com/ns/netconf/actions/1.0
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5295"></a>15.9.5.&nbsp;New Operation: &lt;action&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5297"></a>Description</h4></div></div></div><p>
+The &lt;action&gt; operation identifies the data instance where the action
+is invoked, the action name, and its parameters.  If the action
+returns any result, it is scoped in the instance hierarchy in the
+reply.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5300"></a>Parameters</h4></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>data:</code></em></span></dt><dd><p>
+A hierarchy of configuration or state data as defined by one of the
+device's data models. The first part of the hierarchy defines which
+instance the action is invoked upon. Then comes the action name, and
+any parameters it might need.
+	</p><p>
+One action only can be executed within one rpc.  If more than one
+actions are present in the rpc, an error MUST be returned with an
+&lt;error-tag&gt; set to "bad-element".
+</p></dd></dl></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5309"></a>Positive Response</h4></div></div></div><p>
+An action that does not return any result value, replies with the
+standard &lt;ok/&gt;.  If a result value is returned, it is encapsulated
+in the standard &lt;data&gt; element.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5312"></a>Negative Response</h4></div></div></div><p>
+An &lt;rpc-error&gt; element is included in the &lt;rpc-reply&gt; if the request
+cannot be completed for any reason.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5315"></a>Example</h4></div></div></div><p>
+Suppose we want to start a self-test on interface "eth0", and the test
+returns the run time (in seconds) of the test and test status.  In
+pseudo code
+    </p><div class="informalexample"><pre class="programlisting">  myif = find_if("eth0")
+  (time, status) = myif.self_test(IMMEDIATELY)
+</pre></div><p>
+Using the action RPC over NETCONF:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;action xmlns="http://tail-f.com/ns/netconf/actions/1.0"&gt;
+      &lt;data&gt;
+        &lt;interfaces xmlns="http://example.com/interfaces/1.0"&gt;
+          &lt;interface&gt;
+            &lt;name&gt;eth0&lt;/name&gt;
+            &lt;self-test&gt;
+              &lt;when&gt;immediately&lt;/when&gt;
+            &lt;/self-test&gt;
+          &lt;/interface&gt;
+        &lt;/interfaces&gt;
+      &lt;/data&gt;
+    &lt;/action&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="101"
+             xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;data&gt;
+      &lt;interfaces xmlns="http://example.com/interfaces/1.0"&gt;
+        &lt;interface&gt;
+          &lt;name&gt;eth0&lt;/name&gt;
+            &lt;self-test&gt;
+              &lt;run-time&gt;29&lt;/run-time&gt;
+              &lt;status&gt;ok&lt;/status&gt;
+            &lt;/self-test&gt;
+          &lt;/interface&gt;
+        &lt;/interfaces&gt;
+      &lt;/data&gt;
+    &lt;/action&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5323"></a>15.9.6.&nbsp;Modifications to Existing Operations</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5326"></a>15.9.7.&nbsp;XML Schema</h3></div></div></div><p>
+This XML Schema defines the new action rpc.
+    </p><div class="informalexample"><pre class="programlisting">  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;xs:schema targetNamespace="http://tail-f.com/ns/netconf/actions/1.0"
+	     xmlns="http://tail-f.com/ns/netconf/actions/1.0"
+	     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:netconf="urn:ietf:params:xml:ns:netconf:base:1.0"
+             elementFormDefault="qualified"
+             attributeFormDefault="unqualified"
+	     xml:lang="en"&gt;
+
+    &lt;!--  &lt;action&gt; operation --&gt;
+    &lt;xs:complexType name="ActionType"&gt;
+      &lt;xs:complexContent&gt;
+        &lt;xs:extension base="netconf:rpcOperationType"&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name="data" type="netconf:dataInlineType" /&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;
+    &lt;/xs:complexType&gt;
+
+    &lt;xs:element name="action" type="ActionType"
+                substitutionGroup="netconf:rpcOperation"/&gt;
+
+  &lt;/xs:schema&gt;
+</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.transactions"></a>15.10.&nbsp;Transactions Capability</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5333"></a>15.10.1.&nbsp;Overview</h3></div></div></div><p>
+This capability introduces four new rpc methods which are used to
+control a two-phase commit transaction on the NETCONF server.  The
+normal &lt;edit-config&gt; operation is used to write data in the
+transaction, but the modifications are not applied until an explicit
+&lt;commit-transaction&gt; is sent.
+    </p><p>
+This capability is formally defined in the YANG module
+"tailf-netconf-transactions".
+    </p><p>
+A typical sequence of operations looks like this:
+    </p><div class="informalexample"><pre class="programlisting">               C                           S
+               |                           |
+               |  capability exchange      |
+               |--------------------------&gt;|
+               |&lt;-------------------------&gt;|
+               |                           |
+               |   &lt;start-transaction&gt;     |
+               |--------------------------&gt;|
+               |&lt;--------------------------|
+               |         &lt;ok/&gt;             |
+               |                           |
+               |     &lt;edit-config&gt;         |
+               |--------------------------&gt;|
+               |&lt;--------------------------|
+               |         &lt;ok/&gt;             |
+               |                           |
+               |  &lt;prepare-transaction&gt;    |
+               |--------------------------&gt;|
+               |&lt;--------------------------|
+               |         &lt;ok/&gt;             |
+               |                           |
+               |   &lt;commit-transaction&gt;    |
+               |--------------------------&gt;|
+               |&lt;--------------------------|
+               |         &lt;ok/&gt;             |
+               |                           |
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5340"></a>15.10.2.&nbsp;Dependencies</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5343"></a>15.10.3.&nbsp;Capability Identifier</h3></div></div></div><p>
+The transactions capability is identified by the following capability
+string:
+    </p><div class="informalexample"><pre class="programlisting">  http://tail-f.com/ns/netconf/transactions/1.0
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5348"></a>15.10.4.&nbsp;New Operation: &lt;start-transaction&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5350"></a>Description</h4></div></div></div><p>
+Starts a transaction towards a configuration datastore.  There can
+be a single ongoing transaction per session at any time.
+    </p><p>
+When a transaction has been started, the client can send any NETCONF
+operation, but any &lt;edit-config&gt; or &lt;copy-config&gt; operation sent from
+the client MUST specify the same &lt;target&gt; as the &lt;start-transaction&gt;,
+and any &lt;get-config&gt; MUST specify the same &lt;source&gt; as
+&lt;start-transaction&gt;.
+    </p><p>
+If the server receives an &lt;edit-config&gt; or &lt;copy-config&gt; with another
+&lt;target&gt;, or a &lt;get-config&gt; with another &lt;source&gt;, an error MUST be
+returned with an &lt;error-tag&gt; set to "invalid-value".
+    </p><p>
+The modifications sent in the &lt;edit-config&gt; operations are not
+immediately applied to the configuration datastore.  Instead they
+are kept in the transaction state of the server.  The transaction
+state is only applied when a &lt;commit-transaction&gt; is received.
+    </p><p>
+The client sends a &lt;prepare-transaction&gt; when all modifications
+have been sent.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5357"></a>Parameters</h4></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>target:</code></em></span></dt><dd><p>
+Name of the configuration datastore towards which the transaction is
+started.
+	</p></dd><dt><span class="term"><em class="parameter"><code>with-inactive:</code></em></span></dt><dd><p>
+If this parameter is given, the transaction will handle the
+"inactive" and "active" attributes.  If given, it MUST also be given
+in the &lt;edit-config&gt; and &lt;get-config&gt; invocations in the transaction.
+</p></dd></dl></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5370"></a>Positive Response</h4></div></div></div><p>
+If the device was able to satisfy the request, an &lt;rpc-reply&gt; is sent
+that contains an &lt;ok&gt; element.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5373"></a>Negative Response</h4></div></div></div><p>
+An &lt;rpc-error&gt; element is included in the &lt;rpc-reply&gt; if the
+request cannot be completed for any reason.
+    </p><p>
+If there is an ongoing transaction for this session already, an
+error MUST be returned with &lt;error-app-tag&gt; set to "bad-state".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5377"></a>Example</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;start-transaction xmlns="http://tail-f.com/ns/netconf/transactions/1.0"&gt;
+      &lt;target&gt;
+       &lt;running/&gt;
+      &lt;/target&gt;
+    &lt;/start-transaction&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5381"></a>15.10.5.&nbsp;New Operation: &lt;prepare-transaction&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5383"></a>Description</h4></div></div></div><p>
+Prepares the transaction state for commit.  The server may reject
+the prepare request for any reason, for example due to lack of
+resources or if the combined changes would result in an invalid
+configuration datastore.
+    </p><p>
+After a successful &lt;prepare-transaction&gt;, the next transaction
+related rpc operation must be &lt;commit-transaction&gt; or
+&lt;abort-transaction&gt;.  Note that an &lt;edit-config&gt; cannot be sent
+before the transaction is either committed or aborted.
+    </p><p>
+Care must be taken by the server to make sure that if
+&lt;prepare-transaction&gt; succeeds then the &lt;commit-transaction&gt;
+SHOULD not fail, since this might result in an inconsistent
+distributed state.  Thus, &lt;prepare-transaction&gt; should allocate
+any resources needed to make sure the &lt;commit-transaction&gt; will
+succeed.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5388"></a>Parameters</h4></div></div></div><p>
+None.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5391"></a>Positive Response</h4></div></div></div><p>
+If the device was able to satisfy the request, an &lt;rpc-reply&gt; is
+sent that contains an &lt;ok&gt; element.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5394"></a>Negative Response</h4></div></div></div><p>
+An &lt;rpc-error&gt; element is included in the &lt;rpc-reply&gt; if the
+request cannot be completed for any reason.
+    </p><p>
+If there is no ongoing transaction in this session, or if the
+ongoing transaction already has been prepared, an error MUST be
+returned with &lt;error-app-tag&gt; set to "bad-state".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5398"></a>Example</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="103"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;prepare-transaction
+       xmlns="http://tail-f.com/ns/netconf/transactions/1.0"/&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="103"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5402"></a>15.10.6.&nbsp;New Operation: &lt;commit-transaction&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5404"></a>Description</h4></div></div></div><p>
+Applies the changes made in the transaction to the configuration
+datatore.  The transaction is closed after a
+&lt;commit-transaction&gt;.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5407"></a>Parameters</h4></div></div></div><p>
+None.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5410"></a>Positive Response</h4></div></div></div><p>
+If the device was able to satisfy the request, an &lt;rpc-reply&gt; is
+sent that contains an &lt;ok&gt; element.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5413"></a>Negative Response</h4></div></div></div><p>
+An &lt;rpc-error&gt; element is included in the &lt;rpc-reply&gt; if the
+request cannot be completed for any reason.
+    </p><p>
+If there is no ongoing transaction in this session, or if the
+ongoing transaction already has not been prepared, an error MUST
+be returned with &lt;error-app-tag&gt; set to "bad-state".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5417"></a>Example</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;commit-transaction
+       xmlns="http://tail-f.com/ns/netconf/transactions/1.0"/&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5421"></a>15.10.7.&nbsp;New Operation: &lt;abort-transaction&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5423"></a>Description</h4></div></div></div><p>
+Aborts the ongoing transaction, and all pending changes are
+discarded.  &lt;abort-transaction&gt; can be given at any time during an
+ongoing transaction.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5426"></a>Parameters</h4></div></div></div><p>
+None.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5429"></a>Positive Response</h4></div></div></div><p>
+If the device was able to satisfy the request, an &lt;rpc-reply&gt; is
+sent that contains an &lt;ok&gt; element.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5432"></a>Negative Response</h4></div></div></div><p>
+An &lt;rpc-error&gt; element is included in the &lt;rpc-reply&gt; if the
+request cannot be completed for any reason.
+    </p><p>
+If there is no ongoing transaction in this session, an error MUST
+be returned with &lt;error-app-tag&gt; set to "bad-state".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5436"></a>Example</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;abort-transaction
+       xmlns="http://tail-f.com/ns/netconf/transactions/1.0"/&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5440"></a>15.10.8.&nbsp;Modifications to Existing Operations</h3></div></div></div><p>
+The &lt;edit-config&gt; operation is modified so that if it is received
+during an ongoing transaction, the modifications are not immediately
+applied to the configuration target.  Instead they are kept in the
+transaction state of the server.  The transaction state is only
+applied when a &lt;commit-transaction&gt; is received.
+    </p><p>
+Note that it doesn't matter if the &lt;test-option&gt; is 'set' or
+'test-then-set' in the &lt;edit-config&gt;, since nothing is actually set
+when the &lt;edit-config&gt; is received.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5444"></a>15.10.9.&nbsp;XML Schema</h3></div></div></div><p>
+This XML Schema defines the new transaction rpcs.
+    </p><div class="informalexample"><pre class="programlisting">  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;xs:schema targetNamespace="http://tail-f.com/ns/netconf/transactions/1.0"
+	     xmlns="http://tail-f.com/ns/netconf/transactions/1.0"
+	     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:netconf="urn:ietf:params:xml:ns:netconf:base:1.0"
+             elementFormDefault="qualified"
+             attributeFormDefault="unqualified"
+	     xml:lang="en"&gt;
+
+    &lt;!-- Type for &lt;target&gt; element --&gt;
+    &lt;xs:complexType name="TargetType"&gt;
+      &lt;xs:choice&gt;
+        &lt;xs:element name="running"/&gt;
+        &lt;xs:element name="startup"/&gt;
+        &lt;xs:element name="candidate"/&gt;
+      &lt;/xs:choice&gt;
+    &lt;/xs:complexType&gt;
+
+    &lt;!--  &lt;start-transaction&gt; operation --&gt;
+    &lt;xs:complexType name="StartTransactionType"&gt;
+      &lt;xs:complexContent&gt;
+        &lt;xs:extension base="netconf:rpcOperationType"&gt;
+          &lt;xs:sequence&gt;
+            &lt;xs:element name="target" type="TargetType"/&gt;
+            &lt;xs:element name="with-inactive" minOccurs="0"/&gt;
+          &lt;/xs:sequence&gt;
+        &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;
+    &lt;/xs:complexType&gt;
+
+    &lt;xs:element name="start-transaction" type="StartTransactionType"
+                substitutionGroup="netconf:rpcOperation"/&gt;
+
+    &lt;xs:element name="prepare-transaction"
+                substitutionGroup="netconf:rpcOperation"/&gt;
+
+    &lt;xs:element name="commit-transaction"
+                substitutionGroup="netconf:rpcOperation"/&gt;
+
+    &lt;xs:element name="abort-transaction"
+                substitutionGroup="netconf:rpcOperation"/&gt;
+
+  &lt;/xs:schema&gt;
+</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.proxy"></a>15.11.&nbsp;Proxy Forwarding Capability</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5451"></a>15.11.1.&nbsp;Overview</h3></div></div></div><p>
+The Proxy Forwarding capability makes it possible to forward NETCONF
+requests to a target host through a proxy NETCONF server.  It can be
+used in situations where a client does not have direct network access
+to a target host:
+    </p><div class="informalexample"><pre class="programlisting">                     +--------+
+                     | Client |
+                     +--------+
+                         |
+                         | 
+                         |
+                     +--------+
+                     | Proxy  |
+                     | server |
+                     +--------+
+                       /    \
+                      /      \ 
+                     /        \
+               +--------+   +--------+
+               | Proxy  |   | Proxy  |
+               | target |   | target |
+               +--------+   +--------+
+</pre></div><p>
+See RFC 2663 for a definition of a proxy.  This RFC defines
+two terms "Application Level Gateway" (ALG) and "Proxy":
+    </p><div class="informalexample"><pre class="programlisting">    ALGs are similar to Proxies, in that, both ALGs and proxies
+    facilitate Application specific communication between clients
+    and servers. Proxies use a special protocol to communicate with
+    proxy clients and relay client data to servers and vice
+    versa. Unlike Proxies, ALGs do not use a special protocol to
+    communicate with application clients and do not require changes
+    to application clients.
+</pre></div><p>
+A client that wants to set up a NETCONF session to a Proxy target
+first connects to the Proxy server, which advertises the "forward"
+capability.  The client issues a &lt;forward&gt; RPC, with a &lt;target&gt;
+parameter which specifies which Proxy target to connect to.  The Proxy
+server sets up a NETCONF connection to the Proxy target, and after
+successful authentication, replies with the Proxy target's capability
+list to the client.  From this point, the session is established, and
+any data received by the Proxy server from any side is sent as-is
+(without interpretation) to the other side.
+    </p><div class="informalexample"><pre class="programlisting">    Client                     Server                      Target
+      |                           |                           |
+      |                           |                           |
+      |    capability exchange    |                           |
+      |&lt;-------------------------&gt;|                           |
+      |                           |                           |
+      |       &lt;forward&gt;           |                           |
+      |--------------------------&gt;|                           |
+      |&lt;--------------------------|                           |
+      |       &lt;mechanisms&gt;        |                           |
+      |                           |                           |
+      |       &lt;forward&gt;           |                           |
+      |        &lt;mechanism&gt;        |                           |
+      |--------------------------&gt;|                           |
+      |&lt;--------------------------|                           |
+      |       &lt;challenge&gt;         |                           |
+      |                           |                           |
+      |    &lt;challenge-response&gt;   |                           |
+      |--------------------------&gt;|                           |
+      |                           |    connect+authenticate   |
+      |                           |--------------------------&gt;|
+      |                           |&lt;--------------------------|
+      |                           |        &lt;hello&gt;            |
+      |     &lt;capabilities&gt;        |                           |
+      |&lt;--------------------------|                           |
+      |                           |                           |
+      |        data               |                           |
+      |--------------------------&gt;|          data             |
+      |                           |--------------------------&gt;|
+      |                           |                           |
+      |                           |          data             |
+      |        data               |&lt;--------------------------|
+      |&lt;--------------------------|                           |
+      |                           |                           |
+      |                           |                           |
+</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5462"></a>Client Elements of Procedure</h4></div></div></div><p>
+First, the client constructs a &lt;forward&gt; rpc:
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+If the client does not know with authentication mechanism is
+supported by the Proxy server for the target, or if it wants to do
+automatic login, it sends a &lt;forward&gt; request without the "auth"
+parameter, and waits for a reply.
+</p></li><li class="listitem"><p>If the client knows which mechanism to use, it sends a &lt;forward&gt;
+request with the "auth/mechanism" parameter set, and waits for a
+reply.
+	</p><p>
+The client MAY set the "auth/initial-response" parameter.
+</p></li><li class="listitem"><p>Then the client waits for a reply.
+</p></li><li class="listitem"><p>If the reply contains the "capabilities" parameter, the proxy
+connection is establihed.
+</p></li><li class="listitem"><p>If the reply contains the "challenge" parameter, the client sends a
+&lt;challenge-response&gt; RPC with the repsonse to the challenge, which
+it can get e.g. by prompting the user for credentials.
+	</p><p>
+If the mechanism is PLAIN, the challenge is always empty.
+	</p><p>
+After the &lt;challenge-response&gt; RPC is sent, the client
+continues from step (3).
+</p></li><li class="listitem"><p>If the reply contains the "sasl-failure" error, with the
+"failure" parameter set to "invalid-mechansim", the client
+continues from step (2).
+</p></li><li class="listitem"><p>If the reply contains the "sasl-failure" error, with the "failure"
+parameter set to "not-authorized", the client continues from step
+(1) or aborts.
+</p></li><li class="listitem"><p>Otherwise, the client interprets the error and aborts.
+</p></li></ol></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5485"></a>Server Elements of Procedure</h4></div></div></div><p>
+The procedure when the &lt;forward&gt; RPC is received is as follows:
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+The server looks up the value of the "target" parameter in the
+"proxy" list in the running configuration.  If the target is not
+found, an "invalid-value" error is returned.
+</p></li><li class="listitem"><p>
+If the "auth" parameter is not present, and the server is
+configured to perform auto login, it extracts the current user's
+credentials from the session, and continues from step (8).
+</p></li><li class="listitem"><p>
+If the "auth" parameter is not present, and the server is not
+configured to do auto login, it replies with an error
+"sasl-authentication-needed", with a list of supported mechanisms.
+</p></li><li class="listitem"><p>
+If the "auth" parameter is present, the server verifies that the
+"mechanism" provided is supported by the server.
+	</p><p>
+Currently, the supported mechanism is "PLAIN".
+	</p><p>
+If the mechanism is not supported, the server replies with a
+"sasl-failure" error with the "failure" parameter set to
+"invalid-mechanism".
+</p></li><li class="listitem"><p>
+If the mechanism is supported, and the "initial-response" parameter
+is present, the server decodes the response according to the
+mechanism.
+	</p><p>
+If the response could not be decoded, the server replies with an
+"sasl-failure" error with the "failure" parameter set to
+"incorrect-encoding".
+	</p><p>
+If the response could be decoded, the server continues from step
+(8).
+</p></li><li class="listitem"><p>
+If the mechanism is supported, and the "initial-response"
+parameter is not present, the server replies with a
+"challenge" parameter.
+	</p><p>
+For PLAIN, the challenge is empty.
+	</p><p>
+The server now remembers the target and mechanism, and waits
+to receive a &lt;challenge-response&gt; RPC.
+</p></li><li class="listitem"><p>
+When the &lt;challenge-response&gt; RPC is received, the server
+decodes the "response" parameter as in (5).
+	</p><p>
+If the response could be decoded, the server continues from
+step (8).
+</p></li><li class="listitem"><p>
+The server connects to the target with the given credentials.
+	</p><p>
+If the connection fails due to communication problems, it
+replies with an "connection-failure" error.
+	</p><p>
+If the server fails to authenticate with the given
+credentials, it replies with an "sasl-failure" error with the
+"failure" parameter set to "not-authorized".
+	</p><p>
+If the connection succeeds, the server replies with the
+capabilities of the target, and enters the proxying mode.
+</p></li></ol></div><p>
+In proxying mode, the server reads data from both the client and the
+target, and writes any data received to the other end, without
+interpreting the data.  If any side of the connection is closed, the
+server closes the other side.
+    </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5516"></a>15.11.2.&nbsp;Dependencies</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5519"></a>15.11.3.&nbsp;Capability Identifier</h3></div></div></div><p>
+The proxy forwarding capability is identified by the following
+capability string:
+    </p><div class="informalexample"><pre class="programlisting">  http://tail-f.com/ns/netconf/forward/1.0
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5524"></a>15.11.4.&nbsp;New Operation: &lt;forward&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5526"></a>Description</h4></div></div></div><p>
+Starts a proxy forwarding connection to the given target, if all user
+credentials are given.
+    </p><p>
+The server can be configured to automatically login to the target.  In
+this case, the &lt;forward&gt; rpc does not contain any authentication
+parameters.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5530"></a>Parameters</h4></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>target:</code></em></span></dt><dd><p>
+Name of the target host to connect to.  The name refers to an entry in
+the "proxy" list on the running configuration.
+	</p></dd><dt><span class="term"><em class="parameter"><code>auth/mechanism:</code></em></span></dt><dd><p>
+Name of an SASL authentication mechanism to use.  Currently the
+"PLAIN" mechanism is supported.
+	</p></dd><dt><span class="term"><em class="parameter"><code>auth/initial-response:</code></em></span></dt><dd><p>
+If allowed by the selected mechanism, an initial response can be
+given.   This saves one round-trip.
+	</p><p>
+For the PLAIN mechanism, the response is a base64 encoded PLAIN
+"message" as defined in section 2 of RFC 4616.  The optional
+"authzid" MUST NOT be present.
+</p></dd></dl></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5549"></a>Positive Response</h4></div></div></div><p>
+If the server was able to connect and authenticate to the target,
+it replies with the target's capability list, and the server then
+enters proxying mode.
+    </p><p>
+If the server could not fully authenticate the client, it replies
+with a "challenge" element.  The client should reply to the
+challenge with a &lt;challenge-response&gt; RPC.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5553"></a>Negative Response</h4></div></div></div><p>
+If the server could not find the target, it replies with an
+"invalid-value" error.
+    </p><p>
+If the client did not provide a mechanism, the server replies with
+a "sasl-authentication-needed" error, with a list of available
+mechanisms.
+    </p><p>
+If the client provided an unsupported mechanism, the server
+replies with a "sasl-failure" error with the "failure" parameter
+set to"invalid-mechanism".
+    </p><p>
+If the inital response could not be decoded, the server replies
+with an "sasl-failure" error with the "failure" parameter set to
+"incorrect-encoding".
+    </p><p>
+If the server fails to connect to the target, it replies with an
+"connection-failure" error.
+    </p><p>
+If the server fails to authenticate with the given credentials, it
+replies with an "sasl-failure" error with the "failure" parameter
+set to "not-authorized".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5561"></a>Example 1.</h4></div></div></div><p>
+The proxy server is configured to do automatic login:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="1"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="1"&gt;
+    &lt;data&gt;
+      &lt;capabilities xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+        &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+        &lt;capability&gt;
+          urn:ietf:params:netconf:capability:writable-running:1.0
+        &lt;/capability
+      &lt;/capabilities&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;
+
+  &lt;!- client is now successfully connected to rne-141 --&gt;
+</pre></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5566"></a>Example 2.  Client needs to authenticate to the target:</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="1"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="1"&gt;
+    &lt;rpc-error&gt;
+      &lt;error-type&gt;protocol&lt;/error-type&gt;
+      &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+      &lt;error-severity&gt;error&lt;/error-severity&gt;
+      &lt;error-app-tag&gt;sasl-mechanisms&lt;/error-app-tag&gt;
+      &lt;error-info&gt;
+        &lt;mechanisms xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+          &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+        &lt;/mechansims&gt;
+      &lt;/error-info&gt;
+    &lt;/rpc-error&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="2"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+      &lt;auth&gt;
+        &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+        &lt;initial-response&gt;AGFkbWluAHNlY3JldA==&lt;/initial-response&gt;
+      &lt;/auth&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+</pre></div><p>
+The decoded initial response in the auth message is:
+    </p><div class="informalexample"><pre class="programlisting">    &lt;NUL&gt;admin&lt;NUL&gt;secret
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="2"&gt;
+    &lt;data&gt;
+      &lt;capabilities xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+        &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+      &lt;/capabilities&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;        
+
+  &lt;!- client is now successfully connected to rne-141 --&gt;
+</pre></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5573"></a>Example 3.  Client needs to authenticate to the proxy target, but fails:</h4></div></div></div><div class="informalexample"><pre class="programlisting">  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="1"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="1"&gt;
+    &lt;rpc-error&gt;
+      &lt;error-type&gt;protocol&lt;/error-type&gt;
+      &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+      &lt;error-severity&gt;error&lt;/error-severity&gt;
+      &lt;error-app-tag&gt;sasl-authentication-needed&lt;/error-app-tag&gt;
+      &lt;error-info&gt;
+        &lt;mechanisms xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+          &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+        &lt;/mechansims&gt;
+      &lt;/error-info&gt;
+    &lt;/rpc-error&gt;
+  &lt;/rpc&gt;
+
+
+  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="2"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+      &lt;auth&gt;
+        &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+        &lt;initial-response&gt;AGFkbWluAGFlY3JldA==&lt;/initial-response&gt;
+      &lt;/auth&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+</pre></div><p>
+The decoded initial response in the auth message is:
+    </p><div class="informalexample"><pre class="programlisting">    &lt;NUL&gt;admin&lt;NUL&gt;aecret   (bad passwd)
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="2"&gt;
+    &lt;rpc-error&gt;
+      &lt;error-type&gt;protocol&lt;/error-type&gt;
+      &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+      &lt;error-severity&gt;error&lt;/error-severity&gt;
+      &lt;error-app-tag&gt;sasl-failure&lt;/error-app-tag&gt;
+      &lt;error-info&gt;
+        &lt;failure xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+          &lt;not-authorized/&gt;
+        &lt;/failure&gt;
+      &lt;/error-info&gt;
+    &lt;/rpc-error&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5580"></a>15.11.5.&nbsp;New Operation: &lt;challenge-response&gt;</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5582"></a>Description</h4></div></div></div><p>
+Sent after receiving a challenge reply to the &lt;forward&gt; request.
+If it succeds, the server will enter proxying mode.  
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5585"></a>Parameters</h4></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>response</code></em></span></dt><dd><p>
+For the PLAIN mechanism, the response is a base64 encoded PLAIN
+"message" as defined in section 2 of RFC 4616.  The optional "authzid"
+MUST NOT be present.
+</p></dd></dl></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5593"></a>Positive Response</h4></div></div></div><p>
+If the server was able to connect and authenticate to the target,
+it replies with the target's capability list, and the server then
+enters proxying mode.
+    </p><p>
+If the server could not fully authenticate the client, it replies
+with a "challenge" element.  The client should reply to the
+challenge with a &lt;challenge-response&gt; RPC.
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5597"></a>Negative Response</h4></div></div></div><p>
+If the response could not be decoded, the server replies
+with an "sasl-failure" error with the "failure" parameter set to
+"incorrect-encoding".
+    </p><p>
+If the server fails to connect to the target, it replies with an
+"connection-failure" error.
+    </p><p>
+If the server fails to authenticate with the given credentials, it
+replies with an "sasl-failure" error with the "failure" parameter
+set to "not-authorized".
+    </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5602"></a>Example</h4></div></div></div><p>
+Client needs to authenticate to the target:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="1"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="1"&gt;
+    &lt;rpc-error&gt;
+      &lt;error-type&gt;protocol&lt;/error-type&gt;
+      &lt;error-tag&gt;operation-failed&lt;/error-tag&gt;
+      &lt;error-severity&gt;error&lt;/error-severity&gt;
+      &lt;error-app-tag&gt;sasl-mechanisms&lt;/error-app-tag&gt;
+      &lt;error-info&gt;
+        &lt;mechanisms xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+          &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+        &lt;/mechansims&gt;
+      &lt;/error-info&gt;
+    &lt;/rpc-error&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="2"&gt;
+    &lt;forward xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;target&gt;rne-141&lt;/target&gt;
+      &lt;auth&gt;
+        &lt;mechanism&gt;PLAIN&lt;/mechanism&gt;
+      &lt;/auth&gt;
+    &lt;/forward&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="2"&gt;
+    &lt;data&gt;
+      &lt;challenge xmlns="http://tail-f.com/ns/netconf/forward/1.0"/&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;        
+
+  &lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+       message-id="3"&gt;
+    &lt;challenge-response xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+      &lt;reponse&gt;AGFkbWluAHNlY3JldA==&lt;/response&gt;
+    &lt;/challenge-response&gt;
+  &lt;/rpc&gt;
+</pre></div><p>
+The decoded response in the auth message is:
+    </p><div class="informalexample"><pre class="programlisting">    &lt;NUL&gt;admin&lt;NUL&gt;secret
+
+  &lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"
+             message-id="3"&gt;
+    &lt;data&gt;
+      &lt;capabilities xmlns="http://tail-f.com/ns/netconf/forward/1.0"&gt;
+        &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+      &lt;/capabilities&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;        
+
+  &lt;!- client is now successfully connected to rne-141 --&gt;
+</pre></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5610"></a>15.11.6.&nbsp;Modifications to Existing Operations</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5613"></a>15.11.7.&nbsp;Interactions with Other Capabilities</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5616"></a>15.11.8.&nbsp;XSD Schema</h3></div></div></div><p>
+This XML Schema defines the new forwarding rpcs.
+    </p><div class="informalexample"><pre class="programlisting">  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;xs:schema targetNamespace="http://tail-f.com/ns/netconf/forward/1.0"
+	     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	     xmlns="http://tail-f.com/ns/netconf/forward/1.0"
+	     xmlns:fwd="http://tail-f.com/ns/netconf/forward/1.0"
+             xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+             elementFormDefault="qualified"
+             attributeFormDefault="unqualified"
+	     xml:lang="en"&gt;
+
+    &lt;!-- &lt;forward&gt; operation --&gt;
+    &lt;xs:element name="forward" substitutionGroup="nc:rpcOperation"&gt;
+      &lt;xs:complexType&gt;
+        &lt;xs:complexContent&gt;
+          &lt;xs:extension base="nc:rpcOperationType"&gt;
+              &lt;xs:sequence&gt;
+                &lt;xs:element name="target" type="xs:string"/&gt;
+                &lt;xs:element name="auth" minOccurs="0"&gt;
+                  &lt;xs:complexType&gt;
+                    &lt;xs:sequence&gt;
+                      &lt;xs:element name="mechanism" type="xs:string"/&gt;
+                      &lt;xs:element name="initial-response" minOccurs="0"
+                                  type="xs:string"/&gt;
+                    &lt;/xs:sequence&gt;
+                  &lt;/xs:complexType&gt;
+                &lt;/xs:element&gt;
+              &lt;/xs:sequence&gt;
+          &lt;/xs:extension&gt;
+        &lt;/xs:complexContent&gt;
+      &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+
+
+    &lt;!-- &lt;challenge-response&gt; operation --&gt;
+    &lt;xs:element name="challenge-response" substitutionGroup="nc:rpcOperation"&gt;
+      &lt;xs:complexType&gt;
+        &lt;xs:complexContent&gt;
+          &lt;xs:extension base="nc:rpcOperationType"&gt;
+              &lt;xs:sequence&gt;
+                &lt;xs:element name="response" type="xs:string"/&gt;
+              &lt;/xs:sequence&gt;
+          &lt;/xs:extension&gt;
+        &lt;/xs:complexContent&gt;
+      &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+
+    &lt;!-- reply to &lt;forward&gt; and &lt;challenge-response&gt; operations --&gt;
+    &lt;xs:element name="capabilities"&gt;
+      &lt;xs:complexType&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="capability"
+                      minOccurs="0" maxOccurs="unbounded"
+                      type="xs:uri"/&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+
+    &lt;!-- reply to &lt;forward&gt; and &lt;challenge-response&gt; operations --&gt;
+    &lt;xs:element name="challenge" type="xs:string"/&gt;
+
+    &lt;!-- &lt;error-info&gt; content when &lt;error-app-tag&gt; is "sasl-failure" --&gt;
+    &lt;xs:element name="failure"&gt;
+      &lt;xs:complexType&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:choice&gt;
+            &lt;xs:element name="incorrect-encoding"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+            &lt;xs:element name="invalid-authzid"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+            &lt;xs:element name="invalid-mechanism"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+            &lt;xs:element name="mechanism-too-weak"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+            &lt;xs:element name="not-authorized"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+            &lt;xs:element name="temporary-auth-failure"&gt;
+              &lt;xs:complexType/&gt;
+            &lt;/xs:element&gt;
+          &lt;/xs:choice&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:complexType&gt;
+    &lt;/xs:element&gt;
+
+    &lt;!--
+       &lt;error-info&gt; content when &lt;error-app-tag&gt; is
+       "sasl-authentication-needed"
+    --&gt;
+    &lt;xs:element name="mechanisms"&gt;
+      &lt;xs:complexType&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="mechanism"
+                      minOccurs="0" maxOccurs="unbounded"
+                      type="xs:string"/&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:complexType&gt;
+    &lt;xs:element&gt;
+
+
+  &lt;/xs:schema&gt;
+</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.inactive"></a>15.12.&nbsp;Inactive Capability</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5623"></a>15.12.1.&nbsp;Overview</h3></div></div></div><p>
+This capability is used by the NETCONF server to indicate that it
+supports marking nodes as being inactive.  A node that is marked as
+inactive exists in the data store, but is not used by the server.  Any
+node can be marked as inactive.
+    </p><p>
+In order to not confuse clients that do not understand this attribute,
+the client has to instruct the server to display and handle the
+inactive nodes.  An inactive node is marked with an "inactive" XML
+attribute, and in order to make it active, the "active" XML atribute
+is used.
+    </p><p>
+This capability is formally defined in the YANG module
+"tailf-netconf-inactive".
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5628"></a>15.12.2.&nbsp;Dependencies</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5631"></a>15.12.3.&nbsp;Capability Identifier</h3></div></div></div><p>
+The inactive capability is identified by the following capability
+string:
+    </p><div class="informalexample"><pre class="programlisting">  http://tail-f.com/ns/netconf/inactive/1.0
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5636"></a>15.12.4.&nbsp;New Operations</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5639"></a>15.12.5.&nbsp;Modifications to Existing Operations</h3></div></div></div><p>
+A new parameter, &lt;with-inactive&gt;, is added to the &lt;get&gt;, &lt;get-config&gt;,
+&lt;edit-config&gt;, &lt;copy-config&gt;, and &lt;start-transaction&gt; operations.
+    </p><p>
+The &lt;with-inactive&gt; element is defined in the
+http://tail-f.com/ns/netconf/inactive/1.0 namespace, and takes no
+value.
+    </p><p>
+If this parameter is present in &lt;get&gt;, &lt;get-config&gt;, or &lt;copy-config&gt;,
+the NETCONF server will mark inactive nodes with the "inactive"
+attribute.
+    </p><p>
+If this parameter is present in &lt;edit-config&gt; or &lt;copy-config&gt;, the
+NETCONF server will treat inactive nodes as existing, so that an
+attempt to create a node which is inactive will fail, and an attempt
+to delete a node which is inactive will succeed.  Further, the NETCONF
+server accepts the "inactive" and "active" attributes in the data
+hierarchy, in order to make nodes inactive or active, respectively.
+    </p><p>
+If the parameter is present in &lt;start-transaction&gt;, it MUST also be
+present in any &lt;edit-config&gt;, &lt;copy-config&gt;, &lt;get&gt;, or &lt;get-config&gt;
+operations within the transaction.  If it is not present in
+&lt;start-transaction&gt;, it MUST NOT be present in any &lt;edit-config&gt;
+operation within the transaction.
+    </p><p>
+The "inactive" and "active" attributes are defined in the
+http://tail-f.com/ns/netconf/inactive/1.0 namespace.  The "inactive"
+attribute's value is the string "inactive", and the "active"
+attribute's value is the string "active".
+    </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e5647"></a>Example</h4></div></div></div><p>
+This request creates an inactive interface:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;edit-config&gt;
+      &lt;target&gt;
+        &lt;running/&gt;
+      &lt;/target&gt;
+      &lt;with-inactive
+         xmlns="http://tail-f.com/ns/netconf/inactive/1.0"/&gt;
+      &lt;config&gt;
+        &lt;top xmlns="http://example.com/schema/1.2/config"&gt;
+          &lt;interface inactive="inactive"&gt;
+            &lt;name&gt;Ethernet0/0&lt;/name&gt;
+            &lt;mtu&gt;1500&lt;/mtu&gt;
+          &lt;/interface&gt;
+        &lt;/top&gt;
+      &lt;/config&gt;
+    &lt;/edit-config&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="101"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div><p>
+This request shows the inactive interface:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="102"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;get-config&gt;
+      &lt;source&gt;
+        &lt;running/&gt;
+      &lt;/source&gt;
+      &lt;with-inactive
+         xmlns="http://tail-f.com/ns/netconf/inactive/1.0"/&gt;
+    &lt;/get-config&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="102"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;data&gt;
+      &lt;top xmlns="http://example.com/schema/1.2/config"&gt;
+        &lt;interface inactive="inactive"&gt;
+          &lt;name&gt;Ethernet0/0&lt;/name&gt;
+          &lt;mtu&gt;1500&lt;/mtu&gt;
+        &lt;/interface&gt;
+      &lt;/top&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;
+</pre></div><p>
+This request shows that inactive data is not returned unless the
+client asks for it:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="103"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;get-config&gt;
+      &lt;source&gt;
+        &lt;running/&gt;
+      &lt;/source&gt;
+    &lt;/get-config&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="103"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;data&gt;
+    &lt;/data&gt;
+  &lt;/rpc-reply&gt;
+</pre></div><p>
+This request activates the interface:
+    </p><p>
+This request creates an inactive interface:
+    </p><div class="informalexample"><pre class="programlisting">  &lt;rpc message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;edit-config&gt;
+      &lt;target&gt;
+        &lt;running/&gt;
+      &lt;/target&gt;
+      &lt;with-inactive
+         xmlns="http://tail-f.com/ns/netconf/inactive/1.0"/&gt;
+      &lt;config&gt;
+        &lt;top xmlns="http://example.com/schema/1.2/config"&gt;
+          &lt;interface active="active"&gt;
+            &lt;name&gt;Ethernet0/0&lt;/name&gt;
+          &lt;/interface&gt;
+        &lt;/top&gt;
+      &lt;/config&gt;
+    &lt;/edit-config&gt;
+  &lt;/rpc&gt;
+
+  &lt;rpc-reply message-id="104"
+       xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;ok/&gt;
+  &lt;/rpc-reply&gt;
+</pre></div></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.identification-capability"></a>15.13.&nbsp;Tail-f Identification Capability</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5664"></a>15.13.1.&nbsp;Overview</h3></div></div></div><p>
+This capability is used by a NETCONF peer to inform the other peer
+about the NETCONF stack and NETCONF client.  The receiving peer can
+use this information in log files etc.
+    </p><p>
+The information a peer may advertise is:
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><em class="parameter"><code>vendor:</code></em></span></dt><dd><p>
+The vendor of the NETCONF stack.
+	</p></dd><dt><span class="term"><em class="parameter"><code>product:</code></em></span></dt><dd><p>
+The NETCONF product.
+	</p></dd><dt><span class="term"><em class="parameter"><code>version:</code></em></span></dt><dd><p>
+The version of the product.
+	</p></dd><dt><span class="term"><em class="parameter"><code>client-identity:</code></em></span></dt><dd><p>
+The identity of the user starting the session.  This parameter can be
+the local user name of the operator in the client tool.
+</p></dd></dl></div><p>
+All these parameters are free form strings, advertised as query
+parameters to the capability URI, in the &lt;hello&gt; message.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5690"></a>15.13.2.&nbsp;Dependencies</h3></div></div></div><p>
+None.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5693"></a>15.13.3.&nbsp;Capability Identifier</h3></div></div></div><p>
+The identification capability is identified by the following
+capability string:
+    </p><div class="informalexample"><pre class="programlisting">  http://tail-f.com/ns/netconf/identification/1.0
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5698"></a>15.13.4.&nbsp;Example</h3></div></div></div><p>
+This is an example of how a client might advertise its identification
+information.  Whitespace is added to make the example more readable.
+    </p><div class="informalexample"><pre class="programlisting">  &lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+    &lt;capabilities&gt;
+      &lt;capability&gt;
+        urn:ietf:params:netconf:base:1.1
+      &lt;/capability&gt;
+      &lt;capability&gt;
+        http://tail-f.com/ns/netconf/identification/1.0?
+               vendor=tail-f
+          &amp;amp;product=ncs
+          &amp;amp;version=1.8
+          &amp;amp;client-identity=admin
+      &lt;/capability&gt;
+    &lt;/capabilities&gt;
+  &lt;/hello&gt;
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e5703"></a>15.13.5.&nbsp;ConfD</h3></div></div></div><p>
+If a NETCONF client advertises this capability, ConfD picks up the
+information, and stores it in the user session.  The information is
+available to application programmers through the function
+maapi_get_user_session_identification().
+    </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e5706"></a>15.14.&nbsp;The Query API</h2></div></div></div><p>
+      The Query API consists of a number of RPC operations to start
+      queries, fetch chunks of the result from a query, restart a
+      query, and stop a query.
+    </p><p>
+      In the installed release there are two YANG
+      files named <code class="filename">tailf-netconf-query.yang</code> and
+      <code class="filename">tailf-common-query.yang</code> that defines these
+      operations.  An easy way to find the
+      files is to run the following command from the top directory of
+      release installation:
+    </p><div class="informalexample"><pre class="screen">$ <strong class="userinput"><code>find . -name tailf-netconf-query.yang</code></strong></pre></div><p>
+      The API consists of the following operations:
+    </p><p>
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            <code class="sgmltag-element">start-query</code>: Start a query and return a query handle.
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">fetch-query-result</code>: Use a query handle to
+            repeatedly fetch chunks of the result.
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">immediate-query</code>: Start a query and return the entire
+            result immediately.
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">reset-query</code>: (Re)set where the next fetched
+            result will begin from.
+          </p></li><li class="listitem"><p>
+            <code class="sgmltag-element">stop-query</code>: Stop (and close) the query.
+          </p></li></ul></div><p>
+    </p><p>
+      In the following examples, the following data model is used:
+    </p><div class="informalexample"><pre class="programlisting">
+<strong class="hl-keyword">container</strong> x {
+  <strong class="hl-keyword">list</strong> host {
+    <strong class="hl-keyword">key</strong> number;
+    <strong class="hl-keyword">leaf</strong> number {
+      <strong class="hl-keyword">type</strong> int32;
+    }
+    <strong class="hl-keyword">leaf</strong> enabled {
+      <strong class="hl-keyword">type</strong> boolean;
+    }
+    <strong class="hl-keyword">leaf</strong> name {
+      <strong class="hl-keyword">type</strong> string;
+    }
+    <strong class="hl-keyword">leaf</strong> address {
+      <strong class="hl-keyword">type</strong> inet:ip-address;
+    }
+  }
+}</pre></div><p>
+      Here is an example of a <code class="sgmltag-element">start-query</code> operation:
+    </p><div class="informalexample"><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;start-query</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;foreach&gt;</strong>
+    /x/host[enabled = 'true']
+  <strong class="hl-tag" style="color: #000096">&lt;/foreach&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>address<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;sort-by&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/sort-by&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;limit&gt;</strong>100<strong class="hl-tag" style="color: #000096">&lt;/limit&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;offset&gt;</strong>1<strong class="hl-tag" style="color: #000096">&lt;/offset&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/start-query&gt;</strong></pre></div><p>
+      An informal interpretation of this query is:
+    </p><p>
+      For each <code class="sgmltag-element">/x/host</code> where <code class="sgmltag-element">enabled</code> is true,
+      select its <code class="sgmltag-element">name</code>, and <code class="sgmltag-element">address</code>, and return
+      the result sorted by <code class="sgmltag-element">name</code>, in chunks of 100 results at the
+      time.
+    </p><p>
+      Let us discuss the various pieces of this request.
+    </p><p>
+      The actual XPath query to run is specified by the
+      <code class="sgmltag-element">foreach</code> element. In the example below will search for
+      all <code class="sgmltag-element">/x/host</code> nodes that has the <code class="sgmltag-element">enabled</code>
+      node set to <code class="sgmltag-element">true</code>:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;foreach&gt;</strong>
+  /x/host[enabled = 'true']
+<strong class="hl-tag" style="color: #000096">&lt;/foreach&gt;</strong></pre><p>
+      Now we need to define what we want to have returned from the
+      node set by using one or more <code class="sgmltag-element">select</code> sections. What
+      to actually return is defined by the XPath
+      <code class="sgmltag-element">expression</code>.
+    </p><p>
+      We must also choose how the result should be represented.
+      Basically, it can be the actual value or the path leading to the
+      value.  This is specified per select chunk The possible
+      result-types are: <code class="sgmltag-element">string</code> , <code class="sgmltag-element">path</code> ,
+      <code class="sgmltag-element">leaf-value</code> and <code class="sgmltag-element">inline</code>.
+    </p><p>
+      The difference between <code class="sgmltag-element">string</code>
+      and <code class="sgmltag-element">leaf-value</code> is somewhat subtle. In the case of
+      <code class="sgmltag-element">string</code> the result will be processed by the XPath
+      function <code class="function">string()</code> (which if the result is a
+      node-set will concatenate all the values). The
+      <code class="sgmltag-element">leaf-value</code> will return the value of the first node in
+      the result. As long as the result is a leaf node,
+      <code class="sgmltag-element">string</code> and <code class="sgmltag-element">leaf-value</code> will return the same
+      result. In the example above, we are using <code class="sgmltag-element">string</code> as
+      shown below. At least one <code class="sgmltag-element">result-type</code> must be specified.
+    </p><p>
+      The result-type <code class="sgmltag-element">inline</code> makes it possible to return the full
+      sub-tree of data in XML format. The data will
+      be enclosed with a tag: <code class="sgmltag-element">data</code>.
+    </p><p>
+      Finally we can
+      specify an optional <code class="sgmltag-element">label</code> for a convenient
+      way of labeling the returned data. In the example we have the
+      following:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>address<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong></pre><p>
+      The returned result can be sorted. This is expressed as
+      XPath expressions, which in most cases are very simple and
+      refers to the found node set. In this example we sort the
+      result by the content of the <code class="sgmltag-element">name</code> node:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;sort-by&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/sort-by&gt;</strong></pre><p>
+      To limit the max amount of results in each chunk that
+      <code class="sgmltag-element">fetch-query-result</code> will return we can set the <code class="sgmltag-element">limit</code>
+      element. The default is to get all results in one chunk.
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;limit&gt;</strong>100<strong class="hl-tag" style="color: #000096">&lt;/limit&gt;</strong></pre><p>
+      With the <code class="sgmltag-element">offset</code> element we can specify at which node we
+      should start to receive the result. The default is 1, i.e., the
+      first node in the resulting node-set.
+    </p><pre class="programlisting">&lt;offset&gt;1&lt;/offset&gt;</pre><p>
+      Now, if we continue by putting the operation above in a file
+      <code class="filename">query.xml</code> we can send a request, using the
+      command <span class="command"><strong>netconf-console</strong></span>, like this:
+      </p><div class="informalexample"><pre class="screen">$ <strong class="userinput"><code>netconf-console --rpc query.xml</code></strong></pre></div><p>
+    </p><p>
+      The result would look something like this:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;start-query-result&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;query-handle&gt;</strong>12345<strong class="hl-tag" style="color: #000096">&lt;/query-handle&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/start-query-result&gt;</strong></pre><p>
+      The query handle (in this example "12345") must be used in all
+      subsequent calls. To retrieve the result, we can now send:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;fetch-query-result</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;query-handle&gt;</strong>12345<strong class="hl-tag" style="color: #000096">&lt;/query-handle&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/fetch-query-result&gt;</strong></pre><p>
+      Which will result in something like the following:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;query-result</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>One<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>10.0.0.1<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/result&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>Three<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>10.0.0.1<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/result&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/query-result&gt;</strong></pre><p>
+      If we try to get more data with the
+      <code class="sgmltag-element">fetch-query-result</code> we might get more
+      <code class="sgmltag-element">result</code> entries in return until no more data exists
+      and we get an empty query result back:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;query-result</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/query-result&gt;</strong></pre><p>
+      If we want to send the query and get the entire result with only
+      one request, we can do this by using <code class="sgmltag-element">immediate-query</code>.
+      This function takes similar arguments as <code class="sgmltag-element">start-query</code>
+      and returns the entire result analogous
+      <code class="sgmltag-element">fetch-query-result</code>. Note that it is not possible to
+      paginate or set an offset start node for the result list; i.e. the
+      options <code class="sgmltag-element">limit</code> and <code class="sgmltag-element">offset</code> are ignored.
+    </p><p>
+      An example request and response:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;immediate-query</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;foreach&gt;</strong>
+    /x/host[enabled = 'true']
+  <strong class="hl-tag" style="color: #000096">&lt;/foreach&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;expression&gt;</strong>address<strong class="hl-tag" style="color: #000096">&lt;/expression&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;result-type&gt;</strong>string<strong class="hl-tag" style="color: #000096">&lt;/result-type&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;sort-by&gt;</strong>name<strong class="hl-tag" style="color: #000096">&lt;/sort-by&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;timeout&gt;</strong>600<strong class="hl-tag" style="color: #000096">&lt;/timeout&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/immediate-query&gt;</strong></pre><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;query-result</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>One<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>10.0.0.1<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/result&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;result&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;label&gt;</strong>Host name<strong class="hl-tag" style="color: #000096">&lt;/label&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>Three<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;select&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;value&gt;</strong>10.0.0.3<strong class="hl-tag" style="color: #000096">&lt;/value&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/select&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/result&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/query-result&gt;</strong></pre><p>
+      If we want to go back in the "stream" of received
+      data chunks and have them repeated, we can do that with the
+      <code class="sgmltag-element">reset-query</code> operation.  In the example below we ask to get
+      results from the 42:nd result entry:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;reset-query</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">\"http:</span><strong class="hl-tag" style="color: #000096">//</strong>tail-f.com/ns/netconf/query\"&gt;
+  <strong class="hl-tag" style="color: #000096">&lt;query-handle&gt;</strong>12345<strong class="hl-tag" style="color: #000096">&lt;/query-handle&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;offset&gt;</strong>42<strong class="hl-tag" style="color: #000096">&lt;/offset&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/reset-query&gt;</strong></pre><p>
+      Finally, when we are done we stop the query:
+    </p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;stop-query</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/query"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;query-handle&gt;</strong>12345<strong class="hl-tag" style="color: #000096">&lt;/query-handle&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/stop-query&gt;</strong></pre></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.netconf_agent.attributes"></a>15.15.&nbsp;Meta-data in Attributes</h2></div></div></div><p>
+      ConfD supports three pieces of meta-data
+      data nodes: tags, annotations, and inactive.
+    </p><p>
+      This feature is by
+      default disabled, but can be enabled by setting
+      <code class="sgmltag-element">/confdConfig/enableAttributes</code> to true in
+      <code class="filename">confd.conf</code> (see <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>).
+    </p><p>
+      An annotation is a string which acts a comment.  Any data node
+      present in the configuration can get an annotation.  An
+      annotation does not affect the underlying configuration, but can
+      be set by a user to comment what the configuration does.
+    </p><p>
+      An annotation is encoded as an XML attribute 'annotation' on any
+      data node.  To remove an annotation, set the 'annotation'
+      attribute to an empty string.
+    </p><p>
+      Any configuration data node can have a set of tags.  Tags are
+      set by the user for data organization and filtering purposes.  A
+      tag does not affect the underlying configuration.
+    </p><p>
+      All tags on a data node are encoded as a space separated string
+      in an XML attribute 'tags'.  To remove all tags, set the 'tags'
+      attribute to an empty string.
+    </p><p>
+      Annotation, tags, and inactive attributes can be present in
+      <code class="sgmltag-element">&lt;edit-config&gt;</code>, <code class="sgmltag-element">&lt;copy-config&gt;</code>,
+      <code class="sgmltag-element">&lt;get-config&gt;</code>, and <code class="sgmltag-element">&lt;get&gt;</code>.  For
+      example:
+
+      </p><div class="informalexample"><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;rpc</strong> <span class="hl-attribute" style="color: #F5844C">message-id</span>=<span class="hl-value" style="color: #993300">"101"</span>
+     <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"urn:ietf:params:xml:ns:netconf:base:1.0"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;edit-config&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;target&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;running/&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/target&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;config&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;interfaces</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://example.com/ns/if"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;interface</strong> <span class="hl-attribute" style="color: #F5844C">annotation</span>=<span class="hl-value" style="color: #993300">"this is the management interface"</span>
+                   <span class="hl-attribute" style="color: #F5844C">tags</span>=<span class="hl-value" style="color: #993300">" important ethernet "</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;name&gt;</strong>eth0<strong class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+          ...
+        <strong class="hl-tag" style="color: #000096">&lt;/interface&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;/interfaces&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/config&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/edit-config&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/rpc&gt;</strong></pre></div><p>
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e5836"></a>15.16.&nbsp;Namespace for Additional Error Information</h2></div></div></div><p>
+      ConfD adds an additional namespace which
+      is used to define elements which are included in the
+      <code class="sgmltag-element">&lt;error-info&gt;</code> element.  This namespace also
+      describes which <code class="sgmltag-element">&lt;error-app-tag/&gt;</code> elements the
+      server might generate, as part of an
+      <code class="sgmltag-element">&lt;rpc-error/&gt;</code>.
+    </p><div class="informalexample"><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<strong class="hl-tag" style="color: #000096">&lt;xs:schema</strong> <span class="hl-attribute" style="color: #F5844C">targetNamespace</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/ns/netconf/params/1.1"</span>
+           <span class="hl-attribute" style="color: #F5844C">xmlns:xs</span>=<span class="hl-value" style="color: #993300">"http://www.w3.org/2001/XMLSchema"</span>
+           <span class="hl-attribute" style="color: #F5844C">xml:lang</span>=<span class="hl-value" style="color: #993300">"en"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+
+  <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+      Tail-f's namespace for additional error information.
+      This namespace is used to define elements which are included
+      in the 'error-info' element.
+
+      The following are the app-tags used by the NETCONF agent:
+
+        o  not-writable
+
+          Means that an edit-config or copy-config operation was
+          attempted on an element which is read-only
+          (i.e. non-configuration data).
+
+        o  missing-element-in-choice
+
+          Like the standard error missing-element, but generated when
+          one of a set of elements in a choice is missing.
+
+        o  pending-changes
+
+          Means that a lock operation was attempted on the candidate
+          database, and the candidate database has uncommitted
+          changes. This is not allowed according to the protocol
+          specification.
+
+        o  url-open-failed
+
+          Means that the URL given was correct, but that it could not
+          be opened. This can e.g. be due to a missing local file, or
+          bad ftp credentials. An error message string is provided in
+          the &amp;lt;error-message&amp;gt; element.
+
+        o  url-write-failed
+
+          Means that the URL given was opened, but write failed. This
+          could e.g. be due to lack of disk space. An error message
+          string is provided in the &amp;lt;error-message&amp;gt; element.
+
+        o  bad-state
+
+          Means that an rpc is received when the session is in a state
+          which don't accept this rpc.  An example is
+          &amp;lt;prepare-transaction&amp;gt; before &amp;lt;start-transaction&amp;gt;
+
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+
+  <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"bad-keyref"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+        This element will be present in the 'error-info' container when
+        'error-app-tag' is "instance-required".
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:complexType&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:sequence&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"bad-element"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:string"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+              Contains an absolute XPath expression pointing to the element
+              which value refers to a non-existing instance.
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"missing-element"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:string"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+              Contains an absolute XPath expression pointing to the missing
+              element referred to by 'bad-element'.
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:sequence&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:complexType&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+
+  <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"bad-instance-count"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+        This element will be present in the 'error-info' container when
+        'error-app-tag' is "too-few-elements" or "too-many-elements".
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:complexType&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:sequence&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"bad-element"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:string"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+              Contains an absolute XPath expression pointing to an
+              element which exists in too few or too many instances.
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"instances"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:unsignedInt"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+              Contains the number of existing instances of the element
+              referd to by 'bad-element'.
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;xs:choice&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"min-instances"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:unsignedInt"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+              <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+                Contains the minimum number of instances that must
+                exist in order for the configuration to be consistent.
+                This element is present only if 'app-tag' is
+                'too-few-elems'.
+              <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;xs:element</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"max-instances"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:unsignedInt"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+              <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+                Contains the maximum number of instances that can
+                exist in order for the configuration to be consistent.
+                This element is present only if 'app-tag' is
+                'too-many-elems'.
+              <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+          <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/xs:choice&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:sequence&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:complexType&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/xs:element&gt;</strong>
+
+  <strong class="hl-tag" style="color: #000096">&lt;xs:attribute</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"annotation"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:string"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+        This attribute can be present on any configuration data node.  It
+        acts as a comment for the node.  The annotation does not affect the
+        underlying configuration data.
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/xs:attribute&gt;</strong>
+
+  <strong class="hl-tag" style="color: #000096">&lt;xs:attribute</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"tags"</span> <span class="hl-attribute" style="color: #F5844C">type</span>=<span class="hl-value" style="color: #993300">"xs:string"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;xs:annotation&gt;</strong>
+      <strong class="hl-tag" style="color: #000096">&lt;xs:documentation&gt;</strong>
+        This attribute can be present on any configuration data node.  It
+        is a space separated string of tags for the node.  The tags of a
+        node does not affect the underlying configuration data, but can
+        be used by a user for data organization, and data filtering.
+      <strong class="hl-tag" style="color: #000096">&lt;/xs:documentation&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/xs:annotation&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;/xs:attribute&gt;</strong>
+
+<strong class="hl-tag" style="color: #000096">&lt;/xs:schema&gt;</strong>
+</pre></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch14.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch16.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;14.&nbsp;The AAA infrastructure&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;16.&nbsp;The CLI agent</td></tr></table></div></body></html>

@@ -1,0 +1,91 @@
+module smp {
+  namespace "http://tail-f.com/ns/example/smp";
+  prefix smp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import types {
+    prefix dt;
+  }
+
+  typedef enum-type {
+    type enumeration {
+      enum complete;
+      enum incomplete;
+      enum unavailable;
+      enum invalid;
+    }
+  }
+
+  /*    A set of server structures  */
+  container servers {
+    tailf:validate vp1;
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+      leaf e {
+        type enum-type;
+        default complete;
+      }
+      leaf-list refs {
+        type instance-identifier {
+          require-instance false;
+        }
+      }
+      /*  test enums as keys  */
+      container foo {
+        list ee {
+          key e;
+          max-elements 64;
+          leaf e {
+            type enum-type;
+            tailf:validate vp2;
+          }
+          leaf name {
+            type string;
+            default abcd;
+          }
+          leaf myref {
+            type instance-identifier;
+            mandatory true;
+          }
+        }
+      }
+      choice type {
+        leaf webserver {
+          type string;
+        }
+        leaf mailserver {
+          type string;
+        }
+      }
+    }
+  }
+  list service {
+    key "ip port";
+    leaf ip {
+      type inet:ip-address;
+    }
+    leaf port {
+      type inet:port-number;
+    }
+    container data {
+      uses dt:struct;
+    }
+  }
+}

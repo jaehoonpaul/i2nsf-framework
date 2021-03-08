@@ -1,0 +1,20 @@
+<INFO> 5-Mar-2021::05:06:27.953 security-controller confd[24498]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.3:45566 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:27.954 security-controller confd[24498]: audit user: admin/0 logged in via netconf from 10.0.0.3:45566 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:27.976 security-controller confd[24498]: audit user: admin/28 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:28.169 security-controller confd[24498]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:06:28.449 security-controller confd[24498]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.3:45568 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:28.450 security-controller confd[24498]: audit user: admin/0 logged in via netconf from 10.0.0.3:45568 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:28.456 security-controller confd[24498]: audit user: admin/29 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:28.648 security-controller confd[24498]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:06:28.957 security-controller confd[24498]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.3:45570 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:28.958 security-controller confd[24498]: audit user: admin/0 logged in via netconf from 10.0.0.3:45570 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:28.991 security-controller confd[24498]: audit user: admin/30 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:29.162 security-controller confd[24498]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:06:29.453 security-controller confd[24498]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.3:45572 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:29.454 security-controller confd[24498]: audit user: admin/0 logged in via netconf from 10.0.0.3:45572 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:29.462 security-controller confd[24498]: audit user: admin/31 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:29.631 security-controller confd[24498]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:06:29.928 security-controller confd[24498]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.3:45574 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:29.929 security-controller confd[24498]: audit user: admin/0 logged in via netconf from 10.0.0.3:45574 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:29.936 security-controller confd[24498]: audit user: admin/32 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:30.159 security-controller confd[24498]: audit user: admin/0 logged out <local> user

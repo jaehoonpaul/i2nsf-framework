@@ -1,0 +1,12 @@
+# Created by: admin
+# Date: 2021-03-04 00:54:49
+# Via: netconf
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10001
+
+i2nsf-security-policy {
+    delete:
+    system-policy security_policy_for_blocking_sns;
+}

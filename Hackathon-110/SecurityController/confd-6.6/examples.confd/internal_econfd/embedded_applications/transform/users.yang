@@ -1,0 +1,38 @@
+module users {
+  namespace "http://tail-f.com/ns/example/users";
+  prefix users;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef Role {
+    type enumeration {
+      enum admin;
+      enum oper;
+    }
+  }
+  typedef passwdStr {
+    type tailf:md5-digest-string {
+    }
+  }
+  container users {
+    tailf:callpoint simple_aaa {
+      tailf:transform true;
+    }
+    list user {
+      key name;
+      leaf name {
+        type string;
+      }
+      leaf password {
+        type passwdStr;
+        mandatory true;
+      }
+      leaf role {
+        type Role;
+        mandatory true;
+      }
+    }
+  }
+}

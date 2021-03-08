@@ -1,0 +1,15 @@
+module bridge-ann {
+   namespace "http://tail-f.com/ns/bridge-ann";
+   prefix "ba";
+
+   import tailf-aaa {
+      prefix aaa;
+   }
+   import tailf-common {
+      prefix tailf;
+   }
+
+   tailf:annotate "/aaa:aaa" {
+     tailf:callpoint aaa;
+   }
+}

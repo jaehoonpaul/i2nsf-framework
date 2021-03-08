@@ -1,0 +1,11 @@
+CC=cc
+CFLAGS=-ansi -pedantic
+LDFLAGS=
+LIBS= -lexpat
+
+xmlset: xmlset.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o xmlset xmlset.o $(LIBS)
+	strip xmlset
+
+clean:
+	rm xmlset xmlset.o

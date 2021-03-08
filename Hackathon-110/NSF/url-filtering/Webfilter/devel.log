@@ -1,0 +1,78 @@
+<INFO> 4-Mar-2021::06:14:00.965 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd embedded apps in early_phase0:
+	[]
+<INFO> 4-Mar-2021::06:14:01.154 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd mmap_schema handle_info got msg: timeout
+<INFO> 4-Mar-2021::06:14:01.173 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd embedded apps in phase0:
+	[]
+<INFO> 4-Mar-2021::06:14:01.397 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-cdb init files found in ./confd-cdb: aaa_init.xml
+<INFO> 4-Mar-2021::06:14:01.478 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-cdb Compacted CDB journal file: 18 ms (93 nodes in memory, disk size 1.44 KiB -> 1.39 KiB)
+<INFO> 4-Mar-2021::06:14:01.489 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd embedded apps in phase1:
+	[]
+<ERR> 4-Mar-2021::06:14:01.528 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 4-Mar-2021::06:14:01.538 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 4-Mar-2021::06:14:01.544 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: confd embedded apps in phase2:
+	[]
+<INFO> 4-Mar-2021::06:14:09.421 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 0)
+<INFO> 4-Mar-2021::06:14:19.024 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 1, worker id: 4, socket: {socket,<0.225.0>}
+<INFO> 4-Mar-2021::06:14:19.024 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 1)
+<INFO> 4-Mar-2021::06:16:07.159 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 2)
+<INFO> 4-Mar-2021::06:16:21.716 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 3)
+<INFO> 4-Mar-2021::06:16:26.332 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 4)
+<INFO> 4-Mar-2021::06:16:55.188 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 5)
+<INFO> 4-Mar-2021::06:18:36.094 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 6)
+<INFO> 4-Mar-2021::06:20:24.687 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 7)
+<INFO> 4-Mar-2021::06:34:23.349 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 8)
+<INFO> 4-Mar-2021::06:41:15.949 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 9)
+<INFO> 5-Mar-2021::01:38:24.765 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 10, worker id: 4, socket: {socket,<0.251.0>}
+<INFO> 5-Mar-2021::01:38:24.767 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 10)
+<INFO> 5-Mar-2021::04:13:11.690 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 11, worker id: 4, socket: {socket,<0.261.0>}
+<INFO> 5-Mar-2021::04:13:11.691 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 11)
+<INFO> 5-Mar-2021::04:13:19.194 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 12)
+<INFO> 5-Mar-2021::04:13:56.203 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 13, worker id: 4, socket: {socket,<0.273.0>}
+<INFO> 5-Mar-2021::04:13:56.212 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 13)
+<INFO> 5-Mar-2021::04:16:09.121 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 14)
+<INFO> 5-Mar-2021::04:16:41.340 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 15)
+<INFO> 5-Mar-2021::04:16:50.217 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 16, worker id: 4, socket: {socket,<0.280.0>}
+<INFO> 5-Mar-2021::04:16:50.217 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 16)
+<INFO> 5-Mar-2021::04:18:23.532 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 17)
+<INFO> 5-Mar-2021::04:25:47.235 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 18, worker id: 4, socket: {socket,<0.292.0>}
+<INFO> 5-Mar-2021::04:25:47.236 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 18)
+<INFO> 5-Mar-2021::04:26:15.327 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Worker closed daemon id: 19, worker id: 4, socket: {socket,<0.302.0>}
+<INFO> 5-Mar-2021::04:26:15.328 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 19)
+<INFO> 5-Mar-2021::04:43:54.434 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 20)
+<INFO> 5-Mar-2021::04:51:51.265 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd embedded apps in early_phase0:
+	[]
+<INFO> 5-Mar-2021::04:51:51.438 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd mmap_schema handle_info got msg: timeout
+<INFO> 5-Mar-2021::04:51:51.458 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd embedded apps in phase0:
+	[]
+<INFO> 5-Mar-2021::04:51:51.530 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-cdb Loaded oper data from ./confd-cdb/O.cdb (4 bytes data in 0.000s)
+<INFO> 5-Mar-2021::04:51:51.560 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-cdb Loaded schema file: ./confd-cdb/C.cdb (v4 from 6.6)
+<INFO> 5-Mar-2021::04:51:51.564 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-cdb Loaded configuration from ./confd-cdb/A.cdb (1.60 KiB data, 2 transactions in 0.000s)
+<INFO> 5-Mar-2021::04:51:51.618 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd embedded apps in phase1:
+	[]
+<ERR> 5-Mar-2021::04:51:51.656 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 5-Mar-2021::04:51:51.672 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 5-Mar-2021::04:51:51.679 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: confd embedded apps in phase2:
+	[]
+<INFO> 5-Mar-2021::05:02:08.827 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-c Worker closed daemon id: 0, worker id: 4, socket: {socket,<0.475.0>}
+<INFO> 5-Mar-2021::05:02:08.828 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 0)
+<INFO> 5-Mar-2021::05:03:43.568 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 1)
+<INFO> 5-Mar-2021::05:04:13.437 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd embedded apps in early_phase0:
+	[]
+<INFO> 5-Mar-2021::05:04:13.707 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd mmap_schema handle_info got msg: timeout
+<INFO> 5-Mar-2021::05:04:13.739 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd embedded apps in phase0:
+	[]
+<INFO> 5-Mar-2021::05:04:13.839 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-cdb Loaded oper data from ./confd-cdb/O.cdb (4 bytes data in 0.000s)
+<INFO> 5-Mar-2021::05:04:13.877 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-cdb Loaded schema file: ./confd-cdb/C.cdb (v4 from 6.6)
+<INFO> 5-Mar-2021::05:04:13.883 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-cdb Loaded configuration from ./confd-cdb/A.cdb (1.87 KiB data, 4 transactions in 0.000s)
+<INFO> 5-Mar-2021::05:04:13.955 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd embedded apps in phase1:
+	[]
+<ERR> 5-Mar-2021::05:04:14.015 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 5-Mar-2021::05:04:14.037 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 5-Mar-2021::05:04:14.045 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: confd embedded apps in phase2:
+	[]
+<INFO> 5-Mar-2021::05:05:08.894 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 0)
+<INFO> 5-Mar-2021::05:05:15.224 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 1)
+<INFO> 5-Mar-2021::05:20:43.896 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: devel-c Daemon closed (name: notifier_builtin_replay_store, daemon id: 2)

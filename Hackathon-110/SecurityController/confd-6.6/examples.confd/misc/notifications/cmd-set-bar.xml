@@ -1,0 +1,6 @@
+<!-- run with: netconf-console - -edit cmd-set-bar.xml -->
+<root xmlns="http://tail-f.com/ns/example/noti"
+      xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+      nc:operation="merge">
+  <bar>14</bar>
+</root>

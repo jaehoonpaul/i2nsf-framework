@@ -1,0 +1,8 @@
+{application,econfd,
+ [{description,"econfd"},
+  {vsn,"%VSN%"},
+  {modules,[%MODULES%]},
+  {registered, []},
+  {mod,{econfd_app,[]}},
+  {env, []},
+  {applications,[kernel,stdlib]}]}.

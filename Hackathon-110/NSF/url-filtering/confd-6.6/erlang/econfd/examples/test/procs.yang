@@ -1,0 +1,91 @@
+module procs {
+  namespace "http://tail-f.com/ns/example/procs";
+  prefix procs;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  container test {
+    config false;
+    tailf:callpoint proc_cp;
+    container procs {
+      list proc {
+        key pid;
+        max-elements 512;
+        leaf pid {
+          type string;
+        }
+        leaf heap_size {
+          type int32;
+          mandatory true;
+        }
+        leaf stack_size {
+          type int32;
+          mandatory true;
+        }
+        leaf registered_name {
+          type string;
+        }
+        leaf trap_exit {
+          type boolean;
+          mandatory true;
+        }
+      }
+    }
+    container objs {
+      tailf:callpoint obj_cp;
+      list obj {
+        key key;
+        max-elements 512;
+        leaf key {
+          type int32;
+        }
+        leaf s1 {
+          type string;
+          mandatory true;
+        }
+        leaf time {
+          type xs:time;
+          mandatory true;
+        }
+        leaf date {
+          type xs:date;
+          mandatory true;
+        }
+        leaf-list refs {
+          type instance-identifier {
+            require-instance false;
+          }
+        }
+        container container {
+          presence "";
+          leaf duration {
+            type xs:duration;
+            mandatory true;
+          }
+        }
+      }
+    }
+    container nobjs {
+      tailf:callpoint nobj_cp;
+      list nobj {
+        key "key1 key2";
+        max-elements 512;
+        leaf key1 {
+          type int32;
+        }
+        leaf key2 {
+          type string;
+        }
+        leaf s1 {
+          type string;
+          mandatory true;
+        }
+      }
+    }
+  }
+}

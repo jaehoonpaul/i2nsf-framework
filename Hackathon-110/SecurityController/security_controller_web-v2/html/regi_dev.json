@@ -1,0 +1,17 @@
+{
+    "ietf-i2nsf-cfi-policy:policy": {
+        "endpoint-group": {
+            "device-group": [
+                {
+                    "name": "webservers",
+                    "range-ip-address": [
+                        {
+                            "start-ip-address": "221.159.112.91",
+                            "end-ip-address": "221.159.112.97"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

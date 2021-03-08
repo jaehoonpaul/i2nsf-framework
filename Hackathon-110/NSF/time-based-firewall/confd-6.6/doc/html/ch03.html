@@ -1,0 +1,2202 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch02.html" title="Chapter&nbsp;2.&nbsp;An introduction to ConfD"><link rel="next" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Rendering Agents"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.yang"></a>Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch03.html#d5e142">3.1. The YANG Data Modeling Language</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e149">3.2. YANG in ConfD</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e154">3.3. YANG Introduction</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e388">3.4. Working With YANG Modules</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e440">3.5. Integrity Constraints</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e469">3.6. The when statement</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e483">3.7. Using the Tail-f Extensions with YANG</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e514">3.8. Custom Help Texts and Error Messages</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e551">3.9. Hidden Data</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e594">3.10. An Example: Modeling a List of Interfaces</a></span></dt><dt><span class="sect1"><a href="ch03.html#ug.yang.leafrefs">3.11. More on leafrefs</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e763">3.12. Using Multiple Namespaces</a></span></dt><dt><span class="sect1"><a href="ch03.html#ug.yang.Names_Namespaces_And_Revisions">3.13. Module Names, Namespaces and Revisions</a></span></dt><dt><span class="sect1"><a href="ch03.html#ug.yang.id_value">3.14. Hash Values and the id-value Statement</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e836">3.15. Migrating from Confspecs to YANG</a></span></dt><dt><span class="sect1"><a href="ch03.html#d5e944">3.16. The pyang tool</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e142"></a>3.1.&nbsp;The YANG Data Modeling Language</h2></div></div></div><p>
+        YANG is a data modeling language used to model configuration
+        and state data manipulated by a NETCONF agent. The YANG
+        modeling language is defined in RFC 6020. YANG as a language
+        will not be described in its entirety here - rather we refer
+        to the IETF RFC text at <a class="link" href="http://www.ietf.org/rfc/rfc6020.txt" target="_top">http://www.ietf.org/rfc/rfc6020.txt</a>.
+      </p><p>
+        Another source of information regarding the YANG language is
+        the wiki based web site
+        <a class="link" href="http://www.yang-central.org/" target="_top">http://www.yang-central.org/</a>.  For a tutorial
+        on the data modeling capabilities of YANG, see
+        <a class="link" href="http://www.yang-central.org/twiki/bin/view/Main/DhcpTutorial" target="_top">http://www.yang-central.org/twiki/bin/view/Main/DhcpTutorial</a>.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e149"></a>3.2.&nbsp;YANG in ConfD</h2></div></div></div><p>
+        In
+        ConfD, YANG is not only used for NETCONF data. On the
+        contrary, YANG is used to describe the data model as
+        a whole and used by all northbound interfaces.
+      </p><p>
+        A YANG module can be directly transformed into a
+        final schema (.fxs) file that can be loaded into
+        ConfD.
+        Currently all features of the YANG language except the
+        <code class="code">anyxml</code> statement are supported.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e154"></a>3.3.&nbsp;YANG Introduction</h2></div></div></div><p>
+        This section is a brief introduction to YANG. The exact
+        details of all language constructs is fully described in
+        RFC 6020.
+      </p><p>
+        The
+        ConfD
+        programmer must know YANG well, since all
+        APIs use various paths that are derived from the YANG
+        datamodel.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e158"></a>3.3.1.&nbsp;Modules and Submodules</h3></div></div></div><p>
+            A module contains three types of statements: module-header
+            statements, revision statements, and definition statements.  The
+            module header statements describe the module and give information
+            about the module itself, the revision statements give information
+            about the history of the module, and the definition statements are
+            the body of the module where the data model is defined.
+          </p><p>
+            A module may be divided into submodules, based on the needs of the
+            module owner.  The external view remains that of a single module,
+            regardless of the presence or size of its submodules.
+          </p><p>
+            The <code class="code">include</code> statement allows a module or
+            submodule to reference material in submodules, and the
+            <code class="code">import</code> statement allows references to
+            material defined in other modules.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e165"></a>3.3.2.&nbsp;Data Modeling Basics</h3></div></div></div><p>
+            YANG defines four types of nodes for data modeling.  In each of the
+            following subsections, the example shows the YANG syntax as
+            well as a corresponding NETCONF XML representation.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e168"></a>3.3.3.&nbsp;Leaf Nodes</h3></div></div></div><p>
+            A leaf node contains simple data like an integer or a string.
+            It has exactly one value of a particular type, and no child nodes.
+          </p><div class="informalexample"><pre class="programlisting">leaf host-name {
+    type string;
+    description "Hostname for this system";
+}</pre></div><p>
+            With XML value representation for example as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;host-name&gt;my.example.com&lt;/host-name&gt;</pre></div><p>
+            An interesting variant of leaf nodes are typeless
+            leafs.
+          </p><div class="informalexample"><pre class="programlisting">leaf enabled {
+    type empty;
+    description "Enable the interface";
+}</pre></div><p>
+            With XML value representation for example as:
+          </p><div class="informalexample"><pre class="programlisting">
+&lt;enabled/&gt;
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e182"></a>3.3.4.&nbsp;Leaf-list Nodes</h3></div></div></div><p>
+            A <code class="code">leaf-list</code> is a sequence of leaf nodes
+            with exactly one  value of a particular type per leaf.
+          </p><div class="informalexample"><pre class="programlisting">leaf-list domain-search {
+         type string;
+         description "List of domain names to search";
+     }
+          </pre></div><p>
+            With XML value representation for example as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;domain-search&gt;high.example.com&lt;/domain-search&gt;
+&lt;domain-search&gt;low.example.com&lt;/domain-search&gt;
+&lt;domain-search&gt;everywhere.example.com&lt;/domain-search&gt;
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e191"></a>3.3.5.&nbsp;Container Nodes</h3></div></div></div><p>
+            A <code class="code">container</code> node is used to group related
+            nodes in a subtree.
+            It has only child nodes and no value and may contain
+            any number of child nodes of any type (including leafs, lists,
+            containers, and leaf-lists).
+          </p><div class="informalexample"><pre class="programlisting">container system {
+    container login {
+        leaf message {
+            type string;
+            description
+                "Message given at start of login session";
+        }
+    }
+}
+     </pre></div><p>
+            With XML value representation for example as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;system&gt;
+  &lt;login&gt;
+    &lt;message&gt;Good morning, Dave&lt;/message&gt;
+  &lt;/login&gt;
+&lt;/system&gt;
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e200"></a>3.3.6.&nbsp;List Nodes</h3></div></div></div><p>
+            A <code class="code">list</code> defines a sequence of list entries.  Each
+            entry is like a structure or a record instance, and is uniquely
+            identified by the values of its key leafs.
+            A list can define multiple keys and may
+            contain any number of child nodes of any type (including leafs,
+            lists, containers etc.).
+          </p><div class="informalexample"><pre class="programlisting">list user {
+    key "name";
+    leaf name {
+        type string;
+    }
+    leaf full-name {
+        type string;
+    }
+    leaf class {
+        type string;
+    }
+}
+     </pre></div><p>
+       With XML value representation for example as:
+     </p><div class="informalexample"><pre class="programlisting">&lt;user&gt;
+  &lt;name&gt;glocks&lt;/name&gt;
+  &lt;full-name&gt;Goldie Locks&lt;/full-name&gt;
+  &lt;class&gt;intruder&lt;/class&gt;
+&lt;/user&gt;
+&lt;user&gt;
+  &lt;name&gt;snowey&lt;/name&gt;
+  &lt;full-name&gt;Snow White&lt;/full-name&gt;
+  &lt;class&gt;free-loader&lt;/class&gt;
+&lt;/user&gt;
+&lt;user&gt;
+  &lt;name&gt;rzull&lt;/name&gt;
+  &lt;full-name&gt;Repun Zell&lt;/full-name&gt;
+  &lt;class&gt;tower&lt;/class&gt;
+&lt;/user&gt;
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e209"></a>3.3.7.&nbsp;Example Module</h3></div></div></div><p>
+            These statements are combined to define the module:
+          </p><div class="informalexample"><pre class="programlisting">// Contents of "acme-system.yang"
+module acme-system {
+    namespace "http://acme.example.com/system";
+    prefix "acme";
+
+    organization "ACME Inc.";
+    contact "joe@acme.example.com";
+    description
+        "The module for entities implementing the ACME system.";
+
+    revision 2007-06-09 {
+        description "Initial revision.";
+    }
+
+    container system {
+        leaf host-name {
+            type string;
+            description "Hostname for this system";
+        }
+
+        leaf-list domain-search {
+            type string;
+            description "List of domain names to search";
+        }
+
+        container login {
+            leaf message {
+                type string;
+                description
+                    "Message given at start of login session";
+            }
+
+            list user {
+                key "name";
+                leaf name {
+                    type string;
+                }
+                leaf full-name {
+                    type string;
+                }
+                leaf class {
+                    type string;
+                }
+            }
+        }
+    }
+}
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e214"></a>3.3.8.&nbsp;State Data</h3></div></div></div><p>
+            YANG can model state data, as well as configuration data, based on
+            the <code class="code">config</code> statement.  When a node is
+            tagged with <code class="code">config false</code>,
+            its sub hierarchy is flagged as state data, to be reported using
+            NETCONF's <span class="command"><strong>get</strong></span> operation, not the
+            <span class="command"><strong>get-config</strong></span> operation.  Parent
+            containers, lists, and key leafs are reported also, giving the
+            context for the state data.
+          </p><p>
+            In this example, two leafs are defined for each interface, a
+            configured speed and an observed speed.  The observed speed is not
+            configuration, so it can be returned with NETCONF
+            <span class="command"><strong>get</strong></span> operations,
+            but not with <span class="command"><strong>get-config</strong></span> operations.  The observed
+            speed is not configuration data, and cannot be manipulated using
+            <span class="command"><strong>edit-config</strong></span>.
+          </p><div class="informalexample"><pre class="programlisting">list interface {
+    key "name";
+    config true;
+
+    leaf name {
+        type string;
+    }
+    leaf speed {
+        type enumeration {
+            enum 10m;
+            enum 100m;
+            enum auto;
+        }
+    }
+    leaf observed-speed {
+        type uint32;
+        config false;
+    }
+}
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e227"></a>3.3.9.&nbsp;Built-in Types</h3></div></div></div><p>
+            YANG has a set of built-in types, similar to those of many
+            programming languages, but with some differences due to special
+            requirements from the management domain.  The following table
+            summarizes the built-in types.
+          </p><div class="table"><a name="d5e230"></a><p class="title"><b>Table&nbsp;3.1.&nbsp;YANG built-in types</b></p><div class="table-contents"><table frame="void" border="0"><thead><tr><td>Name</td><td>Type</td><td>Description</td></tr></thead><tbody><tr><td>binary</td><td>Text</td><td>Any binary data</td></tr><tr><td>bits</td><td>Text/Number</td><td>A set of bits or flags</td></tr><tr><td>boolean</td><td>Text</td><td>"true" or "false"</td></tr><tr><td>decimal64</td><td>Number</td><td>64-bit fixed point real number</td></tr><tr><td>empty</td><td>Empty</td><td>A leaf that does not have any value</td></tr><tr><td>enumeration</td><td>Text/Number</td><td>Enumerated strings with associated numeric values</td></tr><tr><td>identityref</td><td>Text</td><td>A reference to an abstract identity</td></tr><tr><td>instance-identifier</td><td>Text</td><td>References a data tree node</td></tr><tr><td>int8</td><td>Number</td><td>8-bit signed integer</td></tr><tr><td>int16</td><td>Number</td><td>16-bit signed integer</td></tr><tr><td>int32</td><td>Number</td><td>32-bit signed integer</td></tr><tr><td>int64</td><td>Number</td><td>64-bit signed integer</td></tr><tr><td>leafref</td><td>Text/Number</td><td>A reference to a leaf instance</td></tr><tr><td>string</td><td>Text</td><td>Human readable string</td></tr><tr><td>uint8</td><td>Number</td><td>8-bit unsigned integer</td></tr><tr><td>uint16</td><td>Number</td><td>16-bit unsigned integer</td></tr><tr><td>uint32</td><td>Number</td><td>32-bit unsigned integer</td></tr><tr><td>uint64</td><td>Number</td><td>64-bit unsigned integer</td></tr><tr><td>union</td><td>Text/Number</td><td>Choice of member types</td></tr></tbody></table></div></div><br class="table-break"></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e314"></a>3.3.10.&nbsp;Derived Types (typedef)</h3></div></div></div><p>
+            YANG can define derived types from base types using the
+            <code class="code">typedef</code> statement.  A base type can be either a
+            built-in type or a derived type, allowing a hierarchy of derived
+            types.
+            A derived type can be used as the argument for the
+            <code class="code">type</code> statement.
+          </p><div class="informalexample"><pre class="programlisting">typedef percent {
+    type uint16 {
+        range "0 .. 100";
+    }
+    description "Percentage";
+}
+
+leaf completed {
+    type percent;
+}
+          </pre></div><p>
+            With XML value representation for example as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;completed&gt;20&lt;/completed&gt;
+</pre></div><p>
+            User defined typedefs are useful when we want to
+            name and reuse a type several times. It is also possible
+            to restrict leafs inline in the data model as in:
+          </p><div class="informalexample"><pre class="programlisting">leaf completed {
+    type uint16 {
+        range "0 .. 100";
+    }
+    description "Percentage";
+}
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e327"></a>3.3.11.&nbsp;Reusable Node Groups (grouping)</h3></div></div></div><p>
+            Groups of nodes can be assembled into the equivalent of complex
+            types using the <code class="code">grouping</code> statement.
+            <code class="code">grouping</code> defines a set of nodes
+            that are instantiated with the <code class="code">uses</code> statement:
+          </p><div class="informalexample"><pre class="programlisting">grouping target {
+    leaf address {
+        type inet:ip-address;
+        description "Target IP address";
+    }
+    leaf port {
+        type inet:port-number;
+        description "Target port number";
+    }
+}
+
+container peer {
+    container destination {
+        uses target;
+    }
+}
+     </pre></div><p>
+       With XML value representation for example as:
+     </p><div class="informalexample"><pre class="programlisting">&lt;peer&gt;
+  &lt;destination&gt;
+    &lt;address&gt;192.0.2.1&lt;/address&gt;
+    &lt;port&gt;830&lt;/port&gt;
+  &lt;/destination&gt;
+&lt;/peer&gt;
+     </pre></div><p>
+            The grouping can be refined as it is used, allowing certain
+            statements to be overridden.  In this example, the description is
+            refined:
+          </p><div class="informalexample"><pre class="programlisting">container connection {
+    container source {
+        uses target {
+            refine "address" {
+                description "Source IP address";
+            }
+            refine "port" {
+                description "Source port number";
+            }
+        }
+    }
+    container destination {
+        uses target {
+            refine "address" {
+                description "Destination IP address";
+            }
+            refine "port" {
+                description "Destination port number";
+            }
+        }
+    }
+}
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e341"></a>3.3.12.&nbsp;Choices</h3></div></div></div><p>
+            YANG allows the data model to segregate incompatible nodes into
+            distinct choices using the <code class="code">choice</code> and
+            <code class="code">case</code> statements.  The
+            <code class="code">choice</code> statement contains a set of <code class="code">case</code>
+            statements which define sets of schema nodes that cannot appear
+            together.  Each <code class="code">case</code> may
+            contain multiple nodes, but each node may appear in only one
+            <code class="code">case</code> under a <code class="code">choice</code>.
+          </p><p>
+            When the nodes from one case are created, all nodes from all
+            other cases are implicitly deleted.  The device handles the
+            enforcement of the constraint, preventing incompatibilities from
+            existing in the configuration.
+          </p><p>
+            The choice and case nodes appear only in the schema tree, not in the
+            data tree or XML encoding.  The additional levels of hierarchy are
+            not needed beyond the conceptual schema.
+          </p><div class="informalexample"><pre class="programlisting">container food {
+   choice snack {
+       mandatory true;
+       case sports-arena {
+           leaf pretzel {
+               type empty;
+           }
+           leaf beer {
+               type empty;
+           }
+       }
+       case late-night {
+           leaf chocolate {
+               type enumeration {
+                   enum dark;
+                   enum milk;
+                   enum first-available;
+               }
+           }
+       }
+   }
+}
+          </pre></div><p>
+            With XML value reprentation for example as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;food&gt;
+  &lt;chocolate&gt;first-available&lt;/chocolate&gt;
+&lt;/food&gt;
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e358"></a>3.3.13.&nbsp;Extending Data Models (augment)</h3></div></div></div><p>
+            YANG allows a module to insert additional nodes into data models,
+            including both the current module (and its submodules) or an
+            external module.  This is useful e.g. for vendors to add
+            vendor-specific parameters to standard data models in an
+            interoperable way.
+          </p><p>
+            The <code class="code">augment</code> statement defines the location in the
+            data model hierarchy where new nodes are inserted, and the
+            <code class="code">when</code> statement
+            defines the conditions when the new nodes are valid.
+          </p><div class="informalexample"><pre class="programlisting">augment /system/login/user {
+    when "class != 'wheel'";
+    leaf uid {
+        type uint16 {
+            range "1000 .. 30000";
+        }
+    }
+}
+     </pre></div><p>
+            This example defines a <code class="code">uid</code> node that only is
+            valid when the user's <code class="code">class</code> is not <code class="code">wheel</code>.
+          </p><p>
+            If a module augments another model, the XML representation of the
+            data will reflect the prefix of the augmenting model.  For example,
+            if the above augmentation were in a module with prefix
+            <code class="code">other</code>, the XML would look like:
+          </p><div class="informalexample"><pre class="programlisting">&lt;user&gt;
+  &lt;name&gt;alicew&lt;/name&gt;
+  &lt;full-name&gt;Alice N. Wonderland&lt;/full-name&gt;
+  &lt;class&gt;drop-out&lt;/class&gt;
+  &lt;other:uid&gt;1024&lt;/other:uid&gt;
+&lt;/user&gt;
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e374"></a>3.3.14.&nbsp;RPC Definitions</h3></div></div></div><p>
+            YANG allows the definition of NETCONF RPCs.  The method names, input
+            parameters and output parameters are modeled using YANG data
+            definition statements.
+            </p><div class="informalexample"><pre class="programlisting">rpc activate-software-image {
+    input {
+        leaf image-name {
+            type string;
+        }
+    }
+    output {
+        leaf status {
+            type string;
+        }
+    }
+}
+     </pre></div><div class="informalexample"><pre class="programlisting">&lt;rpc message-id="101"
+     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;activate-software-image xmlns="http://acme.example.com/system"&gt;
+    &lt;name&gt;acmefw-2.3&lt;/name&gt;
+ &lt;/activate-software-image&gt;
+&lt;/rpc&gt;
+
+&lt;rpc-reply message-id="101"
+           xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;status xmlns="http://acme.example.com/system"&gt;
+    The image acmefw-2.3 is being installed.
+  &lt;/status&gt;
+&lt;/rpc-reply&gt;
+     </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e381"></a>3.3.15.&nbsp;Notification Definitions</h3></div></div></div><p>
+            YANG allows the definition of notifications suitable for NETCONF.
+            YANG data definition statements are used to model the content of the
+            notification.
+          </p><div class="informalexample"><pre class="programlisting">notification link-failure {
+    description "A link failure has been detected";
+    leaf if-name {
+        type leafref {
+            path "/interfaces/interface/name";
+        }
+    }
+    leaf if-admin-status {
+        type ifAdminStatus;
+    }
+}
+     </pre></div><div class="informalexample"><pre class="programlisting">&lt;notification xmlns="urn:ietf:params:netconf:capability:notification:1.0"&gt;
+  &lt;eventTime&gt;2007-09-01T10:00:00Z&lt;/eventTime&gt;
+  &lt;link-failure xmlns="http://acme.example.com/system"&gt;
+    &lt;if-name&gt;so-1/2/3.0&lt;/if-name&gt;
+    &lt;if-admin-status&gt;up&lt;/if-admin-status&gt;
+  &lt;/link-failure&gt;
+&lt;/notification&gt;
+     </pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e388"></a>3.4.&nbsp;Working With YANG Modules</h2></div></div></div><p>
+        Assume we have a small trivial YANG file <code class="filename">test.yang</code>:
+      </p><div class="informalexample"><pre class="programlisting">module test {
+namespace "http://tail-f.com/test";
+prefix "t";
+
+  container top {
+      leaf a {
+          type int32;
+      }
+      leaf b {
+          type string;
+      }
+  }
+}
+    </pre></div><p>
+        </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>
+            There is an Emacs mode suitable for
+            YANG file editing in the system distribution. It is called
+            <code class="filename">yang-mode.el</code>
+          </p></div><p>
+      </p><p>
+        We can use
+        <span class="command"><strong>confdc</strong></span>
+        
+        compiler
+        to compile the YANG module.
+      </p><div class="informalexample"><pre class="screen">$ confdc -c test.yang</pre></div><p>
+        The above command creates an output file <code class="filename">test.fxs</code>
+        that is a compiled schema that can be loaded into the system.
+        The
+        <span class="command"><strong>confdc</strong></span>
+        
+        compiler with all its flags is fully
+        described in
+        <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a>.
+      </p><p>
+        There exists a number of standards based auxiliary YANG
+        modules defining various useful data types.
+        These modules, as well as their accompanying .fxs files can be
+        found in the
+        <code class="filename">${CONFD_DIR}/src/confd/yang</code>
+        
+        directory in the distribution.
+      </p><p>
+         The modules are:
+       </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+             <span class="emphasis"><em>ietf-yang-types</em></span> - defining some basic data
+             types such as counters, dates and times.
+           </p></li><li class="listitem"><p>
+             <span class="emphasis"><em>ietf-inet-types</em></span> - defining several useful
+             types related to IP addresses.
+           </p></li></ul></div><p>
+         Whenever we wish to use any of those predefined modules we
+         need to not only import the module into our YANG module, but
+         we must also load the corresponding .fxs file for the
+         imported module into the system.
+        </p><p>
+          So if  we extend our test module so that it looks like:
+        </p><div class="informalexample"><pre class="programlisting">module test {
+    namespace "http://tail-f.com/test";
+    prefix "t";
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    container top {
+        leaf a {
+            type int32;
+        }
+        leaf b {
+            type string;
+        }
+        leaf ip {
+            type inet:ipv4-address;
+        }
+    }
+}
+          </pre></div><p>
+          Normally when importing other YANG modules we must indicate
+          through the <code class="code">--yangpath</code> flag to
+          <span class="command"><strong>confdc</strong></span>
+          
+
+          where to
+          search for the imported module. In the special case of the
+          standard modules, this is not required.
+        </p><p>
+          We compile the above as:
+        </p><div class="informalexample"><pre class="screen">$ confdc -c test.yang
+$ confdc --get-info test.fxs
+fxs file
+Confdc version:         "3.0_2" (current Confdc version = "3.0_2")
+uri:                    http://tail-f.com/test
+id:                     http://tail-f.com/test
+prefix:                 "t"
+flags:                  6
+type:                   cs
+mountpoint:             undefined
+exported agents:        all
+dependencies:           ['http://www.w3.org/2001/XMLSchema',
+                         'urn:ietf:params:xml:ns:yang:inet-types']
+source:                 ["test.yang"]
+
+        </pre></div><p>
+          We see that the generated .fxs file has a dependency to
+          the standard <code class="code">urn:ietf:params:xml:ns:yang:inet-types</code>
+          namespace. Thus if we try to start
+          <span class="phrase">confd,</span>
+          
+          we must also
+          ensure that the fxs file for that namespace is loaded.
+        </p><p>
+          Failing to do so gives:
+        </p><div class="informalexample"><pre class="screen">$ confd -c confd.conf --foreground --verbose
+The namespace urn:ietf:params:xml:ns:yang:inet-types (referenced by http://tail-f.com/test) could not be found in the loadPath.
+Daemon died status=21
+        </pre></div><p>
+          The remedy is to modify
+          <code class="filename">confd.conf</code>
+          
+          so that it contains the proper load path or to
+          provide the directory containing the fxs file, alternatively
+          we can provide the path on the command line. The directory
+          <code class="filename">${CONFD_DIR}/etc/confd</code>
+          
+          contains pre-compiled versions of the standard YANG modules.
+        </p><div class="informalexample"><pre class="screen">
+$ confd -c confd.conf --addloadpath ${CONFD_DIR}/etc/confd --foreground --verbose
+        </pre></div><p>
+          <code class="filename">confd.conf</code> is the configuration file for
+          ConfD itself. It is described in
+          <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e440"></a>3.5.&nbsp;Integrity Constraints</h2></div></div></div><p>
+          The YANG language has built-in declarative constructs
+          for common integrity constraints. These constructs are
+          conveniently specified as <code class="code">must</code> statements.
+        </p><p>
+          A <code class="code">must</code> statement is an XPath expression that must
+          evaluate to true or a non-empty node-set.
+        </p><p>
+          An example is:
+        </p><div class="informalexample"><pre class="programlisting"> container interface {
+    leaf ifType {
+        type enumeration {
+            enum ethernet;
+            enum atm;
+        }
+    }
+    leaf ifMTU {
+        type uint32;
+    }
+    must "ifType != 'ethernet' or "
+      +  "(ifType = 'ethernet' and ifMTU = 1500)" {
+        error-message "An ethernet MTU must be 1500";
+    }
+    must "ifType != 'atm' or "
+       + "(ifType = 'atm' and ifMTU &lt;= 17966 and ifMTU &gt;= 64)" {
+        error-message "An atm MTU must be  64 .. 17966";
+    }
+}
+        </pre></div><p>
+          XPath is a very powerful tool here. It is often possible to
+          express most realistic validation constraints using XPath
+          expressions.  Note that for performance reasons, it is
+          recommended to use the <code class="code">tailf:dependency</code>
+          statement in the <code class="code">must</code> statement.  The compiler
+          gives a warning if a <code class="code">must</code> statement lacks a
+          <code class="code">tailf:dependency</code> statement, and it cannot
+          derive the dependency from the expression.  The options
+          <code class="option">--fail-on-warnings</code> or <code class="option">-E
+          TAILF_MUST_NEED_DEPENDENCY</code> can be given to force
+          this warning to be treated as an error.
+          <span class="phrase">See <a class="xref" href="ch09.html#ug.validation.dependencies" title="9.9.&nbsp;Dependencies - Why Does Validation Points Get Called">Section&nbsp;9.9, &#8220;Dependencies - Why Does Validation Points Get Called&#8221;</a> for
+          details.</span>
+        </p><p>
+          Another useful built-in constraint checker is the
+          <code class="code">unique</code> statement.
+        </p><p>
+          With the YANG code:
+        </p><div class="informalexample"><pre class="programlisting">list server {
+      key "name";
+      unique "ip port";
+      leaf name {
+          type string;
+      }
+      leaf ip {
+          type inet:ip-address;
+      }
+      leaf port {
+          type inet:port-number;
+      }
+  }
+        </pre></div><p>
+          We specify that the combination of IP and port must
+          be unique. Thus the configuration:
+
+          </p><div class="informalexample"><pre class="programlisting">&lt;server&gt;
+  &lt;name&gt;smtp&lt;/name&gt;
+  &lt;ip&gt;192.0.2.1&lt;/ip&gt;
+  &lt;port&gt;25&lt;/port&gt;
+&lt;/server&gt;
+
+&lt;server&gt;
+  &lt;name&gt;http&lt;/name&gt;
+  &lt;ip&gt;192.0.2.1&lt;/ip&gt;
+  &lt;port&gt;25&lt;/port&gt;
+&lt;/server&gt;
+          </pre></div><p>
+        is not valid.
+        </p><p>
+          The usage of leafrefs (See the YANG specification) ensures
+          that we do not end up with configurations with dangling
+          pointers. Leafrefs are also especially good, since the CLI
+          and Web UI can render a better interface.
+        </p><p>
+          If other constraints are necessary, validation callback
+          functions can be programmed in C. Read more
+          about validation callbacks in
+          <a class="xref" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Semantic validation">Chapter&nbsp;9, <i>Semantic validation</i></a>.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e469"></a>3.6.&nbsp;The when statement</h2></div></div></div><p>
+        The <code class="code">when</code> statement is used to make its parent
+        statement conditional.  If the XPath expression specified as
+        the argument to this statement evaluates to false, the parent
+        node cannot be given configured.  Furthermore, if the parent
+        node exists, and some other node is changed so that the XPath
+        expression becomes false, the parent node is automatically
+        deleted.  For example:
+      </p><div class="informalexample"><pre class="programlisting">
+leaf a {
+    type boolean;
+}
+leaf b {
+    type string;
+    when "../a = 'true'";
+}
+      </pre></div><p>
+        This data model snippet says that 'b' can only exist if 'a' is
+        true. If 'a' is true, and 'b' has a value, and 'a' is set to
+        false, 'b' will automatically be deleted.
+      </p><p>
+        Since the XPath expression in theory can refer to any node in
+        the data tree, it has to be re-evaluated when any node in the
+        tree is modified.  But this would have a disastrous
+        performance impact, so in order to avoid this, ConfD keeps
+        track of dependencies for each when expression.  In some
+        simple cases, the <span class="command"><strong>confdc</strong></span> can figure out
+        these dependencies by itself.  In the example above, ConfD
+        will detect that 'b' is dependant on 'a', and evaluate b's
+        XPath expression only if 'a' is modified.  If
+        <span class="command"><strong>confdc</strong></span> cannot detect the dependencies by
+        itself, it requires a <code class="code">tailf:dependency</code> statement
+        in the <code class="code">when</code> statement.
+        <span class="phrase">See <a class="xref" href="ch09.html#ug.validation.dependencies" title="9.9.&nbsp;Dependencies - Why Does Validation Points Get Called">Section&nbsp;9.9, &#8220;Dependencies - Why Does Validation Points Get Called&#8221;</a> for
+        details.</span>
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e483"></a>3.7.&nbsp;Using the Tail-f Extensions with YANG</h2></div></div></div><p>
+          Tail-f has an extensive set of extensions to the YANG
+          language that  integrates YANG models in ConfD.
+          For example when we have <code class="code">config false;</code> data,
+          we may wish to invoke user C code to deliver the statistics
+          data in runtime. To do this we annotate the YANG model
+          with a Tail-f extension called  <code class="code">tailf:callpoint</code>.
+        </p><p>
+          Alternatively we may wish to invoke user code to
+          validate the configuration, this is also controlled
+          through an extension called <code class="code">tailf:validate</code>.
+        </p><p>
+          All these extensions are handled
+          as normal YANG extensions. (YANG is designed to be extended)
+          We have defined the Tail-f proprietary extensions in a file
+          <code class="filename">${CONFD_DIR}/src/confd/yang/tailf-common.yang</code>
+          
+        </p><p>
+          Continuing with our previous example, adding a callpoint
+          and a validation point we get:
+        </p><div class="informalexample"><pre class="programlisting">
+module test {
+   namespace "http://tail-f.com/test";
+   prefix "t";
+
+   import ietf-inet-types {
+      prefix inet;
+   }
+   import tailf-common {
+      prefix tailf;
+   }
+
+   container top {
+      leaf a {
+          type int32;
+          config false;
+          tailf:callpoint mycp;
+      }
+      leaf b {
+         tailf:validate myvalcp {
+            tailf:dependency "../a";
+         }
+         type string;
+      }
+      leaf ip {
+         type inet:ipv4-address;
+      }
+   }
+}
+           </pre></div><p>
+             The above module contains a callpoint and a validation point.
+             The exact syntax for all Tail-f extensions are defined in the
+             <code class="filename">tailf-common.yang</code> file.
+        </p><p>
+          Note the import statement where we import
+          <code class="code">tailf-common</code>.
+        </p><p>
+          When we are using YANG specifications in order to generate
+          Java classes for ConfM, these extensions are ignored. They
+          only make sense on the device side. It is worth mentioning them
+          though, since EMS developers will certainly get the YANG
+          specifications from the device developers, thus the YANG
+          specifications may contain extensions
+        </p><p>
+          The man page
+          <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a>
+          describes all the Tail-f YANG extensions.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e502"></a>3.7.1.&nbsp;Using a YANG annotation file</h3></div></div></div><p>
+            Sometimes it is convenient to specify all Tail-f extension
+            statements in-line in the original YANG module.  But in
+            some cases, e.g. when implementing a standard YANG module,
+            it is better to keep the Tail-f extension statements in a
+            separate annotation file.  When the YANG module is
+            compiled to an fxs file, the compiler is given the
+            original YANG module, and any number of annotation files.
+          </p><p>
+            A YANG annotation file is a normal YANG module which
+            imports the module to annotate.  Then the
+            <code class="code">tailf:annotate</code> statement is used to annotate
+            nodes in the original module.  For example, the module
+            test above can be annotated like this:
+        </p><div class="informalexample"><pre class="programlisting">module test {
+   namespace "http://tail-f.com/test";
+   prefix "t";
+
+   import ietf-inet-types {
+      prefix inet;
+   }
+
+   container top {
+      leaf a {
+          type int32;
+          config false;
+      }
+      leaf b {
+         type string;
+      }
+      leaf ip {
+         type inet:ipv4-address;
+      }
+   }
+}
+</pre></div><p>
+
+        </p><div class="informalexample"><pre class="programlisting">module test-ann {
+   namespace "http://tail-f.com/test-ann";
+   prefix "ta";
+
+   import test {
+      prefix t;
+   }
+   import tailf-common {
+      prefix tailf;
+   }
+
+   tailf:annotate "/t:top/t:a" {
+       tailf:callpoint mycp;
+   }
+
+   tailf:annotate "/t:top" {
+       tailf:annotate "t:b" {  // recursive annotation
+           tailf:validate myvalcp {
+               tailf:dependency "../t:a";
+           }
+       }
+   }
+}
+           </pre></div><p>
+
+           In order to compile the module with annotations, use the
+           -a parameter to <span class="command"><strong>confdc</strong></span>:
+
+        </p><div class="informalexample"><pre class="programlisting">confdc -c -a test-ann.yang test.yang</pre></div><p>
+
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e514"></a>3.8.&nbsp;Custom Help Texts and Error Messages</h2></div></div></div><p>
+          Certain parts of a YANG model are used by northbound agents,
+          e.g. CLI and Web UI, to provide the end-user with custom help
+          texts and error messages.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e517"></a>3.8.1.&nbsp;Custom Help Texts</h3></div></div></div><p>
+              A YANG statement can be annotated with a
+              <code class="code">description</code> statement which is used to
+              describe the definition for a reader of the module.
+              This text is often too long and too detailed to be
+              useful as help text in a CLI.  For this reason, ConfD by
+              default does not use the text in the
+              <code class="code">description</code> for this purpose.  Instead, a
+              tail-f specific statement, <code class="code">tailf:info</code> is
+              used.  It is recommended that the standard
+              <code class="code">description</code> statement contains a detailed
+              description suitable for a module reader (e.g. NETCONF
+              client or server implementor), and
+              <code class="code">tailf:info</code> contains a CLI help text.
+            </p><p>
+              As an alternative, ConfD can be instructed to use the
+              text in the <code class="code">description</code> statement also for
+              CLI help text.  See the option
+              <span class="command"><strong>--use-description</strong></span> to <a class="xref" href="rn01re06.html" title="confdc"><span class="refentrytitle"><span class="phrase">confdc</span>
+    </span>(1)</a>.
+            </p><p>
+              For example, CLI uses the help text to prompt for a
+              value of this particular type. The CLI shows this
+              information during tab/command completion or if the
+              end-user explicitly asks for help using the
+              ?-character. The behavior depends on the mode the CLI is
+              running in.
+            </p><p>
+              The Web UI uses this information likewise to help the end-user.
+            </p><p>
+              The <code class="code">mtu</code> definition below has been annotated to
+              enrich the end-user experience:
+            </p><div class="informalexample"><pre class="programlisting">leaf mtu {
+    type uint16 {
+        range "1 .. 1500";
+    }
+    description
+       "MTU is the largest frame size that can be transmitted
+        over the network. For example, an Ethernet MTU is 1,500
+        bytes. Messages longer than the MTU must be divided
+        into smaller frames.";
+    tailf:info
+       "largest frame size";
+}
+            </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e535"></a>3.8.2.&nbsp;Custom Help Text in a Typedef</h3></div></div></div><p>
+              Alternatively, we could have provided the help text
+              in a <code class="code">typedef</code> statement as in:
+            </p><div class="informalexample"><pre class="programlisting"> typedef mtuType {
+    type uint16 {
+        range "1 .. 1500";
+    }
+    description
+        "MTU is the largest frame size that can be transmitted over the
+         network. For example, an Ethernet MTU is 1,500
+         bytes. Messages longer than the MTU must be
+         divided into smaller frames.";
+    tailf:info
+       "largest frame size";
+}
+
+leaf mtu {
+    type mtuType;
+}
+            </pre></div><p>If there is an explicit help text attached to a leaf, it
+            overrides the help text attached to the type.
+            </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e542"></a>3.8.3.&nbsp;Custom Error Messages</h3></div></div></div><p>
+              A statement can have an optional error-message
+              statement.
+              The north-bound agents, for example, the
+              CLI uses this to inform the end-user about a provided value which
+              is not of the correct type. If no custom error-message
+              statement is available ConfD generates a built-in error
+              message, e.g. "1505 is too large.".
+            </p><p>
+              All northbound agents use the extra information provided by
+              an <code class="code">error-message</code> statement.
+            </p><p>
+              The <code class="code">typedef</code> statement below has been annotated to
+              enrich the end-user experience when it comes to error information:
+            </p><div class="informalexample"><pre class="programlisting">typedef mtuType {
+   type uint32 {
+       range "1..1500" {
+           error-message
+              "The MTU must be a positive number not "
+            + "larger than 1500";
+       }
+   }
+}
+   </pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e551"></a>3.9.&nbsp;Hidden Data</h2></div></div></div><p>
+        It is sometimes useful to hide nodes from some of the
+        northbound interfaces. The <code class="code">tailf:export</code>
+        statement, or the <span class="command"><strong>--export</strong></span> compile
+        directive can be used to hide an entire module.  It is
+        recommended to use the <code class="code">tailf:export</code> statement.
+        More fine grained control can be attained with the optional
+        <code class="code">tailf:hidden</code> statement.
+      </p><p>
+        The <code class="code">tailf:hidden</code> statement names a <code class="code">hide
+        group</code>.  All nodes belonging to the same hide group
+        are treated the same way as fas as being hidden or
+        invisible. The hide group name <code class="code">full</code> is given a
+        special meaning. The <code class="code">full</code> hide group is hidden
+        from all northbound interfaces, not just user interfaces.
+      </p><p>
+        A related situation is when some nodes should be displayed
+        to the user only when a certain condition is met.  For example,
+        the "ethernet" subtree should be displayed only when the type
+        of an interface is "ethernet".  This is covered in the
+        subsection "Conditional display" below.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e564"></a>3.9.1.&nbsp;Fully Hidden Nodes</h3></div></div></div><p>
+            This is nodes that may be useful for the MOs, but should be
+            hidden from all northbound interfaces. An example is the
+            set of physical network interfaces on a device and their
+            types. This is "static" data, i.e. it can't be changed by
+            configuration, but it can vary between different models of
+            a device that run the same software, and the
+            device-specific data can be provided via init file or
+            through MAAPI.
+          </p><p>
+            This type of data could also be realized via a separate
+            module where <code class="code">tailf:export</code> is used to limit
+            the visibility, but being able to have some nodes in the
+            data model hidden while others are not allows for greater
+            flexibility - e.g. lists in the config data can have
+            hidden child nodes, which get instantiated automatically
+            along with the visible config nodes.
+          </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e569"></a>3.9.2.&nbsp;Hiding Nodes from User Interfaces</h3></div></div></div><p>
+            This is data that is fully visible to programmatic
+            northbound interfaces such as NETCONF, but normally hidden
+            from user interfaces such as CLI and Web UI. Examples are
+            data used for experimental or end-customer-specific
+            features, similar to hidden commands in the CLI but for
+            data nodes.
+          </p><p>
+            A user interface may give access to this type of data (and
+            even totally hidden data) if the user executes an
+            <code class="code">unhide</code> command identifying hide group that
+            should be revealed. After this the nodes belonging to the
+            hide group appear the same as unhidden data, i.e.  they're
+            included in tab completion, listed by <code class="code">show</code>
+            commands etc.
+          </p><p>
+            A hide group can only be <code class="code">unhidden</code> if the
+            group is listed in the
+            <code class="filename">confd.conf</code>. This means that a hide
+            group will be completely hidden to the user interfaces
+            unless it has been explicitly allowed to be unhidden in
+            <code class="filename">confd.conf</code>. A password can optionally
+            be required to unhide a group.
+          </p><div class="informalexample"><pre class="programlisting">
+   &lt;hideGroup&gt;
+      &lt;name&gt;debug&lt;/name&gt;
+      &lt;password&gt;secret&lt;/password&gt;
+   &lt;/hideGroup&gt;
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e581"></a>3.9.3.&nbsp;Conditional display</h3></div></div></div><p>
+            Sometimes it is convenient to hide some CLI commands, or
+            Web UI elements, when certain conditions on the
+            configuration are met.  A typical example is a
+            "discriminated union".  One leaf is the type of something,
+            and depending on the value of this leaf, different
+            containers are visible:
+          </p><div class="informalexample"><pre class="programlisting">
+  typedef interface-type {
+      type enumeration {
+          enum ethernet;
+          enum atm;
+          enum appletalk;
+      }
+  }
+
+  leaf if-type {
+      type interface-type;
+  }
+  container ethernet {
+      ...
+  }
+  container atm {
+      ...
+  }
+  container appletalk {
+      ...
+  }
+          </pre></div><p>
+            In this example, the "ethernet" container should be
+            visible to the user only when the value of "if-type" is
+            "ethernet".
+          </p><p>
+            This can be accomplished by using the <code class="code">tailf:display-when</code>
+            statement.  It contains an XPath expression which specifies
+            when the node should be displayed:
+          </p><div class="informalexample"><pre class="programlisting">
+  container ethernet {
+      tailf:display-when "../if-type = 'ethernet'";
+      ...
+  }
+  container atm {
+      tailf:display-when "../if-type = 'atm'";
+      ...
+  }
+  container appletalk {
+      tailf:display-when "../if-type = 'appletalk'";
+      ...
+  }
+          </pre></div><p>
+            With this data model, the CLI behaves like this:
+          </p><div class="informalexample"><pre class="programlisting">
+% show
+if-type ethernet;
+ethernet {
+    ...         # data for ethernet
+}
+
+% set &lt;tab&gt;
+Possible completions:
+  ethernet  if-type
+
+% set if-type atm
+
+% set atm ...   # create atm data
+
+% delete &lt;tab&gt;
+Possible completions:
+  ethernet  if-type        # NOTE: ethernet NOT present
+          </pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e594"></a>3.10.&nbsp;An Example: Modeling a List of Interfaces</h2></div></div></div><p>
+          Say for example that we want to model the interface list on a
+          Linux based device. Running the <span class="command"><strong>ip link list</strong></span>
+          command reveals the type of information we have to model
+        </p><div class="informalexample"><pre class="screen">$ /sbin/ip link list
+1: eth0: &lt;BROADCAST,MULTICAST,UP&gt;; mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether 00:12:3f:7d:b0:32 brd ff:ff:ff:ff:ff:ff
+2: lo: &lt;LOOPBACK,UP&gt;; mtu 16436 qdisc noqueue
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+3: dummy0: &lt;BROADCAST,NOARP&gt; mtu 1500 qdisc noop
+    link/ether a6:17:b9:86:2c:04 brd ff:ff:ff:ff:ff:ff</pre></div><p>
+          and this is how we want to represent the above in XML:
+        </p><div class="informalexample"><pre class="programlisting">&lt;?xml version="1.0"?&gt;
+&lt;config xmlns="http://example.com/ns/link"&gt;
+  &lt;links&gt;
+    &lt;link&gt;
+      &lt;name&gt;eth0&lt;/name&gt;
+      &lt;flags&gt;
+        &lt;UP/&gt;
+        &lt;BROADCAST/&gt;
+        &lt;MULTICAST/&gt;
+      &lt;/flags&gt;
+      &lt;addr&gt;00:12:3f:7d:b0:32&lt;/addr&gt;
+      &lt;brd&gt;ff:ff:ff:ff:ff:ff&lt;/brd&gt;
+      &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;/link&gt;
+
+    &lt;link&gt;
+      &lt;name&gt;lo&lt;/name&gt;
+      &lt;flags&gt;
+        &lt;UP/&gt;
+        &lt;LOOPBACK/&gt;
+      &lt;/flags&gt;
+      &lt;addr&gt;00:00:00:00:00:00&lt;/addr&gt;
+      &lt;brd&gt;00:00:00:00:00:00&lt;/brd&gt;
+      &lt;mtu&gt;16436&lt;/mtu&gt;
+    &lt;/link&gt;
+  &lt;/links&gt;
+&lt;/config&gt;
+        </pre></div><p>
+        An interface or a <code class="code">link</code> has data associated with it.
+        It also has a name, an obvious choice to use as the key - the data
+        item which uniquely identifies an individual interface.
+      </p><p>
+        The structure of a YANG model is always a header, followed by
+        type definitions, followed by the actual structure of the
+        data. A YANG model for the interface list starts with a
+        header:
+      </p><div class="informalexample"><pre class="programlisting">module links {
+    namespace "http://example.com/ns/links";
+    prefix link;
+
+    revision 2007-06-09 {
+      description "Initial revision.";
+    }
+    ...
+      </pre></div><p>
+        A number of datatype definitions may follow the YANG module
+        header. Looking at the output from <span class="command"><strong>/sbin/ip</strong></span> we see that
+        each interface has a number of boolean flags associated with
+        it, e.g. <code class="code">UP</code>, and <code class="code">NOARP</code>.
+      </p><p>
+        One way to model a sequence of boolean flags is as a sequence
+        of statements:
+      </p><div class="informalexample"><pre class="programlisting">leaf UP {
+    type boolean;
+    default false;
+}
+leaf NOARP {
+    type boolean;
+    default false;
+}
+      </pre></div><p>
+        A better way is to model this as:
+      </p><div class="informalexample"><pre class="programlisting">leaf UP {
+    type empty;
+}
+leaf NOARP {
+    type empty;
+}
+      </pre></div><p>
+        We could choose to group these leafs together into a
+        grouping. This makes sense if we wish to use the same set
+        of boolean flags in more than one place. We could thus create
+        a named grouping such as:
+      </p><div class="informalexample"><pre class="programlisting">grouping LinkFlags {
+    leaf UP {
+        type empty;
+    }
+    leaf NOARP {
+        type empty;
+    }
+    leaf BROADCAST {
+        type empty;
+    }
+    leaf MULTICAST {
+        type empty;
+    }
+    leaf LOOPBACK {
+        type empty;
+    }
+    leaf NOTRAILERS {
+        type empty;
+    }
+}
+
+</pre></div><p>
+        The output from <span class="command"><strong>/sbin/ip</strong></span> also contains Ethernet MAC
+        addresses. These are best represented by the <code class="code">mac-address</code>
+        type defined in the <code class="filename">ietf-yang-types.yang</code> file.
+        The <code class="code">mac-address</code> type is defined as:
+      </p><div class="informalexample"><pre class="programlisting">typedef mac-address {
+    type string {
+        pattern '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}';
+    }
+    description
+       "The mac-address type represents an IEEE 802 MAC address.
+
+       This type is in the value set and its semantics equivalent to
+       the MacAddress textual convention of the SMIv2.";
+    reference
+      "IEEE 802: IEEE Standard for Local and Metropolitan Area
+                 Networks: Overview and Architecture
+       RFC 2579: Textual Conventions for SMIv2";
+}
+      </pre></div><p>
+        This defines a restriction on the string type, restricting
+        values of the defined type "mac-address" to be strings
+        adhering to the regular expression
+        <code class="code">[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}</code>
+        Thus strings such as <code class="code">a6:17:b9:86:2c:04</code> will be
+        accepted.
+      </p><p>
+        Queue disciplines are associated with each device. They are
+        typically used for bandwidth management. Another string
+        restriction we could do is to define an enumeration of the
+        different queue disciplines that can be attached to an
+        interface.
+      </p><p>
+        We could write this as:
+      </p><div class="informalexample"><pre class="programlisting">typedef QueueDisciplineType {
+   type enumeration {
+      enum pfifo_fast;
+      enum noqueue;
+      enum noop;
+      enum htp;
+   }
+}
+       </pre></div><p>
+         There are a large number of queue disciplines and we only
+         list a few here. The example serves to show that
+         using enumerations we can restrict the values of the data set in
+         a way that ensures that data entered always is valid from a
+         syntactical point of view.
+       </p><p>
+         Now that we have a number of usable datatypes, we continue
+         with the actual data structure describing a list of interface
+         entries:
+       </p><div class="informalexample"><pre class="programlisting">container links {
+    list link {
+        key name;
+        unique addr;
+        max-elements 1024;
+        leaf name {
+            type string;
+        }
+        container flags {
+            uses LinkFlags;
+        }
+        leaf addr {
+            type yang:mac-address;
+            mandatory true;
+        }
+        leaf brd {
+            type yang:mac-address;
+            mandatory true;
+        }
+        leaf qdisc {
+            type QueueDisciplineType;
+            mandatory true;
+        }
+        leaf qlen {
+            type uint32;
+            mandatory true;
+        }
+        leaf mtu {
+            type uint32;
+            mandatory true;
+        }
+    }
+}
+    </pre></div><p>
+         The <code class="code">key</code> attribute on the leaf named "name" is
+         important. It indicates that the leaf is the instance key
+         for the list entry named "link". All the <code class="code">link</code>
+         leafs are guaranteed to have unique values for their
+         <code class="code">name</code>
+         leafs due to the key declaration.
+       </p><p>
+         If one leaf alone does not uniquely identify an object, we
+         can define multiple keys.
+         At least one leaf
+         <span class="emphasis"><em>must</em></span> be an instance key - we cannot have lists
+         without a key.
+       </p><p>
+         List entries are ordered and indexed according
+         to the value of the key(s).
+       </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.yang.relationships"></a>3.10.1.&nbsp;Modeling Relationships</h3></div></div></div><p>
+             A very common situation when modeling a device
+             configuration is that we wish to model a relationship
+             between two objects. This is achieved by means of the
+             <code class="code">leafref</code> statements. A <code class="code">leafref</code> points to a
+             child of a list entry which either is defined
+             using a <code class="code">key</code> or <code class="code">unique</code> attribute.
+           </p><p>
+             The <code class="code">leafref</code> statement can be used to express three
+             flavors of relationships: <span class="emphasis"><em>extensions</em></span>,
+             <span class="emphasis"><em>specializations</em></span> and
+             <span class="emphasis"><em>associations</em></span>. Below
+             we exemplify this by extending the "link" example from
+             above.
+           </p><p>
+             Firstly, assume we want to put/store the queue disciplines
+             from the previous section in a separate container - not
+             embedded inside the <code class="code">links</code> container.
+           </p><p>
+             We then specify a separate container , containing
+             all the queue disciplines which each refers to a specific
+             <code class="code">link</code> entry. This is written as:
+         </p><div class="informalexample"><pre class="programlisting">container queueDisciplines {
+    list queueDiscipline {
+        key linkName;
+        max-elements 1024;
+        leaf linkName {
+            type leafref {
+                path "/config/links/link/name";
+            }
+        }
+
+        leaf type {
+            type QueueDisciplineType;
+            mandatory true;
+        }
+        leaf length {
+            type uint32;
+        }
+    }
+}
+         </pre></div><p>
+           The <code class="code">linkName</code> statement is both an instance key of the
+           <code class="code">queueDiscipline</code> list, and at the same time refers
+           to a specific <code class="code">link</code> entry. This way we can extend the
+           amount of configuration data associated with a specific
+           <code class="code">link</code> entry.
+         </p><p>
+           Secondly, assume we want to express a restriction or
+           specialization on Ethernet <code class="code">link</code> entries, e.g. it should
+           be possible to restrict interface characteristics such as
+           10Mbps and half duplex.
+         </p><p>
+           We then specify a separate container, containing
+           all the specializations which each refers to a specific
+           <code class="code">link</code>:
+         </p><div class="informalexample"><pre class="programlisting">container linkLimitations {
+    list LinkLimitation {
+        key linkName;
+        max-elements 1024;
+        leaf linkName {
+            type leafref {
+                path "/config/links/link/name";
+            }
+        }
+        container limitations {
+            leaf only10Mbs { type boolean;}
+            leaf onlyHalfDuplex { type boolean;}
+        }
+    }
+}
+         </pre></div><p>
+           The <code class="code">linkName</code> leaf is both an instance key to the
+           <code class="code">linkLimitation</code> list, and at the same time refers to a
+           specific <code class="code">link</code> leaf. This way we can restrict or
+           specialize a specific <code class="code">link</code>.
+         </p><p>
+           Thirdly, assume we want to express that one of the <code class="code">link</code>
+           entries should be the default link. In that case we
+           enforce an association between a non-dynamic <code class="code">defaultLink</code>
+           and a certain <code class="code">link</code> entry:
+         </p><div class="informalexample"><pre class="programlisting">leaf defaultLink {
+    type leafref {
+        path "/config/links/link/name";
+    }
+}
+         </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e686"></a>3.10.2.&nbsp;Ensuring Uniqueness</h3></div></div></div><p>
+           Key leafs are always unique. Sometimes we may wish to
+           impose further restrictions on objects. For example, we can
+           ensure that all <code class="code">link</code> entries have a unique MAC
+           address. This is achieved through the use of the
+           <code class="code">unique</code> statement:
+         </p><div class="informalexample"><pre class="programlisting">container servers {
+    list server {
+        key name;
+        unique "ip port";
+        unique "index";
+        max-elements 64;
+        leaf name {
+            type string;
+        }
+        leaf index {
+            type uint32;
+            mandatory true;
+        }
+        leaf ip {
+            type inet:ip-address;
+            mandatory true;
+        }
+        leaf port {
+            type inet:port-number;
+            mandatory true;
+        }
+    }
+}
+         </pre></div><p>
+           In this example we have two <code class="code">unique</code> statements.
+           These two groups ensure
+           that each server has a unique index number as well as a
+           unique ip and port pair.
+         </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e695"></a>3.10.3.&nbsp;Default Values</h3></div></div></div><p>
+           A leaf can have a static or dynamic default value.
+           Static default values are defined with the <code class="code">default</code>
+           statement in the data model.  For example:
+         </p><div class="informalexample"><pre class="programlisting">leaf mtu {
+    type int32;
+    default 1500;
+}
+         </pre></div><p>and:</p><div class="informalexample"><pre class="programlisting">leaf UP {
+    type boolean;
+    default true;
+}
+         </pre></div><p>
+           A dynamic default value means that the default value for
+           the leaf is the value of some other leaf in the data model.
+           This can be used to make the default values configurable by
+           the user.  Dynamic default values are defined using the
+           <code class="code">tailf:default-ref</code> statement.  For example, suppose we
+           want to make the MTU default value configurable:
+         </p><div class="informalexample"><pre class="programlisting">container links {
+    leaf mtu {
+        type uint32;
+    }
+    list link {
+        key name;
+        leaf name {
+            type string;
+        }
+        leaf mtu {
+            type uint32;
+            tailf:default-ref '../../mtu';
+        }
+    }
+}
+         </pre></div><p>
+           Now suppose we have the following data:
+         </p><div class="informalexample"><pre class="programlisting">&lt;links&gt;
+  &lt;mtu&gt;1000&lt;/mtu&gt;
+  &lt;link&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
+  &lt;/link&gt;
+  &lt;link&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/link&gt;
+&lt;/links&gt;
+
+</pre></div><p>
+           In the example above, link <code class="code">eth0</code> has the mtu 1500,
+           and link <code class="code">eth1</code> has mtu 1000.  Since <code class="code">eth1</code>
+           does not have a mtu value set, it defaults to the value of
+           <code class="code">../../mtu</code>, which is 1000 in this case.
+         </p><p>
+           </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+               Whenever a leaf has a default
+               value it implies that the leaf can be left out from the
+               XML document, i.e. mandatory = false.
+             </p></div><p>
+         </p><p>
+           With the default value mechanism an old configuration can
+           be used even after having added new settings.
+         </p><p>
+           Another example where default values are used is  when  a
+           new  instance  is  created.  If  all  leafs within the
+           instance have default values, these need not be specified
+           in, for example, a NETCONF create operation.
+         </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e721"></a>3.10.4.&nbsp;The Final Interface YANG model</h3></div></div></div><p>
+           Here is the final interface YANG model with all constructs
+           described above:
+         </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">module</strong> links {
+    <strong class="hl-keyword">namespace</strong> <strong class="hl-string"><em style="color:red">"http://example.com/ns/link"</em></strong>;
+    <strong class="hl-keyword">prefix</strong> link;
+
+    <strong class="hl-keyword">import</strong> ietf-yang-types {
+        <strong class="hl-keyword">prefix</strong> yang;
+    }
+
+
+    <strong class="hl-keyword">grouping</strong> LinkFlagsType {
+        <strong class="hl-keyword">leaf</strong> UP {
+            <strong class="hl-keyword">type</strong> empty;
+        }
+        <strong class="hl-keyword">leaf</strong> NOARP {
+            <strong class="hl-keyword">type</strong> empty;
+        }
+        <strong class="hl-keyword">leaf</strong> BROADCAST {
+            <strong class="hl-keyword">type</strong> empty;
+        }
+        <strong class="hl-keyword">leaf</strong> MULTICAST {
+            <strong class="hl-keyword">type</strong> empty;
+        }
+        <strong class="hl-keyword">leaf</strong> LOOPBACK {
+            <strong class="hl-keyword">type</strong> empty;
+      }
+        <strong class="hl-keyword">leaf</strong> NOTRAILERS {
+            <strong class="hl-keyword">type</strong> empty;
+        }
+    }
+
+    <strong class="hl-keyword">typedef</strong> QueueDisciplineType {
+        <strong class="hl-keyword">type</strong> enumeration {
+            <strong class="hl-keyword">enum</strong> pfifo_fast;
+            <strong class="hl-keyword">enum</strong> noqueue;
+            <strong class="hl-keyword">enum</strong> noop;
+            <strong class="hl-keyword">enum</strong> htb;
+        }
+    }
+    <strong class="hl-keyword">container</strong> <strong class="hl-keyword">config</strong> {
+        <strong class="hl-keyword">container</strong> links {
+            <strong class="hl-keyword">list</strong> link {
+                <strong class="hl-keyword">key</strong> name;
+                <strong class="hl-keyword">unique</strong> addr;
+                max-elements <span class="hl-number">1024</span>;
+                <strong class="hl-keyword">leaf</strong> name {
+                    <strong class="hl-keyword">type</strong> string;
+                }
+                <strong class="hl-keyword">container</strong> flags {
+                    <strong class="hl-keyword">uses</strong> LinkFlagsType;
+                }
+                <strong class="hl-keyword">leaf</strong> addr {
+                    <strong class="hl-keyword">type</strong> yang:mac-address;
+                    <strong class="hl-keyword">mandatory</strong> true;
+                }
+                <strong class="hl-keyword">leaf</strong> brd {
+                    <strong class="hl-keyword">type</strong> yang:mac-address;
+                    <strong class="hl-keyword">mandatory</strong> true;
+                }
+                <strong class="hl-keyword">leaf</strong> mtu {
+                    <strong class="hl-keyword">type</strong> uint32;
+                    <strong class="hl-keyword">default</strong> <span class="hl-number">1500</span>;
+                }
+            }
+        }
+        <strong class="hl-keyword">container</strong> queueDisciplines {
+            <strong class="hl-keyword">list</strong> queueDiscipline {
+                <strong class="hl-keyword">key</strong> linkName;
+                max-elements <span class="hl-number">1024</span>;
+                <strong class="hl-keyword">leaf</strong> linkName {
+                    <strong class="hl-keyword">type</strong> leafref {
+                        <strong class="hl-keyword">path</strong> <strong class="hl-string"><em style="color:red">"/config/links/link/name"</em></strong>;
+                    }
+                }
+                <strong class="hl-keyword">leaf</strong> <strong class="hl-keyword">type</strong> {
+                    <strong class="hl-keyword">type</strong> QueueDisciplineType;
+                    <strong class="hl-keyword">mandatory</strong> true;
+                }
+                <strong class="hl-keyword">leaf</strong> <strong class="hl-keyword">length</strong> {
+                    <strong class="hl-keyword">type</strong> uint32;
+                }
+            }
+        }
+        <strong class="hl-keyword">container</strong> linkLimitations {
+            <strong class="hl-keyword">list</strong> linkLimitation {
+                <strong class="hl-keyword">key</strong> linkName;
+                <strong class="hl-keyword">leaf</strong> linkName {
+                    <strong class="hl-keyword">type</strong> leafref {
+                        <strong class="hl-keyword">path</strong> <strong class="hl-string"><em style="color:red">"/config/links/link/name"</em></strong>;
+                    }
+                }
+                <strong class="hl-keyword">container</strong> limitations {
+                    <strong class="hl-keyword">leaf</strong> only10Mbps {
+                        <strong class="hl-keyword">type</strong> boolean;
+                        <strong class="hl-keyword">default</strong> false;
+                    }
+                    <strong class="hl-keyword">leaf</strong> onlyHalfDuplex {
+                        <strong class="hl-keyword">type</strong> boolean;
+                        <strong class="hl-keyword">default</strong> false;
+                    }
+                }
+            }
+        }
+        <strong class="hl-keyword">container</strong> defaultLink {
+            <strong class="hl-keyword">leaf</strong> linkName {
+                <strong class="hl-keyword">type</strong> leafref {
+                    <strong class="hl-keyword">path</strong> <strong class="hl-string"><em style="color:red">"/config/links/link/name"</em></strong>;
+                }
+            }
+        }
+    }
+}
+
+</pre></div><p>
+           If the above YANG file is saved on disk, as
+           <code class="filename">links.yang</code>, we can compile and link it using
+           the <span class="command"><strong>confdc</strong></span> compiler:
+         </p><div class="informalexample"><pre class="screen">$ confdc -c links.yang
+         </pre></div><p>
+           We now have a ready to use schema file named
+           <code class="filename">links.fxs</code> on disk.
+           To actually run this example, we need to copy the
+           compiled <code class="filename">links.fxs</code> to a directory where
+           ConfD
+           can find it.
+         </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.yang.leafrefs"></a>3.11.&nbsp;More on leafrefs</h2></div></div></div><p>
+      A leafref is a used to model relationships in the data model, as
+      described in <a class="xref" href="ch03.html#ug.yang.relationships" title="3.10.1.&nbsp;Modeling Relationships">Section&nbsp;3.10.1, &#8220;Modeling Relationships&#8221;</a>.  In
+      the simplest case, the leafreaf is a single leaf that references
+      a single key in a list:
+    </p><div class="informalexample"><pre class="programlisting">
+list host {
+    key "name";
+    leaf name {
+        type string;
+    }
+    ...
+}
+
+leaf host-ref {
+    type leafref {
+        path "../host/name";
+    }
+}
+    </pre></div><p>
+      But sometimes a list has more than one key, or we need to refer
+      to a list entry within another list.  Consider this example:
+    </p><div class="informalexample"><pre class="programlisting">
+list host {
+    key "name";
+    leaf name {
+        type string;
+    }
+
+    list server {
+        key "ip port";
+        leaf ip {
+            type inet:ip-address;
+        }
+        leaf port {
+            type inet:port-number;
+        }
+        ...
+    }
+}
+    </pre></div><p>
+      If we want to refer to a specific server on a host, we must
+      provide three values; the host name, the server ip and the
+      server port.  Using leafrefs, we can accomplish this by using
+      three connected leafs:
+    </p><div class="informalexample"><pre class="programlisting">
+leaf server-host {
+    type leafref {
+        path "/host/name";
+    }
+}
+leaf server-ip {
+    type leafref {
+        path "/host[name=current()/../server-host]/server/ip";
+    }
+}
+leaf server-port {
+    type leafref {
+        path "/host[name=current()/../server-host]"
+           + "/server[ip=current()/../server-ip]/../port";
+    }
+}
+    </pre></div><p>
+      The path specification for <code class="code">server-ip</code> means the ip
+      address of the server under the host with same name as specified
+      in <code class="code">server-host</code>.
+    </p><p>
+      The path specification for <code class="code">server-port</code> means the
+      port number of the server with the same ip as specified in
+      <code class="code">server-ip</code>, under the host with same name as
+      specified in <code class="code">server-host</code>.
+    </p><p>
+      This syntax quickly gets awkward and error prone.  ConfD
+      supports a shorthand syntax, by introducing an XPath function
+      <code class="code">deref()</code> (see <a class="xref" href="rn03re20.html#man.5.tailf_yang_extensions.xpath_functions" title="XPATH FUNCTIONS">the section called &#8220;XPATH FUNCTIONS&#8221;</a>).
+      Technically, this function follows a leafreaf value, and returns
+      all nodes that the leafref refer to (typically just one).  The
+      example above can be written like this:
+    </p><div class="informalexample"><pre class="programlisting">
+leaf server-host {
+    type leafref {
+        path "/host/name";
+    }
+}
+leaf server-ip {
+    type leafref {
+        path "deref(../server-host)/../server/ip";
+    }
+}
+leaf server-port {
+    type leafref {
+        path "deref(../server-ip)/../port";
+    }
+}
+    </pre></div><p>
+      Note that using the <code class="code">deref</code> function is syntactic
+      sugar for the basic syntax.  The translation between the two
+      formats is trivial.  Also note that <code class="code">deref()</code> is an
+      extension to YANG, and third party tools might not understand
+      this syntax.  In order to make sure that only plain YANG
+      constructs are used in a module, the parameter
+      <code class="code">--strict-yang</code> can be given to <span class="command"><strong>confdc
+      -c</strong></span>.
+   </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e763"></a>3.12.&nbsp;Using Multiple Namespaces</h2></div></div></div><p>
+        There are several reasons for supporting multiple
+        configuration namespaces. Multiple namespaces can be used to
+        group common datatypes and hierarchies to be used by
+        other YANG models. Separate namespaces can be used to describe
+        the configuration of unrelated sub-systems, i.e. to achieve
+        strict configuration data model boundaries between these
+        sub-systems.
+      </p><p>
+        As an example, <code class="filename">datatypes.yang</code> is a YANG module
+        which defines a reusable data type.
+      </p><div class="informalexample"><pre class="programlisting">module datatypes {
+  namespace "http://example.com/ns/dt";
+  prefix dt;
+
+  grouping countersType {
+     leaf recvBytes {
+        type uint64;
+        mandatory true;
+     }
+     leaf sentBytes {
+        type uint64;
+        mandatory true;
+     }
+  }
+}
+        </pre></div><p>
+        We compile and link <code class="filename">datatypes.yang</code> into a
+        final schema
+        file representing the <code class="code">http://example.com/ns/dt</code> namespace:
+      </p><div class="informalexample"><pre class="screen">$ confdc -c datatypes.yang
+      </pre></div><p>
+        To reuse our user defined <code class="code">countersType</code>, we must
+        import the <code class="code">datatypes</code> module.
+      </p><div class="informalexample"><pre class="programlisting">module test {
+    namespace "http://tail-f.com/test";
+    prefix "t";
+
+    import datatypes {
+        prefix dt;
+    }
+
+    container stats {
+        uses dt:countersType;
+    }
+}
+        </pre></div><p>
+        When compiling this new module that refers to another
+        module, we must indicate to <span class="command"><strong>confdc</strong></span>
+        where to search for the imported module:
+      </p><div class="informalexample"><pre class="screen">$ confdc -c test.yang --yangpath /path/to/dt
+      </pre></div><p>
+        <span class="command"><strong>confdc</strong></span> also searches for referred
+        modules in the colon (:) separated path defined by the
+        environment variable <code class="code">YANG_MODPATH</code> and . (dot) is
+        implicitly included. Thus we can run <span class="command"><strong>pyang</strong></span> on
+        <code class="filename">test.yang</code> and it will search for the
+        <code class="filename">datatypes.yang</code> file and import it.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.yang.Names_Namespaces_And_Revisions"></a>3.13.&nbsp;Module Names, Namespaces and Revisions</h2></div></div></div><p>
+        We have three different entities that define
+        our configuration data.
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            The module name. A system typically consists of several
+            modules. In the future we also expect to see standard
+            modules in a manner similar to how we have standard SNMP
+            modules.
+          </p><p>
+            It is highly recommended to have the vendor name
+            embedded in the module name, similar to how vendors have their
+            names in proprietary MIB s today.
+          </p></li><li class="listitem"><p>
+            The XML namespace.
+            A module defines a namespace.  This is an important
+            part of the module header. For example we have:
+          </p><div class="informalexample"><pre class="programlisting"> module acme-system {
+     namespace "http://acme.example.com/system";
+     .....
+          </pre></div><p>
+            The namespace string must uniquely define the namespace.
+            It is very important that once we have settled on a namespace
+            we never change it. The namespace string should remain the
+            same between revisions of a product. Do not embed
+            revision information in the namespace string since that
+            breaks manager side NETCONF scripts.
+          </p></li><li class="listitem"><p>
+            The <code class="code">revision</code> statement as in:
+          </p><div class="informalexample"><pre class="programlisting"> module acme-system {
+     namespace "http://acme.example.com/system";
+     prefix "acme";
+
+     revision 2007-06-09;
+     .....
+          </pre></div><p>
+          The revision is exposed to a NETCONF manager in the
+          capabilities sent from the agent to the NETCONF manager
+          in the initial hello message.  The
+          fine details of revision management is being worked on
+          in the IETF NETMOD working group and is not finalized at
+          the time of this writing.
+        </p><p>
+          What is clear though, is that a manager should base
+          its version decisions on the information in the
+          revision string.
+        </p><p>
+          A capabilities reply from a NETCONF agent to the manager
+          may look as:
+          </p><div class="informalexample"><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+&lt;capabilities&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:writable-running:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:candidate:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:confirmed-commit:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:xpath:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:validate:1.0&lt;/capability&gt;
+  &lt;capability&gt;urn:ietf:params:netconf:capability:rollback-on-error:1.0&lt;/capability&gt;
+  &lt;capability&gt;http://example.com/ns/link?revision=2007-06-09&lt;/capability&gt;
+  ....
+          </pre></div><p>
+
+        where the revision information for the
+        <code class="code">http://example.com/ns/link</code> namespace is encoded
+        as <code class="code">?revision=2007-06-09</code> using standard URI notation.
+        </p><p>
+          When we change the data model for a namespace, it is
+          recommended to change the revision statement, and to never
+          make any changes to the data model that are backwards
+          incompatible.  This means that all leafs that are added must
+          be either optional or have a default value. That way it is
+          ensured that old NETCONF client code will continue to
+          function on the new data model.  Section 10 of RFC 6020
+          defines exactly what changes can be made to a data model in
+          order to not break old NETCONF clients.
+        </p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.yang.id_value"></a>3.14.&nbsp;Hash Values and the id-value Statement</h2></div></div></div><p>
+        Internally and in the programmer APIs,
+        ConfD
+        uses integer values
+        to represent YANG node names and the namespace URI.  This
+        conserves space and allows for more
+        efficient comparisons (including <code class="code">switch</code> statements) in
+        the user application code.
+        By default, <span class="command"><strong>confdc</strong></span> automatically computes a hash value
+        for the namespace URI and for each string that is used as a
+        node name.
+      </p><p>
+        Conflicts can occur in the mapping between strings and integer
+        values - i.e. the initial assignment of integers to strings is
+        unable to provide a unique, bi-directional mapping. Such
+        conflicts are extremely rare (but possible) when the
+        default hashing mechanism is used.
+      </p><p>
+        The conflicts are detected either by <span class="command"><strong>confdc</strong></span>
+        or by the
+        ConfD
+        daemon when it loads the <code class="filename">.fxs</code> files.
+      </p><p>
+        If there are any conflicts reported they will pertain to
+        XML tags (or the namespace URI),
+      </p><p>
+        There are two different cases:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Two different strings mapped to the same integer. This is
+          the classical hash conflict - extremely rare due to the high
+          quality of the hash function used. The
+          resolution is to use the <code class="code">tailf:id-value</code> statement to
+          assign
+          a different integer to one of the strings - we should choose
+          a number above 2^31+1 to avoid collisions with the generated
+          hash values. To assign a different integer to the namespace
+          URI, we need to use <code class="code">tailf:id-value</code> as a
+          substatement to the <code class="code">module</code> statement.</p></li><li class="listitem"><p>One string mapped to two different integers. This is even
+          more rare than the previous case - it can only happen if
+          a hash conflict was detected and avoided through the use of
+          <code class="code">tailf:id-value</code> on one of the strings,
+          and that string also occurs somewhere else. The resolution is
+          to use <code class="code">tailf:id-value</code> to assign the same integer on
+          both occurrences of the string. As in the
+          previous case, we should choose a number above 2^31+1.</p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e836"></a>3.15.&nbsp;Migrating from Confspecs to YANG</h2></div></div></div><p>
+          There are some constructs in confspecs that are
+          not possible to directly translate into YANG models.
+          Probably the most problematic is how we, using confspecs,
+          can mount pieces of configuration in one confspec
+          file into a mount point in another confspec file. It is also
+          possible to mount entire namespaces, .fxs files, into mount points
+          in other namespaces. Neither is possible with the YANG language.
+        </p><p>
+          YANG has the submodule concept as a construct to
+          divide a module. If the overall goal with confspec mounting
+          is to let different developers work on specific files that
+          are subsequently linked together, that same goal can be
+          achieved in three different ways with YANG. The method
+          described in <a class="xref" href="ch03.html#ug.yang.Migrating.Augment" title="3.15.3.&nbsp;Partitioning the Module Through Augments Statements">Section&nbsp;3.15.3, &#8220;Partitioning the Module Through Augments Statements&#8221;</a>
+          is probably the closest match for the confspec mounting
+          functionality, but one of the others may be more appropriate
+          or convenient to use.
+        </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e841"></a>3.15.1.&nbsp;Submodules and the Uses Statement</h3></div></div></div><p>
+              The strategy here is have a top module, that simply
+              consists of a series of include statements,
+              a series of <code class="code">uses</code> statements, and a set of
+              submodules that all define their respective groupings:
+            </p><div class="informalexample"><pre class="programlisting">module system {
+    namespace "http://tail-f.com/system";
+    prefix "s";
+
+    include system-sub;
+
+    uses top;
+    uses sys;
+}
+            </pre></div><p>
+              And then we can have arbitrary many sub modules.
+            </p><div class="informalexample"><pre class="programlisting">submodule system-sub {
+
+    belongs-to system {
+        prefix s;
+    }
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    grouping top {
+        container top {
+            leaf foo {
+               type int32;
+            }
+            leaf addr{
+               type inet:ip-address;
+            }
+        }
+    }
+
+    grouping sys {
+        leaf bar {
+           type int32;
+        }
+    }
+}
+            </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e850"></a>3.15.2.&nbsp;Submodules and toplevel structures</h3></div></div></div><p>
+              The strategy here is have a top module, that simply
+              consists of a series of include statements,
+              and then each of the submodules define top level
+              structures.
+            </p><div class="informalexample"><pre class="programlisting">module system {
+    namespace "http://tail-f.com/system";
+    prefix "s";
+
+    include system-sub;
+    include system-sub2;
+    .....
+}
+            </pre></div><p>
+              And then we can have arbitrary many sub modules.
+            </p><div class="informalexample"><pre class="programlisting">submodule system-sub {
+
+    belongs-to system {
+        prefix s;
+    }
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    container top {
+       leaf foo {
+           type int32;
+       }
+       leaf addr{
+           type inet:ip-address;
+       }
+    }
+
+    leaf bar {
+        type int32;
+    }
+
+}
+            </pre></div><p>
+              The <code class="code">include</code> statement in the top module
+              will ensure that the structures defined in the
+              submodules(s) get expanded.
+            </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.yang.Migrating.Augment"></a>3.15.3.&nbsp;Partitioning the Module Through Augments Statements</h3></div></div></div><p>
+              First we need a toplevel file that includes all the
+              submodules:
+            </p><div class="informalexample"><pre class="programlisting">module system {
+    namespace "http://tail-f.com/system";
+    prefix "s";
+
+    include system-common;
+    include system-sub;
+
+}
+            </pre></div><p>
+              Following that we have one submodule that defines
+              some shared data types, and most important, the structure
+              of the entire data model as a skeleton.
+            </p><div class="informalexample"><pre class="programlisting">submodule system-common {
+
+    belongs-to system {
+        prefix s;
+    }
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    typedef myType {
+       type int32;
+    }
+
+    container system {
+        container chassis {
+        }
+        container stats {
+        }
+    }
+}
+
+            </pre></div><p>
+              And finally, we have one or more submodules that
+              augment the structure defined in
+              <code class="filename">system-common.yang</code>
+            </p><div class="informalexample"><pre class="programlisting">submodule system-sub {
+
+    belongs-to system {
+        prefix s;
+    }
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    include system-common;
+
+    augment "/system/chassis" {
+        leaf foo {
+           type int32;
+        }
+        leaf addr{
+           type inet:ip-address;
+        }
+    }
+
+    augment "/s:system/s:stats" {
+        leaf bar {
+           type int32;
+        }
+    }
+}
+            </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e872"></a>3.15.4.&nbsp;Miscellaneous</h3></div></div></div><p>
+          The confspec language has a construct called
+          <code class="code">indexedView</code>. This is a means to indicate
+          in the data model that items in a list have an order. Some of the
+          north bound agents can then insert new list
+          entries given by the integer key values.
+          Typical examples are things like firewall rules.
+        </p><p>
+          The <code class="code">indexedView</code> concept is supported by the
+          <code class="code">tailf:indexed-view</code> extension to YANG. However in
+          most cases, it will probably be more appropriate to use the
+          standard, more powerful YANG mechanism called <code class="code">ordered-by
+          user</code>. Thus confspec users that use the
+          <code class="code">indexedView</code> may want to migrate to
+          <code class="code">ordered-by user</code> instead of
+          <code class="code">tailf:indexed-view</code>. Read more about
+          <code class="code">ordered-by user</code> in the YANG specification.
+        </p><p>
+          An alternative is to continue to use the Tail-f proprietary
+          <code class="code">indexedView</code> feature in the YANG model.
+        </p><p>
+          Yet another area that differs slightly are confspec
+          <code class="code">keyref</code>s. A confspec <code class="code">keyref</code> uses tagpaths
+          to indicate
+          what it points to. The YANG equivalent is
+          <code class="code">leafref</code> that behave in a similar way. The major
+          difference is that a <code class="code">leafref</code> use an XPath expression
+          instead of a tagpath.
+        </p><p>
+          Leafrefs that are not also keys may be on the tagpath
+          form we have in confspecs, but they may also be
+          instantiated XPath expressions - thus making leafrefs
+          more powerful that confspec keyrefs.
+        </p><p>
+          We may also have list entries where one or more of the
+          keys are leafrefs.
+          As long as we have list entries
+          with a single key there is no difference at all compared to
+          confspecs. It is only
+          when we have multiple keys that we see a difference.  See
+          <a class="xref" href="ch03.html#ug.yang.leafrefs" title="3.11.&nbsp;More on leafrefs">Section&nbsp;3.11, &#8220;More on leafrefs&#8221;</a> for more info.
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e894"></a>3.15.5.&nbsp;Enumerations</h3></div></div></div><p>
+              confspecs have enumeration on the form of:
+            </p><div class="informalexample"><pre class="programlisting"> &lt;xs:simpleType name="YesNo"&gt;
+   &lt;xs:restriction base="xs:string"&gt;
+     &lt;xs:enumeration value="yes"/&gt;
+     &lt;xs:enumeration value="no"/&gt;
+   &lt;/xs:restriction&gt;
+ &lt;/xs:simpleType&gt;
+            </pre></div><p>
+              The equivalent enumeration in YANG looks as:
+            </p><div class="informalexample"><pre class="programlisting">typedef YesNo {
+    type enumeration {
+       enum yes;
+       enum no;
+    }
+}
+            </pre></div><p>
+              These two enumerations are however not completely
+              equivalent. YANG enumerations are implicitly
+              numbered, starting at zero. Thus the exactly equivalent
+              confspec enumerations looks like:
+            </p><div class="informalexample"><pre class="programlisting">&lt;xs:simpleType name="YesNo"&gt;
+  &lt;xs:restriction base="xs:string"&gt;
+    &lt;xs:enumeration value="yes" idValue="0"/&gt;
+    &lt;xs:enumeration value="no" idValue="1"/&gt;
+  &lt;/xs:restriction&gt;
+&lt;/xs:simpleType&gt;
+            </pre></div><p>
+              Thus, applications that are currently not using the
+              <span class="command"><strong>--allow-enum-conflicts</strong></span> flag to <span class="command"><strong>confdc</strong></span>
+              may break. The C API functions to map from hash value
+              to string doesn't work properly for enumerations
+              any longer when we
+              use YANG models. When we use YANG models, the flag
+              <span class="command"><strong>--allow-enum-conflicts</strong></span> is implicitly used
+              due to the above mentioned fact that YANG enumerations
+              always start at zero.
+            </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e909"></a>3.15.6.&nbsp;The Namespace URI</h3></div></div></div><p>Prior to YANG we have recommended confspec users to
+            embed version information in the string that identifies a
+            namespace as in:</p><div class="informalexample"><pre class="programlisting">&lt;confspec xmlns="http://tail-f.com/ns/confspec/1.0"
+          xmlns:confd="http://tail-f.com/ns/confd/1.0"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          targetNamespace="http://example.com/ns/interfaces/1.1"
+          mount="/"&gt;</pre></div><p>using for example the <code class="code">targetNamespace</code>
+            attribute.  This is no longer recommended practice. The
+            recommendation is now to never embed version information
+            in the namespace URI, see <a class="xref" href="ch03.html#ug.yang.Names_Namespaces_And_Revisions" title="3.13.&nbsp;Module Names, Namespaces and Revisions">Section&nbsp;3.13, &#8220;Module Names, Namespaces and Revisions&#8221;</a>.</p><p>Using the new naming scheme one would translate the
+            example above into a YANG module like this:</p><div class="informalexample"><pre class="programlisting">module interfaces {
+  namespace "http://example.com/ns/interfaces";
+  prefix interfaces;
+...
+}</pre></div><p>However if we need to support upgrade from a
+            software release that used confspec to a new release that
+            uses YANG for the same config we have to be careful. In
+            confspec the identifier of a module is the part of the
+            namespace before the version number. That is, in
+            <code class="uri">http://example.com/ns/interfaces/1.1</code> the
+            identifier is <code class="uri">http://example.com/ns/interfaces</code>
+            (in confspec it can also be explicitly set using the
+            <code class="sgmltag-element">id</code> attribute on the top-level
+            <code class="sgmltag-element">confspec</code> node). This matters to CDB upgrade, in
+            that CDB will use the <span class="emphasis"><em>identifier</em></span> to
+            determine if a namespace is the same or not, when
+            upgrading (so that it can correctly identify
+            <code class="uri">http://example.com/ns/interfaces/2.0</code> as the new
+            version of
+            <code class="uri">http://example.com/ns/interfaces/1.1</code>). When
+            using YANG ConfD (and CDB) considers the whole namespace
+            string (since it isn't supposed to change between
+            revisions) as the identifier. To help there is a YANG
+            extension called <code class="sgmltag-element">tailf:id</code> which takes either an
+            empty string (which means <span class="quote">&#8220;<span class="quote">treat the namespace just
+            as confspec would, and deduce the id from the namespace
+            string</span>&#8221;</span>) or an explicit string (the equivalent of
+            using <code class="sgmltag-element">id</code> in confspec).</p><p>In summary: if we need to support upgrade from a
+            previous release <span class="emphasis"><em>and</em></span> need to keep the
+            exact namespace string we had in confspec we can translate
+            the initial confspec fragment above to:</p><div class="informalexample"><pre class="programlisting">module interfaces {
+  namespace "http://example.com/ns/interfaces/1.1";
+  prefix interfaces;
+  tailf:id "";
+...
+}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e935"></a>3.15.7.&nbsp;The cs2yang Tool</h3></div></div></div><p>
+              Finally we must mention the cs2yang tool.  It is an XSLT
+              based tool that can be used to translate confspec files
+              into YANG files.  There are some constructs that are not
+              directly translatable, but the output from cs2yang
+              provides an excellent starting point for migration.
+            </p><p>
+              Thus the first step in a migration from
+              confspecs to YANG is to use the <span class="command"><strong>cs2yang</strong></span> tool
+              on all confspec files we wish to translate.
+            </p><p>
+              Following that, we must decide on a multi-file mount
+              strategy as described above. The generated files must
+              then subsequently be hand edited into a suitable form.
+            </p><p>
+              In many confspec models, the namespace URI contains a
+              version number.  In YANG, the namespace URI of a data
+              model must not change if the model is updated.  Instead,
+              YANG has a revision statement to handle data model
+              versioning.  Unless confspec based systems need to be
+              upgraded in the field to YANG, it is recommended that
+              the version number in the namespace URI is removed, and
+              a revision statement is added.  In this case, the
+              <code class="sgmltag-element">tailf:id</code> statement that cs2yang generated,
+              must also be removed from the YANG module. See <a class="xref" href="ch03.html#ug.yang.migrating.namespace">Section&nbsp;3.15.6, &#8220;The Namespace URI&#8221;</a> for a more
+              detailed discussion of this problem.
+            </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e944"></a>3.16.&nbsp;The pyang tool</h2></div></div></div><p>
+        <code class="function">pyang</code> is a Python based tool that
+        is integrated into the <code class="function">confdc</code> tool chain.
+        Pyang can be used to check and transform YANG models.
+        It has an extensible plugin architecture that allows users
+        to plugin their own output modules. Thus if we wish to
+        to transform YANG data models - processing e.g proprietary
+        extensions, writing a Python plugin to pyang is a feasible
+        way forward.
+      </p><p>
+        Pyang is developed by Tail-f, and it is open source. Code
+        and documentation are available at
+        <a class="link" href="http://www.yang-central.org/" target="_top">http://www.yang-central.org/</a>.
+      </p><p>
+        Pyang is also described in the man page
+          ???
+      </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;2.&nbsp;An introduction to ConfD&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;4.&nbsp;Rendering Agents</td></tr></table></div></body></html>

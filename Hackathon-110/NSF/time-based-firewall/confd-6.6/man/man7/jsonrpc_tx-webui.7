@@ -1,0 +1,50 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "API" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBAPI\fR \- Transaction (webui)
+.
+.SH "METHOD get_webui_trans"
+Gets the webui read\-write transaction
+.
+.SS "RESULT"
+.
+.nf
+
+{"trans": <array of trans>}
+
+trans =
+ {"db": <"startup" | "running" | "candidate", default: "running">,
+  "conf_mode": <"private" | "shared" | "exclusive", default: "private">,
+  "th": <integer>
+ }
+.
+.fi
+.
+.SH "METHOD new_webui_trans"
+Creates a read\-write transaction that can be retrieved by \'get_webui_trans\'\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"db": <"startup" | "running" | "candidate", default: "running">,
+ "conf_mode": <"private" | "shared" | "exclusive", default: "private">}
+.
+.fi
+.
+.P
+See \'new_trans\' for semantics of the parameters and specific errors\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.P
+A new transaction handler id

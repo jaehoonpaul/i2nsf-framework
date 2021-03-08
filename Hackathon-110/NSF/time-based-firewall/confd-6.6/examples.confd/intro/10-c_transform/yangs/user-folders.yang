@@ -1,0 +1,108 @@
+module user-folders {
+
+  namespace "https://example.com/user-folders";
+  prefix "folders";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  // Single root list to cover all the configuration related to user's storage
+  // folders.
+  list folder-user {
+
+    // everything in this subtree is managed by a ConfD transformation callpoint
+    tailf:callpoint transcp {
+      tailf:transform true;
+    }
+
+    description "List of storage users.";
+
+    key "username";
+
+    // Key identifier we want to use is username unique in our "folders" system.
+    // This transforms to an unique user-id that is the key in the underlying
+    // user-storage model. Callpoint code utilizes the XPath filtering to
+    // map the username to specific user-id.
+    leaf username {
+      description "User identifier & remote login username.";
+      type string;
+    }
+
+    // Simplify the authentication in original mode - only data related to the
+    // "active" auth-type needs to be present.
+    choice authentication {
+      description "Authentication related data.";
+      mandatory true;
+
+      // set the underlying auth-type enumeration to "none"
+      // "missing" implementation of set-case callback causes ConfD to invoke
+      // deletion for password/key leaves have had they been set.
+      case none {
+        description "No authentication.";
+        leaf auth-none {
+          type empty;
+        }
+      }
+
+      // Set the underlying auth-type enum. to "password" and set it's value.
+      // Missing set-case callback causes ConfD to invoke deletion of "key",
+      // in case it had been set.
+      case password {
+        leaf auth-password {
+          description "Simple password.";
+          type tailf:aes-cfb-128-encrypted-string;
+        }
+      }
+
+      // Set the underlying auth-type enum. to "key" and set it's value.
+      // Missing set-case callback causes ConfD to invoke deletion of the
+      // "password", in case it had been set.
+      case key {
+        leaf auth-key {
+          description "Authentication key.";
+          type yang:hex-string {
+            tailf:value-length "4 .. 4096";
+          }
+        }
+      }
+    }
+
+    // Folder belonging to an user is defined as a nested list.
+    // This relieves us of using a foreign key to bind it to specific user
+    // (as it is done in user-storage model).
+    list managed-folder {
+      description "Storages managed by the user.";
+
+      key folder-id;
+
+      // Underlying storage-id is unique, thus not allowing storage names the
+      // same to multiple users. To "fix" this, transformation takes this
+      // folder-id and creates a "composite" key - prefixing it with user-id.
+      // This allows to have same folder names for different users...
+      leaf folder-id {
+        description "Storage identifier.";
+        type string;
+      }
+
+      // Instead of rather "technical" bit-mask used in underlying model,
+      // use the leaf-list of the enum. values.
+      leaf-list content-type {
+        description "Type of data to be stored.";
+        type enumeration {
+          enum media;
+          enum document;
+          enum archive;
+        }
+      }
+    }
+  }
+
+  // Some of the user-storage.yang elements (e.g. "descrip" leaf) are not used
+  // in this transformed model - use case being - they are elements not wanted
+  // in the new model structure - hidden form the northbound users.
+}

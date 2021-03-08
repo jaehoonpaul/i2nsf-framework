@@ -1,0 +1,85 @@
+ConfD Example hooks in the data model
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how you can define set-hook and
+transaction-hook in the data model, how the hook callback is
+implemented in C.
+
+In addition, the example also illustrates how to use MAAPI C API
+in the hook callback functions.
+
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+1. defines data model of (ipv4) 'hosts' and 'hosts_ipv6'
+2. when (ipv4) host 'ip' address and 'netmask' is configured (not committed),
+   the set-hook automatically pre-fills gateway ('gw') address with
+   smallest network IP address (according to the netmask).
+3. when configuration is committed, the (ipv4) 'hosts' are iterated and
+   corresponding 'hosts_ipv6' are created (if not yet exists).
+   The IPv4 'ip' address and gateway ('gw') are converted to the IPv6
+   (prefix ::ffff:: is used).
+   After that, all 'hosts_ipv6' are iterated, and those not having (ipv4)
+   'hosts' counterpart are deleted.
+
+
+Source code
+~~~~~~~~~~~
+
+1. 'main' function - registration of callbacks (transaction t_init and
+   t_finish; set-hook create, remove, set_elem; transaction hook write_all)
+2. 't_init' - first call attaches maapi socket (used by hooks)
+3. 'hook_ip_mask_set' - set-hook set_elem callback; calculates gateway address
+   (from 'ip' and 'netmask') and configures it ('gw')
+4. 'hook_ip_mask_remove` - set-hook remove callback; only logs message when
+    called
+5. 'hook_ip_mask_create' - set-hook create callback; not used in our scenario,
+    it should not be called, warning is displayed
+6. 'hook_hosts_write_all' - transaction hook write_all callback;
+    called during commit, creates and deletes 'hosts_ipv6' elements according
+    to the 'hosts' elements
+
+Starting and running the Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing
+
+        $ make all start
+
+ 2. Start the C-style CLI with 'make cli' in a different window and try some
+    commands
+
+config
+hosts aa
+ip 1.2.3.4
+netmask 255.255.0.0
+top
+show configuration hosts
+commit
+do show running-config hosts
+do show running-config hosts_ipv6
+
+hosts bb
+ip 5.6.7.8
+commit
+top
+do show running-config hosts
+do show running-config hosts_ipv6
+
+no hosts aa
+commit
+do show running-config hosts
+do show running-config hosts_ipv6
+
+ 3. Stop and clean
+
+        $ make stop
+        $ make clean
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD User Guide: Hooks
++ man 3 confd_lib_dp (confd_data_cbs)
++ man 3 confd_lib_maapi

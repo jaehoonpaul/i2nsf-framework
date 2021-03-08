@@ -1,0 +1,224 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "API" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBAPI\fR \- Session
+.
+.SH "METHOD login"
+Creates a user session and sets a browser cookie
+.
+.SS "PARAMS"
+.
+.nf
+
+{"user": <string>, "passwd": <string>, "ack_warning": <boolean, default: false&>}
+.
+.fi
+.
+.P
+The \fBuser\fR and \fBpasswd\fR are the credentials to be used in order to create a user session\. The common AAA engine in &product; is used to verify the credentials\.
+.
+.P
+If the method fails with a warning, the warning needs to be displayed to the user, along with a checkbox to allow the user to acknowledge the warning\. The acknowledgement of the warning translates to setting \fBack_warning\fR to true\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"warning": <string, optional>}
+.
+.fi
+.
+.P
+\fBNOTE\fR The response will have a \fBSet\-Cookie\fR HTTP header with a \fBsessionid\fR cookie which will be your authentication token for upcoming JSON\-RPC requests\.
+.
+.P
+The \fBwarning\fR is a free-text string that should be displayed to the user after a successful login\. This is not to be mistaken with a failed login that has a \fBwarning\fR as well\. In case of a failure, the user should also acknowledge the warning, not just have it displayed for optional reading\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "login", \e
+         "params": {"user": "joe", \e
+                    "passwd": "SWkkasE32"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "error":
+ {"code": \-32000,
+  "type": "rpc\.method\.failed",
+  "message": "Method failed"}}
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "login", \e
+         "params": {"user": "admin", \e
+         "passwd": "admin"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": {}}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBNOTE\fR \fBsessionid\fR cookie is set at this point in your User Agent (browser)\. In our examples, we set the cookie explicitly in the upcoming requests for clarity\.
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess4245223558720207078;" \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "get_trans"}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": {"trans": []}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD logout"
+Removes a user session and invalidates the browser cookie
+.
+.P
+The HTTP cookie identifies the user session so no input parameters are needed\.
+.
+.SS "PARAMS"
+None\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess4245223558720207078;" \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "logout"}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": {}}
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess4245223558720207078;" \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "logout"}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "error":
+ {"code": \-32000,
+  "type": "session\.invalid_sessionid",
+  "message": "Invalid sessionid"}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD kick_user"
+Kills a user session, i\.e\. kicking out the user
+.
+.SS "PARAMS"
+.
+.nf
+
+{"user": <string | number>}
+.
+.fi
+.
+.P
+The \fBuser\fR param is either the username of a logged in user or session id\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi

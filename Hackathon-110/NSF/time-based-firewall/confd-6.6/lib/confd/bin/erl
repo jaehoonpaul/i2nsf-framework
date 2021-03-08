@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# This script to be located on the internal bin directory in ther release
+
+bindir=`dirname $0`
+case $bindir in
+    /*) ROOTDIR=`dirname $bindir`;;
+    *)  ROOTDIR=`(cd $bindir/..; pwd)`;;
+esac
+
+product=`basename $ROOTDIR`
+
+BINDIR=${ROOTDIR}/erts/bin
+PROGNAME=${product}
+EMU=${product}
+export ROOTDIR BINDIR PROGNAME EMU
+async="+A0"
+exec_cmd="${BINDIR}/${product}exec +B ${async}"
+
+${exec_cmd} ${1+"$@"}

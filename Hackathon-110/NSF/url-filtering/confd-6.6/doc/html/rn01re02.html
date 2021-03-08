@@ -1,0 +1,70 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd_aaa_bridge</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01re01.html" title="confd"><link rel="next" href="rn01re03.html" title="confd_cli"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">confd_aaa_bridge</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01re01.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01re03.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.confd_aaa_bridge"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.confd_aaa_bridge.name"></a><h2>Name</h2><p>confd_aaa_bridge &#8212; Populating ConfD aaa_bridge.fxs with external data</p></div><div class="refsynopsisdiv"><a name="man.1.confd_aaa_bridge.synopsis"></a><h2>Synopsis</h2><pre class="programlisting">&lt;aaa&gt;
+    &lt;aaaBridge&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;file&gt;/etc/confd/aaa.conf&lt;/file&gt;
+    &lt;/aaaBridge&gt;
+  &lt;/aaa&gt;</pre></div><div class="refsect1"><a name="man.1.confd_aaa_bridge.description"></a><h2>DESCRIPTION</h2><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>This program is deprecated. It does not support the
+    NACM data model for access control.</p></div><p>ConfD needs to have the YANG module defining the namespace <code class="uri">http://tail-f.com/ns/aaa/1.1</code>
+    defined. The namespace is mandatory for ConfD to run. The
+    namespace specifies authentication and authorization data for
+    ConfD and ConfD doesn't run unless this namespace is
+    populated. This is fully described in the document "The ConfD AAA
+    infrastructure"</p><p>We can either choose to use CDB to populate the AAA
+    namespace in which case no C code needs to be written. Using CDB
+    is the easiest and recommended way to populate the AAA. In the CDB
+    case we should choose to have the "aaa_cdb.fxs" file in ConfD load
+    path.  By default ConfD use CDB to store the AAA data, thus this
+    man page is only of interest for users that don't use CDB to store
+    the "/aaa" tree.</p><p>If we do not want to use CDB, we can choose to populate the
+    namespace using "aaa_bridge.fxs" using external data in which case
+    a program - using the ConfD external data API from libconfd.so
+    must be written to populate aaa_bridge.fxs.</p><p>confd_aaa_bridge.c is an example of such a program. It reads
+    and writes an ad hoc .ini file which is used as "external
+    database" for authentication and authorization data. If we enable
+    confd_aaa_bridge in the configuration file for ConfD (see <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a>) ConfD will
+    automatically start a precompiled version of confd_aaa_bridge on
+    startup and stop it on shutdown.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p> confd_aaa_bridge is just an example of how we can
+    choose to populate the AAA namespace if we do not want to use CDB
+    at all.</p></div><p>confd_aaa_bridge reads and writes a file with the following
+    syntax:</p><div class="informalexample"><pre class="programlisting"><code class="sgmltag-element">[users]</code>
+<em class="replaceable"><code> .. a set of users</code></em>
+
+<code class="sgmltag-element">[groups]</code>
+<em class="replaceable"><code> .. a set of groups</code></em>
+
+<code class="sgmltag-element">[cmdrules]</code>
+<em class="replaceable"><code> .. a set of rules</code></em>
+
+<code class="sgmltag-element">[datarules]</code>
+<em class="replaceable"><code> .. a set of rules</code></em></pre></div><p>The <code class="sgmltag-element">[users]</code> are specified as six
+    space/tab separated fields</p><div class="informalexample"><pre class="programlisting">  user    uid   gid cryptpassword   sshdir  homedir</pre></div><p>The <code class="sgmltag-element">user</code> field is the name of the user, the
+    <code class="sgmltag-element">cryptpassword</code> is the encrypted (see man crypt(3))
+    password of the user.  The <code class="sgmltag-element">sshdir</code> is the name of a
+    directory where the users SSH keys are kept and finally the
+    <code class="sgmltag-element">homedir</code> is a directory which is considered the HOME
+    directory of the user.  The CLI will save files in this directory.
+    The uid and gid are UNIX ids ConfD will use to run commands on
+    behalf of the logged in user.</p><div class="informalexample"><pre class="programlisting">[users]
+admin 0 0 $1$feedbabe$nGlMYlZpQ0bzenyFOQI3L1 /var/u1/.ssh /var/u1
+oper  0 0 $1$feedbabe$i2glnaB.iUj2VXh/zlq.o/ /var/u2/.ssh /var/u2</pre></div><p>The <code class="sgmltag-element">[groups]</code> are specified as several space/tab
+    separated fields</p><div class="informalexample"><pre class="programlisting">group   gid user1 user2 ......</pre></div><p>The first field, the <span class="emphasis"><em>group</em></span> is the name
+    of a group, the remainder of space separated strings is a list of
+    users being members in the group.  The gid is the UNIX group id of
+    this group. -1 means that no additional group id should be
+    assigned to a user that belongs to this group.</p><p>The <code class="sgmltag-element">[cmdrules]</code> are specified as six
+    space/tab separated fields:</p><div class="informalexample"><pre class="programlisting">
+        index  context  command  group  op  action
+      </pre></div><p>And the <code class="sgmltag-element">[datarules]</code> are specified of seven
+    space/tab separated fields</p><div class="informalexample"><pre class="programlisting">index  context  namespace  keypath  group  op  action</pre></div><p>The meaning of the different rule fields is described in the
+    AAA userguide.</p></div><div class="refsect1"><a name="man.1.confd_aaa_bridge.signals"></a><h2>SIGNALS</h2><p>If the signal SIGHUP is sent to the program as in</p><div class="informalexample"><pre class="screen"># killall -HUP confd_aaa_bridge</pre></div><p>The program will die, ConfD will notice the exit code and
+    silently restart confd_aaa_bridge. This is a convenient way to
+    force ConfD to reload a data file edited by hand, is to kill -HUP
+    the confd_aaa_bridge UNIX process</p></div><div class="refsect1"><a name="man.1.confd_aaa_bridge.see_also"></a><h2>SEE ALSO</h2><p>See the YANG module <code class="filename">tailf-aaa.yang</code> in the
+    <code class="filename">$CONFD_DIR/src/confd/aaa</code> directory in the
+    release, as well as the accompanying annotation YANG module
+    <code class="filename">bridge-ann.yang</code> in the
+    <code class="filename">$CONFD_DIR/src/confd/confd_aaa_bridge</code> directory,
+    which brings the necessary callpoint into the original YANG module
+    <code class="filename">tailf-aaa.yang</code>.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01re01.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01re03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">confd&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;<span class="phrase">confd</span>_cli</td></tr></table></div></body></html>

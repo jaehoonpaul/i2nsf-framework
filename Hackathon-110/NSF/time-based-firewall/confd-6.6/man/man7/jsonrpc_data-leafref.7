@@ -1,0 +1,76 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "API" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBAPI\fR \- Data (leafref)
+.
+.SH "METHOD deref"
+Dereferences a leaf with a leafref type
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "path": <string>,
+ "result_as": <"paths" | "target", default: "paths">}
+.
+.fi
+.
+.P
+The \fBpath\fR param is a keypath pointing to a leaf with a leafref type\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"paths": <array of string, a keypath to a leaf>}
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"target": <a keypath to a leaf/list>}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD get_leafref_values"
+Gets all possible values for a leaf with a leafref type
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "path": <string>,
+ "skip_grouping": <boolean, default: false>,
+ "keys": <array of string>}
+.
+.fi
+.
+.P
+The \fBth\fR param is as returned from a call to \fBnew_read_trans\fR or \fBnew_write_trans\fR\. The \fBpath\fR param is a keypath pointing to a leaf with a leafref type\.
+.
+.P
+The \fBskip_grouping\fR param is by default set to false and is only needed to be set to true if if a set of sibling leafref leafs points to a list instance with multiple keys \fIand\fR if \fBget_leafref_values\fR should return an array of possible leaf values instead an array of arrays with possible key value combinations\.
+.
+.P
+The \fBkeys\fR param is an optional array of values that should be set if a more than one leafref statement is used within action input parameters \fIand\fR if they refer to each other using \fBderef()\fR or \fBcurrent()\fR XPath functions\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"values": <array of string>,
+ "source": <string>}
+.
+.fi
+.
+.P
+The \fBsource\fR param will point to the keypath where the values originate\.

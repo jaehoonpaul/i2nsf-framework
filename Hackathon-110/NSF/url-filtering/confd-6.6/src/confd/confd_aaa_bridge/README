@@ -1,0 +1,38 @@
+
+This directory contains the source for confd_aaa_bridge.
+See man confd_aaa_bridge(1).
+
+This is an example implementation on how to populate the
+ConfD /aaa tree with data from an external source - in
+this case an adhoc .ini file.
+
+Also see the AAA section in the User Guide.
+
+ConfD ships with a built-in version of the program found
+here. The built-in version is enabled by the directive
+  /confdConfig/aaa/aaaBridge
+in the confd.conf file (see confd.conf(5)).
+
+If you want to run an external version (e.g. this code),
+the built-in confd_aaa_bridge must be disabled.
+
+So, to run this:
+
+1. Disable the automatic startup of confd_aaa_bridge in
+   confd.conf.
+
+2. Compile this code.
+
+3. Make sure that ConfD loads the generated aaa_bridge.fxs from
+   this directory as opposed to the normal confd_cdb.fxs. Both
+   of the fxs files describe the same namespace, with the
+   difference that aaa_bridge.fxs also defines a callpoint for
+   C, precisely the callpoint which this program,
+   confd_aaa_bridge.c, connects to.
+
+4. Start ConfD (no AAA is loaded and the system is unusable).
+
+5. Start this program with the example data file as
+   ./confd_aaa_bridge -i -t -c ./confd.aaa
+
+6. Study the source code.

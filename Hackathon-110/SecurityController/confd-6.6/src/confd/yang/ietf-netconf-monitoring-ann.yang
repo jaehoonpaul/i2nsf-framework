@@ -1,0 +1,67 @@
+module ietf-netconf-monitoring-ann {
+  namespace "urn:dummy";
+  prefix dummy;
+
+  import tailf-common {
+    prefix tailf;
+  }
+  import ietf-netconf-monitoring {
+    prefix ncm;
+  }
+
+  description
+    "Annotation module for ietf-netconf-monitoring.
+
+    Adds tailf:info statements for a better CLI / WebUI experience,
+    and adds the callpoints necessary for using this module with
+    ConfD.";
+
+  tailf:annotate "/ncm:netconf-state" {
+    tailf:callpoint "ncagent" {
+      tailf:internal;
+    }
+    tailf:info "Statistics about NETCONF";
+
+    tailf:annotate "ncm:capabilities" {
+      tailf:info "Capabilities supported by the NETCONF server";
+
+      tailf:annotate "ncm:capability" {
+        tailf:info "Capabilities supported by the NETCONF server";
+        tailf:cli-list-syntax;
+      }
+    }
+    tailf:annotate "ncm:datastores" {
+      tailf:info "Available datastores";
+      tailf:annotate "ncm:datastore" {
+        tailf:cli-suppress-show-path;
+      }
+    }
+    tailf:annotate "ncm:schemas" {
+      tailf:info "Data models supported by the NETCONF server";
+      tailf:annotate "ncm:schema" {
+        tailf:cli-suppress-show-path;
+      }
+    }
+    tailf:annotate "ncm:sessions" {
+      tailf:info "Currently active sessions";
+      tailf:annotate "ncm:session" {
+        tailf:cli-suppress-show-path;
+      }
+    }
+    tailf:annotate "ncm:statistics" {
+      tailf:info "Statistics related to the NETCONF server";
+      tailf:annotate "*" {
+        tailf:cli-suppress-show-path;
+      }
+    }
+  }
+
+  tailf:annotate "/ncm:get-schema" {
+    tailf:actionpoint "ncagent" {
+      tailf:internal;
+    }
+    // make sure get-schema cannot be called from CLI and WebUI
+    tailf:hidden "netconf-only";
+  }
+}
+

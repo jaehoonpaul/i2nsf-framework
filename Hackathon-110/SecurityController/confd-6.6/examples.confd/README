@@ -1,0 +1,131 @@
+ConfD Examples
+~~~~~~~~~~~~~~
+
+Here are a variety of ConfD examples of different complexity and
+focus.  Each example contains one or more README files and a Makefile.
+
+I recommend new users to start with the intro examples.  There is a
+guided tour further down in this document.
+
+
+Working with the Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ConfD examples can be copied and moved around.  To try something
+out, make a copy of the example that comes closest to what you want to
+do, then modify it as you want.
+
+Let's say you would like to write an operational data provider. You
+start with
+
+    $ source ~/confd-X.X/confdrc
+
+
+All examples come with a 'Makefile' with similar structure. Simply
+typing 'make' in any example directory gives you a menu.  The make
+targets below are pretty much standard for all examples, but some of
+them have additional targets.
+
+    $ make
+    See README file for more instructions
+    make all     Build all example files
+    make clean   Remove all built and intermediary files
+    make start   Start CONFD daemon and example agent
+    make stop    Stop any CONFD daemon and example agent
+    make cli     Start the CONFD Command Line Interface
+
+
+Examples Tour
+~~~~~~~~~~~~~
+
+We highly recommend starting with the intro examples.  There you'll
+find a suite of examples which shows you how to:
+
+  * build, start, and interact with a ConfD example
+  * create a simple managed object reading it's configuration and
+    subscribing to configuration change events
+  * write an operational data provider
+  * integrate an external data store, this could be an external
+    database or configuration file
+  * add actions available to all northbound interfaces, this could be
+    commands like 'reset interface eth2' or 'reboot'.
+
+Open up $CONFD_DIR/examples.confd/intro/0-README to get started with the
+intro examples.
+
+When you're done with the intro and have got the hang of the ConfD
+example makefiles, you can go in different directions depending on
+your interest.
+
+Northbound Management Interfaces
+
+  * To take a look at the Web User Interface, go to examples.confd/webui.
+
+  * A variety of NETCONF queries and commands are available in the
+    examples.confd/intro/1-2-3-start-query-model example.  The NETCONF
+    interface can be extended in various ways.  This is shown in
+    examples.confd/netconf_extensions.
+
+  * The Command Line Interface (CLI) is used in pretty much every
+    example. To name one, go to examples.confd/intro/1-2-3-start-query-model.
+    More examples are found in examples.confd/cli.
+
+  * Examples of the SNMP Agent can be found in examples.confd/snmpa
+
+Northbound Notifications
+
+  * To work with NETCONF Notifications, go to
+    examples.confd/netconf_notifications.
+
+  * To work with SNMP notifications/traps, go to
+    examples.confd/snmpa/3-sendtrap.
+
+Working with the Data Tree
+
+  * To look at validation of configuration data, go to
+    examples.confd/validate.
+
+  * To find out how to work with encrypted information in the data
+    tree, go to examples.confd/crypto.
+
+Working with the Database
+
+  * To look at more advanced ways for Managed Objects to subscribe to
+    changes to the configuration, go to examples.confd/cdb_subscription.
+
+  * To look at how you can upgrade/downgrade the data stored in CDB at
+    a new (or old) software version, go to examples.confd/cdb_upgrade.
+
+  * To look at how operational (run-time) data can be stored in CDB,
+    go to examples.confd/cdb_oper.
+
+Managing ConfD
+
+  * The High Availability API to ConfD, used to plug ConfD into an HA
+    framework is demonstrated in examples.confd/ha.
+
+  * Advanced uses of audit log information and other ConfD events is
+    demonstrated in examples.confd/misc/notifications.
+
+Model Transformation
+
+  * To get the most out of the YANG and to show different views of
+    the data model to different users or northbound interfaces, you
+    can use transformations. Some of this power is demonstrated in
+    examples.confd/misc/gen_transform.
+
+  * A simpler way of handling users is built using a transform in
+    examples.confd/misc/aaa_transform.
+
+Miscellaneous
+
+  * To see the SNMP gateway, which makes data from an external SNMP agent
+    available to ConfD, see examples.confd/misc/snmpgw.
+
+  * To see the full examples from the User Guide, go to
+    examples.confd/user_guide_examples.
+
+This list isn't exhaustive, and the list is constantly growing because
+we are creating new examples as a way to show customers how to use
+ConfD to attain their goals.  If you have an idea for an example,
+please don't hesitate to tell us.

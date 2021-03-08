@@ -1,0 +1,61 @@
+Example: Implementing new data types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how to implement new (i.e. "user-defined") data
+types. This can be useful if none of the predefined types, nor a
+derivation of one of those types is suitable. Of course it is always
+possible to define a type as a derivation of 'string' and have the
+application parse the string whenever a value needs to be processed, but
+with a user-defined type ConfD will do the string <-> value translation
+just as for the predefined types. Please refer to the confd_types(3) man
+page for a full description of the procedure.
+
+The "portType" type defined here has an internal "structure", as it
+carries three integer values that together identify a specific network
+interface port in a multi-chassis device, as 'shelf'/'slot'/'port'.
+I.e. port 3 on the card in slot 4 on shelf 1 has the textual
+representation "1/4/3". For the value representation, a 32-bit integer
+(i.e. confd_value_t type C_INT32) is used, with one integer in each
+of the lower three bytes (none of them will exceed 255).
+
+The "ipv4AddressMask" and "ipv6AddressMask" types also have an internal
+structure, as they each carry both an IP address and the length of the
+netmask for the connected network. In this case the C_IPV4PREFIX and
+C_IPV6PREFIX types, normally used to represent a single value (an
+address prefix), is a convenient choice for the value representation.
+
+In the general case, an arbitrarily complex type can always be mapped
+to/from the opaque byte array provided by the C_BINARY confd_value_t
+type.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Running the Example
+~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+    As ConfD starts, it will load the shared object (confd_type.so)
+    that holds the type-defining callbacks. Note that ConfD also loads
+    the libconfd.so shared library, and thus needs the LD_LIBRARY_PATH
+    environment variable to find the library in this example.
+
+ 2. Start the CLI with 'make cli', and create and show some /system/port
+    instances, e.g.:
+
+        (J) % set system port 1/2/3 ip 1.2.3.4/24
+        (J) % set system port 0/5/9 ip ffff::1/64
+        (J) % show system 
+        (J) % commit
+
+        (C) # system port 1/2/3 ip 1.2.3.4/24
+        (C) # system port 0/5/9 ip ffff::1/64
+        (C) # show full-configuration system 
+        (C) # commit
+
+ 3. Exit the CLI and run the demo application with 'make demo'. The
+    application just reads the instances that were created in the
+    previous step and prints them.

@@ -1,0 +1,84 @@
+module yaws {
+  namespace "http://tail-f.com/ns/example/yaws";
+  prefix yaws;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef TraceType {
+    type enumeration {
+      enum traffic;
+      enum http;
+      enum none;
+    }
+  }
+  container yaws {
+    leaf logdir {
+      type string;
+      mandatory true;
+    }
+    leaf id {
+      type string;
+      mandatory true;
+    }
+    leaf trace {
+      type TraceType;
+      mandatory true;
+    }
+    leaf log_wrap_size {
+      type int32;
+      mandatory true;
+    }
+    leaf copy_error_log {
+      type boolean;
+      mandatory true;
+    }
+    leaf pick_first_virthost_on_nomatch {
+      type boolean;
+      mandatory true;
+    }
+    container vservers {
+      list vserver {
+        key index;
+        max-elements 64;
+        leaf index {
+          type int32;
+        }
+        leaf listen {
+          type inet:ip-address;
+          default 0.0.0.0;
+        }
+        leaf port {
+          type inet:port-number;
+          mandatory true;
+        }
+        container servers {
+          list server {
+            key index;
+            min-elements 1;
+            max-elements 64;
+            leaf index {
+              type int32;
+            }
+            leaf rhost {
+              type string;
+              mandatory true;
+            }
+            leaf deflate {
+              type boolean;
+              mandatory true;
+            }
+            leaf docroot {
+              type string;
+              mandatory true;
+            }
+          }
+        }
+      }
+    }
+  }
+}

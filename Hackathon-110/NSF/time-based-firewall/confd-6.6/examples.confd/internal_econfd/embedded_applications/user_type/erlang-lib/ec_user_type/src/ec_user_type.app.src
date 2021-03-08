@@ -1,0 +1,12 @@
+%% This is an -*- erlang -*- file
+
+{application, ec_user_type,
+ [
+  {description, "User types"},
+  {vsn, "%VSN%"},
+  {modules, [%MODULES%]},
+  {mod, {ec_user_type, []}},
+  {registered, [ec_user_type_server]},
+  {applications, [stdlib, kernel]},
+  {env, [{confd_start_phase, early_phase0}]}
+ ]}.

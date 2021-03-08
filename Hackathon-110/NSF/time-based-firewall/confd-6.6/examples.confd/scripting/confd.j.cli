@@ -1,0 +1,57 @@
+<!-- -*- nxml -*- -->
+<clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="j">
+  <operationalMode>
+    <modifications>
+    </modifications>
+   <cmd name="echo" mount="my clispec">
+      <info>Display a line of text</info>
+      <help>"Display a line of text</help>
+      <callback>
+        <exec>
+          <osCommand>scripts/command/echo.sh</osCommand>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <name>nolf</name>
+          <optional/>
+          <type><void/></type>
+          <argFlag>-n</argFlag>
+          <info>Do not output the trailing newline</info>
+          <help>Do not output the trailing newline</help>
+        </param>
+        <param>
+          <name>file</name>
+          <optional/>
+          <argFlag>-f</argFlag>
+          <info>Redirect output to file</info>
+          <help>Redirect output to file</help>
+        </param>
+        <any>
+          <info>String to be displayed</info>
+          <help>String to be displayed</help>
+        </any>
+      </params>
+    </cmd>
+  </operationalMode>
+
+  <configureMode>
+    <modifications>
+    </modifications>
+
+   <cmd name="shell">
+      <info>Start a Bourne-Again SHell</info>
+      <help>Start a Bourne-Again SHell</help>
+      <callback>
+        <exec>
+          <osCommand>/bin/bash</osCommand>
+        </exec>
+      </callback>
+    </cmd>
+  </configureMode>
+
+  <pipeCmds>
+    <modifications>
+    </modifications>
+  </pipeCmds>
+</clispec>

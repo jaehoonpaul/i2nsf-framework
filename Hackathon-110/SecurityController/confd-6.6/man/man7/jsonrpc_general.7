@@ -1,0 +1,248 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_GENERAL" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_general\fR
+.
+.SH "METHOD comet"
+Listens on a comet channel, i\.e\. all asynchronous messages from batch commands started by calls to \fBstart_cmd\fR, \fBsubscribe_cdboper\fR, \fBsubscribe_changes\fR, \fBsubscribe_messages\fR, \fBsubscribe_poll_leaf\fR or \fBsubscribe_upgrade\fR ends up on the comet channel\.
+.
+.P
+You are expected to have a continuous long polling call to the \fBcomet\fR method at any given time\. As soon as the browser or server closes the socket, due to browser or server connect timeout, the \fBcomet\fR method should be called again\.
+.
+.P
+As soon as the \fBcomet\fR method returns with values they should be dispatched and the \fBcomet\fR method should be called again\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"comet_id": <string>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+[{"handle": <number>,
+  "message": <a context specific json object, see example below>},
+ \.\.\.]
+.
+.fi
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "comet\.duplicated_channel"}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "subscribe_changes", \e
+         "params": {"comet_id": "main", \e
+                    "path": "/dhcp:dhcp"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": {"handle": "2"}}
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "batch_init_done", \e
+         "params": {"handle": "2"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": {}}
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-m 15 \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "comet", \e
+         "params": {"comet_id": "main"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.P
+hangs\.\.\. and finally\.\.\.
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ [{"handle": "1",
+   "message":
+   {"db": "running",
+    "changes":
+    [{"keypath": "/dhcp:dhcp/default\-lease\-time",
+      "op": "value_set",
+      "value": "100"}],
+    "user": "admin",
+    "ip": "127\.0\.0\.1"}}]}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+In this case the admin user seems to have set \fB/dhcp:dhcp/default\-lease\-time\fR to \fB100\fR\.
+.
+.SH "METHOD get_system_setting"
+Extracts system settings such as capabilities, supported datastores, etc\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"operation": <"capabilities" | "customizations" | "models" | "user" | "version" | "all" | "namespaces", default: "all">}
+.
+.fi
+.
+.P
+The \fBoperation\fR param specifies which system setting to get:
+.
+.IP "\(bu" 4
+\fBcapabilities\fR \- the server\-side settings are returned, e\.g\. is rollback and confirmed commit supported
+.
+.IP "\(bu" 4
+\fBcustomizations\fR \- an array of all webui customizations
+.
+.IP "\(bu" 4
+\fBmodels\fR \- an array of all loaded YANG modules are returned, i\.e\. prefix, namespace, name
+.
+.IP "\(bu" 4
+\fBuser\fR \- the username of the currently logged in user is returned
+.
+.IP "\(bu" 4
+\fBversion\fR \- the system version
+.
+.IP "\(bu" 4
+\fBall\fR \- all of the above is returned\.
+.
+.IP "\(bu" 4
+(DEPRECATED) \fBnamespaces\fR \- an object of all loaded YANG modules are returned, i\.e\. prefix to namespace
+.
+.IP "" 0
+.
+.SS "RESULT"
+.
+.nf
+
+{"user:" <string>,
+ "models:" <array of YANG modules>,
+ "version:" <string>,
+ "customizations": <array of customizations>,
+ "capabilities":
+ {"rollback": <boolean>,
+  "copy_running_to_startup": <boolean>,
+  "exclusive": <boolean>,
+  "confirmed_commit": <boolean>
+ },
+ "namespaces": <object of YANG modules prefix/namespace>}
+.
+.fi
+.
+.P
+The above is the result if using the \fBall\fR operation\.
+.
+.SH "METHOD abort"
+Abort a JSON\-RPC method by its associated id\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"id": <integer>}
+.
+.fi
+.
+.P
+The \fBxpath_expr\fR param is the XPath expression to be evaluated\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD eval_xpath"
+Evaluates an xpath expression on the server side
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "xpath_expr": <string>}
+.
+.fi
+.
+.P
+The \fBxpath_expr\fR param is the XPath expression to be evaluated\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"value": <string>}
+.
+.fi
+

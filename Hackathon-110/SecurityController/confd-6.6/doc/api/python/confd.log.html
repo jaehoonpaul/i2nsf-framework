@@ -1,0 +1,91 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module confd.log</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="confd.html"><font color="#ffffff">confd</font></a>.log</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/log.py">/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/log.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;provides&nbsp;some&nbsp;logging&nbsp;utilities.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="unittest.html">unittest</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="confd.log.html#Log">Log</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Log">class <strong>Log</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;log&nbsp;helper&nbsp;class.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;makes&nbsp;it&nbsp;easier&nbsp;to&nbsp;write&nbsp;log&nbsp;entries.&nbsp;It&nbsp;encapsulates<br>
+another&nbsp;log&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;that&nbsp;supports&nbsp;Python&nbsp;standard&nbsp;log&nbsp;interface,&nbsp;and<br>
+makes&nbsp;it&nbsp;easier&nbsp;to&nbsp;format&nbsp;the&nbsp;log&nbsp;message&nbsp;be&nbsp;adding&nbsp;the&nbsp;ability&nbsp;to<br>
+support&nbsp;multiple&nbsp;arguments.<br>
+&nbsp;<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;logging<br>
+&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;confd.log<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;logger&nbsp;=&nbsp;logging.getLogger(__name__)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mylog&nbsp;=&nbsp;confd.log.<a href="#Log">Log</a>(logger)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;count&nbsp;=&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;=&nbsp;'foo'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mylog.<a href="#Log-debug">debug</a>('got&nbsp;',&nbsp;count,&nbsp;'&nbsp;values&nbsp;from&nbsp;',&nbsp;name)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Log-__init__"><strong>__init__</strong></a>(self, logobject, add_timestamp<font color="#909090">=False</font>)</dt><dd><tt>Initialize&nbsp;a&nbsp;<a href="#Log">Log</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;<br>
+The&nbsp;argument&nbsp;'logobject'&nbsp;is&nbsp;mandatory&nbsp;and&nbsp;can&nbsp;be&nbsp;any&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;which<br>
+should&nbsp;support&nbsp;as&nbsp;least&nbsp;one&nbsp;of&nbsp;the&nbsp;standard&nbsp;log&nbsp;methods&nbsp;(info,&nbsp;warning,<br>
+error,&nbsp;critical,&nbsp;debug).&nbsp;If&nbsp;'add_timestamp'&nbsp;is&nbsp;set&nbsp;to&nbsp;True&nbsp;a&nbsp;time&nbsp;stamp<br>
+will&nbsp;precede&nbsp;your&nbsp;log&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Log-critical"><strong>critical</strong></a>(self, *args)</dt><dd><tt><a href="#Log">Log</a>&nbsp;a&nbsp;critical&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Log-debug"><strong>debug</strong></a>(self, *args)</dt><dd><tt><a href="#Log">Log</a>&nbsp;a&nbsp;debug&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Log-error"><strong>error</strong></a>(self, *args)</dt><dd><tt><a href="#Log">Log</a>&nbsp;an&nbsp;error&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Log-fatal"><strong>fatal</strong></a>(self, *args)</dt><dd><tt>Just&nbsp;calls&nbsp;<a href="#Log-critical">critical</a>().</tt></dd></dl>
+
+<dl><dt><a name="Log-info"><strong>info</strong></a>(self, *args)</dt><dd><tt><a href="#Log">Log</a>&nbsp;an&nbsp;information&nbsp;message.</tt></dd></dl>
+
+<dl><dt><a name="Log-warning"><strong>warning</strong></a>(self, *args)</dt><dd><tt><a href="#Log">Log</a>&nbsp;a&nbsp;warning&nbsp;message.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

@@ -1,0 +1,253 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;22.&nbsp;The RESTCONF API</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch21.html" title="Chapter&nbsp;21.&nbsp;The REST API"><link rel="next" href="ch23.html" title="Chapter&nbsp;23.&nbsp;The Management Agent API"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;22.&nbsp;The RESTCONF API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch21.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch23.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.restconf"></a>Chapter&nbsp;22.&nbsp;The RESTCONF API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch22.html#d5e12830">22.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12835">22.2. Getting started</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12883">22.3. Capabilities</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12892">22.4. Streams</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12912">22.5. Schema resource</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12918">22.6. YANG Patch Media Type</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12922">22.7. Extensions</a></span></dt><dt><span class="sect1"><a href="ch22.html#d5e12953">22.8. Custom Response HTTP Headers</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12830"></a>22.1.&nbsp;Introduction</h2></div></div></div><p>
+      RESTCONF is a HTTP based protocol as defined in <a class="link" href="http://www.ietf.org/rfc/rfc8040.txt" target="_top"> RFC
+      8040</a>. It is very similar to the ConfD REST API.
+    </p><p>
+      This chapter describes any extensions and/or deviations between
+      our implementation and RFC 8040.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12835"></a>22.2.&nbsp;Getting started</h2></div></div></div><p>
+      In order to enable RESTCONF in <span class="phrase">ConfD</span>,
+      RESTCONF must be enabled in the <code class="filename">confd.conf</code>
+      configuration file. The web server configuration for RESTCONF
+      is shared with the WebUI's config.
+      However, the WebUI does not have to be enabled for RESTCONF to work.
+    </p><p>
+      Here's a minimal example of what is needed in the
+      <code class="filename">confd.conf</code> file:
+    </p><p>
+      </p><div class="example"><a name="d5e12843"></a><p class="title"><b>Example&nbsp;22.1.&nbsp;ConfD configuration for REST</b></p><div class="example-contents"><pre class="screen">
+&lt;restconf&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+&lt;/restconf&gt;
+
+&lt;webui&gt;
+  &lt;enabled&gt;false&lt;/enabled&gt;
+  &lt;transport&gt;
+    &lt;tcp&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+      &lt;port&gt;8008&lt;/port&gt;
+    &lt;/tcp&gt;
+  &lt;/transport&gt;
+&lt;/webui&gt;</pre></div></div><p><br class="example-break">
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12846"></a>22.2.1.&nbsp;Root resource discovery</h3></div></div></div><p>
+        RESTCONF makes it possible to specify where the RESTCONF API is located,
+        as described in RFC 8040.
+      </p><p>
+        As per default, the RESTCONF API root is <span class="emphasis"><em>/restconf</em></span>.
+        To change this, configure the RESTCONF API root in the
+        <code class="filename">confd.conf</code> file as:
+      </p><p>
+      </p><div class="example"><a name="d5e12853"></a><p class="title"><b>Example&nbsp;22.2.&nbsp;ConfD configuration for RESTCONF</b></p><div class="example-contents"><pre class="screen">
+&lt;restconf&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;rootResource&gt;my_own_restconf_root&lt;/rootResource&gt;
+&lt;/restconf&gt;</pre></div></div><p><br class="example-break">
+    </p><p>
+      The RESTCONF API root will now be
+      <span class="emphasis"><em>/my_own_restconf_root</em></span>.
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        In this document, all examples will assume the RESTCONF API root to be
+        <span class="emphasis"><em>/restconf</em></span>.
+      </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12861"></a>22.2.2.&nbsp;The Authentication Cache</h3></div></div></div><p>The RESTCONF server maintains an authentication cache.
+      When authenticating an incoming request for a particular
+      User:Password, it is first checked if the User exists in the cache
+      and if so, the request is processed. This makes it possible to
+      avoid the, potentially time consuming, login procedure that will
+      take place in case of a cache miss.
+      </p><p>Cache entries has a maximum Time-To-Live (TTL) and upon expiry
+      a cache entry is removed which will cause the next request for that User
+      to perform the normal login procedure. The TTL value is configurable
+      via the <span class="emphasis"><em>authCacheTTL</em></span> parameter, as shown in the
+      example. Note that, by setting the TTL value to zero (PT0S), the cache
+      is effectively turned off.
+      </p><p>
+      </p><div class="example"><a name="d5e12867"></a><p class="title"><b>Example&nbsp;22.3.&nbsp;ConfD configuration of the authentication cache TTL</b></p><div class="example-contents"><pre class="screen">
+  ...
+  &lt;aaa&gt;
+     ...
+     &lt;rest&gt;
+        &lt;!-- Set the TTL to 10 seconds! --&gt;
+        &lt;authCacheTTL&gt;PT10S&lt;/authCacheTTL&gt;
+     &lt;/rest&gt;
+     ...
+  &lt;/aaa&gt;
+  ...</pre></div></div><p><br class="example-break">
+    </p><p>It is also possible to combine the Clients IP address with
+      the User name as a key into the cache. This behaviour is disabled
+      by default. It can be enabled by setting the
+      <span class="emphasis"><em>enableAuthCacheClientIp</em></span> parameter
+      to <span class="emphasis"><em>true</em></span>.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12873"></a>22.2.3.&nbsp;Client IP via Proxy</h3></div></div></div><p>It is possible to configure the ConfD RESTCONF server
+      to pick up the client IP address via a HTTP header in the request.
+      A list of HTTP headers to look for is configurable via the
+      <span class="emphasis"><em>proxyHeaders</em></span> parameter as shown in the example.
+      </p><p>To avoid misuse of this feature, only requests from trusted sources
+      will be searched for such a HTTP header. The list of trusted sources is
+      configured via the <span class="emphasis"><em>allowedProxyIpPrefix</em></span> as shown
+      in the example.
+      </p><p>
+      </p><div class="example"><a name="d5e12880"></a><p class="title"><b>Example&nbsp;22.4.&nbsp;ConfD configuration of Client IP via Proxy</b></p><div class="example-contents"><pre class="screen">
+  ...
+  &lt;webui&gt;
+     ...
+     &lt;useForwardedClientIp&gt;
+       &lt;proxyHeaders&gt;X-Forwarded-For&lt;/proxyHeaders&gt;
+       &lt;proxyHeaders&gt;X-REAL-IP&lt;/proxyHeaders&gt;
+       &lt;allowedProxyIpPrefix&gt;10.12.34.0/24&lt;/allowedProxyIpPrefix&gt;
+       &lt;allowedProxyIpPrefix&gt;2001:db8:1234::/48&lt;/allowedProxyIpPrefix&gt;
+     &lt;/useForwardedClientIp&gt;
+     ...
+  &lt;/webui&gt;
+  ...</pre></div></div><p><br class="example-break">
+    </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12883"></a>22.3.&nbsp;Capabilities</h2></div></div></div><p>
+      RESTCONF capabilities are described in Section 9.1 of RFC 8040.
+    </p><p>
+      To view currently enabled capabilities, use the
+      ietf-restconf-monitoring YANG model. This is available via
+      <span class="emphasis"><em>/restconf/data/restconf-state</em></span>, example result:
+    </p><p>
+      </p><div class="example"><a name="d5e12889"></a><p class="title"><b>Example&nbsp;22.5.&nbsp;ConfD RESTCONF capabilities</b></p><div class="example-contents"><pre class="screen">
+&lt;restconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-restconf-monitoring"
+  xmlns:rcmon="urn:ietf:params:xml:ns:yang:ietf-restconf-monitoring"&gt;
+&lt;capabities&gt;
+  &lt;capility&gt;
+    urn:ietf:params:restconf:capability:defaults:1.0?basic-mode=explicit
+  &lt;/capability&gt;
+  &lt;capility&gt;urn:ietf:params:restconf:capability:depth:1.0&lt;/capability&gt;
+  &lt;capility&gt;urn:ietf:params:restconf:capability:fields:1.0&lt;/capability&gt;
+  &lt;capility&gt;urn:ietf:params:restconf:capability:with-defaults:1.0&lt;/capability&gt;
+  &lt;capility&gt;urn:ietf:params:restconf:capability:filter:1.0&lt;/capability&gt;
+  &lt;capility&gt;urn:ietf:params:restconf:capability:replay:1.0&lt;/capability&gt;
+  &lt;capility&gt;http://tail-f.com/ns/restconf/collection/1.0&lt;/capability&gt;
+  &lt;capility&gt;http://tail-f.com/ns/restconf/query-api/1.0&lt;/capability&gt;
+&lt;/capalities&gt;
+&lt;/restconf-state&gt;</pre></div></div><p><br class="example-break">
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12892"></a>22.4.&nbsp;Streams</h2></div></div></div><p>
+      RESTCONF event notification streams are described in Sections 6
+      and 9.2 of RFC 8040, where also notification examples can be found.
+    </p><p>
+      RESTCONF event notification is a way for RESTCONF clients to retrieve
+      notifications for different event streams. Event streams configured in
+      ConfD can be subscribed to using different channels such as RESTCONF or
+      NETCONF.
+    </p><p>
+      More information on how to define a new notification event using Yang is
+      described in RFC 6020.
+    </p><p>
+      How to add and configure notifications support in ConfD is described in
+      the <code class="filename">confd.conf(5)</code> man page.
+    </p><p>
+      The design of RESTCONF event notification is inspired by how NETCONF event
+      notification is designed. More information on NETCONF event notification
+      can be found in RFC 5277.
+    </p><p>
+      To view currently enabled event streams, use the
+      ietf-restconf-monitoring YANG model. This is available via
+      <span class="emphasis"><em>/restconf/data/restconf-state/streams</em></span>,
+      example result:
+    </p><p>
+      </p><div class="example"><a name="d5e12903"></a><p class="title"><b>Example&nbsp;22.6.&nbsp;ConfD RESTCONF streams</b></p><div class="example-contents"><pre class="screen">
+&lt;streams xmlns="urn:ietf:params:xml:ns:yang:ietf-restconf-monitoring"
+  xmlns:rcmon="urn:ietf:params:xml:ns:yang:ietf-restconf-monitoring"&gt;
+  &lt;stream&gt;
+    &lt;name&gt;NETCONF&lt;/name&gt;
+    &lt;description&gt;default NETCONF event stream&lt;/description&gt;
+    &lt;replay-support&gt;false&lt;/replay-support&gt;
+    &lt;access&gt;
+      &lt;encoding&gt;xml&lt;/encoding&gt;
+      &lt;location&gt;https://localhost:8889/restconf/streams/NETCONF/xml&lt;/location&gt;
+    &lt;/access&gt;
+    &lt;access&gt;
+      &lt;encoding&gt;json&lt;/encoding&gt;
+      &lt;location&gt;https://localhost:8889/restconf/streams/NETCONF/json
+      &lt;/location&gt;
+    &lt;/access&gt;
+  &lt;/stream&gt;
+&lt;/streams&gt;</pre></div></div><p><br class="example-break">
+    </p><p>
+      Errors occurring during streaming of events will be reported as
+      Server-Sent Events (SSE) comments as described in <a class="link" href="http://www.w3.org/TR/2015/REC-eventsource-20150203" target="_top">
+      W3C.REC-eventsource-20150203</a>
+
+      Example error:
+    </p><p>
+      </p><div class="example"><a name="d5e12909"></a><p class="title"><b>Example&nbsp;22.7.&nbsp;ConfD RESTCONF errors during streaming</b></p><div class="example-contents"><pre class="screen">
+: error: notification stream NETCONF temporarily unavailable</pre></div></div><p><br class="example-break">
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12912"></a>22.5.&nbsp;Schema resource</h2></div></div></div><p>
+      RFC 8040 Section 3.7 describes retrieval of YANG modules used by the
+      server via the RPC operation <code class="code">get-schema</code>. The YANG source is
+      made available by <span class="phrase">ConfD</span> in two ways: compiled into
+      the fxs file or put in the loadPath. See <a class="xref" href="ch15.html#ug.netconf_agent.monitoring" title="15.6.&nbsp;Monitoring of the NETCONF Server">Section&nbsp;15.6, &#8220;Monitoring of the NETCONF Server&#8221;</a>.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12918"></a>22.6.&nbsp;YANG Patch Media Type</h2></div></div></div><p>
+      The ConfD RESTCONF API also support the YANG Patch Media Type,
+      as defined in
+      <a class="link" href="http://www.ietf.org/rfc/rfc8040.txt" target="_top">RFC 8072</a>
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12922"></a>22.7.&nbsp;Extensions</h2></div></div></div><p>
+      To avoid any potential future conflict with the RESTCONF standard,
+      any extensions made to the <span class="phrase">ConfD</span> implementation
+      of RESTCONF is located under
+      the URL path: <span class="emphasis"><em>/restconf/tailf</em></span>, or is controlled
+      by means of a vendor specific media type.
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+        There is no index of extensions under
+        <span class="emphasis"><em>/restconf/tailf</em></span>. To list extensions, access
+        <span class="emphasis"><em>/restconf/data/modules-state</em></span> and follow published
+        links for schemas.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12931"></a>22.7.1.&nbsp;Collections</h3></div></div></div><p>
+        The RESTCONF specification states that a result containing
+        multiple instances (e.g a number of list entries) is not
+        allowed if XML encoding is used. The reason for this is that
+        an XML document can only have one root node.
+      </p><p>
+        To remedy this, a HTTP GET request can make use of
+        the "Accept:"
+        media type: <span class="emphasis"><em>application/vnd.yang.collection+xml</em></span> as
+        shown in the following example.
+      </p><p>
+        </p><div class="example"><a name="d5e12937"></a><p class="title"><b>Example&nbsp;22.8.&nbsp;Use of collections</b></p><div class="example-contents"><pre class="screen">
+curl  -H "Accept: application/vnd.yang.collection+xml"  http://....</pre></div></div><p><br class="example-break">
+      </p><p>
+        The result will then be wrapped with a "collection" element
+        as shown below:
+      </p><p>
+        </p><div class="example"><a name="d5e12942"></a><p class="title"><b>Example&nbsp;22.9.&nbsp;Use of collections</b></p><div class="example-contents"><pre class="screen">
+&lt;collection xmlns:y="urn:ietf:params:xml:ns:yang:ietf-restconf"&gt;
+  ....
+&lt;/collection&gt;</pre></div></div><p><br class="example-break">
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e12945"></a>22.7.2.&nbsp;The RESTCONF Query API</h3></div></div></div><p>
+        Refer to <a class="xref" href="ch21.html#ug.rest.query.api" title="21.9.&nbsp;The Query API">Section&nbsp;21.9, &#8220;The Query API&#8221;</a> for a
+        complete description of this functionality.
+      </p><p>
+        The only difference in the ConfD implementation is the
+        use of the RESTCONF URI root resource, and the RESTCONF media types.
+        An example of how a <span class="command"><strong>curl</strong></span> request can look like
+        is shown below:
+      </p><pre class="screen"><strong class="userinput"><code>
+curl -i 'http://admin:admin@localhost:8008/restconf/tailf/query' \
+     -X POST -T test.xml \
+     -H "Content-Type: application/yang-data+xml"
+      </code></strong></pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e12953"></a>22.8.&nbsp;Custom Response HTTP Headers</h2></div></div></div><p>
+      The RESTCONF server can be configured to reply with particular HTTP
+      headers in the HTTP response. For example, to support
+      Cross-Origin Resource Sharing (CORS, http://www.w3.org/TR/cors/)
+      there is a need to add a couple of headers to the HTTP
+      Response.
+    </p><p>
+      We add the extra configuration parameter in <code class="filename">confd.conf</code> 
+    </p><p>
+      </p><div class="example"><a name="d5e12959"></a><p class="title"><b>Example&nbsp;22.10.&nbsp;ConfD configuration for RESTCONF</b></p><div class="example-contents"><pre class="screen">
+    &lt;restconf&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;customHeaders&gt;
+        &lt;header&gt;
+          &lt;name&gt;Access-Control-Allow-Origin&lt;/name&gt;
+          &lt;value&gt;*&lt;/value&gt;
+        &lt;/header&gt;
+      &lt;/customHeaders&gt;
+    &lt;/restconf&gt;
+        </pre></div></div><p><br class="example-break">
+    </p><p>
+      
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch21.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch23.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;21.&nbsp;The REST API&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;23.&nbsp;The Management Agent API</td></tr></table></div></body></html>

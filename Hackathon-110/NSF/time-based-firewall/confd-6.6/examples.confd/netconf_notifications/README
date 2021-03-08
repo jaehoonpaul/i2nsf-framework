@@ -1,0 +1,66 @@
+Example: Implementing a NETCONF Notification Stream
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how to implement a NETCONF Notification stream. 
+
+Two applications (notifier_builtin_replay_store.c and notifier.c) are
+provided which implements either a a notification stream with built-in
+replay support or with externally implemented replay support.
+
+notifier.c keeps its replay log in memory for simplicity.  A real
+external replay store implementation would keep the replay log on disk.
+
+The notifications are specified in notif.yang.
+
+In confd.conf, the stream 'interface' is defined, and the NETCONF
+notification capability is enabled.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD and notifier by typing 
+
+        $ make all start
+
+    notifier_builtin_replay_store.c is now started in the foreground.
+
+    Alternative: To start notifier.c do the following instead:
+
+        $ make all start2
+
+ 2. In order to make the notifier program generate some notifications,
+    hit 'y', 'u', 'i', or 'd', followed by <enter>.  (see notifier.c
+    for details).
+
+ 3. In another shell, to query the stream information, type
+
+        $ make query
+
+ 4. In the new shell, type
+
+        $ make replay
+
+    to replay all logged notifications, and continue with the live feed.
+
+ 5. Generate some more notifications as in step 2, and watch them
+    arrive as XML in the new shell from step 4.
+
+ 6. In a third shell, type
+
+        $ make subscribe
+
+    to subscribe to the live feed only.  Repeat step 5.
+
+ 7. Ctrl-c to terminate the session when the notifications are
+    generated.
+        

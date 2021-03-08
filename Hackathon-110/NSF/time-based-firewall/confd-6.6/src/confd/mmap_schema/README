@@ -1,0 +1,7 @@
+This directory holds the source to the mmap_schema program that ConfD
+uses to implement the functionality enabled by
+/confdConfig/enableSharedMemorySchema in confd.conf (see the
+confd.conf(5) manual page). If it needs tuning/tweaking for some
+platform, the modified version can be compiled and installed in some
+convenient location, with the pathname specified via
+/confdConfig/sharedMemorySchemaExecutable.

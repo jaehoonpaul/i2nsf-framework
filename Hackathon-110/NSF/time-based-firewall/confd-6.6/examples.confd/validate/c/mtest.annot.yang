@@ -1,0 +1,17 @@
+module mtest.annot {
+  namespace "http://tail-f.com/ns/example/mtest.annot";
+  prefix mtesta;
+
+  import mtest {
+    prefix m;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  tailf:annotate "/m:mtest/m:a_number" {
+    tailf:validate vp1;
+  }
+}
+

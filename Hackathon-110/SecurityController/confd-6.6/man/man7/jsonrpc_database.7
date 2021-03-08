@@ -1,0 +1,85 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_DATABASE" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_database\fR
+.
+.SH "METHOD reset_candidate_db"
+Resets the candidate datastore
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD lock_db"
+Takes a database lock
+.
+.SS "PARAMS"
+.
+.nf
+
+{"db": <"startup" | "running" | "candidate">}
+.
+.fi
+.
+.P
+The \fBdb\fR param specifies which datastore to lock\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "db\.locked", "data": {"sessions": <array of string>}}
+.
+.fi
+.
+.P
+The \fBdata\.sessions\fR param is an array of strings describing the current sessions of the locking user, e\.g\. an array of "admin tcp (cli from 192\.245\.2\.3) on since 2006\-12\-20 14:50:30 exclusive"\.
+.
+.SH "METHOD unlock_db"
+Releases a database lock
+.
+.SS "PARAMS"
+.
+.nf
+
+{"db": <"startup" | "running" | "candidate">}
+.
+.fi
+.
+.P
+The \fBdb\fR param specifies which datastore to unlock\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD copy_running_to_startup_db"
+Copies the running datastore to the startup datastore
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

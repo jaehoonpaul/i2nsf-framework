@@ -1,0 +1,379 @@
+'\" t
+.\"     Title: maapi
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "MAAPI" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+maapi \- command to access an ongoing transaction
+.SH "SYNOPSIS"
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-get \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-set \fIPath\fR \fIValue\fR [\fIPath\fR\ \fIValue\fR...]
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-keys \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-exists \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-delete \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-create \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-insert \fIPath\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-revert
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-msg \fITo\fR \fIMessage\fR \fISender\fR
+.br
+\-\-priomsg \fITo\fR \fIMessage\fR
+.br
+\-\-sysmsg \fITo\fR \fIMessage\fR
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-cliget \fIParam\fR...
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-cliset \fIParam\fR \fIValue\fR [\fIParam\fR\ \fIValue\fR...]
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-cmd2path \fICmd\fR [\fICmd\fR]
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-cmd\-path [\-\-is\-deleta] [\-\-emit\-parents] [\-\-non\-recursive] \fIPath\fR [\fIPath\fR]
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-cmd\-diff \fIPath\fR [\fIPath\fR]
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-keypath\-diff \fIPath\fR
+.HP \w'\fBmaapi\fR\ 'u
+\fBmaapi\fR \-\-clicmd [\-\-get\-io] [\-\-no\-hidden] [\-\-no\-error] [\-\-no\-aaa] [\-\-no\-fullpath] [\-\-unhide\ \fI<group>\fR] \fICli\fR \fIcommand\fR...
+.br
+
+.SH "DESCRIPTION"
+.PP
+This command is intended to be used from inside a CLI command or a NETCONF extension RPC\&. These can be implemented in several ways, as an action callback or as an executable\&.
+.PP
+It is sometimes convenient to use a shell script to implement a CLI command and then invoke the script as an executable from the CLI\&. The maapi program makes it possible to manipulate the transaction in which the script was invoked\&.
+.PP
+Using the maapi command it is possible to, for example, write configuration wizards and custom show commands\&.
+.SH "OPTIONS"
+.PP
+\fB\-g\fR, \fB\-\-get\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Read element value at Path and display result\&. Multiple values can be read by giving more than one Path as argument to get\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-set\fR \fIPath\fR \fIValue\fR \&.\&.\&.
+.RS 4
+Set the value of Path to Value\&. Multiple values can be set by giving multiple Path Value pairs as arguments to set\&.
+.RE
+.PP
+\fB\-k\fR, \fB\-\-keys\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Display all instances found at path\&. Multiple Paths can be specified\&.
+.RE
+.PP
+\fB\-e\fR, \fB\-\-exists\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Exit with exit code 0 if Path exists (if multiple paths are given all must exist for the exit code to be 0)\&.
+.RE
+.PP
+\fB\-d\fR, \fB\-\-delete\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Delete element found at Path\&.
+.RE
+.PP
+\fB\-c\fR, \fB\-\-create\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Create the element Path\&.
+.RE
+.PP
+\fB\-i\fR, \fB\-\-insert\fR \fIPath\fR \&.\&.\&.
+.RS 4
+Insert the element at Path\&. This is only possible if the elem has the \*(Aqindexed\-view\*(Aq attribute set\&.
+.RE
+.PP
+\fB\-z\fR, \fB\-\-revert\fR
+.RS 4
+Remove all changes in the transaction\&.
+.RE
+.PP
+\fB\-m\fR, \fB\-\-msg\fR \fITo\fR \fIMessage\fR \fISender\fR
+.RS 4
+Send message to a user logged on to the system\&.
+.RE
+.PP
+\fB\-Q\fR, \fB\-\-priomsg\fR \fITo\fR \fIMessage\fR
+.RS 4
+Send prio message to a user logged on to the system\&.
+.RE
+.PP
+\fB\-M\fR, \fB\-\-sysmsg\fR \fITo\fR \fIMessage\fR
+.RS 4
+Send system message to a user logged on to the system\&.
+.RE
+.PP
+\fB\-G\fR, \fB\-\-cliget\fR \fIParam\fR \&.\&.\&.
+.RS 4
+Read and display CLI session parameter or attribute\&. Multiple params can be read by giving more than one Param as argument to cliget\&. Possible params are
+for C and I\-style: complete\-on\-space, idle\-timeout, ignore\-leading\-space, paginate, output\-file, screen\-length, screen\-width, history, terminal, autowizard, "service prompt config" , show\-defaults, and if enabled, display\-level\&. And for J\-style:
+complete\-on\-space, idle\-timeout, ignore\-leading\-space, paginate, "output file", "screen length", "screen width", terminal, history, autowizard, "show defaults", and if enabled, display\-level\&. In addition to this the attributes called annotation, tags and inactive can be read\&.
+.RE
+.PP
+\fB\-S\fR, \fB\-\-cliset\fR \fIParam\fR \fIValue\fR \&.\&.\&.
+.RS 4
+Set CLI session parameter to Value\&. Multiple params can be set by giving more than one Param\-Value pair as argument to cliset\&. Possible params are
+for C and I\-style: complete\-on\-space, idle\-timeout, ignore\-leading\-space, paginate, output\-file, screen\-length, screen\-width, history, terminal, autowizard, "service prompt config", show\-defaults, and if enabled, display\-level\&. And for J\-style:
+complete\-on\-space, idle\-timeout, ignore\-leading\-space, paginate, "output file", "screen length", "screen width", terminal, history, autowizard, "show defaults", and if enabled, display\-level\&.
+.RE
+.PP
+\fB\-E\fR, \fB\-\-cmd\-path\fR [\fB\-\-is\-delete\fR] [\fB\-\-emit\-parents\fR] [\fB\-\-non\-recursive\fR] \fIPath\fR
+.RS 4
+Display the C\- and I\-style command for a given path\&. Optionally display the command to delete the path, and optionally emit the parents, ie the commands to reach the submode of the path\&.
+.RE
+.PP
+\fB\-L\fR, \fB\-\-cmd\-diff\fR \fIPath\fR
+.RS 4
+Display the C\- and I\-style command for going from the running configuration to the current configuration\&.
+.RE
+.PP
+\fB\-q\fR, \fB\-\-keypath\-diff\fR \fIPath\fR
+.RS 4
+Display the difference between the current state in the attached transaction and the running configuration\&. One line is emitted for each difference\&. Each such line begins with the type of the change, followed by a colon (\*(Aq:\*(Aq) character and lastly the keypath\&. The type of the change is one of the following: "created", "deleted", "modified", "value set", "moved after" and "attr set"\&.
+.RE
+.PP
+\fB\-T\fR, \fB\-\-cmd2path\fR \fICmd\fR
+.RS 4
+Attempts to derive an aaa\-style namespace and path from a C\-/I\-style command path\&.
+.RE
+.PP
+\fB\-C\fR, \fB\-\-clicmd\fR [\fB\-\-get\-io\fR] [\fB\-\-no\-hidden\fR] [\fB\-\-no\-error\fR] [\fB\-\-no\-aaa\fR] [\fB\-\-no\-fullpath\fR] [\fB\-\-unhide\fR \fIgroup\fR] \fICli command to execute\fR
+.RS 4
+Execute cli command in ongoing session, optionally ignoring that a command is hidden, unhiding a specific hide group, or ignoring the fullpath check of the argument to the show command\&. Multiple hide groups may be unhidden using the \-\-unhide parameter multiple times\&.
+.RE
+.SH "EXAMPLE"
+.PP
+Suppose we want to create an add\-user wizard as a shell script\&. We would add the command in the clispec file
+confd\&.cli
+as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ \&.\&.\&.
+  <configureMode>
+    <cmd name="wizard">
+      <info>Configuration wizards</info>
+      <help>Configuration wizards</help>
+      <cmd name="adduser">
+        <info>Create a user</info>
+        <help>Create a user</help>
+        <callback>
+          <exec>
+            <osCommand>\&./adduser\&.sh</osCommand>
+          </exec>
+        </callback>
+      </cmd>
+    </cmd>
+  </configureMode>
+ \&.\&.\&.
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+And have the following script
+adduser\&.sh:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#!/bin/bash 
+
+## Ask for user name
+while true; do
+    echo \-n "Enter user name: "
+    read user
+
+    if [ ! \-n "${user}" ]; then
+	echo "You failed to supply a user name\&."
+    elif maapi \-\-exists "/aaa:aaa/authentication/users/user{${user}}"; then
+	echo "The user already exists\&."
+    else
+	break
+    fi
+done
+
+## Ask for password
+while true; do
+    echo \-n "Enter password: "
+    read \-s pass1
+    echo
+
+    if [ "${pass1:0:1}" == "$" ]; then
+	echo \-n "The password must not start with $\&. Please choose a "
+	echo    "different password\&."
+    else
+	echo \-n "Confirm password: "
+	read \-s pass2
+	echo
+
+	if [ "${pass1}" != "${pass2}" ]; then
+	    echo "Passwords do not match\&."
+	else
+	    break
+	fi
+    fi
+done
+
+groups=`maapi \-\-keys "/aaa:aaa/authentication/groups/group"`
+while true; do
+    echo "Choose a group for the user\&."
+    echo \-n "Available groups are: "
+    for i in ${groups}; do echo \-n "${i} "; done    
+    echo
+    echo \-n "Enter group for user: "
+    read group
+
+    if [ ! \-n "${group}" ]; then
+	echo "You must enter a valid group\&."
+    else
+	for i in ${groups}; do
+	    if [ "${i}" == "${group}" ]; then
+		# valid group found
+		break 2;
+	    fi
+	done
+	echo "You entered an invalid group\&."
+    fi
+    echo
+done
+
+echo
+echo "Creating user"
+echo
+maapi \-\-create "/aaa:aaa/authentication/users/user{${user}}"
+maapi \-\-set "/aaa:aaa/authentication/users/user{${user}}/password" \e
+	"${pass1}"
+
+echo "Setting home directory to: /var/confd/homes/${user}"
+maapi \-\-set "/aaa:aaa/authentication/users/user{${user}}/homedir" \e
+            "/var/confd/homes/${user}"
+echo
+
+echo "Setting ssh key directory to: "
+echo "/var/confd/homes/${user}/ssh_keydir"
+maapi \-\-set "/aaa:aaa/authentication/users/user{${user}}/ssh_keydir" \e
+            "/var/confd/homes/${user}/ssh_keydir"
+echo
+
+maapi \-\-set "/aaa:aaa/authentication/users/user{${user}}/uid" "1000"
+maapi \-\-set "/aaa:aaa/authentication/users/user{${user}}/gid" "100"
+
+echo "Adding user to the ${group} group\&."
+gusers=`maapi \-\-get "/aaa:aaa/authentication/groups/group{${group}}/users"`
+
+for i in ${gusers}; do
+    if [ "${i}" == "${user}" ]; then
+	echo "User already in group"
+	exit 0
+    fi
+done
+maapi \-\-set "/aaa:aaa/authentication/groups/group{${group}}/users" \e
+            "${gusers} ${user}"
+echo
+exit 0
+
+    
+.fi
+.if n \{\
+.RE
+.\}
+.SH "DIAGNOSTICS"
+.PP
+On success exit status is 0\&. On failure 1 or 2\&. Any error message is printed to stderr\&.
+.SH "ENVIRONMENT VARIABLES"
+.PP
+Environment variables are used for determining which user session and transaction should be used when performing the operations\&. The
+CONFD_MAAPI_USID and
+CONFD_MAAPI_THANDLE environment variables are automatically set by
+ConfD
+when invoking a CLI command, but when a NETCONF extension RPC is invoked, only
+CONFD_MAAPI_USID is set, since there is no transaction associated with such an invocation\&.
+.PP
+\fBCONFD\fR\fB_MAAPI_USID\fR
+.RS 4
+User session to use\&.
+.RE
+.PP
+\fBCONFD\fR\fB_MAAPI_THANDLE\fR
+.RS 4
+The transaction to use when performing the operations\&.
+.RE
+.PP
+\fBCONFD\fR\fB_MAAPI_DEBUG\fR
+.RS 4
+Maapi debug information will be printed if this variable is defined\&.
+.RE
+.PP
+\fBCONFD\fR\fB_IPC_ADDR\fR, \fBCONFD_IPC_EXTADDR\fR
+.RS 4
+The address used to connect to the ConfD daemon, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD\fR\fB_IPC_PORT\fR
+.RS 4
+The port number to connect to the ConfD daemon on, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD_IPC_EXTSOPATH\fR
+.RS 4
+The absolute path to the shared object to use for a connection using external IPC when
+\fBCONFD_IPC_EXTADDR\fR
+is given\&.
+.RE
+.SH "SEE ALSO"
+.PP
+The ConfD User Guide
+.PP
+\fBconfd\fR(1)
+\- command to start and control the ConfD daemon
+.PP
+\fBconfdc\fR(1)
+\- YANG compiler
+.PP
+\fBconfd.conf\fR(5)
+\- ConfD daemon configuration file format
+.PP
+\fBclispec\fR(5)
+\- CLI specification file format
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

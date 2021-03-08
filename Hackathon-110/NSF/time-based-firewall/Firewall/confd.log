@@ -1,0 +1,32 @@
+<INFO> 4-Mar-2021::00:54:38.544 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Writing daemon log to /home/ubuntu/Firewall/confd.log
+<INFO> 4-Mar-2021::00:54:38.550 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Writing NETCONF log to /home/ubuntu/Firewall/netconf.log
+<INFO> 4-Mar-2021::00:54:38.550 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Writing audit log to /home/ubuntu/Firewall/audit.log
+<INFO> 4-Mar-2021::00:54:38.551 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Writing developer log to /home/ubuntu/Firewall/devel.log
+<INFO> 4-Mar-2021::00:54:38.551 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Daemon logging started
+<DEBUG> 4-Mar-2021::00:54:38.576 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ./ietf-i2nsf-policy-rule-for-nsf.fxs
+<DEBUG> 4-Mar-2021::00:54:38.581 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 4-Mar-2021::00:54:38.582 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 4-Mar-2021::00:54:38.583 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 4-Mar-2021::00:54:38.584 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 4-Mar-2021::00:54:38.585 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 4-Mar-2021::00:54:38.587 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 4-Mar-2021::00:54:38.588 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ./ietf-i2nsf-nsf-monitoring.fxs
+<DEBUG> 4-Mar-2021::00:54:38.592 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file /home/ubuntu/confd-6.6/lib/confd/lib/netconf/netconf/priv/netconf_netmod.fxs
+<DEBUG> 4-Mar-2021::00:54:38.593 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 4-Mar-2021::00:54:38.594 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 4-Mar-2021::00:54:38.595 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 4-Mar-2021::00:54:38.598 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 4-Mar-2021::00:54:38.599 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 4-Mar-2021::00:54:38.600 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 4-Mar-2021::00:54:38.602 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 4-Mar-2021::00:54:38.603 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 4-Mar-2021::00:54:38.604 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 4-Mar-2021::00:54:38.620 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ./commands-c.ccl
+<DEBUG> 4-Mar-2021::00:54:38.628 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ./commands-j.ccl
+<DEBUG> 4-Mar-2021::00:54:38.629 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 4-Mar-2021::00:54:38.732 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 4-Mar-2021::00:54:39.151 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 4-Mar-2021::00:54:39.800 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 4-Mar-2021::00:54:39.823 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 4-Mar-2021::00:54:39.882 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 4-Mar-2021::00:54:39.990 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: - ConfD started vsn: 6.6

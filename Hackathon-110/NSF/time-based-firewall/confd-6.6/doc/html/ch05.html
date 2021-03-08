@@ -1,0 +1,1474 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Rendering Agents"><link rel="next" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Operational Data"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.cdb"></a>Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch05.html#d5e1049">5.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1055">5.2. CDB</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1085">5.3. An example</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1146">5.4. Using keypaths</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1173">5.5. A session</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1184">5.6. CDB subscriptions</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1253">5.7. Reconnect</a></span></dt><dt><span class="sect1"><a href="ch05.html#ug.cdb.init">5.8. Loading initial data into CDB</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1283">5.9. Automatic schema upgrades and downgrades</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1383">5.10. Using initialization files for upgrade</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1413">5.11. Using MAAPI to modify CDB during upgrade</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1435">5.12. More complex schema upgrades</a></span></dt><dt><span class="sect1"><a href="ch05.html#d5e1465">5.13. The full dhcpd example</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1049"></a>5.1.&nbsp;Introduction</h2></div></div></div><p>This chapter describes how to use ConfD's built-in
+    configuration database CDB. As a running example, we will describe
+    a DHCP daemon configuration.  CDB can also be used to store
+    operational data - read more about this in <a class="xref" href="ch06.html#ug.opdata.cdb" title="6.8.&nbsp;Operational data in CDB">Section&nbsp;6.8, &#8220;Operational data in CDB&#8221;</a>.</p><p>A network device needs to store its configuration somewhere.
+    Usually the device configuration is stored in a database or in
+    plain files, sometimes a combination of both.</p><p>ConfD has a built-in XML database which can be used to store
+    the configuration data for the device. The database is called CDB
+    - Configuration DataBase.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1055"></a>5.2.&nbsp;CDB</h2></div></div></div><p>By default, ConfD stores all configuration data in CDB.  The
+    alternative is to use an external database as described in <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>.  There are a number of advantages to
+    CDB compared to using some external storage for configuration
+    data. CDB has:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>A solid model on how to handle configuration data in
+        network devices, including a good update subscription
+        mechanism.</p></li><li class="listitem"><p>A networked API whereby it is possible for an
+        unconfigured device to find the configuration data on the
+        network and use that configuration.</p></li><li class="listitem"><p>Fast lightweight database access. CDB by default keeps
+        the entire configuration in RAM as well as on disk.
+        </p></li><li class="listitem"><p>Ease of use. CDB is already integrated into ConfD, the
+        database is lightweight and has no maintenance needs. Writing
+        instrumentation functions to access data is easy.</p></li><li class="listitem"><p>Automatic support for upgrade and downgrade of
+        configuration data.  This is a key feature, which is useful
+        not only when performing actual up/downgrades on the device.
+        It also greatly simplifies the development process by allowing
+        individual developers to add/delete items in the configuration
+        without any impact whatsoever on other developers. This will
+        be fully described later.</p></li></ul></div><p>When using CDB to store the configuration data, the
+    applications need to be able to:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Read configuration data from the database.</p></li><li class="listitem"><p>React when the database is written to. There are several
+        possible writers to the database, such as the CLI, NETCONF
+        sessions, the Web UI, or the NETCONF agent. Suppose an
+        operator runs the CLI and changes the value of some leaf. When
+        this happens, the application needs to be informed about the
+        configuration change.</p></li></ol></div><p>The following figure illustrates the architecture when CDB
+    is used.</p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="496"><tr><td align="center"><img src="pics/cdb_arch.png" align="middle" width="496"></td></tr></table><div class="caption"><p>ConfD CDB architecture scenario</p></div></div><p>The Applications/Managed Objects in the figure above read
+    configuration data and subscribe to changes to the database using
+    a simple RPC-based API. The API is part of the
+    <code class="filename">libconfd.so</code> shared library and is fully
+    documented in the UNIX man page <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a>.  Since the API is RPC-based,
+    the Applications may run on other hosts that are not running ConfD
+    - which could be used for example in a chassis-based system where
+    ConfD only would run on the management blade, and the managed
+    applications on other blades in the system.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1085"></a>5.3.&nbsp;An example</h2></div></div></div><p>Let us look at a simple example which will illustrate how to
+    populate the database, how to read from it using the C API, as
+    well as react to changes to the data. First we need a YANG module
+    (see <a class="xref" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language">Chapter&nbsp;3, <i>The YANG Data Modeling Language</i></a> for more details about how to
+    write data models in YANG). Consider this simplified, but
+    functional, example:</p><div class="example"><a name="ug.cdb.ex.servers"></a><p class="title"><b>Example&nbsp;5.1.&nbsp;a simple server data model,
+      <code class="filename">servers.yang</code></b></p><div class="example-contents"><pre class="programlisting">module servers {
+  namespace "http://example.com/ns/servers";
+  prefix servers;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  revision "2006-09-01" {
+      description "Initial servers data model";
+  }
+
+  /*  A set of server structures  */
+  container servers {
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>Since we are using CDB here, ConfD will keep an XML tree
+    conforming to the above data model in its internal persistent XML
+    database.</p><p>We start by saving the YANG module to a file,
+    <code class="filename">servers.yang</code> and compile and link the data
+    model into a single <code class="filename">servers.fxs</code> which is the
+    binary format, used by ConfD, of a YANG module.</p><div class="informalexample"><pre class="screen">$ confdc -c servers.yang</pre></div><p>We then proceed to use the <code class="option">--emit-h</code> flag to
+    generate a .h file which contains the namespace symbol
+    (<code class="constant">servers__ns</code>) which we need in order to use
+    the CDB API.</p><div class="informalexample"><pre class="screen">$ confdc --emit-h servers.h servers.fxs
+$ head servers.h
+
+#ifndef _SERVERS_H_
+#define _SERVERS_H_
+
+#ifndef servers__ns
+#define servers__ns 686487091
+#define servers__ns_id "http://example.com/ns/servers"
+#define servers__ns_uri "http://example.com/ns/servers"
+#endif
+</pre></div><p>Once we have compiled the YANG module, we can start
+    ConfD. We need to provide a configuration file to ConfD which
+    indicates that we want ConfD to store the configuration.</p><p>The relevant parts from the
+    <code class="filename">confd.conf</code> configuration file are:</p><div class="informalexample"><pre class="programlisting">&lt;loadPath&gt;
+    &lt;dir&gt;/etc/confd&lt;/dir&gt;
+&lt;/loadPath&gt;
+
+...
+
+&lt;cdb&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;dbDir&gt;/var/confd/cdb&lt;/dbDir&gt;
+&lt;/cdb&gt;</pre></div><p>The newly generated .fxs file must be copied to the
+    directory <code class="filename">/etc/confd</code> and the directory
+    <code class="filename">/var/confd/cdb</code> must exist and be writable.
+    Thus:</p><div class="informalexample"><pre class="screen">$ cp servers.fxs /etc/confd
+$ mkdir /var/confd/cdb
+$ confd -v --foreground</pre></div><p>By far the easiest way to populate the database with some
+    actual data is to run the CLI.</p><div class="informalexample"><pre class="screen">$ confd_cli -u admin
+admin connected from 127.0.0.1 using console on buzz
+admin@buzz&gt; configure private
+Entering configuration mode "private"
+admin@buzz% set servers server www
+admin@buzz% set servers server www port 80
+admin@buzz% set servers server www ip 192.168.128.1
+admin@buzz% commit
+Configuration committed
+admin@buzz&gt; show configuration
+servers {
+    server www {
+        ip 192.168.128.1;
+        port 80;
+    }
+}</pre></div><p>Now the database is populated with a single server
+    instance.</p><p>What remains to conclude our simple example is to write our
+    application - our managed object - the code that uses the
+    configuration data in the database. The implied meaning of the
+    <code class="filename">servers.yang</code> YANG module is that the managed
+    object would start and stop the services in the configuration. We
+    will not do that; we will merely show how to read the
+    configuration from the CDB database and react to changes in
+    CDB.</p><p>The code is straightforward. We are using the API functions
+    from <code class="filename">libconfd.so</code>. The CDB API is fully
+    described in the UNIX man page <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a>.</p><p>Main looks like this:</p><div class="informalexample"><pre class="programlisting">int main(int argc, char **argv)
+{
+    struct sockaddr_in addr;
+    int subsock;
+    int status;
+    int spoint;
+
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(CONFD_PORT);
+
+    confd_init(argv[0], stderr, CONFD_SILENT);
+
+    if ((subsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open socket\n");
+
+    if (cdb_connect(subsock, CDB_SUBSCRIPTION_SOCKET,
+                    (struct sockaddr*)&amp;addr,
+                    sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    if ((status =
+         cdb_subscribe(subsock, 3, servers__ns, &amp;spoint,"/servers"))
+        != CONFD_OK) {
+        fprintf(stderr, "Terminate: subscribe %d\n", status);
+        exit(1);
+    }
+    if (cdb_subscribe_done(subsock) != CONFD_OK)
+        confd_fatal("cdb_subscribe_done() failed");
+
+    if ((status = read_conf(&amp;addr)) != CONFD_OK) {
+        fprintf(stderr, "Terminate: read_conf %d\n", status);
+        exit(1);
+    }
+
+    /* ... */
+</pre></div><p>The code initializes the library, reads the configuration
+    and creates a socket to CDB.  One socket is a read socket and it
+    is used to read configuration data by means of CDB API read
+    functions, while the other is a subscription socket. The
+    subscription socket must be part of the client
+    <code class="function">poll()</code> set. Whenever data arrives on the
+    subscription socket, the client invokes a CDB API function,
+    <code class="function">cdb_read_subscription_socket()</code> on the
+    subscription socket. The subscription model will be explained
+    further later in this chapter.</p><p>The <code class="function">read_conf()</code> function reads the
+    configuration data from CDB and stores it in local ephemeral
+    (temporary) data structures. We have:</p><div class="informalexample"><pre class="programlisting">#include "servers.h"
+
+struct server {
+    char name[BUFSIZ];
+    struct in_addr ip;
+    unsigned int port;
+};
+
+static struct server running_db[64];
+static int num_servers = 0;
+
+static int read_conf(struct sockaddr_in *addr)
+{
+    int rsock, i, n, st = CONFD_OK;
+    struct in_addr ip;
+    u_int16_t port;
+    char buf[BUFSIZ];
+
+    if ((rsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        return CONFD_ERR;
+
+    if (cdb_connect(rsock, CDB_READ_SOCKET, (struct sockaddr*)addr,
+                    sizeof (struct sockaddr_in)) &lt; 0)
+        return CONFD_ERR;
+    if (cdb_start_session(rsock, CDB_RUNNING) != CONFD_OK)
+        return CONFD_ERR;
+    cdb_set_namespace(rsock, servers__ns);
+    num_servers = 0;
+    if ((n = cdb_num_instances(rsock, "/servers/server")) &lt; 0) {
+        cdb_close(rsock);
+        return n;
+    }
+    num_servers = n;
+    for(i=0; i&lt;n; i++) {
+        if ((st = cdb_get_str(rsock, buf, BUFSIZ,
+                              "/servers/server[%d]/name",i)) != CONFD_OK)
+            break;
+        if ((st = cdb_get_ipv4(
+                 rsock, &amp;ip,"/servers/server[%d]/ip",i))!= CONFD_OK)
+            break;
+        if ((st = cdb_get_u_int16(
+                 rsock, &amp;port, "/servers/server[%d]/port",i)) != CONFD_OK)
+            break;
+        strcpy(running_db[i].name, buf);
+        running_db[i].ip.s_addr = ip.s_addr;
+        running_db[i].port = port;
+    }
+    cdb_close(rsock);
+    return st;
+}
+</pre></div><p>The code first creates a read socket to ConfD by means of
+    <code class="function">cdb_connect()</code>. Following that, the code
+    figures out how many <code class="sgmltag-element">server</code> instances CDB has stored
+    and then loops over all of those instances and reads the
+    individual leaves with the different <code class="function">cdb_get_</code>
+    functions.</p><p>Finally we have our <code class="function">poll()</code> loop. The
+    subscription socket we created in <code class="function">main()</code> must
+    be added to the poll set - and whenever that file descriptor has
+    IO ready to read we must act. When <code class="varname">subsock</code> is
+    ready to read, the following code fragment should be
+    executed:</p><div class="informalexample"><pre class="programlisting">        int sub_points[1];
+        int reslen;
+
+        if ((status = cdb_read_subscription_socket(subsock,
+                                                   sub_points,
+                                                   &amp;reslen)) != CONFD_OK)
+            exit(status);
+        if (reslen &gt; 0) {
+            if ((status = read_conf(&amp;addr)) != CONFD_OK)
+                exit(1);
+        }
+        print_servers();        /* do something with data here... */
+        if ((status =
+             cdb_sync_subscription_socket(subsock, CDB_DONE_PRIORITY))
+            != CONFD_OK) {
+            exit(status);
+        }
+</pre></div><p>Instead of actually using the data we will merely print it
+    to stdout when we receive any changes:</p><div class="informalexample"><pre class="programlisting">static void print_servers()
+{
+    int i;
+
+    for (i=0; i &lt; num_servers; i++) {
+        printf("server %d: %s %s:%d\n", i, running_db[i].name,
+               inet_ntoa(running_db[i].ip), running_db[i].port);
+    }
+}
+</pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1146"></a>5.4.&nbsp;Using keypaths</h2></div></div></div><p>We'll go through all the CDB API functions used in the C
+    code, but first a note on the path notation.  Several of the API
+    functions take a keypath as a parameter. A keypath leads down into
+    the configuration data tree. A keypath can be either absolute or
+    relative.  An absolute keypath starts from the root of the tree,
+    while a relative path starts from the "current position" in the
+    tree. They are differentiated by presence or absence of a leading
+    "/". It is possible to change the "current position" with for
+    example the <code class="function">cdb_cd()</code> function.</p><p>XML elements that are containers for other XML elements,
+    such as the <code class="sgmltag-element">servers</code> container that contains multiple
+    <code class="sgmltag-element">server</code> instances, can be traversed using two different
+    path notations. In our code above, we use the function
+    <code class="function">cdb_num_instances()</code> to figure out how many
+    children a list has, and then traverse all children using a
+    <code class="code">[%d]</code> notation.  The children of a list have an
+    implicit numbering starting at 0. Thus the path:
+    <code class="sgmltag-element">/servers/server[2]/port</code> refers to the "port" leaf of
+    the third <code class="sgmltag-element">server</code> in the configuration.  This numbering
+    is only valid during the current CDB session.  CDB is always
+    locked for the duration of the read session.</p><p>We can also refer to list instances using the values of the
+    keys of the list. Remember that we specified in the data model
+    which leaf(s) in the XML structure were keys using the <code class="sgmltag-element">key
+    name</code> statement at the beginning of the list. In our case a
+    <code class="sgmltag-element">server</code> has the <code class="sgmltag-element">name</code> leaf as key. So the
+    path: <code class="sgmltag-element">/servers/server{www}/ip</code> refers to the
+    <code class="sgmltag-element">ip</code> leaf of the server whose name is "www".</p><p>A YANG list may have more than one key. In the next section
+    we will provide an example where we configure a DHCP daemon. That
+    data model uses multiple keys and for example the path:
+    <code class="sgmltag-element">/dhcp/subNets/subNet{192.168.128.0
+    255.255.255.0}/routers</code> refers to the routers list of the
+    subNet which has key <code class="constant">"192.168.128.0
+    255.255.255.0"</code>.</p><p>The syntax for keys is a space separated list of key values
+    enclosed within curly brackets: <code class="code">{ Key1 Key2
+    ...}</code></p><p>Which version of bracket notation to use depends on the
+    situation. For example the bracket notation is normally used when
+    looping through all instances.  As a convenience all functions
+    expecting keypaths accept formatting characters and accompanying
+    data items. For example <code class="code">cdb_get("server[%d]/ifc{%s}/mtu", 2,
+    "eth0")</code> to fetch the MTU of the third server instance's
+    interface named "eth0".  Using relative paths and
+    <code class="function">cdb_pushd()</code> it is possible to write code that
+    can be re-used for common sub-trees. An example of this is
+    presented further down.</p><p>The current position also includes the namespace. To read
+    elements from a different namespace use the
+    <code class="function">cdb_set_namespace()</code> function.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1173"></a>5.5.&nbsp;A session</h2></div></div></div><p>It is important to consider that CDB is locked for writing
+    during a read session using the C API. A session starts with
+    <code class="function">cdb_start_session()</code> and the lock is not
+    released until the <code class="function">cdb_end_session()</code> (or the
+    <code class="function">cdb_close()</code>) call. CDB will also
+    automatically release the lock if the socket is closed for some
+    other reason, such as program termination.</p><p>In the example above we created a new socket each time we
+    called <code class="function">read_conf()</code>. It is also possible to
+    re-use an existing connection.</p><div class="example"><a name="d5e1181"></a><p class="title"><b>Example&nbsp;5.2.&nbsp;Pseudo code showing several sessions reusing one connection</b></p><div class="example-contents"><pre class="programlisting">cdb_connect(s);
+
+..
+
+cdb_start_session(s); /* Start session and take CDB lock */
+  cdb_cd();
+  cdb_get();
+cdb_end_session(s);   /* lock is released */
+
+..
+
+cdb_start_session(s); /* Start session and take CDB lock */
+  cdb_get();
+cdb_end_session(s);   /* lock is released */
+
+..
+
+cdb_close(s);</pre></div></div><br class="example-break"></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1184"></a>5.6.&nbsp;CDB subscriptions</h2></div></div></div><p>The CDB subscription mechanism allows an external program to
+    be notified when different parts of the configuration changes. At
+    the time of notification it is also possible to iterate through
+    the changes written to CDB. Subscriptions are always towards the
+    running datastore (it is not possible to subscribe to changes to
+    the startup datastore). Subscriptions towards the operational data
+    kept in CDB are also possible, but the mechanism is slightly
+    different, see below.</p><p>The first thing to do is to inform CDB which paths we want
+    to subscribe to, registering a path returns a subscription point
+    identifier. This is done with the
+    <code class="function">cdb_subscribe()</code> function. Each subscriber can
+    have multiple subscription points, and there can be many different
+    subscribers. Every point is defined through a path - similar to
+    the paths we use for read operations, with the exception that
+    instead of fully instantiated paths to list instances we can
+    selectively use tagpaths.</p><p>We can subscribe either to specific leaves, or entire
+    subtrees. Explaining this by example we get:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="sgmltag-element">/named/options/pid-file</code></span></dt><dd><p>a subscription to a leaf. Only changes to this leaf
+          will generate a notification.</p></dd><dt><span class="term"><code class="sgmltag-element">/servers</code></span></dt><dd><p>Means that we subscribe to any changes in the subtree
+          rooted at <code class="sgmltag-element">/servers</code>. This includes additions or
+          removals of <code class="sgmltag-element">server</code> instances, as well as changes
+          to already existing <code class="sgmltag-element">server</code> instances.</p></dd><dt><span class="term"><code class="sgmltag-element">/servers/server{www}/ip</code></span></dt><dd><p>Means that we only want to be notified when the
+          server "www" changes its ip address.</p></dd><dt><span class="term"><code class="sgmltag-element">/servers/server/ip</code></span></dt><dd><p>Means we want to be notified when the leaf
+          <code class="sgmltag-element">ip</code> is changed in <span class="emphasis"><em>any</em></span> server
+          instance.</p></dd></dl></div><p>When adding a subscription point the client must also
+    provide a priority, which is an integer. As CDB is changed, the
+    change is part of a transaction. For example the transaction is
+    initiated by a <span class="command"><strong>commit</strong></span> operation from the CLI or
+    a <span class="command"><strong>candidate-commit</strong></span> operation in NETCONF
+    resulting in the running database being modified. As the last part
+    of the transaction CDB will generate notifications in lock-step
+    priority order. First all subscribers at the lowest numbered
+    priority are handled, once they all have replied and synchronized
+    by calling <code class="function">cdb_sync_subscription_socket()</code> the
+    next set - at the next priority level - is handled by CDB. Not
+    until all subscription points have been acknowledged is the
+    transaction complete. This implies that if the initiator of the
+    transaction was for example a <span class="command"><strong>commit</strong></span> command in
+    the CLI, the command will hang until notifications have been
+    acknowledged.</p><p>Note that even though the notifications are delivered within
+    the transaction it is not possible for a subscriber to reject the
+    changes (since this would break the two-phase commit protocol used
+    by the ConfD backplane towards all data-providers).</p><p>When a client is done subscribing it needs to inform ConfD
+    it is ready to receive notifications. This is done by first
+    calling <code class="function">cdb_subscribe_done()</code>, after which the
+    subscription socket is ready to be polled.</p><p>As a subscriber has read its subscription notifications
+    using <code class="function">cdb_read_subscription_socket()</code> it can
+    iterate through the changes that caused the particular
+    subscription notification using the
+    <code class="function">cdb_diff_iterate()</code> function. It is also
+    possible to start a new read-session to the CDB_PRE_COMMIT_RUNNING
+    database to read the running database as it was before the pending
+    transaction.</p><p>Subscriptions towards the operational data in CDB are
+    similar to the above, but due to the fact that the operational
+    data store is designed for light-weight access, and thus does not
+    have transactions and normally avoids the use of any locks, there
+    are several differences - in particular:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Subscription notifications are only generated if the
+        writer obtains a "subscription lock", by using the
+        <code class="function">cdb_start_session2()</code> function with the
+        CDB_LOCK_REQUEST flag, see the <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a> manual page. It is possible
+        to obtain a "subscription lock" for a subtree of the operational
+        data store by using the CDB_LOCK_PARTIAL flag.</p></li><li class="listitem"><p>Subscriptions are registered by using the
+        <code class="function">cdb_subscribe2()</code> function with type
+        <code class="constant">CDB_SUB_OPERATIONAL</code> (or
+        <code class="function">cdb_oper_subscribe()</code>) rather
+        than <code class="function">cdb_subscribe()</code>.</p></li><li class="listitem"><p>No priorities are used.</p></li><li class="listitem"><p>Neither the writer that generated the subscription
+        notifications nor other writes to the same data are blocked
+        while notifications are being delivered.  However the
+        subscription lock remains in effect until notification
+        delivery is complete.</p></li><li class="listitem"><p>The previous value for a modified leaf is not available
+        when using the <code class="function">cdb_diff_iterate()</code>
+        function.</p></li></ul></div><p>Essentially a write operation towards the operational data
+    store, combined with the subscription lock, takes on the role of a
+    transaction for configuration data as far as subscription
+    notifications are concerned.  This means that if operational data
+    updates are done with many single-element write operations, this
+    can potentially result in a lot of subscription notifications.
+    Thus it is a good idea to use the multi-element
+    <code class="function">cdb_set_object()</code> etc functions for updating
+    operational data that applications subscribe to.</p><p>Since write operations that do not attempt to obtain a
+    subscription lock are allowed to proceed even during notification
+    delivery, it is the responsibility of the applications using the
+    operational data store to obtain the lock as needed when
+    writing. E.g. if subscribers should be able to reliably read the
+    exact data that resulted from the write that triggered their
+    subscription, a subscription lock must always be obtained when
+    writing that particular set of data elements. One possibility is
+    of course to obtain a lock for <span class="emphasis"><em>all</em></span> writes
+    to operational data, but this may have an unacceptable performance
+    impact.</p><p>To view registered subscribers use the <span class="command"><strong>confd
+    --status</strong></span> command. For details on how to use the
+    different subscription functions see the <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a> manual page.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1253"></a>5.7.&nbsp;Reconnect</h2></div></div></div><p>If ConfD is restarted, our CDB sockets obviously die. The
+    correct thing to do then is to re-open the cdb sockets and re-read
+    the configuration. In the case of a high availability setup this
+    also applies. If we are connected to one ConfD node and that node
+    dies, we must reconnect to another ConfD node and read/subscribe
+    to the configuration from that node.</p><p>If the configuration has not changed we do not want to
+    restart our managed objects, we just want to reconnect our CDB
+    sockets. The API function <code class="function">cdb_get_txid()</code> will
+    read the last transaction id from our cdb socket. The id is
+    guaranteed to be unique. We issue the call
+    <code class="function">cdb_get_txid()</code> on the data socket and we must
+    not have an active read session on that socket while issuing the
+    call.</p><div class="example"><a name="d5e1259"></a><p class="title"><b>Example&nbsp;5.3.&nbsp;Pseudo code demonstrating how to avoid re-reading the configuration</b></p><div class="example-contents"><pre class="programlisting"> struct cdb_txid prev_stamp;
+
+ cdb_connect(s);
+ load_config(s);
+ cdb_get_txid(s, &amp;prev_stamp);
+...
+ subscribe(....);
+ while (1) {
+    poll(...);
+    if (has_new_data(s)) {
+        load_config(s);
+        cdb_get_txid(s, &amp;prev_stamp);
+    }
+    else if (is_closed(s)) {
+         struct cdb_txid new_stamp;
+         cdb_connect(s);
+         cdb_get_txid(s, &amp;new_stamp);
+         if ((prev_stamp.s1 == new_stamp.s1) &amp;&amp;
+             (prev_stamp.s2 == new_stamp.s2) &amp;&amp;
+             (prev_stamp.s3 == new_stamp.s3) &amp;&amp;
+             (strcmp(prev_stamp.master, new_stamp.master) == 0)) {
+             /* no need to re-read config, it hasn't changed */
+             continue;
+         }
+         else {
+             load_config(s);
+             cdb_get_txid(s, &amp;prev_stamp);
+        }
+    }
+ }</pre></div></div><br class="example-break"></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.cdb.init"></a>5.8.&nbsp;Loading initial data into CDB</h2></div></div></div><p>When ConfD starts for the first time, assuming CDB is
+    enabled, the CDB database is empty. CDB is configured to store its
+    data in a directory as in:</p><div class="informalexample"><pre class="programlisting">&lt;cdb&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;dbDir&gt;/var/confd/cdb&lt;/dbDir&gt;
+&lt;/cdb&gt;</pre></div><p>At startup, when CDB is empty, i.e. no database files are
+    found in the CDB directory, CDB will try to initialize the
+    database from all instantiated XML documents found in the CDB
+    directory. This is the mechanism we use to have an empty database
+    initialized to some default setup.</p><p>This feature can be used to for example reset the
+    configuration back to some factory setting or some such.</p><p>For example, assume we have the data model from <a class="xref" href="ch05.html#ug.cdb.ex.servers" title="Example&nbsp;5.1.&nbsp;a simple server data model, servers.yang">Example&nbsp;5.1, &#8220;a simple server data model,
+      <code class="filename">servers.yang</code>&#8221;</a>. Furthermore, assume CDB is
+    empty, i.e. no database files at all reside under
+    <code class="filename">/var/confd/cdb</code>. However we do have a file,
+    <code class="filename">/var/confd/cdb/foobar.xml</code> containing the
+    following data:</p><div class="informalexample"><pre class="programlisting">&lt;servers:servers xmlns:servers="http://example.com/ns/servers"&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;www&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.4&lt;/servers:ip&gt;
+    &lt;servers:port&gt;88&lt;/servers:port&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;www2&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.5&lt;/servers:ip&gt;
+    &lt;servers:port&gt;80&lt;/servers:port&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;smtp&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.4&lt;/servers:ip&gt;
+    &lt;servers:port&gt;25&lt;/servers:port&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;dns&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.5&lt;/servers:ip&gt;
+    &lt;servers:port&gt;53&lt;/servers:port&gt;
+  &lt;/servers:server&gt;
+&lt;/servers:servers&gt;
+</pre></div><p>CDB will be initialized from the above XML document. The
+    feature of initializing CDB with some predefined set of XML
+    elements is used to initialize the AAA database. This is described
+    in <a class="xref" href="ch14.html" title="Chapter&nbsp;14.&nbsp;The AAA infrastructure">Chapter&nbsp;14, <i>The AAA infrastructure</i></a>.</p><p>All files ending in <code class="filename">.xml</code> will be loaded
+    (in an undefined order) and committed in a single transaction when
+    CDB enters start phase 1 (see <a class="xref" href="ch28.html#ug.advanced.starting_confd" title="28.5.&nbsp;Starting ConfD">Section&nbsp;28.5, &#8220;Starting ConfD&#8221;</a> for more details on
+    start phases). The format of the init files is rather lax in that
+    it is not required that a complete instance document following the
+    data-model is present, much like the NETCONF
+    <code class="sgmltag-element">edit-config</code> operation. It is also possible to wrap
+    multiple top-level tags in the file with a surrounding config tag,
+    like this:</p><div class="informalexample"><pre class="programlisting">&lt;config xmlns="http://tail-f.com/ns/config/1.0"&gt;
+  ...
+&lt;/config&gt;</pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1283"></a>5.9.&nbsp;Automatic schema upgrades and downgrades</h2></div></div></div><p>Software upgrades and downgrades represent one of the main
+    problems of managing configuration data of network devices.  Each
+    software release for a network device is typically associated with
+    a certain version of configuration data layout, i.e. a schema.  In
+    ConfD the schema is the data model stored in the .fxs files. Once
+    CDB has initialized it also stores a copy of the schema associated
+    with the data it holds.</p><p>Every time ConfD starts, CDB will check the current contents
+    of the .fxs files with its own copy of the schema files. If CDB
+    detects any changes in the schema it initiates an upgrade
+    transaction. In the simplest case CDB automatically resolves the
+    changes and commits the new data before ConfD reaches start-phase
+    one.</p><p>An example of how the CDB automatically handles upgrades
+    follows. For version 1.0 of the "forest configurator" software
+    project the following YANG module is used:</p><div class="example"><a name="d5e1288"></a><p class="title"><b>Example&nbsp;5.4.&nbsp;Version 1.0 of the forest module</b></p><div class="example-contents"><pre class="programlisting">module forest {
+  namespace "http://example.com/ns/forest";
+  prefix forest;
+
+  revision "2006-09-01" {
+      description "Initial forest model";
+  }
+
+  container forest {
+    list tree {
+      key name;
+      min-elements 2;
+      max-elements 1024;
+      leaf name {
+        type string;
+      }
+      leaf height {
+        type uint8;
+        mandatory true;
+      }
+      leaf type {
+        type string;
+        mandatory true;
+      }
+    }
+    list flower {
+      key name;
+      max-elements 1024;
+      leaf name {
+        type string;
+      }
+      leaf type {
+        type string;
+        mandatory true;
+      }
+      leaf color {
+        type string;
+        mandatory true;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>The YANG module will be mounted at / in the larger
+    compounded data model tree. We start ConfD and populate the CDB,
+    e.g. by using the ConfD CLI. The programmer then writes C code
+    which reads these items from the configuration database.</p><p>To demonstrate the automatic upgrade, we will assume that
+    CDB is populated with the instance data in <a class="xref" href="ch05.html#ug.cdb.ex.forest_init" title="Example&nbsp;5.5.&nbsp;Initial forest instance document">Example&nbsp;5.5, &#8220;Initial forest instance document&#8221;</a></p><div class="example"><a name="ug.cdb.ex.forest_init"></a><p class="title"><b>Example&nbsp;5.5.&nbsp;Initial forest instance document</b></p><div class="example-contents"><pre class="programlisting">&lt;forest xmlns="http://example.com/ns/forest"&gt;
+  &lt;tree&gt;
+    &lt;name&gt;George&lt;/name&gt;&lt;height&gt;10&lt;/height&gt;&lt;type&gt;oak&lt;/type&gt;
+  &lt;/tree&gt;
+  &lt;tree&gt;
+    &lt;name&gt;Eliza&lt;/name&gt;&lt;height&gt;15&lt;/height&gt;&lt;type&gt;oak&lt;/type&gt;
+  &lt;/tree&gt;
+  &lt;tree&gt;
+    &lt;name&gt;Henry&lt;/name&gt;&lt;height&gt;12&lt;/height&gt;&lt;type&gt;pine&lt;/type&gt;
+  &lt;/tree&gt;
+  &lt;flower&gt;
+    &lt;name&gt;Sebastian&lt;/name&gt;&lt;type&gt;dandelion&lt;/type&gt;&lt;color&gt;yellow&lt;/color&gt;
+  &lt;/flower&gt;
+  &lt;flower&gt;
+    &lt;name&gt;Alvin&lt;/name&gt;&lt;type&gt;tulip&lt;/type&gt;&lt;color&gt;white&lt;/color&gt;
+  &lt;/flower&gt;
+&lt;/forest&gt;
+</pre></div></div><br class="example-break"><p>During the development of the next version of the "forest
+    configurator" software project a couple of changes were made to
+    the configuration data schema. The <code class="sgmltag-element">tree</code> list height was
+    found to need more than 256 possible values and expanded to a
+    32-bit integer, and two new leaves <code class="sgmltag-element">color</code> and
+    <code class="sgmltag-element">birthday</code> were added. The list <code class="sgmltag-element">flower</code> had an
+    optional <code class="sgmltag-element">edible</code> leaf added, and the <code class="sgmltag-element">color</code>
+    changed type to a more strict enumeration type. The result is in
+    <a class="xref" href="ch05.html#ug.cdb.ex.forest2_yang" title="Example&nbsp;5.6.&nbsp;Version 2.0 of the forest module">Example&nbsp;5.6, &#8220;Version 2.0 of the forest module&#8221;</a>.</p><div class="example"><a name="ug.cdb.ex.forest2_yang"></a><p class="title"><b>Example&nbsp;5.6.&nbsp;Version 2.0 of the forest module</b></p><div class="example-contents"><pre class="programlisting">module forest {
+  namespace "http://example.com/ns/forest";
+  prefix forest;
+
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  revision "2009-10-01" {
+      description
+          "Needed room for taller trees.
+           Flowers can be edible.";
+  }
+
+  revision "2008-09-01" {
+      description "Initial forest model";
+  }
+
+  typedef colorType {
+    type enumeration {
+      enum unknown;
+      enum blue;
+      enum yellow;
+      enum red;
+      enum green;
+    }
+  }
+  container forest {
+    list tree {
+      key name;
+      min-elements 2;
+      max-elements 1024;
+      leaf name {
+        type string;
+      }
+      leaf height {
+        type int32;
+        mandatory true;
+      }
+      leaf birthday {
+        type xs:date;
+        default 2006-09-01;
+      }
+      leaf color {
+        type colorType;
+        default unknown;
+      }
+      leaf type {
+        type string;
+        mandatory true;
+      }
+    }
+    list flower {
+      key name;
+      max-elements 1024;
+      leaf name {
+        type string;
+      }
+      leaf type {
+        type string;
+        mandatory true;
+      }
+      leaf edible {
+        type empty;
+      }
+      leaf color {
+        type colorType;
+        default unknown;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>After compiling this new version of the YANG module into an
+    fxs file using <span class="command"><strong>confdc</strong></span> and restarting ConfD with
+    the new schema, CDB automatically detects that the namespace <code class="uri">http://example.com/ns/forest</code> has been
+    modified. CDB will then update the schema <span class="emphasis"><em>and</em></span>
+    the contents of the database. When ConfD has started the data in
+    the database now looks like in <a class="xref" href="ch05.html#ug.cdb.ex.forest2_xml" title="Example&nbsp;5.7.&nbsp;Forest instance document after upgrade">Example&nbsp;5.7, &#8220;Forest instance document after upgrade&#8221;</a></p><div class="example"><a name="ug.cdb.ex.forest2_xml"></a><p class="title"><b>Example&nbsp;5.7.&nbsp;Forest instance document after upgrade</b></p><div class="example-contents"><pre class="programlisting">    &lt;forest xmlns="http://example.com/ns/forest"&gt;
+      &lt;tree&gt;
+        &lt;name&gt;Eliza&lt;/name&gt;
+        &lt;height&gt;15&lt;/height&gt;
+        &lt;birthday&gt;2006-09-01&lt;/birthday&gt;
+        &lt;color&gt;unknown&lt;/color&gt;
+        &lt;type&gt;oak&lt;/type&gt;
+      &lt;/tree&gt;
+      &lt;tree&gt;
+        &lt;name&gt;George&lt;/name&gt;
+        &lt;height&gt;10&lt;/height&gt;
+        &lt;birthday&gt;2006-09-01&lt;/birthday&gt;
+        &lt;color&gt;unknown&lt;/color&gt;
+        &lt;type&gt;oak&lt;/type&gt;
+      &lt;/tree&gt;
+      &lt;tree&gt;
+        &lt;name&gt;Henry&lt;/name&gt;
+        &lt;height&gt;12&lt;/height&gt;
+        &lt;birthday&gt;2006-09-01&lt;/birthday&gt;
+        &lt;color&gt;unknown&lt;/color&gt;
+        &lt;type&gt;pine&lt;/type&gt;
+      &lt;/tree&gt;
+      &lt;flower&gt;
+        &lt;name&gt;Alvin&lt;/name&gt;
+        &lt;type&gt;tulip&lt;/type&gt;
+        &lt;color&gt;unknown&lt;/color&gt;
+      &lt;/flower&gt;
+      &lt;flower&gt;
+        &lt;name&gt;Sebastian&lt;/name&gt;
+        &lt;type&gt;dandelion&lt;/type&gt;
+        &lt;color&gt;yellow&lt;/color&gt;
+      &lt;/flower&gt;
+    &lt;/forest&gt;
+</pre></div></div><br class="example-break"><p>Let's follow what CDB does by checking the devel log. The
+    devel log is meant to be used as support while the application is
+    developed. It is enabled in <code class="filename">confd.conf</code> as
+    shown in <a class="xref" href="ch05.html#ug.cdb.ex.confd_confd_devel" title="Example&nbsp;5.8.&nbsp;Enabling the developer log">Example&nbsp;5.8, &#8220;Enabling the developer log&#8221;</a>.</p><div class="example"><a name="ug.cdb.ex.confd_confd_devel"></a><p class="title"><b>Example&nbsp;5.8.&nbsp;Enabling the developer log</b></p><div class="example-contents"><pre class="programlisting">&lt;developerLog&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;file&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;name&gt;/var/confd/log/devel.log&lt;/name&gt;
+  &lt;/file&gt;
+&lt;/developerLog&gt;
+&lt;developerLogLevel&gt;trace&lt;/developerLogLevel&gt;</pre></div></div><br class="example-break"><div class="example"><a name="d5e1322"></a><p class="title"><b>Example&nbsp;5.9.&nbsp;Developer log entries resulting from upgrade</b></p><div class="example-contents"><pre class="programlisting">upgrade: http://example.com/ns/forest -&gt; http://example.com/ns/forest
+upgrade: /forest/flower/{"Alvin"}/color: -&gt; unknown (default because old value white does not fit in new type)
+upgrade: /forest/flower/{"Sebastian"}/color: -&gt; yellow (but with new type)
+upgrade: /forest/tree/{"Eliza"}/birthday: added, with default (2006-09-01)
+upgrade: /forest/tree/{"Eliza"}/color: added, with default (unknown)
+upgrade: /forest/tree/{"Eliza"}/height: -&gt; 15 (but with new type)
+upgrade: /forest/tree/{"George"}/birthday: added, with default (2006-09-01)
+upgrade: /forest/tree/{"George"}/color: added, with default (unknown)
+upgrade: /forest/tree/{"George"}/height: -&gt; 10 (but with new type)
+upgrade: /forest/tree/{"Henry"}/birthday: added, with default (2006-09-01)
+upgrade: /forest/tree/{"Henry"}/color: added, with default (unknown)
+upgrade: /forest/tree/{"Henry"}/height: -&gt; 12 (but with new type)
+</pre></div></div><br class="example-break"><p>CDB can automatically handle the following changes to the
+    schema:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">Deleted elements</span></dt><dd><p>When an element is deleted from the schema, CDB simply
+          deletes it (and any children) from the database.</p></dd><dt><span class="term">Added elements</span></dt><dd><p>If a new element is added to the schema it needs to
+          either be optional, dynamic, or have a default value. New
+          elements with a default are added set to their default
+          value. New dynamic or optional elements are simply noted as
+          a schema change.</p></dd><dt><span class="term">Re-ordering elements</span></dt><dd><p>An element with the same name, but in a different
+          position on the same level, is considered to be the same
+          element. If its type hasn't changed it will retain its
+          value, but if the type has changed it will be upgraded as
+          described below.</p></dd><dt><span class="term">Type changes</span></dt><dd><p>If a leaf is still present but its type has changed,
+          automatic coercions are performed, so for example integers
+          may be transformed to their string representation if the
+          type changed from e.g. <span class="type">int32</span> to
+          <span class="type">string</span>. Automatic type conversion succeeds as
+          long as the string representation of the current value can
+          be parsed into its new type. (Which of course also implies
+          that a change from a smaller integer type,
+          e.g. <span class="type">int8</span>, to a larger type,
+          e.g. <span class="type">int32</span>, succeeds for any value - while the
+          opposite will not hold, but might!)</p><p>If the coercion fails, any supplied default value will
+          be used. If no default value is present in the new schema
+          the <span class="emphasis"><em>automatic</em></span> upgrade will fail.</p><p>Type changes when user-defined types are used are also
+          handled automatically, provided that some straightforward
+          rules are followed for the type definitions. Read more about
+          user-defined types in the <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a> manual page, which also
+          describes these rules.</p></dd><dt><span class="term">Hash changes</span></dt><dd><p>When a hash value of particular element has changed
+          (due to an addition of, or a
+          change to, a <code class="sgmltag-element">tailf:id-value</code> statement) CDB will
+          update that element.</p></dd><dt><span class="term">Key changes</span></dt><dd><p>When a key of a list is modified, CDB tries to upgrade
+          the key using the same rules as explained above for adding,
+          deleting, re-ordering, change of type, and change of hash
+          value. If automatic upgrade of a key fails the entire list
+          instance will be deleted.</p></dd><dt><span class="term">Default values</span></dt><dd><p>If a leaf has a default value, which has not been
+          changed from its default, then the automatic upgrade will
+          use the new default value (if any). If the leaf value has
+          been changed from the old default, then that value will be
+          kept.</p></dd><dt><span class="term">Adding / Removing namespaces</span></dt><dd><p>If a namespace no longer is present after an upgrade,
+          CDB removes all data in that namespace. When CDB detects a
+          new namespace, it is initialized with default values.</p></dd><dt><span class="term">Changing to/from operational</span></dt><dd><p>Elements that previously had <code class="sgmltag-element">config false</code>
+          set that are changed into database elements will be treated
+          as a added elements. In the opposite case, where data
+          elements in the new data model are tagged with <code class="sgmltag-element">config
+          false</code>, the elements will be deleted from the
+          database.</p></dd><dt><span class="term">Callpoint changes</span></dt><dd><p>CDB only considers the part of the data model in YANG
+          modules that do not have external callpoints (see <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>). But while upgrading, CDB does
+          handle moving subtrees into CDB from a callpoint and vice
+          versa. CDB simply considers these as added and deleted
+          schema elements.</p><p>Thus an application can be developed using CDB in the
+          first development cycle. When the external database
+          component is ready it can easily replace CDB without
+          changing the schema.</p></dd></dl></div><p>Should the <span class="emphasis"><em>automatic</em></span> upgrade fail, exit
+    codes and log-entries will indicate the reason (see <a class="xref" href="ch28.html#ug.advanced.disaster" title="28.11.&nbsp;Disaster management">Section&nbsp;28.11, &#8220;Disaster management&#8221;</a>).</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1383"></a>5.10.&nbsp;Using initialization files for upgrade</h2></div></div></div><p>As described earlier, when ConfD starts with an empty CDB
+    database, CDB will load all instantiated XML documents found in
+    the CDB directory and use these to initialize the the database.
+    We can also use this mechanism for CDB upgrade, since CDB will
+    again look for files in the CDB directory ending in
+    <code class="filename">.xml</code> when doing an upgrade.</p><p>This allows for handling many of the cases that the
+    automatic upgrade can not do by itself, e.g. addition of mandatory
+    leaves (without default statements), or multiple instances of new
+    dynamic containers. Most of the time we can probably simply use
+    the XML init file that is appropriate for a fresh install of the
+    new version also for the upgrade from a previous version.</p><p>When using XML files for initialization of CDB, the complete
+    contents of the files is used. On upgrade however, doing this
+    could lead to modification of the user's existing configuration -
+    e.g. we could end up resetting data that the user has modified
+    since CDB was first initialized. For this reason two restrictions
+    are applied when loading the XML files on upgrade:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Only data for elements that are new as of the upgrade
+        (i.e.  elements that did not exist in the previous schema)
+        will be considered.</p></li><li class="listitem"><p>The data will only be loaded if all old
+        (i.e. previously existing) optional/dynamic parent elements
+        and instances exist in the current configuration.</p></li></ul></div><p>To clarify this, we will look again at <a class="xref" href="ch05.html#ug.cdb.ex.servers" title="Example&nbsp;5.1.&nbsp;a simple server data model, servers.yang">Example&nbsp;5.1, &#8220;a simple server data model,
+      <code class="filename">servers.yang</code>&#8221;</a>. In version 1.5 of the server
+    manager, it was realized that the data model had a serious
+    shortcoming: There was no way to specify the protocol to use, TCP
+    or UDP.  To fix this, another leaf was added to the
+    <code class="sgmltag-element">/servers/server</code> list, and the new YANG module looks
+    like this:</p><div class="example"><a name="d5e1397"></a><p class="title"><b>Example&nbsp;5.10.&nbsp;Version 1.5 of the servers.yang module</b></p><div class="example-contents"><pre class="programlisting">module servers {
+  namespace "http://example.com/ns/servers";
+  prefix servers;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  revision "2007-06-01" {
+      description "added protocol.";
+  }
+
+  revision "2006-09-01" {
+      description "Initial servers data model";
+  }
+
+  /*  A set of server structures  */
+  container servers {
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+      leaf protocol {
+        type enumeration {
+            enum tcp;
+            enum udp;
+        }
+        mandatory true;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>Since it was considered important that the user explicitly
+    specified the protocol, the new leaf was made mandatory. Of course
+    the XML init file was updated to include this leaf, and now looks
+    like this:</p><div class="informalexample"><pre class="programlisting">&lt;servers:servers xmlns:servers="http://example.com/ns/servers"&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;www&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.4&lt;/servers:ip&gt;
+    &lt;servers:port&gt;88&lt;/servers:port&gt;
+    &lt;servers:protocol&gt;tcp&lt;/servers:protocol&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;www2&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.5&lt;/servers:ip&gt;
+    &lt;servers:port&gt;80&lt;/servers:port&gt;
+    &lt;servers:protocol&gt;tcp&lt;/servers:protocol&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;smtp&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.4&lt;/servers:ip&gt;
+    &lt;servers:port&gt;25&lt;/servers:port&gt;
+    &lt;servers:protocol&gt;tcp&lt;/servers:protocol&gt;
+  &lt;/servers:server&gt;
+  &lt;servers:server&gt;
+    &lt;servers:name&gt;dns&lt;/servers:name&gt;
+    &lt;servers:ip&gt;192.168.3.5&lt;/servers:ip&gt;
+    &lt;servers:port&gt;53&lt;/servers:port&gt;
+    &lt;servers:protocol&gt;udp&lt;/servers:protocol&gt;
+  &lt;/servers:server&gt;
+&lt;/servers:servers&gt;
+</pre></div><p>We can then just use this new init file for the upgrade, and
+    the existing server instances in the user's configuration will get
+    the new <code class="sgmltag-element">/servers/server/protocol</code> leaf filled in as
+    expected. However some users may have deleted some of the original
+    servers from their configuration, and in those cases we obviously
+    do not want those servers to get re-created during the upgrade
+    just because they are present in the XML file - the above
+    restrictions make sure that this does not happen. Here is what the
+    configuration looks like after upgrade if the "smtp" server has
+    been deleted before upgrade:</p><div class="informalexample"><pre class="programlisting">    &lt;servers xmlns="http://example.com/ns/servers"&gt;
+      &lt;server&gt;
+        &lt;name&gt;dns&lt;/name&gt;
+        &lt;ip&gt;192.168.3.5&lt;/ip&gt;
+        &lt;port&gt;53&lt;/port&gt;
+        &lt;protocol&gt;udp&lt;/protocol&gt;
+      &lt;/server&gt;
+      &lt;server&gt;
+        &lt;name&gt;www&lt;/name&gt;
+        &lt;ip&gt;192.168.3.4&lt;/ip&gt;
+        &lt;port&gt;88&lt;/port&gt;
+        &lt;protocol&gt;tcp&lt;/protocol&gt;
+      &lt;/server&gt;
+      &lt;server&gt;
+        &lt;name&gt;www2&lt;/name&gt;
+        &lt;ip&gt;192.168.3.5&lt;/ip&gt;
+        &lt;port&gt;80&lt;/port&gt;
+        &lt;protocol&gt;tcp&lt;/protocol&gt;
+      &lt;/server&gt;
+    &lt;/servers&gt;
+</pre></div><p>This example also implicitly shows a limitation with this
+    method: If the user has created additional servers, the new XML
+    file will not specify what protocol to use for those servers, and
+    the upgrade cannot succeed unless the external program method is
+    used, see below. However the example is a bit contrived - in
+    practice this limitation is rarely a problem: It does not occur
+    for new lists or optional elements, nor for new mandatory elements
+    that are not children of old lists. And in fact correctly adding
+    this "protocol" leaf for user-created servers would require user
+    input - it can not be done by <span class="emphasis"><em>any</em></span> fully
+    automated procedure.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Since CDB will attempt to load all
+      <code class="filename">*.xml</code> files in the CDB directory at the
+      time of upgrade, it is important to not leave XML init files
+      from a previous version that are no longer valid there.</p></div><p>It is always possible to write an external program to change
+    the data before the upgrade transaction is committed. This will be
+    explained in the following sections.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1413"></a>5.11.&nbsp;Using MAAPI to modify CDB during upgrade</h2></div></div></div><p>To take full control over the upgrade transaction, ConfD
+    must be started using the <code class="option">--start-phase{0,1,2}</code>
+    command line options. When ConfD is started using the
+    <code class="option">--start-phase0</code> option CDB will initiate, and if
+    it detects an upgrade situation the upgrade transaction will be
+    created, and all <span class="emphasis"><em>automatic</em></span> upgrades will be
+    performed. After which ConfD simply waits, either for a MAAPI
+    connection or <span class="command"><strong>confd --start-phase1</strong></span>.</p><p>Whenever changes to the schema cannot be handled
+    automatically, or when the application programmer wants more
+    control over how the data in the upgraded database is populated it
+    is possible to use MAAPI to attach and write to the upgrade
+    transaction in progress (see <a class="xref" href="ch23.html" title="Chapter&nbsp;23.&nbsp;The Management Agent API">Chapter&nbsp;23, <i>The Management Agent API</i></a> for
+    details on this API).</p><p>Using the <code class="function">maapi_attach_init()</code> function
+    call an external program can attach to the upgrade transaction
+    during <code class="sgmltag-element">phase0</code>. For example a program that creates the
+    optional container <code class="sgmltag-element">edible</code> on each <code class="sgmltag-element">flower</code> in
+    the previous forest example would look like this:</p><div class="example"><a name="d5e1427"></a><p class="title"><b>Example&nbsp;5.11.&nbsp;Writing to an upgrade transaction using MAAPI</b></p><div class="example-contents"><pre class="programlisting">int th;
+
+maapi_attach_init(ms, &amp;th);
+maapi_set_namespace(ms, th, simple__ns);
+
+maapi_init_cursor(sock, th, &amp;mc, "/forest/flower");
+maapi_get_next(&amp;mc);
+while (mc.n != 0) {
+    maapi_create(sock, th, "/forest/flower{%x}/edible", &amp;mc.keys[0]);
+    maapi_get_next(&amp;mc);
+}
+maapi_destroy_cursor(&amp;mc);
+
+exit(0);</pre></div></div><br class="example-break"><p>Note the use of the special
+    <code class="function">maapi_attach_init()</code> function, it attaches the
+    MAAPI socket to the upgrade transaction (or init transaction) and
+    returns (through the second argument) the transaction handle we
+    need to make further MAAPI calls. This special upgrade transaction
+    is only available during phase0. Once we call <span class="command"><strong>confd
+    --start-phase1</strong></span> the transaction will be committed.</p><p>This method can also be combined with the init file usage
+    described in the previous section - the data from the init file
+    will be applied immediately following the automatic conversions at
+    the beginning of <code class="sgmltag-element">phase0</code>, and the external program can
+    then use MAAPI to modify or complement the result.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1435"></a>5.12.&nbsp;More complex schema upgrades</h2></div></div></div><p>In the previous section we showed how to use MAAPI to access
+    the upgrade transaction <span class="emphasis"><em>after</em></span> the automatic
+    upgrade had taken place. But this means that CDB has deleted all
+    values that are no longer part of the schema. Well, not quite
+    yet. In start-phase0 it is possible to use all the CDB C-API calls
+    to access the data using the schema from the database as it looked
+    <span class="emphasis"><em>before</em></span> the automatic upgrade. That is, the
+    <span class="emphasis"><em>complete</em></span> database as it stood before the
+    upgrade is still available to the application. This allows us to
+    write programs that transfer data in an application specific way
+    between software releases.</p><p>Say, for example, that the developers of the <a class="xref" href="ch05.html#ug.cdb.ex.servers" title="Example&nbsp;5.1.&nbsp;a simple server data model, servers.yang">Example&nbsp;5.1, &#8220;a simple server data model,
+      <code class="filename">servers.yang</code>&#8221;</a> now has decided that having all
+    servers under one top-element is not enough for their 2.0
+    release. They want to instead have different categories of servers
+    under different server types. Also a new IP address is added to
+    each server, the <code class="sgmltag-element">adminIP</code>. The new version of
+    <code class="filename">servers.yang</code> could then look like this
+    (version 1.5 has not been merged to the 2.0 branch yet):</p><div class="example"><a name="d5e1445"></a><p class="title"><b>Example&nbsp;5.12.&nbsp;Version 2 of the servers.yang module</b></p><div class="example-contents"><pre class="programlisting">module servers {
+
+  namespace "http://example.com/ns/servers";
+  prefix servers;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  revision "2007-07-15" {
+      description "Split servers into www and others";
+  }
+
+  revision "2006-09-01" {
+      description "Initial servers data model";
+  }
+
+  container servers {
+    list www {
+      key name;
+      max-elements 32;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+      leaf adminIP {
+        type inet:ip-address;
+        mandatory true;
+      }
+    }
+    list others {
+      key name;
+      max-elements 32;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+      leaf adminIP {
+        type inet:ip-address;
+        mandatory true;
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>The plan for upgrading users with the old version of the
+    software is to transfer all servers with their name containing the
+    letters "www" or whose port is equal to 80, to the
+    <code class="sgmltag-element">/servers/www</code> subtree, and all the others to the
+    <code class="sgmltag-element">/servers/others</code> subtree. The new <code class="sgmltag-element">adminIP</code>
+    element will be initialized to 10.0.0.1 for the first server, and
+    then increased by one for each server found in the old
+    database. The code to perform this operation would have to be
+    written like this:</p><div class="example"><a name="d5e1452"></a><p class="title"><b>Example&nbsp;5.13.&nbsp;The <code class="function">upgrade()</code> function of <code class="filename">server_upgrade.c</code></b></p><div class="example-contents"><pre class="programlisting">static struct sockaddr_in addr; /* Keeps address to confd daemon */
+
+/* confd_init()  must be called before calling this function */
+/* ms and cs are assumed to be valid sockets */
+static void upgrade(int ms, int cs)
+{
+    int th;
+    int i, n;
+    static struct in_addr admin_ip;
+
+    cdb_connect(cs, CDB_READ_SOCKET,
+                (struct sockaddr *)&amp;addr, sizeof(addr));
+    cdb_start_session(cs, CDB_RUNNING);
+    cdb_set_namespace(cs, servers__ns);
+
+    maapi_connect(ms, (struct sockaddr *)&amp;addr, sizeof(addr));
+    maapi_attach_init(ms, &amp;th);
+    maapi_set_namespace(ms, th, servers__ns);
+
+    admin_ip.s_addr = htonl(0x0a000001); /* initialize to 10.0.0.1 */
+    n = cdb_num_instances(cs, "/servers/server");
+    printf("servers = %d\n", n);
+    for (i=0; i &lt; n; i++) {
+        char name[128];
+        confd_value_t ip, port, aip;
+        char *dst;
+
+        /* read old database using cdb_* API */
+        cdb_get_str(cs, name, 128, "/servers/server[%d]/name", i);
+        cdb_get(cs, &amp;ip,   "/servers/server[%d]/ip", i);
+        cdb_get(cs, &amp;port, "/servers/server[%d]/port", i);
+
+        if ((CONFD_GET_UINT16(&amp;port) == 80) ||
+            (strstr(name, "www") != NULL)) {
+            dst = "/servers/www{%s}";
+        } else {
+            dst = "/servers/others{%s}";
+        }
+        /* now create entries in the new database using maapi */
+        maapi_create(ms, th, dst, name);
+        maapi_pushd(ms, th, dst, name);
+        maapi_set_elem(ms, th, &amp;ip, "ip");
+        maapi_set_elem(ms, th, &amp;port, "port");
+        CONFD_SET_IPV4(&amp;aip, admin_ip);
+        maapi_set_elem(ms, th, &amp;aip, "adminIP");
+        admin_ip.s_addr = htonl(ntohl(admin_ip.s_addr) + 1);
+        maapi_popd(ms, th);
+    }
+
+    cdb_end_session(cs);
+    cdb_close(cs);
+}
+</pre></div></div><br class="example-break"><p>It would of course be wise to add error checks to the code
+    above. Also note that choosing new values for added elements can
+    be done in a number of different ways, perhaps the end-user needs
+    to be prompted, perhaps the data resides elsewhere on the
+    device.</p><p>Now assuming the data in CDB is as in the "Initialization
+    data for CDB" figure in the section above, then running the
+    upgrade code would be done in the following order.</p><div class="informalexample"><pre class="screen">$ confd --stop
+           ... Install new versions of software and fxs files ...
+$ confd --start-phase0
+$ server_upgrade
+$ confd --start-phase1
+           ... Start other internal daemons ...
+$ confd --start-phase2</pre></div><p>Finally, after ConfD is up and running after the upgrade the
+    data would look like this.</p><div class="informalexample"><pre class="programlisting">    &lt;servers xmlns="http://example.com/ns/servers"&gt;
+      &lt;www&gt;
+        &lt;name&gt;www&lt;/name&gt;
+        &lt;ip&gt;192.168.3.4&lt;/ip&gt;
+        &lt;port&gt;88&lt;/port&gt;
+        &lt;adminIP&gt;10.0.0.3&lt;/adminIP&gt;
+      &lt;/www&gt;
+      &lt;www&gt;
+        &lt;name&gt;www2&lt;/name&gt;
+        &lt;ip&gt;192.168.3.5&lt;/ip&gt;
+        &lt;port&gt;80&lt;/port&gt;
+        &lt;adminIP&gt;10.0.0.4&lt;/adminIP&gt;
+      &lt;/www&gt;
+      &lt;others&gt;
+        &lt;name&gt;dns&lt;/name&gt;
+        &lt;ip&gt;192.168.3.5&lt;/ip&gt;
+        &lt;port&gt;53&lt;/port&gt;
+        &lt;adminIP&gt;10.0.0.1&lt;/adminIP&gt;
+      &lt;/others&gt;
+      &lt;others&gt;
+        &lt;name&gt;smtp&lt;/name&gt;
+        &lt;ip&gt;192.168.3.4&lt;/ip&gt;
+        &lt;port&gt;25&lt;/port&gt;
+        &lt;adminIP&gt;10.0.0.2&lt;/adminIP&gt;
+      &lt;/others&gt;
+    &lt;/servers&gt;
+</pre></div><p>ConfD does not impose any specific meaning to "version" -
+    any change in the data model is an upgrade situation as far as CDB
+    is concerned. ConfD also does not force the application programmer
+    to handle software releases in a specific way, as each application
+    may have very different needs and requirements in terms of
+    footprint and storage etc.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1465"></a>5.13.&nbsp;The full dhcpd example</h2></div></div></div><p>As an example, we show how to integrate dhcpd - the ISC DHCP
+    daemon - under ConfD.</p><p>Assume we have <a class="xref" href="ch05.html#ug.cdb.ex.dhcpd_yang" title="Example&nbsp;5.14.&nbsp;A YANG module describing a dhcpd server configuration">Example&nbsp;5.14, &#8220;A YANG module describing a dhcpd server configuration&#8221;</a> in
+    a file called <code class="filename">dhcpd.yang</code>.</p><div class="example"><a name="ug.cdb.ex.dhcpd_yang"></a><p class="title"><b>Example&nbsp;5.14.&nbsp;A YANG module describing a dhcpd server configuration</b></p><div class="example-contents"><pre class="programlisting">module dhcpd {
+  namespace "http://example.com/ns/dhcpd";
+  prefix dhcpd;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  typedef loglevel {
+    type enumeration {
+      enum kern;
+      enum mail;
+      enum local7;
+    }
+  }
+
+  grouping subNetworkType {
+    leaf net {
+      type inet:ip-address;
+    }
+    leaf mask {
+      type inet:ip-address;
+    }
+    container range {
+      presence "";
+      leaf dynamicBootP {
+        type boolean;
+        default false;
+      }
+      leaf lowAddr {
+        type inet:ip-address;
+        mandatory true;
+      }
+      leaf hiAddr {
+        type inet:ip-address;
+      }
+    }
+    leaf routers {
+      type string;
+    }
+    leaf maxLeaseTime {
+      type xs:duration;
+      default PT7200S;
+    }
+  }
+  container dhcp {
+    leaf defaultLeaseTime {
+      type xs:duration;
+      default PT600S;
+    }
+    leaf maxLeaseTime {
+      type xs:duration;
+      default PT7200S;
+    }
+    leaf logFacility {
+      type loglevel;
+      default local7;
+    }
+    container SubNets {
+      container subNet {
+        uses subNetworkType;
+      }
+    }
+    container SharedNetworks {
+      list sharedNetwork {
+        key name;
+        max-elements 1024;
+        leaf name {
+          type string;
+        }
+        container SubNets {
+          container subNet {
+            uses subNetworkType;
+          }
+        }
+      }
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>We use some interesting constructs in this module. We define
+    a grouping and reuse it twice in the module.  This is what we do
+    when we want to reuse a data model structure defined somewhere
+    else in the specification.</p><p>Now we have a data model which is fully usable with ConfD.
+    Consider an actual <code class="filename">dhcpd.conf</code> file which
+    looks like:</p><div class="informalexample"><pre class="programlisting">defaultleasetime 600;
+maxleasetime 7200;
+subnet 192.168.128.0 netmask 255.255.255.0 {
+    range 192.168.128.60 192.168.128.98;
+}
+sharednetwork 22429 {
+  subnet 10.17.224.0 netmask 255.255.255.0 {
+     option routers rtr224.example.org;
+  }
+  subnet 10.0.29.0 netmask 255.255.255.0 {
+     option routers rtr29.example.org;
+  }
+}</pre></div><p>The above dhcp configuration would be represented by an XML
+    structure that looks like this:</p><div class="informalexample"><pre class="programlisting">&lt;dhcp&gt;
+  &lt;maxLeaseTime&gt;7200&lt;/maxLeaseTime&gt;
+  &lt;defaultLeaseTime&gt;600&lt;/defaultLeaseTime&gt;
+  &lt;subNets&gt;
+    &lt;subNet&gt;
+      &lt;net&gt;192.168.128.0&lt;/net&gt;
+      &lt;mask&gt;255.255.255.0&lt;/mask&gt;
+      &lt;range&gt;
+        &lt;lowAddr&gt;192.168.128.60&lt;/lowAddr&gt;
+        &lt;highAddr&gt;192.168.128.98&lt;/highAddr&gt;
+      &lt;/range&gt;
+    &lt;/subNet&gt;
+  &lt;/subNets&gt;
+  &lt;sharedNetworks&gt;
+    &lt;sharedNetwork&gt;
+      &lt;name&gt;22429&lt;/name&gt;
+      &lt;subNets&gt;
+        &lt;subNet&gt;
+          &lt;net&gt;10.17.224.0&lt;/net&gt;
+          &lt;mask&gt;255.255.255.0&lt;/mask&gt;
+          &lt;routers&gt;rtr224.example.org&lt;/routers&gt;
+        &lt;/subNet&gt;
+        &lt;subNet&gt;
+          &lt;net&gt;10.0.29.0&lt;/net&gt;
+          &lt;mask&gt;255.255.255.0&lt;/mask&gt;
+          &lt;routers&gt;rtr29.example.org&lt;/routers&gt;
+        &lt;/subNet&gt;
+      &lt;/subNets&gt;
+    &lt;/sharedNetwork&gt;
+  &lt;/sharedNetworks&gt;
+&lt;/dhcp&gt;</pre></div><p>The dhcp server subscribes to configuration changes and
+    reconfigures when notified. For our purposes we write a small
+    program which:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Reads the configuration database.</p></li><li class="listitem"><p>Writes <code class="filename">/etc/dhcp/dhcpd.conf</code> and
+        HUPs the daemon.</p></li></ol></div><p>The main function looks exactly like the example where we
+    read the servers database with the exception that we establish a
+    subscription socket for the path <code class="sgmltag-element">/dhcp</code> instead of
+    <code class="sgmltag-element">/servers</code>. Whenever <span class="emphasis"><em>any</em></span>
+    configuration change occurs for anything related to dhcp, the
+    program rereads the configuration from CDB, regenerates the
+    <code class="filename">dhcpd.conf</code> file and HUPs the dhcp
+    daemon.</p><p>Reading the dhcp configuration from CDB is done as
+    follows:</p><div class="informalexample"><pre class="programlisting">static int read_conf(struct sockaddr_in *addr)
+{
+    FILE *fp;
+    struct confd_duration dur;
+    int i, n, tmp;
+    int rsock;
+
+    if ((rsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open socket\n");
+
+    if (cdb_connect(rsock, CDB_READ_SOCKET, (struct sockaddr*)addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        return CONFD_ERR;
+    cdb_set_namespace(rsock, dhcpd__ns);
+
+    if ((fp = fopen("dhcpd.conf.tmp", "w")) == NULL) {
+        cdb_close(rsock);
+        return CONFD_ERR;
+    }
+    cdb_get_duration(rsock, &amp;dur, "/dhcp/defaultLeaseTime");
+    fprintf(fp, "default-lease-time %d\n", duration_to_secs(&amp;dur));
+
+    cdb_get_duration(rsock, &amp;dur, "/dhcp/maxLeaseTime");
+    fprintf(fp, "max-lease-time %d\n", duration_to_secs(&amp;dur));
+
+    cdb_get_enum_value(rsock, &amp;tmp, "/dhcp/logFacility");
+    switch (tmp) {
+    case dhcpd_kern:
+        fprintf(fp, "log-facility kern\n");
+        break;
+    case dhcpd_mail:
+        fprintf(fp, "log-facility mail\n");
+        break;
+    case dhcpd_local7:
+        fprintf(fp, "log-facility local7\n");
+        break;
+    }
+    n = cdb_num_instances(rsock, "/dhcp/subNets/subNet");
+    for (i=0; i&lt;n; i++) {
+        cdb_cd(rsock, "/dhcp/subNets/subNet[%d]", i);
+        do_subnet(rsock, fp);
+    }
+    n = cdb_num_instances(rsock, "/dhcp/SharedNetworks/sharedNetwork");
+    for (i=0; i&lt;n; i++) {
+        unsigned char *buf;
+        int buflen;
+        int j, m;
+
+        cdb_get_buf(rsock, &amp;buf, &amp;buflen,
+                    "/dhcp/SharedNetworks/sharedNetwork[%d]/name");
+        fprintf(fp, "shared-network %.*s {\n", buflen, buf);
+        m = cdb_num_instances(
+            rsock,
+            "/dhcp/SharedNetworks/sharedNetwork[%d]/subNets/subNet", i);
+        for (j=0; j&lt;m; j++) {
+            cdb_pushd(rsock, "/dhcp/SharedNetworks/sharedNetwork[%d]/"
+                      "subNets/subNet[%d]", i, j);
+            do_subnet(rsock, fp);
+            cdb_popd(rsock);
+        }
+        fprintf(fp, "}\n");
+    }
+    fclose(fp);
+    return cdb_close(rsock);
+}</pre></div><p>The code first establishes a read socket to CDB. Following
+    that the code utilizes various CDB read functions to read the
+    data. Look for example at how we extract the value
+    <code class="sgmltag-element">/dhcp/defaultLeaseTime</code> from CDB.  Looking at <a class="xref" href="ch05.html#ug.cdb.ex.dhcpd_yang" title="Example&nbsp;5.14.&nbsp;A YANG module describing a dhcpd server configuration">Example&nbsp;5.14, &#8220;A YANG module describing a dhcpd server configuration&#8221;</a>, we see that the
+    <code class="sgmltag-element">type</code> of the leaf is <span class="type">xs:duration</span>. There
+    exists a special type safe version of
+    <code class="function">cdb_get()</code> which reads a duration value from
+    the database, which we use as follows:</p><div class="informalexample"><pre class="programlisting">cdb_get_duration(rsock, &amp;dur, "/dhcp/defaultLeaseTime");
+fprintf(fp, "default-lease-time %d\n", duration_to_secs(&amp;dur));</pre></div><p>Alternatively, we could have written:</p><div class="informalexample"><pre class="programlisting">confd_value_t v;
+struct confd_duration dur;
+
+cdb_get(rsock, &amp;v, "/dhcp/defaultLeaseTime");
+dur = CONFD_GET_DURATION(&amp;v)
+fprintf(fp, "default-lease-time %d\n", duration_to_secs(&amp;dur));</pre></div><p>We figure out how many shared networks instances there are
+    through the call to <code class="function">cdb_num_instances()</code> and
+    then refer to the individual instances through the string syntax
+    <code class="sgmltag-element">/dhcp/sharedNetworks/sharedNetwork[%d]</code>. The key of an
+    individual shared network is, according to the data model, the
+    <code class="sgmltag-element">name</code> element but we do not care about that here, we
+    iterate through each shared network instance using integers.
+    These integers which obviously refer to shared network instances
+    are only valid within this CDB session. Using the normal ConfD key
+    syntax we can also refer to individual shared networks instances,
+    e.g. <code class="sgmltag-element">/dhcp/sharedNetworks/sharedNetwork{24-29}</code>. When we
+    just wish to loop through a set of XML structures it is usually
+    easier to use the <code class="code">[%d]</code> key syntax.</p><p>Also note the call to <code class="code">cdb_get_enum_value(rsock,
+    &amp;tmp, "/dhcp/logFacility");</code> which reads an
+    enumeration. The <code class="sgmltag-element">logFacility</code> element was defined as an
+    enumerated type. Enumerations are represented as integers, both in
+    our C code, but more importantly they are also represented as
+    integers when we store the string in the CDB database on
+    disk. I.e., we will not store the "logFacility" string "local7"
+    over and over again on disk. Similarly in our C code we also get a
+    (switchable) integer value as returned from
+    <code class="function">cdb_get_enum_value()</code>.</p><p>Especially interesting in the
+    <code class="function">read_conf()</code> code above is how we use
+    <code class="function">cdb_pushd()</code> in combination with
+    <code class="function">cdb_popd()</code>. The
+    <code class="function">cdb_pushd()</code> functions works like
+    <code class="function">cdb_cd()</code>, i.e. it changes the position in the
+    data tree, with the difference that we can call
+    <code class="function">cdb_popd()</code> and return to where we were
+    earlier in the XML tree. We traverse the <code class="sgmltag-element">SharedNetworks</code>
+    and execute</p><div class="informalexample"><pre class="programlisting">cdb_pushd(rsock, "/dhcp/SharedNetworks/sharedNetwork[%d]/"
+                      "subNets/subNet[%d]", i, j);
+do_subnet(rsock, fp);
+cdb_popd(rsock);</pre></div><p>Where the function <code class="function">do_subnet()</code> reads in
+    a subnet structure from CDB. The <code class="function">do_subnet()</code>
+    code works on relative paths as opposed to absolute paths.</p><p>The purpose of the example is to show how we can reuse the
+    function <code class="function">do_subnet()</code> and call it at different
+    points in the XML tree. The function itself does not know whether
+    it is reading a subnet under <code class="sgmltag-element">/dhcp/subNets</code> or under
+    <code class="sgmltag-element">/dhcp/SharedNetworks/sharedNetwork/subNets</code>.  Also
+    noteworthy is that fact that utilizing pushd/popd makes for more
+    efficient code since the part of the path leading up to the pushed
+    element is already parsed and verified to be correct. Thus the
+    parsing and path verification does not have to be executed for
+    each and every element.</p><div class="informalexample"><pre class="programlisting">static void do_subnet(int rsock, FILE *fp)
+{
+   struct in_addr ip;
+   char buf[BUFSIZ];
+   struct confd_duration dur;
+   char *ptr;
+
+   cdb_get_ipv4(rsock, &amp;ip, "net");
+   fprintf(fp, "subnet %s ", inet_ntoa(ip));
+   cdb_get_ipv4(rsock, &amp;ip, "mask");
+   fprintf(fp, "netmask %s {\n", inet_ntoa(ip));
+
+   if (cdb_exists(rsock, "range") == 1) {
+       int bool;
+       fprintf(fp, " range ");
+       cdb_get_bool(rsock, &amp;bool, "range/dynamicBootP");
+       if (bool) fprintf(fp, " dynamic-bootp ");
+       cdb_get_ipv4(rsock, &amp;ip, "range/lowAddr");
+       fprintf(fp, " %s ", inet_ntoa(ip));
+       cdb_get_ipv4(rsock, &amp;ip, "range/hiAddr");
+       fprintf(fp, " %s ", inet_ntoa(ip));
+       fprintf(fp, "\n");
+   }
+   cdb_get_str(rsock, &amp;buf[0], BUFSIZ, "routers");
+
+   /* replace space with comma */
+   for (ptr = buf; ptr != '\0'; ptr++) {
+       if (*ptr == ' ')
+           *ptr = ',';
+   }
+   fprintf(fp, "routers %s\n", buf);
+   cdb_get_duration(rsock, &amp;dur, "maxLeaseTime");
+   fprintf(fp, "max-lease-time %d\n", duration_to_secs(&amp;dur));
+}</pre></div><p>Finally, we define the code fragment that must be executed
+    by our application when there is IO ready to read on the
+    subscription socket:</p><div class="informalexample"><pre class="programlisting">if (set[1].revents &amp; POLLIN) {
+   int sub_points[1];
+   int reslen;
+
+   if ((status = cdb_read_subscription_socket(subsock,
+                                               &amp;sub_points[0],
+                                               &amp;reslen)) != CONFD_OK) {
+        fprintf(stderr, "terminate sub_read: %d\n", status);
+        exit(1);
+   }
+   if (reslen &gt; 0) {
+        if ((status = read_conf(&amp;addr)) != CONFD_OK) {
+            fprintf(stderr, "Terminate: read_conf %d\n", status);
+            exit(1);
+        }
+   }
+   rename("dhcpd.conf.tmp", "/etc/dhcpd.conf");
+   system("killall -HUP dhcpd");
+   if ((status = cdb_sync_subscription_socket(subsock,
+                                              CDB_DONE_PRIORITY))
+        != CONFD_OK) {
+        fprintf(stderr, "failed to sync subscription: %d\n", status);
+        exit(1);
+   }
+}</pre></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;Rendering Agents&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Operational Data</td></tr></table></div></body></html>
