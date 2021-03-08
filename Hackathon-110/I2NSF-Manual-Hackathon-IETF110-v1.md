@@ -1,6 +1,6 @@
 
 # I2NSF Hackathon Manual
-### July 20-24, 2020
+### March 1-6, 2021
 
 **Made by: Patrick Lingga (SKKU)**
 
@@ -45,7 +45,7 @@ $ touch local.conf
 ```
 6. Edit the local.conf file with the file from:
 
-https://github.com/jaehoonpaul/i2nsf-framework/blob/master/Hackathon-109/devstack/local.conf
+https://github.com/jaehoonpaul/i2nsf-framework/blob/master/Hackathon-110/devstack/local.conf
 
 Note: Make sure to change the IP address according to your IP
 address in local.conf
@@ -67,9 +67,9 @@ NOTE: In this manual database password is "devstack"
 $ git clone https://github.com/jaehoonpaul/i2nsf-framework
 ```
 
-10. Move i2nsf-framework/Hackathon-109/openstack/ to /opt/stack
+10. Move i2nsf-framework/Hackathon-110/openstack/ to /opt/stack
 ```
-$ mv i2nsf-framework/Hackathon-109/openstack/* /opt/stack/
+$ mv i2nsf-framework/Hackathon-110/openstack/* /opt/stack/
 ```
 
 11. Edit openstack_server.py IP address to your IP
@@ -78,7 +78,7 @@ address
 ## I2NSF Framework Setup
 
 * Security Controller, DMS Server, and employee example in
-Hackathon-109 use Ubuntu 16.04 cloud images.
+Hackathon-110 use Ubuntu 16.04 cloud images.
 
 * Download link:
 
@@ -127,11 +127,11 @@ $ sudo apt-get install python python-pip python-mysqldb \
     libssl-dev make
 $ pip install numpy==1.14.6 MySQL-python
 ```
-Notes: In this Hackathon-109 MySQL Password = secu
+Notes: In this Hackathon-110 MySQL Password = secu
 
 7. Install confd
 ```
-$ cp /home/ubuntu/i2nsf-framework/Hackathon-109/* /home/ubuntu/
+$ cp /home/ubuntu/i2nsf-framework/Hackathon-110/* /home/ubuntu/
 $ cd /home/ubuntu/confd-basic-linux.x86_64/
 $ sh confd-basic-6.6.linux.x86_64.installer.bin /home/ubuntu/confd-6.6
 $ source /home/ubuntu/confd-6.6/confdrc
@@ -223,7 +223,7 @@ $ nova boot --image xenial-server-cloudimg-amd64-disk1 \
 
 3. Move time-based-firewall to /home/ubuntu
 ```
-$ cp -r i2nsf-framework/Hackathon-109/NSF/time-based-firewall/* \
+$ cp -r i2nsf-framework/Hackathon-110/NSF/time-based-firewall/* \
     /home/ubuntu
  ```
 
@@ -260,7 +260,7 @@ $ nova boot --image xenial-server-cloudimg-amd64-disk1 \
 
 3. Move time-based-firewall to /home/ubuntu
 ```
-$ cp -r i2nsf-framework/Hackathon-109/NSF/url-filtering/* \
+$ cp -r i2nsf-framework/Hackathon-110/NSF/url-filtering/* \
     /home/ubuntu
 ```
 
@@ -295,7 +295,7 @@ $ nova boot --image xenial-server-cloudimg-amd64-disk1 \
 
 3. move Analyzer to /home/ubuntu
 ```
-$ cp -r i2nsf-framework/Hackathon-109/Analyzer/* \
+$ cp -r i2nsf-framework/Hackathon-110/Analyzer/* \
     /home/ubuntu
 ```
 
@@ -362,15 +362,23 @@ $ python openstack_server.py
 
 8. Employee instance should not be able to connect to facebook and instagram
 
-9. For Monitoring, access the web-based monitoring
-\#Use a web browser and enter
-```
-http://<Analyzer-IP-address>:5000/
-username: admin
-password: secu 
-```
+## Monitoring
 
-11. Enter the name of the NSF and submit
+1. Access the Analyzer with SSH connection
+
+2. Subscribe to NSFs
+```
+# Subscribe to Time Based Firewall
+$ python3 subscribe-time-fw.py
+# Subscribe to URL Filtering
+$ python3 subscribe-url-filtering.py
+```
+3. For simulation of overloaded NSF:
+```
+# In Time Based Firewall or URL Filtering
+$ stress --cpu 2 --vm 6 --timeout 5s
+
+```
 
 ## Termination
 
