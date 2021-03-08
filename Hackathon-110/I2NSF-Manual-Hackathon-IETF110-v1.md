@@ -382,22 +382,21 @@ $ stress --cpu 2 --vm 6 --timeout 5s
 ## Termination
 
 1. Security Controller
-
-\#In JETCONF console, press ctrl + c
-
-\#Go to /home/ubuntu directory and enter
 ```
+#In JETCONF console, press ctrl + c
+#Go to /home/ubuntu directory and enter
 $ ./clean_security_controller
 ```
 
 2. DMS
-
-\#In DMS Console, press ctrl + c
-
+```
+#In DMS Console, press ctrl + c
+```
 3. Openstack
 
-\#In openstack console, press ctrl + c and enter
- ```
+
+```
+# In openstack console, press ctrl + c and enter
 $ python clean.py
 ```
 # Thanks!
