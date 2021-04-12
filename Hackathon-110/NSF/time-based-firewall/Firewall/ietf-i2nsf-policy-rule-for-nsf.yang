@@ -3,7 +3,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   namespace 
     "urn:ietf:params:xml:ns:yang:ietf-i2nsf-policy-rule-for-nsf";
   prefix
-    iiprfn;
+    nsfintf;
 
   import ietf-inet-types{
     prefix inet;
@@ -13,7 +13,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
     prefix yang;
     reference "RFC 6991";
   }
-
+  
   organization
     "IETF I2NSF (Interface to Network Security Functions) 
      Working Group";
@@ -22,41 +22,32 @@ module ietf-i2nsf-policy-rule-for-nsf {
     "WG Web: <http://tools.ietf.org/wg/i2nsf>
      WG List: <mailto:i2nsf@ietf.org>
 
-     WG Chair: Adrian Farrel
-     <mailto:Adrain@olddog.co.uk>
-
-     WG Chair: Linda Dunbar
-     <mailto:Linda.duhbar@huawei.com>
-
-     Editor: Jingyong Tim Kim 
+	 Editor: Jinyong Tim Kim 
      <mailto:timkim@skku.edu>
     
      Editor: Jaehoon Paul Jeong
-     <mailto:pauljeong@skku.edu>
-     
-     Editor: Susan Hares
-     <mailto:shares@ndzh.com>";
+     <mailto:pauljeong@skku.edu>";
 
   description
-    "This module defines a YANG data module for network security 
-     functions.
-     
-    Copyright (c) 2018 IETF Trust and the persons
-    identified as authors of the code.  All rights reserved.
-
-    Redistribution and use in source and binary forms, with or
-    without modification, is permitted pursuant to, and subject
-    to the license terms contained in, the Simplified BSD License
-    set forth in Section 4.c of the IETF Trust's Legal Provisions
-    Relating to IETF Documents
-    (http://trustee.ietf.org/license-info).
-
-    This version of this YANG module is part of RFC 8341; see
-    the RFC itself for full legal notices.";
-     
-     
-  revision "2019-03-11"{
-    description "Initial revision.";
+    "This module is a YANG module for Network Security Functions
+     (NSF)-Facing Interface.
+	 
+     Copyright (c) 2021 IETF Trust and the persons identified as
+     authors of the code. All rights reserved.
+	 
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Simplified BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+	 
+     This version of this YANG module is part of RFC XXXX
+     (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
+     for full legal notices.";
+  
+  revision "2021-03-07"{
+    description "The latest revision.";
     reference
       "RFC XXXX: I2NSF Network Security Function-Facing Interface 
        YANG Data Model";
@@ -85,98 +76,100 @@ module ietf-i2nsf-policy-rule-for-nsf {
   
   identity event {
     description
-      "Base identity for event of policy.";
+      "Base identity for policy events";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - Event";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - Event";
   }
   
   identity system-event {
     base event;
     description 
-      "Identity for system event";
+      "Identity for system events";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System event";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System event";	   
   }
   
   identity system-alarm {
     base event;
     description 
-      "Identity for system alarm";
+      "Identity for system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm";	
   }
   
   identity access-violation {
     base system-event;
     description
       "Identity for access violation
-      among system events";
+      system events";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System event";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System event for access
+       violation";
   }
   
   identity configuration-change {
     base system-event;
     description 
       "Identity for configuration change
-      among system events";
+      system events";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System event";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System event for configuration
+       change";	   
   }
   
   identity memory-alarm {
     base system-alarm;
     description
       "Identity for memory alarm 
-      among system alarms";
+      system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm for memory";	   
   }
   
   identity cpu-alarm {
     base system-alarm;
     description
-      "Identity for cpu alarm 
-      among system alarms";
+      "Identity for CPU alarm 
+      system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm for CPU";	   
   }
 
   identity disk-alarm {
     base system-alarm;
     description 
       "Identity for disk alarm 
-      among system alarms";
+      system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm for disk";	   
   }
 
   identity hardware-alarm {
     base system-alarm;
     description 
       "Identity for hardware alarm 
-      among system alarms";
+      system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm for hardware";	   
   }
 
   identity interface-alarm {
     base system-alarm;
     description 
       "Identity for interface alarm 
-      among system alarms";
+      system alarms";
     reference
-      "draft-hong-i2nsf-nsf-monitoring-data-model-06
-       - System alarm";
+      "draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF NSF
+       Monitoring YANG Data Model - System alarm for interface";	   
   }  
   
   identity type-of-service {
@@ -190,7 +183,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Base identity for traffic-class of IPv6";
     reference
-      "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -198,10 +191,10 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description 
-      "Identity for normal";
+      "Identity for normal IPv4 TOS and IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -209,10 +202,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description 
-      "Identity for minimize cost";
+      "Identity for 'minimize monetary cost' IPv4 TOS and 
+      IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -220,10 +214,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description 
-      "Identity for maximize reliability";
+      "Identity for 'maximize reliability' IPv4 TOS and
+      IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -231,10 +226,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description 
-      "Identity for maximize throughput";
+      "Identity for 'maximize throughput' IPv4 TOS and
+      IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -242,10 +238,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description
-      "Identity for minimize delay";
+      "Identity for 'minimize delay' IPv4 TOS and
+      IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -253,10 +250,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base type-of-service;
     base traffic-class;
     description 
-      "Identity for maximize security";
+      "Identity for 'maximize security' IPv4 TOS and
+      IPv6 Traffic Class";
     reference
       "RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Traffic Class";
   }
   
@@ -270,7 +268,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity fragment {
     base fragmentation-flags-type;
     description 
-      "Identity for fragment";
+      "Identity for 'More fragment' flag";
     reference
       "RFC 791: Internet Protocol - Fragmentation Flags";
   }
@@ -278,7 +276,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity no-fragment {
     base fragmentation-flags-type;
     description 
-      "Identity for no fragment";
+      "Identity for 'Do not fragment' flag";
     reference
       "RFC 791: Internet Protocol - Fragmentation Flags";
   }
@@ -286,7 +284,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity reserved {
     base fragmentation-flags-type;
     description 
-      "Identity for reserved";
+      "Identity for reserved flags";
     reference
       "RFC 791: Internet Protocol - Fragmentation Flags";
   }
@@ -295,16 +293,15 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Base identity for protocol of IPv4";
     reference
-      "RFC 790: Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC 791: Internet Protocol - Protocol";
+      "IANA: Assigned Internet Protocol Numbers
+      RFC 791: Internet Protocol - Protocol";
   }
 
   identity next-header {
     description
-      "Base identity for next header of IPv6";
+      "Base identity for IPv6 next header";
     reference
-      "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "RFC 8200: Internet Protocol, Version 6 (IPv6) 
       Specification - Next Header";  
   }
   
@@ -312,12 +309,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for icmp";
+      "Identity for ICMP IPv4 protocol and 
+      IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -325,12 +322,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for igmp";
+      "Identity for IGMP IPv4 protocol and 
+      IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers 
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -338,12 +335,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for tcp";
+      "Identity for TCP protocol";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers 
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -351,12 +347,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for igrp";
+      "Identity for IGRP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -364,12 +360,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for udp";
+      "Identity for UDP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers  
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -377,12 +373,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for gre";
+      "Identity for GRE IPv4 protocol
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers 
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -390,12 +386,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for esp";
+      "Identity for ESP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers	   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -403,12 +399,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for ah";
+      "Identity for AH IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -416,12 +412,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for mobile";
+      "Identity for mobile IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -429,12 +425,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for tlsp";
+      "Identity for TLSP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -442,12 +438,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for skip";
+      "Identity for skip IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers   
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -455,26 +451,25 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for IPv6 icmp ";
+      "Identity for IPv6 ICMP next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers
+       RFC 4443: Internet Control Message Protocol (ICMPv6)
+       for the Internet Protocol Version 6 (IPv6) Specification
+	   RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
-  }
-  
+  }  
   
   identity eigrp {
     base protocol;
     base next-header;
     description 
-      "Identity for eigrp";
+      "Identity for EIGRP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers 
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -482,12 +477,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for ospf";
+      "Identity for OSPF IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
   
@@ -495,15 +490,14 @@ module ietf-i2nsf-policy-rule-for-nsf {
     base protocol;
     base next-header;
     description 
-      "Identity for l2tp";
+      "Identity for L2TP IPv4 protocol 
+      and IPv6 next header";
     reference
-      "RFC  790: - Assigned numbers - Assigned Internet 
-       Protocol Number
-       RFC  791: Internet Protocol - Type of Service
-       RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "IANA: Assigned Internet Protocol Numbers
+       RFC  791: Internet Protocol - Protocol
+       RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - Next Header";
   }
-  
 
   identity ipopts {
     description
@@ -515,7 +509,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity rr {
     base ipopts;
     description
-      "Identity for record route";
+      "Identity for 'Record Route' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -523,7 +517,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity eol {
     base ipopts;
     description
-      "Identity for end of list";
+      "Identity for 'End of List' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -531,7 +525,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity nop {
     base ipopts;
     description
-      "Identity for no operation";
+      "Identity for 'No Operation' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -539,7 +533,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity ts {
     base ipopts;
     description
-      "Identity for time stamp";
+      "Identity for 'Timestamp' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -547,7 +541,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity sec {
     base ipopts;
     description
-      "Identity for IP security";
+      "Identity for 'IP security' IP Option";
     reference
       "RFC 791: Internet Protocol - Options"; 
   }
@@ -555,7 +549,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity esec {
     base ipopts;
     description
-      "Identity for IP extended security";
+      "Identity for 'IP extended security' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -563,7 +557,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity lsrr {
     base ipopts;
     description
-      "Identity for loose source routing";
+      "Identity for 'Loose Source Routing' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -571,7 +565,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity ssrr {
     base ipopts;
     description
-      "Identity for strict source routing";
+      "Identity for 'Strict Source Routing' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -579,7 +573,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity satid {
     base ipopts;
     description
-      "Identity for stream identifier";
+      "Identity for 'Stream Identifier' IP Option";
     reference
       "RFC 791: Internet Protocol - Options";
   }
@@ -587,14 +581,15 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity any {
     base ipopts;
     description
-      "Identity for which any IP options are set";
+      "Identity for 'any IP options 
+      included in IPv4 packet";
     reference
       "RFC 791: Internet Protocol - Options";
   }
   
   identity tcp-flags {
     description
-      "Base identity for tcp flags";
+      "Base identity for TCP flags";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -602,7 +597,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity cwr {
     base tcp-flags;
     description
-      "Identity for congestion window reduced";
+      "Identity for 'Congestion Window Reduced' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -610,7 +605,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity ecn {
     base tcp-flags;
     description
-      "Identity for explicit congestion notification";
+      "Identity for 'Explicit Congestion Notification' 
+      TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -618,7 +614,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity urg {
     base tcp-flags;
     description
-      "Identity for urgent";
+      "Identity for 'Urgent' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -626,7 +622,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity ack {
     base tcp-flags;
     description
-      "Identity for acknowledgement";
+      "Identity for 'acknowledgement' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -634,7 +630,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity psh {
     base tcp-flags;
     description
-      "Identity for push";
+      "Identity for 'Push' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags"; 
   }
@@ -642,7 +638,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity rst {
     base tcp-flags;
     description
-      "Identity for reset";
+      "Identity for 'Reset' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -650,7 +646,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity syn {
     base tcp-flags;
     description
-      "Identity for synchronize";
+      "Identity for 'Synchronize' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
@@ -658,14 +654,14 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity fin {
     base tcp-flags;
     description
-      "Identity for finish";
+      "Identity for 'Finish' TCP flag";
     reference
       "RFC 793: Transmission Control Protocol - Flags";
   }
   
   identity icmp-type {
     description
-      "Base identity for icmp types";
+      "Base identity for ICMP Message types";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -673,7 +669,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity echo-reply {
     base icmp-type;
     description
-      "Identity for echo reply";
+      "Identity for 'Echo Reply' ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -681,31 +677,17 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity destination-unreachable {
     base icmp-type;
     description
-      "Identity for destination unreachable";
+      "Identity for 'Destination Unreachable'
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
   
-  identity source-quench  {
-    base icmp-type;
-    description
-      "Identity for source quench";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
   
   identity redirect {
     base icmp-type;
     description
-      "Identity for redirect";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity alternate-host-address {
-    base icmp-type;
-    description
-      "Identity for alternate host address";
+      "Identity for 'Redirect' ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -713,7 +695,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity echo {
     base icmp-type;
     description
-      "Identity for echo";
+      "Identity for 'Echo' ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -721,7 +703,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity router-advertisement {
     base icmp-type;
     description
-      "Identity for router advertisement";
+      "Identity for 'Router Advertisement' 
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -729,7 +712,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity router-solicitation {
     base icmp-type;
     description
-      "Identity for router solicitation";
+      "Identity for 'Router Solicitation' 
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -737,7 +721,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity time-exceeded {
     base icmp-type;
     description
-      "Identity for time exceeded";
+      "Identity for 'Time exceeded' ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -745,7 +729,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity parameter-problem {
     base icmp-type;
     description
-      "Identity for parameter problem";
+      "Identity for 'Parameter Problem'
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -753,7 +738,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity timestamp {
     base icmp-type;
     description
-      "Identity for timestamp";
+      "Identity for 'Timestamp' ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -761,47 +746,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity timestamp-reply {
     base icmp-type;
     description
-      "Identity for timestamp reply";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity information-request {
-    base icmp-type;
-    description
-      "Identity for information request";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity information-reply {
-    base icmp-type;
-    description
-      "Identity for information reply";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity address-mask-request {
-    base icmp-type;
-    description
-      "Identity for address mask request";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity address-mask-reply {
-    base icmp-type;
-    description
-      "Identity for address mask reply";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity traceroute {
-    base icmp-type;
-    description
-      "Identity for traceroute";
+      "Identity for 'Timestamp Reply'
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -809,79 +755,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity datagram-conversion-error {
     base icmp-type;
     description
-      "Identity for datagram conversion error";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity mobile-host-redirect {
-    base icmp-type;
-    description
-      "Identity for mobile host redirect";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity ipv6-where-are-you {
-    base icmp-type;
-    description
-      "Identity for IPv6 where are you";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity ipv6-i-am-here {
-    base icmp-type ;
-    description
-      "Identity for IPv6 i am here";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity mobile-registration-request {
-    base icmp-type;
-    description
-      "Identity for mobile registration request";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity mobile-registration-reply {
-    base icmp-type;
-    description
-      "Identity for mobile registration reply";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity domain-name-request {
-    base icmp-type;
-    description
-      "Identity for domain name request";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity domain-name-reply {
-    base icmp-type;
-    description
-      "Identity for domain name reply";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity iskip {
-    base icmp-type;
-    description
-      "Identity for icmp skip";
-    reference
-      "RFC 792: Internet Control Message Protocol";
-  }
-  
-  identity photuris {
-    base icmp-type;
-    description
-      "Identity for photuris";
+      "Identity for 'Datagram Conversion Error'
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -889,7 +764,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity experimental-mobility-protocols {
     base icmp-type;
     description
-      "Identity for experimental mobility protocols";
+      "Identity for 'Experimental Mobility Protocols'
+      ICMP message type";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -897,7 +773,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity extended-echo-request {
     base icmp-type;
     description
-      "Identity for extended echo request";
+      "Identity for 'Extended Echo Request'
+      ICMP message type";
     reference
       "RFC  792: Internet Control Message Protocol
        RFC 8335: PROBE: A Utility for Probing Interfaces";
@@ -906,7 +783,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity extended-echo-reply {
     base icmp-type;
     description
-      "Identity for extended echo reply";
+      "Identity for 'Extended Echo Reply'
+      ICMP message type";
     reference
       "RFC  792: Internet Control Message Protocol
        RFC 8335: PROBE: A Utility for Probing Interfaces";
@@ -1160,8 +1038,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity bad-spi {
     base icmp-type;
     description
-      "Identity for bad spi
-      in photuris types";
+      "Identity for bad spi";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1169,8 +1046,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity authentication-failed {
     base icmp-type;
     description
-      "Identity for authentication failed
-      in photuris types";
+      "Identity for authentication failed";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1178,8 +1054,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity decompression-failed {
     base icmp-type;
     description
-      "Identity for decompression failed
-      in photuris types";
+      "Identity for decompression failed";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1187,8 +1062,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity decryption-failed {
     base icmp-type;
     description
-      "Identity for decryption failed
-      in photuris types";
+      "Identity for decryption failed";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1196,8 +1070,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity need-authentication {
     base icmp-type;
     description
-      "Identity for need authentication
-      in photuris types";
+      "Identity for need authentication";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1205,8 +1078,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
   identity need-authorization {
     base icmp-type;
     description
-      "Identity for need authorization
-      in photuris types";
+      "Identity for need authorization";
     reference
       "RFC 792: Internet Control Message Protocol";
   }
@@ -1270,76 +1142,151 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "RFC  792: Internet Control Message Protocol
        RFC 8335: PROBE: A Utility for Probing Interfaces";
   }
+ 
+  identity target-device {
+    description
+      "Base identity for target devices";
+    reference
+      "draft-ietf-i2nsf-capability-data-model-15: 
+       I2NSF Capability YANG Data Model";
+  }
+
+  identity computer {
+    base target-device;
+    description 
+      "Identity for computer such as personal computer (PC)
+       and server";
+  }
+ 
+  identity mobile-phone {
+    base target-device;
+    description 
+      "Identity for mobile-phone such as smartphone and
+       cellphone";
+  }
+  
+  identity voip-volte-phone {
+    base target-device;
+    description 
+      "Identity for voip-volte-phone";
+  }
+  
+  identity tablet {
+    base target-device;
+    description 
+      "Identity for tablet";
+  }
+  
+  identity network-infrastructure-device {
+    base target-device;
+    description 
+      "Identity for network infrastructure devices
+       such as switch, router, and access point";
+  }
+  
+  identity iot {
+    base target-device;
+    description 
+      "Identity for IoT (Internet of Things)";
+  }
+  
+  identity vehicle {
+    base target-device;
+    description 
+      "Identity for vehicle that connects to and shares
+       data through the Internet";
+  }
   
   identity content-security-control {
     description
       "Base identity for content security control";
     reference
       "RFC 8329: Framework for Interface to 
-       Network Security Functions - Differences 
-       from ACL Data Models
-       draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities";
+       Network Security Functions - Flow-Based 
+       NSF Capability Characterization
+       draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model";
+  }
+  
+  identity firewall {
+    base content-security-control;
+    description 
+      "Identity for firewall that monitors 
+       incoming and outgoing network traffic 
+       and permits or blocks data packets based 
+       on a set of security rules.";
   }
   
   identity antivirus {
     base content-security-control;
     description 
-      "Identity for antivirus";
+      "Identity for antivirus that prevents, 
+       scans, detects and deletes viruses 
+       from a computer";
   }
   
   identity ips {
     base content-security-control;
     description
-      "Identity for ips";
+      "Identity for IPS (Intrusion Prevention System) 
+       that prevents malicious activity within a network";
   }
   
   identity ids {
     base content-security-control;
     description
-      "Identity for ids";
+      "Identity for IDS (Intrusion Detection System) 
+       that detects malicious activity within a network";
   }
   
   identity url-filtering {
     base content-security-control;
     description
-      "Identity for url filtering";
+      "Identity for url filtering that 
+       limits access by comparing the web traffic's URL 
+       with the URLs for web filtering in a database";
   }
   
   identity mail-filtering {
     base content-security-control;
     description
-      "Identity for mail filtering";
+      "Identity for mail filtering that 
+       filters out a malicious email message by 
+       comparing its sender email address with the email
+       addresses of malicious users in a database";
   }
   
   identity file-blocking {
     base content-security-control;
     description
-      "Identity for file blocking";
-  }
-  
-  identity file-isolate {
-    base content-security-control;
-    description
-      "Identity for file isolate";
+      "Identity for file blocking that blocks the
+       download or upload of malicious files with the
+       information of suspicious files in a database";
   }
   
   identity pkt-capture {
     base content-security-control;
     description
-      "Identity for packet capture";
+      "Identity for packet capture that 
+       intercepts a packet that is crossing or moving
+       over a specific network.";
   }
   
   identity application-control {
     base content-security-control;
     description
-      "Identity for application control";
+      "Identity for application control that 
+       filters out the packets of malicious applications
+       with the information of those applications in a
+       database";
   }
   
   identity voip-volte {
     base content-security-control;
     description
-      "Identity for voip and volte";
+      "Identity for VoIP/VoLTE security service that 
+       filters out the packets of malicious users 
+       with a blacklist of malicious users in a database";
   }
   
   identity attack-mitigation-control {
@@ -1347,124 +1294,139 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "Base identity for attack mitigation control";
     reference
       "RFC 8329: Framework for Interface to 
-       Network Security Functions - Differences 
-       from ACL Data Models
-       draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities";
+       Network Security Functions - Flow-Based 
+       NSF Capability Characterization
+       draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model";
   }
-  
+
   identity syn-flood {
     base attack-mitigation-control;
     description
-      "Identity for syn flood";
+      "Identity for syn flood
+       that weakens the SYN flood attack";
   }
 
   identity udp-flood {
     base attack-mitigation-control;
     description
-      "Identity for udp flood";
+      "Identity for udp flood
+       that weakens the UDP flood attack";
   }
 
   identity icmp-flood {
     base attack-mitigation-control;
     description
-      "Identity for icmp flood";
+      "Identity for icmp flood
+       that weakens the ICMP flood attack";
   }
 
   identity ip-frag-flood {
     base attack-mitigation-control;
     description
-      "Identity for ip frag flood";
-  }
-
-  identity ipv6-related {
-    base attack-mitigation-control;
-    description
-      "Identity for ipv6 related";
+      "Identity for ip frag flood
+       that weakens the IP fragmentation flood attack";
   }
 
   identity http-and-https-flood {
     base attack-mitigation-control;
     description
-      "Identity for http and https flood";
+      "Identity for http and https flood
+       that weakens the HTTP and HTTPS flood attack";
   }
 
   identity dns-flood {
     base attack-mitigation-control;
     description
-      "Identity for dns flood";
+      "Identity for dns flood
+       that weakens the DNS flood attack";
   }
 
   identity dns-amp-flood {
     base attack-mitigation-control;
     description
-      "Identity for dns amp flood";
+      "Identity for dns amp flood
+       that weakens the DNS amplification flood attack";
+  }
+
+  identity ntp-amp-flood {
+    base attack-mitigation-control;
+    description
+      "Identity for ntp amp flood
+       that weakens the NTP amplification flood attack";
   }
 
   identity ssl-ddos {
     base attack-mitigation-control;
     description
-      "Identity for ssl ddos";
+      "Identity for ssl ddos
+       that weakens the SSL DDoS attack";
   }
 
   identity ip-sweep {
     base attack-mitigation-control;
     description
-      "Identity for ip sweep";
+      "Identity for ip sweep
+       that weakens the IP sweep attack";
   }
 
   identity port-scanning {
     base attack-mitigation-control;
     description
-      "Identity for port scanning";
+      "Identity for port scanning
+       that weakens the port scanning attack";
   }
 
   identity ping-of-death {
     base attack-mitigation-control;
     description
-      "Identity for ping of death";
+      "Identity for ping-of-death
+       that weakens the ping-of-death attack";
   }  
   
   identity teardrop {
     base attack-mitigation-control;
     description
-      "Identity for teardrop";
+      "Identity for teardrop
+       that weakens the teardrop attack";
   }  
 
   identity oversized-icmp {
     base attack-mitigation-control;
     description
-      "Identity for oversized icmp";
+      "Identity for oversized icmp
+       that weakens the oversized icmp attack";
   }  
 
   identity tracert {
     base attack-mitigation-control;
     description
-      "Identity for tracert";
+      "Identity for tracert
+       that weakens the tracert attack";
   }    
   
   identity ingress-action {
     description
       "Base identity for action";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Ingress Action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Ingress Action";
   }    
   
   identity egress-action {
     description
       "Base identity for egress action";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Egress action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Egress Action";
   }    
   
   identity default-action {
     description
       "Base identity for default action";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Default Action";
   }    
   
   identity pass {
@@ -1474,9 +1436,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description
       "Identity for pass";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Actions and 
-       default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Actions and
+       Default Action";
   }
   
   identity drop {
@@ -1486,9 +1448,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description
       "Identity for drop";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Actions and 
-       default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Actions and
+       Default Action";
   }
 
   identity reject {
@@ -1498,9 +1460,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description
       "Identity for reject";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Actions and 
-       default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Actions and
+       Default Action";
   }
 
   identity alert {
@@ -1510,9 +1472,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description
       "Identity for alert";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Actions and 
-       default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Actions and
+       Default Action";
   }
 
   identity mirror {
@@ -1522,9 +1484,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description
       "Identity for mirror";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Actions and 
-       default action";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Actions and
+       Default Action";
   }
   
   identity log-action {
@@ -1573,8 +1535,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Base identity for resolution strategy";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }    
   
   identity fmr {
@@ -1582,8 +1544,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Identity for First Matching Rule (FMR)";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }
 
   identity lmr {
@@ -1591,8 +1553,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Identity for Last Matching Rule (LMR)";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }
   
   identity pmr {
@@ -1600,18 +1562,18 @@ module ietf-i2nsf-policy-rule-for-nsf {
     description 
       "Identity for Prioritized Matching Rule (PMR)";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }
   
   identity pmre {
     base resolution-strategy;
     description 
-      "Identity for Prioritized Matching Rule 
+      "Identity for Prioritized Matching Rule
       with Errors (PMRE)";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }
   
   identity pmrn {
@@ -1620,52 +1582,52 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "Identity for Prioritized Matching Rule 
       with No Errors (PMRN)";
     reference
-      "draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Resolution Strategy";
+      "draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Resolution Strategy";
   }
   
   /*
    * Typedefs
    */
-  
-  typedef start-time-type {
-    type union {
-       type string {
-         pattern '\d{2}:\d{2}:\d{2}(\.\d+)?'
-               + '(Z|[\+\-]\d{2}:\d{2})';
-       }
-      
-      type enumeration {
-        enum right-away {
-          description
-            "Immediate rule execution
-             in the system.";
+   
+    typedef start-time-type {
+      type union {
+         type string {
+           pattern '\d{2}:\d{2}:\d{2}(\.\d+)?'
+                 + '(Z|[\+\-]\d{2}:\d{2})';
+         }
+
+        type enumeration {
+          enum right-away {
+            description
+              "Immediate rule execution
+               in the system.";
+          }
         }
       }
+
+      description
+        "Start time when the rules are applied.";
     }
-    
-    description 
-      "Start time when the rules are applied.";
-  }
-  
-  typedef end-time-type {
-    type union {
-       type string {
-         pattern '\d{2}:\d{2}:\d{2}(\.\d+)?'
-               + '(Z|[\+\-]\d{2}:\d{2})';
-       }
-      
-      type enumeration {
-        enum infinitely {
-          description
-            "Infinite rule execution
-             in the system.";
+
+    typedef end-time-type {
+      type union {
+         type string {
+           pattern '\d{2}:\d{2}:\d{2}(\.\d+)?'
+                 + '(Z|[\+\-]\d{2}:\d{2})';
+         }
+
+        type enumeration {
+          enum infinitely {
+            description
+              "Infinite rule execution
+               in the system.";
+          }
         }
       }
+      description
+        "End time when the rules are applied.";
     }
-    description 
-      "End time when the rules are applied.";
-  }
  
    typedef day-type {
       type enumeration {
@@ -1767,7 +1729,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
     list ipv4-address {
       key "ipv4";
       description
-        "The list of IPv4 address.";
+        "The list of IPv4 addresses.";
     
       leaf ipv4 {
         type inet:ipv4-address;
@@ -1804,7 +1766,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
     list ipv6-address {
       key "ipv6";
       description
-        "The list of IPv6 address.";
+        "The list of IPv6 addresses.";
     
       leaf ipv6 {
         type inet:ipv6-address;
@@ -1824,7 +1786,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "Grouping for an IPv6 address";
       
     reference
-      "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - IPv6 address
        RFC 8344: A YANG Data Model for IP Management";
   }  
@@ -1832,8 +1794,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   grouping pkt-sec-ipv4 {
     choice match-type {
       description
-        "There are two types to configure a security policy 
-        for IPv4 address, such as exact match and range match.";
+        "There are two types of security policy IPv4 address
+        matching - exact match and range match.";
       case exact-match {
         uses ipv4;
         description
@@ -1845,13 +1807,13 @@ module ietf-i2nsf-policy-rule-for-nsf {
           leaf start-ipv4-address {
             type inet:ipv4-address;
             description
-              "Start IPv4 address for a range match.";
+              "Starting IPv4 address for a range match.";
           }
               
           leaf end-ipv4-address {
             type inet:ipv4-address;
             description
-              "End IPv4 address for a range match.";
+              "Ending IPv4 address for a range match.";
           }
           description
             "Range match for an IPv4 address.";
@@ -1868,8 +1830,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
   grouping pkt-sec-ipv6 {
     choice match-type {
       description
-        "There are two types to configure a security policy 
-        for IPv6 address, such as exact match and range match.";
+        "There are two types of security policy IPv6 address
+        matching - exact match and range match.";
       case exact-match {
         uses ipv6;
         description
@@ -1881,13 +1843,13 @@ module ietf-i2nsf-policy-rule-for-nsf {
           leaf start-ipv6-address {
             type inet:ipv6-address;
             description
-              "Start IPv6 address for a range match.";
+              "Starting IPv6 address for a range match.";
           }
               
           leaf end-ipv6-address {
             type inet:ipv6-address;
             description
-              "End IPv6 address for a range match.";
+              "Ending IPv6 address for a range match.";
           }
           description
             "Range match for an IPv6 address.";
@@ -1898,15 +1860,15 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "Grouping for IPv6 address.";
       
     reference
-      "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+      "RFC 8200: Internet Protocol, Version 6 (IPv6) 
        Specification - IPv6 address";
   }
   
   grouping pkt-sec-port-number {
     choice match-type {
       description
-        "There are two types to configure a security policy 
-        for a port number, such as exact match and range match.";
+        "There are two types of security policy TCP/UDP port
+        matching - exact match and range match.";
       case exact-match {
         leaf-list port-num {
           type inet:port-number;
@@ -1920,12 +1882,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
           leaf start-port-num {
             type inet:port-number;
             description
-              "Start port number for a range match.";
+              "Starting port number for a range match.";
           }
           leaf end-port-num {
             type inet:port-number;
             description
-              "Start port number for a range match.";
+              "Ending port number for a range match.";
           }
           description
             "Range match for a port number.";
@@ -1949,7 +1911,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
       "Container for security policy
        including a set of security rules according to certain logic, 
        i.e., their similarity or mutual relations, etc. The network
-       security policy is able to apply over both the unidirectional
+       security policy can be applied to both the unidirectional
        and bidirectional traffic across the NSF.
        The I2NSF security policies use the Event-Condition-Action 
        (ECA) policy model ";
@@ -1957,9 +1919,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
     reference
       "RFC 8329: Framework for Interface to Network Security 
        Functions - I2NSF Flow Security Policy Structure
-       draft-ietf-i2nsf-capability-04: Information Model 
-       of NSFs Capabilities - Design Principles and ECA Policy Model
-       Overview";
+       draft-ietf-i2nsf-capability-data-model-15:
+       I2NSF Capability YANG Data Model - Design Principles and
+       ECA Policy Model Overview";
        
     list system-policy {
       key "system-policy-name";
@@ -1967,16 +1929,13 @@ module ietf-i2nsf-policy-rule-for-nsf {
         "The system-policy represents there could be multiple system 
         policies in one NSF, and each system policy is used by 
         one virtual instance of the NSF/device.";
-       
-      
+             
       leaf system-policy-name {
         type string;
-        mandatory true;     
         description
           "The name of the policy. 
            This must be unique.";
       }  
-     
      
       leaf priority-usage {
         type identityref {
@@ -1994,16 +1953,16 @@ module ietf-i2nsf-policy-rule-for-nsf {
         }
         default fmr;
         description 
-          "The resolution strategies can be used to
+          "The resolution strategies that can be used to
           specify how to resolve conflicts that occur between 
-          the actions of the same or different policy rules that 
+          actions of the same or different policy rules that 
           are matched and contained in this particular NSF";       
 
         reference
-          "draft-ietf-i2nsf-capability-04: Information Model 
-           of NSFs Capabilities - Resolution strategy";
+          "draft-ietf-i2nsf-capability-data-model-15:
+           I2NSF Capability YANG Data Model - Resolution strategy";
       }
-        
+    
       leaf default-action {
         type identityref {
           base default-action;
@@ -2016,10 +1975,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
           is the use of a default statement in a C switch statement.";     
           
         reference
-          "draft-ietf-i2nsf-capability-04: Information Model 
-           of NSFs Capabilities - Default action";
+          "draft-ietf-i2nsf-capability-data-model-15:
+           I2NSF Capability YANG Data Model - Default Action";
       }
-      
       
       list rules {
         key "rule-name";
@@ -2028,10 +1986,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
             
         leaf rule-name {
           type string;
-          mandatory true;
           description
-            "The name of the rule.
-             This must be unique.";
+            "The name of the rule.";
         }
         
         leaf rule-description {
@@ -2047,22 +2003,50 @@ module ietf-i2nsf-policy-rule-for-nsf {
           }
           description
             "The priority keyword comes with a mandatory 
-             numeric value which can range from 1 till 255.";
+             numeric value which can range from 1 till 255.
+             Note that a higher number means a higher priority";
         }
         
         leaf rule-enable {
           type boolean;
           description
             "True is enable.
-             False is not enbale.";
+             False is not enable.";
         }
 
-        container time-zone {
+        leaf session-aging-time {
+          type uint16;
+          units "second";
+          description
+            "This is session aging time.";
+        }
+
+        container long-connection {
+          description
+            "This is long-connection";
+
+          leaf enable {
+            type boolean;
+            description
+              "True is enable.
+               False is not enable.";
+          }
+
+          leaf duration {
+            type uint16;
+            description
+              "This is the duration of the long-connection.";
+          }
+        }
+        
+        container time-intervals {
           description
             "Time zone when the rules are applied";
-          container absolute-time-zone {
+          container absolute-time-interval {
             description
-              "Rule execution according to absolute time";
+              "Rule execution according to the absolute time.
+              The absolute time interval means the exact time to 
+              start or end.";
              
             leaf start-time {
               type start-time-type;
@@ -2078,9 +2062,11 @@ module ietf-i2nsf-policy-rule-for-nsf {
             }
           }
           
-          container periodic-time-zone {
+          container periodic-time-interval {
             description
-              "Rule execution according to periodic time";   
+              "Rule execution according to the periodic time.
+              The periodic time interval means the repeated time 
+			  such as a day, week, or month.";   
             
             container day {
               description 
@@ -2138,12 +2124,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
           reference
             "RFC 8329: Framework for Interface to Network Security 
              Functions - I2NSF Flow Security Policy Structure
-             draft-ietf-i2nsf-capability-04: Information Model 
-             of NSFs Capabilities - Design Principles and ECA 
-             Policy Model Overview
-             draft-hong-i2nsf-nsf-monitoring-data-model-06: A YANG 
-             Data Model for Monitoring I2NSF Network Security 
-             Functions - System Alarm and System Events";
+             draft-ietf-i2nsf-capability-data-model-15:
+             I2NSF Capability YANG Data Model - Design Principles and
+             ECA Policy Model Overview
+             draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF
+			 NSF Monitoring YANG Data Model - Alarms, Events, Logs,
+			 and Counters";
         
           leaf event-clause-description {
             type string;
@@ -2153,17 +2139,17 @@ module ietf-i2nsf-policy-rule-for-nsf {
         
           container event-clauses {
             description
-              "It has two event types such as 
-              system event and system alarm.";
+              "System Event Clause - either a system event or
+              system alarm";
             reference
               "RFC 8329: Framework for Interface to Network Security 
                Functions - I2NSF Flow Security Policy Structure
-               draft-ietf-i2nsf-capability-04: Information Model 
-               of NSFs Capabilities - Design Principles and ECA Policy 
-               Model Overview
-               draft-hong-i2nsf-nsf-monitoring-data-model-06: A YANG 
-               Data Model for Monitoring I2NSF Network Security 
-               Functions - System Alarm and System Events";
+               draft-ietf-i2nsf-capability-data-model-15:
+               I2NSF Capability YANG Data Model - Design Principles and
+               ECA Policy Model Overview
+               draft-ietf-i2nsf-nsf-monitoring-data-model-04: I2NSF
+               NSF Monitoring YANG Data Model - Alarms, Events, Logs,
+               and Counters";
                
             leaf-list system-event {
               type identityref {
@@ -2199,10 +2185,10 @@ module ietf-i2nsf-policy-rule-for-nsf {
           reference
             "RFC 8329: Framework for Interface to Network Security 
              Functions - I2NSF Flow Security Policy Structure
-             draft-ietf-i2nsf-capability-04: Information Model 
-             of NSFs Capabilities - Design Principles and ECA Policy 
-             Model Overview";
-            
+             draft-ietf-i2nsf-capability-data-model-15:
+             I2NSF Capability YANG Data Model - Design Principles and
+             ECA Policy Model Overview";
+
           leaf condition-clause-description {
             type string;
             description
@@ -2218,12 +2204,17 @@ module ietf-i2nsf-policy-rule-for-nsf {
             reference
               "RFC 791: Internet Protocol";
          
+            leaf ipv4-description {
+              type string;
+              description
+               "ipv4 condition textual description.";
+            }
+            
             container pkt-sec-ipv4-header-length {
               choice match-type {
                 description
-                  "There are two types to configure a security 
-                  policy for IPv4 header length, such as exact match 
-                  and range match.";
+                  "Security policy IPv4 Header length match - 
+                  exact match and range match.";
                 case exact-match {
                   leaf-list ipv4-header-length {
                     type uint8 {
@@ -2242,7 +2233,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                         range "5..15";
                       }
                       description
-                        "Start IPv4 header length for a range match.";
+                        "Starting IPv4 header length for a range match.";
                     }
                   
                     leaf end-ipv4-header-length {
@@ -2250,7 +2241,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                         range "5..15";
                       }
                       description
-                        "End IPv4 header length for a range match.";
+                        "Ending IPv4 header length for a range match.";
                     }
                     description
                       "Range match for an IPv4 header length.";
@@ -2278,9 +2269,8 @@ module ietf-i2nsf-policy-rule-for-nsf {
             container pkt-sec-ipv4-total-length {
               choice match-type {
                 description
-                  "There are two types to configure a security 
-                  policy for IPv4 total length, such as exact match 
-                  and range match.";
+                  "Security policy IPv4 total length matching 
+                  - exact match and range match.";
                 case exact-match {
                   leaf-list ipv4-total-length {
                     type uint16;
@@ -2294,12 +2284,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
                     leaf start-ipv4-total-length {
                       type uint16;
                       description
-                        "Start IPv4 total length for a range match.";
+                        "Starting IPv4 total length for a range match.";
                     }
                     leaf end-ipv4-total-length {
                       type uint16;
                       description
-                        "End IPv4 total length for a range match.";
+                        "Ending IPv4 total length for a range match.";
                     }
                     description
                       "Range match for an IPv4 total length.";
@@ -2357,14 +2347,14 @@ module ietf-i2nsf-policy-rule-for-nsf {
                         range "0..16383";
                       }
                       description
-                        "Start IPv4 fragment offset for a range match.";
+                        "Starting IPv4 fragment offset for a range match.";
                     }
                     leaf end-ipv4-fragment-offset {
                       type uint16 {
                         range "0..16383";
                       }
                       description
-                        "End IPv4 fragment offset for a range match.";
+                        "Ending IPv4 fragment offset for a range match.";
                     }
                     description
                       "Range match for an IPv4 fragment offset.";
@@ -2397,12 +2387,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
                     leaf start-ipv4-ttl {
                       type uint8;
                       description
-                        "Start IPv4 TTL for a range match.";
+                        "Starting IPv4 TTL for a range match.";
                     }
                     leaf end-ipv4-ttl {
                       type uint8;
                       description
-                        "End IPv4 TTL for a range match.";
+                        "Ending IPv4 TTL for a range match.";
                     }
                     description
                       "Range match for an IPv4 TTL.";
@@ -2457,23 +2447,22 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "RFC 791: Internet Protocol - Options";
             }
          
-            leaf pkt-sec-ipv4-sameip {
+            leaf pkt-sec-ipv4-same-ip {
               type boolean;
               description
-                "Every packet has a source IP-address and 
-                 a destination IP-address. It can be that 
-                 the source IP is the same as 
-                 the destination IP.";
+                "Match on packets with the same IPv4 source
+                 and IPv4 destination address.";
             }
          
-            leaf-list pkt-sec-ipv4-geoip {
+            leaf-list pkt-sec-ipv4-geo-ip {
               type string;
               description
-                "The geoip keyword enables you to match on 
-                 the source, destination or source and destination
-                 IP addresses of network traffic and to see to
-                 which country it belongs. To do this, Suricata 
-                 uses GeoIP API with MaxMind database format.";
+                "The geo-ip keyword enables you to match on 
+                 source and destination IP addresses of network 
+                 traffic and to see to which country it belongs.";
+              reference
+                "ISO 3166: Codes for the representation of 
+                 names of countries and their subdivisions";
             }
           }
             
@@ -2484,9 +2473,15 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 if the set of policy actions in this ECA policy 
                 rule should be executed or not.";
             reference
-              "RFC 2460: Internet Protocol, Version 6 (IPv6) 
-               Specification";
+               "RFC 8200: Internet Protocol, Version 6 (IPv6) 
+                Specification";
          
+            leaf ipv6-description {
+              type string;
+              description
+               "This is description for ipv6 condition.";
+            }
+            
          
             leaf-list pkt-sec-ipv6-traffic-class {
               type identityref {
@@ -2496,7 +2491,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 traffic class.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - Traffic class";
             }
             
@@ -2523,14 +2518,14 @@ module ietf-i2nsf-policy-rule-for-nsf {
                         range "0..1048575";
                       }
                       description
-                        "Start IPv6 flow label for a range match.";
+                        "Starting IPv6 flow label for a range match.";
                     }
                     leaf end-ipv6-flow-label {
                       type uint32 {
                         range "0..1048575";
                       }
                       description
-                        "End IPv6 flow label for a range match.";
+                        "Ending IPv6 flow label for a range match.";
                     }
                     description
                       "Range match for an IPv6 flow label.";
@@ -2541,7 +2536,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 flow label.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - Flow label";
             }
          
@@ -2565,12 +2560,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
                     leaf start-ipv6-payload-length {
                       type uint16;
                       description
-                        "Start IPv6 payload length for a range match.";
+                        "Starting IPv6 payload length for a range match.";
                     }
                     leaf end-ipv6-payload-length {
                       type uint16;
                       description
-                        "End IPv6 payload length for a range match.";
+                        "Ending IPv6 payload length for a range match.";
                     }
                     description
                       "Range match for an IPv6 payload length.";
@@ -2581,7 +2576,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 payload length.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - Payload length";
             }
          
@@ -2593,7 +2588,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 next header.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - Next header";
             }
             
@@ -2632,7 +2627,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 hop limit.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - Hop limit";
             }
          
@@ -2642,7 +2637,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 source address.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - IPv6 address";
             }
             
@@ -2652,7 +2647,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "The security policy rule according to 
                  IPv6 destination address.";
               reference
-                "RFC 2460: Internet Protocol, Version 6 (IPv6) 
+                "RFC 8200: Internet Protocol, Version 6 (IPv6) 
                  Specification - IPv6 address";
             }
          
@@ -2667,6 +2662,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
             reference
               "RFC 793: Transmission Control Protocol";
          
+            leaf tcp-description {
+              type string;
+              description
+               "This is description for tcp condition.";
+            }
+            
             container pkt-sec-tcp-src-port-num {
               uses pkt-sec-port-number;
               description
@@ -2676,7 +2677,6 @@ module ietf-i2nsf-policy-rule-for-nsf {
                 "RFC 793: Transmission Control Protocol 
                  - Port number";
             }
-               
          
             container pkt-sec-tcp-dest-port-num {
               uses pkt-sec-port-number;
@@ -2688,126 +2688,6 @@ module ietf-i2nsf-policy-rule-for-nsf {
                  - Port number";
             }
             
-            container pkt-sec-tcp-seq-num {
-              choice match-type {
-                description
-                  "There are two types to configure a security 
-                  policy for tcp sequence number, 
-                  such as exact match and range match.";
-                case exact-match {
-                  leaf-list tcp-seq-num {
-                    type uint32;
-                    description
-                      "Exact match for an tcp sequence number.";
-                  }
-                }
-                case range-match {
-                  list range-tcp-seq-num {
-                    key "start-tcp-seq-num end-tcp-seq-num";
-                    leaf start-tcp-seq-num {
-                      type uint32;
-                      description
-                        "Start tcp sequence number for a range match.";
-                    }
-                    leaf end-tcp-seq-num {
-                      type uint32;
-                      description
-                        "End tcp sequence number for a range match.";
-                    }
-                    description
-                      "Range match for a tcp sequence number.";
-                  }
-                }
-              }
-              description
-                "The security policy rule according to 
-                 tcp sequence number.";
-              reference
-                "RFC 793: Transmission Control Protocol 
-                 - Sequence number";
-            }
-            
-            container pkt-sec-tcp-ack-num {
-              choice match-type {
-                description
-                  "There are two types to configure a security 
-                  policy for tcp acknowledgement number, 
-                  such as exact match and range match.";
-                case exact-match {
-                  leaf-list tcp-ack-num {
-                    type uint32;
-                    description
-                      "Exact match for an tcp acknowledgement number.";
-                  }
-                }
-                case range-match {
-                  list range-tcp-ack-num {
-                    key "start-tcp-ack-num end-tcp-ack-num";
-                    leaf start-tcp-ack-num {
-                      type uint32;
-                      description
-                        "Start tcp acknowledgement number 
-                        for a range match.";
-                    }
-                    leaf end-tcp-ack-num {
-                      type uint32;
-                      description
-                        "End tcp acknowledgement number 
-                        for a range match.";
-                    }
-                    description
-                      "Range match for a tcp acknowledgement number.";
-                  }
-                }
-              }
-              description
-                "The security policy rule according to 
-                 tcp acknowledgement number.";
-              reference
-                "RFC 793: Transmission Control Protocol 
-                 - Acknowledgement number";
-            }
-            
-            container pkt-sec-tcp-window-size {
-              choice match-type {
-                description
-                  "There are two types to configure a security 
-                  policy for tcp window size, 
-                  such as exact match and range match.";
-                case exact-match {
-                  leaf-list tcp-window-size {
-                    type uint16;
-                    description
-                      "Exact match for an tcp window size.";
-                  }
-                }
-                case range-match {
-                  list range-tcp-window-size {
-                    key "start-tcp-window-size end-tcp-window-size";
-                    leaf start-tcp-window-size {
-                      type uint16;
-                      description
-                        "Start tcp window size for a range match.";
-                    }
-                    leaf end-tcp-window-size {
-                      type uint16;
-                      description
-                        "End tcp window size for a range match.";
-                    }
-                    description
-                      "Range match for a tcp window size.";
-                  }
-                }
-              }
-              description
-                "The security policy rule according to 
-                 tcp window size.";
-              reference
-                "RFC 793: Transmission Control Protocol 
-                 - Window size";
-            }
-         
-         
             leaf-list pkt-sec-tcp-flags {
               type identityref {
                 base tcp-flags;
@@ -2830,14 +2710,20 @@ module ietf-i2nsf-policy-rule-for-nsf {
             reference
               "RFC 793: Transmission Control Protocol";
          
+            leaf udp-description {
+              type string;
+              description
+               "This is description for udp condition.";
+            }
+            
             container pkt-sec-udp-src-port-num {
               uses pkt-sec-port-number;
               description
                 "The security policy rule according to 
                  udp source port number.";
               reference
-                "RFC 793: Transmission Control Protocol 
-                 - Port number";
+                "RFC 768: User Datagram Protocol 
+                 - Total Length";
             }
                
          
@@ -2890,7 +2776,108 @@ module ietf-i2nsf-policy-rule-for-nsf {
                  - Total Length";
             }
           }
+          
+          container packet-security-sctp-condition {
+            description
+              "The purpose of this container is to represent 
+               SCTP packet header information to determine 
+               if the set of policy actions in this ECA policy 
+               rule should be executed or not.";
+            leaf sctp-description {
+              type string;
+              description
+                "This is description for sctp condition.";
+            }
             
+            container pkt-sec-sctp-src-port-num {
+              uses pkt-sec-port-number;
+              description
+                "The security policy rule according to 
+                 sctp source port number.";
+              reference
+                "RFC 4960: Stream Control Transmission Protocol
+                 - Port number";
+            }
+               
+         
+            container pkt-sec-sctp-dest-port-num {
+              uses pkt-sec-port-number;
+              description
+                "The security policy rule according to 
+                 sctp destination port number.";
+              reference
+                "RFC 4960: Stream Control Transmission Protocol
+                 - Total Length";
+            }
+            
+            leaf-list pkt-sec-sctp-verification-tag {
+              type uint32;
+              description
+                "The security policy rule according to 
+                 udp total length.";
+              reference
+                "RFC 4960: Stream Control Transmission Protocol
+                 - Verification Tag";
+            }
+            
+            leaf-list pkt-sec-sctp-chunk-type {
+              type uint8;
+              description
+                "The security policy rule according to 
+                 sctp chunk type ID Value.";
+              reference
+                "RFC 4960: Stream Control Transmission Protocol
+                 - Chunk Type";
+            }
+          }
+          
+          container packet-security-dccp-condition {
+            description
+              "The purpose of this container is to represent 
+               DCCP packet header information to determine 
+               if the set of policy actions in this ECA policy 
+               rule should be executed or not.";
+            leaf dccp-description {
+              type string;
+              description
+                "This is description for dccp condition.";
+            }
+            
+            container pkt-sec-dccp-src-port-num {
+              uses pkt-sec-port-number;
+              description
+                "The security policy rule according to 
+                 dccp source port number.";
+              reference
+                "RFC 4340: Datagram Congestion Control Protocol (DCCP)
+                 - Port number";
+            }
+
+            container pkt-sec-dccp-dest-port-num {
+              uses pkt-sec-port-number;
+              description
+                "The security policy rule according to 
+                 dccp destination port number.";
+              reference
+                "RFC 4340: Datagram Congestion Control Protocol (DCCP)
+                 - Port number";
+            }
+            
+            leaf-list pkt-sec-dccp-service-code {
+              type uint32;
+              description
+                "The security policy rule according to 
+                 dccp service code.";
+              reference
+                "RFC 4340: Datagram Congestion Control Protocol (DCCP)
+                 - Service Codes
+                 RFC 5595: The Datagram Congestion Control Protocol (DCCP)
+                 Service Codes
+                 RFC 6335: Internet Assigned Numbers Authority (IANA)
+                 Procedures for the Management of the Service Name and
+                 Transport Protocol Port Number Registry - Service Code";
+            }
+          }
          
           container packet-security-icmp-condition {
             description
@@ -2902,6 +2889,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
               "RFC  792: Internet Control Message Protocol
                RFC 8335: PROBE: A Utility for Probing Interfaces";
          
+            leaf icmp-description {
+              type string;
+              description
+               "This is description for icmp condition.";
+            }
+            
             leaf-list pkt-sec-icmp-type-and-code {
               type identityref {
                 base icmp-type;
@@ -2915,22 +2908,26 @@ module ietf-i2nsf-policy-rule-for-nsf {
             }
           }
 
-          container packet-security-http-condition {
+          container packet-security-url-category-condition {
             description
-              "Condition for http.";
-
-            leaf-list pkt-sec-uri-content {
+              "Condition for url category";
+            leaf url-category-description {
               type string;
               description
-                "The security policy rule according to 
-                 uri content.";
+                "This is description for the condition of a URL's
+                 category such as SNS sites, game sites, ecommerce
+                 sites, company sites, and university sites.";
             }
-            
-            leaf-list pkt-sec-url-content {
+
+            leaf-list pre-defined-category {
               type string;
               description
-                "The security policy rule according to 
-                 url content.";
+                "This is pre-defined-category.";
+            }
+            leaf-list user-defined-category {
+              type string;
+              description
+                "This user-defined-category.";
             }
           }
           
@@ -2949,6 +2946,12 @@ module ietf-i2nsf-policy-rule-for-nsf {
             reference
               "RFC 3261: SIP: Session Initiation Protocol";
 
+            leaf voice-description {
+              type string;
+              description
+               "This is description for voice condition.";
+            }
+            
             leaf-list pkt-sec-src-voice-id {
               type string;
               description
@@ -2975,11 +2978,244 @@ module ietf-i2nsf-policy-rule-for-nsf {
             description
               "Condition for DDoS attack.";
 
-            leaf pkt-sec-alert-rate {
+            leaf ddos-description {
+              type string;
+              description
+               "This is description for ddos condition.";
+            }
+            
+            leaf pkt-sec-alert-packet-rate {
+              type uint32;
+              units "pps";
+              description
+                "The alert rate of flood detection for 
+                 packets per second (PPS) of an IP address.";
+            }
+            
+            leaf pkt-sec-alert-flow-rate {
               type uint32;
               description
-                "The alert rate of flood detect for 
-                 same packets.";
+                "The alert rate of flood detection for 
+                 flows per second of an IP address.";
+            }
+            
+            leaf pkt-sec-alert-byte-rate {
+              type uint32;
+              units "BPS";
+              description
+                "The alert rate of flood detection for 
+                 bytes per second of an IP address.";
+            }
+          }
+          
+          container packet-security-payload-condition {
+            description
+              "Condition for packet payload";
+            leaf packet-payload-description {
+              type string;
+              description
+               "This is description for payload condition.";
+            }
+            leaf-list pkt-payload-content {
+              type string;
+              description
+                "This is a condition for packet payload content.";
+            }
+          }
+          
+          container context-condition {
+            description
+              "Condition for context";
+            leaf context-description {
+              type string;
+              description
+                "This is description for context condition.";
+            }
+            
+            container application-condition {
+              description
+                "Condition for application";
+              leaf application-description {
+                type string;
+                description
+                 "This is description for application condition.";
+              }
+              leaf-list application-object {
+                type string;
+                description
+                  "This is application object.";
+              }
+              leaf-list application-group {
+                type string;
+                description
+                  "This is application group.";
+              }
+              leaf-list application-label {
+                type string;
+                description
+                  "This is application label.";
+              }
+              container category {
+                description
+                  "This is application category";
+                list application-category {
+                  key "name application-subcategory";
+                  description
+                    "This is application category list";
+
+                  leaf name {
+                    type string;
+                    description
+                     "This is name for application category.";
+                  }
+                  leaf application-subcategory {
+                    type string;
+                    description
+                     "This is application subcategory.";
+                  }
+                }
+              }
+            }
+            
+            container target-condition {
+              description
+                "Condition for target";
+              leaf target-description {
+                type string;
+                description
+                  "This is description for target condition.
+                  Vendors can write instructions for target condition
+                  that vendor made";
+              }
+  
+              container device-sec-context-cond {
+                description
+                  "The device attribute that can identify a device,
+                   including the device type (i.e., router, switch,
+                   pc, ios, or android) and the device's owner as
+                   well.";
+  
+                leaf-list target-device {
+                  type identityref {
+                    base target-device;
+                  }
+                  description
+                    "Leaf list for target devices";
+                }
+              }
+            }
+            
+            container users-condition {
+              description
+                "Condition for users";
+              leaf users-description {
+                type string;
+                description
+                  "This is the description for users' condition.";
+              }
+              list user{
+                key "user-id";
+                description
+                  "The user (or user group) information with which
+                   network flow is associated: The user has many
+                   attributes such as name, id, password, type,
+                   authentication mode and so on. 
+                   id is often used in the security policy to
+                   identify the user.
+                   Besides, an NSF is aware of the IP address of the
+                   user provided by a unified user management system
+                   via network. Based on name-address association,
+                   an NSF is able to enforce the security functions
+                   over the given user (or user group)";
+
+                leaf user-id {
+                  type uint32;
+                  description
+                    "The ID of the user.";
+                }
+                leaf user-name {
+                  type string;
+                  description
+                    "The name of the user.";
+                }
+              }
+              list group {
+                key "group-id";
+                description
+                  "The user (or user group) information with which
+                   network flow is associated: The user has many
+                   attributes such as name, id, password, type,
+                   authentication mode and so on. 
+                   id is often used in the security policy to
+                   identify the user.
+                   Besides, an NSF is aware of the IP address of the
+                   user provided by a unified user management system
+                   via network. Based on name-address association,
+                   an NSF is able to enforce the security functions
+                   over the given user (or user group)";
+
+                leaf group-id {
+                  type uint32;
+                  description
+                    "The ID of the group.";
+                }
+                leaf group-name {
+                  type string;
+                  description
+                    "The name of the group.";
+                }
+              }
+                
+              leaf security-group {
+                type string;
+                description
+                  "security-group.";
+              }
+            }
+            
+            container geography-context-condition {
+              description
+                "Condition for generic context";
+              leaf geography-context-description {
+                type string;
+                description
+                  "This is description for generic context condition.
+                  Vendors can write instructions for generic context
+                  condition that vendor made";
+              }
+              
+              container geography-location {
+                description
+                  "The location which network traffic flow is associated
+                   with. The region can be the geographical location
+                   such as country, province, and city,
+                   as well as the logical network location such as
+                   IP address, network section, and network domain.";
+
+                leaf-list src-geography-location {
+                  type string;
+                  description
+                    "The src-geography-location is a geographical 
+                     location mapped into an IP address. It matches the
+                     mapped IP address to the source IP address of the 
+                     traffic flow.";
+                  reference
+                    "ISO 3166: Codes for the representation of 
+                     names of countries and their subdivisions";
+                }
+                
+                leaf-list dest-geography-location {
+                  type string;
+                  description
+                    "The dest-geography-location is a geographical 
+                     location mapped into an IP address. It matches the 
+                     mapped IP address to the destination IP address of 
+                     the traffic flow.";
+                  reference
+                    "ISO 3166: Codes for the representation of 
+                     names of countries and their subdivisions";
+                }
+              }
             }
           }
         }
@@ -2996,10 +3232,10 @@ module ietf-i2nsf-policy-rule-for-nsf {
           reference
             "RFC 8329: Framework for Interface to Network Security 
              Functions - I2NSF Flow Security Policy Structure
-             draft-ietf-i2nsf-capability-04: Information Model 
-             of NSFs Capabilities - Design Principles and ECA Policy 
-             Model Overview";
-             
+             draft-ietf-i2nsf-capability-data-model-15:
+             I2NSF Capability YANG Data Model - Design Principles and
+             ECA Policy Model Overview";             
+
           leaf action-clause-description {
             type string;
             description
@@ -3012,9 +3248,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
             reference
               "RFC 8329: Framework for Interface to Network Security 
                Functions - I2NSF Flow Security Policy Structure
-               draft-ietf-i2nsf-capability-04: Information Model 
-               of NSFs Capabilities - Design Principles and ECA 
-               Policy Model Overview";
+               draft-ietf-i2nsf-capability-data-model-15:
+               I2NSF Capability YANG Data Model - Design Principles and
+               ECA Policy Model Overview";
 
             leaf ingress-action {
               type identityref {
@@ -3044,11 +3280,52 @@ module ietf-i2nsf-policy-rule-for-nsf {
             
           }  
             
+          container flow-action {
+            description
+              "Action for flows";
+            reference
+              "RFC 8329: Framework for Interface to Network Security 
+               Functions - I2NSF Flow Security Policy Structure
+               draft-ietf-i2nsf-capability-data-model-15:
+               I2NSF Capability YANG Data Model - Design Principles and
+               ECA Policy Model Overview";
+
+            leaf ingress-action {
+              type identityref {
+                base ingress-action;
+              }
+              description
+                "Action: pass, drop, reject, alert, and mirror.";
+            }
+            
+            leaf egress-action {
+              type identityref {
+                base egress-action;
+              }
+              description
+                "Egress action: pass, drop, reject, alert, mirror, 
+                 invoke-signaling, tunnel-encapsulation, 
+                 forwarding, and redirection.";
+              }
+
+            leaf log-action {
+              type identityref {
+                base log-action;
+              }
+              description
+                "Log action: rule log and session log";
+            }
+            
+          }  
+          
           container advanced-action {
             description
-              "If the packet need be additionally inspected, 
-               the packet are passed to advanced network 
-               security functions according to the profile.";
+              "If the packet needs to be additionally inspected, 
+               the packet is passed to advanced network 
+               security functions according to the profile.
+               The profile means the types of NSFs where the packet 
+               will be forwarded in order to additionally 
+               inspect the packet.";
             reference
               "RFC 8329: Framework for Interface to Network Security 
                Functions - Differences from ACL Data Models";
@@ -3058,7 +3335,9 @@ module ietf-i2nsf-policy-rule-for-nsf {
                   base content-security-control;
                 }
                 description
-                  "The Profile is divided into content security 
+                  "Content-security-control is the NSFs that 
+                   inspect the payload of the packet.
+                   The Profile is divided into content security 
                    control and attack-mitigation-control.
                    Content security control: antivirus, ips, ids, 
                    url filtering, mail filtering, file blocking, 
@@ -3071,16 +3350,62 @@ module ietf-i2nsf-policy-rule-for-nsf {
                   base attack-mitigation-control;
                 }
                 description
-                  "The Profile is divided into content security 
+                  "Attack-mitigation-control is the NSFs that weaken 
+                   the attacks related to a denial of service 
+                   and reconnaissance.
+                   The Profile is divided into content security 
                    control and attack-mitigation-control.
                    Attack mitigation control: syn flood, udp flood, 
                    icmp flood, ip frag flood, ipv6 related, http flood, 
                    https flood, dns flood, dns amp flood, ssl ddos, 
                    ip sweep, port scanning, ping of death, teardrop, 
                    oversized icmp, tracert.";
-            } 
+            }
           }        
-        }     
+        }       
+      }
+      container rule-group {
+        description
+          "This is rule group";
+
+        list groups {
+          key "group-name";
+          description
+            "This is a group for rules";
+
+          leaf group-name {
+            type string;
+            description
+              "This is a group for rules";
+          }
+
+          container rule-range {
+            description
+              "This is a rule range.";
+
+            leaf start-rule {
+              type string;
+              description
+                "This is a start rule";
+            }
+            leaf end-rule {
+              type string;
+              description
+                "This is a end rule";
+            }
+          }
+          leaf enable {
+            type boolean;
+            description
+              "This is enable
+               False is not enable.";
+          }
+          leaf description {
+            type string;
+            description
+              "This is a description for rule-group";
+          }
+        }
       }
     }  
   }

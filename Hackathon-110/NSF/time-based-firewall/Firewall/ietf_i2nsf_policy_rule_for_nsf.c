@@ -90,7 +90,7 @@ static void do_rule(int rsock, FILE *fp)
 		printf("Advanced action: %d\n", CONFD_GET_IDENTITYREF(&advanced_action[i]).ns);
 		printf("Advanced action: %d\n", CONFD_GET_IDENTITYREF(&advanced_action[i]).id);
 		switch(CONFD_GET_IDENTITYREF(&advanced_action[i]).id) {
-			case iiprfn_url_filtering:
+			case nsfintf_url_filtering:
 				printf("Advanced action: %s\n", "url_filtering");
 				break;
 		}
@@ -204,7 +204,7 @@ static int read_conf(struct sockaddr_in *addr)
         return CONFD_ERR;
     if (cdb_start_session(rsock, CDB_RUNNING) != CONFD_OK)
         return CONFD_ERR;
-    cdb_set_namespace(rsock, iiprfn__ns);
+    cdb_set_namespace(rsock, nsfintf__ns);
 
         system("cp /home/ubuntu/suricata.yaml /etc/suricata/suricata.yaml");
 
@@ -317,7 +317,7 @@ int start_confd(void)
                       sizeof (struct sockaddr_in)) < 0)
         confd_fatal("Failed to cdb_connect() to confd \n");
 
-    if ((status = cdb_subscribe(subsock, 3, iiprfn__ns, &spoint, "/i2nsf-security-policy"))
+    if ((status = cdb_subscribe(subsock, 3, nsfintf__ns, &spoint, "/i2nsf-security-policy"))
         != CONFD_OK) {
         fprintf(stderr, "Terminate: subscribe %d\n", status);
         exit(0);
