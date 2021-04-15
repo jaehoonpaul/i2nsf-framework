@@ -51,7 +51,7 @@ module ietf-i2nsf-policy-rule-for-nsf {
     reference
       "RFC XXXX: I2NSF Network Security Function-Facing Interface 
        YANG Data Model";
-  } 
+  }
   
   /*
    * Identities
