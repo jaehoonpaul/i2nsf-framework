@@ -1,4 +1,4 @@
-2nsf-cfi-policy:policy>
+<ietf-i2nsf-cfi-policy:policy>
 <endpoint-group>
           <user-group>
             <name>employees</name>
