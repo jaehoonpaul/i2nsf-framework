@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# This script to be located on the top bin directory in the release
+
+bindir=`dirname $0`
+case $bindir in
+    /*) topdir=`dirname $bindir`;;
+    *)  topdir=`(cd $bindir/..; pwd)`;;
+esac
+libdir=$topdir/lib
+
+if [ -f ${bindir}/confd ]; then
+    product="confd"
+else
+    product="ncs"
+fi
+
+erlc_cmd="${libdir}/${product}/bin/erlc"
+
+${erlc_cmd} ${1+"$@"}

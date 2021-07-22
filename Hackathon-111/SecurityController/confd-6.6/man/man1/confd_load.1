@@ -1,0 +1,540 @@
+'\" t
+.\"     Title: confd_load
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_LOAD" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_load \- Command line utility to load and save ConfD configurations
+.SH "SYNOPSIS"
+.HP \w'\fBconfd\fR\fB_load\fR\ 'u
+\fBconfd\fR\fB_load\fR [\-W] [\-S] [(1)\ \fIcommon options\fR] [\fIfilename\fR]
+.HP \w'\fBconfd\fR\fB_load\fR\ 'u
+\fBconfd\fR\fB_load\fR \-l [\-m | \-r] [\-D] [(1)\ \fIcommon options\fR] [\fIfilename\fR...]
+.HP \w'\fBconfd\fR\fB_load\fR\ 'u
+\fBconfd\fR\fB_load\fR \-C\ [\-R]\ [\fIfilename\fR...] 
+.HP \w'\fBconfd\fR\fB_load\fR\ 'u
+\fBconfd\fR\fB_load\fR \-h | \-? 
+.br
+
+.HP \w'(1)\ 'u
+(1)\ [\-d] [\-t] [\-F\ {x\ |\ p\ |\ o\ |\ j\ |\ c\ |\ i}] [\-H | \-U] [\-a] [\-e] [[\-u\ \fIuser\fR]\ [\-g\ \fIgroup\fR...]\ [\-c\ \fIcontext\fR]  | [\-i]] [[\-p\ \fIkeypath\fR] | [\-P\ \fIXPath\fR]] [\-o] [\-s] [\-O]
+.SH "DESCRIPTION"
+.PP
+The confd_load command is a command line interface to the functions
+\fBmaapi_save_config()\fR,
+\fBmaapi_load_config()\fR,
+\fBmaapi_load_config_stream()\fR, and
+\fBcdb_load_file()\fR
+respectively\&.
+.PP
+This command provides a convenient way of loading and saving all or parts of the configuration in different formats\&. It can be used to initialize or restore configurations as well as in CLI commands\&.
+.PP
+If you run
+\fBconfd\fR\fB_load\fR
+without any options it will print the current configuration in XML format on stdout\&. The exit status will be zero on success and non\-zero otherwise\&.
+.PP
+Source code to this utility is included in the distribution as
+src/confd/tools/confd_load\&.c\&.
+.SH "COMMON OPTIONS"
+.PP
+\fB\-d\fR
+.RS 4
+Debug flag\&. Add more to increase debug level\&. All debug output will be to stderr\&.
+.RE
+.PP
+\fB\-t\fR
+.RS 4
+Measure how long the requested command takes and print the result on stderr\&.
+.RE
+.PP
+\fB\-F\fR x | p | o | j | c | i
+.RS 4
+Selects the format of the configuration, must be set both when loading and saving\&. One of XML (x), pretty XML (p), JSON (o), curly braces J\-style CLI (j), C\-style CLI (c), or I\-style CLI (i)\&. Default is XML\&.
+.RE
+.PP
+\fB\-H\fR
+.RS 4
+Hide all hidden nodes\&. By default, no nodes are hidden unless
+\fBconfd\fR\fB_load\fR
+has attached to an existing transaction, in which case the hidden nodes are the same as in that transaction\*(Aqs session\&.
+.RE
+.PP
+\fB\-U\fR
+.RS 4
+Unhide all hidden nodes\&. By default, no nodes are hidden unless
+\fBconfd\fR\fB_load\fR
+has attached to an existing transaction, in which case the hidden nodes are the same as in that transaction\*(Aqs session\&.
+.RE
+.PP
+\fB\-u\fR \fIuser\fR, \fB\-g\fR \fIgroup\fR \&.\&.\&., \fB\-c\fR \fIcontext\fR
+.RS 4
+Loading and saving the configuration is done in a user session, using these options it is possible to specify which user, groups (more than one
+\fB\-g\fR
+can be used to add groups), and context that should be used when starting the user session\&. If only a user is supplied the user is assumed to belong to a single group with the same name as the user\&. This is significant in that AAA rules will be applied for the specified user / groups / context combination\&. The default is to use the
+\fBsystem\fR
+context, which implies that AAA rules will
+\fInot\fR
+be applied at all\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+If the environment variables
+\fBCONFD\fR\fB_MAAPI_USID\fR
+and
+\fBCONFD\fR\fB_MAAPI_THANDLE\fR
+are set (see the ENVIRONMENT section), or if the
+\fB\-i\fR
+option is used, these options are silently ignored, since
+\fBconfd\fR\fB_load\fR
+will attach to an existing transaction\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fB\-i\fR
+.RS 4
+Instead of starting a new user session and transaction,
+\fBconfd\fR\fB_load\fR
+will try to attach to the init session\&. This is only valid when ConfD is in start phase 0, and will fail otherwise\&. It can be used to load a
+\(lqfactory default\(rqfile during startup, or loading a file during upgrade\&.
+.RE
+.PP
+\fB\-s\fR
+.RS 4
+Start transaction towards the startup datastore (instead of the default running)\&. I\&.e\&. when loading, the configuration loaded will be committed to startup, and as such won\*(Aqt take effect until ConfD is restarted\&.
+.RE
+.SH "SAVE CONFIGURATION"
+.PP
+By default the complete current configuration will be output on stdout\&. To save it in a file add the filename on the command line (the
+\fB\-f\fR
+option is deprecated)\&. The file is opened by the
+\fBconfd\fR\fB_load\fR
+utility, permissions and ownership will be determined by the user running
+\fBconfd\fR\fB_load\fR\&. Output format is specified using the
+\fB\-F\fR
+option\&.
+.PP
+When saving the configuration in XML format, the context of the user session (see the
+\fB\-c\fR
+option) will determine which namespaces with export restriction (from
+tailf:export) that are included\&. If the
+\fBsystem\fR
+context is used (this is the default), all namespaces are saved, regardless of export restriction\&. When saving the configuration in one of the CLI formats, the context used for this selection is always
+\fBcli\fR\&.
+.PP
+A number of options are only applicable, or have a special meaning when saving the configuration:
+.PP
+\fB\-f\fR \fIfilename\fR
+.RS 4
+Filename to save configuration to (option is deprecated, just give the filename on the command line)\&.
+.RE
+.PP
+\fB\-W\fR
+.RS 4
+Include leaves which are unset (set to their default value) in the output\&. By default these leaves are not included in the output\&.
+(Corresponds to the \fBMAAPI_CONFIG_WITH_DEFAULTS\fR flag)\&.
+.RE
+.PP
+\fB\-S\fR
+.RS 4
+Include the default value of a leaf as a comment (only works for CLI formats, not XML)\&. (Corresponds to the
+\fBMAAPI_CONFIG_SHOW_DEFAULTS\fR
+flag)\&.
+.RE
+.PP
+\fB\-p\fR \fIkeypath\fR
+.RS 4
+Only include the configuration below
+\fIkeypath\fR
+in the output\&.
+.RE
+.PP
+\fB\-P\fR \fIXPath\fR
+.RS 4
+Filter the configuration using the
+\fIXPath\fR
+expression\&. (Only works for the XML format\&.)
+.RE
+.PP
+\fB\-o\fR
+.RS 4
+Include operational data in the output\&. (Corresponds to the
+\fBMAAPI_CONFIG_WITH_OPER\fR
+flag)\&.
+.RE
+.PP
+\fB\-O\fR
+.RS 4
+Include
+\fIonly\fR
+operational data, and ancestors to operational data nodes, in the output\&. (Corresponds to the
+\fBMAAPI_CONFIG_OPER_ONLY\fR
+flag)\&.
+.RE
+.SH "LOAD CONFIGURATION"
+.PP
+When the
+\fB\-l\fR
+option is present
+\fBconfd\fR\fB_load\fR
+will load all the files listed on the command line
+using the \fBmaapi_load_config()\fR function\&. The file(s) are expected to be in XML format unless otherwise specified using the
+\fB\-F\fR
+flag\&. Note that it is the ConfD daemon that opens the file(s), it must have permission to do so\&. However relative pathnames are assumed to be relative to the working directory of the
+\fBconfd\fR\fB_load\fR
+command
+(it will pass an absolute pathname to \fBmaapi_load_config()\fR)\&.
+.PP
+If neither of the
+\fB\-m\fR
+and
+\fB\-r\fR
+options are given when multiple files are listed on the command line,
+\fBconfd\fR\fB_load\fR
+will silently treat the second and subsequent files as if
+\fB\-m\fR
+had been given, i\&.e\&. it will merge in the contents of these files instead of deleting and replacing the configuration for each file\&. Note, we almost always want the merge behavior\&. If no file is given, or "\-" is given as a filename,
+\fBconfd\fR\fB_load\fR
+will stream standard input to ConfD
+by using \fBmaapi_load_config_stream()\fR\&.
+.PP
+\fB\-f\fR \fIfilename\fR
+.RS 4
+The file to load (deprecated, just list the file after the options instead)\&.
+.RE
+.PP
+\fB\-m\fR
+.RS 4
+Merge in the contents of
+\fIfilename\fR, the (somewhat unfortunate) default is to delete and replace\&.
+(Corresponds to the \fBMAAPI_CONFIG_MERGE\fR flag)\&.
+.RE
+.PP
+\fB\-x\fR
+.RS 4
+Lax loading\&. Only applies to XML loading\&. Ignore unknown namespaces, attributes and elements\&.
+.RE
+.PP
+\fB\-r\fR
+.RS 4
+Replace the part of the configuration that is present in
+\fIfilename\fR, the default is to delete and replace\&. (Corresponds to the
+\fBMAAPI_CONFIG_REPLACE\fR
+flag)\&.
+.RE
+.PP
+\fB\-a\fR
+.RS 4
+When loading configuration in \*(Aqi\*(Aq or \*(Aqc\*(Aq format, do a commit operation after each line\&. Default and recommended is to only commit when all the configuration has been loaded\&. (Corresponds to the
+\fBMAAPI_CONFIG_AUTOCOMMIT\fR
+flag)\&.
+.RE
+.PP
+\fB\-e\fR
+.RS 4
+When loading configuration do not abort when encountering errors (corresponds to the
+\fBMAAPI_CONFIG_CONTINUE_ON_ERROR\fR
+flag)\&.
+.RE
+.PP
+\fB\-D\fR
+.RS 4
+Call
+\fBmaapi_delete_all\fR
+(\fIMAAPI_DEL_ALL\fR) before loading the file\&.
+.RE
+.PP
+\fB\-p\fR \fIkeypath\fR
+.RS 4
+Call
+\fBmaapi_delete(\fR\fB\fIkeypath\fR\fR\fB)\fR
+before loading the file\&.
+.RE
+.PP
+\fB\-o\fR
+.RS 4
+Accept but ignore contents in the file which is operational data (without this flag it will be an error)\&.
+(Corresponds to the \fBMAAPI_CONFIG_WITH_OPER\fR flag)
+.RE
+.PP
+\fB\-O\fR
+.RS 4
+Start a transaction to load
+\fIonly\fR
+operational data, and ancestors to operational data nodes\&. Only supported for XML input\&.
+.RE
+.SH "LOAD CDB OPERATIONAL"
+.PP
+The
+\fB\-C\fR
+option is a direct interface to the
+\fBcdb_load_file()\fR
+function\&.
+.PP
+The
+\fB\-C\fR
+option is used to load operational data\&. When you use
+\fB\-C\fR
+all other options except
+\fB\-R\fR
+(and
+\fB\-d\fR) are ignored, since they don\*(Aqt apply\&. Files on the command line must be in XML format
+and will be fed to \fBcdb_load_file()\fR in the order they are listed\&. If no file is given, or "\-" is given as a filename,
+\fBconfd\fR\fB_load\fR
+will read standard input
+and use \fBcdb_load_str()\fR to load the collected data\&. If the
+\fB\-R\fR
+option is included, CDB operational subscription notifications will be generated\&.
+.PP
+Any data which isn\*(Aqt part of CDB operational per the data model will be ignored\&. This means that you can save a single file with both configuration and operational data and feed it back to
+\fBconfd\fR\fB_load\fR\&.
+.PP
+If you use a relative path for
+\fIfilename\fR
+it is assumed to be relative to the working directory of the
+\fBconfd\fR\fB_load\fR
+command
+(it will pass an absolute pathname to \fBcdb_load_file()\fR)\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+This option is DEPRECATED\&. Use \-O instead which use
+\fBmaapi_load_config()\fR
+with
+\fBMAAPI_CONFIG_OPER_ONLY\fR
+flag)\&.
+.sp .5v
+.RE
+.SH "EXAMPLES"
+.PP
+\fBExample\ \&1.\ \&Reloading all xml files in the cdb directory\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-D \-m \-l cdb/*\&.xml
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&2.\ \&Merging in the contents of conf\&.cli\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-l \-m \-F j conf\&.cli
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&3.\ \&Print interface config and statistics data in cli format\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-F i \-o \-p /sys:sys/ifc
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&4.\ \&Using xslt to format output\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-F x \-p /sys:sys/ifc | xsltproc fmtifc\&.xsl \-
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&5.\ \&Using xmllint to pretty print the xml output\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-F x | xmllint \-\-format \-
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&6.\ \&Saving config and operational data to /tmp/conf\&.xml\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-F x \-o > /tmp/conf\&.xml
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&7.\ \&Restoring both config and operational data\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-l \-F x \-o /tmp/conf\&.xml
+confd_load \-C /tmp/conf\&.xml
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&8.\ \&Measure how long it takes to fetch config\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-t > /dev/null
+elapsed time: 0\&.011 s
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBExample\ \&9.\ \&Output all instances in list /foo/table which has ix larger than 10\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_load \-F x \-P "/foo/table[ix > 10]"
+.fi
+.if n \{\
+.RE
+.\}
+.SH "ENVIRONMENT"
+.PP
+\fBCONFD\fR\fB_IPC_ADDR\fR, \fBCONFD_IPC_EXTADDR\fR
+.RS 4
+The address used to connect to the ConfD daemon, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD\fR\fB_IPC_PORT\fR
+.RS 4
+The port number to connect to the ConfD daemon on, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD_IPC_EXTSOPATH\fR
+.RS 4
+The absolute path to the shared object to use for a connection using external IPC when
+\fBCONFD_IPC_EXTADDR\fR
+is given\&.
+.RE
+.PP
+\fBCONFD\fR\fB_MAAPI_USID\fR, \fBCONFD\fR\fB_MAAPI_THANDLE\fR
+.RS 4
+If set
+\fBconfd_load\fR
+will use
+\fBmaapi_attach2()\fR
+to attach to an existing transaction in an existing user session instead of starting a new session\&.
+.sp
+These environment variables are set by the ConfD CLI when it invokes external commands, which means you can run
+\fBconfd\fR\fB_load\fR
+directly from the CLI\&. For example, the following addition to the
+<operationalMode>
+in a clispec file (see
+\m[blue]\fBclispec(5)\fR\m[])
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<cmd name="servers" mount="show">
+  <info/>
+  <help/>
+  <callback>
+    <exec>
+      <osCommand>confd_load</osCommand>
+          <args>\-F j \-p /system/servers</args>
+    </exec>
+  </callback>
+</cmd>
+.fi
+.if n \{\
+.RE
+.\}
+will add a
+\fBshow servers\fR
+command which, when run will invoke
+\fBconfd\fR\fB_load \-F j \-p /system/servers\fR\&. This will output the configuration below
+/system/servers
+in curly braces format\&.
+.sp
+Note that when these environment variables are set, it means that the configuration will be loaded into the current CLI transaction (which must be in configure mode, and have AAA permissions to actually modify the config)\&. To load (or save) a file in a separate transaction, unset these two environment variables before invoking the
+\fBconfd\fR\fB_load\fR
+command\&.
+.RE
+.SH "SEE ALSO"
+.PP
+\fBconfd_lib_maapi\fR(3)
+\- Confd MAAPI library
+.PP
+\fBconfd_lib_cdb\fR(3)
+\- Confd CDB library
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

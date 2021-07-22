@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <data>
+    <i2nsf-security-policy xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-policy-rule-for-nsf">
+      <system-policy>
+        <system-policy-name>security_policy_for_blocking_sns</system-policy-name>
+        <rules>
+          <rule-name>block_access_to_sns_during_office_hours</rule-name>
+          <time-intervals>
+            <absolute-time-interval>
+              <start-time>09:00:00Z</start-time>
+              <end-time>18:00:00Z</end-time>
+            </absolute-time-interval>
+          </time-intervals>
+          <condition-clause-container>
+            <packet-security-ipv4-condition>
+              <pkt-sec-ipv4-src>
+                <range-ipv4-address>
+                  <start-ipv4-address>10.0.0.3</start-ipv4-address>
+                  <end-ipv4-address>10.0.0.40</end-ipv4-address>
+                </range-ipv4-address>
+              </pkt-sec-ipv4-src>
+            </packet-security-ipv4-condition>
+          </condition-clause-container>
+          <action-clause-container>
+            <packet-action>
+              <ingress-action>drop</ingress-action>
+              <egress-action>drop</egress-action>
+            </packet-action>
+          </action-clause-container>
+        </rules>
+      </system-policy>
+    </i2nsf-security-policy>
+  </data>
+</rpc-reply>

@@ -1,0 +1,6169 @@
+'\" t
+.\"     Title: confd_types
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_TYPES" "3" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_types \- ConfD value representation in C
+.SH "SYNOPSIS"
+.sp
+.ft B
+.nf
+#include <confd_lib\&.h>
+.fi
+.ft
+.SH "DESCRIPTION"
+.PP
+The
+libconfd
+library manages data values such as elements received over the NETCONF protocol\&. This man page describes how these values as well as the XML paths (\fBconfd_hkeypath_t\fR) identifying the values are represented in the C language\&.
+.SH "TYPEDEFS"
+.PP
+The following
+enum
+defines the different types\&. These are used to represent data model types from several different sources \- see the section
+\m[blue]\fBDATA MODEL TYPES\fR\m[]
+at the end of this manual page for a full specification of how the data model types map to these types\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum confd_vtype {
+    C_NOEXISTS    = 1,  /* end marker                              */
+    C_XMLTAG      = 2,  /* struct xml_tag                          */
+    C_SYMBOL      = 3,  /* not yet used                            */
+    C_STR         = 4,  /* NUL\-terminated strings                  */
+    C_BUF         = 5,  /* confd_buf_t (string \&.\&.\&.)                */
+    C_INT8        = 6,  /* int8_t    (int8)                        */
+    C_INT16       = 7,  /* int16_t   (int16)                       */
+    C_INT32       = 8,  /* int32_t   (int32)                       */
+    C_INT64       = 9,  /* int64_t   (int64)                       */
+    C_UINT8       = 10, /* u_int8_t  (uint8)                       */
+    C_UINT16      = 11, /* u_int16_t (uint16)                      */
+    C_UINT32      = 12, /* u_int32_t (uint32)                      */
+    C_UINT64      = 13, /* u_int64_t (uint64)                      */
+    C_DOUBLE      = 14, /* double (xs:float,xs:double)             */
+    C_IPV4        = 15, /* struct in_addr in NBO                   */
+                        /*  (inet:ipv4\-address)                    */
+    C_IPV6        = 16, /* struct in6_addr in NBO                  */
+                        /*  (inet:ipv6\-address)                    */
+    C_BOOL        = 17, /* int       (boolean)                     */
+    C_QNAME       = 18, /* struct confd_qname (xs:QName)           */
+    C_DATETIME    = 19, /* struct confd_datetime                   */
+                        /*  (yang:date\-and\-time)                   */
+    C_DATE        = 20, /* struct confd_date (xs:date)             */
+    C_TIME        = 23, /* struct confd_time (xs:time)             */
+    C_DURATION    = 27, /* struct confd_duration (xs:duration)     */
+    C_ENUM_VALUE  = 28, /* int32_t (enumeration)                   */
+    C_BIT32       = 29, /* u_int32_t (bits size 32)                */
+    C_BIT64       = 30, /* u_int64_t (bits size 64)                */
+    C_LIST        = 31, /* confd_list (leaf\-list)                  */
+    C_XMLBEGIN    = 32, /* struct xml_tag, start of container or   */
+                        /*  list entry                             */
+    C_XMLEND      = 33, /* struct xml_tag, end of container or     */
+                        /*  list entry                             */
+    C_OBJECTREF   = 34, /* struct confd_hkeypath*                  */
+                        /*  (instance\-identifier)                  */
+    C_UNION       = 35, /* (union) \- not used in API functions     */
+    C_PTR         = 36, /* see cdb_get_values in confd_lib_cdb(3)  */
+    C_CDBBEGIN    = 37, /* as C_XMLBEGIN, with CDB instance index  */
+    C_OID         = 38, /* struct confd_snmp_oid*                  */
+                        /*  (yang:object\-identifier)               */
+    C_BINARY      = 39, /* confd_buf_t (binary \&.\&.\&.)                */
+    C_IPV4PREFIX  = 40, /* struct confd_ipv4_prefix                */
+                        /*  (inet:ipv4\-prefix)                     */
+    C_IPV6PREFIX  = 41, /* struct confd_ipv6_prefix                */
+                        /*  (inet:ipv6\-prefix)                     */
+    C_DEFAULT     = 42, /* default value indicator                 */
+    C_DECIMAL64   = 43, /* struct confd_decimal64 (decimal64)      */
+    C_IDENTITYREF = 44, /* struct confd_identityref (identityref)  */
+    C_XMLBEGINDEL = 45, /* as C_XMLBEGIN, but for a deleted list   */
+                        /*  entry                                  */
+    C_DQUAD       = 46, /* struct confd_dotted_quad                */
+                        /*  (yang:dotted\-quad)                     */
+    C_HEXSTR      = 47, /* confd_buf_t (yang:hex\-string)           */
+    C_IPV4_AND_PLEN = 48, /* struct confd_ipv4_prefix              */
+                        /*  (tailf:ipv4\-address\-and\-prefix\-length) */
+    C_IPV6_AND_PLEN = 49, /* struct confd_ipv6_prefix              */
+                        /*  (tailf:ipv6\-address\-and\-prefix\-length) */
+    C_BITBIG      = 50, /* confd_buf_t (bits size > 64)            */
+    C_MAXTYPE           /* maximum marker; add new values above    */
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+A concrete value is represented as a
+\fBconfd_value_t\fR
+C struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_value {
+    enum confd_vtype type;  /* as defined above */
+    union {
+        struct xml_tag xmltag;
+        u_int32_t symbol;
+        confd_buf_t buf;
+        confd_buf_const_t c_buf;
+        char *s;
+        const char *c_s;
+        int8_t i8;
+        int16_t i16;
+        int32_t i32;
+        int64_t i64;
+        u_int8_t u8;
+        u_int16_t u16;
+        u_int32_t u32;
+        u_int64_t u64;
+        double d;
+        struct in_addr ip;
+        struct in6_addr ip6;
+        int boolean;
+        struct confd_qname qname;
+        struct confd_datetime datetime;
+        struct confd_date date;
+        struct confd_time time;
+        struct confd_duration duration;
+        int32_t enumvalue;
+        u_int32_t b32;
+        u_int64_t b64;
+        struct confd_list list;
+        struct confd_hkeypath *hkp;
+        struct confd_vptr ptr;
+        struct confd_snmp_oid *oidp;
+        struct confd_ipv4_prefix ipv4prefix;
+        struct confd_ipv6_prefix ipv6prefix;
+        struct confd_decimal64 d64;
+        struct confd_identityref idref;
+        struct confd_dotted_quad dquad;
+        u_int32_t enumhash;     /* backwards compat */
+    } val;
+} confd_value_t;
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBC_NOEXISTS\fR
+.RS 4
+This is used internally by ConfD, as an end marker in
+\fBconfd_hkeypath_t\fR
+arrays, and as a "value does not exist" indicator in arrays of values\&.
+.RE
+.PP
+\fBC_DEFAULT\fR
+.RS 4
+This is used to indicate that an element with a default value defined in the data model does not have a value set\&. When reading data from ConfD, we will only get this indication if we specifically request it, otherwise the default value is returned\&.
+.RE
+.PP
+\fBC_XMLTAG\fR
+.RS 4
+An C_XMLTAG value is represented as a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct xml_tag {
+    u_int32_t tag;
+    u_int32_t ns;
+};
+.fi
+.if n \{\
+.RE
+.\}
+When a YANG module is compiled by the
+\m[blue]\fBconfdc(1)\fR\m[]
+compiler, the
+\fB\-\-emit\-h\fR
+flag is used to generate a \&.h file containing definitions for all the nodes in the module\&. For example if we compile the following YANG module:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# cat blaster\&.yang
+module blaster {
+  namespace "http://tail\-f\&.com/ns/blaster";
+  prefix blaster;
+
+  import tailf\-common {
+    prefix tailf;
+  }
+
+  typedef Fruit {
+    type enumeration {
+      enum apple;
+      enum orange;
+      enum pear;
+    }
+  }
+  container tiny {
+    tailf:callpoint xcp;
+    leaf foo {
+      type int8;
+    }
+    leaf bad {
+      type int16;
+    }
+  }
+}
+
+# confdc \-c blaster\&.yang
+# confdc \-\-emit\-h blaster\&.h blaster\&.fxs
+.fi
+.if n \{\
+.RE
+.\}
+We get the following contents in blaster\&.h
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+# cat blaster\&.h
+/*
+ * BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE
+ * This file has been auto\-generated by the confdc compiler\&.
+ * Source: blaster\&.fxs
+ * BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE BEWARE
+ */
+
+#ifndef _BLASTER_H_
+#define _BLASTER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+#ifndef blaster__ns
+#define blaster__ns 670579579
+#define blaster__ns_id "http://tail\-f\&.com/ns/blaster"
+#define blaster__ns_uri "http://tail\-f\&.com/ns/blaster"
+#endif
+
+#define blaster_orange 1
+#define blaster_apple 0
+#define blaster_pear 2
+#define blaster_foo 161968632
+#define blaster_tiny 1046642021
+#define blaster_bad 1265139696
+#define blaster__callpointid_xcp "xcp"
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+.fi
+.if n \{\
+.RE
+.\}
+The integers in the \&.h file are used in the
+\fBstruct xml_tag\fR, thus the container node
+tiny
+is represented as a
+\fBxml_tag\fR
+C struct
+{tag=1046642021, ns=670579579}
+or, using the #defines
+{tag=blaster_tiny, ns=blaster__ns}\&.
+.sp
+Each callpoint, actionpoint, and validate statement also yields a preprocessor symbol\&. If the symbol is used rather than the literal string in calls to ConfD, the C compiler will catch the potential problem when the id in the data model has changed but the C code hasn\*(Aqt been updated\&.
+.sp
+Sometimes we wish to retrieve a string representation of defined hash values\&. This can be done with the function
+\fBconfd_hash2str()\fR, see the
+\m[blue]\fBUSING SCHEMA INFORMATION\fR\m[]
+section below\&.
+.RE
+.PP
+\fBC_BUF\fR
+.RS 4
+This type is used to represent the YANG built\-in type
+\fBstring\fR
+and the
+\fBxs:token\fR
+type\&. The struct which is used is:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_buf {
+    unsigned int size;
+    unsigned char *ptr;
+} confd_buf_t;
+.fi
+.if n \{\
+.RE
+.\}
+Strings passed to the application from ConfD are always NUL\-terminated\&. When values of this type are received by the callback functions in
+\m[blue]\fBconfd_lib_dp(3)\fR\m[], the
+\fBptr\fR
+field is a pointer to libconfd private memory, and the data will not survive unless copied by the application\&.
+.sp
+To create and extract values of type C_BUF we do:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval;
+char *x; int len;
+
+CONFD_SET_BUF(&myval, "foo", 3)
+x = CONFD_GET_BUFPTR(&myval);
+len = CONFD_GET_BUFSIZE(&myval);
+
+.fi
+.if n \{\
+.RE
+.\}
+It is important to realize that C_BUF data received by the application through either
+\fBmaapi_get_elem()\fR
+or
+\fBcdb_get()\fR
+which are of type C_BUF must be freed by the application\&.
+.RE
+.PP
+\fBC_STR\fR
+.RS 4
+This tag is never received by the application\&. Values and keys received in the various data callbacks (See
+\fBconfd_register_data_cb()\fR
+in
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+never have this type\&. It is only used when the application replies with values to ConfD\&. (See
+\fBconfd_data_reply_value()\fR
+in
+\m[blue]\fBconfd_lib_dp(3)\fR\m[])\&.
+.sp
+It is used to represent regular NUL\-terminated char* values\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval;
+myval\&.type = C_STR;
+myval\&.val\&.s = "Zaphod";
+/* or alternatively and recommended */
+CONFD_SET_STR(&myval, "Beeblebrox");
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_INT8\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBint8\fR, which is a signed 8 bit integer\&. The corresponding C type is
+\fBint8_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int8_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT8(&myval, \-32);
+ival = CONFD_GET_INT8(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_INT16\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBint16\fR, which is a signed 16 bit integer\&. The corresponding C type is
+\fBint16_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int16_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT16(&myval, \-3277);
+ival = CONFD_GET_INT16(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_INT32\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBint32\fR, which is a signed 32 bit integer\&. The corresponding C type is
+\fBint32_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int32_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT32(&myval, \-77732);
+ival = CONFD_GET_INT32(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_INT64\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBint64\fR, which is a signed 64 bit integer\&. The corresponding C type is
+\fBint64_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int64_t ival;
+confd_value_t myval;
+
+CONFD_SET_INT64(&myval, \-32);
+ival = CONFD_GET_INT64(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_UINT8\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBuint8\fR, which is an unsigned 8 bit integer\&. The corresponding C type is
+\fBu_int8_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+u_int8_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT8(&myval, 32);
+ival = CONFD_GET_UINT8(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_UINT16\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBuint16\fR, which is an unsigned 16 bit integer\&. The corresponding C type is
+\fBu_int16_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+u_int16_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT16(&myval, 3277);
+ival = CONFD_GET_UINT16(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_UINT32\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBuint32\fR, which is an unsigned 32 bit integer\&. The corresponding C type is
+\fBu_int32_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+u_int32_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT32(&myval, 77732);
+ival = CONFD_GET_UINT32(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_UINT64\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBuint64\fR, which is an unsigned 64 bit integer\&. The corresponding C type is
+\fBu_int64_t\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+u_int64_t ival;
+confd_value_t myval;
+
+CONFD_SET_UINT64(&myval, 32);
+ival = CONFD_GET_UINT64(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DOUBLE\fR
+.RS 4
+Used to represent the XML schema types
+\fBxs:decimal\fR,
+\fBxs:float\fR
+and
+\fBxs:double\fR\&. They are all coerced into the C type
+\fBdouble\fR\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+double d;
+confd_value_t myval;
+
+CONFD_SET_DOUBLE(&myval, 3\&.14);
+d = CONFD_GET_DOUBLE(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_BOOL\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBboolean\fR\&. The C representation is an integer with
+0
+representing false and non\-zero representing true\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int bool
+confd_value_t myval;
+
+CONFD_SET_BOOL(&myval, 1);
+b = CONFD_GET_BOOL(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_QNAME\fR
+.RS 4
+Used to represent XML Schema type
+\fBxs:QName\fR
+which consists of a pair of strings,
+\fBprefix\fR
+and a
+\fBname\fR\&. Data is allocated by the library as for C_BUF\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+unsigned char* prefix, *name;
+int prefix_len, name_len;
+confd_value_t myval;
+
+CONFD_SET_QNAME(&myval, "myprefix", 8, "myname", 6);
+prefix = CONFD_GET_QNAME_PREFIX_PTR(&myval);
+prefix_len = CONFD_GET_QNAME_PREFIX_SIZE(&myval);
+name = CONFD_GET_QNAME_NAME_PTR(&myval);
+name_len = CONFD_GET_QNAME_NAME_SIZE(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DATETIME\fR
+.RS 4
+Used to represent the YANG type
+\fByang:date\-and\-time\fR\&. The C representation is a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_datetime {
+    int16_t year;
+    u_int8_t month;
+    u_int8_t day;
+    u_int8_t hour;
+    u_int8_t min;
+    u_int8_t sec;
+    u_int32_t micro;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};
+.fi
+.if n \{\
+.RE
+.\}
+ConfD does not try to convert the data values into timezone independent C structs\&. The timezone and timezone_minutes fields are integers where:
+.PP
+timezone == 0 && timezone_minutes == 0
+.RS 4
+represents UTC\&. This corresponds to a timezone specification in the string form of "Z" or "+00:00"\&.
+.RE
+.PP
+\-14 <= timezone && timezone <= 14
+.RS 4
+represents an offset in hours from UTC\&. In this case
+\fItimezone_minutes\fR
+represents a fraction of an hour in minutes if the offset from UTC isn\*(Aqt an integral number of hours, otherwise it is 0\&. If
+timezone != 0, its sign gives the direction of the offset, and
+\fItimezone_minutes\fR
+is always
+>= 0
+\- otherwise the sign of
+\fItimezone_minutes\fR
+gives the direction of the offset\&. E\&.g\&.
+timezone == 5 && timezone_minutes == 30
+corresponds to a timezone specification in the string form of "+05:30"\&.
+.RE
+.PP
+timezone == CONFD_TIMEZONE_UNDEF
+.RS 4
+means that the string form indicates lack of timezone information with "\-00:00"\&.
+.RE
+.sp
+It is up to the application to transform these structs into more UNIX friendly structs such as
+\fBstruct tm\fR
+from
+<time\&.h>\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#include <time\&.h>
+confd_value_t myval;
+struct confd_datetime dt;
+struct tm *tm = localtime(time(NULL));
+
+dt\&.year = tm\->tm_year + 1900; dt\&.month = tm\->tm_mon + 1;
+dt\&.day = tm\->tm_mday; dt\->hour = tm\->tm_hour;
+dt\&.min = tm\->tm_min; dt\->sec = tm\->tm_sec;
+dt\&.micro = 0; dt\&.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_DATETIME(&myval, dt);
+dt = CONFD_GET_DATETIME(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DATE\fR
+.RS 4
+Used to represent the XML Schema type
+\fBxs:date\fR\&. The C representation is a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_date {
+    int16_t year;
+    u_int8_t month;
+    u_int8_t day;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval;
+struct confd_date dt;
+
+dt\&.year = 1960, dt\&.month = 3,
+dt\&.day = 31; dt\&.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_DATE(&myval, dt);
+dt = CONFD_GET_DATE(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_TIME\fR
+.RS 4
+Used to represent the XML Schema type
+\fBxs:time\fR\&. The C representation is a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_time {
+    u_int8_t hour;
+    u_int8_t min;
+    u_int8_t sec;
+    u_int32_t micro;
+    int8_t timezone;
+    int8_t timezone_minutes;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval;
+struct confd_time dt;
+
+dt\&.hour = 19, dt\&.min = 3,
+dt\&.sec = 31; dt\&.timezone = CONFD_TIMEZONE_UNDEF;
+CONFD_SET_TIME(&myval, dt);
+dt = CONFD_GET_TIME(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DURATION\fR
+.RS 4
+Used to represent the XML Schema type
+\fBxs:duration\fR\&. The C representation is a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_duration {
+    u_int32_t years;
+    u_int32_t months;
+    u_int32_t days;
+    u_int32_t hours;
+    u_int32_t mins;
+    u_int32_t secs;
+    u_int32_t micros;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example of something that is supposed to last 3 seconds:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval;
+struct confd_duration dt;
+
+memset(&dt, 0, sizeof(struct confd_duration));
+dt\&.secs = 3;
+CONFD_SET_DURATION(&myval, dt);
+dt = CONFD_GET_DURATION(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV4\fR
+.RS 4
+Used to represent the YANG type
+\fBinet:ipv4\-address\fR\&. The C representation is a
+\fBstruct in_addr\fR
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct in_addr ip;
+confd_value_t myval;
+
+ip\&.s_addr = inet_addr("192\&.168\&.1\&.2");
+CONFD_SET_IPV4(&myval, ip);
+ip = CONFD_GET_IPV4(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV6\fR
+.RS 4
+Used to represent the YANG type
+\fBinet:ipv6\-address\fR\&. The C representation is as
+\fBstruct in6_addr\fR
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct in6_addr ip6;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "FFFF::192\&.168\&.42\&.2", &ip6);
+CONFD_SET_IPV6(&myval, ip6);
+ip6 = CONFD_GET_IPV6(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_ENUM_VALUE\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBenumeration\fR
+\- like the Fruit enumeration from the beginning of this man page\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+enum fruit {
+   ORANGE = blaster_orange,
+   APPLE = blaster_apple,
+   PEAR = blaster_pear
+};
+
+enum fruit f;
+confd_value_t myval;
+CONFD_SET_ENUM_VALUE(&myval, APPLE);
+f = CONFD_GET_ENUM_VALUE(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+Thus leafs that have type
+\fBenumeration\fR
+in the YANG module do not have values that are strings in the C code, but integer values according to the YANG standard\&. The file generated by
+\fBconfdc \-\-emit\-h\fR
+includes
+#define
+symbols for these integer values\&.
+.RE
+.PP
+\fBC_BIT32\fR, \fBC_BIT64\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBbits\fR
+when the highest bit position assigned is below 64\&. In C the value representation for a bitmask is either a 32 bit or a 64 bit unsigned integer, depending on the highest bit position assigned\&. The file generated by
+\fBconfdc \-\-emit\-h\fR
+includes
+#define
+symbols giving bitmask values for the defined bit names\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+u_int32_t mask = 77;
+confd_value_t myval;
+CONFD_SET_BIT32(&myval, mask);
+mask = CONFD_GET_BIT32(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_BITBIG\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBbits\fR
+when the highest bit position assigned is above 63\&. In C the value representation for a bitmask in this case is a "little\-endian" byte array (confd_buf_t), i\&.e\&. byte 0 holds bits 0\-7, byte 1 holds bit 8\-15, and so on\&. The file generated by
+\fBconfdc \-\-emit\-h\fR
+includes
+#define
+symbols giving position values for the defined bit names, as well as the size needed for a byte array that can hold the values for all the defined bits\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+unsigned char mask[myns__size_mytype];
+unsigned char *mask2;
+confd_value_t myval;
+memset(mask, 0, sizeof(mask));
+CONFD_BITBIG_SET_BIT(mask, myns__pos_mytype_somebit);
+CONFD_SET_BITBIG(&myval, mask, sizeof(mask));
+mask2 = CONFD_GET_BITBIG_PTR(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_LIST\fR
+.RS 4
+Used to represent a YANG
+leaf\-list\&. In C the value representation for is:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_list {
+    unsigned int size;
+    struct confd_value *ptr;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Similar to the C_BUF type, the confd library will allocate data when an element of type
+\fBC_LIST\fR
+is retrieved via
+\fBmaapi_get_elem()\fR
+or
+\fBcdb_get()\fR\&. Using
+\fBconfd_free_value()\fR
+(see
+\m[blue]\fBconfd_lib_lib(3)\fR\m[]) to free allocated data is especially convenient for C_LIST, as the individual list elements may also have allocated data (e\&.g\&. a YANG
+leaf\-list
+of type
+\fBstring\fR)\&.
+.sp
+To set a value of type C_LIST we have to populate the list array separately, for example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t arr[5];
+confd_value_t v;
+confd_value_t *vp;
+int i, size;
+
+for (i=0; i<5; i++)
+     CONFD_SET_INT32(&arr[i], i);
+CONFD_SET_LIST(&v, &arr[0], 5);
+
+vp = CONFD_GET_LIST(&v);
+size = CONFD_GET_LISTSIZE(&v);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_XMLBEGIN\fR, \fBC_XMLEND\fR
+.RS 4
+These are only used in the "Tagged Value Array" format for representing XML structures, see below\&. The representation is the same as for C_XMLTAG\&.
+.RE
+.PP
+\fBC_OBJECTREF\fR
+.RS 4
+This is used to represent the YANG built\-in type
+\fBinstance\-identifier\fR\&. Values are represented as
+\fBconfd_hkeypath_t\fR
+pointers\&. Data is allocated by the library as for C_BUF\&. When we read an
+\fBinstance\-identifier\fR
+via e\&.g\&.
+\fBcdb_get()\fR
+we can retrieve the pointer to the keypath as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t v;
+confd_hkeypath_t *hkp;
+
+cdb_get(sock, &v, mypath);
+hkp = CONFD_GET_OBJECTREF(&v);
+
+.fi
+.if n \{\
+.RE
+.\}
+To retrieve the value which is identified by the
+\fBinstance\-identifier\fR
+we can e\&.g\&. use the "%h" modifier in the format string used with the CDB and MAAPI API functions\&.
+.RE
+.PP
+\fBC_OID\fR
+.RS 4
+This is used to represent the YANG
+\fByang:object\-identifier\fR
+and
+\fByang:object\-identifier\-128\fR
+types, i\&.e\&. SNMP Object Identifiers\&. The value is a pointer to a struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_snmp_oid {
+    u_int32_t oid[128];
+    int len;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Data is allocated by the library as for C_BUF\&. When using values of this type, we set or get the
+\fIlen\fR
+element, and the individual OID elements in the
+\fIoid\fR
+array\&. This example will store the string "0\&.1\&.2" in
+\fIbuf\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_snmp_oid myoid;
+confd_value_t myval;
+char buf[BUFSIZ];
+int i;
+
+for (i = 0; i < 3; i++)
+    myoid\&.oid[i] = i;
+myoid\&.len = 3;
+CONFD_SET_OID(&myval, &myoid);
+
+confd_pp_value(buf, sizeof(buf), &myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_BINARY\fR
+.RS 4
+This type is used to represent arbitrary binary data\&. The YANG built\-in type
+\fBbinary\fR, the ConfD built\-in types
+\fBtailf:hex\-list\fR
+and
+\fBtailf:octet\-list\fR, and the XML Schema primitive type
+\fBxs:hexBinary\fR
+all use this type\&. The value representation is the same as for C_BUF\&. Binary (C_BINARY) data received by the application from ConfD is always NUL terminated, but since the data may also contain NUL bytes, it is generally necessary to use the size given by the representation\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_buf {
+    unsigned int size;
+    unsigned char *ptr;
+} confd_buf_t;
+.fi
+.if n \{\
+.RE
+.\}
+Data is also allocated by the library as for C_BUF\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval, myval2;
+unsigned char *bin;
+int len;
+
+bin = CONFD_GET_BINARY_PTR(&myval);
+len = CONFD_GET_BINARY_SIZE(&myval);
+CONFD_SET_BINARY(&myval2, bin, len);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV4PREFIX\fR
+.RS 4
+Used to represent the YANG data type
+\fBinet:ipv4\-prefix\fR\&. The C representation is a struct as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv4_prefix {
+    struct in_addr ip;
+    u_int8_t len;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv4_prefix prefix;
+confd_value_t myval;
+
+prefix\&.ip\&.s_addr = inet_addr("10\&.0\&.0\&.0");
+prefix\&.len = 8;
+CONFD_SET_IPV4PREFIX(&myval, prefix);
+prefix = CONFD_GET_IPV4PREFIX(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV6PREFIX\fR
+.RS 4
+Used to represent the YANG data type
+\fBinet:ipv6\-prefix\fR\&. The C representation is a struct as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv6_prefix {
+    struct in6_addr ip6;
+    u_int8_t len;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv6_prefix prefix;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "2001:DB8::1428:57A8", &prefix\&.ip6);
+prefix\&.len = 125;
+CONFD_SET_IPV6PREFIX(&myval, prefix);
+prefix = CONFD_GET_IPV6PREFIX(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DECIMAL64\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBdecimal64\fR, which is a decimal number with 64 bits of precision\&. The C representation is a struct as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_decimal64 {
+    int64_t value;
+    u_int8_t fraction_digits;
+};
+.fi
+.if n \{\
+.RE
+.\}
+The
+\fIvalue\fR
+element is scaled with the value of the
+\fIfraction_digits\fR
+element, to be able to represent it as a 64\-bit integer\&. Note that
+\fIfraction_digits\fR
+is a constant for any given instance of a decimal64 type\&. It is provided whenever we receive a C_DECIMAL64 from ConfD\&. When we provide a C_DECIMAL64 to ConfD, we can set
+\fIfraction_digits\fR
+either to the correct value or to 0 \- however the
+\fIvalue\fR
+element must always be correctly scaled\&. See also
+\fBconfd_get_decimal64_fraction_digits()\fR
+in the
+\m[blue]\fBconfd_lib_lib(3)\fR\m[]
+man page\&.
+.sp
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_decimal64 d64;
+confd_value_t myval;
+
+d64\&.value = 314159;
+d64\&.fraction_digits = 5;
+CONFD_SET_DECIMAL64(&myval, d64);
+d64 = CONFD_GET_DECIMAL64(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IDENTITYREF\fR
+.RS 4
+Used to represent the YANG built\-in type
+\fBidentityref\fR, which references an existing
+identity\&. The C representation is a struct as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_identityref {
+    u_int32_t ns;
+    u_int32_t id;
+};
+.fi
+.if n \{\
+.RE
+.\}
+The
+\fIns\fR
+and
+\fIid\fR
+elements are hash values that represent the namespace of the module that defines the identity, and the identity within that module\&.
+.sp
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_identityref idref;
+confd_value_t myval;
+
+idref\&.ns = des__ns;
+idref\&.id = des_des3
+CONFD_SET_IDENTITYREF(&myval, idref);
+idref = CONFD_GET_IDENTITYREF(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_DQUAD\fR
+.RS 4
+Used to represent the YANG data type
+\fByang:dotted\-quad\fR\&. The C representation is a struct as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_dotted_quad {
+    unsigned char quad[4];
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_dotted_quad dquad;
+confd_value_t myval;
+
+dquad\&.quad[0] = 1;
+dquad\&.quad[1] = 2;
+dquad\&.quad[2] = 3;
+dquad\&.quad[3] = 4;
+CONFD_SET_DQUAD(&myval, dquad);
+dquad = CONFD_GET_DQUAD(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_HEXSTR\fR
+.RS 4
+Used to represent the YANG data type
+\fByang:hex\-string\fR\&. The value representation is the same as for C_BUF and C_BINARY\&. C_HEXSTR data received by the application from ConfD is always NUL terminated, but since the data may also contain NUL bytes, it is generally necessary to use the size given by the representation\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_buf {
+    unsigned int size;
+    unsigned char *ptr;
+} confd_buf_t;
+.fi
+.if n \{\
+.RE
+.\}
+Data is also allocated by the library as for C_BUF/C_BINARY\&. Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t myval, myval2;
+unsigned char *hex;
+int len;
+
+hex = CONFD_GET_HEXSTR_PTR(&myval);
+len = CONFD_GET_HEXSTR_SIZE(&myval);
+CONFD_SET_HEXSTR(&myval2, bin, len);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV4_AND_PLEN\fR
+.RS 4
+Used to represent the ConfD built\-in data type
+\fBtailf:ipv4\-address\-and\-prefix\-length\fR\&. The C representation is the same struct that is used for C_IPV4PREFIX, as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv4_prefix {
+    struct in_addr ip;
+    u_int8_t len;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv4_prefix ip_and_len;
+confd_value_t myval;
+
+ip_and_len\&.ip\&.s_addr = inet_addr("172\&.16\&.1\&.2");
+ip_and_len\&.len = 16;
+CONFD_SET_IPV4_AND_PLEN(&myval, ip_and_len);
+ip_and_len = CONFD_GET_IPV4_AND_PLEN(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\fBC_IPV6_AND_PLEN\fR
+.RS 4
+Used to represent the ConfD built\-in data type
+\fBtailf:ipv6\-address\-and\-prefix\-length\fR\&. The C representation is the same struct that is used for C_IPV6PREFIX, as follows:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv6_prefix {
+    struct in6_addr ip6;
+    u_int8_t len;
+};
+.fi
+.if n \{\
+.RE
+.\}
+Example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_ipv6_prefix ip_and_len;
+confd_value_t myval;
+
+inet_pton(AF_INET6, "2001:DB8::1428:57A8", &ip_and_len\&.ip6);
+ip_and_len\&.len = 64;
+CONFD_SET_IPV6_AND_PLEN(&myval, ip_and_len);
+ip_and_len = CONFD_GET_IPV6_AND_PLEN(&myval);
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.SH "XML PATHS"
+.PP
+Almost all of the callback functions the user is supposed write for the
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+library takes a parameter of type
+\fBconfd_hkeypath_t\fR\&. This type includes an array of the type
+\fBconfd_value_t\fR
+described above\&. The
+\fBconfd_hkeypath_t\fR
+is defined as a C struct:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_hkeypath {
+    int len;
+    confd_value_t v[MAXDEPTH][MAXKEYLEN];
+} confd_hkeypath_t;
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Where:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#define MAXDEPTH 20   /* max depth of data model tree
+                         (max KP length + 1) */
+#define MAXKEYLEN 9   /* max number of key elems
+                         (max keys + 1) */
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+For example, assume we have a YANG module with:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+container servers {
+  tailf:callpoint mycp;
+  list server {
+    key name;
+    max\-elements 64;
+    leaf name {
+      type string;
+    }
+    leaf ip {
+      type inet:ip\-address;
+    }
+    leaf port {
+      type inet:port\-number;
+    }
+  }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Assuming a
+server
+entry with the name "www" exists, then the path
+/servers/server{www}/ip
+is valid and identifies the
+ip
+leaf in the server entry whose key is "www"\&.
+.PP
+The
+\fBconfd_hkeypath_t\fR
+which corresponds to
+/servers/server{www}/ip
+is received in reverse order so the following holds assuming the variable holding a pointer to the keypath is called
+\fBhkp\fR\&.
+.PP
+hkp\->v[0][0]
+is the last element, the "ip" element\&. It is a data model node, and
+CONFD_GET_XMLTAG(&hkp\->v[0][0])
+will evaluate to a hashed integer (which can be found in the confdc generated \&.h file as a #define)
+.PP
+hkp\->v[1][0]
+is the next element in the path\&. The key element is called "name"\&. This is a
+\fBstring\fR
+value \- thus
+strcmp("www", CONFD_GET_BUFPTR(&hkp\->v[1][0])) == 0
+holds\&.
+.PP
+If we had chosen to use multiple keys in our data model \- for example if we had chosen to use both the "name" and the "ip" leafs as keys:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+key "name ip";
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The hkeypaths would be different since two keys are required\&. A valid path identifying a
+port
+leaf would be
+/servers/server{www 10\&.2\&.3\&.4}/port\&. In this case we can get to the
+ip
+part of the key with:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct in_addr ip;
+ip = CONFD_GET_IPV4(&hkp\->v[1][1])
+.fi
+.if n \{\
+.RE
+.\}
+.SH "USER-DEFINED TYPES"
+.PP
+We can define new types in addition to those listed in the TYPEDEFS section above\&. This can be useful if none of the predefined types, nor a derivation of one of those types via standard YANG restrictions, is suitable\&. Of course it is always possible to define a type as a derivation of
+\fBstring\fR
+and have the application parse the string whenever a value needs to be processed, but with a user\-defined type ConfD will do the string <\-> value translation just as for the predefined types\&.
+.PP
+A user\-defined type will always have a value representation that uses a confd_value_t with one of the
+\fBenum confd_vtype\fR
+values listed above, but the textual representation and the range(s) of allowed values are defined by the user\&. The
+misc/user_type
+example in the collection delivered with the ConfD release shows implementation of several user\-defined types \- it will be useful to refer to it for the description below\&.
+.PP
+The choice of
+\fBconfd_vtype\fR
+to use for the value representation can be whatever suits the actual data values best, with one exception:
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+The C_LIST
+\fBconfd_vtype\fR
+value can
+\fInot\fR
+be used for a leaf that is a key in a YANG list\&. The "normal" C_LIST usage is only for representation of leaf\-lists, and a leaf\-list can of course not be a key\&. Thus the ConfD code is not prepared to handle this kind of "value" for a key\&. It is a strong recommendation to
+\fInever\fR
+use C_LIST for a user\-defined type, since even if the type is not initially used for key leafs, subsequent development may see a need for this, at which point it may be cumbersome to change to a different representation\&.
+.sp .5v
+.RE
+.PP
+The example uses C_INT32, C_IPV4PREFIX, and C_IPV6PREFIX for the value representation of the respective types, but in many cases the opaque byte array provided by C_BINARY will be most suitable \- this can e\&.g\&. be mapped to/from an arbitrary C struct\&.
+.PP
+When we want to implement a user\-defined type, we need to specify the type as
+\fBstring\fR, and add a
+tailf:typepoint
+statement \- see
+\m[blue]\fBtailf_yang_extensions(5)\fR\m[]\&. We can use
+tailf:typepoint
+wherever a built\-in or derived type can be specified, i\&.e\&. as sub\-statement to
+typedef,
+leaf, or
+leaf\-list:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef myType {
+  type string;
+  tailf:typepoint my_type;
+}
+
+container c {
+  leaf one {
+    type myType;
+  }
+  leaf two {
+    type string;
+    tailf:typepoint two_type;
+  }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The argument to the
+tailf:typepoint
+statement is used to locate the type implementation, similar to how "callpoints" are used to locate data providers, but the actual mechanism is different, as described below\&.
+.PP
+To actually implement the type definition, we need to write three callback functions that are defined in the
+\fBstruct confd_type\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_type {
+    /* If a derived type point at the parent */
+    struct confd_type *parent;
+
+    /* not used in confspecs, but used in YANG */
+    struct confd_type *defval;
+
+    /* parse value located in str, and validate\&.
+     * returns CONFD_TRUE if value is syntactically correct
+     * and CONFD_FALSE otherwise\&.
+     */
+    int (*str_to_val)(struct confd_type *self,
+                      struct confd_type_ctx *ctx,
+                      const char *str, unsigned int len,
+                      confd_value_t *v);
+
+    /* print the value to str\&.
+     * does not print more than len bytes, including trailing NUL\&.
+     * return value as snprintf \- i\&.e\&. if the value is correct for
+     * the type, it returns the length of the string form regardless
+     * of the len limit \- otherwise it returns a negative number\&.
+     * thus, the NUL terminated output has been completely written
+     * if and only if the returned value is nonnegative and less
+     * than len\&.
+     * If strp is non\-NULL and the string form is constant (i\&.e\&.
+     * C_ENUM_VALUE), a pointer to the string is stored in *strp\&.
+     */
+    int (*val_to_str)(struct confd_type *self,
+                      struct confd_type_ctx *ctx,
+                      const confd_value_t *v,
+                      char *str, unsigned int len,
+                      const char **strp);
+
+    /* returns CONFD_TRUE if value is correct, otherwise CONFD_FALSE
+     */
+    int (*validate)(struct confd_type *self,
+                    struct confd_type_ctx *ctx,
+                    const confd_value_t *v);
+
+    /* data optionally used by the callbacks */
+    void *opaque;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+I\&.e\&.
+\fBstr_to_val()\fR
+and
+\fBval_to_str()\fR
+are responsible for the string to value and value to string translations, respectively, and
+\fBvalidate()\fR
+may be called to verify that a given value adheres to any restrictions on the values allowed for the type\&. The
+\fIerrstr\fR
+element in the
+\fIstruct confd_type_ctx *ctx\fR
+passed to these functions can be used to return an error message when the function fails \- in this case
+\fIerrstr\fR
+must be set to the address of a dynamically allocated string\&. The other elements in
+\fIctx\fR
+are currently unused\&.
+.PP
+Including user\-defined types in a YANG
+union
+may need some special consideration\&. Per the YANG specification, the string form of a value is matched against the union member types in the order they are specified until a match is found, and this procedure determines the type of the value\&. A corresponding procedure is used by ConfD when the value needs to be converted to a string, but this conversion does not include any evaluation of restrictions etc \- the values are assumed to be correct for their type\&. Thus the
+\fBval_to_str()\fR
+function for the member types are tried in order until one succeeds, and the resulting string is used\&. This means that a)
+\fBval_to_str()\fR
+must verify that the value is of the correct type, i\&.e\&. that it has the expected
+\fBconfd_vtype\fR, and b) if the value representation is the same for multiple member types, there is no guarantee that the same member type as for the string to value conversion is chosen\&.
+.PP
+The
+\fIopaque\fR
+element in the
+\fBstruct confd_type\fR
+can be used for any auxiliary (static) data needed by the functions (on invocation they can reference it as self\->opaque)\&. The
+\fIparent\fR
+and
+\fIdefval\fR
+elements are not used in this context, and should be NULL\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+The
+\fBstr_to_val()\fR
+function
+\fImust\fR
+allocate space (using e\&.g\&. malloc(3)) for the actual data value for those confd_value_t types that are listed as having allocated data above, i\&.e\&. C_BUF, C_QNAME, C_LIST, C_OBJECTREF, C_OID, C_BINARY, and C_HEXSTR\&.
+.sp .5v
+.RE
+.PP
+We make the implementation available to ConfD by creating one or more shared objects (\&.so files) containing the above callback functions\&. Each shared object may implement one or more types, and at startup the ConfD daemon will search the directories specified for
+/confdConfig/loadPath
+in
+confd\&.conf
+for files with a name that match the pattern "confd_type*\&.so" and load them\&.
+.PP
+Each shared object must also implement an "init" callback:
+.nr wf \w'int\ confd_type_cb_init('
+.nr wm 0
+.nr wp \w'struct\ confd_type_cbs\ **cbs);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_type_cb_init("
+.br
+.BI "struct\ confd_type_cbs\ **" "cbs" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_type_cb_init(struct\ confd_type_cbs\ **" "cbs" ");" \}
+.PP
+When the object has been loaded, ConfD will call this function\&. It must return a pointer to an array of type callback structures via the
+\fIcbs\fR
+argument, and the number of elements in the array as return value\&. The
+\fBstruct confd_type_cbs\fR
+is defined as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_type_cbs {
+    char *typepoint;
+    struct confd_type *type;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+These structures are then used by ConfD to locate the implementation of a given type, by searching for a
+\fItypepoint\fR
+string that matches the
+tailf:typepoint
+argument in the YANG data model\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+Since our callbacks are executed directly by the ConfD daemon, it is critically important that they do not have a negative impact on the daemon\&. No other processing can be done by ConfD while the callbacks are executed, and e\&.g\&. a NULL pointer dereference in one of the callbacks will cause ConfD to crash\&. Thus they should be simple, purely algorithmic functions, never referencing any external resources\&.
+.sp .5v
+.RE
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+When user\-defined types are present, the ConfD daemon also needs to load the libconfd\&.so shared library, otherwise used only by applications\&. This means that either this library must be in one of the system directories that are searched by the OS runtime loader (typically /lib and /usr/lib), or its location must be given by setting the LD_LIBRARY_PATH environment variable before starting ConfD\&.
+.sp .5v
+.RE
+.PP
+The above is enough for ConfD to use the types that we have defined, but the libconfd library can also do local string<\->value translation if we have loaded the schema information, as described in the
+\m[blue]\fBUSING SCHEMA INFORMATION\fR\m[]
+section below\&. For this to work for user\-defined types, we must register the type definitions with the library, using one of these functions:
+.nr wf \w'int\ confd_register_ns_type('
+.nr wm 0
+.nr wp \w'u_int32_t\ nshash,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *name,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_ns_type("
+.br
+.BI "u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_ns_type(u_int32_t\ " "nshash" ", const\ char\ *" "name" ", struct\ confd_type\ *" "type" ");" \}
+.PP
+Here we must pass the hash value for the namespace where the type is defined as
+\fInshash\fR, and the name of the type from a
+typedef
+statement (i\&.e\&.
+\fInot\fR
+the typepoint name if they are different) as
+\fIname\fR\&. Thus we can not use this function to register a user\-defined type that is specified "inline" in a
+leaf
+or
+leaf\-list
+statement, since we don\*(Aqt have a name for the type\&.
+.nr wf \w'int\ confd_register_node_type('
+.nr wm 0
+.nr wp \w'struct\ confd_cs_node\ *node,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_type\ *type);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_register_node_type("
+.br
+.BI "struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_register_node_type(struct\ confd_cs_node\ *" "node" ", struct\ confd_type\ *" "type" ");" \}
+.PP
+This function takes a pointer to a schema node (see the section
+\m[blue]\fBUSING SCHEMA INFORMATION\fR\m[]) that uses the type instead of namespace and type name\&. It is necessary to use this for registration of user\-defined types that are specified "inline", but it can also be used for user\-defined types specified via
+typedef\&. In the latter case it will be equivalent to calling
+\fBconfd_register_ns_type()\fR
+for the typedef, i\&.e\&. a single registration will apply to all nodes using the typedef\&.
+.PP
+The functions can only be called
+\fIafter\fR\fBconfd_load_schemas()\fR
+or
+\fBmaapi_load_schemas()\fR
+(see below) has been called, and if
+\fBconfd_load_schemas()\fR/
+\fBmaapi_load_schemas()\fR
+is called again, the registration must be re\-done\&. The
+misc/user_type
+example shows a way to use the exact same code for the shared object and for this registration\&.
+.PP
+Schema upgrades when the data is stored in CDB requires special consideration for user\-defined types\&. Normally CDB can handle any type changes automatically, and this is true also when changing to/from/between user\-defined types, provided that the following requirements are fulfilled:
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 1.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  1." 4.2
+.\}
+A given typepoint name always refers to the exact same implementation \- i\&.e\&. same value representation, same range restrictions, etc\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 2.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  2." 4.2
+.\}
+Shared objects providing implementations for all the typepoint ids used in the new
+\fIand\fR
+the old schema are made available to ConfD\&.
+.RE
+.PP
+I\&.e\&. if we change the implementation of a type, we also change the typepoint name, and keep the old implementation around\&. If requirement 1 isn\*(Aqt fulfilled, we can end up with the case of e\&.g\&. a changed value representation between schema versions even though the types are indistinguishable for CDB\&. This can still be handled by using MAAPI to modify CDB during the upgrade as described in the User Guide, but if that is not done, CDB will just carry the old values over, which in effect results in a corrupt database\&.
+.SH "USING SCHEMA INFORMATION"
+.PP
+Schema information from the data model can be loaded from the ConfD daemon at runtime using the
+\fBmaapi_load_schemas()\fR
+function, see the
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+manual page\&. Information for all namespaces loaded into ConfD is then made available\&. In many cases it may be more convenient to use the
+\fBconfd_load_schemas()\fR
+utility function\&. For details about this function and those discussed below, see
+\m[blue]\fBconfd_lib_lib(3)\fR\m[]\&. After loading the data, we can call
+\fBconfd_get_nslist()\fR
+to find which namespaces are known to the library as a result\&.
+.PP
+Note that all pointers returned (directly or indirectly) by the functions discussed here reference dynamically allocated memory maintained by the library \- they will become invalid if
+\fBconfd_load_schemas()\fR
+or
+\fBmaapi_load_schemas()\fR
+is subsequently called again\&.
+.PP
+The
+\m[blue]\fBconfdc(1)\fR\m[]
+compiler can also optionally generate a C header file that has #define symbols for the integer values corresponding to data model nodes and enumerations\&.
+.PP
+When the schema information has been made available to the library, we can format an arbitrary instance of a
+\fBconfd_value_t\fR
+value using
+\fBconfd_pp_value()\fR
+or
+\fBconfd_ns_pp_value()\fR, or an arbitrary hkeypath using
+\fBconfd_pp_kpath()\fR
+or
+\fBconfd_xpath_pp_kpath()\fR\&. We can also get a pointer to the string representing a data model node using
+\fBconfd_hash2str()\fR\&.
+.PP
+Furthermore a tree representation of the data model is available, which contains a
+\fBstruct confd_cs_node\fR
+for every node in the data model\&. There is one tree for each namespace that has toplevel elements\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+/* flag bits in confd_cs_node_info */
+#define CS_NODE_IS_LIST          (1 << 0)
+#define CS_NODE_IS_WRITE         (1 << 1)
+#define CS_NODE_IS_CDB           (1 << 2)
+#define CS_NODE_IS_ACTION        (1 << 3)
+#define CS_NODE_IS_PARAM         (1 << 4)
+#define CS_NODE_IS_RESULT        (1 << 5)
+#define CS_NODE_IS_NOTIF         (1 << 6)
+#define CS_NODE_IS_CASE          (1 << 7)
+#define CS_NODE_IS_CONTAINER     (1 << 8)
+#define CS_NODE_HAS_WHEN         (1 << 9)
+#define CS_NODE_HAS_DISPLAY_WHEN (1 << 10)
+#define CS_NODE_HAS_META_DATA    (1 << 11)
+#define CS_NODE_IS_WRITE_ALL     (1 << 12)
+#define CS_NODE_IS_LEAF_LIST     (1 << 13)
+#define CS_NODE_IS_LEAFREF       (1 << 14)
+#define CS_NODE_IS_DYN CS_NODE_IS_LIST /* backwards compat */
+
+/* cmp values in confd_cs_node_info */
+#define CS_NODE_CMP_NORMAL        0
+#define CS_NODE_CMP_SNMP          1
+#define CS_NODE_CMP_SNMP_IMPLIED  2
+#define CS_NODE_CMP_USER          3
+#define CS_NODE_CMP_UNSORTED      4
+
+struct confd_cs_node_info {
+    u_int32_t *keys;
+    int minOccurs;
+    int maxOccurs;   /* \-1 if unbounded */
+    enum confd_vtype shallow_type;
+    struct confd_type *type;
+    confd_value_t *defval;
+    struct confd_cs_choice *choices;
+    int flags;
+    u_int8_t cmp;
+    struct confd_cs_meta_data *meta_data;
+};
+
+struct confd_cs_meta_data {
+    char* key;
+    char* value;
+};
+
+struct confd_cs_node {
+    u_int32_t tag;
+    u_int32_t ns;
+    struct confd_cs_node_info info;
+    struct confd_cs_node *parent;
+    struct confd_cs_node *children;
+    struct confd_cs_node *next;
+    void *opaque;   /* private user data */
+};
+
+struct confd_cs_choice {
+    u_int32_t tag;
+    u_int32_t ns;
+    int minOccurs;
+    struct confd_cs_case *default_case;
+    struct confd_cs_node *parent;         /* NULL if parent is case */
+    struct confd_cs_case *cases;
+    struct confd_cs_choice *next;
+    struct confd_cs_case *case_parent;    /* NULL if parent is node */
+};
+
+struct confd_cs_case {
+    u_int32_t tag;
+    u_int32_t ns;
+    struct confd_cs_node *first;
+    struct confd_cs_node *last;
+    struct confd_cs_choice *parent;
+    struct confd_cs_case *next;
+    struct confd_cs_choice *choices;
+};
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Each
+\fBconfd_cs_node\fR
+is linked to its related nodes:
+\fIparent\fR
+is a pointer to the parent node,
+\fInext\fR
+is a pointer to the next sibling node, and
+\fIchildren\fR
+is a pointer to the first child node \- for each of these, a NULL pointer has the obvious meaning\&.
+.PP
+Each
+\fBconfd_cs_node\fR
+also contains an information structure: For a list node, the
+\fIkeys\fR
+field is a zero\-terminated array of integers \- these are the
+\fItag\fR
+values for the children nodes that are key elements\&. This makes it possible to find the name of a key element in a keypath\&. If the
+\fBconfd_cs_node\fR
+is not a list node, the
+\fIkeys\fR
+field is NULL\&. The
+\fIshallow_type\fR
+field gives the "primitive" type for the element, i\&.e\&. the
+\fBenum confd_vtype\fR
+value that is used in the
+\fBconfd_value_t\fR
+representation\&.
+.PP
+Typed leaf nodes also carry a complete type definition via the
+\fItype\fR
+pointer, which can be used with the
+\fBconf_str2val()\fR
+and
+\fBconfd_val2str()\fR
+functions, as well as the leaf\*(Aqs default value (if any) via the
+\fIdefval\fR
+pointer\&.
+.PP
+If the YANG
+choice
+statement is used in the data model, additional structures are created by the schema loading\&. For list and container nodes that have
+choice
+statements, the
+\fIchoices\fR
+element in
+\fBconfd_cs_node_info\fR
+is a pointer to a linked list of
+\fBconfd_cs_choice\fR
+structures representing the choices\&. Each
+\fBconfd_cs_choice\fR
+has a pointer to the parent node and a
+\fIcases\fR
+pointer to a linked list of
+\fBconfd_cs_case\fR
+structures representing the cases for that choice\&. Finally, each
+\fBconfd_cs_case\fR
+structure has pointers to the parent
+\fBconfd_cs_choice\fR
+structure, and to the
+\fBconfd_cs_node\fR
+structures representing the first and last element in the case\&. Those
+\fBconfd_cs_node\fR
+structures, i\&.e\&. the "toplevel" elements of a case, have the CS_NODE_IS_CASE flag set\&. Note that it is possible for a case to be "empty", i\&.e\&. there are no elements in the case \- then the
+\fIfirst\fR
+and
+\fIlast\fR
+pointers in the
+\fBconfd_cs_case\fR
+structure are NULL\&.
+.PP
+For a list node, the sort order is indicated by the
+\fIcmp\fR
+element in
+\fBconfd_cs_node_info\fR\&. The value CS_NODE_CMP_NORMAL means an ordinary, system ordered, list\&. CS_NODE_CMP_SNMP is system ordered, but ordered according to SNMP lexicographical order, and CS_NODE_CMP_SNMP_IMPLIED is an SNMP lexicographical order where the last key has an IMPLIED keyword\&. CS_NODE_CMP_UNSORTED is system ordered, but is not sorted\&. The value CS_NODE_CMP_USER denotes an "ordered\-by user" list\&.
+.PP
+If the
+tailf:meta\-data
+extension is used for a node, the
+\fImeta_data\fR
+element points to an array of
+\fBstruct confd_cs_meta_data\fR, otherwise it is NULL\&. In the array, the
+\fIkey\fR
+element is the argument of
+tailf:meta\-data, and the
+\fIvalue\fR
+element is the argument of the
+tailf:meta\-value
+substatement, if any \- otherwise it is NULL\&. The end of the array is indicated by a struct where the
+\fIkey\fR
+element is NULL\&.
+.PP
+Action and notification specifications are included in the tree in the same way as the config/data elements \- they are indicated by the CS_NODE_IS_ACTION flag being set on the
+action
+node, and the CS_NODE_IS_NOTIF flag being set on the
+notification
+node, respectively\&. Furthermore the nodes corresponding to the sub\-statements of the action\*(Aqs
+input
+statement have the CS_NODE_IS_PARAM flag set, and those corresponding to the sub\-statements of the action\*(Aqs
+output
+statement have the CS_NODE_IS_RESULT flag set\&. Note that the
+input
+and
+output
+statements do not have corresponding nodes in the tree\&.
+.PP
+The
+\fBconfd_find_cs_root()\fR
+function returns the root of the tree for a given namespace, and the
+\fBconfd_find_cs_node()\fR,
+\fBconfd_find_cs_node_child()\fR, and
+\fBconfd_cs_node_cd()\fR
+functions are useful for navigating the tree\&. Assume that we have the following data model:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+container servers {
+  list server {
+    key name;
+    max\-elements 64;
+    leaf name {
+      type string;
+    }
+    leaf ip {
+      type inet:ip\-address;
+    }
+    leaf port {
+      type inet:port\-number;
+    }
+  }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Then, given the keypath
+/servers/server{www}
+in
+\fBconfd_hkeypath_t\fR
+form, a call to
+\fBconfd_find_cs_node()\fR
+would return a
+\fBstruct confd_cs_node\fR, i\&.e\&. a pointer into the tree, as in:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+struct confd_cs_node *csp;
+char *name;
+csp = confd_find_cs_node(mykeypath, mykeypath\->len);
+name = confd_hash2str(csp\->info\&.keys[0])
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+and the C variable
+\fIname\fR
+will have the value
+"name"\&. These functions make it possible to format keypaths in various ways\&.
+.PP
+If we have a keypath which identifies a node below the one we are interested in, such as
+/servers/server{www}/ip, we can use the
+\fIlen\fR
+parameter as in
+confd_find_cs_node(kp, 3)
+where
+3
+is the length of the keypath we wish to consider\&.
+.PP
+The equivalent of the above
+\fBconfd_find_cs_node()\fR
+example, but using a string keypath, could be written as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+csp = confd_cs_node_cd(confd_find_cs_root(mynamespace),
+                       "/servers/server{www}");
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fItype\fR
+field in the
+\fBstruct confd_cs_node_info\fR
+can be used for data model aware string <\-> value translations\&. E\&.g\&. assuming that we have a
+\fBconfd_hkeypath_t *kp\fR
+representing the element
+/servers/server{www}/ip, we can do the following:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t v;
+csp = confd_find_cs_node(kp, kp\->len);
+confd_str2val(csp\->info\&.type, "10\&.0\&.0\&.1", &v);
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fBconfd_value_t v\fR
+will then be filled in with the corresponding C_IPV4 value\&. This technique is generally necessary for translating C_ENUM_VALUE values to the corresponding strings (or vice versa), since there isn\*(Aqt a type\-independent mapping\&. But
+\fBconfd_val2str()\fR
+(or
+\fBconfd_str2val()\fR) can always do the translation, since it is given the full type information\&. E\&.g\&. this will store the string "nonVolatile" in
+\fIbuf\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t v;
+char buf[64];
+
+CONFD_SET_ENUM_VALUE(&v, 3);
+root = confd_find_cs_root(SNMP_COMMUNITY_MIB__ns);
+csp = confd_cs_node_cd(root, "/SNMP\-COMMUNITY\-MIB/snmpCommunityTable/"
+                       "snmpCommunityEntry/snmpCommunityStorageType");
+confd_val2str(csp\->info\&.type, &v, buf, sizeof(buf));
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The type information can also be found by using the
+\fBconfd_find_ns_type()\fR
+function to look up the type name as a string in the namespace where it is defined \- i\&.e\&. we could alternatively have achieved the same result with:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+CONFD_SET_ENUM_VALUE(&v, 3);
+type = confd_find_ns_type(SNMPv2_TC__ns, "StorageType");
+confd_val2str(type, &v, buf, sizeof(buf));
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If we give
+\fB0\fR
+for the
+\fInshash\fR
+argument to
+\fBconfd_find_ns_type()\fR, the type name will be looked up among the ConfD built\-in types (i\&.e\&. the YANG built\-in types, the types defined in the YANG "tailf\-common" module, and the types defined in the pre\-defined "confd" and/or "xs" namespaces) \- e\&.g\&. the type information for
+/servers/server{www}/name
+could be found with
+confd_find_ns_type(0, "string")\&.
+.SH "XML STRUCTURES"
+.PP
+Two different methods are used to represent a subtree of data nodes\&.
+\m[blue]\fB"Value Array"\fR\m[]
+describes a format that is simpler but has some limitations, while
+\m[blue]\fB"Tagged Value Array"\fR\m[]
+describes a format that is more complex but can represent an arbitrary subtree\&.
+.SS "Value Array"
+.PP
+The simpler format is an array of
+\fBconfd_value_t\fR
+elements corresponding to the complete contents of a list entry or container\&. The content of sub\-list entries cannot be represented\&. The array is populated through a "depth first" traversal of the data tree as follows:
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 1.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  1." 4.2
+.\}
+Optional leafs or
+presence
+containers that do not exist use a single array element, with type C_NOEXISTS (value ignored)\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 2.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  2." 4.2
+.\}
+List nodes use a single array element, with type C_NOEXISTS (value ignored), regardless of the actual number of entries or their contents\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 3.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  3." 4.2
+.\}
+Leafs with a type other than
+\fBempty\fR
+use an array element with their type and value as usual\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 4.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  4." 4.2
+.\}
+Leafs of type
+\fBempty\fR
+use an array element with type C_XMLTAG, and
+\fItag\fR
+and
+\fIns\fR
+set according to the leaf name\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 5.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  5." 4.2
+.\}
+Containers use one array element with type C_XMLTAG, and
+\fItag\fR
+and
+\fIns\fR
+set according to the element name, followed by array elements for the sub\-nodes according to this list\&.
+.RE
+.PP
+Note that the list or container node corresponding to the complete array is not included in the array, and that there is no array element for the "end" of a container\&.
+.PP
+As an example, the array corresponding to the
+/servers/server{www}
+list entry above could be populated as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_value_t v[3];
+struct in_addr ip;
+
+CONFD_SET_STR(&v[0], "www");
+ip\&.s_addr = inet_addr("192\&.168\&.1\&.2");
+CONFD_SET_IPV4(&v[1], ip);
+CONFD_SET_UINT16(&v[2], 80);
+.fi
+.if n \{\
+.RE
+.\}
+.SS "Tagged Value Array"
+.PP
+This format uses an array of
+\fBconfd_tag_value_t\fR
+elements\&. This is a structure defined as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+typedef struct confd_tag_value {
+    struct xml_tag tag;
+    confd_value_t v;
+} confd_tag_value_t;
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+I\&.e\&. each value element is associated with the
+\fBstruct xml_tag\fR
+that identifies the node in the data model\&. The
+\fIns\fR
+element of the
+\fBstruct xml_tag\fR
+can normally be set to 0, with the meaning "current namespace"\&. The array is populated, normally through a "depth first" traversal of the data tree, as follows:
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 1.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  1." 4.2
+.\}
+Optional leafs or
+presence
+containers that do not exist are omitted entirely from the array\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 2.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  2." 4.2
+.\}
+List and container nodes use one array element where the value has type C_XMLBEGIN, and
+\fItag\fR
+and
+\fIns\fR
+set according to the node name, followed by array elements for the sub\-nodes according to this list, followed by one array element where the value has type C_XMLEND, and
+\fItag\fR
+and
+\fIns\fR
+set according to the node name\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 3.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  3." 4.2
+.\}
+Leafs with a type other than
+\fBempty\fR
+use an array element with their type and value as usual\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 4.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  4." 4.2
+.\}
+Leafs of type
+\fBempty\fR
+use an array element where the value has type C_XMLTAG, and
+\fItag\fR
+and
+\fIns\fR
+set according to the leaf name\&.
+.RE
+.PP
+Note that the list or container node corresponding to the complete array is not included in the array\&. In some usages, non\-optional nodes may also be omitted from the array \- refer to the relevant API documentation to see whether this is allowed and the semantics of doing so\&.
+.PP
+A set of CONFD_SET_TAG_XXX() macros corresponding to the CONFD_SET_XXX() macros described above are provided \- these set the
+\fIns\fR
+element to 0 and the
+\fItag\fR
+element to their second argument\&. The array corresponding to the
+/servers/server{www}
+list entry above could be populated as:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_tag_value_t tv[3];
+struct in_addr ip;
+
+CONFD_SET_TAG_STR(&tv[0], servers_name, "www");
+ip\&.s_addr = inet_addr("192\&.168\&.1\&.2");
+CONFD_SET_TAG_IPV4(&tv[1], servers_ip, ip);
+CONFD_SET_TAG_UINT16(&tv[2], servers_port, 80);
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+There are also macros to access the components of the
+\fBconfd_tag_value_t\fR
+elements:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_tag_value_t tv;
+u_int16_t port;
+
+if (CONFD_GET_TAG_TAG(&tv) == servers_port)
+    port = CONFD_GET_UINT16(CONFD_GET_TAG_VALUE(&tv));
+.fi
+.if n \{\
+.RE
+.\}
+.SH "DATA MODEL TYPES"
+.PP
+This section describes the types that can be used in YANG data modeling, and their C representation\&. Also listed is the corresponding SMIv2 type, which is used when a data model is translated into a MIB\&. In several cases, the data model type cannot easily be translated into a native SMIv2 type\&. In those cases, the type
+\fBOCTET STRING\fR
+is used in the translation\&. The SNMP agent in ConfD will in those cases send the string representation of the value over SNMP\&. For example, the
+\fBxs:float\fR
+value
+3\&.14
+is sent as the string "3\&.14"\&.
+.PP
+These subsections describe the following sets of types, which can be used with YANG data modeling:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\m[blue]\fBYANG built\-in types\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\m[blue]\fBThe ietf\-yang\-types YANG module\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\m[blue]\fBThe ietf\-inet\-types YANG module\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\m[blue]\fBThe tailf\-common YANG module\fR\m[]
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\m[blue]\fBThe tailf\-xsd\-types YANG module\fR\m[]
+.RE
+.SS "YANG built\-in types"
+.PP
+These types are built\-in to the YANG language, and also built\-in to ConfD\&.
+.PP
+\fBint8\fR
+.RS 4
+A signed 8\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_INT8
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIi8\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint8_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBInteger32 (\-128 \&.\&. 127)\fR
+.RE
+.RE
+.PP
+\fBint16\fR
+.RS 4
+A signed 16\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_INT16
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIi16\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint16_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBInteger32 (\-32768 \&.\&. 32767)\fR
+.RE
+.RE
+.PP
+\fBint32\fR
+.RS 4
+A signed 32\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_INT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIi32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBInteger32\fR
+.RE
+.RE
+.PP
+\fBint64\fR
+.RS 4
+A signed 64\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_INT64
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIi64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint64_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBuint8\fR
+.RS 4
+An unsigned 8\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT8
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu8\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int8_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32 (0 \&.\&. 255)\fR
+.RE
+.RE
+.PP
+\fBuint16\fR
+.RS 4
+An unsigned 16\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT16
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu16\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int16_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32 (0 \&.\&. 65535)\fR
+.RE
+.RE
+.PP
+\fBuint32\fR
+.RS 4
+An unsigned 32\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32\fR
+.RE
+.RE
+.PP
+\fBuint64\fR
+.RS 4
+An unsigned 64\-bit integer\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT64
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int64_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBdecimal64\fR
+.RS 4
+A decimal number with 64 bits of precision\&. The C representation uses a struct with a 64\-bit signed integer for the scaled value, and an unsigned 8\-bit integer in the range 1\&.\&.18 for the number of fraction digits specified by the
+fraction\-digits
+sub\-statement\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DECIMAL64
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fId64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_decimal64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBstring\fR
+.RS 4
+The
+\fBstring\fR
+type is represented as a struct
+\fBconfd_buf_t\fR
+when
+\fIreceived\fR
+from ConfD in the C code\&. I\&.e\&. it is NUL\-terminated and also has a size given\&.
+.sp
+However, when the C code wants to produce a value of the
+\fBstring\fR
+type it is possible to use a
+\fBconfd_value_t\fR
+with the value type C_BUF or C_STR (which requires a NUL\-terminated string)
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBboolean\fR
+.RS 4
+The boolean values "true" and "false"\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BOOL
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIboolean\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBTruthValue\fR
+.RE
+.RE
+.PP
+\fBenumeration\fR
+.RS 4
+Enumerated strings with associated numeric values\&. The C representation uses the numeric values\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_ENUM_VALUE
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIenumvalue\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBINTEGER\fR
+.RE
+.RE
+.PP
+\fBbits\fR
+.RS 4
+A set of bits or flags\&. Depending on the highest argument given to a
+position
+sub\-statement, the C representation uses either C_BIT32, C_BIT64, or C_BITBIG\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BIT32, C_BIT64, or C_BITBIG
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIb32\fR,
+\fIb64\fR, or
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR,
+\fBu_int64_t\fR, or
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32\fR
+or
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBbinary\fR
+.RS 4
+Any binary data\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBidentityref\fR
+.RS 4
+A reference to an abstract identity\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IDENTITYREF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIidref\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_identityref\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBunion\fR
+.RS 4
+The
+\fBunion\fR
+type has no special
+\fBconfd_value_t\fR
+representation \- elements are represented as one of the member types according to the current value instantiation\&. This means that for unions that comprise different "primitive" types, applications must check the
+\fItype\fR
+element to determine the type, and the type safe alternatives to the
+\fBcdb_get()\fR
+and
+\fBmaapi_get_elem()\fR
+functions can not be used\&.
+.sp
+Note that the YANG specification stipulates that when a value of type
+\fBunion\fR
+is validated, the
+\fIfirst\fR
+matching member type should be chosen\&. Consider this YANG fragment:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+leaf uni {
+  type union {
+    type int32;
+    type int64;
+  }
+}
+
+.fi
+.if n \{\
+.RE
+.\}
+If we set the leaf to the value
+\fB2\fR, it should thus be of type
+\fBint32\fR, not type
+\fBint64\fR\&. This is enforced when ConfD converts a string to an internal value, but not when setting values "directly" via e\&.g\&.
+\fBmaapi_set_elem()\fR
+or
+\fBcdb_set_elem()\fR\&. It is thus possible to set the leaf to a
+\fBC_INT64\fR
+with the value
+\fB2\fR, but this is formally an invalid value\&.
+.sp
+Applications setting values of type
+\fBunion\fR
+must thus take care to choose the member type correctly, or alternatively provide the value as a string via one of the functions
+\fBmaapi_set_elem2()\fR,
+\fBcdb_set_elem2()\fR, or
+\fBconfd_str2val()\fR\&. These functions will always turn the string "2" into a
+\fBC_INT32\fR
+with the above definition\&.
+.sp
+The SMIv2 type is an
+\fBOCTET STRING\fR\&.
+.RE
+.PP
+\fBinstance\-identifier\fR
+.RS 4
+The instance\-identifier built\-in type is used to uniquely identify a particular instance node in the data tree\&. The syntax for an instance\-identifier is a subset of the XPath abbreviated syntax\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_OBJECTREF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIhkp\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_hkeypath_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.sp
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBThe leaf-list statement\fR
+.RS 4
+.PP
+The values of a YANG
+leaf\-list
+node is represented as an element with a list of values of the type given by the
+type
+sub\-statement\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_LIST
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIlist\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_list\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.SS "The ietf\-yang\-types YANG module"
+.PP
+This module contains a collection of generally useful derived YANG data types\&. They are defined in the
+urn:ietf:params:xml:ns:yang:ietf\-yang\-types
+namespace\&.
+.PP
+\fByang:counter32, yang:zero\-based\-counter32\fR
+.RS 4
+32\-bit counters, corresponding to the Counter32 type and the ZeroBasedCounter32 textual convention of the SMIv2\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBCounter32\fR
+.RE
+.RE
+.PP
+\fByang:counter64, yang:zero\-based\-counter64\fR
+.RS 4
+64\-bit counters, corresponding to the Counter64 type and the ZeroBasedCounter64 textual convention of the SMIv2\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT64
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int64_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBCounter64\fR
+.RE
+.RE
+.PP
+\fByang:gauge32\fR
+.RS 4
+32\-bit gauge value, corresponding to the Gauge32 type of the SMIv2\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBCounter32\fR
+.RE
+.RE
+.PP
+\fByang:gauge64\fR
+.RS 4
+64\-bit gauge value, corresponding to the CounterBasedGauge64 SMIv2 textual convention\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT64
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu64\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int64_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBCounter64\fR
+.RE
+.RE
+.PP
+\fByang:object\-identifier, yang:object\-identifier\-128\fR
+.RS 4
+An SNMP OBJECT IDENTIFIER (OID)\&. This is a sequence of integers which identifies an object instance for example "1\&.3\&.6\&.1\&.4\&.1\&.24961\&.1"\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+tailf:value\-length
+restriction is measured in integer elements for
+\fBobject\-identifier\fR
+and
+\fBobject\-identifier\-128\fR\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_OID
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIoidp\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_snmp_oid\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOBJECT IDENTIFIER\fR
+.RE
+.RE
+.PP
+\fByang:yang\-identifier\fR
+.RS 4
+A YANG identifier string as defined by the \*(Aqidentifier\*(Aq rule in Section 12 of RFC 6020\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:date\-and\-time\fR
+.RS 4
+The date\-and\-time type is a profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DATETIME
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIdatetime\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_datetime\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBDateAndTime\fR
+.RE
+.RE
+.PP
+\fByang:timeticks, yang:timestamp\fR
+.RS 4
+Time ticks and time stamps, measured in hundredths of seconds\&. Corresponding to the TimeTicks type and the TimeStamp textual convention of the SMIv2\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBCounter32\fR
+.RE
+.RE
+.PP
+\fByang:phys\-address\fR
+.RS 4
+Represents media\- or physical\-level addresses represented as a sequence octets, each octet represented by two hexadecimal digits\&. Octets are separated by colons\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+tailf:value\-length
+restriction is measured in number of octets for
+\fBphys\-address\fR\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:mac\-address\fR
+.RS 4
+The mac\-address type represents an IEEE 802 MAC address\&.
+.sp
+The length of the ConfD C_BINARY representation is always 6\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:xpath1\&.0\fR
+.RS 4
+This type represents an XPATH 1\&.0 expression\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:hex\-string\fR
+.RS 4
+A hexadecimal string with octets represented as hex digits separated by colons\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+tailf:value\-length
+restriction is measured in number of octets for
+\fBhex\-string\fR\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_HEXSTR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:uuid\fR
+.RS 4
+A Universally Unique Identifier in the string representation defined in RFC 4122\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fByang:dotted\-quad\fR
+.RS 4
+An unsigned 32\-bit number expressed in the dotted\-quad notation\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DQUAD
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIdquad\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_dotted_quad\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.SS "The ietf\-inet\-types YANG module"
+.PP
+This module contains a collection of generally useful derived YANG data types for Internet addresses and related things\&. They are defined in the
+urn:ietf:params:xml:ns:yang:inet\-types
+namespace\&.
+.PP
+\fBinet:ip\-version\fR
+.RS 4
+This value represents the version of the IP protocol\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_ENUM_VALUE
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIenumvalue\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBint32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBINTEGER\fR
+.RE
+.RE
+.PP
+\fBinet:dscp\fR
+.RS 4
+The dscp type represents a Differentiated Services Code\-Point\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT8
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu8\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int8_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32 (0 \&.\&. 255)\fR
+.RE
+.RE
+.PP
+\fBinet:ipv6\-flow\-label\fR
+.RS 4
+The flow\-label type represents flow identifier or Flow Label in an IPv6 packet header\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_UINT32
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIu32\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBu_int32_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBUnsigned32\fR
+.RE
+.RE
+.PP
+\fBinet:port\-number\fR
+.RS 4
+The port\-number type represents a 16\-bit port number of an Internet transport layer protocol such as UDP, TCP, DCCP or SCTP\&.
+.sp
+The value space and representation is identical to the built\-in
+\fBuint16\fR
+type\&.
+.RE
+.PP
+\fBinet:as\-number\fR
+.RS 4
+The as\-number type represents autonomous system numbers which identify an Autonomous System (AS)\&.
+.sp
+The value space and representation is identical to the built\-in
+\fBuint32\fR
+type\&.
+.RE
+.PP
+\fBinet:ip\-address\fR
+.RS 4
+The ip\-address type represents an IP address and is IP version neutral\&. The format of the textual representations implies the IP version\&.
+.sp
+This is a
+\fBunion\fR
+of the
+\fBinet:ipv4\-address\fR
+and
+\fBinet:ipv6\-address\fR
+types defined below\&. The representation is thus identical to the representation for one of these types\&.
+.sp
+The SMIv2 type is an
+\fBOCTET STRING (SIZE (4|16))\fR\&.
+.RE
+.PP
+\fBinet:ipv4\-address\fR
+.RS 4
+The ipv4\-address type represents an IPv4 address in dotted\-quad notation\&.
+.sp
+The use of a zone index is not supported by ConfD\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV4
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIip\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct in_addr\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBIpAddress\fR
+.RE
+.RE
+.PP
+\fBinet:ipv6\-address\fR
+.RS 4
+The ipv6\-address type represents an IPv6 address in full, mixed, shortened and shortened mixed notation\&.
+.sp
+The use of a zone index is not supported by ConfD\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV6
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIip6\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct in6_addr\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBIPV6\-MIB:Ipv6Address\fR
+.RE
+.RE
+.PP
+\fBinet:ip\-prefix\fR
+.RS 4
+The ip\-prefix type represents an IP prefix and is IP version neutral\&. The format of the textual representations implies the IP version\&.
+.sp
+This is a
+\fBunion\fR
+of the
+\fBinet:ipv4\-prefix\fR
+and
+\fBinet:ipv6\-prefix\fR
+types defined below\&. The representation is thus identical to the representation for one of these types\&.
+.sp
+The SMIv2 type is an
+\fBOCTET STRING (SIZE (5|17))\fR\&.
+.RE
+.PP
+\fBinet:ipv4\-prefix\fR
+.RS 4
+The ipv4\-prefix type represents an IPv4 address prefix\&. The prefix length is given by the number following the slash character and must be less than or equal to 32\&.
+.sp
+A prefix length value of n corresponds to an IP address mask which has n contiguous 1\-bits from the most significant bit (MSB) and all other bits set to 0\&.
+.sp
+The IPv4 address represented in dotted quad notation must have all bits that do not belong to the prefix set to zero\&.
+.sp
+An example: 10\&.0\&.0\&.0/8
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV4PREFIX
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIipv4prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_ipv4_prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING (SIZE (5))\fR
+.RE
+.RE
+.PP
+\fBinet:ipv6\-prefix\fR
+.RS 4
+The ipv6\-prefix type represents an IPv6 address prefix\&. The prefix length is given by the number following the slash character and must be less than or equal 128\&.
+.sp
+A prefix length value of n corresponds to an IP address mask which has n contiguous 1\-bits from the most significant bit (MSB) and all other bits set to 0\&.
+.sp
+The IPv6 address must have all bits that do not belong to the prefix set to zero\&.
+.sp
+An example: 2001:DB8::1428:57AB/125
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV6PREFIX
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIipv6prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_ipv6_prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING (SIZE (17))\fR
+.RE
+.RE
+.PP
+\fBinet:domain\-name\fR
+.RS 4
+The domain\-name type represents a DNS domain name\&. The name SHOULD be fully qualified whenever possible\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBinet:host\fR
+.RS 4
+The host type represents either an IP address or a DNS domain name\&.
+.sp
+This is a
+\fBunion\fR
+of the
+\fBinet:ip\-address\fR
+and
+\fBinet:domain\-name\fR
+types defined above\&. The representation is thus identical to the representation for one of these types\&.
+.sp
+The SMIv2 type is an
+\fBOCTET STRING\fR, which contains the textual representation of the domain name or address\&.
+.RE
+.PP
+\fBinet:uri\fR
+.RS 4
+The uri type represents a Uniform Resource Identifier (URI) as defined by STD 66\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.SS "The iana\-crypt\-hash YANG module"
+.PP
+This module defines a type for storing passwords using a hash function, and features to indicate which hash functions are supported by an implementation\&. The type is defined in the
+urn:ietf:params:xml:ns:yang:iana\-crypt\-hash
+namespace\&.
+.PP
+\fBianach:crypt\-hash\fR
+.RS 4
+The crypt\-hash type is used to store passwords using a hash function\&. The algorithms for applying the hash function and encoding the result are implemented in various UNIX systems as the function crypt(3)\&. A value of this type matches one of the forms:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$0$<clear text password>
+$<id>$<salt>$<password hash>
+$<id>$<parameter>$<salt>$<password hash>
+
+.fi
+.if n \{\
+.RE
+.\}
+The "$0$" prefix indicates that the value is clear text\&. When such a value is received by the server, a hash value is calculated, and the string "$<id>$<salt>$" or $<id>$<parameter>$<salt>$ is prepended to the result\&. This value is stored in the configuration data store\&.
+.sp
+If a value starting with "$<id>$", where <id> is not "0", is received, the server knows that the value already represents a hashed value, and stores it as is in the data store\&.
+.sp
+In the Tail\-f implementation, this type is logically a union of the types tailf:md5\-digest\-string, tailf:sha\-256\-digest\-string, and tailf:sha\-512\-digest\-string \- see the section
+\m[blue]\fBThe tailf\-common YANG module\fR\m[]
+below\&. All the hashed values of these types are accepted, and the choice of algorithm to use for hashing clear text is specified via the
+/confdConfig/cryptHash/algorithm
+parameter in
+confd\&.conf
+(see
+\m[blue]\fBconfd\&.conf(5)\fR\m[])\&. If the algorithm is set to "sha\-256" or "sha\-512", it can be tuned via the
+/confdConfig/cryptHash/rounds
+parameter in
+confd\&.conf\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.SS "The tailf\-common YANG module"
+.PP
+This module defines Tail\-f common YANG types, that are built\-in to ConfD\&.
+.PP
+\fBtailf:size\fR
+.RS 4
+A value that represents a number of bytes\&. An example could be S1G8M7K956B; meaning 1GB+8MB+7KB+956B = 1082138556 bytes\&. The value must start with an S\&. Any byte magnifier can be left out, i\&.e\&. S1K1B equals 1025 bytes\&. The order is significant though, i\&.e\&. S1B56G is not a valid byte size\&.
+.sp
+The value space and representation is identical to the built\-in
+\fBuint64\fR
+type\&.
+.RE
+.PP
+\fBtailf:octet\-list\fR
+.RS 4
+A list of dot\-separated octets for example "192\&.168\&.255\&.1\&.0"\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+tailf:value\-length
+restriction is measured in number of octets for
+\fBoctet\-list\fR\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:hex\-list\fR
+.RS 4
+A list of colon\-separated hexa\-decimal octets for example "4F:4C:41:71"\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+tailf:value\-length
+restriction is measured in octets of binary data for
+\fBhex\-list\fR\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:md5\-digest\-string\fR
+.RS 4
+The md5\-digest\-string type automatically computes a MD5 digest for a value adhering to this type\&.
+.sp
+This is best explained using an example\&. Suppose we have a leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+leaf key {
+  type tailf:md5\-digest\-string;
+}
+
+.fi
+.if n \{\
+.RE
+.\}
+A valid configuration is:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<key>$0$In god we trust\&.</key>
+
+.fi
+.if n \{\
+.RE
+.\}
+The "$0$" prefix indicates that this is plain text and that this value should be represented as a MD5 digest from now\&. ConfD computes a MD5 digest for the value and prepends "$1$<salt>$", where <salt> is a random eight character salt used to generate the digest\&. When this value later on is fetched from ConfD the following is returned:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<key>$1$fB$ndk2z/PIS0S1SvzWLqTJb\&.</key>
+
+.fi
+.if n \{\
+.RE
+.\}
+A value adhering to md5\-digest\-string must have "$0$" or a "$1$<salt>$" prefix\&.
+.sp
+The digest algorithm is the same as the md5 crypt function used for encrypting passwords for various UNIX systems, e\&.g\&.
+\m[blue]\fB\%http://www.freebsd.org/cgi/cvsweb.cgi/~checkout~/src/lib/libcrypt/crypt.c?rev=1.5&content-type=text/plain\fR\m[]
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+pattern
+restriction can not be used with this type\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:sha\-256\-digest\-string\fR
+.RS 4
+The sha\-256\-digest\-string type automatically computes a SHA\-256 digest for a value adhering to this type\&. A value of this type matches one of the forms:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$0$<clear text password>
+$5$<salt>$<password hash>
+$5$rounds=<number>$<salt>$<password hash>
+
+.fi
+.if n \{\
+.RE
+.\}
+The "$0$" prefix indicates that this is plain text\&. When a plain text value is received by the server, a SHA\-256 digest is calculated, and the string "$5$<salt>$" is prepended to the result, where <salt> is a random 16 character salt used to generate the digest\&. This value is stored in the configuration data store\&. The algorithm can be tuned via the
+/confdConfig/cryptHash/rounds
+parameter in
+confd\&.conf
+(see
+\m[blue]\fBconfd\&.conf(5)\fR\m[]), which if set to a number other than the default will cause "$5$rounds=<number>$<salt>$" to be prepended instead of only "$5$<salt>$"\&.
+.sp
+If a value starting with "$5$" is received, the server knows that the value already represents a SHA\-256 digest, and stores it as is in the data store\&.
+.sp
+The digest algorithm used is the same as the SHA\-256 crypt function used for encrypting passwords for various UNIX systems, see e\&.g\&.
+\m[blue]\fB\%http://www.akkadia.org/drepper/SHA-crypt.txt\fR\m[]
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:sha\-512\-digest\-string\fR
+.RS 4
+The sha\-512\-digest\-string type automatically computes a SHA\-512 digest for a value adhering to this type\&. A value of this type matches one of the forms:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$0$<clear text password>
+$6$<salt>$<password hash>
+$6$rounds=<number>$<salt>$<password hash>
+
+.fi
+.if n \{\
+.RE
+.\}
+The "$0$" prefix indicates that this is plain text\&. When a plain text value is received by the server, a SHA\-512 digest is calculated, and the string "$6$<salt>$" is prepended to the result, where <salt> is a random 16 character salt used to generate the digest\&. This value is stored in the configuration data store\&. The algorithm can be tuned via the
+/confdConfig/cryptHash/rounds
+parameter in
+confd\&.conf
+(see
+\m[blue]\fBconfd\&.conf(5)\fR\m[]), which if set to a number other than the default will cause "$6$rounds=<number>$<salt>$" to be prepended instead of only "$6$<salt>$"\&.
+.sp
+If a value starting with "$6$" is received, the server knows that the value already represents a SHA\-512 digest, and stores it as is in the data store\&.
+.sp
+The digest algorithm used is the same as the SHA\-512 crypt function used for encrypting passwords for various UNIX systems, see e\&.g\&.
+\m[blue]\fB\%http://www.akkadia.org/drepper/SHA-crypt.txt\fR\m[]
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:des3\-cbc\-encrypted\-string\fR
+.RS 4
+The des3\-cbc\-encrypted\-string type automatically encrypts a value adhering to this type using DES in CBC mode followed by a base64 conversion\&. If the value isn\*(Aqt encrypted already, that is\&.
+.sp
+This is best explained using an example\&. Suppose we have a leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+leaf enc {
+  type tailf:des3\-cbc\-encrypted\-string;
+}
+
+.fi
+.if n \{\
+.RE
+.\}
+A valid configuration is:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<enc>$0$In god we trust\&.</enc>
+
+.fi
+.if n \{\
+.RE
+.\}
+The "$0$" prefix indicates that this is plain text\&. When a plain text value is received by the server, the value is DES3/Base64 encrypted, and the string "$7$" is prepended\&. The resulting string is stored in the configuration data store\&.
+.sp
+When a value of this type is read, the encrypted value is always returned\&. In the example above, the following value could be returned:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+<enc>$7$Qxxsn8BVzxphCdflqRwZm6noKKmt0QoSWnRnhcXqocg=</enc>
+
+.fi
+.if n \{\
+.RE
+.\}
+If a value starting with "$7$" is received, the server knows that the value is already encrypted, and stores it as is in the data store\&.
+.sp
+A value adhering to this type must have a "$0$" or a "$7$" prefix\&.
+.sp
+ConfD uses a configurable set of encryption keys to encrypt the string\&. For details, see the description of the
+encryptedStrings
+configurable in the
+\m[blue]\fBconfd\&.conf(5)\fR\m[]
+manual page\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+pattern
+restriction can not be used with this type\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:aes\-cfb\-128\-encrypted\-string\fR
+.RS 4
+The aes\-cfb\-128\-encrypted\-string works exactly like des3\-cbc\-encrypted\-string but AES/128bits in CFB mode is used to encrypt the string\&. The prefix for encrypted values is "$8$"\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+The
+pattern
+restriction can not be used with this type\&.
+.sp .5v
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBtailf:ip\-address\-and\-prefix\-length\fR
+.RS 4
+The ip\-address\-and\-prefix\-length type represents a combination of an IP address and a prefix length and is IP version neutral\&. The format of the textual representations implies the IP version\&.
+.sp
+This is a
+\fBunion\fR
+of the
+\fBtailf:ipv4\-address\-and\-prefix\-length\fR
+and
+\fBtailf:ipv6\-address\-and\-prefix\-length\fR
+types defined below\&. The representation is thus identical to the representation for one of these types\&.
+.sp
+The SMIv2 type is an
+\fBOCTET STRING (SIZE (5|17))\fR\&.
+.RE
+.PP
+\fBtailf:ipv4\-address\-and\-prefix\-length\fR
+.RS 4
+The ipv4\-address\-and\-prefix\-length type represents a combination of an IPv4 address and a prefix length\&. The prefix length is given by the number following the slash character and must be less than or equal to 32\&.
+.sp
+An example: 172\&.16\&.1\&.2/16
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV4_AND_PLEN
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIipv4prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_ipv4_prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING (SIZE (5))\fR
+.RE
+.RE
+.PP
+\fBtailf:ipv6\-address\-and\-prefix\-length\fR
+.RS 4
+The ipv6\-address\-and\-prefix\-length type represents a combination of an IPv6 address and a prefix length\&. The prefix length is given by the number following the slash character and must be less than or equal to 128\&.
+.sp
+An example: 2001:DB8::1428:57AB/64
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_IPV6_AND_PLEN
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIipv6prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_ipv6_prefix\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING (SIZE (17))\fR
+.RE
+.RE
+.SS "The tailf\-xsd\-types YANG module"
+.PP
+"This module contains useful XML Schema Datatypes that are not covered by YANG types directly\&.
+.PP
+\fBxs:duration\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DURATION
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIduration\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_duration\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBxs:date\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DATE
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIdate\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_date\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBxs:time\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_TIME
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fItime\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_time\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBxs:token\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BUF
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBxs:hexBinary\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_BINARY
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fIbuf\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBconfd_buf_t\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.PP
+\fBxs:QName\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_QNAME
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =\fIqname\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBstruct confd_qname\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type = <not applicable>
+.RE
+.RE
+.PP
+\fBxs:decimal, xs:float, xs:double\fR
+.RS 4
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+\fIvalue\&.type\fR
+= C_DOUBLE
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+union element =
+\fId\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+C type =
+\fBdouble\fR
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+SMIv2 type =
+\fBOCTET STRING\fR
+.RE
+.RE
+.SH "SEE ALSO"
+.PP
+The ConfD User Guide
+.PP
+\fBconfd_lib\fR(3)
+\- confd C library\&.
+.PP
+\fBconfd.conf\fR(5)
+\- confd daemon configuration file format
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

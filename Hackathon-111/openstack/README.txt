@@ -1,0 +1,1 @@
+Change openstack_server.py IP address to your openstack IP address

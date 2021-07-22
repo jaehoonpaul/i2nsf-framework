@@ -1,0 +1,1105 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Semantic validation"><link rel="next" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Actions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch09.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch11.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.transformations"></a>Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch10.html#d5e2788">10.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e2808">10.2. Transformation Control Flow</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e2815">10.3. An Example</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e2878">10.4. AAA Transform</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e2897">10.5. Other Use Cases for Transformations</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e2907">10.6. Hooks</a></span></dt><dt><span class="sect1"><a href="ch10.html#ug.transformations.hidden_data">10.7. Hidden Data</a></span></dt><dt><span class="sect1"><a href="ch10.html#d5e3036">10.8. tailf:symlink</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2788"></a>10.1.&nbsp;Introduction</h2></div></div></div><p>
+        When building new variants of an old product, we often have a
+        situation where we have large amounts of application code, which
+        reads configuration data from some datastore and we do not
+        want to make any changes to the application code, we merely wish
+        to expose a different view of the same configuration data.
+      </p><p>
+        Another common situation is when we have application code
+        which requires more configuration data than we wish to expose
+        through the northbound management interfaces. The application
+        reads and use a number of configuration items that do not make
+        sense to expose through the different management interfaces.
+      </p><p>
+        In general, when the actual configuration data differs from
+        what we wish to expose as management data, we can use a variety
+        of different techniques in ConfD.
+      </p><p>
+        In this chapter we describe the following four different
+        techniques that all are used to somehow show different
+        views of the system.
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+             <span class="emphasis"><em>Transforms</em></span> are used to show
+             a portion of the system in a different way than the
+             original data model.
+           </p></li><li class="listitem"><p>
+             <span class="emphasis"><em>Hooks</em></span> are used to execute user code whenever
+             a part of the configuration is changed.
+           </p></li><li class="listitem"><p>
+             <span class="emphasis"><em>Hidden Data</em></span> is means to hide
+             parts of the configuration.
+           </p></li><li class="listitem"><p>
+             <span class="emphasis"><em>Symlinks</em></span> are pointers in the data model
+             effectively making one part of the data model appear
+             at a different place.
+           </p></li></ul></div><p>
+        Some or several of the above features are often the
+        required trick when we wish to accomplish certain
+        modifications of the data model. However, combining these
+        features, can make the system complex. A clean YANG data model
+        is easy to understand - whereas a system consisting of
+        hidden transformations with symlinks here and there, can
+        very easy become hard to understand. So - use these features
+        with caution.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2808"></a>10.2.&nbsp;Transformation Control Flow</h2></div></div></div><p>
+        ConfD uses the data model, i.e. the YANG files to render
+        all the northbound interfaces, the layout of the datamodel
+        is exactly reflected in the CLI and the Web UI.
+        Thus, unfortunately,  we may sometimes be forced to manipulate
+        the data model
+        in order to have a desired look and feel in the CLI or
+        the Web UI. In these cases, a transform may be required trick.
+      </p><p>
+        A transformation works as follows. We start out with the YANG
+        model we wish to transform. We may add <span class="command"><strong>tailf:export
+        maapi</strong></span> to that YANG module.  This makes the YANG
+        model invisible to all management agents except MAAPI.
+        Although invisible, the YANG model is loaded into the system
+        and regardless of whether the YANG model is populated through
+        cdb or an external database it is fully operational and
+        accessible through the MAAPI APIs as well as through the CDB
+        APIs (assuming the YANG model is populated by CDB).
+      </p><p>
+        Following that, we write another YANG model which represents the
+        management data we do wish to expose to the northbound management
+        agents. This YANG model has a callpoint which uses the attribute
+        <code class="code">tailf:transform</code>. Finally we must write
+        a program which acts as an
+        external database, serving data for a callpoint. This program
+        should use the MAAPI API to read and write the real YANG model data
+        which is used by the managed objects.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2815"></a>10.3.&nbsp;An Example</h2></div></div></div><p>
+         Assume we have the following YANG model:
+       </p><div class="example"><a name="d5e2818"></a><p class="title"><b>Example&nbsp;10.1.&nbsp;full.yang</b></p><div class="example-contents"><pre class="programlisting">
+container full {
+  leaf firstname {
+    type string;
+    default George;
+  }
+  leaf a_number {
+    type int64;
+    default 42;
+  }
+  leaf b_number {
+    type int64;
+    default 7;
+  }
+  container servers {
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:host;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+    }
+  }
+}
+       </pre></div></div><br class="example-break"><p>
+         For some reason we think that this YANG model is way too complicated
+         to expose through the management interfaces. We have also invested
+         time and energy in various applications that read and use
+         precisely this data and we do not want to change any of those
+         applications.
+       </p><p>What we want to do is to expose a YANG model
+       which looks like:
+       </p><div class="example"><a name="d5e2823"></a><p class="title"><b>Example&nbsp;10.2.&nbsp;small.yang</b></p><div class="example-contents"><pre class="programlisting">
+container small {
+  container servers {
+    tailf:callpoint transcp {
+        tailf:transform true;
+    }
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+    }
+  }
+}
+         </pre></div></div><br class="example-break"><p>
+         I.e. skip all the first toplevel elements, and skip the ip
+         and the port. We write C code which derives both.
+         Also note the transformation callpoint.
+       </p><p>
+         When ConfD needs to read and write data in the
+         <code class="filename">small.yang</code> YANG model, it will use the callpoint
+         <code class="code">transcp</code>. I.e. it will invoke the installed callback
+         functions for that callpoint. The main difference between a normal
+         callpoint and a transformation callpoint is when write and
+         when validation occurs. In a transformation callpoint
+         the write operations occur before validation. This means
+         that any data that is written through MAAPI in the actual transform,
+         will also be validated.
+       </p><p>
+         Similar to callpoints for external data, we need a worker socket
+         a control socket and registered callbacks. Our <code class="function">main()</code>
+         function together with some global variables would look like:
+       </p><div class="informalexample"><pre class="programlisting">
+#include "full.h"  /* generated .h files */
+#include "small.h"
+
+static struct confd_daemon_ctx *dctx;
+static int ctlsock;
+static int workersock;
+struct confd_trans_cbs tcb;
+struct confd_data_cbs  data;
+static int maapi_socket;
+
+
+int main()
+{
+
+    struct in_addr in;
+    struct sockaddr_in addr;
+
+    confd_init("MYNAME", stderr, debuglevel);
+    if ((dctx = confd_init_daemon("mydaemon")) == NULL)
+        confd_fatal("Failed to initialize confd\n");
+
+    if ((ctlsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open ctlsocket\n");
+
+    inet_aton("127.0.0.1", &amp;in);
+    addr.sin_addr.s_addr = in.s_addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(CONFD_PORT);
+    confd_load_schemas((struct sockaddr*)&amp;addr,sizeof (struct sockaddr_in))l
+    if (confd_connect(dctx, ctlsock, CONTROL_SOCKET, (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    if ((workersock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open workersocket\n");
+    if (confd_connect(dctx, workersock, WORKER_SOCKET,(struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+
+    tcb.init = init_transformation;
+    tcb.finish = stop_transformation;
+    confd_register_trans_cb(dctx, &amp;tcb);
+
+
+    data.get_elem = get_elem;
+    data.get_next = get_next;
+    data.set_elem = set_elem;
+    data.create   = create;
+    data.remove   = dbremove;
+    data.exists_optional = NULL;
+    strcpy(data.callpoint, "transcp");
+
+    if (confd_register_data_cb(dctx, &amp;data) != CONFD_OK)
+        confd_fatal("Failed to register data cb \n");
+
+    if (confd_register_done(dctx) != CONFD_OK)
+        confd_fatal("Failed to complete registration \n");
+
+    setup_maapi_sock(&amp;maapi_socket));
+
+    .........
+       </pre></div><p>The above is precisely the same setup as when we register
+       callbacks for an external database with the only exception that
+       the callpoint uses <code class="code">tailf:transform true</code>.
+       </p><p>The code to establish the MAAPI socket is  just a call to
+       <code class="function">maapi_connect()</code>.
+       </p><p>The difference comes in the implementation of the data callbacks,
+       with an external database, we have the data to deliver, in the case
+       of a transformation callpoint, we don't have the data. The data resides
+       inside ConfD and we can read and write that data
+       <span class="emphasis"><em>inside</em></span>
+       the same transaction using <code class="function">maapi_attach()</code>.
+       </p><p>The initialization looks like:</p><div class="informalexample"><pre class="programlisting">
+static int init_transformation(struct confd_trans_ctx *tctx)
+{
+    maapi_attach(maapi_socket, full__ns, tctx);
+    confd_trans_set_fd(tctx, workersock);
+    return CONFD_OK;
+}
+
+static int stop_transformation(struct confd_trans_ctx *tctx)
+{
+    if (tctx-&gt;t_opaque != NULL) {
+        struct maapi_cursor *mc = (struct maapi_cursor *)tctx-&gt;t_opaque;
+        maapi_destroy_cursor(mc);
+        free(tctx-&gt;t_opaque);
+    }
+    maapi_detach(maapi_socket, tctx);
+    return CONFD_OK;
+}
+       </pre></div><p>Whenever a transaction starts, we get called - as usual -
+       in our <code class="function">init()</code> callback and whenever the transaction
+       terminates, regardless of the outcome of the transaction, we get
+       called in our <code class="function">finish()</code> callback. Here we attach to the
+       executing transaction using <code class="function">maapi_attach()</code> in the
+       <code class="function">init()</code> callback. We will use the attached MAAPI socket
+       with the right transaction handle in all our data processing
+       callbacks. In the <code class="function">finish()</code> callback we need to release
+       any memory used for a MAAPI cursor, see <code class="function">get_next()</code> below.
+       </p><p>
+         The <code class="function">get_elem()</code> callback is interesting. The path
+         we get queried with is <code class="sgmltag-element">/small/servers/server{key}/name</code>
+         which doesn't exist in the real database.
+         What does exist as proper data though is
+         the path <code class="sgmltag-element">/full/servers/server{key}/name</code> and we
+         use the MAAPI socket to read that value from the "hidden" YANG model.
+       </p><div class="informalexample"><pre class="programlisting">
+static int get_elem(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath)
+
+{
+
+    confd_value_t v;
+    confd_value_t *leaf = &amp;(keypath-&gt;v[0][0]);
+    confd_value_t *vp = &amp;(keypath-&gt;v[1][0]);
+    switch (CONFD_GET_XMLTAG(leaf)) {
+    case small_name:
+        if (maapi_get_elem(maapi_socket, tctx-&gt;thandle, &amp;v,
+                           "/full/servers/server{%x}/name",  vp) == CONFD_OK) {
+            confd_data_reply_value(tctx, &amp;v);
+            free(CONFD_GET_BUFPTR(&amp;v));
+            return CONFD_OK;
+        }
+        else if (confd_errno == CONFD_ERR_NOEXISTS) {
+            fprintf(stderr, "\nNOT FOUND \n");
+            confd_data_reply_not_found(tctx);
+            return CONFD_OK;
+        }
+        else {
+            fprintf (stderr, "errno = %d\n", confd_errno);
+            return CONFD_ERR;
+        }
+    default:
+        return CONFD_ERR;
+    }
+}
+       </pre></div><p> It is important that we check <code class="code">confd_errno</code>
+       to distinguish
+       between the real error cases and the case where the element
+       doesn't exist. Also note how we format the path to the
+       <code class="function">maapi_get_elem()</code> call using the second element in the
+       keypath. This will be the key since the path will be
+       <code class="sgmltag-element">/small/servers/server{key}/name</code>.
+       </p><p><code class="function">set_elem()</code> will never be called since our MO
+       <span class="emphasis"><em>server</em></span>
+       only contains a key and no other elements.
+       </p><p>
+         The callback <code class="function">get_next()</code> is also interesting. Here we
+         utilize a MAAPI cursor to iterate through the different
+         "full" servers. Since the MAAPI cursor must exist across calls to
+         <code class="function">get_next()</code>, and we must be able to handle multiple
+         transactions (from different user sessions) in parallel, we
+         allocate the cursor dynamically and use the <code class="code">t_opaque</code>
+         element in the transaction context to keep track of it.
+       </p><div class="informalexample"><pre class="programlisting">
+static int get_next(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath,
+                    long next)
+{
+    struct maapi_cursor *mc;
+
+    if (next == -1) {
+        if (tctx-&gt;t_opaque == NULL) {
+            /* allocate the cursor */
+            mc = (struct maapi_cursor *)malloc(sizeof(struct maapi_cursor));
+            tctx-&gt;t_opaque = mc;
+        } else {
+            /* re-use previously allocated cursor */
+            mc = (struct maapi_cursor *)tctx-&gt;t_opaque;
+            maapi_destroy_cursor(mc);
+        }
+        maapi_init_cursor(maapi_socket, tctx-&gt;thandle, mc,
+                          "/full/servers/server");
+    } else {
+        mc = (struct maapi_cursor *)tctx-&gt;t_opaque;
+    }
+    maapi_get_next(mc);
+    if (mc-&gt;n == 0) {
+        confd_data_reply_next_key(tctx, NULL, -1, -1);
+        return CONFD_OK;
+    }
+    confd_data_reply_next_key(tctx, &amp;(mc-&gt;keys[0]), 1, 1);
+    return CONFD_OK;
+}
+       </pre></div><p>
+         Finally we have the <code class="function">delete()</code> and <code class="function">create()</code>
+         callbacks. The <code class="function">delete()</code> callback is completely
+         straightforward where we simply delete the same element from
+         the hidden "full" YANG model. The <code class="function">create()</code> callback
+         needs to do a bit of work. The "full" YANG model contains two
+         elements that are not part of the "small" YANG model. Thus when
+         a manager creates a new element in the "small" YANG model, it
+         is the responsibility of our code here to create the
+         corresponding element in the "full" YANG model, but also to
+         populate the additional two elements with values. If we fail
+         to do that the commit will fail since values in the "full"
+         YANG model are unset.
+       </p><p>
+         The code to delete and create:
+       </p><div class="informalexample"><pre class="programlisting">
+static int dbremove(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath)
+{
+    maapi_delete(maapi_socket, tctx-&gt;thandle,
+                 "/full/servers/server{%x}", &amp;(keypath-&gt;v[0][0]));
+    return CONFD_OK;
+}
+
+
+static int create(struct confd_trans_ctx *tctx,
+                  confd_hkeypath_t *keypath)
+{
+    /* this is where we have to do extra, we need to also populate */
+    /* the ip and ports fields in full.cs */
+    char buf[BUFSIZ];
+    confd_value_t *key = &amp;(keypath-&gt;v[0][0]);
+    struct servent *srv;
+    maapi_create(maapi_socket, tctx-&gt;thandle,
+                 "/full/servers/server{%x}", key);
+    maapi_set_elem2(maapi_socket, tctx-&gt;thandle,
+                    "0.0.0.0",
+                    "/full/servers/server{%x}/ip",key);
+    /* NUL terminate string */
+    memcpy(buf, CONFD_GET_BUFPTR(key), CONFD_GET_BUFSIZE(key));
+    buf[CONFD_GET_BUFSIZE(key)] = 0;
+
+    if ((srv = getservbyname(buf, NULL)) == NULL) {
+        char tbuf[BUFSIZ];
+        sprintf(tbuf, "Unknown service %s", buf);
+        confd_trans_seterr(tctx, tbuf);
+        return CONFD_ERR;
+    }
+    sprintf(buf, "%d", srv-&gt;s_port);
+    maapi_set_elem2(maapi_socket, tctx-&gt;thandle, buf,
+                    "/full/servers/server{%x}/port",key);
+    return CONFD_OK;
+}
+       </pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2878"></a>10.4.&nbsp;AAA Transform</h2></div></div></div><p>
+        The ConfD AAA YANG model is a very good example of where we may wish
+        to expose a different set of configuration items to the
+        management stations than what exists in the AAA YANG model
+        <code class="filename">tailf-aaa.yang</code>. The AAA system is described in
+        <a class="xref" href="ch14.html" title="Chapter&nbsp;14.&nbsp;The AAA infrastructure">Chapter&nbsp;14, <i>The AAA infrastructure</i></a>.
+      </p><p>
+        The data in the AAA YANG model is used by ConfD itself and all
+        that data including the fairly complicated authorization rules
+        must be there for ConfD to read. We think that very few
+        devices wish to expose e.g. the authorization rules from
+        <code class="filename">tailf-aaa.yang</code> to end users.  The solution to this
+        is to use a transformation.
+      </p><p>In the ConfD examples collection, we have an example which
+      exposes a very simple AAA model. The simple AAA YANG model looks
+      as:
+      </p><div class="example"><a name="d5e2886"></a><p class="title"><b>Example&nbsp;10.3.&nbsp;users.yang</b></p><div class="example-contents"><pre class="programlisting">
+module users {
+  namespace "http://www.example.com/ns/users";
+  prefix u;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef Role {
+    type enumeration {
+        enum admin;
+        enum oper;
+    }
+  }
+  typedef passwdStr {
+    type tailf:md5-digest-string {
+    }
+  }
+  container users {
+    tailf:callpoint simple_aaa {
+        tailf:transform true;
+    }
+    list user {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf password {
+        type passwdStr;
+        mandatory true;
+      }
+      leaf role {
+        type Role;
+        mandatory true;
+      }
+    }
+  }
+}
+       </pre></div></div><br class="example-break"><p>This YANG model just exposes a list of users. Each user has
+       a password and an enum indicating the role of the
+       user. There are only two static roles to choose from,
+       <code class="code">admin</code> and <code class="code">oper</code>.
+       </p><p>If we also have intimate knowledge of the datamodel we are
+       using, it is possible to generate static authorization rules.
+       </p><p>Let's take a look at the <code class="function">get_elem()</code> callback. The
+       task of this callback is to use MAAPI in order to populate
+       the simple YANG model from above.
+       </p><div class="informalexample"><pre class="programlisting">
+static int get_elem(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath)
+
+{
+
+    confd_value_t v;
+    confd_value_t *leaf = &amp;(keypath-&gt;v[0][0]);
+    confd_value_t *vp = &amp;(keypath-&gt;v[1][0]);
+    switch (CONFD_GET_XMLTAG(leaf)) {
+    case aaa_simple_name:
+        if (maapi_get_elem(
+                maapi_socket, tctx-&gt;thandle, &amp;v,
+                "/aaa/authentication/users/user{%x}/name",  vp) == CONFD_OK) {
+            confd_data_reply_value(tctx, &amp;v);
+            free(CONFD_GET_BUFPTR(&amp;v));
+            return CONFD_OK;
+        }
+        else if (confd_errno == CONFD_ERR_NOEXISTS) {
+            confd_data_reply_not_found(tctx);
+            return CONFD_OK;
+        }
+        else {
+            printf ("errno = %d\n", confd_errno);
+            return CONFD_ERR;
+        }
+    case aaa_simple_password:
+        if (maapi_get_elem(
+                maapi_socket, tctx-&gt;thandle, &amp;v,
+                "/aaa/authentication/users/user{%x}/password", vp)==CONFD_OK) {
+            confd_data_reply_value(tctx, &amp;v);
+            free(CONFD_GET_BUFPTR(&amp;v));
+            return CONFD_OK;
+        }
+        else if (confd_errno == CONFD_ERR_NOEXISTS) {
+            confd_data_reply_not_found(tctx);
+            return CONFD_OK;
+        }
+        else {
+            fprintf (stderr, "errno = %d\n", confd_errno);
+            return CONFD_ERR;
+        }
+    case aaa_simple_role: {
+        int ret;
+        char users[BUFSIZ];
+        char user[256];
+        memcpy(&amp;user[0], CONFD_GET_BUFPTR(vp), CONFD_GET_BUFSIZE(vp));
+        user[CONFD_GET_BUFSIZE(vp)] = 0;
+
+        ret = maapi_get_str_elem(
+            maapi_socket, tctx-&gt;thandle, users, BUFSIZ,
+            "/aaa/authentication/groups/group{admin}/users");
+        if (strstr(users, user) != NULL) {
+            CONFD_SET_ENUM_VALUE(&amp;v, aaa_simple_admin);
+            confd_data_reply_value(tctx, &amp;v);
+            return CONFD_OK;
+        }
+        else {
+            maapi_get_str_elem(
+                maapi_socket, tctx-&gt;thandle, users, BUFSIZ,
+                "/aaa/authentication/groups/group{oper}/users");
+            if (strstr(users, user) != NULL) {
+                CONFD_SET_ENUM_VALUE(&amp;v, aaa_simple_oper);
+                confd_data_reply_value(tctx, &amp;v);
+                return CONFD_OK;
+            }
+        }
+        /* user not part of any group at all */
+        confd_data_reply_not_found(tctx);
+        return CONFD_OK;
+    }
+    default:
+        confd_fatal("Unexpected switch tag %d\n",
+                    CONFD_GET_XMLTAG(leaf));
+    }
+    return CONFD_ERR;
+}
+       </pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2897"></a>10.5.&nbsp;Other Use Cases for Transformations</h2></div></div></div><p>
+        We may also envision a use case where we wish to expose
+        more data than is available in the YANG model. In this case
+        the task of the transformation would be to aggregate the
+        data and write into MAAPI.
+      </p><p>
+        Yet another use case for transformations would be when we
+        wish to expose two variants of the same config, one for
+        novices and one for experts. In this case we have the full YANG model
+        with all the details exposed to experts and a simplified version
+        which fills in many reasonable default values and possibly also
+        derives data, exposed to novices. The YANG model for novices would
+        then be populated by a transformation.
+      </p><p>
+        One common transformation is to logically move an entire
+        subtree of some data model to some other place.  For example,
+        ConfD's AAA data model is named <code class="sgmltag-element">/aaa</code>, but suppose we
+        want to access it through <code class="sgmltag-element">/system/advanced/aaa</code>
+        instead.  This can be done by using a transform as described
+        above, or it can be done using a <code class="code">symlink</code>, which
+        essentially is a specialized, built-in transform.
+      </p><p>
+        Finally when we want to implement support for standard SNMP mibs
+        while at the same time use a proper hierarchical high level
+        data model for all other north bound interfaces we must use
+        a transform on the SNMP data. To implement this we compile
+        the mib into a YANG model document using the <code class="code">smidump</code> tool.
+        We must then also annotate the YANG model derived from the MIB and
+        set a transformation point at the top.  Thus when the SNMP agent
+        tries to read data from the MIB (through the YANG model) our
+        transformation C code gets invoked and we can then, over the
+        maapi interface, read the right data from the high level data model
+        and return that data to the SNMP agent.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2907"></a>10.6.&nbsp;Hooks</h2></div></div></div><p>
+      A hook is a function that is invoked within the transaction when
+      an object is modified.  The hook function has access to the
+      transaction, so it can modify other objects in the transaction
+      as necessary.
+    </p><p>
+      A hook is a way for the application to participate
+      in a transaction. A hook is like a callpoint or a validation
+      point only that the application gets to attach (using maapi)
+      to the transaction and can write more data.
+    </p><p>
+      For example if we have an optional container containing a set of
+      items, whenever the container is created, our hook gets called
+      and the container can be populated with proper values. This
+      effect is also achieved by letting the container elements have
+      default values. The "default value" solution is compile time,
+      whereas a populating the container through a hook is obviously
+      runtime.
+    </p><p>
+      Hooks can also be used to attach some magic to individual
+      elements. Say that we have a leaf:
+    </p><div class="informalexample"><pre class="programlisting">
+leaf magic {
+   type int32;
+}
+    </pre></div><p>
+      Whenever the <span class="emphasis"><em>magic</em></span> leaf get set to, say
+      <span class="emphasis"><em>-1</em></span>, our hook code performs some other
+      arbitrary write operations.
+    </p><p>
+      Thus the hook mechanism can be used to achieve a wide
+      variety of effects.
+    </p><p>
+      A hook is implemented similar to a callpoint with the
+      exception that only write callbacks need to be
+      implemented. The write callbacks are
+      <code class="function">set_elem()</code>,
+      <code class="function">create()</code>,
+      <code class="function">remove()</code>,
+      <code class="function">set_case()</code>,
+      <code class="function">set_attr()</code>, and
+      <code class="function">move_after()</code>.
+      However a hook only needs to implement the write callbacks that it
+      actually needs for its own use - the others can be left
+      unimplemented, indicated by setting them to NULL in the
+      callback registration.
+    </p><p>
+      There are two types of hooks, <span class="emphasis"><em>set hooks</em></span>
+      and <span class="emphasis"><em>transaction hooks</em></span>.  The main
+      difference between the two is when they are invoked.  Set
+      hooks are invoked directly as an object is modified, and
+      transaction hooks are invoked in the two-phase commit phase.
+      The ConfD transaction engine receives all the original write
+      operations from one of the north bound agents. Once all write
+      operations have been received, i.e. when a user for example
+      types "commit" in the CLI, the transaction engine invokes the
+      relevant transaction hooks. Once all transaction hooks are
+      run the validation phase is entered, thus the write
+      operations performed by the transaction hooks are also
+      validated.
+    </p><p>
+      When set hooks make changes to the configuration, these
+      changes are just like changes done directly by the user -
+      they will be committed together with other changes, e.g.
+      when the user types "commit" in the CLI. If such a commit
+      operation cannot be completed, due to validation errors,
+      the changes done by set hooks will remain in the change set
+      until explicitly reverted.
+    </p><p>
+      Changes done by transaction hooks are different, in that
+      ConfD keeps track of them, and rolls them back in case a
+      commit operation cannot be completed. This makes it possible
+      for the user to fix validation errors and attempt to commit
+      again.
+    </p><p>
+      The hook is specified similar to callpoint if we have:
+    </p><div class="informalexample"><pre class="programlisting">
+list dyn {
+  key name;
+  max-elements 64;
+  tailf:callpoint foocp {
+      tailf:transaction-hook subtree;
+  }
+  leaf name {
+    type string;
+  }
+  leaf aval {
+    type string;
+    mandatory true;
+  }
+  leaf container {
+    type empty;
+  }
+}
+    </pre></div><p>The statement:
+      <code class="code">tailf:transaction-hook subtree;</code> indicates that we
+      wish to attach a hook to this part of the data model.  A set
+      hook uses the statement <code class="code">tailf:set-hook</code> instead.
+      Similar to a validator, the hook code will participate in the
+      transaction by calling <code class="function">maapi_attach()</code> and
+      similar to a data provider, the hook code must register its
+      callbacks through calls to
+      <code class="function">confd_register_trans_cb()</code> and
+      <code class="function">confd_register_data_cb()</code>.  Only those of the
+      possible write callbacks that are actually needed by the hook need
+      to be registered as data callbacks. All other callbacks must be
+      set to NULL.
+    </p><p>
+      For example our <code class="function">set_elem()</code> callback could look
+      like:
+    </p><div class="informalexample"><pre class="programlisting">
+static int my_set_elem(struct confd_trans_ctx *tctx,
+                       confd_hkeypath_t *keypath,
+                       confd_value_t *newval)
+{
+    confd_value_t *tag = &amp;(keypath-&gt;v[0][0]);
+    confd_value_t *key = &amp;(keypath-&gt;v[1][0]);
+
+    if (confd_svcmp("donk", key) == 0) {
+        maapi_setelem2(maapisock, tctx-&gt;thandle,"222", "/foo/bar");
+        .....
+      </pre></div><p>
+      So whenever some north bound agent assigns the value
+      "donk" to <code class="sgmltag-element">/dyn{key}/aval</code> for all values of <code class="code">key</code>
+      our code kicks in and additionally assigns a value to
+      <code class="sgmltag-element">/foo/bar</code>.
+    </p><p>We can have three different kinds of hooks.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+          <code class="code">subtree</code> - this assigns the hook
+          code to all objects found below where the hook is defined.
+          The value <code class="code">"true"</code> is the same as <code class="code">"subtree"</code>.
+        </p></li><li class="listitem"><p>
+          <code class="code">object</code> - This is used when we
+          wish to assign a hook to the manipulation of list entries.
+          The hook reaches down to and including the list
+          where it is defined. If there exists further lists
+          further down in the tree they are not affected by the hook.
+        </p></li><li class="listitem"><p>
+          <code class="code">node</code> - This is used when we
+          wish to assign a hook an optional container and only
+          that. It affects the container but non of its children.
+        </p></li></ol></div><p>
+      In some cases a transaction hook may need to update the
+      transaction in a way that really depends on the complete
+      configuration, rather than on the changes done in the current
+      transaction, making it difficult to implement the hook via the
+      <code class="function">create()</code>, <code class="function">set_elem()</code>,
+      etc callbacks. We can then use the
+      <code class="code">tailf:invocation-mode</code> substatement to
+      <code class="code">tailf:transaction-hook</code>, like this:
+    </p><div class="informalexample"><pre class="programlisting">
+  tailf:callpoint foocp {
+    tailf:transaction-hook subtree {
+      tailf:invocation-mode per-transaction;
+    }
+  }
+    </pre></div><p>
+      The <code class="code">per-transaction</code> argument tells ConfD that this
+      hook should only have one data callback invocation, regardless
+      of the details of the changes to the objects the hook is
+      assigned to. We can even use the same callpoint name, with the
+      same <code class="code">tailf:invocation-mode</code> statement, at several
+      points in the data model, and still only get one callback
+      invocation. The data callback that gets invoked for a
+      transaction hook specified like this is called
+      <code class="function">write_all()</code> (see the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page). It is thus the
+      only callback that should be registered for such a hook.
+    </p><p>
+      It is possible to define multiple hooks for a given node in the
+      data model, and have them all invoked. However hooks on descendant
+      nodes override all hooks that are inherited from ancestor
+      nodes. To "accumulate" hooks, the inherited hooks that should
+      remain in effect need to be specified again on descendant nodes
+      that have hooks. Consider the following example:
+    </p><div class="informalexample"><pre class="programlisting">
+list dyn {
+  key name;
+  tailf:callpoint t1 {
+      tailf:transaction-hook subtree;
+  }
+  tailf:callpoint s1 {
+      tailf:set-hook subtree;
+  }
+  leaf name {
+    type string;
+  }
+  leaf aval {
+    type string;
+  }
+  leaf bval {
+    type string;
+    tailf:callpoint t2 {
+        tailf:transaction-hook subtree;
+    }
+  }
+  leaf cval {
+    type string;
+    tailf:callpoint t1 {
+        tailf:transaction-hook subtree;
+    }
+    tailf:callpoint s2 {
+        tailf:set-hook subtree;
+    }
+  }
+}
+    </pre></div><p>
+      The result of this will be that changes to the <code class="sgmltag-element">dyn</code> list
+      node or the <code class="sgmltag-element">aval</code> leaf will invoke the callbacks
+      registered for the <code class="code">t1</code> and <code class="code">s1</code>
+      callpoints, while changes to the <code class="sgmltag-element">bval</code> leaf will only
+      invoke the callbacks registered for the <code class="code">t2</code> callpoint,
+      and changes to the <code class="sgmltag-element">cval</code> leaf will invoke the callbacks
+      registered for the <code class="code">t1</code> and <code class="code">s2</code>
+      callpoints.
+    </p><p>
+      Since hook code gets to execute for all the possible
+      write callbacks, the number of use cases
+      for hook code is very large. One common use case is once again
+      associated to the implementation of standard MIBS. Depending on the
+      nature of the chosen standard MIBs, we may need to maintain
+      mapping tables. If for example
+      the keys differ in the SNMP table from the high level data model
+      we may need to maintain additional mapping tables that are maintained
+      by hook code.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e2987"></a>10.6.1.&nbsp;Set Hooks and Candidate Configuration</h3></div></div></div><p>
+        When ConfD has been configured to provide a candidate
+        configuration, set hook code will be invoked when changes are
+        done to the candidate configuration, while transaction hooks
+        will be invoked when the candidate is committed to running.
+      </p><p>
+        There are situations when you only want your hook to modify the
+        running configuration:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+              A hook can use maapi to modify config elements that the
+              operator is not allowed to modify directly, according to
+              the active aaa rule set.  If such a modification is done
+              on the candidate configuration store, the operator will
+              not be allowed to commit the candidate configuration to
+              the running configuration. In this situation you must thus
+              use a transaction hook to modify the configuration.
+            </p></li></ul></div><p>
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.transformations.hidden_data"></a>10.7.&nbsp;Hidden Data</h2></div></div></div><p>
+      It is sometimes useful to hide nodes from some of the
+      northbound interfaces. The <code class="code">tailf:export</code> statement
+      can be used to hide an entire namespace. More fine grained
+      control can be attained with the <code class="code">tailf:hidden</code>
+      statement.
+    </p><p>
+      The <code class="code">tailf:hidden</code> statement names a
+      <span class="emphasis"><em>hide group</em></span>, i.e.
+      all containers and leafs that has the tailf:hidden statement, with a
+      specific hide group, are treated the
+      same way as far as being hidden or invisible. The hide group
+      name <code class="code">full</code> is given a special meaning.
+      The <code class="code">full</code>
+      hide group is hidden from all northbound interfaces, not
+      just <code class="code">user</code> interfaces.
+    </p><p>
+      A node with the <code class="code">tailf:hidden</code> statement must be
+      optional or have a default value if it can be implicitly
+      created via the creation of a differently hidden node
+      higher up in the hierarchy (e.g. hidden leafs in a non-hidden
+      list entry).
+    </p><p>
+      A related situation is when some nodes should be displayed
+      to user only when a certain condition is met.  For example,
+      the <code class="sgmltag-element">ethernet</code> subtree should be displayed only when the
+      type of an interface is <code class="sgmltag-element">ethernet</code>.  This can
+      be achieved through the <code class="code">tailf:display-when</code> statement.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3011"></a>10.7.1.&nbsp;Fully Hidden Nodes</h3></div></div></div><p>
+        This is nodes that may be useful for the application
+        code, but should be
+        hidden from all northbound interfaces. An example is the
+        set of physical network interfaces on a device and their
+        types. This is static data, i.e. it can't be changed by
+        configuration, but it can vary between different models of
+        a device that run the same software, and the
+        device-specific data can be provided via init file or
+        through MAAPI.
+      </p><p>
+        This type of data could also be realized via a separate
+        namespace where <code class="code">tailf:export</code> is used to limit the
+        visibility, but being able to have some nodes in the
+        data model hidden while others are not allows for greater
+        flexibility - e.g. list entries in the config data can
+        have hidden containers or leafs, which get instantiated
+        automatically along with the visible config nodes.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3016"></a>10.7.2.&nbsp;Hiding nodes from User Interfaces</h3></div></div></div><p>
+        This is data that is fully visible to programmatic
+        northbound interfaces such as NETCONF, but normally hidden
+        from user interfaces such as CLI and Web UI. Examples are
+        data used for experimental or end-customer-specific
+        features, similar to hidden commands in the CLI but for
+        data nodes.
+      </p><p>
+        A user interface may give access to this type of data (and
+        even totally hidden data) if the user executes an
+        <code class="code">unhide</code>
+        command identifying the set of hidden data that should be
+        revealed. After this these data nodes appear the same
+        as unhidden data, i.e.  they are included in tab
+        completion, listed by <span class="command"><strong>show</strong></span> commands etc.
+      </p><p>
+        A hide group can only be <span class="emphasis"><em>unhidden</em></span> if the group
+        is listed in the confd.conf file. This means that a
+        hide group will be completely hidden to the user
+        interfaces unless it has been explicitly allowed to be
+        unhidden in the confd.conf file. A password can optionally
+        be required to unhide a group.
+      </p><div class="informalexample"><pre class="programlisting">
+&lt;hideGroup&gt;
+   &lt;name&gt;debug&lt;/name&gt;
+   &lt;password&gt;secret&lt;/password&gt;
+&lt;/hideGroup&gt;
+          </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3026"></a>10.7.3.&nbsp;Conditional Display</h3></div></div></div><p>
+              A typical usage example is a
+              discriminated union.  One leaf is the type of something,
+              and depending on the value of this leaf, different
+              containers are visible:
+            </p><div class="informalexample"><pre class="programlisting">
+container service {
+    leaf type {
+        default http;
+        type enumeration {
+            enum http;
+            enum smtp;
+        }
+    }
+    choice service-type {
+        container http {
+            presence "HTTP enabled";
+            tailf:display-when '/service/type = "http"';
+            leaf addr {
+                mandatory  true;
+                type inet:ipv4-address;
+            }
+            leaf docroot {
+                mandatory  true;
+                type string;
+            }
+        }
+        container smtp {
+            presence "SMTP enabled";
+            tailf:display-when '/service/type = "smtp"';
+            leaf smtp-relay {
+                mandatory  true;
+                type boolean;
+            }
+            leaf use-virtual-mbox {
+                type boolean;
+            }
+        }
+    }
+}
+
+          </pre></div><p>
+            In this example, the "smtp" container should be
+            visible to the user only when the value of
+            <code class="sgmltag-element">service-type</code> is <code class="code">smtp</code>.
+          </p><p>
+            This can be accomplished by using the
+            <code class="code">tailf:display-when</code>
+            statement.  It contains an XPath expression which specifies
+            when the node should be displayed:
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3036"></a>10.8.&nbsp;tailf:symlink</h2></div></div></div><p>
+      NOTE: The usage of symlink is not recommended.  If it is used,
+      use it carefully.  It can be made to work in some special cases,
+      but some other use cases, described below, are problematic.  In
+      the problematic cases, <code class="code">tailf:link</code> can often be used
+      instead.  See <a class="xref" href="ch10.html#ug.transformations.symlink.discussion" title="10.8.1.&nbsp;Discussion">Section&nbsp;10.8.1, &#8220;Discussion&#8221;</a> for more
+      details.
+    </p><p>
+      Sometimes we want to move things in our data models.
+      One major downside
+      of moving structures around in the data model is that all
+      code that reads data from CDB has to be changed. Sometimes this is
+      not feasible because we do not
+      want to change this code. In this case the
+      <code class="code">symlink</code> feature may be a solution.
+    </p><p>
+      Another situation where symlinks might be the remedy is when
+      we want to move things in the data model due to aesthetics in the
+      human interfaces, the CLI and the Web UI that are both rendered
+      from the data model.
+    </p><p>
+      The syntax for a <code class="code">symlink</code> is straightforward:
+    </p><div class="informalexample"><pre class="programlisting">
+container top {
+  tailf:symlink foo {
+    tailf:path "/baz/bar";
+  }
+}
+
+container baz {
+  container bar {
+    leaf target {
+      type string;
+      default "Zappa";
+    }
+  }
+}
+</pre></div><p>
+      With the above construct we create a link from
+      <code class="sgmltag-element">/top/foo</code> to <code class="sgmltag-element">/baz/bar</code>.
+    </p><p>
+      The net result of the link is that it will appear as if
+      all data found in the data model below the link target,
+      e.g. <code class="sgmltag-element">/baz/bar</code> will appear under the link
+      source, e.g. <code class="sgmltag-element">/top/foo</code>.  Thus if prior to
+      the symlink the path
+      <code class="sgmltag-element">/baz/bar{13}/server{www}/port</code> was a valid key
+      path, now the path
+      <code class="sgmltag-element">/top/foo/bar{13}/server{www}/port</code> point to
+      the same configuration item. Hence we now have two
+      different ways to configure the same item. The remedy to
+      that is is typically to hide the the target
+      configuration from the north bound agents using the
+      <code class="code">tailf:hidden</code> or <code class="code">tailf:export</code> statements.
+    </p><p>
+      The textual format of a symlink is an XPath absolute
+      location path.
+    </p><p>
+      The target of a symlink can contain instantiated keys.
+      Using XPath notation we could point to the
+      <code class="sgmltag-element">counters</code> element
+      in a specific <code class="sgmltag-element">server</code> as in :
+    </p><div class="informalexample"><pre class="programlisting">
+tailf:symlink mycounter {
+  tailf:path "/servers/server[ip='10.0.0.1'][port=80]'
+           + "/counter";
+}
+</pre></div><p>
+      Slightly more advanced is that the target can refer to keys
+      in the source. If
+      the target lies within a list, all keys must be
+      specified. A key
+      either has a value, or is a reference to a key in the path of the
+      source element, using the function <code class="code">current()</code> as starting
+      point for an XPath location path. Example of a valid target
+      for a symlink is:
+    </p><div class="informalexample"><pre class="programlisting">
+/servers/server[ip='10.0.0.1'][port=current()/../myport]/mycounter
+</pre></div><p>
+      This feature must be used when we want to use keys in our
+      own path down the XML tree and use those very same keys to find
+      an other way down the XML tree.
+    </p><p>
+      At link time, confdc checks that the target of the
+      symlink can actually exist at run-time.  A symlink may
+      point to another symlink.  confdc checks at link time,
+      and ConfD at load time, that no cycles exist. Dangling
+      pointers may occur though. If we have a symlink that
+      points into an optional container or into a list entry,
+      the target container can be removed.  It is up to the application
+      developers to check that dangling pointers do not
+      occur. If they do, and the symlink is accessed, this is
+      logged in the developer log as an error.
+    </p><p>
+      Finally we need to mention that when we are symlinking into
+      another namespace, we must indicate that using the default
+      XML notation for referencing elements in other namespaces. Thus if
+      we want to have a symlink into the
+      <code class="code">http://example.com/ns/servers</code>
+      namespace we typically
+      have to import the module defining that namespace, and use
+      the prefix of that module in the symlink as in:
+    </p><div class="informalexample"><pre class="programlisting">
+import servers {
+  prefix srv;
+}
+...
+
+tailf:symlink myserver {
+  tailf:path "/srv:servers/srv:server";
+}
+</pre></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.transformations.symlink.discussion"></a>10.8.1.&nbsp;Discussion</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e3076"></a>Northbound Client Applications</h4></div></div></div><p>
+          The YANG modules that the device publishes to the northbound
+          clients define the API between the client and the device.
+          Specifically, the YANG module defines the complete data tree
+          for configuration and operational state.
+        </p><p>
+          One problem with <code class="code">tailf:symlink</code> is that a
+          client application (EMS or NMS or similar) cannot just
+          ignore the statement, since it defines a subtree in the
+          datastore.  But since this is not a standard statement,
+          third-party clients will ignore it.  This means that when
+          they talk to the device, they will not understand the
+          subtree under the symlink.
+        </p><p>
+          Note that symlink is used to provide a different entry point
+          to the same underlying data.  If both the data model with
+          the symlink and the target data model is being exposed at
+          the same time to the client, this will be confusing to the
+          client.  A change in one part of the tree makes another part
+          change automatically.
+        </p><p>
+          One solution to this problem is to make sure that the module
+          with the symlink is not exposed to the client.  Instead,
+          publish the target module only.
+        </p><p>
+          Another solution to this problem is to not publish the target
+          module, but instead use <span class="command"><strong>pyang</strong></span> to sanitize
+          the module with the symlink.  The sanitizing process
+          replaces the symlink statement with a copy of the target
+          subtree.  Then publish the sanitized version of the module.
+        </p><p>
+          NOTE: If a module is not published to a client, it should have
+          a <code class="code">tailf:export</code> statement, to
+          exclude the protocol the client is using.  For example,
+          suppose we have a symlink in our module
+          <code class="code">acme-system.yang</code> from
+          <code class="sgmltag-element">/system/netconf/nacm</code> to the standard NACM path
+          <code class="sgmltag-element">/nacm</code>.  The standard NACM module might be
+          annotated with:
+    </p><div class="informalexample"><pre class="programlisting">
+  tailf:export netconf;
+</pre></div><p>
+           and the system module with:
+    </p><div class="informalexample"><pre class="programlisting">
+  tailf:export cli;
+  tailf:export webui;
+</pre></div><p>
+        </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e3094"></a>Errors</h4></div></div></div><p>
+          Another problem with symlinks is if the target subtree
+          contains <code class="code">must</code> expression or validation code
+          that refers to nodes outside the target subtree.  For
+          example, if a symlink <code class="sgmltag-element">foo</code> points to
+          <code class="sgmltag-element">/x/z</code> in this example:
+    </p><div class="informalexample"><pre class="programlisting">
+  container x {
+    leaf y {
+      type int32;
+    }
+    leaf z {
+      type int32;
+      must ". &gt; ../y" {
+       error-message "x must be greater than y";
+    }
+  }
+</pre></div><p>
+          If someone sets the <code class="sgmltag-element">foo</code> to a value that happens
+          to invalidate the must expression, the error message will be
+          misleading since it refers to a node they cannot see, and it
+          is not easily fixed, since they cannot modify the node y.
+        </p></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch09.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch11.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;9.&nbsp;Semantic validation&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;11.&nbsp;Actions</td></tr></table></div></body></html>

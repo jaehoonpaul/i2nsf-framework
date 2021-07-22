@@ -1,0 +1,103 @@
+<INFO> 4-Mar-2021::06:14:00.945 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Writing daemon log to /home/ubuntu/Webfilter/confd.log
+<INFO> 4-Mar-2021::06:14:00.949 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Writing NETCONF log to /home/ubuntu/Webfilter/netconf.log
+<INFO> 4-Mar-2021::06:14:00.950 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Writing audit log to /home/ubuntu/Webfilter/audit.log
+<INFO> 4-Mar-2021::06:14:00.950 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Writing developer log to /home/ubuntu/Webfilter/devel.log
+<INFO> 4-Mar-2021::06:14:00.950 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Daemon logging started
+<DEBUG> 4-Mar-2021::06:14:00.970 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ./ietf-i2nsf-policy-rule-for-nsf.fxs
+<DEBUG> 4-Mar-2021::06:14:00.975 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 4-Mar-2021::06:14:00.976 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 4-Mar-2021::06:14:00.977 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 4-Mar-2021::06:14:00.979 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 4-Mar-2021::06:14:00.980 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 4-Mar-2021::06:14:00.981 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 4-Mar-2021::06:14:00.982 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ./ietf-i2nsf-nsf-monitoring.fxs
+<DEBUG> 4-Mar-2021::06:14:00.985 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file /home/ubuntu/confd-6.6/lib/confd/lib/netconf/netconf/priv/netconf_netmod.fxs
+<DEBUG> 4-Mar-2021::06:14:00.986 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 4-Mar-2021::06:14:00.987 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 4-Mar-2021::06:14:00.988 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 4-Mar-2021::06:14:00.992 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 4-Mar-2021::06:14:00.993 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 4-Mar-2021::06:14:00.994 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 4-Mar-2021::06:14:00.995 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 4-Mar-2021::06:14:00.996 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 4-Mar-2021::06:14:00.997 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 4-Mar-2021::06:14:01.017 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ./commands-c.ccl
+<DEBUG> 4-Mar-2021::06:14:01.025 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ./commands-j.ccl
+<DEBUG> 4-Mar-2021::06:14:01.025 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 4-Mar-2021::06:14:01.119 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 4-Mar-2021::06:14:01.397 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 4-Mar-2021::06:14:01.552 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 4-Mar-2021::06:14:01.573 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 4-Mar-2021::06:14:01.610 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 4-Mar-2021::06:14:01.715 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - ConfD started vsn: 6.6
+<INFO> 5-Mar-2021::04:51:39.782 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - ConfD stopping (confd --stop called by ubuntu in /home/ubuntu/Webfilter)
+<INFO> 5-Mar-2021::04:51:39.810 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Stopping to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 5-Mar-2021::04:51:39.811 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Stopping to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 5-Mar-2021::04:51:39.950 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: - Daemon logging terminating, reason: shutdown
+<INFO> 5-Mar-2021::04:51:51.245 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Writing daemon log to /home/ubuntu/Webfilter/confd.log
+<INFO> 5-Mar-2021::04:51:51.250 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Writing NETCONF log to /home/ubuntu/Webfilter/netconf.log
+<INFO> 5-Mar-2021::04:51:51.250 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Writing audit log to /home/ubuntu/Webfilter/audit.log
+<INFO> 5-Mar-2021::04:51:51.250 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Writing developer log to /home/ubuntu/Webfilter/devel.log
+<INFO> 5-Mar-2021::04:51:51.251 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Daemon logging started
+<DEBUG> 5-Mar-2021::04:51:51.270 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ./ietf-i2nsf-policy-rule-for-nsf.fxs
+<DEBUG> 5-Mar-2021::04:51:51.275 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::04:51:51.276 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 5-Mar-2021::04:51:51.277 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 5-Mar-2021::04:51:51.278 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 5-Mar-2021::04:51:51.279 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 5-Mar-2021::04:51:51.280 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 5-Mar-2021::04:51:51.281 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ./ietf-i2nsf-nsf-monitoring.fxs
+<DEBUG> 5-Mar-2021::04:51:51.284 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file /home/ubuntu/confd-6.6/lib/confd/lib/netconf/netconf/priv/netconf_netmod.fxs
+<DEBUG> 5-Mar-2021::04:51:51.285 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 5-Mar-2021::04:51:51.286 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::04:51:51.287 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 5-Mar-2021::04:51:51.290 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 5-Mar-2021::04:51:51.290 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 5-Mar-2021::04:51:51.292 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 5-Mar-2021::04:51:51.293 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 5-Mar-2021::04:51:51.294 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 5-Mar-2021::04:51:51.294 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 5-Mar-2021::04:51:51.307 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ./commands-c.ccl
+<DEBUG> 5-Mar-2021::04:51:51.314 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ./commands-j.ccl
+<DEBUG> 5-Mar-2021::04:51:51.315 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 5-Mar-2021::04:51:51.405 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 5-Mar-2021::04:51:51.687 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 5-Mar-2021::04:51:51.709 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 5-Mar-2021::04:51:51.764 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 5-Mar-2021::04:51:51.867 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - ConfD started vsn: 6.6
+<INFO> 5-Mar-2021::05:04:06.579 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - ConfD stopping (confd --stop called by ubuntu in /home/ubuntu/Webfilter)
+<INFO> 5-Mar-2021::05:04:06.615 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Stopping to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 5-Mar-2021::05:04:06.617 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Stopping to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 5-Mar-2021::05:04:06.773 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: - Daemon logging terminating, reason: shutdown
+<INFO> 5-Mar-2021::05:04:13.412 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Writing daemon log to /home/ubuntu/Webfilter/confd.log
+<INFO> 5-Mar-2021::05:04:13.418 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Writing NETCONF log to /home/ubuntu/Webfilter/netconf.log
+<INFO> 5-Mar-2021::05:04:13.418 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Writing audit log to /home/ubuntu/Webfilter/audit.log
+<INFO> 5-Mar-2021::05:04:13.419 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Writing developer log to /home/ubuntu/Webfilter/devel.log
+<INFO> 5-Mar-2021::05:04:13.419 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Daemon logging started
+<DEBUG> 5-Mar-2021::05:04:13.444 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ./ietf-i2nsf-policy-rule-for-nsf.fxs
+<DEBUG> 5-Mar-2021::05:04:13.450 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:04:13.452 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:04:13.453 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 5-Mar-2021::05:04:13.454 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 5-Mar-2021::05:04:13.455 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 5-Mar-2021::05:04:13.456 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 5-Mar-2021::05:04:13.458 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ./ietf-i2nsf-nsf-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:04:13.463 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file /home/ubuntu/confd-6.6/lib/confd/lib/netconf/netconf/priv/netconf_netmod.fxs
+<DEBUG> 5-Mar-2021::05:04:13.464 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 5-Mar-2021::05:04:13.465 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:04:13.467 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:04:13.472 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 5-Mar-2021::05:04:13.473 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 5-Mar-2021::05:04:13.474 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 5-Mar-2021::05:04:13.475 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 5-Mar-2021::05:04:13.477 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 5-Mar-2021::05:04:13.477 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 5-Mar-2021::05:04:13.499 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ./commands-c.ccl
+<DEBUG> 5-Mar-2021::05:04:13.510 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ./commands-j.ccl
+<DEBUG> 5-Mar-2021::05:04:13.513 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 5-Mar-2021::05:04:13.658 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 5-Mar-2021::05:04:14.055 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 5-Mar-2021::05:04:14.085 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 5-Mar-2021::05:04:14.135 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 5-Mar-2021::05:04:14.238 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - ConfD started vsn: 6.6
+<INFO> 5-Mar-2021::06:13:32.154 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: - Session limit of type 'cli' reached, rejected new session request

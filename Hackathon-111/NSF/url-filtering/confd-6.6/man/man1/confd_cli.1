@@ -1,0 +1,311 @@
+'\" t
+.\"     Title: confd_cli
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_CLI" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_cli \- Frontend to the ConfD CLI engine
+.SH "SYNOPSIS"
+.HP \w'\fBconfd\fR\fB_cli\fR\ 'u
+\fBconfd\fR\fB_cli\fR [\fIoptions\fR] [\fIFile\fR]
+.HP \w'\fBconfd\fR\fB_cli\fR\ 'u
+\fBconfd\fR\fB_cli\fR [\-\-help] [\-\-host\ \fIHost\fR] [\-\-ip\ \fIIpAddress\fR\ |\ \fIIpAddress/Port\fR] [\-\-address\ \fIAddress\fR] [\-\-port\ \fIPortNumber\fR] [\-\-cwd\ \fIDirectory\fR] [\-\-proto\ tcp>\ |\ ssh\ |\ console] [\-\-interactive] [\-\-noninteractive] [\-J | \-C | \-I] [\-\-user\ \fIUsername\fR] [\-\-uid\ \fIUidInt\fR] [\-\-groups\ \fIGroups\fR] [\-\-gids\ \fIGidList\fR] [\-\-gid\ \fIGid\fR] [\-\-opaque\ \fIOpaque\fR] [\-\-noaaa]
+.SH "DESCRIPTION"
+.PP
+The
+confd_cli program is a C frontend to the ConfD CLI engine\&. The
+\fBconfd\fR\fB_cli\fR
+program connects to ConfD and basically passes data back and forth from the user to ConfD\&.
+.PP
+confd_cli can be invoked from the command line\&. If so, no authentication is done\&. The archetypical usage of
+confd_cli is to use it as a login shell in /etc/passwd, in which case authentication is done by the login program\&.
+.PP
+The source code for
+\fBconfd_cli\fR
+resides in
+$CONFD_DIR/src/confd/cli
+and can be modified if required\&.
+.SH "OPTIONS"
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Display help text\&.
+.RE
+.PP
+\fB\-H\fR, \fB\-\-host\fR \fIHostName\fR
+.RS 4
+Gives the name of the current host\&. The
+\fBconfd\fR\fB_cli\fR
+program will use the value of the system call
+\fBgethostbyname()\fR
+by default\&. The host name is used in the CLI prompt\&.
+.RE
+.PP
+\fB\-i\fR, \fB\-\-ip\fR \fIIpAddress\fR | \fIIpAddress/Port\fR
+.RS 4
+Set the IP (or IP address and port) which ConfD reports that the user is coming from\&. The
+\fBconfd\fR\fB_cli\fR
+program by default tries to determine this automatically by reading the
+\fBSSH_CONNECTION\fR
+environment variable\&.
+.RE
+.PP
+\fB\-A\fR, \fB\-\-address\fR \fIAddress\fR
+.RS 4
+CLI address to connect to\&. The default is 127\&.0\&.0\&.1\&. This can be controlled by either this flag, or the UNIX environment variable
+\fBCONFD\fR\fB_IPC_ADDR\fR\&. The
+\fB\-A\fR
+flag takes precedence\&.
+.RE
+.PP
+\fB\-P\fR, \fB\-\-port\fR \fIPortNumber\fR
+.RS 4
+CLI port to connect to\&. The default is the ConfD IPC port, which is
+4565
+This can be controlled by either this flag, or the UNIX environment variable
+\fBCONFD\fR\fB_IPC_PORT\fR\&. The
+\fB\-P\fR
+flag takes precedence\&.
+.RE
+.PP
+\fB\-c\fR, \fB\-\-cwd\fR \fIDirectory\fR
+.RS 4
+The current working directory for the user once in the CLI\&. All file references from the CLI will be relative to the cwd\&. By default the value will be the actual cwd where
+confd_cli is invoked\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-proto\fR ssh | tcp | console
+.RS 4
+The protocol the user is using\&. If
+\fBSSH_CONNECTION\fR
+is set, this defaults to "ssh", otherwise "console"\&.
+.RE
+.PP
+\fB\-n\fR, \fB\-\-interactive\fR
+.RS 4
+This forces the CLI to run in interactive mode\&. In non interactive mode, the CLI never prompts the user for any input\&. This flag can sometimes be useful in certain CLI scripting scenarios\&.
+.RE
+.PP
+\fB\-N\fR, \fB\-\-noninteractive\fR
+.RS 4
+This forces the CLI to run in non interactive mode\&. See
+\m[blue]\fB\%#ug.cli.starting\fR\m[]
+for further info\&.
+.RE
+.PP
+\fB\-J\fR, \fB\-C\fR, \fB\-I\fR
+.RS 4
+This flag sets the mode of the CLI\&.
+\fB\-J\fR
+is Juniper style CLI,
+\fB\-C\fR
+is Cisco XR style CLI and
+\fB\-I\fR
+is Cisco IOS style CLI\&.
+.RE
+.PP
+\fB\-u\fR, \fB\-\-user\fR \fIUser\fR
+.RS 4
+Indicates to ConfD which username the user has\&. This defaults to the username of the invoker\&.
+.RE
+.PP
+\fB\-U\fR, \fB\-\-uid\fR \fIUid\fR
+.RS 4
+Indicates to ConfD which uid the user has\&.
+.RE
+.PP
+\fB\-g\fR, \fB\-\-groups\fR \fIGroupList\fR
+.RS 4
+Indicates to ConfD which groups the user are a member of\&. The parameter is a comma separated string\&. This defaults to the actual UNIX groups the user is a member of\&. The group names are used by the AAA system in ConfD to authorize data and command access\&.
+.RE
+.PP
+\fB\-D\fR, \fB\-\-gids\fR \fIGidList\fR
+.RS 4
+Indicates to ConfD which secondary group ids the user shall have\&. The parameter is a comma separated string of integers\&. This defaults to the actual secondary UNIX group ids the user has\&. The gids are used by ConfD when ConfD executes commands on behalf of the user\&.
+.RE
+.PP
+\fB\-G\fR, \fB\-\-gid\fR \fIGid\fR
+.RS 4
+Indicates to ConfD which group id the user shall have\&. This defaults to the actual UNIX group id the user has\&. The gid is used by ConfD when ConfD executes commands on behalf of the user\&.
+.RE
+.PP
+\fB\-O\fR, \fB\-\-opaque\fR \fIOpaque\fR
+.RS 4
+Pass an opaque string to
+ConfD\&. The string is not interpreted by
+ConfD, only made available to application code\&. See "built\-in variables" in
+\m[blue]\fBclispec(5)\fR\m[]
+and
+\fBmaapi_get_user_session_opaque()\fR
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&. The string can be given either via this flag, or via the UNIX environment variable
+\fBCONFD\fR\fB_CLI_OPAQUE\fR\&. The
+\fB\-O\fR
+flag takes precedence\&.
+.RE
+.PP
+\fB\-\-noaaa\fR
+.RS 4
+Completely disables all AAA checks for this CLI\&. This can be used as a disaster recovery mechanism if the AAA rules in ConfD have somehow become corrupted\&.
+.RE
+.SH "ENVIRONMENT VARIABLES"
+.PP
+CONFD_IPC_ADDR
+.RS 4
+Which IP address to connect to\&.
+.RE
+.PP
+CONFD_IPC_PORT
+.RS 4
+Which TCP port to connect to\&.
+.RE
+.PP
+SSH_CONNECTION
+.RS 4
+Set by openssh and used by
+\fIconfd\fR\fI_cli\fR
+to determine client IP address etc\&.
+.RE
+.PP
+TERM
+.RS 4
+Passed on to terminal aware programs invoked by ConfD\&.
+.RE
+.SH "EXIT CODES"
+.PP
+0
+.RS 4
+Normal exit
+.RE
+.PP
+1
+.RS 4
+Failed to read user data for initial handshake\&.
+.RE
+.PP
+2
+.RS 4
+Close timeout, client side closed, session inactive\&.
+.RE
+.PP
+3
+.RS 4
+Idle timeout triggered\&.
+.RE
+.PP
+4
+.RS 4
+Tcp level error detected on daemon side\&.
+.RE
+.PP
+5
+.RS 4
+Internal error occurred in daemon\&.
+.RE
+.PP
+5
+.RS 4
+User interrupted clistart using special escape char\&.
+.RE
+.PP
+6
+.RS 4
+User interrupted clistart using special escape char\&.
+.RE
+.PP
+7
+.RS 4
+Daemon abruptly closed socket\&.
+.RE
+.SH "SCRIPTING"
+.PP
+It is very easy to use
+\fBconfd\fR\fB_cli\fR
+from
+\fB/bin/sh\fR
+scripts\&.
+\fBconfd\fR\fB_cli\fR
+reads stdin and can then also be run in non interactive mode\&. This is the default if stdin is not a tty (as reported by
+\fBisatty()\fR)
+.PP
+Here is example of invoking
+\fBconfd\fR\fB_cli\fR
+from a shell script\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#!/bin/sh
+
+confd_cli << EOF
+configure
+set foo bar 13
+set funky stuff 44
+commit
+exit no\-confirm
+exit
+EOF
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+And here is en example capturing the output of
+\fBconfd\fR\fB_cli\fR:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#!/bin/sh
+{ confd_cli << EOF;
+configure
+set trap\-manager t2 ip\-address 10\&.0\&.0\&.1 port 162 snmp\-version 2
+commit
+exit no\-confirm
+exit
+EOF
+} | grep \*(AqAborted:\&.*not unique\&.*\*(Aq
+if [ $? != 0 ]; then
+  echo \*(Aqtest2: commit did not fail\*(Aq; exit 1;
+fi
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The above type of CLI scripting is a very efficient and easy way to test various aspects of the CLI\&.
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

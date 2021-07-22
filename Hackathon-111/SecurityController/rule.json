@@ -1,0 +1,29 @@
+{
+  "ietf-i2nsf-cfi-policy:i2nsf-cfi-policy": [
+    {
+      "policy-name": "security_policy_for_blockin_sns",
+      "rules": {
+        "rule": [
+          {
+            "rule-name": "block_access_to_sns_during_office_hours",
+            "event": {
+              "time-information": {
+                "start-date-time": "2021-04-20T09:00:00Z",
+                "end-date-time": "2021-04-20T18:00:00Z"
+              }
+            },
+            "condition": {
+              "firewall-condition": {
+                "source": "employees"
+              }
+            },
+            "actions": {
+              "primary-action": "drop"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+

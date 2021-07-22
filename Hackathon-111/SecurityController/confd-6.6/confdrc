@@ -1,0 +1,20 @@
+# bash/sh/zsh environment setup for ConfD confd-basic-6.6
+CONFD_DIR=/home/ubuntu/confd-6.6
+PATH=$CONFD_DIR/bin:$PATH
+if [ "x${LD_LIBRARY_PATH}" != "x" ]; then
+    LD_LIBRARY_PATH=$CONFD_DIR/lib:$LD_LIBRARY_PATH
+else
+    LD_LIBRARY_PATH=$CONFD_DIR/lib
+fi
+if [ "x$PYTHONPATH" != "x" ]; then
+    PYTHONPATH=$CONFD_DIR/src/confd/pyapi:$PYTHONPATH
+else
+    PYTHONPATH=$CONFD_DIR/src/confd/pyapi
+fi
+export CONFD_DIR PATH LD_LIBRARY_PATH PYTHONPATH
+if [ "x${MANPATH}" != "x" ]; then
+    MANPATH=$CONFD_DIR/man:$MANPATH
+else
+    MANPATH=$CONFD_DIR/man:/usr/share/man
+fi
+export MANPATH

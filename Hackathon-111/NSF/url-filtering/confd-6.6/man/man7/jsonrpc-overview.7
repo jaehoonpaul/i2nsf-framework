@@ -1,0 +1,390 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC" "" "February 2016" "" ""
+.
+.SH "PROTOCOL OVERVIEW"
+The JSON\-RPC 2\.0 Specification \fIhttp://www\.jsonrpc\.org/specification\fR contains all the details you need in order to understand the protocol but here is the short version\.
+.
+.P
+A request payload typically looks like this:
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "method": "subtract",
+ "params": [42, 23]}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+where the \fBmethod\fR and \fBparams\fR properties are as defined in this manual page\.
+.
+.P
+A response payload typically looks like this:
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": 19}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+or
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "error":
+ {"code": \-32601,
+   "type": "rpc\.request\.method\.not_found",
+   "message": "Method not found"}}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The request \fBid\fR param is returned as\-is in the response to make it easy to pair requests and responses\.
+.
+.P
+The batch JSON\-RPC standard is dependent on matching requests and responses by \fBid\fR, since the server processes requests in any order it sees fit e\.g\.:
+.
+.IP "" 4
+.
+.nf
+
+[{"jsonrpc": "2\.0",
+  "id": 1,
+  "method": "subtract",
+  "params": [42, 23]}
+,{"jsonrpc": "2\.0",
+  "id": 2,
+  "method": "add",
+  "params": [42, 23]}]
+.
+.fi
+.
+.IP "" 0
+.
+.P
+with a possible response like (first result for "add", second result for "substract"):
+.
+.IP "" 4
+.
+.nf
+
+[{"jsonrpc": "2\.0",
+  "id": 2,
+  "result": 65}
+,{"jsonrpc": "2\.0",
+  "id": 1,
+  "result": 19}]
+.
+.fi
+.
+.IP "" 0
+.
+.SH "COMMON CONCEPTS"
+The URL for the JSON\-RPC API is \fB/jsonrpc\fR\. For logging and debugging purposes, you can add anything as a subpath to the URL, for example turning the URL into \fB/jsonrpc/<method>\fR which will allow you to see the exact method in different browsers\' \fIDeveloper Tools\fR \- \fINetwork\fR tab \- \fIName\fR column, rather than just an opaque "jsonrpc"\.
+.
+.P
+For brevity, in the upcoming descriptions of each methods, only the input \fBparams\fR and the output \fBresult\fR are mentioned, although they are part of a fully formed JSON\-RPC payload\.
+.
+.P
+Authorization is based on HTTP cookies\. The response to a successful call to \fBlogin\fR would create a session, and set a HTTP\-only cookie, and even a HTTP\-only secure cookie over HTTPS, named \fBsessionid\fR\. All subsequent calls are authorized by the presence and the validity of this cookie\.
+.
+.P
+The \fBth\fR param is a transaction handle identifier as returned from a call to \fBnew_read_trans\fR or \fBnew_write_trans\fR\.
+.
+.P
+The \fBcomet_id\fR param is a unique id (decided by the client) which must be given first in a call to the \fBcomet\fR method, and then to upcoming calls which trigger comet notifications\.
+.
+.P
+The \fBhandle\fR param needs to a semantic value (not just a counter) prefixed with the comet id (for disambiguation), and overrides the handle that would have otherwise been returned by the call\. This gives more freedom to the client and set semantic handles\.
+.
+.SS "COMMON ERRORS"
+The JSON\-RPC specification defines the following error \fBcode\fR values:
+.
+.IP "\(bu" 4
+\-32700 \- Invalid JSON was received by the server\. An error occurred on the server while parsing the JSON text\.
+.
+.IP "\(bu" 4
+\-32600 \- The JSON sent is not a valid Request object\.
+.
+.IP "\(bu" 4
+\-32601 \- The method does not exist / is not available\.
+.
+.IP "\(bu" 4
+\-32602 \- Invalid method parameter(s)\.
+.
+.IP "\(bu" 4
+\-32603 \- Internal JSON\-RPC error\.
+.
+.IP "\(bu" 4
+\-32000 to \-32099 \- Reserved for application defined errors (see below)
+.
+.IP "" 0
+.
+.P
+To make server errors easier to read, along the numeric \fBcode\fR, we use a \fBtype\fR param that yields a literal error token\. For all application defined errors, the \fBcode\fR is always \-32000\. It\'s best to ignore the \fBcode\fR and just use the \fBtype\fR param\.
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "method": "login",
+ "params":
+ {"foo": "joe",
+  "bar": "SWkkasE32"}}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+which results in:
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "error":
+ {"code": \-32602,
+  "type": "rpc\.method\.unexpected_params",
+  "message": "Unexpected params",
+  "data":
+  {"param": "foo"}}}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The \fBmessage\fR param is a free text string in English meant for human consumption, which is a one\-to\-one match with the \fBtype\fR param\. To remove noise from the examples, this param is omitted from the following descriptions\.
+.
+.P
+An additional method\-specific \fBdata\fR param may be added to give further details on the error, most predominantly a \fBreason\fR param which is also a free text string in English meant for human consumption\. To remove noise from the examples, this param is omitted from the following descriptions\. But any additional \fBdata\fR params will be noted by each method description\.
+.
+.SS "APPLICATION DEFINED ERRORS"
+All methods may return one of the following JSON RPC or application defined errors, in addition to others, specific to each method\.
+.
+.IP "" 4
+.
+.nf
+
+{"type": "rpc\.request\.parse_error"}
+{"type": "rpc\.request\.invalid"}
+{"type": "rpc\.method\.not_found"}
+{"type": "rpc\.method\.invalid_params", "data": {"param": <string>}}
+{"type": "rpc\.internal_error"}
+
+
+{"type": "rpc\.request\.eof_parse_error"}
+{"type": "rpc\.request\.multipart_broken"}
+{"type": "rpc\.request\.too_big"}
+{"type": "rpc\.request\.method_denied"}
+
+
+{"type": "rpc\.method\.unexpected_params", "data": {"param": <string>}}
+{"type": "rpc\.method\.invalid_params_type", "data": {"param": <string>}}
+{"type": "rpc\.method\.missing_params", "data": {"param": <string>}}
+{"type": "rpc\.method\.unknown_params_value", "data": {"param": <string>}}
+
+
+{"type": "rpc\.method\.failed"}
+{"type": "rpc\.method\.denied"}
+{"type": "rpc\.method\.timeout"}
+
+{"type": "session\.missing_sessionid"}
+{"type": "session\.invalid_sessionid"}
+{"type": "session\.overload"}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "FAQ"
+.
+.SS "WHAT ARE THE SECURITY CHARACTERISTICS OF THE JSON\-RPC API?"
+JSON\-RPC runs on top the embedded web server (see "The web server" chapter), which accepts HTTP and/or HTTPS\.
+.
+.P
+The JSON\-RPC session ties the client and the server via an HTTP cookie, named "sessionid" which contains a randomly server\-generated number\. This cookie is not only secure (when the requests come over HTTPS), meaning that HTTPS cookies do not leak over HTTP, but even more importantly this cookie is also http\-only, meaning that only the server and the browser (e\.g\. not the JavaScript code) have access to the cookie\. Furthermore, this cookie is a session cookie, meaning that a browser restart would delete the cookie altogether\.
+.
+.P
+The JSON\-RPC session lives as long as the user does not request to logout, as long as the user is active within a 30 minute (default value, which is configurable) time frame, as long as there are no severe server crashes\. When the session dies, the server will reply with the intention to delete any "sessionid" cookies stored in the browser (to prevent any leaks)\.
+.
+.P
+When used in a browser, the JSON\-RPC API does not accept cross\-domain requests by default, but can be configured to do so via the custom headers functionality in the embedded web server, or by adding a reverse\-proxy (see "The web server" chapter)\.
+.
+.SS "WHAT IS THE PROPER WAY TO USE THE JSON\-RPC API IN A CORS SETUP?"
+The embedded server allows for custom headers to be se, in this case CORS headers, like:
+.
+.IP "" 4
+.
+.nf
+
+Access\-Control\-Allow\-Origin: http://webpage\.com
+Access\-Control\-Allow\-Credentials: true
+Access\-Control\-Allow\-Headers: Origin, Content\-Type, Accept
+Access\-Control\-Request\-Method: POST
+.
+.fi
+.
+.IP "" 0
+.
+.P
+A server hosted at http://server\.com responding with these headers, would mean that the JSON\-RPC API can be contacted from a browser which is showing a web page from http://webpage\.com, and will allow the browser to make POST requests, with a limited amount of headers and with credentials (i\.e\. cookies)\.
+.
+.P
+This is not enough though, because the browser also needs to be told that your JavaScript code really wants to make a CORS request\. A jQuery example would show like this:
+.
+.IP "" 4
+.
+.nf
+
+// with jQuery
+$\.ajax({
+  type: \'post\',
+  url: \'http://server\.com/jsonrpc\',
+  contentType: \'application/json\',
+  data: JSON\.stringify({
+    jsonrpc: \'2\.0\',
+    id: 1,
+    method: \'login\',
+    params: {
+      \'user\': \'joe\',
+      \'passwd\': \'SWkkasE32\'
+    }
+  }),
+  dataType: \'json\',
+  crossDomain: true,       // CORS specific
+  xhrFields: {             // CORS specific
+    withCredentials: true  // CORS specific
+  }                        // CORS specific
+})
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Without this setup, you will notice that the browser will not send the "sessionid" cookie on post\-login JSON\-RPC calls\.
+.
+.SS "WHAT IS A TAG/KEYPATH?"
+A \fBtagpath\fR is a path pointing to a specific position in a YANG module\'s schema\.
+.
+.P
+A \fBkeypath\fR is a path pointing to specific position in a YANG module\'s instance\.
+.
+.P
+These kind of paths are used for several of the API methods (e\.g\. \fBset_value\fR, \fBget_value\fR, \fBsubscribe_changes\fR), and could be seen as XPath path specifications in abbreviated format\.
+.
+.P
+Lets look at some examples using the following YANG module as input:
+.
+.IP "" 4
+.
+.nf
+
+module devices {
+    namespace "http://acme\.com/ns/devices";
+    prefix d;
+
+    container config {
+        leaf description { type string; }
+        list device {
+            key "interface";
+            leaf interface { type string; }
+            leaf date { type string; }
+        }
+    }
+}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Valid tagpaths:
+.
+.IP "\(bu" 4
+\fB/d:config/description\fR
+.
+.IP "\(bu" 4
+\fB/d:config/device/interface\fR
+.
+.IP "" 0
+.
+.P
+Valid keypaths:
+.
+.IP "\(bu" 4
+\fB/d:config/device{eth0}/date\fR \- the date leaf value within a device with an \fBinterface\fR key set to \fBeth0\fR
+.
+.IP "" 0
+.
+.P
+Note how the prefix is prepended to the first tag in the path\. This prefix is compulsory\.
+.
+.SS "RESTRICTING ACCESS TO METHODS"
+The AAA infrastructure can be used to restrict access to library functions using command rules:
+.
+.IP "" 4
+.
+.nf
+
+<cmdrule xmlns="http://tail\-f\.com/yang/acm">
+  <name>webui</name>
+  <context xmlns="http://tail\-f\.com/yang/acm">webui</context>
+  <command>::jsonrpc:: get_schema</command>
+  <access\-operations>read exec</access\-operations>
+  <action>deny</action>
+</cmdrule>
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Note how the command is prefixed with "::jsonrpc:: "\. This tells the AAA engine to apply the command rule to JSON\-RPC API functions\.
+.
+.P
+You can read more about command rules in "The AAA infrastructure" chapter in this User Guide\.
+.
+.SS "What is session\.overload error?"
+A series of limits are imposed on the load that one session can put on the system\.
+.
+.P
+This reduces the risk that a session takes overs the whole system and brings it into a DoS situation\.
+.
+.P
+The response will include details about the limit that triggered the error\.
+.
+.P
+Known limits:
+.
+.IP "\(bu" 4
+only 10000 commands/subscriptions are allowed per session
+.
+.IP "" 0
+

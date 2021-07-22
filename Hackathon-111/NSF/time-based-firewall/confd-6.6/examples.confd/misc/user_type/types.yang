@@ -1,0 +1,46 @@
+module types {
+  namespace "http://tail-f.com/ns/example/types";
+  prefix types;
+
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef portType {
+    type string;
+    tailf:info "shelf/slot/port";
+    tailf:typepoint port_type;
+  }
+  typedef ipv4AddressMask {
+    type string;
+    tailf:info "IPv4-address/mask-length";
+    tailf:typepoint ipv4_mask;
+  }
+
+  typedef ipv6AddressMask {
+    type string;
+    tailf:info "IPv6-address/mask-length";
+    tailf:typepoint ipv6_mask;
+  }
+  typedef ipAddressMask {
+    tailf:info "IP-address/mask-length";
+    type union {
+      type ipv4AddressMask;
+      type ipv6AddressMask;
+    }
+  }
+  container system {
+    list port {
+      key name;
+      max-elements 4096;
+      leaf name {
+        type portType;
+      }
+      leaf ip {
+        type ipAddressMask;
+        mandatory true;
+      }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;2.&nbsp;An introduction to ConfD</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch01.html" title="Chapter&nbsp;1.&nbsp;About the Documentation"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;2.&nbsp;An introduction to ConfD</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.intro"></a>Chapter&nbsp;2.&nbsp;An introduction to ConfD</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch02.html#d5e81">2.1. An on-device software system for configuration management</a></span></dt><dt><span class="sect1"><a href="ch02.html#d5e93">2.2. ConfD Architecture</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e81"></a>2.1.&nbsp;An on-device software system for configuration management</h2></div></div></div><p>
+      Network devices, such as routers, switches or gateways,
+      need to be configured and
+      monitored. A fair amount of software is embedded in these devices
+      to facilitate
+      configuration and monitoring. This software typically includes:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          An SNMP agent for monitoring the device (SNMP is in practice
+          almost never
+          used for configuring devices, although it is possible to do so).
+        </p></li><li class="listitem"><p>
+          Software to drive and render a command line interface (CLI).
+        </p></li><li class="listitem"><p>
+          A small web server and content making up a device-specific
+          web site, for a web-based user interface to the device
+          management system.
+        </p></li></ul></div><p>
+      In addition, the IETF has developed a standard called NETCONF for
+      automated
+      configuration of network devices. NETCONF allows devices to expose an
+      XML-based API that the network operator can use to set and get full
+      and partial configuration data sets.
+    </p><p>
+      NETCONF solves several management problems that have
+      been lacking  standardized solutions. However, for an engineering
+      organization with limited
+      resources and a tight time schedule introducing/implementing
+      NETCONF also poses a problem; a whole new management sub-system
+      needs to be implemented and integrated with the other
+      already existing management components, while time-to-market
+      requirements remain unchanged.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e93"></a>2.2.&nbsp;ConfD Architecture</h2></div></div></div><p>
+      Tail-f's ConfD is a device configuration toolkit meant to be
+      integrated as a management sub-system in network devices, providing:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          An implementation of the NETCONF protocol
+        </p></li><li class="listitem"><p>
+          Automatic rendering of northbound interfaces, including CLI, Web UI and NETCONF
+        </p></li><li class="listitem"><p>
+          Clustered/fault-tolerant storage of configuration data
+        </p></li><li class="listitem"><p>
+          Master-agent/sub-agent framework for NETCONF, CLI, Web UI and SNMP
+        </p></li></ul></div><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="461"><tr><td align="center"><img src="pics/confd_position.png" align="middle" width="461"></td></tr></table><div class="caption"><p>ConfD as sub-system on a network device</p></div></div><p>
+      The following figure illustrates where ConfD would reside on,
+      for example, a chassis-based router:
+    </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="602"><tr><td align="center"><img src="pics/confd-on-target.png" align="middle" width="602"></td></tr></table><div class="caption"><p>ConfD on a chassis-based router</p></div></div><p>ConfD executes as a regular Unix daemon on the target device,
+    acting:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>as a NETCONF agent for the NETCONF protocol</p></li><li class="listitem"><p>as a Web server for the Web UI</p></li><li class="listitem"><p>as a CLI engine for command-line access</p></li><li class="listitem"><p>and as an SNMP agent</p></li></ul></div><p>
+    It also contains a built-in XML configuration database.
+    </p><p>
+      The following figure illustrates the overall architecture. The
+      ConfD architecture is modular, with well-defined interfaces
+      between sub-systems.
+    </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="531"><tr><td align="center"><img src="pics/confd-arch.png" align="middle" width="531"></td></tr></table><div class="caption"><p>ConfD architecture</p></div></div><p>
+      The NETCONF, SNMP, CLI and Web modules are Management
+      Agents. These communicate with external managers, and provide
+      the managers with a protocol-specific view of the system. The
+      box labeled Other Agent is e.g. a GUI application or some
+      other management protocol implementation. These other Agents
+      use the Management Agent API (MAAPI) to talk to the Management
+      Backplane.
+    </p><p>
+      The Management Backplane provides an hierarchical view of the
+      configuration and status/statistics data through the
+      Management Agent API. This API is a session-oriented
+      read/write API to the hierarchical data, with transaction-like
+      semantics.
+    </p><p>
+      Examples of operations in this interface are 'create-subtree',
+      'get-instance', 'set-instance'. This interface is used both
+      when the configuration is stored in the built-in ConfD
+      database, and when it is stored in an external database.
+    </p><p>
+      The Management Backplane authenticates incoming requests
+      through an AAA (Authentication, Authorization, Accounting) plugin
+      API. An AAA plugin authenticates users and authorizes their
+      requests. ConfD comes with a built-in AAA plugin, which can be
+      replaced by vendor specific code.
+    </p><p>
+      In order to actually read and write the device-native
+      configuration data, the sessions in the Management Backplane
+      use the Database Plugin API. A database plugin has to provide
+      mapping from the hierarchical view of the data used in the
+      management protocols, to the native view used by the
+      management database.
+    </p><p>
+      The management database can either be the integrated
+      management database - called CDB - or some other database. CDB
+      is a light-weight fault-tolerant distributed XML database. CDB
+      can be used in single or multi-node systems in master slave
+      configuration. It handles updates to the database
+      schema automatically.
+    </p><p>
+      The Managed Objects in the application use the Managed Object
+      API to read their configuration from the ConfD management
+      database. There is a also a subscription mechanism, which the
+      Managed Objects can use to react on configuration changes.
+    </p><p>
+      ConfD provides language bindings for the callback oriented
+      plugin interfaces in C and Java. In the figure above, the
+      Database Plugin API and the AAA Plugin API are available in C and Java
+      The normal function call oriented APIs are available as C
+      or Java APIs.
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;1.&nbsp;About the Documentation&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language</td></tr></table></div></body></html>

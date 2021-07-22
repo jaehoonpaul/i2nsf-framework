@@ -1,0 +1,22 @@
+# Created by: admin
+# Date: 2021-03-05 04:53:45
+# Via: netconf
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10001
+
+i2nsf-security-policy {
+    system-policy security_policy_for_ddos_attack {
+        rules ddos_attack_rule {
+            condition-clause-container {
+                packet-security-ipv4-condition {
+                    pkt-sec-ipv4-dest {
+                        delete:
+                        ipv4-address 10.0.0.37;
+                    }
+                 }
+             }
+         }
+     }
+ }

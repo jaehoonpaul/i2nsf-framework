@@ -1,0 +1,219 @@
+<clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="j">
+  <operationalMode>
+    <modifications>
+    </modifications>
+
+    <cmd name="copy" mount="file">
+      <info>Copy a file</info>
+      <help>Copy a file from one location to another in the file system</help>
+      <callback>
+        <exec>
+          <osCommand>cp</osCommand>
+          <options>
+            <uid>user</uid>
+            <gid>user</gid>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <type><file/></type>
+          <info>&lt;source file&gt;</info>
+          <help>source file</help>
+        </param>
+        <param>
+          <type><file/></type>
+          <info>&lt;destination file&gt;></info>
+          <help>destination file</help>
+        </param>
+      </params>
+    </cmd>
+
+    <cmd name="compare" mount="file">
+      <info>Compare the contents of two files</info>
+      <help>Compare the contents of two files, line by line</help>
+      <cmd name="files">
+        <info>Compare the contents of two files</info>
+        <help>Compare the contents of two files, line by line</help>
+        <callback>
+          <exec>
+            <osCommand>diff</osCommand>
+            <options>
+              <uid>user</uid>
+              <gid>user</gid>
+              <ignoreExitValue/>
+            </options>
+          </exec>
+        </callback>
+        <params>
+          <param>
+            <type><file/></type>
+            <info>&lt;file&gt;</info>
+            <help>file</help>
+          </param>
+          <param>
+            <type><file/></type>
+            <info>&lt;file&gt;</info>
+            <help>file</help>
+          </param>
+        </params>
+      </cmd>
+    </cmd>
+
+    <cmd name="delete" mount="file">
+      <info>Delete a file</info>
+      <help>Permanently delete a file from the filesystem.</help>
+      <callback>
+        <exec>
+          <osCommand>rm</osCommand>
+          <options>
+            <uid>user</uid>
+            <gid>user</gid>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <type><file/></type>
+          <info>&lt;file&gt;</info>
+          <help>file to delete</help>
+        </param>
+      </params>
+    </cmd>
+
+
+    <cmd name="log" mount="show">
+      <info>Display content of log</info>
+      <help>Display content of log</help>
+      <callback>
+        <exec>
+          <osCommand>cat</osCommand>
+          <options>
+            <uid>user</uid>
+            <gid>user</gid>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <type><file wd="/var/log"/></type>
+          <info>&lt;log file to show&gt;</info>
+          <help>name of log file to view</help>
+        </param>
+      </params>
+    </cmd>
+
+    <cmd name="rename" mount="file">
+      <info>Rename a file</info>
+      <help>Change the name of a file</help>
+      <callback>
+        <exec>
+          <osCommand>mv</osCommand>
+          <options>
+            <uid>user</uid>
+            <gid>user</gid>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <type><file/></type>
+          <info>&lt;source file&gt;</info>
+          <help>source file</help>
+        </param>
+        <param>
+          <type><file/></type>
+          <info>&lt;destination file&gt;</info>
+          <help>destination file</help>
+        </param>
+      </params>
+    </cmd>
+
+    <cmd name="ping">
+      <info>Ping a host</info>
+      <help>Check the reachability of a network host</help>
+      <callback>
+        <exec>
+          <osCommand>ping</osCommand>
+          <options>
+            <uid>user</uid>
+            <gid>user</gid>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <info>&lt;host&gt;</info>
+          <help>host name or IP</help>
+        </param>
+      </params>
+    </cmd>
+
+    <cmd name="traceroute">
+      <info>Trace the route to a remote host</info>
+      <help>Trace the route to a remote host</help>
+      <callback>
+        <exec>
+          <osCommand>/usr/sbin/traceroute</osCommand>
+          <options/>
+        </exec>
+      </callback>
+      <params>
+        <any>
+          <info>&lt;host&gt;</info>
+          <help>host name or IP</help>
+        </any>
+      </params>
+    </cmd>
+
+    <cmd name="monitor">
+      <info>Real-time debugging</info>
+      <help>Real-time debugging</help>
+
+      <cmd name="start">
+        <info>Start displaying the system log or trace a file</info>
+        <help>Start displaying the system log or trace a file</help>
+        <callback>
+          <exec>
+            <osCommand>tail</osCommand>
+            <args>-f -n 0</args>
+            <options>
+              <uid>user</uid>
+              <gid>user</gid>
+              <batch>
+                <group>monitor_file</group>
+                <prefix>log:</prefix>
+                <noDuplicate/>
+              </batch>
+            </options>
+          </exec>
+        </callback>
+        <params>
+          <param>
+            <type><file/></type>
+            <info>&lt;file&gt;</info>
+            <help>log file to trace</help>
+          </param>
+        </params>
+      </cmd>
+
+      <cmd name="stop">
+        <info>Stop displaying the system log or trace a file</info>
+        <help>Stop displaying the system log or trace a file</help>
+        <callback>
+          <execStop batchGroup="monitor_file"/>
+        </callback>
+        <params>
+          <param>
+            <type><file/></type>
+            <info>&lt;file&gt;</info>
+            <help>log file to trace</help>
+          </param>
+        </params>
+      </cmd>
+    </cmd>
+  </operationalMode>
+
+  <configureMode>
+  </configureMode>
+</clispec>

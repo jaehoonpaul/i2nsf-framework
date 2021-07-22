@@ -1,0 +1,9 @@
+{
+    "cpu_usage": 100.0, 
+    "disk_left": 83.0, 
+    "disk_usage": 16.9, 
+    "in_traffic_speed": 844773, 
+    "memory_usage": 16.3, 
+    "out_traffic_speed": 447691, 
+    "system_status": "Running"
+}

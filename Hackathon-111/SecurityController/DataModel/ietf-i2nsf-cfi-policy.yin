@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module name="ietf-i2nsf-cfi-policy"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:nsfcfi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-cfi-policy"
+        xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types"
+        xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types"
+        xmlns:nacm="urn:ietf:params:xml:ns:yang:ietf-netconf-acm">
+  <yang-version value="1.1"/>
+  <namespace uri="urn:ietf:params:xml:ns:yang:ietf-i2nsf-cfi-policy"/>
+  <prefix value="nsfcfi"/>
+  <import module="ietf-inet-types">
+    <prefix value="inet"/>
+  </import>
+  <import module="ietf-yang-types">
+    <prefix value="yang"/>
+  </import>
+  <import module="ietf-netconf-acm">
+    <prefix value="nacm"/>
+  </import>
+  <organization>
+    <text>IETF I2NSF (Interface to Network Security Functions)
+Working Group</text>
+  </organization>
+  <contact>
+    <text>WG Web: &lt;http://tools.ietf.org/wg/i2nsf&gt;
+WG List: &lt;mailto:i2nsf@ietf.org&gt;
+
+Editor: Jaehoon Paul Jeong
+&lt;mailto:pauljeong@skku.edu&gt;
+
+Editor: Patrick Lingga
+&lt;mailto:patricklink@skku.edu&gt;</text>
+  </contact>
+  <description>
+    <text>This module is a YANG module for Consumer-Facing Interface.
+   
+Copyright (c) 2021 IETF Trust and the persons identified as
+authors of the code. All rights reserved.
+   
+Redistribution and use in source and binary forms, with or
+without modification, is permitted pursuant to, and subject to
+the license terms contained in, the Simplified BSD License set
+forth in Section 4.c of the IETF Trust's Legal Provisions
+Relating to IETF Documents
+(https://trustee.ietf.org/license-info).
+   
+This version of this YANG module is part of RFC XXXX
+(https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
+for full legal notices.</text>
+  </description>
+  <revision date="2021-03-08">
+    <description>
+      <text>Initial revision.</text>
+    </description>
+    <reference>
+      <text>RFC XXXX: I2NSF Consumer-Facing Interface YANG Data Model</text>
+    </reference>
+  </revision>
+  <identity name="malware-file-type">
+    <description>
+      <text>Base identity for malware file types.</text>
+    </description>
+  </identity>
+  <identity name="executable-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for executable file types.</text>
+    </description>
+  </identity>
+  <identity name="doc-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for Microsoft document file types.</text>
+    </description>
+  </identity>
+  <identity name="html-app-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for html application file types.</text>
+    </description>
+  </identity>
+  <identity name="javascript-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for Javascript file types.</text>
+    </description>
+  </identity>
+  <identity name="pdf-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for pdf file types.</text>
+    </description>
+  </identity>
+  <identity name="dll-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for dll file types.</text>
+    </description>
+  </identity>
+  <identity name="msi-file">
+    <base name="malware-file-type"/>
+    <description>
+      <text>Identity for Microsoft installer file types.</text>
+    </description>
+  </identity>
+  <identity name="security-event-type">
+    <description>
+      <text>Base identity for security event types.</text>
+    </description>
+  </identity>
+  <identity name="ddos">
+    <base name="security-event-type"/>
+    <description>
+      <text>Identity for DDoS event types.</text>
+    </description>
+  </identity>
+  <identity name="spyware">
+    <base name="security-event-type"/>
+    <description>
+      <text>Identity for spyware event types.</text>
+    </description>
+  </identity>
+  <identity name="trojan">
+    <base name="security-event-type"/>
+    <description>
+      <text>Identity for Trojan infection event types.</text>
+    </description>
+  </identity>
+  <identity name="ransomware">
+    <base name="security-event-type"/>
+    <description>
+      <text>Identity for ransomware infection event types.</text>
+    </description>
+  </identity>
+  <identity name="i2nsf-ipsec">
+    <description>
+      <text>Base identity for IPsec method types.</text>
+    </description>
+    <reference>
+      <text>draft-ietf-i2nsf-sdn-ipsec-flow-protection-08: Software-Defined
+Networking (SDN)-based IPsec Flow Protection - IPsec method
+types can be selected.</text>
+    </reference>
+  </identity>
+  <identity name="ipsec-ike">
+    <base name="i2nsf-ipsec"/>
+    <description>
+      <text>Identity for ipsec-ike.</text>
+    </description>
+    <reference>
+      <text>draft-ietf-i2nsf-sdn-ipsec-flow-protection-08: Software-Defined
+Networking (SDN)-based IPsec Flow Protection - IPsec method
+type with IKE is selected.</text>
+    </reference>
+  </identity>
+  <identity name="ipsec-ikeless">
+    <base name="i2nsf-ipsec"/>
+    <description>
+      <text>Identity for ipsec-ikeless.</text>
+    </description>
+    <reference>
+      <text>draft-ietf-i2nsf-sdn-ipsec-flow-protection-08: Software-Defined
+Networking (SDN)-based IPsec Flow Protection - IPsec method
+type without IKE is selected.</text>
+    </reference>
+  </identity>
+  <identity name="continent">
+    <description>
+      <text>Base Identity for continent types.</text>
+    </description>
+  </identity>
+  <identity name="africa">
+    <base name="continent"/>
+    <description>
+      <text>Identity for Africa.</text>
+    </description>
+  </identity>
+  <identity name="asia">
+    <base name="continent"/>
+    <description>
+      <text>Identity for Asia.</text>
+    </description>
+  </identity>
+  <identity name="europe">
+    <base name="continent"/>
+    <description>
+      <text>Identity for Europe.</text>
+    </description>
+  </identity>
+  <identity name="north-america">
+    <base name="continent"/>
+    <description>
+      <text>Identity for North America.</text>
+    </description>
+  </identity>
+  <identity name="south-america">
+    <base name="continent"/>
+    <description>
+      <text>Identity for South America.</text>
+    </description>
+  </identity>
+  <identity name="oceania">
+    <base name="continent"/>
+    <description>
+      <text>Identity for Oceania</text>
+    </description>
+  </identity>
+  <identity name="protocol-type">
+    <description>
+      <text>This identity represents the protocol types.</text>
+    </description>
+  </identity>
+  <identity name="ftp">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for ftp protocol.</text>
+    </description>
+    <reference>
+      <text>RFC 959: File Transfer Protocol (FTP)</text>
+    </reference>
+  </identity>
+  <identity name="ssh">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for ssh protocol.</text>
+    </description>
+    <reference>
+      <text>RFC 4250: The Secure Shell (SSH) Protocol</text>
+    </reference>
+  </identity>
+  <identity name="telnet">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for telnet.</text>
+    </description>
+    <reference>
+      <text>RFC 854: Telnet Protocol</text>
+    </reference>
+  </identity>
+  <identity name="smtp">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for smtp.</text>
+    </description>
+    <reference>
+      <text>RFC 5321: Simple Mail Transfer Protocol (SMTP)</text>
+    </reference>
+  </identity>
+  <identity name="sftp">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for sftp.</text>
+    </description>
+    <reference>
+      <text>RFC 913: Simple File Transfer Protocol (SFTP)</text>
+    </reference>
+  </identity>
+  <identity name="http">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for http.</text>
+    </description>
+    <reference>
+      <text>RFC 2616: Hypertext Transfer Protocol (HTTP)</text>
+    </reference>
+  </identity>
+  <identity name="https">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for https.</text>
+    </description>
+    <reference>
+      <text>RFC 2818: HTTP over TLS (HTTPS)</text>
+    </reference>
+  </identity>
+  <identity name="pop3">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for pop3.</text>
+    </description>
+    <reference>
+      <text>RFC 1081: Post Office Protocol -Version 3 (POP3)</text>
+    </reference>
+  </identity>
+  <identity name="nat">
+    <base name="protocol-type"/>
+    <description>
+      <text>The identity for nat.</text>
+    </description>
+    <reference>
+      <text>RFC 1631: The IP Network Address Translator (NAT)</text>
+    </reference>
+  </identity>
+  <identity name="primary-action">
+    <description>
+      <text>This identity represents the primary actions, such as
+PASS, DROP, ALERT, RATE-LIMIT, and MIRROR.</text>
+    </description>
+  </identity>
+  <identity name="pass">
+    <base name="primary-action"/>
+    <description>
+      <text>The identity for pass.</text>
+    </description>
+  </identity>
+  <identity name="drop">
+    <base name="primary-action"/>
+    <description>
+      <text>The identity for drop.</text>
+    </description>
+  </identity>
+  <identity name="alert">
+    <base name="primary-action"/>
+    <description>
+      <text>The identity for alert.</text>
+    </description>
+  </identity>
+  <identity name="rate-limit">
+    <base name="primary-action"/>
+    <description>
+      <text>The identity for rate-limit.</text>
+    </description>
+  </identity>
+  <identity name="mirror">
+    <base name="primary-action"/>
+    <description>
+      <text>The identity for mirroring.</text>
+    </description>
+  </identity>
+  <identity name="secondary-action">
+    <description>
+      <text>This field identifies additional actions if a rule is
+matched. This could be one of 'LOG', 'SYSLOG',
+'SESSION-LOG', etc.</text>
+    </description>
+  </identity>
+  <identity name="log">
+    <base name="secondary-action"/>
+    <description>
+      <text>The identity for logging.</text>
+    </description>
+  </identity>
+  <identity name="syslog">
+    <base name="secondary-action"/>
+    <description>
+      <text>The identity for system logging.</text>
+    </description>
+  </identity>
+  <identity name="session-log">
+    <base name="secondary-action"/>
+    <description>
+      <text>The identity for session logging.</text>
+    </description>
+  </identity>
+  <identity name="signature-type">
+    <description>
+      <text>This represents the base identity for signature types.</text>
+    </description>
+  </identity>
+  <identity name="signature-yara">
+    <base name="signature-type"/>
+    <description>
+      <text>This represents the YARA signatures.</text>
+    </description>
+    <reference>
+      <text>YARA: YARA signatures are explained.</text>
+    </reference>
+  </identity>
+  <identity name="signature-snort">
+    <base name="signature-type"/>
+    <description>
+      <text>This represents the SNORT signatures.</text>
+    </description>
+    <reference>
+      <text>SNORT: SNORT signatures are explained.</text>
+    </reference>
+  </identity>
+  <identity name="signature-suricata">
+    <base name="signature-type"/>
+    <description>
+      <text>This represents the SURICATA signatures.</text>
+    </description>
+    <reference>
+      <text>SURICATA: SURICATA signatures are explained.</text>
+    </reference>
+  </identity>
+  <identity name="threat-feed-type">
+    <description>
+      <text>This represents the base identity for threat-feed.</text>
+    </description>
+  </identity>
+  <identity name="day">
+    <description>
+      <text>This represents the base for days.</text>
+    </description>
+  </identity>
+  <identity name="monday">
+    <base name="day"/>
+    <description>
+      <text>This represents Monday.</text>
+    </description>
+  </identity>
+  <identity name="tuesday">
+    <base name="day"/>
+    <description>
+      <text>This represents Tuesday.</text>
+    </description>
+  </identity>
+  <identity name="wednesday">
+    <base name="day"/>
+    <description>
+      <text>This represents Wednesday.</text>
+    </description>
+  </identity>
+  <identity name="thursday">
+    <base name="day"/>
+    <description>
+      <text>This represents Thursday.</text>
+    </description>
+  </identity>
+  <identity name="friday">
+    <base name="day"/>
+    <description>
+      <text>This represents Friday.</text>
+    </description>
+  </identity>
+  <identity name="saturday">
+    <base name="day"/>
+    <description>
+      <text>This represents Saturday.</text>
+    </description>
+  </identity>
+  <identity name="sunday">
+    <base name="day"/>
+    <description>
+      <text>This represents Sunday.</text>
+    </description>
+  </identity>
+  <typedef name="time">
+    <type name="string">
+      <pattern value="(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.\d+)?(Z|[\+\-]((1[0-3]|0[0-9]):([0-5][0-9])|14:00))?"/>
+    </type>
+    <description>
+      <text>The time type represents an instance of time of zero-duration
+that recurs every day.</text>
+    </description>
+  </typedef>
+  <grouping name="ipv4-list">
+    <description>
+      <text>Grouping for an IPv4 address list.</text>
+    </description>
+    <leaf-list name="ipv4">
+      <type name="inet:ipv4-address"/>
+      <description>
+        <text>This is the entry for an IPv4 address list.</text>
+      </description>
+    </leaf-list>
+  </grouping>
+  <grouping name="ipv6-list">
+    <description>
+      <text>Grouping for an IPv6 address list.</text>
+    </description>
+    <leaf-list name="ipv6">
+      <type name="inet:ipv6-address"/>
+      <description>
+        <text>This is the entry for an IPv6 address list.</text>
+      </description>
+    </leaf-list>
+  </grouping>
+  <grouping name="ipv4">
+    <description>
+      <text>Grouping for an IPv4 address.</text>
+    </description>
+    <leaf name="ipv4">
+      <type name="inet:ipv4-address"/>
+      <description>
+        <text>This is the entry for an IPv4 address.</text>
+      </description>
+    </leaf>
+  </grouping>
+  <grouping name="ipv6">
+    <description>
+      <text>Grouping for an IPv6 address.</text>
+    </description>
+    <leaf name="ipv6">
+      <type name="inet:ipv6-address"/>
+      <description>
+        <text>This is the entry for an IPv6 address.</text>
+      </description>
+    </leaf>
+  </grouping>
+  <grouping name="ip-address-info">
+    <description>
+      <text>There are two types to configure a security policy
+for an IPv4 address, such as exact match and range match.</text>
+    </description>
+    <choice name="match-type">
+      <description>
+        <text>User can choose between 'exact match' and 'range match'.</text>
+      </description>
+      <case name="exact-match-ipv4">
+        <uses name="ipv4"/>
+        <description>
+          <text>Exact ip-address match for IPv4 addresses</text>
+        </description>
+      </case>
+      <case name="exact-match-ipv6">
+        <uses name="ipv6"/>
+        <description>
+          <text>Exact ip-address match for IPv6 addresses</text>
+        </description>
+      </case>
+      <case name="range-match-ipv4">
+        <container name="range-ipv4-address">
+          <leaf name="start-ipv4-address">
+            <type name="inet:ipv4-address"/>
+            <mandatory value="true"/>
+            <description>
+              <text>A start IPv4 address for a range match.</text>
+            </description>
+          </leaf>
+          <leaf name="end-ipv4-address">
+            <type name="inet:ipv4-address"/>
+            <mandatory value="true"/>
+            <description>
+              <text>An end IPv4 address for a range match.</text>
+            </description>
+          </leaf>
+          <description>
+            <text>A range match for IPv4 addresses is provided.  Note that the
+start IPv4 address must be lower than the end IPv4 address.</text>
+          </description>
+        </container>
+      </case>
+      <case name="range-match-ipv6">
+        <container name="range-ipv6-address">
+          <leaf name="start-ipv6-address">
+            <type name="inet:ipv6-address"/>
+            <mandatory value="true"/>
+            <description>
+              <text>A start IPv6 address for a range match.</text>
+            </description>
+          </leaf>
+          <leaf name="end-ipv6-address">
+            <type name="inet:ipv6-address"/>
+            <mandatory value="true"/>
+            <description>
+              <text>An end IPv6 address for a range match.</text>
+            </description>
+          </leaf>
+          <description>
+            <text>A range match for IPv6 addresses is provided.  Note that the
+start IPv6 address must be lower than the end IPv4 address.</text>
+          </description>
+        </container>
+      </case>
+    </choice>
+  </grouping>
+  <grouping name="ipsec-based-method">
+    <description>
+      <text>This represents the ipsec-based method.</text>
+    </description>
+    <list name="ipsec-method">
+      <key value="method"/>
+      <description>
+        <text>This represents the list of IPsec method types.</text>
+      </description>
+      <leaf name="method">
+        <type name="identityref">
+          <base name="i2nsf-ipsec"/>
+        </type>
+        <description>
+          <text>This represents IPsec IKE and IPsec IKEless cases.  If this
+is not set, it cannot support IPsec IKE or IPsec IKEless.</text>
+        </description>
+        <reference>
+          <text>draft-ietf-i2nsf-sdn-ipsec-flow-protection-08:
+Software-Defined Networking (SDN)-based IPsec Flow Protection
+- IPsec method types can be selected.</text>
+        </reference>
+      </leaf>
+    </list>
+  </grouping>
+  <grouping name="user-group">
+    <description>
+      <text>This group represents user group information such as name and
+ip-address.</text>
+    </description>
+    <leaf name="name">
+      <type name="string"/>
+      <description>
+        <text>This represents the name of a user-group.  A user-group name
+is used to map a user-group's name (e.g., employees) to an IP
+address. It is dependent on implementation.</text>
+      </description>
+    </leaf>
+    <uses name="ip-address-info">
+      <refine target-node="match-type">
+        <mandatory value="true"/>
+      </refine>
+      <description>
+        <text>This represents the IP addresses of a user-group.</text>
+      </description>
+    </uses>
+  </grouping>
+  <grouping name="device-group">
+    <description>
+      <text>This group represents device group information such as ip-address
+protocol.</text>
+    </description>
+    <leaf name="name">
+      <type name="string"/>
+      <description>
+        <text>This represents the name of a device-group.</text>
+      </description>
+    </leaf>
+    <uses name="ip-address-info">
+      <refine target-node="match-type">
+        <mandatory value="true"/>
+      </refine>
+    </uses>
+    <leaf-list name="protocol">
+      <type name="identityref">
+        <base name="protocol-type"/>
+      </type>
+      <description>
+        <text>This represents the communication protocols of devices.  If this
+is not set, it cannot support the appropriate protocol</text>
+      </description>
+    </leaf-list>
+  </grouping>
+  <grouping name="location-group">
+    <description>
+      <text>This group represents location-group information such as geo-ip
+and continent.</text>
+    </description>
+    <leaf name="name">
+      <type name="string"/>
+      <description>
+        <text>This represents the name of a location.</text>
+      </description>
+    </leaf>
+    <list name="geo-ip-ipv4">
+      <key value="ipv4-address"/>
+      <description>
+        <text>This represents the list of IPv4 addresses based on a location.</text>
+      </description>
+      <leaf name="ipv4-address">
+        <type name="inet:ipv4-address"/>
+        <description>
+          <text>This represents an IPv4 geo-ip address of a location.</text>
+        </description>
+      </leaf>
+      <leaf name="ipv4-prefix">
+        <type name="inet:ipv4-prefix"/>
+        <description>
+          <text>This represents the prefix for the IPv4 addresses.</text>
+        </description>
+      </leaf>
+    </list>
+    <list name="geo-ip-ipv6">
+      <key value="ipv6-address"/>
+      <description>
+        <text>This represents the list of IPv6 addresses based on a location.</text>
+      </description>
+      <leaf name="ipv6-address">
+        <type name="inet:ipv6-address"/>
+        <description>
+          <text>This represents an IPv6 geo-ip address of a location.</text>
+        </description>
+      </leaf>
+      <leaf name="ipv6-prefix">
+        <type name="inet:ipv6-prefix"/>
+        <description>
+          <text>This represents the prefix for the IPv6 addresses.</text>
+        </description>
+      </leaf>
+    </list>
+    <leaf name="continent">
+      <type name="identityref">
+        <base name="continent"/>
+      </type>
+      <default value="asia"/>
+      <description>
+        <text>location-group has geo-ip addresses of the corresponding
+continent.</text>
+      </description>
+    </leaf>
+  </grouping>
+  <grouping name="threat-feed-info">
+    <description>
+      <text>This is the grouping for the threat-feed-list</text>
+    </description>
+    <leaf name="threat-type">
+      <type name="identityref">
+        <base name="threat-feed-type"/>
+      </type>
+      <description>
+        <text>This represents the type of the threat-feed.</text>
+      </description>
+    </leaf>
+    <leaf name="server-ipv4">
+      <type name="inet:ipv4-address"/>
+      <description>
+        <text>The IPv4 address for the threat-feed server.</text>
+      </description>
+    </leaf>
+    <leaf name="server-ipv6">
+      <type name="inet:ipv6-address"/>
+      <description>
+        <text>The IPv6 address for the threat-feed server.</text>
+      </description>
+    </leaf>
+    <leaf name="description">
+      <type name="string"/>
+      <description>
+        <text>This represents the descriptions of a threat-feed.  The
+description should include information, such as type, threat,
+method, and file type.  Structured Threat Information Expression
+(STIX) can be used for description of a threat [STIX].</text>
+      </description>
+    </leaf>
+  </grouping>
+  <grouping name="payload-string">
+    <description>
+      <text>The grouping for payload-string content.  It contains information
+such as name and string content.</text>
+    </description>
+    <leaf name="description">
+      <type name="string"/>
+      <description>
+        <text>This represents the description of a payload.  If this is not
+set, it cannot support the description of how the payload content
+is related to a security attack.</text>
+      </description>
+    </leaf>
+    <leaf-list name="content">
+      <type name="string"/>
+      <description>
+        <text>This represents the string of the payload contents.  This content
+leaf-list contains the payload of a packet to analyze a threat.
+Due to the types of threats, the type of the content is defined
+as a string to accommodate any kind of a payload type such as
+HTTP, HTTPS, and SIP.  If this is not set, it cannot support the
+payload contents involved in a security attack as a string.</text>
+      </description>
+    </leaf-list>
+  </grouping>
+  <list name="i2nsf-cfi-policy">
+    <key value="policy-name"/>
+    <description>
+      <text>This is a security policy list.  Each policy in the list contains
+a list of security policy rules, and is a policy instance to have
+the information of where and when a policy needs to be applied.</text>
+    </description>
+    <leaf name="policy-name">
+      <type name="string"/>
+      <description>
+        <text>The name which identifies the policy.</text>
+      </description>
+    </leaf>
+    <container name="rules">
+      <description>
+        <text>This container has rules.</text>
+      </description>
+      <nacm:default-deny-write/>
+      <list name="rule">
+        <key value="rule-name"/>
+        <ordered-by value="user"/>
+        <leaf name="rule-name">
+          <type name="string"/>
+          <description>
+            <text>This represents the name for a rule.</text>
+          </description>
+        </leaf>
+        <description>
+          <text>There can be a single or multiple number of rules.</text>
+        </description>
+        <container name="event">
+          <description>
+            <text>This represents an event (i.e., a security event), for which
+a security rule is made.</text>
+          </description>
+          <leaf name="security-event">
+            <type name="identityref">
+              <base name="security-event-type"/>
+            </type>
+            <description>
+              <text>This contains the description of a security event.  If this
+is not set, it cannot support what security event will be
+enforced.</text>
+            </description>
+          </leaf>
+          <container name="time-information">
+            <description>
+              <text>The time information when a security policy rule should be
+applied.</text>
+            </description>
+            <leaf name="start-date-time">
+              <type name="yang:date-and-time"/>
+              <description>
+                <text>This is the start date and time for a security policy
+rule.</text>
+              </description>
+            </leaf>
+            <leaf name="end-date-time">
+              <type name="yang:date-and-time"/>
+              <description>
+                <text>This is the end date and time for a policy rule.  The
+policy rule will stop working after the specified
+end-date-time.</text>
+              </description>
+            </leaf>
+            <container name="period">
+              <when condition="../../frequency!='only-once'"/>
+              <description>
+                <text>This represents the repetition time.  In the case where
+the frequency is weekly, the days can be set.</text>
+              </description>
+              <leaf name="start-time">
+                <type name="time"/>
+                <description>
+                  <text>This is a period's start time for an event.</text>
+                </description>
+              </leaf>
+              <leaf name="end-time">
+                <type name="time"/>
+                <description>
+                  <text>This is a period's end time for an event.</text>
+                </description>
+              </leaf>
+              <leaf-list name="day">
+                <when condition="../../../frequency='weekly'"/>
+                <type name="identityref">
+                  <base name="day"/>
+                </type>
+                <min-elements value="1"/>
+                <description>
+                  <text>This represents the repeated day of every week (e.g.,
+Monday and Tuesday).  More than one day can be
+specified.</text>
+                </description>
+              </leaf-list>
+              <leaf-list name="date">
+                <when condition="../../../frequency='monthly'"/>
+                <type name="int32">
+                  <range value="1..31"/>
+                </type>
+                <min-elements value="1"/>
+                <description>
+                  <text>This represents the repeated date of every month.  More
+than one date can be specified.</text>
+                </description>
+              </leaf-list>
+              <leaf-list name="month">
+                <when condition="../../../frequency='yearly'"/>
+                <type name="string">
+                  <pattern value="\d{2}-\d{2}"/>
+                </type>
+                <min-elements value="1"/>
+                <description>
+                  <text>This represents the repeated date and month of every
+year.  More than one can be specified.  A pattern used
+here is Month and Date (MM-DD).</text>
+                </description>
+              </leaf-list>
+            </container>
+          </container>
+          <leaf name="frequency">
+            <type name="enumeration">
+              <enum name="only-once">
+                <description>
+                  <text>This represents that the rule is immediately enforced
+only once and not repeated.  The policy will
+continuously be active from the start-time to the
+end-time.</text>
+                </description>
+              </enum>
+              <enum name="daily">
+                <description>
+                  <text>This represents that the rule is enforced on a daily
+basis.  The policy will be repeated daily until the
+end-date.</text>
+                </description>
+              </enum>
+              <enum name="weekly">
+                <description>
+                  <text>This represents that the rule is enforced on a weekly
+basis.  The policy will be repeated weekly until the
+end-date.  The repeated days can be specified.</text>
+                </description>
+              </enum>
+              <enum name="monthly">
+                <description>
+                  <text>This represents that the rule is enforced on a monthly
+basis. The policy will be repeated monthly until the
+end-date.</text>
+                </description>
+              </enum>
+              <enum name="yearly">
+                <description>
+                  <text>This represents that the rule is enforced on a yearly
+basis.  The policy will be repeated yearly until the
+end-date.</text>
+                </description>
+              </enum>
+            </type>
+            <default value="only-once"/>
+            <description>
+              <text>This represents how frequently the rule should be enforced.</text>
+            </description>
+          </leaf>
+        </container>
+        <container name="condition">
+          <description>
+            <text>Conditions for general security policies.</text>
+          </description>
+          <container name="firewall-condition">
+            <description>
+              <text>A general firewall condition.</text>
+            </description>
+            <leaf name="source">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/user-group/name"/>
+              </type>
+              <description>
+                <text>This describes the path to the source.</text>
+              </description>
+            </leaf>
+            <leaf-list name="destination">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/user-group/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to the destinations.</text>
+              </description>
+            </leaf-list>
+          </container>
+          <container name="ddos-condition">
+            <description>
+              <text>A condition for a DDoS attack.</text>
+            </description>
+            <leaf-list name="source">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/device-group/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to the sources.</text>
+              </description>
+            </leaf-list>
+            <leaf-list name="destination">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/device-group/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to the destinations.</text>
+              </description>
+            </leaf-list>
+            <container name="rate-limit">
+              <description>
+                <text>This describes the rate-limit.</text>
+              </description>
+              <leaf name="packet-threshold-per-second">
+                <type name="uint32"/>
+                <description>
+                  <text>This is a trigger value for a rate limit for a
+DDoS-attack mitigation.</text>
+                </description>
+              </leaf>
+            </container>
+          </container>
+          <container name="location-condition">
+            <description>
+              <text>A condition for a location-based connection</text>
+            </description>
+            <leaf-list name="source">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/location-group/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to a location's sources.</text>
+              </description>
+            </leaf-list>
+            <leaf-list name="destination">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/endpoint-groups/location-group/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to a location's destinations.</text>
+              </description>
+            </leaf-list>
+          </container>
+          <container name="custom-condition">
+            <description>
+              <text>A condition based on a packet's content.</text>
+            </description>
+            <leaf-list name="source">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/threat-preventions/payload-content/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to a packet content's sources.</text>
+              </description>
+            </leaf-list>
+            <leaf name="destination">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/threat-preventions/payload-content/name"/>
+              </type>
+              <description>
+                <text>This describes the path to a packet content's
+destination.</text>
+              </description>
+            </leaf>
+          </container>
+          <container name="threat-feed-condition">
+            <description>
+              <text>A condition based on the threat-feed information.</text>
+            </description>
+            <leaf-list name="source">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/threat-preventions/threat-feed-list/name"/>
+              </type>
+              <description>
+                <text>This describes the paths to a threat-feed's sources.</text>
+              </description>
+            </leaf-list>
+            <leaf name="destination">
+              <type name="leafref">
+                <path value="/i2nsf-cfi-policy/threat-preventions/threat-feed-list/name"/>
+              </type>
+              <description>
+                <text>This describes the path to a threat-feed's destination.</text>
+              </description>
+            </leaf>
+          </container>
+        </container>
+        <container name="actions">
+          <description>
+            <text>This is the action container.</text>
+          </description>
+          <leaf name="primary-action">
+            <type name="identityref">
+              <base name="primary-action"/>
+            </type>
+            <description>
+              <text>This represent primary actions (e.g., PASS, DROP, ALERT,
+and MIRROR) to be applied to a condition.  If this is not
+set, it cannot support the primary actions.</text>
+            </description>
+          </leaf>
+          <leaf name="secondary-action">
+            <type name="identityref">
+              <base name="secondary-action"/>
+            </type>
+            <description>
+              <text>This represents secondary actions (e.g., log and syslog)
+to be applied if they are needed.  If this is not set, it
+cannot support the secondary actions.</text>
+            </description>
+          </leaf>
+        </container>
+        <container name="ipsec-method">
+          <description>
+            <text>This container represents the IPsec method such as IKE case
+and IKEless case.</text>
+          </description>
+          <leaf name="method">
+            <type name="identityref">
+              <base name="i2nsf-ipsec"/>
+            </type>
+            <description>
+              <text>This represents the IPsec method type such as IKE case and
+IKEless case.  If this is not set, it cannot support
+either IPsec IKE or IPsec IKEless.</text>
+            </description>
+            <reference>
+              <text>draft-ietf-i2nsf-sdn-ipsec-flow-protection-08:
+Software-Defined Networking (SDN)-based IPsec Flow
+Protection - IPsec method types can be selected.</text>
+            </reference>
+          </leaf>
+        </container>
+      </list>
+    </container>
+    <container name="endpoint-groups">
+      <description>
+        <text>A logical entity in a business environment, where a security
+policy is to be applied.</text>
+      </description>
+      <list name="user-group">
+        <uses name="user-group"/>
+        <key value="name"/>
+        <description>
+          <text>This represents a user group.</text>
+        </description>
+      </list>
+      <list name="device-group">
+        <key value="name"/>
+        <uses name="device-group"/>
+        <description>
+          <text>This represents a device group.</text>
+        </description>
+      </list>
+      <list name="location-group">
+        <key value="name"/>
+        <uses name="location-group"/>
+        <description>
+          <text>This represents a location group.</text>
+        </description>
+      </list>
+    </container>
+    <container name="threat-preventions">
+      <description>
+        <text>This describes the list of threat-preventions.</text>
+      </description>
+      <list name="threat-feed-list">
+        <key value="name"/>
+        <description>
+          <text>There can be a single or multiple number of threat-feeds.</text>
+        </description>
+        <leaf name="name">
+          <type name="string"/>
+          <description>
+            <text>This represents the name of the threat-feed.</text>
+          </description>
+        </leaf>
+        <uses name="threat-feed-info"/>
+        <leaf-list name="threat-file-types">
+          <type name="identityref">
+            <base name="malware-file-type"/>
+          </type>
+          <description>
+            <text>This contains a list of file types needed to be scanned for
+a security threat (e.g., virus).</text>
+          </description>
+        </leaf-list>
+        <leaf-list name="signatures">
+          <type name="identityref">
+            <base name="signature-type"/>
+          </type>
+          <description>
+            <text>This contains a list of signatures or hashes of the threats.</text>
+          </description>
+        </leaf-list>
+      </list>
+      <list name="payload-content">
+        <key value="name"/>
+        <leaf name="name">
+          <type name="string"/>
+          <description>
+            <text>This represents the name of a packet's payload-content.  It
+should give an idea of why a specific payload content is
+marked as a threat.  For example, the name 'backdoor'
+indicates the payload content is related to a backdoor
+attack.</text>
+          </description>
+        </leaf>
+        <description>
+          <text>This represents a payload-string group.</text>
+        </description>
+        <uses name="payload-string"/>
+      </list>
+    </container>
+  </list>
+</module>

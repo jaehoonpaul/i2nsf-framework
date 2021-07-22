@@ -1,0 +1,21 @@
+This example shows how to implement an action callback. It is intended
+to work with the netconf_extensions/simple_rpc example in the standard
+ConfD distribution, replacing the math-capi.c implementation there that
+does the same thing in C.
+
+To run, first go to the $STD_EXAMPLES/netconf_extensions/simple_rpc
+directory and
+
+% make all
+% make start-confd
+
+then come back here and
+
+% make all
+% make estart
+
+Then in the $STD_EXAMPLES/netconf_extensions/simple_rpc directory you
+can do
+
+% make query3
+

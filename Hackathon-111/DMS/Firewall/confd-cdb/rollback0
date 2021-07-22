@@ -1,0 +1,12 @@
+# Created by: admin
+# Date: 2019-03-06 10:39:06
+# Via: netconf
+# Type: delta
+# Label: 
+# Comment: 
+# No: 10000
+
+i2nsf-security-policy {
+    delete:
+    system-policy sns_access;
+}

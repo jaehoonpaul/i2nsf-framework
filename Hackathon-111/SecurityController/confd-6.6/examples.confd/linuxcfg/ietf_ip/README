@@ -1,0 +1,72 @@
+General
+-------
+
+The `ietf_ip` component provides support for the IETF standard
+ "RFC 7277: A YANG Data Model for IP Management"
+(http://tools.ietf.org/html/rfc7277). It extends the `ietf_interfaces`
+model.
+
+It enables configuration of both IPv4 and IPv6 addresses and
+neighbor-tables on an interface and tries to make sure it is synced
+to the actual interface.
+
+The component implements the yang model taken from:
+ http://www.netconfcentral.org/modules/ietf-ip
+
+In particular
+ http://dld.netconfcentral.org/src/ietf-interfaces@2014-05-08.yang
+
+and also uses the 'iana-if-type' YANG module from:
+http://www.iana.org/assignments/iana-if-type-yang/iana-if-type-yang
+
+Requirements
+------------
+
+This should work on any "standard Linux" system, but has been tested
+on Ubuntu 14.04.
+
+Specific requirements:
+
+ - You must have enabled the `ietf_interfaces` component.
+ - It uses the `ip` and `sysctl` commands.
+
+
+Installation
+------------
+
+No specific installation required, but no other system should be
+managing the interfaces at the same time.
+
+Configuration notes
+-------------------
+
+Generic::
+
+The commands and constants used are defined at the beginning of each
+c-file, there you can also find the appropriate flags to change the
+commands at compile-time.
+
+Operational data::
+The data is coordinated with that for `IP-MIB` in the 'ipmibs'
+component and gathers information through the existing mechanisms.
+
+
+Developers hints
+----------------
+
+The code is divided into four parts:
+
+ - A relatively simple top level handler (`ietf_ip.c`) that
+   coordinates the protocol versions.
+
+ - A state container (`iflist.c`) that keeps a local copy of the
+ interface state and configurations. It also contains a few macros
+ `DECLARE_SIMPLE_HANDLER` and `DECLARE_LIST_HANDLER` that simplifies
+ the use of the list so that you only have to provide the function to
+ apply a variable to the interface.
+
+ - The IPv4 handler that handles the IPv4 subtree, both for config and
+   operational data.
+
+ - The IPv6 handler that handles the IPv6 subtree, both for config and
+   operational data.

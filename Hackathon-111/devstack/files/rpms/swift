@@ -1,0 +1,7 @@
+curl
+liberasurecode-devel
+memcached
+rsync-daemon
+sqlite
+xfsprogs
+xinetd

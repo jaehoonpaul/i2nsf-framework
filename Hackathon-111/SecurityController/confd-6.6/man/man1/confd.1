@@ -1,0 +1,345 @@
+'\" t
+.\"     Title: confd
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd \- command to start and control the ConfD daemon
+.SH "SYNOPSIS"
+.HP \w'\fBconfd\fR\ 'u
+\fBconfd\fR [\-\-conf\ \fIConfFile\fR] [\-\-cd\ \fIDir\fR] [\-\-libdir\ \fILibDir\fR] [\-\-addloadpath\ \fIDir\fR] [\-\-nolog] [\-\-smp\ \fINr\fR] [\-\-foreground\ [\-v\ |\ \-\-verbose]\ [\-\-stop\-on\-eof]] [\-\-ignore\-initial\-validation] [\-\-full\-upgrade\-validation] [\-\-start\-phase0] [\-\-epoll\ {true\ |\ false}]
+.HP \w'\fBconfd\fR\ 'u
+\fBconfd\fR {\-\-wait\-phase0\ [\ \fITryTime\fR]  | \-\-start\-phase1 | \-\-start\-phase2 | \-\-wait\-started\ [\ \fITryTime\fR]  | \-\-clear\-aaa\-cache | \-\-reload | \-\-areload | \-\-status | \-\-check\-callbacks\ [\fINamespace\fR\ |\ \fIPath\fR] | \-\-loadfile\ \fIFile\fR | \-\-rollback\ \fINr\fR | \-\-debug\-dump\ \fIFile\fR | \-\-cli\-j\-dump\ \fIFile\fR | \-\-cli\-i\-dump\ \fIFile\fR | \-\-cli\-c\-dump\ \fIFile\fR | \-\-cli\-check\-templates | \-\-loadxmlfiles\ \fIFile\fR... | \-\-mergexmlfiles\ \fIFile\fR... | \-\-cdb\-backup\ \fIFile\fR | \-\-stop} [\-\-timeout\ \fIMaxTime\fR]
+.HP \w'\fBconfd\fR\ 'u
+\fBconfd\fR {\-\-version | \-\-cdb\-debug\-dump\ \fIDirectory\fR | \-\-printlog\ \fIBaseFileName\fR | \-\-set\-snmp\-engine\-boots\ \fINr\fR}
+.SH "DESCRIPTION"
+.PP
+Use this command to start and control the ConfD daemon\&.
+.SH "STARTING CONFD"
+.PP
+These options are relevant when starting the ConfD daemon\&.
+.PP
+\fB\-c\fR, \fB\-\-conf\fR ConfFile
+.RS 4
+ConfFile is the path to a confd\&.conf file\&. The default location is defined when ConfD is installed, typically /etc/confd/confd\&.conf\&.
+.RE
+.PP
+\fB\-\-cd\fR Dir
+.RS 4
+Change working directory
+.RE
+.PP
+\fB\-l\fR, \fB\-\-libdir\fR LibDir
+.RS 4
+LibDir is where the ConfD helper libraries are found\&. The default location is defined when ConfD is installed\&. The use of this flag is deprecated since confd figures out this information automatically, and using the confd command with LibDir from a different version of ConfD is not supported\&.
+.RE
+.PP
+\fB\-\-addloadpath\fR Dir
+.RS 4
+Add Dir to the set of directories ConfD uses to load fxs, clispec and, optionally, bin files\&.
+.RE
+.PP
+\fB\-\-nolog\fR
+.RS 4
+Do not log initial startup messages to syslog\&.
+.RE
+.PP
+\fB\-\-smp\fR Nr
+.RS 4
+Number of threads to run for Symmetric Multiprocessing (SMP)\&. The default is 1, i\&.e\&. no SMP support\&. A value bigger than 1 will enable SMP support, where ConfD will at any given time use at most as many logical processors as the number of threads\&. The SMP behavior can also be affected by removing one of the two ConfD daemon executables from the installation, see the section
+\m[blue]\fBInstalling ConfD on a target system in the Advanced Topics chapter in the User Guide\fR\m[]
+for the details of this\&.
+.RE
+.PP
+\fB\-\-foreground [ \-v | \-\-verbose ] [ \-\-stop\-on\-eof ]\fR
+.RS 4
+Do not start as a daemon\&. Can be used to start ConfD from a process manager\&. In combination with \-v or \-\-verbose, all log messages are printed to stdout\&. Useful during development\&. In combination with \-\-stop\-on\-eof, ConfD will stop if it receives EOF (ctrl\-d) on standard input\&. Note that to stop ConfD when run in foreground, send EOF (if \-\-stop\-on\-eof was used) or use confd \-\-stop\&. Do not terminate with ctrl\-c, since ConfD in that case won\*(Aqt have the chance to close the database files\&.
+.RE
+.PP
+\fB\-\-ignore\-initial\-validation\fR
+.RS 4
+When CDB starts on an empty database, or when upgrading, it starts a transaction to load the initial configuration or perform the upgrade\&. This option makes ConfD skip any validation callpoints when committing these initial transaction\&. (The preferred alternative is to use start\-phases and register the validation callpoints in phase 0, see the user guide)\&.
+.RE
+.PP
+\fB\-\-full\-upgrade\-validation\fR
+.RS 4
+Perform a full validation of the entire database if the data models have been upgraded\&. This is useful in order to trigger external validation to run even if the database content has not been modified\&.
+.RE
+.PP
+\fB\-\-start\-phase0\fR
+.RS 4
+Start the daemon, but only start internal subsystems and CDB\&. Phase 0 is used when a controlled upgrade is done\&.
+.RE
+.PP
+\fB\-\-epoll { true | false }\fR
+.RS 4
+Determines whether ConfD should use an enhanced poll() function (e\&.g\&. Linux epoll(7))\&. This can improve performance when ConfD has a high number of connections, but there may be issues with the implementation in some OS/kernel versions\&. The default is false\&.
+.RE
+.SH "COMMUNICATING WITH CONFD"
+.PP
+When the ConfD daemon has been started, these options are used to communicate with the running daemon\&.
+.PP
+By default these options will perform their function by connecting to a running ConfD daemon over the loopback interface on the standard port\&. If the environment variable
+\fBCONFD_IPC_PORT\fR
+and/or
+\fBCONFD_IPC_ADDR\fR
+are set then the address/port in those variables will be used to communicate with the ConfD daemon\&. (Must be used if the daemon is not listening on its standard port on localhost, see the
+/confdConfig/confdIpcAddress/ip
+setting in the
+\m[blue]\fBconfd\&.conf(5)\fR\m[]
+man\-page, and the section on
+\m[blue]\fBConfD IPC\fR\m[]
+in the ConfD Users Guide)\&.
+.PP
+\fB\-\-wait\-phase0 [ TryTime ]\fR
+.RS 4
+This call hangs until ConfD has initialized start phase0\&. After this call has returned, it is safe to register validation callbacks, upgrade CDB etc\&. This function is useful when ConfD has been started with \-\-foreground and \-\-start\-phase0\&. It will keep trying the initial connection to ConfD for at most TryTime seconds (default 5)\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_wait_start()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-start\-phase1\fR
+.RS 4
+Do not start the subsystems that listen to the management IP address\&. Must be called after the daemon was started with \-\-start\-phase0\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_start_phase()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-start\-phase2\fR
+.RS 4
+Must be called after the management interface has been brought up, if \-\-start\-phase1 has been used\&. Starts the subsystems that listens to the management IP address\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_start_phase()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-wait\-started [ TryTime ]\fR
+.RS 4
+This call hangs until ConfD is completely started\&. This function is useful when ConfD has been started with \-\-foreground\&. It will keep trying the initial connection to ConfD for at most TryTime seconds (default 5)\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_wait_start()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-clear\-aaa\-cache\fR
+.RS 4
+Clear the ConfD AAA cache\&. When the AAA namespace is stored outside ConfD, for example through the
+\fIconfd_aaa_bridge\&.c\fR
+program, ConfD must be notified when there is new AAA data to be read\&. ConfD caches all AAA data and this command will force ConfD to reload the AAA cache\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_aaa_reload()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-reload\fR
+.RS 4
+Reload the ConfD daemon configuration\&. All log files are closed and reopened, which means that
+\fBconfd \-\-reload\fR
+can be used from e\&.g\&. logrotate(8) \- however it is preferable to use
+\m[blue]\fB\fBmaapi_reopen_logs()\fR\fR\m[]
+for this, see
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+\fBmaapi_reopen_logs()\fR
+can also be invoked via
+\fBconfd_cmd \-c reopen_logs\fR, see
+\m[blue]\fBconfd_cmd(1)\fR\m[]\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_reload_config()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+If we update a \&.fxs file, it is not enough to do a reload; the daemon has to be restarted, or the procedure described in the
+\m[blue]\fBIn\-service Data Model Upgrade\fR\m[]
+chapter in the User Guide has to be used\&.
+.sp .5v
+.RE
+.RE
+.PP
+\fB\-\-areload\fR
+.RS 4
+Asynchronously reload the ConfD daemon configuration\&. This can be used in scripts executed by the ConfD daemon\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_reload_config()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-stop\fR
+.RS 4
+Stop the ConfD daemon\&.
+.sp
+For an equivalent C function see
+\m[blue]\fB\fBmaapi_stop()\fR\fR\m[]
+in
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]\&.
+.RE
+.PP
+\fB\-\-status\fR
+.RS 4
+Prints status information about the ConfD daemon on stdout\&. Among the things listed are: loaded namespaces, current user sessions, callpoints (and whether they are registered or not), CDB status, and the current start\-phase\&. Start phases are reported as "status:" and can be one of starting (which is pre\-phase0), phase0, phase1, started (i\&.e\&. phase2), or stopping (which means that ConfD is about to shutdown)\&.
+.RE
+.PP
+\fB\-\-debug\-dump File\fR
+.RS 4
+Dump debug information from an already running ConfD daemon into a file\&. The file only makes sense to ConfD developers\&. It is often a good idea to include a debug dump in ConfD trouble reports\&.
+.RE
+.PP
+\fB\-\-cli\-j\-dump File\fR
+.RS 4
+Dump cli structure information from the ConfD daemon into a file\&.
+.RE
+.PP
+\fB\-\-cli\-i\-dump File\fR
+.RS 4
+Dump cli structure information from the ConfD daemon into a file\&.
+.RE
+.PP
+\fB\-\-cli\-c\-dump File\fR
+.RS 4
+Dump cli structure information from the ConfD daemon into a file\&.
+.RE
+.PP
+\fB\-\-cli\-check\-templates\fR
+.RS 4
+Walks through the entire data tree and validates all templates and verifies that all paths in the templates are valid\&.
+.RE
+.PP
+\fB\-\-check\-callbacks [Namespace | Path]\fR
+.RS 4
+Walks through the entire data tree (config and stat), or only the Namespace or Path, and verifies that all read\-callbacks are implemented for all elements, and verifies their return values\&.
+.RE
+.PP
+\fB\-\-loadfile File\fR
+.RS 4
+Load configuration in curly bracket format from File\&.
+.RE
+.PP
+\fB\-\-rollback Nr\fR
+.RS 4
+Rollback configuration to saved configuration number Nr\&.
+.RE
+.PP
+\fB\-\-loadxmlfiles File \&.\&.\&.\fR
+.RS 4
+Load configuration in XML format from Files\&. The configuration is completely replaced by the contents in Files\&.
+.RE
+.PP
+\fB\-\-mergexmlfiles File \&.\&.\&.\fR
+.RS 4
+Load configuration in XML format from Files\&. The configuration is merged with the contents in Files\&. The XML may use the \*(Aqoperation\*(Aq attribute, in the same way as it is used in a NETCONF <edit\-config> operation\&.
+.RE
+.PP
+\fB\-\-cdb\-backup File\fR
+.RS 4
+Save a snapshot of the CDB database into a GZipp:ed tar archive file (given by the File argument)\&. If the File argument is a relative path, the file will be saved relative the
+\fIConfD daemon\*(Aqs current working directory\fR\&. Only configuration data stored in CDB is saved (persistent CDB operational data is not)\&. Note: if the database is locked for writing, the command will fail\&.
+.RE
+.PP
+\fB\-\-timeout MaxTime\fR
+.RS 4
+Specify the maximum time to wait for the ConfD daemon to complete the command, in seconds\&. If this option is not given, no timeout is used\&.
+.RE
+.SH "STANDALONE OPTIONS"
+.PP
+\fB\-\-cdb\-debug\-dump Directory\fR
+.RS 4
+Print a lot of information about the CDB files in
+\fIDirectory\fR
+to stdout\&. This is a completely stand\-alone feature and the only thing needed is the \&.cdb files (no running ConfD daemon or \&.fxs files etc)\&.
+.RE
+.PP
+\fB\-\-version\fR
+.RS 4
+Reports the ConfD version without interacting with the daemon\&.
+.RE
+.PP
+\fB\-\-printlog BaseFileName\fR
+.RS 4
+Print the contents of the ConfD errorLog\&. This is normally only useful for Tail\-f support and developers, since the information pertains to internal details of the ConfD software components, but it may also be relevant for Erlang application code executed internally in ConfD\&. The argument is the name as specified by
+/confdConfig/logs/errorLog/filename, i\&.e\&. without the
+\&.idx,
+\&.1
+etc suffixes\&.
+.RE
+.PP
+\fB\-\-set\-snmp\-engine\-boots Nr\fR
+.RS 4
+Set the initial value, or override the previous value for the snmpEngineBoots counter object\&. After invoking ConfD with this option and (re\-)starting ConfD the counter\*(Aqs value will be
+\fINr\fR
++ 1\&. This is potentially useful if an SNMP Agent implementation is being replaced by ConfD, using the same snmpEngineId as the previous agent implementation, and not wanting to clear the snmpEngineBoots counter for SNMP managers that have been communicating with the old Agent using SNMP v3\&. Invoking ConfD with this option must be done with
+/confdConfig/stateDir
+as working directory\&.
+.RE
+.PP
+\fB\-\-timeout MaxTime\fR
+.RS 4
+See above\&.
+.RE
+.SH "DIAGNOSTICS"
+.PP
+If ConfD starts, the exit status is 0\&. If not it is a positive integer\&. The different meanings of the different exit codes are documented in the
+\m[blue]\fBAdvanced topics\fR\m[]
+chapter in the user guide\&. When failing to start, the reason is normally given in the ConfD daemon log\&. The location of the daemon log is specified in the ConfFile as described in
+\m[blue]\fBconfd\&.conf(5)\fR\m[]\&.
+.SH "SEE ALSO"
+.PP
+\fBconfd.conf\fR(5)
+\- ConfD daemon configuration file format
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

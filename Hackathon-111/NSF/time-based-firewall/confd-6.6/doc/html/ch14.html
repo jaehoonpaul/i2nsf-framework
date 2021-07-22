@@ -1,0 +1,1804 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;14.&nbsp;The AAA infrastructure</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch13.html" title="Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade"><link rel="next" href="ch15.html" title="Chapter&nbsp;15.&nbsp;The NETCONF Server"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;14.&nbsp;The AAA infrastructure</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch13.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch15.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.aaa"></a>Chapter&nbsp;14.&nbsp;The AAA infrastructure</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch14.html#d5e3797">14.1. The problem</a></span></dt><dt><span class="sect1"><a href="ch14.html#d5e3804">14.2. Structure - data models</a></span></dt><dt><span class="sect1"><a href="ch14.html#d5e3828">14.3. AAA related items in <span class="phrase">confd.conf</span></a></span></dt><dt><span class="sect1"><a href="ch14.html#ug.aaa.authentication">14.4. Authentication</a></span></dt><dt><span class="sect1"><a href="ch14.html#ug.aaa.groups">14.5. Group Membership</a></span></dt><dt><span class="sect1"><a href="ch14.html#ug.aaa.authorization">14.6. Authorization</a></span></dt><dt><span class="sect1"><a href="ch14.html#d5e4607">14.7. The AAA cache</a></span></dt><dt><span class="sect1"><a href="ch14.html#d5e4610">14.8. Populating AAA using CDB</a></span></dt><dt><span class="sect1"><a href="ch14.html#ug.aaa.External_database">14.9. Populating AAA using external data</a></span></dt><dt><span class="sect1"><a href="ch14.html#d5e4662">14.10. Hiding the AAA tree</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3797"></a>14.1.&nbsp;The problem</h2></div></div></div><p>
+      This chapter describes how to use
+      ConfD's  built-in
+      authentication and authorization mechanisms.
+      Users log into
+      ConfD through the CLI, NETCONF, RESTCONF,
+      SNMP, or via the Web UI.
+      In either case, users need to be <span class="emphasis"><em>authenticated</em></span>.
+      That is, a user needs to present credentials, such as a
+      password or a public key in order to gain access.
+      As an alternative for RESTCONF, users can be authenticated
+      via token validation.
+    </p><p>
+      Once a user is authenticated, all operations performed
+      by that user need to be <span class="emphasis"><em>authorized</em></span>.
+      That is, certain users may be allowed to perform certain tasks,
+      whereas others are not. This is called
+      <span class="emphasis"><em>authorization</em></span>. We differentiate
+      between authorization of commands and authorization of data access.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3804"></a>14.2.&nbsp;Structure - data models</h2></div></div></div><p>
+      The ConfD
+      daemon manages device configuration including
+      <span class="emphasis"><em>AAA</em></span> information. In fact,
+      ConfD both manages AAA
+      information and uses it. The AAA information
+      describes which users may login, what passwords they have
+      and what they are allowed to do.
+    </p><p>
+      This is solved in ConfD by requiring a data model to be both
+      loaded and populated with data. ConfD uses the YANG module
+      <code class="filename">tailf-aaa.yang</code> for authentication, while
+      <code class="filename">ietf-netconf-acm.yang</code> (NACM, <a class="link" href="http://tools.ietf.org/html/rfc6536" target="_top">RFC 6536</a>)
+      as augmented by <code class="filename">tailf-acm.yang</code> is used for
+      group assignment and authorization. For backwards compatibility,
+      it is alternatively possible to use the older revision 2011-09-22
+      of <code class="filename">tailf-aaa.yang</code> for all of authentication,
+      group assignment, and authorization. This legacy version of
+      tailf-aaa can be found in the <code class="filename">$CONFD_DIR/src/confd/aaa</code>  directory, but its
+      usage is not further described here. Detailed information about
+      this can be found in versions of this document for
+      <span class="phrase">ConfD-5.3</span>  and earlier.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3816"></a>14.2.1.&nbsp;Data model contents</h3></div></div></div><p>
+        The NACM data model is targeted specifically towards access
+        control for NETCONF operations, and thus lacks some
+        functionality that is needed in ConfD, in particular support for
+        authorization of CLI commands and the possibility to specify the
+        "context" (NETCONF/CLI/etc) that a given authorization rule
+        should apply to. This functionality is modeled by augmentation
+        of the NACM model, as defined in the
+        <code class="filename">tailf-acm.yang</code> YANG module.
+      </p><p>
+        The <code class="filename">ietf-netconf-acm.yang</code> and
+        <code class="filename">tailf-acm.yang</code> modules can be found in
+        <code class="filename">$CONFD_DIR/src/confd/yang</code>
+        
+        directory in the release, while
+        <code class="filename">tailf-aaa.yang</code> can be found in
+        the <code class="filename">$CONFD_DIR/src/confd/aaa</code>  directory.
+      </p><p>
+        The complete AAA data model defines a set of users, a set of
+        groups and a set of rules. The data model must be populated with
+        data that is subsequently used by by ConfD itself when it
+        authenticates users
+        and authorizes user data access. These YANG modules work exactly
+        like all other fxs files loaded into the system with the
+        exception that ConfD itself uses them. The data belongs to
+        the application, but ConfD itself is the user of the
+        data.
+      </p><p>
+        Since ConfD requires a data model for the AAA
+        information for its operation, it will report an error and fail
+        to start if these data models can not be found.
+      </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3828"></a>14.3.&nbsp;AAA related items in <span class="phrase">confd.conf</span></h2></div></div></div><p>
+      ConfD itself is configured through a configuration file -
+      <code class="filename">confd.conf</code>
+      .
+       In that file we have the following
+      items related to authentication and authorization:
+    </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="sgmltag-element">/confdConfig/aaa/sshServerKeyDir</code></span></dt><dd><p>
+            If SSH termination is enabled for NETCONF or the CLI, the
+            ConfD
+            built-in SSH server needs to have server keys. These
+            keys are generated by the
+            ConfD
+            install script and by
+            default end up in
+            <code class="filename">$CONFD_DIR/etc/confd/ssh</code>
+            .
+          </p><p>
+            It is also possible to use OpenSSH to terminate
+            NETCONF or the CLI.  If  OpenSSH is used to terminate SSH traffic,
+            the SSH keys are not necessary.
+          </p></dd><dt><span class="term"><code class="sgmltag-element">/confdConfig/aaa/sshPubkeyAuthentication</code></span></dt><dd><p>
+            If SSH termination is enabled for NETCONF or the CLI, this
+            item controls how the ConfD SSH daemon locates the user
+            keys for public key authentication. See
+            <a class="xref" href="ch14.html#ug.aaa.public_key_login" title="14.4.1.&nbsp;Public Key Login">Section&nbsp;14.4.1, &#8220;Public Key Login&#8221;</a> for the details.
+          </p></dd><dt><span class="term">
+        <code class="sgmltag-element">/confdConfig/aaa/localAuthentication/enabled</code>
+        
+        </span></dt><dd><p>
+            The term "local user" refers to a user stored
+            under <code class="sgmltag-element">/aaa/authentication/users</code>. The alternative
+            is a user unknown to
+            ConfD,
+            typically authenticated by PAM.
+          </p><p>
+            By default, ConfD
+            first checks local users before trying
+            PAM or external authentication.
+          </p><p>
+            Local authentication is practical in test environments. It is also useful
+            when we want to have one set of users that are allowed to login to the
+            host with normal shell access and another set of users that are only
+            allowed to access the system using the normal encrypted, fully authenticated,
+            northbound interfaces of
+            ConfD.
+          </p><p>
+            If we always authenticate users through PAM it may make
+            sense to set this configurable to <code class="code">false</code>. If we
+            disable local authentication it implicitly means that we
+            must use either PAM authentication or "external
+            authentication". It also means that we can leave the entire
+            data trees under <code class="sgmltag-element">/aaa/authentication/users</code> and,
+            in the case of "external auth" also <code class="sgmltag-element">/nacm/groups</code>
+            (for NACM) or <code class="sgmltag-element">/aaa/authentication/groups</code> (for
+            legacy tailf-aaa) empty.
+          </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/pam</code>
+        </span></dt><dd><p>
+            ConfD
+            can authenticate users using PAM (Pluggable
+            Authentication Modules). PAM is an integral part of
+            most Unix-like systems.
+          </p><p>
+            PAM is a complicated - albeit powerful - subsystem. It
+            may be easier to have all users stored locally on the host,
+            However if we want to store users in a central
+            location, PAM can be used to access the remote
+            information. PAM can be configured to perform most login
+            scenarios including RADIUS and LDAP.  One major drawback with
+            PAM authentication is that there is no easy way to extract the
+            group information from PAM. PAM authenticates users, it does not
+            also assign a user to a set of groups.
+          </p><p>
+            PAM authentication is thoroughly described later in this chapter.
+          </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/defaultGroup</code>
+          
+        </span></dt><dd><p>
+            If this configuration parameter is defined and if the group
+            of a user cannot be determined, a logged in user ends up
+            in the given default group.
+          </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/aaaBridge</code>
+          </span></dt><dd><p>
+            This key will be described in the
+            <a class="xref" href="ch14.html#ug.aaa.External_database" title="14.9.&nbsp;Populating AAA using external data">Section&nbsp;14.9, &#8220;Populating AAA using external data&#8221;</a> section.
+          </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/externalAuthentication</code>
+          </span></dt><dd><p>
+              ConfD can authenticate users using an external
+              executable. This is further described later in the
+              <a class="xref" href="ch14.html#ug.aaa.External_authentication" title="14.4.4.&nbsp;External authentication">Section&nbsp;14.4.4, &#8220;External authentication&#8221;</a>
+              section.
+            </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/externalValidation</code>
+          </span></dt><dd><p>
+              ConfD can authenticate users by validation of tokens using an
+              external executable. This is further described later in the
+              <a class="xref" href="ch14.html#ug.aaa.External_validation" title="14.4.5.&nbsp;External token validation">Section&nbsp;14.4.5, &#8220;External token validation&#8221;</a>
+              section. The difference is that a token, instead of a username and
+              password, is input and a username and, optionally, a token is
+              output. This is currently only supported for RESTCONF.
+            </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/authenticationCallback/enabled</code>
+          </span></dt><dd><p>
+              If this is set to "true", ConfD
+              will, as the last step of
+              every authentication attempt, invoke an application
+              callback. The callback can reject an otherwise successful
+              authentication. See <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.authentication_callback" title="AUTHENTICATION CALLBACK">the section called &#8220;AUTHENTICATION CALLBACK&#8221;</a> in
+              the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for
+              the details about this.
+            </p></dd><dt><span class="term">
+          <code class="sgmltag-element">/confdConfig/aaa/authorization/callback/enabled</code>
+          </span></dt><dd><p>
+              If this is set to "true", ConfD will invoke application
+              callbacks for authorization. The callbacks can partially
+              or completely replace the logic described in <a class="xref" href="ch14.html#ug.aaa.authorization" title="14.6.&nbsp;Authorization">Section&nbsp;14.6, &#8220;Authorization&#8221;</a>. See <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.authorization_callbacks" title="AUTHORIZATION CALLBACKS">the section called &#8220;AUTHORIZATION CALLBACKS&#8221;</a> in
+              the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for
+              the details about this.
+            </p></dd></dl></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.aaa.authentication"></a>14.4.&nbsp;Authentication</h2></div></div></div><p>
+      Depending on northbound management protocol, when a user session
+      is created in ConfD, it may or may not be authenticated.  If the
+      session is not yet authenticated, ConfD's AAA subsystem is used
+      to perform authentication and authorization, as described below.
+      If the session already has been authenticated, ConfD's AAA
+      assigns groups to the user as described in
+      <a class="xref" href="ch14.html#ug.aaa.groups" title="14.5.&nbsp;Group Membership">Section&nbsp;14.5, &#8220;Group Membership&#8221;</a>,
+      and performs authorization, as described in
+      <a class="xref" href="ch14.html#ug.aaa.authorization" title="14.6.&nbsp;Authorization">Section&nbsp;14.6, &#8220;Authorization&#8221;</a>.
+    </p><p>
+      The authentication part of the data model can be found in
+      tailf-aaa.yang:
+    </p><div class="informalexample"><pre class="programlisting">
+    container authentication {
+      tailf:info "User management";
+      container users {
+        tailf:info "List of local users";
+        list user {
+          key name;
+          leaf name {
+            type string;
+            tailf:info "Login name of the user";
+          }
+          leaf uid {
+            type int32;
+            mandatory true;
+            tailf:info "User Identifier";
+          }
+          leaf gid {
+            type int32;
+            mandatory true;
+            tailf:info "Group Identifier";
+          }
+          leaf password {
+            type passwdStr;
+            mandatory true;
+          }
+          leaf ssh_keydir {
+            type string;
+            mandatory true;
+            tailf:info "Absolute path to directory where user's ssh keys
+                        may be found";
+          }
+          leaf homedir {
+            type string;
+            mandatory true;
+            tailf:info "Absolute path to user's home directory";
+          }
+        }
+      }
+    }
+</pre></div><p>
+      AAA authentication is used in the following cases:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            When the built-in SSH server is used for NETCONF and
+            CLI sessions.
+          </p></li><li class="listitem"><p>
+            For Web UI sessions and REST access.
+          </p></li><li class="listitem"><p>
+            When the function
+            <code class="function">maapi_authenticate()</code> is used.
+          </p></li></ul></div><p>
+
+      <span class="phrase">
+      The different authentication mechanisms that may be used in these
+      cases are described below. Regardless of which mechanism that is
+      used, ConfD can optionally invoke an application callback as the
+      last step of the authentication process, see <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.authentication_callback" title="AUTHENTICATION CALLBACK">the section called &#8220;AUTHENTICATION CALLBACK&#8221;</a> in
+      <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>. The callback is not used
+      for the actual authentication, but it can reject an otherwise
+      successful authentication.
+      </span>
+
+    </p><p>
+      ConfD's AAA authentication is <span class="emphasis"><em>not</em></span> used
+      in the following cases:
+
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            When NETCONF uses an external SSH daemon, such as OpenSSH.
+          </p><p>
+            In this case, the NETCONF session is initiated using the
+            program <span class="command"><strong>netconf-subsys</strong></span>, as described in
+            <span class="phrase">
+              <a class="xref" href="ch15.html#ug.netconf_agent.transport" title="15.3.&nbsp;NETCONF Transport Protocols">Section&nbsp;15.3, &#8220;NETCONF Transport Protocols&#8221;</a>.
+            </span>
+            
+          </p></li><li class="listitem"><p>
+            When NETCONF uses TCP, as described in
+            <span class="phrase">
+              <a class="xref" href="ch15.html#ug.netconf_agent.transport" title="15.3.&nbsp;NETCONF Transport Protocols">Section&nbsp;15.3, &#8220;NETCONF Transport Protocols&#8221;</a>,
+            </span>
+            
+            e.g. through
+            the command <span class="command"><strong>netconf-console</strong></span>.
+          </p></li><li class="listitem"><p>
+            When the CLI uses an external SSH daemon, such as
+            OpenSSH, or a telnet daemon.
+          </p><p>
+            In this case, the CLI session is initiated through the
+            command
+            <span class="command"><strong>confd_cli</strong></span>
+            .
+            An important special case here is when a user has logged in to
+            the host and invokes the command
+            <span class="command"><strong>confd_cli</strong></span>
+             from the shell.
+            
+
+          </p></li><li class="listitem"><p>
+            When SNMP is used.  SNMP has its own authentication
+            mechanisms.  See <span class="phrase"><a class="xref" href="ch17.html#ug.snmpa.aaa" title="17.5.2.&nbsp;USM and VACM and ConfD AAA">Section&nbsp;17.5.2, &#8220;USM and VACM and ConfD AAA&#8221;</a>
+            </span>.
+          </p></li><li class="listitem"><p>
+            When the function
+            <code class="function">maapi_start_user_session()</code> is used
+            without a preceding call of
+            <code class="function">maapi_authenticate()</code>.
+          </p></li></ul></div><p>
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.aaa.public_key_login"></a>14.4.1.&nbsp;Public Key Login</h3></div></div></div><p>
+      When a user logs in over NETCONF or the CLI using the built-in
+      SSH server, with public key login, the procedure is as follows.
+    </p><p>
+      The user presents a username in accordance with the SSH protocol.
+      The SSH server consults the settings for
+      <span class="phrase">
+        <code class="sgmltag-element">/confdConfig/aaa/sshPubkeyAuthentication</code>
+        and
+        <code class="sgmltag-element">/confdConfig/aaa/localAuthentication/enabled</code>
+      </span>
+      .
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+          If
+          <span class="phrase">
+            <code class="sgmltag-element">sshPubkeyAuthentication</code>
+          </span>
+          
+          is set to <code class="literal">local</code>, and the SSH keys in
+          <code class="sgmltag-element">/aaa/authentication/users/user{$USER}/ssh_keydir</code>
+          match the keys presented by the user, authentication
+          succeeds.
+        </p></li><li class="listitem"><p>
+          Otherwise, if
+          <span class="phrase">
+            <code class="sgmltag-element">sshPubkeyAuthentication</code>
+          </span>
+          
+          is set to <code class="literal">system</code>,
+          <span class="phrase">
+            <code class="sgmltag-element">localAuthentication</code>
+          </span>
+          
+          is enabled, and the SSH keys in
+          <code class="sgmltag-element">/aaa/authentication/users/user{$USER}/ssh_keydir</code>
+          match the keys presented by the user, authentication
+          succeeds.
+        </p></li><li class="listitem"><p>
+          Otherwise, if
+          <span class="phrase">
+            <code class="sgmltag-element">sshPubkeyAuthentication</code>
+          </span>
+          
+          is set to <code class="literal">system</code> and the user
+          <code class="sgmltag-element">/aaa/authentication/users/user{$USER}</code> does not
+          exist, but the user does exist in the OS password database,
+          the keys in the user's <code class="sgmltag-element">$HOME/.ssh</code> directory are
+          checked. If these keys match the keys presented by the user,
+          authentication succeeds.
+        </p></li><li class="listitem"><p>
+          Otherwise, authentication fails.
+        </p></li></ol></div><p>
+      In all cases the keys are expected to be stored in a file called
+      <code class="filename">authorized_keys</code> (or
+      <code class="filename">authorized_keys2</code> if
+      <code class="filename">authorized_keys</code> does not exist), and in the
+      native OpenSSH format (i.e. as generated by the OpenSSH
+      <span class="command"><strong>ssh-keygen</strong></span> command).
+      If authentication succeeds, the user's group membership is
+      established as described in
+      <span class="phrase">
+        <a class="xref" href="ch14.html#ug.aaa.groups" title="14.5.&nbsp;Group Membership">Section&nbsp;14.5, &#8220;Group Membership&#8221;</a>.
+      </span>
+      
+    </p><p>
+      This is exactly the same procedure that is used by the OpenSSH
+      server with the exception that the built-in SSH server
+      also  may locate the directory containing the public keys for a
+      specific user by consulting the
+      <code class="sgmltag-element">/aaa/authentication/users</code> tree.
+    </p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="d5e3992"></a>Setting up Public Key Login</h4></div></div></div><p>
+        We need to provide a directory where SSH keys are kept for a
+        specific user, and give the absolute path to this directory for
+        the <code class="sgmltag-element">/aaa/authentication/users/user/ssh_keydir</code>
+        leaf. If public key login is not desired at all for a user, the
+        value of the <code class="sgmltag-element">ssh_keydir</code> leaf should be set to
+        <code class="code">""</code>, i.e. the empty string. Similarly, if the
+        directory does not contain any SSH keys, public key logins for
+        that user will be disabled.
+      </p><p>
+        The built-in SSH daemon supports DSA and RSA keys.
+        To generate and enable RSA keys of size 4096 bits for, say,
+        user "bob", the following steps are required.
+      </p><p>
+        On the client machine, as user "bob", generate
+        a private/public key pair as:
+      </p><div class="informalexample"><pre class="screen">
+# ssh-keygen -b 4096 -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/bob/.ssh/id_rsa):
+Created directory '/home/bob/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/bob/.ssh/id_rsa.
+Your public key has been saved in /home/bob/.ssh/id_rsa.pub.
+The key fingerprint is:
+ce:1b:63:0a:f9:d4:1d:04:7a:1d:98:0c:99:66:57:65 bob@buzz
+# ls -lt ~/.ssh
+total 8
+-rw-------  1 bob users 3247 Apr  4 12:28 id_rsa
+-rw-r--r--  1 bob users  738 Apr  4 12:28 id_rsa.pub
+</pre></div><p>
+        Now we need to copy the public key to
+        the target machine where the NETCONF or CLI SSH client runs.
+      </p><p>
+        Assume we have the following user entry:
+      </p><div class="informalexample"><pre class="programlisting">
+&lt;user&gt;
+  &lt;name&gt;bob&lt;/name&gt;
+  &lt;uid&gt;100&lt;/uid&gt;
+  &lt;gid&gt;10&lt;/gid&gt;
+  &lt;password&gt;$1$feedbabe$nGlMYlZpQ0bzenyFOQI3L1&lt;/password&gt;
+  &lt;ssh_keydir&gt;/var/system/users/bob/.ssh&lt;/ssh_keydir&gt;
+  &lt;homedir&gt;/var/system/users/bob&lt;/homedir&gt;
+&lt;/user&gt;
+</pre></div><p>
+        We need to copy the newly generated file
+        <code class="filename">id_rsa.pub</code>, which is the public key, to
+        a file on the target machine called
+        <code class="filename">/var/system/users/bob/.ssh/authorized_keys</code>
+      </p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4009"></a>14.4.2.&nbsp;Password Login</h3></div></div></div><p>
+      Password login is triggered in the following cases:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          When a user logs in over NETCONF or the CLI using the built
+          in SSH server, with a password.  The user presents a
+          username and a password in accordance with the SSH protocol.
+        </p></li><li class="listitem"><p>
+          When a user logs in using the Web UI.  The Web UI asks for a
+          username and password.
+        </p></li><li class="listitem"><p>
+          When the function <code class="function">maapi_authenticate()</code>
+          is used.
+        </p></li></ul></div><p>
+      In this case, ConfD
+      will by default try local authentication,
+      PAM, and external authentication, in that order, as described
+      below.  It is possible to change the order in which these are
+      tried, by modifying the
+      <code class="filename">confd.conf</code>
+      .
+      parameter <code class="sgmltag-element">/confdConfig/aaa/authOrder</code>
+      .
+      See <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>
+      
+      for details.
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            If <code class="sgmltag-element">/aaa/authentication/users/user{$USER}</code>
+            exists and the presented password matches the encrypted
+            password in
+            <code class="sgmltag-element">/aaa/authentication/users/user{$USER}/password</code>
+            the user is authenticated.
+          </p></li><li class="listitem"><p>
+            If the password does not match or if the user does not
+            exist in <code class="sgmltag-element">/aaa/authentication/users</code>, PAM login
+            is attempted, if enabled.  See
+            <span class="olink">????</span>
+            for details.
+          </p></li><li class="listitem"><p>
+            If all of the above fails and
+            external authentication is enabled, the
+            configured executable is invoked.  See
+            <span class="olink">????</span>
+            for details.
+          </p></li></ol></div><p>
+        If authentication succeeds, the user's group membership is
+        established as described in
+        <span class="olink">????</span>.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.aaa.pam"></a>14.4.3.&nbsp;PAM</h3></div></div></div><p>
+    On operating systems supporting PAM,
+    ConfD
+    also supports PAM authentication. Using PAM authentication with
+    ConfD
+    can be very convenient since it allows us to have the same
+    set of users and groups having access to
+    ConfD as those that
+    have access to the UNIX/Linux host itself.
+  </p><p>
+    If we use PAM, we do not have to have any users or any
+    groups configured in the ConfD
+    aaa namespace at all.
+    To configure PAM we typically need to do the following:
+  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+        Remove all users and groups from the aaa initialization
+        XML file.
+      </p></li><li class="listitem"><p>
+        Enable PAM in <span class="phrase">confd.conf</span>
+         by adding:
+        </p><div class="informalexample"><pre class="programlisting">
+&lt;pam&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;service&gt;common-auth&lt;/service&gt;
+&lt;/pam&gt;
+        </pre></div><p>
+        to the aaa section in <span class="phrase">confd.conf</span>
+        . The <code class="sgmltag-element">service</code> name
+        specifies the PAM service, typically a file in the directory
+        <code class="filename">/etc/pam.d</code>, but may alternatively be an
+        entry in a file <code class="filename">/etc/pam.conf</code>, depending on
+        OS and version. Thus it is possible to have a different login
+        procedure to ConfD
+        than to the host itself.
+      </p></li><li class="listitem"><p>
+        If pam is enabled and we want to use pam for login
+        the system may have to run as root. This depends on how
+        pam is configured locally. However the default "system-auth"
+        will typically require root since the pam libraries then read
+        <code class="filename">/etc/shadow</code>.  If we don't want to run
+        ConfD as root,
+        the solution here is to change owner of a helper program called
+        <code class="filename">$CONFD_DIR/lib/confd/lib/core/pam/priv/epam</code>
+        
+        and also  set the setuid bit.
+      </p><div class="informalexample"><pre class="screen">
+# cd $CONFD_DIR/lib/confd/lib/core/pam/priv/
+# chown root:root epam
+# chmod u+s epam
+      </pre></div></li></ol></div><p>
+    PAM is the recommended way to authenticate
+    ConfD users.
+  </p><p>
+    As an example, say that we have user test in <code class="filename">/etc/passwd</code>,
+    and furthermore:
+    </p><div class="informalexample"><pre class="screen">
+# grep test /etc/group
+operator:x:37:test
+admin:x:1001:test
+    </pre></div><p>
+
+    thus, the test user is part of the admin and the operator
+    groups and
+    logging in to ConfD
+    as the test user, through CLI ssh, Web UI, or
+    netconf renders the following in the audit log.
+  </p><div class="informalexample"><pre class="programlisting">
+&lt;INFO&gt; 28-Jan-2009::16:05:55.663 buzz confd[14658]: audit user: test/0 logged
+    in over ssh from 127.0.0.1 with authmeth:password
+&lt;INFO&gt; 28-Jan-2009::16:05:55.670 buzz confd[14658]: audit user: test/5 assigned
+    to groups: operator,admin
+&lt;INFO&gt; 28-Jan-2009::16:05:57.655 buzz confd[14658]: audit user: test/5 CLI 'exit'
+  </pre></div><p>
+    Thus, the test user was found and authenticated from
+    <code class="filename">/etc/passwd</code>, and the crucial group assignment of the test user
+    was done from <code class="filename">/etc/group</code>.
+  </p><p>
+    If we wish to be able to also manipulate the users, their
+    passwords etc on the device we can write a private YANG model
+    for that data, store that data in CDB, setup a normal CDB subscriber for
+    that data, and finally when our private user data is manipulated,
+    our CDB subscriber picks up the changes and changes the contents of
+    the relevant <code class="filename">/etc</code> files.
+  </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.aaa.External_authentication"></a>14.4.4.&nbsp;External authentication</h3></div></div></div><p>A common situation is when we wish to have
+  all authentication data stored remotely, not locally,
+  for example on a remote RADIUS or LDAP
+  server. This remote authentication server typically not
+  only stores the users and their passwords, but also
+  the group information.
+  </p><p>If we wish to have not only the users, but also the group
+  information stored on a remote server, the best
+  option for ConfD
+  authentication is to use
+  "external authentication".
+  </p><p>
+    If this feature is configured, ConfD
+    will invoke
+    the executable configured in
+    <code class="sgmltag-element">/confdConfig/aaa/externalAuthentication/executable</code>
+    
+    in
+    <code class="filename">confd.conf</code>
+    
+    , and pass the username and
+    the clear text password on <code class="code">stdin</code>
+    using the string notation:
+    <code class="code">"[user;password;]\n"</code>.
+  </p><p>For example if user "bob" attempts to login over SSH
+  using the password "secret", and external authentication is
+  enabled, ConfD
+  will invoke the configured executable and
+  write <code class="code">"[bob;secret;]\n"</code> on the <code class="code">stdin</code> stream
+  for the executable.
+  </p><p>The task of the executable is then to authenticate the
+  user and also establish the username-to-groups mapping.
+  </p><p>For example the executable could be a RADIUS client
+  which utilizes some proprietary vendor attributes to
+  retrieve the groups of the user from the RADIUS server.
+  If authentication is successful, the program should write
+  <code class="code">"accept "</code> followed by a space-separated list of groups the
+  user is member of, and additional information as described below.
+  Again, assuming that Bob's password indeed
+  was "secret", and that Bob is member of the "admin" and the
+  "lamers" groups, the program should write
+  <code class="code">"accept admin lamers $uid $gid $supplementary_gids $HOME\n"</code> on
+  its standard output and then exit.
+  </p><p>Thus the format of the output from an "externalauth" program
+  when authentication is successful should be:</p><p>
+    <code class="code">"accept $groups $uid $gid $supplementary_gids $HOME\n"</code>
+  </p><p>Where</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+        <code class="code">$groups</code> is a space separated list of the group names
+        the user is a member of.
+      </p></li><li class="listitem"><p>
+        <code class="code">$uid</code> is the UNIX integer user id
+        ConfD
+        should use
+        as default when executing commands for this user.
+      </p></li><li class="listitem"><p>
+        <code class="code">$gid</code> is the UNIX integer group id
+        ConfD
+        should use
+        as default when executing commands for this user.
+      </p></li><li class="listitem"><p>
+        <code class="code">$supplementary_gids</code> is a (possibly empty)
+        space separated list of additional
+        UNIX group ids the user is also a member of.
+      </p></li><li class="listitem"><p>
+        <code class="code">$HOME</code> is the directory which should be used as
+        HOME for this user when ConfD
+        executes commands on behalf
+        of this user.
+      </p></li></ul></div><p>It is further possible for the program to return a token on successful
+  authentication, by using
+  <code class="code">"accept_token"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_token $groups $uid $gid $supplementary_gids $HOME $token\n"</code>
+  </p><p>Where <code class="code">$token</code> is an arbitrary string. ConfD
+  will then, for some northbound interfaces, include this token in
+  responses.</p><p>It is also possible for the program to return additional
+  information on successful authentication, by using
+  <code class="code">"accept_info"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_info $groups $uid $gid $supplementary_gids $HOME $info\n"</code>
+  </p><p>Where <code class="code">$info</code> is some arbitrary text. ConfD
+  will then just append this text to the generated audit log message
+  (CONFD_EXT_LOGIN).</p><p>Yet another possibility is for the program to return a warning
+  that the user's password is about to expire, by using
+  <code class="code">"accept_warning"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_warning $groups $uid $gid $supplementary_gids $HOME $warning\n"</code>
+  </p><p>Where <code class="code">$warning</code> is an appropriate warning message.
+  The message will be processed by ConfD
+  according to the setting of <code class="sgmltag-element">/confdConfig/aaa/expirationWarning</code>  in <code class="filename">confd.conf</code> .</p><p>There is also support for token variations of <code class="code">"accept_info"</code>
+  and <code class="code">"accept_warning"</code> namely <code class="code">"accept_token_info"</code> and
+  <code class="code">"accept_token_warning"</code>.
+  Both <code class="code">"accept_token_info"</code> and <code class="code">"accept_token_warning"</code>
+  expects the external program to output exactly the same as described above
+  with the addition of a token after $HOME:</p><p>
+    <code class="code">"accept_token_info $groups $uid $gid $supplementary_gids $HOME $token $info\n"</code>
+  </p><p>
+    <code class="code">"accept_token_warning $groups $uid $gid $supplementary_gids $HOME $token $warning\n"</code>
+  </p><p>If authentication failed, the program should write
+  <code class="code">"reject"</code> or <code class="code">"abort"</code>, possibly followed by a
+  reason for the rejection, and a trailing newline. For example
+  <code class="code">"reject Bad password\n"</code> or just <code class="code">"abort\n"</code>.
+  The difference between <code class="code">"reject"</code> and <code class="code">"abort"</code>
+  is that with <code class="code">"reject"</code>, ConfD
+  will try subsequent mechanisms configured for <code class="sgmltag-element">/confdConfig/aaa/authOrder</code>  in <code class="filename">confd.conf</code>  (if any), while with
+  <code class="code">"abort"</code>, the authentication fails immediately. Thus
+  <code class="code">"abort"</code> can prevent subsequent mechanisms from being
+  tried, but when external authentication is the last mechanism (as in
+  the default order), it has the same effect as
+  <code class="code">"reject"</code>.</p><p>When external authentication is used, the group list returned
+  by the external program is prepended by any possible
+  group information stored locally under the <code class="sgmltag-element">/aaa</code> tree.
+  Hence when we use
+  external authentication it is indeed possible to have the entire
+  <code class="sgmltag-element">/aaa/authentication</code> tree empty. The group assignment performed
+  by the external program will still be valid and the relevant groups will
+  be used by ConfD
+  when the authorization rules are checked.
+  </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.aaa.External_validation"></a>14.4.5.&nbsp;External token validation</h3></div></div></div><p>When username, password authentication is not feasible, authentication
+  by token validation is possible. Currently only RESTCONF supports this mode
+  of authentication. It shares all properties of external authentication, but
+  instead of a username and password, it takes a token as input.
+  The output is also almost the same, the only difference is that it is also
+  expected to output a username.
+  </p><p>
+    If this feature is configured, ConfD
+    will invoke
+    the executable configured in
+    <code class="sgmltag-element">/confdConfig/aaa/externalValidation/executable</code>
+    
+    in
+    <code class="filename">confd.conf</code>
+    
+    , and pass the token on <code class="code">stdin</code>
+    using the string notation:
+    <code class="code">"[token;]\n"</code>.
+  </p><p>For example if user "bob" attempts to login over RESTCONF
+  using the token "topsecret", and external validation is
+  enabled, ConfD
+  will invoke the configured executable and
+  write <code class="code">"[topsecret;]\n"</code> on the <code class="code">stdin</code> stream
+  for the executable.
+  </p><p>The task of the executable is then to validate the token, thereby
+  authenticating the user and also establish the username and username-to-groups
+  mapping.
+  </p><p>For example the executable could be a FUSION client
+  which utilizes some proprietary vendor attributes to
+  retrieve the username and groups of the user from the FUSION server.
+  If token validation is successful, the program should write
+  <code class="code">"accept "</code> followed by a space-separated list of groups the
+  user is member of, and additional information as described below.
+  Again, assuming that Bob's token indeed
+  was "topsecret", and that Bob is member of the "admin" and the
+  "lamers" groups, the program should write
+  <code class="code">"accept admin lamers $uid $gid $supplementary_gids $HOME $USER\n"</code> on
+  its standard output and then exit.
+  </p><p>Thus the format of the output from an "externalvalidation" program
+  when token validation authentication is successful should be:</p><p>
+    <code class="code">"accept $groups $uid $gid $supplementary_gids $HOME $USER\n"</code>
+  </p><p>Where</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+        <code class="code">$groups</code> is a space separated list of the group names
+        the user is a member of.
+      </p></li><li class="listitem"><p>
+        <code class="code">$uid</code> is the UNIX integer user id
+        ConfD
+        should use
+        as default when executing commands for this user.
+      </p></li><li class="listitem"><p>
+        <code class="code">$gid</code> is the UNIX integer group id
+        ConfD
+        should use
+        as default when executing commands for this user.
+      </p></li><li class="listitem"><p>
+        <code class="code">$supplementary_gids</code> is a (possibly empty)
+        space separated list of additional
+        UNIX group ids the user is also a member of.
+      </p></li><li class="listitem"><p>
+        <code class="code">$HOME</code> is the directory which should be used as
+        HOME for this user when ConfD
+        executes commands on behalf
+        of this user.
+      </p></li><li class="listitem"><p>
+        <code class="code">$USER</code> is the user derived from mapping the token.
+      </p></li></ul></div><p>It is further possible for the program to return a new token on successful
+  token validation authentication, by using
+  <code class="code">"accept_token"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_token $groups $uid $gid $supplementary_gids $HOME $USER $token\n"</code>
+  </p><p>Where <code class="code">$token</code> is an arbitrary string. ConfD
+  will then, for some northbound interfaces, include this token in
+  responses.</p><p>It is also possible for the program to return additional
+  information on successful token validation authentication, by using
+  <code class="code">"accept_info"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_info $groups $uid $gid $supplementary_gids $HOME $USER $info\n"</code>
+  </p><p>Where <code class="code">$info</code> is some arbitrary text. ConfD
+  will then just append this text to the generated audit log message
+  (CONFD_EXT_LOGIN).</p><p>Yet another possibility is for the program to return a warning
+  that the user's password is about to expire, by using
+  <code class="code">"accept_warning"</code> instead of <code class="code">"accept"</code>:</p><p>
+    <code class="code">"accept_warning $groups $uid $gid $supplementary_gids $HOME $USER $warning\n"</code>
+  </p><p>Where <code class="code">$warning</code> is an appropriate warning message.
+  The message will be processed by ConfD
+  according to the setting of <code class="sgmltag-element">/confdConfig/aaa/expirationWarning</code>  in <code class="filename">confd.conf</code> .</p><p>There is also support for token variations of <code class="code">"accept_info"</code>
+  and <code class="code">"accept_warning"</code> namely <code class="code">"accept_token_info"</code> and
+  <code class="code">"accept_token_warning"</code>.
+  Both <code class="code">"accept_token_info"</code> and <code class="code">"accept_token_warning"</code>
+  expects the external program to output exactly the same as described above
+  with the addition of a token after $USER:</p><p>
+    <code class="code">"accept_token_info $groups $uid $gid $supplementary_gids $HOME $USER $token $info\n"</code>
+  </p><p>
+    <code class="code">"accept_token_warning $groups $uid $gid $supplementary_gids $HOME $USER $token $warning\n"</code>
+  </p><p>If token validation authentication failed, the program should write
+  <code class="code">"reject"</code> or <code class="code">"abort"</code>, possibly followed by a
+  reason for the rejection, and a trailing newline. For example
+  <code class="code">"reject Bad password\n"</code> or just <code class="code">"abort\n"</code>.
+  The difference between <code class="code">"reject"</code> and <code class="code">"abort"</code>
+  is that with <code class="code">"reject"</code>, ConfD
+  will try subsequent mechanisms configured for <code class="sgmltag-element">/confdConfig/aaa/validationOrder</code>  in <code class="filename">confd.conf</code>  (if any), while with
+  <code class="code">"abort"</code>, the token validation authentication fails immediately.
+  Thus <code class="code">"abort"</code> can prevent subsequent mechanisms from being
+  tried. Currently the only available token validation authentication
+  mechanism is the external one.</p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.aaa.groups"></a>14.5.&nbsp;Group Membership</h2></div></div></div><p>
+    Once a user is authenticated, group membership must be
+    established.
+    A single user can be a member of several groups.
+    Group membership is used by the authorization rules to
+    decide which operations a certain user is allowed to
+    perform.
+    Thus the ConfD
+    AAA authorization model is entirely group based.
+    This is also sometimes referred to as role based authorization.
+  </p><p>
+      All groups are stored under <code class="sgmltag-element">/nacm/groups</code>, and each group
+      contains a number of usernames. The
+      <code class="filename">ietf-netconf-acm.yang</code> model defines a group
+      entry:
+    </p><div class="informalexample"><pre class="programlisting">
+list group {
+  key name;
+
+  description
+    "One NACM Group Entry.  This list will only contain
+     configured entries, not any entries learned from
+     any transport protocols.";
+
+  leaf name {
+    type group-name-type;
+    description
+      "Group name associated with this entry.";
+  }
+
+  leaf-list user-name {
+    type user-name-type;
+    description
+      "Each entry identifies the username of
+       a member of the group associated with
+       this entry.";
+  }
+}
+</pre></div><p>The <code class="filename">tailf-acm.yang</code> model augments this
+    with a <code class="sgmltag-element">gid</code> leaf:
+    </p><div class="informalexample"><pre class="programlisting">
+augment /nacm:nacm/nacm:groups/nacm:group {
+  leaf gid {
+    type int32;
+    description
+      "This leaf associates a numerical group ID with the group.
+       When a OS command is executed on behalf of a user,
+       supplementary group IDs are assigned based on 'gid' values
+       for the groups that the use is a member of.";
+  }
+}
+</pre></div><p>
+    A valid group entry could thus look like:
+  </p><div class="informalexample"><pre class="programlisting">
+&lt;group&gt;
+  &lt;name&gt;admin&lt;/name&gt;
+  &lt;user-name&gt;bob&lt;/user-name&gt;
+  &lt;user-name&gt;joe&lt;/user-name&gt;
+  &lt;gid xmlns="http://tail-f.com/yang/acm"&gt;99&lt;/gid&gt;
+&lt;/group&gt;
+  </pre></div><p>The above XML data would then mean that users
+  <code class="sgmltag-element">bob</code> and <code class="sgmltag-element">joe</code> are members of the <code class="sgmltag-element">admin</code> group.
+  The users need not necessarily exist as actual users under
+  <code class="sgmltag-element">/aaa/authentication/users</code> in order to belong to
+  a group.  If for example PAM authentication is used, it does not make
+  sense to have all users listed under
+  <code class="sgmltag-element">/aaa/authentication/users</code>.
+  </p><p>
+    By default, the user is assigned to groups by using any groups
+    provided by the northbound transport (e.g. via the
+    <span class="command"><strong>confd_cli</strong></span>
+    
+    or <span class="command"><strong>netconf-subsys</strong></span>
+    programs), by consulting data under
+    <code class="sgmltag-element">/nacm/groups</code>, by consulting the
+    <code class="filename">/etc/group</code> file, and by using any additional
+    groups supplied by the authentication method. If
+    <code class="sgmltag-element">/nacm/enable-external-groups</code> is set to "false",
+    only the data under <code class="sgmltag-element">/nacm/groups</code> is consulted.
+  </p><p>
+    The resulting group assignment is the union of these
+    methods, if it is non-empty.  Otherwise, the default group is
+    used, if configured (<code class="sgmltag-element">/confdConfig/aaa/defaultGroup</code>
+     in
+    <code class="filename">confd.conf</code>
+    ).
+  </p><p>
+    A user entry has a UNIX uid and UNIX gid assigned to it.
+    Groups may have
+    optional group ids. When a user is logged in, and
+    ConfD
+    tries
+    to execute commands on behalf of that user, the uid/gid for the
+    command execution is taken from the user entry. Furthermore,
+    UNIX supplementary group ids are assigned according to the gids in
+    the groups where the user is a member.
+  </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.aaa.authorization"></a>14.6.&nbsp;Authorization</h2></div></div></div><p>
+    Once a user is authenticated and group membership
+    is established, when the user starts to perform
+    various actions, each action must be authorized.
+    Normally the authorization is done based on rules configured in the
+    AAA data model as described in this section<span class="phrase">, but if needed we can
+    also register application callbacks to partially or completely
+    replace this logic, see <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.authorization_callbacks" title="AUTHORIZATION CALLBACKS">the section called &#8220;AUTHORIZATION CALLBACKS&#8221;</a> in <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a></span>.
+  </p><p>
+      The authorization procedure first checks the value of
+      <code class="sgmltag-element">/nacm/enable-nacm</code>. This leaf has a default of
+      <code class="code">true</code>, but if it is set to <code class="code">false</code>, all
+      access is permitted. Otherwise, the next step is to traverse the
+      <code class="sgmltag-element">rule-list</code> list:
+    </p><div class="informalexample"><pre class="programlisting">
+list rule-list {
+  key "name";
+  ordered-by user;
+  description
+    "An ordered collection of access control rules.";
+
+  leaf name {
+    type string {
+      length "1..max";
+    }
+    description
+      "Arbitrary name assigned to the rule-list.";
+  }
+  leaf-list group {
+    type union {
+      type matchall-string-type;
+      type group-name-type;
+    }
+    description
+      "List of administrative groups that will be
+       assigned the associated access rights
+       defined by the 'rule' list.
+
+       The string '*' indicates that all groups apply to the
+       entry.";
+  }
+
+  // ...
+}
+</pre></div><p>
+      If the <code class="sgmltag-element">group</code> leaf-list in a <code class="sgmltag-element">rule-list</code> entry
+      matches any of the user's groups, the <code class="sgmltag-element">cmdrule</code> list
+      entries are examined for command authorization, while the
+      <code class="sgmltag-element">rule</code> entries are examined for rpc, notification, and
+      data authorization.
+    </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4293"></a>14.6.1.&nbsp;Command authorization</h3></div></div></div><p>
+        The <code class="filename">tailf-acm.yang</code> module augments the
+        <code class="sgmltag-element">rule-list</code> entry in
+        <code class="filename">ietf-netconf-acm.yang</code> with a
+        <code class="sgmltag-element">cmdrule</code> list:
+      </p><div class="informalexample"><pre class="programlisting">
+augment /nacm:nacm/nacm:rule-list {
+
+  list cmdrule {
+    key "name";
+    ordered-by user;
+    description
+      "One command access control rule. Command rules control access
+       to CLI commands and Web UI functions.
+
+       Rules are processed in user-defined order until a match is
+       found.  A rule matches if 'context', 'command', and
+       'access-operations' match the request.  If a rule
+       matches, the 'action' leaf determines if access is granted
+       or not.";
+
+    leaf name {
+      type string {
+        length "1..max";
+      }
+      description
+        "Arbitrary name assigned to the rule.";
+    }
+
+    leaf context {
+      type union {
+        type nacm:matchall-string-type;
+        type string;
+      }
+      default "*";
+      description
+        "This leaf matches if it has the value '*' or if its value
+         identifies the agent that is requesting access, i.e. 'cli'
+         for CLI or 'webui' for Web UI.";
+    }
+
+    leaf command {
+      type string;
+      default "*";
+      description
+        "Space-separated tokens representing the command. Refer
+         to the Tail-f AAA documentation for further details.";
+    }
+
+    leaf access-operations {
+      type union {
+        type nacm:matchall-string-type;
+        type nacm:access-operations-type;
+      }
+      default "*";
+      description
+        "Access operations associated with this rule.
+
+         This leaf matches if it has the value '*' or if the
+         bit corresponding to the requested operation is set.";
+    }
+
+    leaf action {
+      type nacm:action-type;
+      mandatory true;
+      description
+        "The access control action associated with the
+         rule.  If a rule is determined to match a
+         particular request, then this object is used
+         to determine whether to permit or deny the
+         request.";
+    }
+
+    leaf log-if-permit {
+      type empty;
+      description
+        "If this leaf is present, access granted due to this rule
+         is logged in the developer log. Otherwise, only denied
+         access is logged. Mainly intended for debugging of rules.";
+    }
+
+    leaf comment {
+      type string;
+      description
+        "A textual description of the access rule.";
+    }
+  }
+}
+</pre></div><p>
+        Each rule has seven leafs. The first is the <code class="sgmltag-element">name</code> list
+        key, the following three leafs are matching leafs. When
+        ConfD tries to run a command it tries to
+        match the command towards the matching leafs and if all of
+        <code class="sgmltag-element">context</code>, <code class="sgmltag-element">command</code>, and
+        <code class="sgmltag-element">access-operations</code> match, the fifth field, i.e.  the
+        <code class="sgmltag-element">action</code>, is applied.
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">name</span></dt><dd><p>
+              <code class="sgmltag-element">name</code> is the name of the rule. The rules are
+              checked in order, with the ordering given by the the YANG
+              <code class="code">ordered-by user</code> semantics, i.e. independent of
+              the key values.
+            </p></dd><dt><span class="term">context</span></dt><dd><p>
+              <code class="sgmltag-element">context</code> is either of the strings
+              <code class="code">cli</code>, <code class="code">webui</code>, or <code class="code">*</code>
+              for a command rule.  This means that we can differentiate
+              authorization rules for which access method is used. Thus if
+              command access is attempted through the CLI the context
+              will be the string <code class="code">cli</code> whereas for operations
+              via the Web UI, the context will be the string
+              <code class="code">webui</code>.
+            </p></dd><dt><span class="term">command</span></dt><dd><p>
+              This is the actual command getting executed.  If the rule
+              applies to one or several CLI commands, the string is a
+              space separated list of CLI command tokens, for example
+              <code class="code">request system reboot</code>. If the command
+              applies to Web UI operations, it is a space separated string
+              similar to a CLI string.
+
+              
+
+              A string which consists of just "*" matches any command.
+            </p><p>
+              It is important to understand that a command rule for the CLI
+              applies to the string as entered by the user. The command rules
+              are not aware of the data model. Thus it is not possible to
+              have a rule like:
+              </p><div class="informalexample"><pre class="programlisting">
+&lt;cmdrule&gt;
+  &lt;name&gt;delete-eth0&lt;/name&gt;
+  &lt;context&gt;cli&lt;/context&gt;
+  &lt;command&gt;delete interfaces interface eth0&lt;/command&gt;
+  &lt;access-operations&gt;exec&lt;/access-operations&gt;
+  &lt;action&gt;deny&lt;/action&gt;
+&lt;/cmdrule&gt;
+</pre></div><p>
+            to protect a specific interface from removal in The Juniper
+            CLI. The user can enter:
+            </p><div class="informalexample"><pre class="screen">
+joe@host% edit interfaces
+joe@host% delete interface eth0
+</pre></div><p>
+            making the command rule above moot.
+            </p><p>
+              In the Cisco like CLIs it makes more sense to use command
+              rules to protect data. This is due to the command oriented
+              character of the Cisco CLIs.
+            </p><p>
+              In general, we do not recommend using command rules to
+              protect the configuration. Use rules for data access as
+              described in the next section to control access to
+              different parts of the data. Command rules should be used
+              only for CLI commands and Web UI operations that cannot be
+              expressed as data rules.
+            </p><p>
+              Another thing that is important for command rule
+              processing of CLI commands is the mode. If we enable the
+              feature <code class="sgmltag-element">/confdConfig/cli/modeInfoInAAA</code>, the
+              command rule matching will match on a string where the CLI
+              mode is prepended. This makes command rule processing more
+              useful in the Cisco style CLIs than in the Juniper style
+              CLI.
+            </p><p>
+              The individual tokens can be POSIX extended regular
+              expressions. Each regular expression is implicitly
+              anchored, i.e.  an "^" is prepended and a "$" is appended
+              to the regular expression.
+          </p></dd><dt><span class="term">access-operations</span></dt><dd><p>
+              <code class="sgmltag-element">access-operations</code> is used to match the
+              operation that ConfD tries to perform. It
+              must be one or both of the "read" and "exec" values from
+              the <code class="code">access-operations-type</code> bits type
+              definition in <code class="filename">ietf-netconf-acm.yang</code>,
+              or "*" to match any operation.
+            </p></dd><dt><span class="term">action</span></dt><dd><p>
+              If all of the previous fields match, the rule as a whole
+              matches and the value of <code class="sgmltag-element">action</code> will be taken.
+              I.e. if a match is found, a decision is made whether to
+              permit or deny the request in its entirety. If
+              <code class="sgmltag-element">action</code> is <code class="code">permit</code>, the request is
+              permitted, if <code class="sgmltag-element">action</code> is <code class="code">deny</code>, the
+              request is denied and an entry written to the developer
+              log.
+            </p></dd><dt><span class="term">log-if-permit</span></dt><dd><p>
+              If this leaf is present, an entry is written to the
+              developer log for a matching request also when
+              <code class="sgmltag-element">action</code> is <code class="code">permit</code>. This is very
+              useful when debugging command rules.
+            </p></dd><dt><span class="term">comment</span></dt><dd><p>
+              An optional textual description of the rule.
+            </p></dd></dl></div><p>
+        For the rule  processing to be written to the devel
+        log, the <code class="sgmltag-element">/confdConfig/logs/developerLogLevel</code>
+         entry in
+        <code class="filename">confd.conf</code>
+        
+        must be set to <code class="code">trace</code>.
+      </p><p>
+        If no matching rule is found in any of the <code class="sgmltag-element">cmdrule</code>
+        lists in any <code class="sgmltag-element">rule-list</code> entry that matches the user's
+        groups, this augmentation from
+        <code class="filename">tailf-acm.yang</code> is relevant:
+      </p><div class="informalexample"><pre class="programlisting">
+augment /nacm:nacm {
+  leaf cmd-read-default {
+    type nacm:action-type;
+    default "permit";
+    description
+      "Controls whether command read access is granted
+       if no appropriate cmdrule is found for a
+       particular command read request.";
+  }
+
+  leaf cmd-exec-default {
+    type nacm:action-type;
+    default "permit";
+    description
+      "Controls whether command exec access is granted
+       if no appropriate cmdrule is found for a
+       particular command exec request.";
+  }
+
+  leaf log-if-default-permit {
+    type empty;
+    description
+      "If this leaf is present, access granted due to one of
+       /nacm/read-default, /nacm/write-default, or /nacm/exec-default
+       /nacm/cmd-read-default, or /nacm/cmd-exec-default
+       being set to 'permit' is logged in the developer log.
+       Otherwise, only denied access is logged. Mainly intended
+       for debugging of rules.";
+  }
+}
+</pre></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            If "read" access is requested, the value of
+            <code class="sgmltag-element">/nacm/cmd-read-default</code> determines whether access is
+            permitted or denied.
+          </p></li><li class="listitem"><p>
+            If "exec" access is requested, the value of
+            <code class="sgmltag-element">/nacm/cmd-exec-default</code> determines whether access is
+            permitted or denied.
+          </p></li></ul></div><p>
+        If access is permitted due to one of these default leafs, the
+        <code class="sgmltag-element">/nacm/log-if-default-permit</code>has the same effect as the
+        <code class="sgmltag-element">log-if-permit</code> leaf for the <code class="sgmltag-element">cmdrule</code> lists.
+      </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4387"></a>14.6.2.&nbsp;Rpc, notification, and data authorization</h3></div></div></div><p>
+        The rules in the <code class="sgmltag-element">rule</code> list are used to control access
+        to rpc operations, notifications, and data nodes defined in YANG
+        models. Access to invocation of actions
+        (<code class="code">tailf:action</code>) is controlled with the same method
+        as access to data nodes, with a request for "exec"
+        access. <code class="filename">ietf-netconf-acm.yang</code> defines a
+        <code class="sgmltag-element">rule</code> entry as:
+      </p><div class="informalexample"><pre class="programlisting">
+list rule {
+  key "name";
+  ordered-by user;
+  description
+    "One access control rule.
+
+     Rules are processed in user-defined order until a match is
+     found.  A rule matches if 'module-name', 'rule-type', and
+     'access-operations' match the request.  If a rule
+     matches, the 'action' leaf determines if access is granted
+     or not.";
+
+  leaf name {
+    type string {
+      length "1..max";
+    }
+    description
+      "Arbitrary name assigned to the rule.";
+  }
+
+  leaf module-name {
+    type union {
+      type matchall-string-type;
+      type string;
+    }
+    default "*";
+    description
+      "Name of the module associated with this rule.
+
+       This leaf matches if it has the value '*' or if the
+       object being accessed is defined in the module with the
+       specified module name.";
+  }
+  choice rule-type {
+    description
+      "This choice matches if all leafs present in the rule
+       match the request.  If no leafs are present, the
+       choice matches all requests.";
+    case protocol-operation {
+      leaf rpc-name {
+        type union {
+          type matchall-string-type;
+          type string;
+        }
+        description
+          "This leaf matches if it has the value '*' or if
+           its value equals the requested protocol operation
+           name.";
+      }
+    }
+    case notification {
+      leaf notification-name {
+        type union {
+          type matchall-string-type;
+          type string;
+        }
+        description
+          "This leaf matches if it has the value '*' or if its
+           value equals the requested notification name.";
+      }
+    }
+    case data-node {
+      leaf path {
+        type node-instance-identifier;
+        mandatory true;
+        description
+          "Data Node Instance Identifier associated with the
+           data node controlled by this rule.
+
+           Configuration data or state data instance
+           identifiers start with a top-level data node.  A
+           complete instance identifier is required for this
+           type of path value.
+
+           The special value '/' refers to all possible
+           data-store contents.";
+      }
+    }
+  }
+
+  leaf access-operations {
+    type union {
+      type matchall-string-type;
+      type access-operations-type;
+    }
+    default "*";
+    description
+      "Access operations associated with this rule.
+
+       This leaf matches if it has the value '*' or if the
+       bit corresponding to the requested operation is set.";
+  }
+
+  leaf action {
+    type action-type;
+    mandatory true;
+    description
+      "The access control action associated with the
+       rule.  If a rule is determined to match a
+       particular request, then this object is used
+       to determine whether to permit or deny the
+       request.";
+  }
+
+  leaf comment {
+    type string;
+    description
+      "A textual description of the access rule.";
+  }
+}
+</pre></div><p>
+        <code class="filename">tailf-acm</code> augments this with two additional
+        leafs:
+      </p><div class="informalexample"><pre class="programlisting">
+augment /nacm:nacm/nacm:rule-list/nacm:rule {
+
+  leaf context {
+    type union {
+      type nacm:matchall-string-type;
+      type string;
+    }
+    default "*";
+    description
+      "This leaf matches if it has the value '*' or if its value
+       identifies the agent that is requesting access, e.g. 'netconf'
+       for NETCONF, 'cli' for CLI, or 'webui' for Web UI.";
+
+  }
+
+  leaf log-if-permit {
+    type empty;
+    description
+      "If this leaf is present, access granted due to this rule
+       is logged in the developer log. Otherwise, only denied
+       access is logged. Mainly intended for debugging of rules.";
+  }
+}
+</pre></div><p>
+        Similar to the command access check, whenever a user through
+        some agent tries to access an rpc, a notification, a data item,
+        or an action, access is checked.  For a rule to match, three or
+        four leafs must match and when a match is found, the
+        corresponding action is taken.
+      </p><p>
+        We have the following leafs in the <code class="sgmltag-element">rule</code> list entry.
+      </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">name</span></dt><dd><p>
+              <code class="sgmltag-element">name</code> is the name of the rule. The rules are
+              checked in order, with the ordering given by the the YANG
+              <code class="code">ordered-by user</code> semantics, i.e. independent of
+              the key values.
+            </p></dd><dt><span class="term">module-name</span></dt><dd><p>
+              The <code class="sgmltag-element">module-name</code> string is the name of the YANG
+              module where the node being accessed is defined. The
+              special value <code class="code">*</code> (i.e. the default) matches
+              all modules.
+            </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+              Since the elements of the path to a given node may be
+              defined in different YANG modules when augmentation is
+              used, rules which have a value other than <code class="code">*</code>
+              for the <code class="sgmltag-element">module-name</code> leaf may require that
+              additional processing is done before a decision to permit
+              or deny or the access can be taken. Thus if an XPath that
+              completely identifies the nodes that the rule should apply
+              to is given for the <code class="sgmltag-element">path</code> leaf (see below), it
+              may be best to leave the <code class="sgmltag-element">module-name</code> leaf unset.
+            </p></div></dd><dt><span class="term">rpc-name / notification-name / path</span></dt><dd><p>
+              This is a choice between three possible leafs that are
+              used for matching, in addition to the
+              <code class="sgmltag-element">module-name</code>:
+            </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">rpc-name</span></dt><dd><p>
+                    The name of a rpc operation, or "*" to match any rpc.
+                  </p></dd><dt><span class="term">notification-name</span></dt><dd><p>
+                    The name of a notification, or "*" to match any
+                    notification.
+                  </p></dd><dt><span class="term">path</span></dt><dd><p>
+                    A restricted XPath expression leading down into the
+                    populated XML tree.  A rule with a path specified
+                    matches if it is equal to or shorter than the
+                    checked path.  Several types of paths are allowed.
+                  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Tagpaths that are not containing any
+                      keys. For example <code class="sgmltag-element">/interfaces/interface/mtu</code>
+                      .
+                      </p></li><li class="listitem"><p>Instantiated key: as in
+                      <code class="sgmltag-element">/interfaces/interface[name="eth0"]/mask</code>
+                      matches the mask element only for the interface
+                      name "eth0". It's possible to have partially
+                      instantiated paths only containing some keys
+                      instantiated - i.e combinations of tagpaths and
+                      keypaths.  Assuming a deeper tree, the path
+                      <code class="sgmltag-element">/hosts/host[name="venus"]/servers/server/ip</code>
+                      matches the "ip" element for all servers, but only
+                      for the host named "venus".
+                      </p></li><li class="listitem"><p>
+                        Wild card at end as in:
+                        <code class="sgmltag-element">/interfaces/interface/*</code> does not
+                        match <code class="sgmltag-element">/interfaces/interface</code> but
+                        rather all children of that path.
+                      </p></li></ol></div><p>
+                    Thus the path in a rule is matched against the path in the
+                    attempted data access.
+                    If the attempted access has a path that is
+                    equal to or longer than the rule path - we have a match.
+                  </p></dd></dl></div><p>
+              If none of the leafs <code class="sgmltag-element">rpc-name</code>,
+              <code class="sgmltag-element">notification-name</code>, or <code class="sgmltag-element">path</code> are set,
+              the rule matches for any rpc, notification, data, or
+              action access.
+            </p></dd><dt><span class="term">context</span></dt><dd><p>
+              <code class="code">context</code> is either of the strings <code class="code">cli</code>,
+              <code class="code">netconf</code>, <code class="code">webui</code>, <code class="code">snmp</code>, or
+              <code class="code">*</code> for a data rule. Furthermore, when we initiate
+              user sessions from MAAPI, we can choose any string we want.
+            </p><p>
+              Similarly to command rules we can differentiate access depending
+              on which agent is used to gain access.
+            </p></dd><dt><span class="term">access-operations</span></dt><dd><p>
+              <code class="sgmltag-element">access-operations</code> is used to match the operation
+              that ConfD tries to perform.  It must be
+              one or more of the "create", "read", "update", "delete" and
+              "exec" values  from
+              the <code class="code">access-operations-type</code> bits type
+              definition in <code class="filename">ietf-netconf-acm.yang</code>,
+              or "*" to match any operation.
+            </p></dd><dt><span class="term">action</span></dt><dd><p>
+              This leaf has the same characteristics as the <code class="sgmltag-element">action</code>
+              leaf for command access.
+            </p></dd><dt><span class="term">log-if-permit</span></dt><dd><p>
+              This leaf has the same characteristics as the
+              <code class="sgmltag-element">log-if-permit</code> leaf for command access.
+            </p></dd><dt><span class="term">comment</span></dt><dd><p>
+              An optional textual description of the rule.
+            </p></dd></dl></div><p>
+        If no matching rule is found in any of the <code class="sgmltag-element">rule</code> lists
+        in any <code class="sgmltag-element">rule-list</code> entry that matches the user's
+        groups, the data model node for which access is requested is
+        examined for presence of the NACM extensions:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            If the <code class="code">nacm:default-deny-all</code> extension is
+            specified for the data model node, access is denied.
+          </p></li><li class="listitem"><p>
+            If the <code class="code">nacm:default-deny-write</code> extension is
+            specified for the data model node, and "create", "update",
+            or "delete" access is requested, access is denied.
+          </p></li></ul></div><p>
+        If examination of the NACM extensions did not result in access
+        being denied, the value (<code class="code">permit</code> or
+        <code class="code">deny</code>) of the relevant default leaf is examined:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            If "read" access is requested, the value of
+            <code class="sgmltag-element">/nacm/read-default</code> determines whether access is
+            permitted or denied.
+          </p></li><li class="listitem"><p>
+            If "create", "update", or "delete" access is requested, the
+            value of <code class="sgmltag-element">/nacm/write-default</code> determines whether
+            access is permitted or denied.
+          </p></li><li class="listitem"><p>
+            If "exec" access is requested, the value of
+            <code class="sgmltag-element">/nacm/exec-default</code> determines whether access is
+            permitted or denied.
+          </p></li></ul></div><p>
+        If access is permitted due to one of these default leafs, this
+        augmentation from <code class="filename">tailf-acm.yang</code> is
+        relevant:
+      </p><div class="informalexample"><pre class="programlisting">
+augment /nacm:nacm {
+  ...
+  leaf log-if-default-permit {
+    type empty;
+    description
+      "If this leaf is present, access granted due to one of
+       /nacm/read-default, /nacm/write-default, /nacm/exec-default
+       /nacm/cmd-read-default, or /nacm/cmd-exec-default
+       being set to 'permit' is logged in the developer log.
+       Otherwise, only denied access is logged. Mainly intended
+       for debugging of rules.";
+  }
+}
+</pre></div><p>
+        I.e. it has the same effect as the <code class="sgmltag-element">log-if-permit</code> leaf
+        for the <code class="sgmltag-element">rule</code> lists, but for the case
+        where the value of one of the default leafs permits the access.
+      </p><p>
+        When ConfD
+        executes a command, the command rules in the authorization
+        database are searched, The rules are tried in order, as
+        described above. When a rule matches the
+        operation (command) that ConfD
+        is attempting, the action
+        of the matching rule is applied - whether permit or deny.
+      </p><p>
+        When actual data access is attempted, the data rules are searched.
+        E.g. when a user attempts to execute <code class="code">delete aaa</code> in the CLI,
+        the user needs delete access to the entire tree <code class="sgmltag-element">/aaa</code>.
+      </p><p>
+        Another example is if a CLI user writes <code class="code">show configuration
+        aaa TAB</code> it suffices to have read access to at least one item
+        below <code class="sgmltag-element">/aaa</code> for the CLI to perform the TAB completion.
+        If no rule matches or an explicit deny rule is found, the CLI
+        will not TAB complete.
+      </p><p>
+        Yet another example is if a user tries to execute
+        <code class="code">delete aaa authentication users</code>, we need to perform a check
+        on the paths <code class="sgmltag-element">/aaa</code> and <code class="sgmltag-element">/aaa/authentication</code> before
+        attempting
+        to delete the sub tree. Say that we have a rule for
+        path <code class="sgmltag-element">/aaa/authentication/users</code> which is an permit rule and we
+        have a subsequent rule for path <code class="sgmltag-element">/aaa</code> which is a
+        deny rule. With this
+        rule set the user should indeed be allowed to delete the entire
+        <code class="sgmltag-element">/aaa/authentication/users</code> tree but not the <code class="sgmltag-element">/aaa</code>
+        tree nor the <code class="sgmltag-element">/aaa/authentication</code> tree.
+      </p><p>
+        We have two variations on how the rules are
+        processed. The easy case is when we actually try to
+        read or write an item in the configuration database.
+        The execution goes like:
+      </p><div class="informalexample"><pre class="programlisting">
+foreach rule {
+    if (match(rule, path)) {
+       return rule.action;
+    }
+}
+</pre></div><p>
+        The second case is when we execute TAB completion in the
+        CLI. This is more complicated. The execution goes like:
+      </p><div class="informalexample"><pre class="programlisting">
+rules = select_rules_that_may_match(rules, path);
+if (any_rule_is_permit(rules))
+    return permit;
+else
+    return deny;
+</pre></div><p>
+        The idea being that as we traverse (through TAB) down the
+        XML tree, as long as there is at least one rule that can
+        possibly match later, once we have more data, we must
+        continue.
+      </p><p>
+        For example assume we have:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            <code class="code">"/system/config/foo" --&gt; permit</code>
+          </p></li><li class="listitem"><p>
+            <code class="code">"/system/config" --&gt; deny</code>
+          </p></li></ol></div><p>
+        If we in the CLI stand at <code class="code">"/system/config"</code> and hit TAB
+        we want the CLI to show <code class="code">foo</code> as a completion, but none
+        of the other nodes that exist under <code class="code">/system/config</code>.
+        Whereas if we try to execute <code class="code">delete /system/config</code> the
+        request must be rejected.
+    </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e4555"></a>14.6.3.&nbsp;Authorization Examples</h3></div></div></div><p>
+      Assume that we have two groups, <code class="code">admin</code> and
+      <code class="code">oper</code>.  We want <code class="code">admin</code> to be able to see
+      and and edit the XML tree rooted at <code class="sgmltag-element">/aaa</code>, but we do not
+      want users that are members of the <code class="code">oper</code> group to even
+      see the <code class="sgmltag-element">/aaa</code> tree.  We would have the following
+      rule-list and rule entries.  Note, here we use the XML data from
+      <code class="filename">tailf-aaa.yang</code> to exemplify.  The examples
+      apply to all data, for all data models loaded into the system.
+    </p><div class="informalexample"><pre class="programlisting">
+&lt;rule-list&gt;
+  &lt;name&gt;admin&lt;/name&gt;
+  &lt;group&gt;admin&lt;/group&gt;
+  &lt;rule&gt;
+    &lt;name&gt;tailf-aaa&lt;/name&gt;
+    &lt;module-name&gt;tailf-aaa&lt;/module-name&gt;
+    &lt;path&gt;/&lt;/path&gt;
+    &lt;access-operations&gt;read create update delete&lt;/access-operations&gt;
+    &lt;action&gt;permit&lt;/action&gt;
+  &lt;/rule&gt;
+&lt;/rule-list&gt;
+&lt;rule-list&gt;
+  &lt;name&gt;oper&lt;/name&gt;
+  &lt;group&gt;oper&lt;/group&gt;
+  &lt;rule&gt;
+    &lt;name&gt;tailf-aaa&lt;/name&gt;
+    &lt;module-name&gt;tailf-aaa&lt;/module-name&gt;
+    &lt;path&gt;/&lt;/path&gt;
+    &lt;access-operations&gt;read create update delete&lt;/access-operations&gt;
+    &lt;action&gt;deny&lt;/action&gt;
+  &lt;/rule&gt;
+&lt;/rule-list&gt;
+ </pre></div><p>
+      If we do not want the members of <code class="code">oper</code> to
+      be able to execute the NETCONF operation <code class="code">edit-config</code>, we
+      define the following rule-list and rule entries:
+    </p><div class="informalexample"><pre class="programlisting">
+&lt;rule-list&gt;
+  &lt;name&gt;oper&lt;/name&gt;
+  &lt;group&gt;oper&lt;/group&gt;
+  &lt;rule&gt;
+    &lt;name&gt;edit-config&lt;/name&gt;
+    &lt;rpc-name&gt;edit-config&lt;/rpc-name&gt;
+    &lt;context xmlns="http://tail-f.com/yang/acm"&gt;netconf&lt;/context&gt;
+    &lt;access-operations&gt;exec&lt;/access-operations&gt;
+    &lt;action&gt;deny&lt;/action&gt;
+  &lt;/rule&gt;
+&lt;/rule-list&gt;
+  </pre></div><p>
+      To spell it out, the above defines four elements to match. If
+      ConfD tries to perform a
+      <code class="code">netconf</code> operation, which is the operation
+      <code class="code">edit-config</code>, and the user which runs the command is
+      member of the <code class="code">oper</code> group, and finally it is an
+      <code class="code">exec</code> (execute) operation, we have a match. If so, the
+      action is <code class="code">deny</code>.
+    </p><p>
+      The <code class="sgmltag-element">path</code> leaf can be used to specify explicit
+      paths into the XML tree using XPath syntax. For example
+      the following:
+    </p><div class="informalexample"><pre class="programlisting">
+&lt;rule-list&gt;
+  &lt;name&gt;admin&lt;/name&gt;
+  &lt;group&gt;admin&lt;/group&gt;
+  &lt;rule&gt;
+    &lt;name&gt;bob-password&lt;/name&gt;
+    &lt;path&gt;/aaa/authentication/users/user[name='bob']/password&lt;/path&gt;
+    &lt;context xmlns="http://tail-f.com/yang/acm"&gt;cli&lt;/context&gt;
+    &lt;access-operations&gt;read update&lt;/access-operations&gt;
+    &lt;action&gt;permit&lt;/action&gt;
+  &lt;/rule&gt;
+&lt;/rule-list&gt;
+  </pre></div><p>
+      Explicitly allows the <code class="code">admin</code> group to change the
+      password for precisely the <code class="code">bob</code> user when the user is
+      using the CLI. Had <code class="sgmltag-element">path</code> been
+      <code class="sgmltag-element">/aaa/authentication/users/user/password</code> the rule would
+      apply to all password elements for all users. Since the
+      <code class="sgmltag-element">path</code> leaf completely identifies the nodes that the rule
+      applies to, we do not need to give <code class="filename">tailf-aaa</code>
+      for the <code class="sgmltag-element">module-name</code> leaf.
+    </p><p>
+      ConfD applies variable substitution, whereby
+      the username of the logged in user can be used in a
+      <code class="sgmltag-element">path</code>. Thus:
+    </p><div class="informalexample"><pre class="programlisting">
+&lt;rule-list&gt;
+  &lt;name&gt;admin&lt;/name&gt;
+  &lt;group&gt;admin&lt;/group&gt;
+  &lt;rule&gt;
+    &lt;name&gt;user-password&lt;/name&gt;
+    &lt;path&gt;/aaa/authentication/users/user[name='$USER']/password&lt;/path&gt;
+    &lt;context xmlns="http://tail-f.com/yang/acm"&gt;cli&lt;/context&gt;
+    &lt;access-operations&gt;read update&lt;/access-operations&gt;
+    &lt;action&gt;permit&lt;/action&gt;
+  &lt;/rule&gt;
+&lt;/rule-list&gt;
+  </pre></div><p>
+      The above rule allows all users that are part of the
+      <code class="code">admin</code> group to change their own passwords only.
+    </p><p>
+      Finally if we wish members of the <code class="code">oper</code> group
+      to never be able to execute the <code class="code">request system
+      reboot</code> command, also available as a <code class="code">reboot</code>
+      NETCONF rpc, we have:
+    </p><div class="informalexample"><pre class="programlisting">
+&lt;rule-list&gt;
+  &lt;name&gt;oper&lt;/name&gt;
+  &lt;group&gt;oper&lt;/group&gt;
+
+  &lt;cmdrule xmlns="http://tail-f.com/yang/acm"&gt;
+    &lt;name&gt;request-system-reboot&lt;/name&gt;
+    &lt;context&gt;cli&lt;/context&gt;
+    &lt;command&gt;request system reboot&lt;/command&gt;
+    &lt;access-operations&gt;exec&lt;/access-operations&gt;
+    &lt;action&gt;deny&lt;/action&gt;
+  &lt;/cmdrule&gt;
+
+  &lt;!-- The following rule is required since the user can --&gt;
+  &lt;!-- do "edit system" --&gt;
+
+  &lt;cmdrule xmlns="http://tail-f.com/yang/acm"&gt;
+    &lt;name&gt;request-reboot&lt;/name&gt;
+    &lt;context&gt;cli&lt;/context&gt;
+    &lt;command&gt;request reboot&lt;/command&gt;
+    &lt;access-operations&gt;exec&lt;/access-operations&gt;
+    &lt;action&gt;deny&lt;/action&gt;
+  &lt;/cmdrule&gt;
+
+  &lt;rule&gt;
+    &lt;name&gt;netconf-reboot&lt;/name&gt;
+    &lt;rpc-name&gt;reboot&lt;/rpc-name&gt;
+    &lt;context xmlns="http://tail-f.com/yang/acm"&gt;netconf&lt;/context&gt;
+    &lt;access-operations&gt;exec&lt;/access-operations&gt;
+    &lt;action&gt;deny&lt;/action&gt;
+  &lt;/rule&gt;
+
+&lt;/rule-list&gt;
+  </pre></div><p>
+      Debugging the AAA rules can be hard. The best way to debug rules
+      that behave unexpectedly is to add the <code class="sgmltag-element">log-if-permit</code>
+      leaf to some or all of the rules that have <code class="sgmltag-element">action</code>
+      <code class="code">permit</code>. Whenever such a rule triggers a permit
+      action, an entry is written to the developer log.
+    </p><p>
+      Finally it is worth mentioning that when a user session is
+      initially created it will gather the authorization rules that are
+      relevant for that user session and keep these rules for the life
+      of the user session. Thus when we update the AAA rules in e.g.
+      the CLI the update will not apply to the current session - only to
+      future user sessions.
+    </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e4607"></a>14.7.&nbsp;The AAA cache</h2></div></div></div><p>
+    ConfD's AAA subsystem will cache the AAA
+    information in order to speed up the authorization process. This
+    cache must be updated whenever there is a change to the AAA
+    information. The mechanism for this update depends on how the AAA
+    information is stored, as described in the following two sections.
+  </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e4610"></a>14.8.&nbsp;Populating AAA using CDB</h2></div></div></div><p>
+    In order to start ConfD, the data models for AAA must be
+    loaded. The defaults in the case that no actual
+    data is loaded for these models allow all read and exec access,
+    while write access is denied.  Access may still be further
+    restricted by the NACM extensions, though - e.g. the
+    <code class="sgmltag-element">/nacm</code> container has <code class="code">nacm:default-deny-all</code>,
+    meaning that not even read access is allowed if no data is loaded.
+  </p><p>
+    The AAA data can either be stored in CDB or in an external
+    daemon as described in the chapter
+    <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;The external database API">Chapter&nbsp;7, <i>The external database API</i></a>.
+    The only new problem when we use CDB to store the AAA data is
+    to initialize the AAA database.  This can be done as described in
+    the chapter
+    <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a>,
+    from an XML document containing real data.
+  </p><p>
+    ConfD
+    ships with a decent initialization document for the
+    AAA database. The file is called <code class="filename">aaa_init.xml</code> and
+    is by default copied to the CDB directory by the
+    ConfD
+    install scripts. The file defines two users, <code class="code">admin</code> and
+    <code class="code">oper</code> with passwords set to  <code class="code">admin</code> and
+    <code class="code">oper</code> respectively.
+  </p><p>
+    Normally the AAA data will be stored as configuration in CDB. This
+    allows for changes to be made through ConfD's
+    transaction-based configuration
+    management. In this case the AAA cache will be updated automatically
+    when changes are made to the AAA data. If changing the AAA data via
+    ConfD's configuration management is not
+    possible or desirable, it is alternatively possible to use the CDB
+    operational data store for AAA data. In this case the AAA cache can
+    be updated either explicitly e.g. by using the
+    <code class="function">maapi_aaa_reload()</code> function, see the
+    <span class="olink">????</span>
+    manual page, or by triggering
+    a subscription notification by using the "subscription lock" when
+    updating the CDB operational data store, see
+    <span class="olink">????</span>.
+  </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.aaa.External_database"></a>14.9.&nbsp;Populating AAA using external data</h2></div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The <code class="filename">confd_aaa_bridge</code> program
+  described here is deprecated. It does not support the NACM data
+  model. It may still be useful to study this as an example of an
+  external data provider for AAA data, however the implementation
+  follows the same principles as for other external data
+  providers.</p></div><p>
+    An alternative to storing the AAA data in CDB is to
+    store it outside of ConfD. ConfD comes with an example
+    implementation of such a program. It is called
+    <code class="filename">confd_aaa_bridge</code> and is fully described
+    in the man page <a class="xref" href="rn01re02.html" title="confd_aaa_bridge"><span class="refentrytitle">confd_aaa_bridge</span>(1)</a>.
+  </p><p>
+    The procedure here is precisely the same as with any other
+    data model - with the exception that ConfD itself is a user of
+    this data and reads it. Thus if using CDB to store the AAA
+    data is not an option, the API for external databases must
+    be used to populate the AAA tree.
+  </p><p>
+    The YANG model which describes this is the same
+    <code class="filename">tailf-aaa.yang</code> but annotated with a
+    callpoint. It is shipped together with the example implementation
+    called <code class="filename">confd_aaa_bridge</code>. When we compile the
+    <code class="filename">tailf-aaa.yang</code> with the callpoint for external data
+    we name the resulting file <code class="filename">aaa_bridge.fxs</code>.
+  </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The name of the fxs file is not significant, the
+  <code class="filename">aaa_bridge.fxs</code> name is used here only to
+  distinguish it from the <code class="filename">aaa_cdb.fxs</code> name that has
+  been used for the CDB version of legacy tailf-aaa. We can
+  equally well use the more "natural" name
+  <code class="filename">tailf-aaa.fxs</code> in both cases.</p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>We must additionally annotate
+  the <code class="filename">ietf-netconf-acm.yang</code> module with a callpoint
+  and compile it, if the group assignment and authorization data is to
+  be provided by an external data provider. This annotation must be done
+  <span class="emphasis"><em>in addition to</em></span> the annotation done by the
+  <code class="filename">ietf-netconf-acm-ann.yang</code> module included in the
+  ConfD release.</p></div><p>
+    The example program <code class="filename">confd_aaa_bridge.c</code> which
+    is delivered
+    as source code in the ConfD release contains an example
+    implementation of external storage of the AAA data in an ad
+    hoc .ini style file. (This is only of interest for users that
+    do not use CDB to store any data at all.) See the UNIX man page
+    <a class="xref" href="rn01re02.html" title="confd_aaa_bridge"><span class="refentrytitle">confd_aaa_bridge</span>(1)</a>.
+  </p><p>
+    The <code class="filename">confd_aaa_bridge</code> program implements a
+    configuration data provider, and thus changes to the AAA data can be
+    made through ConfD's configuration management just as when
+    the data is stored as configuration in CDB. And similar to the CDB
+    case, if changing the AAA data via ConfD's configuration
+    management is not
+    possible or desirable, it is alternatively possible to let the AAA
+    data be provided by an operational (i.e. read-only) external data
+    provider. In either case, when we use an external data provider for
+    AAA, the AAA cache must always be updated explicitly, e.g. by using
+    the <code class="function">maapi_aaa_reload()</code> function, see the <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> manual page. For a
+    configuration data provider, the
+    <code class="function">confd_aaa_reload()</code> function may be more
+    convenient, see the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>
+    manual page - this function is used by
+    <code class="filename">confd_aaa_bridge</code>.
+  </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e4662"></a>14.10.&nbsp;Hiding the AAA tree</h2></div></div></div><p>
+    Some applications may not want to expose the AAA data
+    to end users in the CLI or the Web UI. Two reasonable approaches exist
+    here and both rely on the <code class="code">tailf:export</code> statement.
+    If a module has <code class="code">tailf:export none</code> it will be
+    invisible to all agents. We can then either use a transform whereby
+    we define another AAA model and write a transform program which maps our
+    AAA data to the data which must exist in
+    <code class="filename">tailf-aaa.yang</code> and
+    <code class="filename">ietf-netconf-acm.yang</code>.
+    This way we can
+    choose to export and and expose an entirely different AAA model.
+  </p><p>
+    Yet another very easy way out, is to define a set of static AAA rules
+    whereby a set of fixed users and fixed groups have fixed access to
+    our configuration data. Possibly the only field we wish to manipulate
+    is the password field.
+  </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch13.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch15.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;15.&nbsp;The  NETCONF Server</td></tr></table></div></body></html>

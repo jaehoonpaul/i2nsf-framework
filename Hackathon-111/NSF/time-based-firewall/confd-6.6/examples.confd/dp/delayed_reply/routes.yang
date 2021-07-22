@@ -1,0 +1,33 @@
+ /*********************************************************************
+ * ConfD delayed data provider reply example
+ *
+ * (C) 2005-2017 Tail-f Systems
+ * Permission to use this code as a starting point hereby granted
+ * This is ConfD Sample Code.
+ *
+ * See the README file for more information
+ ********************************************************************/
+
+module routes {
+  namespace "http://tail-f.com/ns/example/routes/1.0";
+  prefix r;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container routes {
+    tailf:callpoint "routescp";
+    list route {
+      key "id";
+      leaf id {
+        type int32 {
+          range "0..99";
+        }
+      }
+      leaf value {
+        type int32;
+      }
+    }
+  }
+}

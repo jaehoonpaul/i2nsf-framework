@@ -1,0 +1,807 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;9.&nbsp;Semantic validation</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Configuration Meta-Data"><link rel="next" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;9.&nbsp;Semantic validation</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch08.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch10.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.validation"></a>Chapter&nbsp;9.&nbsp;Semantic validation</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch09.html#d5e2551">9.1. Why Do We Need to Validate</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2565">9.2. Syntactic Validation in YANG models</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2573">9.3. Integrity Constraints in YANG Models</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2602">9.4. The YANG must Statement</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2605">9.5. Validation Logic</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2614">9.6. Validation Points</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2635">9.7. Validating Data in C</a></span></dt><dt><span class="sect1"><a href="ch09.html#d5e2705">9.8. Validation Points and CDB</a></span></dt><dt><span class="sect1"><a href="ch09.html#ug.validation.dependencies">9.9. Dependencies - Why Does Validation Points Get Called</a></span></dt><dt><span class="sect1"><a href="ch09.html#ug.validation.configuration_policies">9.10. Configuration Policies</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2551"></a>9.1.&nbsp;Why Do We Need to Validate</h2></div></div></div><p>
+          ConfD stores device configuration data. Some device
+          configuration data is truly critical for the correct
+          operations of the device. Misconfiguring a network device
+          may lead to a situation where the device is no longer
+          connected to the network. Before committing configuration
+          data it is crucial to ensure that the new configuration is
+          correct.
+        </p><p>
+          Another benefit with a guaranteed correct configuration, is
+          that application software which reads the configuration data
+          need not check the validity of the configuration.
+        </p><p>
+          ConfD has support for several different levels of
+          validation. We have:
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                Syntactic validation - this means that the configuration
+                data - viewed as an XML document - must adhere to the
+                YANG model.
+              </p></li><li class="listitem"><p>
+                Integrity constraints. Certain configuration leaves may
+                only have values within specified ranges.
+              </p></li><li class="listitem"><p>
+                YANG must statements use XPath expressions that can
+                be used to constrain values. This is a very powerful
+                mechanism whereby it's possible to instruct ConfD to compute
+                an XPath expression whenever a configuration change
+                is attempted. This makes it possible to have value
+                constraints that depend on other parts of the configuration.
+              </p></li><li class="listitem"><p>
+                Explicit validation logic where user code gets
+                to read and analyze the configuration prior to commit.
+              </p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2565"></a>9.2.&nbsp;Syntactic Validation in YANG models</h2></div></div></div><p>
+        A YANG model is a schema. It has a number of constructs
+        the define the structure of the model as a whole as well
+        as type constrains on individual leaves.
+      </p><p>
+        Structure enforcing statements include constructs like
+        container <code class="code">presence</code> statements,
+        leaf <code class="code">mandatory</code> statements,
+        leaf-list min and max elements statements and
+        list min and max elements statements.
+      </p><p>
+        Each leaf has a either a built-in primitive type, e.g.
+        integer, string, boolean etc, or a derived type
+        e.g. a union, enumeration, boundary
+        restriction, or regular expression pattern
+      </p><p>
+        The ConfD CLI and Web UI use this information to
+        guide the operator what is possible to configure.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2573"></a>9.3.&nbsp;Integrity Constraints in YANG Models</h2></div></div></div><p>
+          Before going for semantic validation we should also make
+          sure that our need for validation can not be satisfied by
+          any of the <span class="emphasis"><em>integrity constraint</em></span> constructs
+          available in the YANG model modeling language:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+              <code class="code">min-elements</code> and <code class="code">max-elements</code>
+              </span></dt><dd><p>
+                  Specifies how many instances may exist in the
+                  configuration data store.  Both YANG list statements
+                  and leaf-list statements can be constrained by a
+                  min and/or a max.
+                </p></dd><dt><span class="term"><code class="code">key</code></span></dt><dd><p>
+            Specifies that the leaf is used as a key for a
+            multi-instance object.  An object can have multiple keys.
+          </p></dd><dt><span class="term"><code class="code">unique</code></span></dt><dd><p>
+            Specifies that the leaf's value must be unique across
+            all instances.
+          </p></dd><dt><span class="term"><code class="code">leafref</code></span></dt><dd><p>
+            The leafref type is used to reference a particular leaf
+            instance in the data tree. Its value is constrained to be
+            the same as the value of an existing leaf.
+          </p></dd></dl></div><p>
+          Read more about integrity constraints in the
+          <a class="xref" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language">Chapter&nbsp;3, <i>The YANG Data Modeling Language</i></a> chapter as well in
+          <a class="link" href="http://www.ietf.org/rfc/rfc6020.txt" target="_top">http://www.ietf.org/rfc/rfc6020.txt</a>.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2602"></a>9.4.&nbsp;The YANG must Statement</h2></div></div></div><p>
+        Using XPath expressions it is possible to express
+        constraints on values in virtually any way.
+        XPath is complicated and requires a bit of work to learn.
+        It is well worth the effort though, since writing declarative
+        constraints on the data model - in the data model - is better
+        than writing C code that executes outside of ConfD.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2605"></a>9.5.&nbsp;Validation Logic</h2></div></div></div><p>
+          Semantic validation in ConfD extends the validation
+          functionality to allow for verification of constraints that
+          can not be expressed by the above constructs. It is important
+          to realize that the basic concept is the same, though. The
+          task of semantic validation is to make sure that the new
+          configuration satisfies some set of logical constraints before
+          it is allowed to be committed.
+        </p><p>
+          With a command centric view of configuration, validation may
+          be thought of as checking the validity of operator actions
+          vis-a-vis existing configuration. This tends to lead to
+          complex and error prone code, since there will often be a
+          large number of combinations of actions and configuration
+          values that need to be checked, and some "corner cases" can
+          easily be overlooked. Furthermore covering multiple user
+          interfaces, such as NETCONF and Web UI in addition to CLI,
+          with the same validation code will be an almost impossible
+          task.
+        </p><p>
+          In contrast, ConfD's data model centric validation concept,
+          i.e. checking the validity of the configuration that will be
+          the result of those actions, allows for clear and concise
+          validation code that rejects an invalid configuration
+          regardless of which commands or other operations that were
+          used to (attempt to) create it.
+        </p><p>
+          Attempting to validate the operations instead of the resulting
+          configuration can also lead to problems with loading config
+          backups or doing rollbacks. The old configuration that should
+          be applied as a result of such actions is obviously valid (as
+          long as the logical constraints have not changed), but
+          validation logic that rejects specific changes to the
+          configuration may still result in that configuration being
+          rejected.
+        </p><p>
+          An additional benefit of the "logical constraints" approach to
+          validation is the possibility of "off-line" validation -
+          i.e. a complete configuration can be loaded onto a device that
+          is not in production use, and the validation code can give its
+          verdict about its validity, even though the sequence of
+          operations that would lead to this configuration may not even
+          be known.
+        </p><p>
+          Since ConfD provides access to the complete new configuration
+          inside a transaction for the purpose of semantic validation,
+          it is generally straightforward to implement constraints that
+          are expressed in terms of relations between configuration
+          nodes that must hold true for any valid configuration.
+          Identifying and formulating those constraints is thus the
+          first thing we must do when implementing semantic validation.
+        </p><p>
+          There is however one case where using the validation
+          functionality to check operator actions can be useful, namely
+          when we want to warn the operator of undesirable consequences
+          - e.g. "If you change this value, the system will reboot".
+          This is not validation in the sense of verifying correctness,
+          since the new configuration will be valid too and should not
+          be rejected - but the validation code is still the appropriate
+          place to implement such functionality. To specifically inspect
+          changes from the current configuration to the new
+          configuration, the MAAPI API provides functions to iterate
+          over all or a subset of the changes, or if CDB is used,
+          current configuration values can be read via the CDB API.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2614"></a>9.6.&nbsp;Validation Points</h2></div></div></div><p>
+          In a manner similar to how we use <code class="code">callpoint</code>s to
+          register callback functions which read and write data in
+          external databases, we use named
+          <span class="emphasis"><em>validation points</em></span> to
+          define which code is responsible for the validation of
+          different parts of the configuration.
+          However unlike callpoints, validation points do not form a
+          hierarchy where they "take over" responsibility from
+          validation points higher up in the XML tree.
+        </p><p>
+          The validation code can reject the data, accept it, or
+          accept it with a warning.  If a warning is produced, it will
+          be displayed for interactive users (e.g. through the CLI or
+          Web UI).  The user may choose to abort or continue to commit
+          the transaction.
+        </p><p>
+          Validation callbacks are typically assigned to individual
+          leafs or containers in the YANG model, but this is mostly a
+          matter of organization and modularization of the validation
+          code. In some cases it may even be feasible to use a single
+          validation callback, e.g. on the top level node of the
+          configuration. In such a case, this callback is responsible
+          for the validation of all values and their relationships
+          throughout the configuration.
+        </p><p>
+          A validation callback is only invoked if its validation point
+          is for an element that exists in the new configuration. This
+          may be surprising, but it is a logical consequence of the
+          "validate the configuration, not the operations" concept of
+          ConfD validation - we can not be asked to validate something
+          that does not exist. Since it sometimes leads to the question
+          "How can I prevent deletion of an element?", an example may be
+          useful:
+        </p><div class="informalexample"><pre class="programlisting">
+container notification {
+  leaf protocol {
+    type enumeration {
+        enum SNMP;
+        enum SMTP;
+        enum NETCONF;
+    }
+    mandatory true;
+  }
+  leaf smtp-server {
+    type inet:host;
+  }
+}
+        </pre></div><p>
+          Here we can configure a notification protocol, and optionally
+          the address of an SMTP server - we want it to be optional,
+          since it is not needed unless the notification protocol is
+          SMTP. However if protocol SMTP and a server has been
+          configured, the SMTP server element must not be deleted. But
+          if we assign a validation point to that element, the callback
+          will not get invoked on deletion, since the element does not
+          exist in the new configuration!
+        </p><p>
+          The solution is in the previous section - we must identify and
+          formulate the logical constraint. In this case it is "If
+          notification protocol SMTP is configured, an SMTP server must
+          also be configured".
+        </p><p>
+          The easiest way to enforce this is through an XPath expression
+          as in:
+        </p><div class="informalexample"><pre class="programlisting">
+container notification {
+   leaf protocol {
+     must ". != 'SMTP' or ../smtp-server" {
+       error-message "Must specify smtp-server";
+     }
+     type enumeration {
+     ......
+        </pre></div><p>
+          Alternatively, if we us C code logic to achieve the same thing
+          to make sure that our callback is
+          invoked, we assign the validation point to the "protocol"
+          element. The validation callback will then get the value of
+          this element as a parameter, and the implementation of the
+          constraint check will just be:
+        </p><div class="informalexample"><pre class="programlisting">
+if (CONFD_GET_ENUM_VALUE(newval) == nsprefix_SMTP &amp;&amp;
+    maapi_exists(maapi_socket, tctx-&gt;thandle, "/notification/smtp-server") != 1) {
+    confd_trans_seterr(tctx, "SMTP server must be configured");
+    return CONFD_ERR;
+}
+        </pre></div><p>
+          See the examples below for the API details. Note well that
+          since it is based on the logical constraint, this single
+          expression also covers the other required case of "operational
+          validation", i.e. setting of the notification protocol to SMTP
+          - it will be rejected unless an SMTP server has been
+          configured.
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            Validation will always fail if no
+            code is registered under a validation point that would
+            otherwise have had its callback invoked during
+            validation.
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2635"></a>9.7.&nbsp;Validating Data in C</h2></div></div></div><p>
+          Next we describe how to connect user defined C code to
+          the validation process. We start off with a really simple
+          YANG model.
+        </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">module</strong> mtest {
+  <strong class="hl-keyword">namespace</strong> <strong class="hl-string"><em style="color:red">"http://tail-f.com/ns/example/mtest"</em></strong>;
+  <strong class="hl-keyword">prefix</strong> mtest;
+  <strong class="hl-keyword">container</strong> mtest {
+    <strong class="hl-keyword">leaf</strong> a_number {
+      <strong class="hl-keyword">type</strong> int64;
+      <strong class="hl-keyword">default</strong> <span class="hl-number">42</span>;
+    }
+    <strong class="hl-keyword">leaf</strong> b_number {
+      <strong class="hl-keyword">type</strong> int64;
+      <strong class="hl-keyword">default</strong> <span class="hl-number">7</span>;
+    }
+  }
+}
+</pre></div><p>
+          We wish to ensure that the integer value
+          <span class="emphasis"><em>/mtest/a_number</em></span>
+          is bigger than <span class="emphasis"><em>/mtest/b_number</em></span>.
+          We use a YANG model annotation file
+          to specify the validation point. This is a good technique to use
+          if wish to keep out data models clean of any Tail-f extensions.
+        </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">module</strong> mtest.annot {
+  <strong class="hl-keyword">namespace</strong> <strong class="hl-string"><em style="color:red">"http://tail-f.com/ns/example/mtest.annot"</em></strong>;
+  <strong class="hl-keyword">prefix</strong> mtesta;
+
+  <strong class="hl-keyword">import</strong> mtest {
+    <strong class="hl-keyword">prefix</strong> m;
+  }
+
+  <strong class="hl-keyword">import</strong> tailf-common {
+    <strong class="hl-keyword">prefix</strong> tailf;
+  }
+
+  tailf:annotate <strong class="hl-string"><em style="color:red">"/m:mtest/m:a_number"</em></strong> {
+    tailf:validate vp1;
+  }
+}
+
+</pre></div><p>
+            We define a validation point on
+            <span class="emphasis"><em>/mtest/a_number</em></span> called <code class="code">vp1</code>.
+            This instructs
+            ConfD that whenever ConfD needs to validate the XML data
+            element associated with <span class="emphasis"><em>/mtest/a_number</em></span>, ConfD
+            should call an external process which has registered
+            itself under the validation point <code class="code">vp1</code> using the
+            <code class="filename">libconfd</code> interface.  If no process is
+            registered, the
+            validation will fail and it will not be possible to commit
+            any changes.
+          </p><p>
+            We continue with the necessary C code to implement the
+            relevant parts of the external process. The complete code
+            for this can be found in
+            <code class="filename">examples.confd/validate/c</code> in the
+            ConfD examples collection. The validation
+            code will be called during the validation phase of a ConfD
+            transaction, i.e. before any write operations have been
+            performed. The C code must install three different
+            callback functions.
+          </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+                <code class="code">init()</code> - This callback will be invoked for any
+                transaction where one of our validate() callbacks
+                is invoked. The purpose of the callback is to
+                initialize data structures and sockets for the
+                remainder of the transaction.  In particular it must
+                indicate to the library which socket should be used
+                for this transaction.
+              </p><p>
+                Another task to perform in the <code class="code">init()</code> callback
+                is to attach a MAAPI socket to this transaction.
+                While validating the individual values, we use MAAPI
+                to possibly read other XML data elements from the same
+                transaction we are validating. The function
+                <code class="code">maapi_attach()</code> is used to attach our
+                MAAPI socket to the running transaction.
+              </p></li><li class="listitem"><p>
+              <code class="code">validate()</code> - We may have several validation
+              points.
+              We must install one callback for each defined validation
+              point.  The callback will be automatically called by
+              ConfD during the actual validation phase. The callback
+              must return <code class="code">CONFD_OK</code> if the validation succeeds,
+              <code class="code">CONFD_ERR</code> on validation failure, or
+              <code class="code">CONFD_VALIDATION_WARN</code> to accept with a warning.
+              </p></li><li class="listitem"><p>
+              <code class="code">stop()</code> - This callback will be invoked when the
+              transaction finishes, if the <code class="code">init()</code> callback
+              was invoked. It will be called
+              regardless of the outcome of the transaction.
+              </p></li></ul></div><p>
+            The <code class="code">init()</code> and <code class="code">stop()</code> callbacks are
+            installed through the API call
+            <code class="code">confd_register_trans_validate_cb()</code> and the
+            individual validation point callbacks are installed
+            through consecutive calls to
+            <code class="code">confd_register_valpoint_cb()</code> for each defined
+            validation point.
+          </p><p>
+            We start by creating three sockets to ConfD. We need two
+            sockets for the callback machinery and one MAAPI socket.
+          </p><div class="informalexample"><pre class="programlisting">
+            #include "confd_lib.h"
+#include "confd_dp.h"
+#include "confd_maapi.h"
+
+/* include generated ns file */
+#include "mtest.h"
+
+int debuglevel = CONFD_DEBUG;
+
+static int ctlsock;
+static int workersock;
+static int maapi_socket;
+static struct confd_daemon_ctx *dctx;
+
+            
+    confd_init("more_a_than_b", stderr, debuglevel);
+
+    if ((dctx = confd_init_daemon("mydaemon")) == NULL)
+        confd_fatal("Failed to initialize confd\n");
+
+    if ((ctlsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open ctlsocket\n");
+
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(CONFD_PORT);
+
+    OK(confd_load_schemas((struct sockaddr*)&amp;addr, sizeof(struct sockaddr_in)));
+
+    /* Create the first control socket, all requests to */
+    /* create new transactions arrive here */
+    if (confd_connect(dctx, ctlsock, CONTROL_SOCKET,
+                      (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0) {
+        confd_fatal("Failed to confd_connect() to confd \n");
+    }
+
+    /* Also establish a workersocket, this is the most simple */
+    /* case where we have just one ctlsock and one workersock */
+    if ((workersock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open workersocket\n");
+    if (confd_connect(dctx, workersock, WORKER_SOCKET,(struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+                if ((*maapi_sock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open socket\n");
+
+    if (maapi_connect(*maapi_sock, (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+          </pre></div><p>
+            The above code connects three times. We need the control
+            socket and the worker socket for the C callbacks. This
+            works precisely the same way as when C callbacks are installed
+            for the external data provider API. Thus the request from
+            ConfD to invoke the <code class="code">init()</code> callback will arrive on
+            the control socket whereas the subsequent requests to
+            invoke the individual <code class="code">validate()</code> callbacks as well
+            as the finishing request to invoke <code class="code">stop()</code> will
+            arrive on the designated worker socket.
+          </p><p>
+            The MAAPI socket will be used to attach the running
+            transaction to a MAAPI socket.
+          </p><p>All three sockets are connected to the same port number.</p><p>
+            Next step is to continue with the installation of the
+            callbacks:
+          </p><div class="informalexample"><pre class="programlisting">
+            struct confd_trans_validate_cbs vcb;
+struct confd_valpoint_cb valp1;
+
+static void OK(int rval)
+{
+    if (rval != CONFD_OK) {
+        fprintf(stderr, "more_a_than_b.c: error not CONFD_OK: %d : %s \n",
+                confd_errno, confd_lasterr());
+        abort();
+    }
+}
+
+                vcb.init = init_validation;
+    vcb.stop = stop_validation;
+    confd_register_trans_validate_cb(dctx, &amp;vcb);
+
+    valp1.validate = validate;
+    strcpy(valp1.valpoint, "vp1");
+    OK(confd_register_valpoint_cb(dctx, &amp;valp1));
+
+    OK(confd_register_done(dctx));
+
+          </pre></div><p>Note the call to <code class="code">confd_register_done()</code> after the
+          callback registrations - this is required, to tell ConfD that we
+          have completed our registrations. The actual callbacks look like:
+          </p><div class="informalexample"><pre class="programlisting">
+            static int init_validation(struct confd_trans_ctx *tctx)
+{
+    OK(maapi_attach(maapi_socket, mtest__ns, tctx));
+    confd_trans_set_fd(tctx, workersock);
+    return CONFD_OK;
+}
+
+static int stop_validation(struct confd_trans_ctx *tctx)
+{
+    OK(maapi_detach(maapi_socket, tctx));
+    return CONFD_OK;
+}
+
+static int validate(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath,
+                    confd_value_t *newval)
+{
+    int64_t b_val;
+    int64_t a_val;
+    int64_t newval_a;
+
+    /* we validate that a_number &gt; b_number  */
+
+    newval_a = CONFD_GET_INT64(newval);
+
+    /* this switch is not necessary in this case; we know that we're
+       called for a_number only.  the switch is useful when the same
+       code is used to validate multiple objects. */
+    switch (CONFD_GET_XMLTAG(&amp;(keypath-&gt;v[0][0]))) {
+    case mtest_a_number:
+        OK(maapi_get_int64_elem(maapi_socket, tctx-&gt;thandle, &amp;b_val,
+                                "/mtest/b_number"));
+        OK(maapi_get_int64_elem(maapi_socket, tctx-&gt;thandle, &amp;a_val,
+                                "/mtest/a_number"));
+        /* just an assertion to show that newval == /mtest/a_number */
+        /* in this transaction */
+
+        assert(CONFD_GET_INT64(newval) == a_val);
+        if (newval_a == 88) {
+            /* This is how we get to interact with the CLI/webui */
+            confd_trans_seterr(tctx, "Dangerous value: 88");
+            return CONFD_VALIDATION_WARN;
+        }
+        else if (newval_a &gt;  b_val) {
+            return CONFD_OK;
+        }
+        else {
+            confd_trans_seterr(tctx, "a_number is &lt;= b_number ");
+            return CONFD_ERR;
+        }
+        break;
+
+    default: {
+        char ebuf[BUFSIZ];
+        sprintf(ebuf, "Unknown tag %d",
+                CONFD_GET_XMLTAG(&amp;(keypath-&gt;v[0][0])));
+        confd_trans_seterr(tctx, ebuf);
+        return CONFD_ERR;
+    } /* default case */
+    } /* switch */
+}
+
+          </pre></div><p>
+            The <code class="code">switch</code> on the keypath exemplifies that we
+            really get the keypath populated with the path leading to
+            the textual element being validated. We can thus have the
+            same validation point validate different XML data
+            elements.
+          </p><p>
+            The <code class="code">init</code> callback attaches to MAAPI and the global
+            variable <code class="code">maapi_socket</code> is used to read data from the
+            transaction. All MAAPI functions use a "transaction
+            handle"; this handle is available inside the instantiated
+            <code class="code">struct confd_trans_ctx *tctx</code> structure.
+          </p><p>
+            Finally we have a poll loop where we dispatch requests to
+            invoke C callbacks on the control socket and the worker
+            socket.
+          </p><div class="informalexample"><pre class="programlisting">
+                while (1) {
+        struct pollfd set[2];
+        int ret;
+
+        set[0].fd = ctlsock;
+        set[0].events = POLLIN;
+        set[0].revents = 0;
+
+        set[1].fd = workersock;
+        set[1].events = POLLIN;
+        set[1].revents = 0;
+
+        if (poll(&amp;set[0], 2, -1) &lt; 0) {
+            perror("Poll failed:");
+            continue;
+        }
+
+        if (set[0].revents &amp; POLLIN) {
+            if ((ret = confd_fd_ready(dctx, ctlsock)) == CONFD_EOF) {
+                confd_fatal("Control socket closed\n");
+            } else if (ret == CONFD_ERR &amp;&amp; confd_errno != CONFD_ERR_EXTERNAL) {
+                confd_fatal("Error on control socket request\n");
+            }
+        }
+        if (set[1].revents &amp; POLLIN) {
+            if ((ret = confd_fd_ready(dctx, workersock)) == CONFD_EOF) {
+                confd_fatal("Worker socket closed\n");
+            } else if (ret == CONFD_ERR &amp;&amp; confd_errno != CONFD_ERR_EXTERNAL) {
+                confd_fatal("Error on worker socket request\n");
+            }
+        }
+    }
+
+         </pre></div><p>
+           In the above example we also showed how to issue
+           a warning as opposed to a validation failure. Hadn't it
+           been for that, it would have been considerably easier to
+           express the same validation as an XPath expression. Thus we
+           attach a <code class="code">must</code> statement to the <code class="code">mtest</code>
+           container as:
+         </p><div class="informalexample"><pre class="programlisting">
+container mtest {
+  must "a_number &gt; b_number" {
+    error-message "a_number is &lt;= b_number";
+  }
+
+         </pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2705"></a>9.8.&nbsp;Validation Points and CDB</h2></div></div></div><p>
+          When CDB first starts or upgrades the database it creates a
+          special transaction which, when committed, will invoke
+          validation. An external validation point (written e.g. in C)
+          has to be registered before these transactions are committed,
+          otherwise starting ConfD will fail. Starting ConfD and
+          external applications in a synchronized way is accomplished
+          using ConfD start phases (see the Advanced Topics chapter). To
+          avoid this extra complexity use the
+          <code class="code">--ignore-initial-validation</code> option when starting
+          ConfD (useful during development).
+        </p><p>
+          In a validation point it might be desirable to access CDB to
+          validate a value against the old value of the parameter (or
+          some other parameter) in the configuration. Using the normal
+          cdb calls this works fine in the normal case, but when
+          CDB is initializing there are no old values. The
+          <code class="code">cdb_get_phase()</code> call can be used to check for this
+          case,
+          (see the
+          <a class="xref" href="rn02re09.html" title="confd_lib_cdb"><span class="refentrytitle">confd_lib_cdb</span>(3)</a>
+          manual page for details).
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+            If a CDB session is used throughout the
+            validation phase (i.e. the session is not ended until the
+            <code class="code">stop()</code> callback invocation), we must start it without a
+            read lock, i.e. using <code class="code">cdb_start_session2()</code> with
+            <code class="code">flags</code> = 0.
+            It is safe to do that in this particular case, since
+            the transaction lock prevents changes to CDB during
+            validation.
+          </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.validation.dependencies"></a>9.9.&nbsp;Dependencies - Why Does Validation Points Get Called</h2></div></div></div><p>
+          In general, validation code for a particular element in the
+          configuration may read any other part of the configuration,
+          and accept or reject the configuration based on that. I.e. the
+          outcome of the validation may actually depend on other
+          configuration elements than the one the validation point is
+          assigned to - and for correct operation, the validation code
+          must be executed when any element it depends on has been
+          modified. As ConfD can not make any assumptions about these
+          dependencies, it takes the safe default of always invoking all
+          callbacks (for existing elements) on every configuration
+          change.
+        </p><p>
+          It is possible to declare these dependencies explicitly in the
+          YANG model. This can be a significant optimization, but it is
+          strictly an optimization, i.e. a validation callback
+          implementing a logical constraint verification will always
+          return the same result for a given configuration, it doesn't
+          matter if it is invoked unnecessarily due to lack of a
+          dependency declaration in the YANG model. On the other hand an
+          incorrect dependency declaration, that omits some dependency,
+          can allow changes that lead to an invalid configuration. Thus
+          if dependency declarations are used, it is critical that they
+          are correct, and in particular that they are updated as needed
+          if the validation logic of the callback is changed.
+        </p><p>
+          There can be multiple dependency declarations for a validation
+          point. Each declaration consists of a <code class="code">dependency</code>
+          element specifying a configuration subtree that the validation
+          code is dependent upon.  If any element in any of the subtrees
+          is modified, the validation callback is invoked. A subtree can
+          be specified as an absolute path or as a relative path.
+        </p><p>
+          The relative path '.' is often used to declare that the
+          validation code needs to be run whenever the current element
+          or an element below it is modified. However note that per
+          above, routinely specifying '.' as the
+          <span class="emphasis"><em>only</em></span> dependency for all validation points
+          is a dangerous practice - if the validation logic actually
+          depends on elements outside the subtree of the validation
+          point, an invalid configuration may go undetected. Also, for a
+          leaf element, having '.' as the only dependency is almost
+          always wrong - if the validation really depends only on the
+          leaf itself, it is likely that it could be expressed as a
+          constraint in the YANG model instead of via a validation
+          callback.
+        </p><p>
+          As described above, if a dependency is not declared, it
+          defaults to a single dependency on the root of the
+          configuration tree (/), which means that the validation code
+          is executed when any configuration element is modified.
+        </p><p>
+          If dependencies are declared on a leaf element, an implicit
+          dependency on the leaf itself is added.
+        </p><p>
+          As an example, consider the <span class="emphasis"><em>/mtest/a_number</em></span>
+          validation above.  The element
+          <code class="code">a_number</code> has validation code attached to it, and this
+          code depends on element <code class="code">b_number</code>.  Thus, this code has
+          to be executed whenever <code class="code">a_number</code> or <code class="code">b_number</code>
+          is modified.  To specify this, we can do:
+        </p><div class="informalexample"><pre class="programlisting">
+leaf a_number {
+  type int64;
+  default 42;
+  tailf:validate vp1 {
+    tailf:dependency '../b_number';
+  }
+}
+        </pre></div><p>
+          Here we specified the validation point with its
+          <code class="code">dependency</code> sub-element directly in the YANG model -
+          it is of course possible to use an annotation file in this case too.
+        </p><p>
+          It is also possible, and recommended for performance
+          reasons, to specify dependencies in <code class="code">must</code> statements:
+        </p><div class="informalexample"><pre class="programlisting">
+leaf a_number {
+  type int64;
+  default 42;
+  must ". &gt; ../b_number" {
+    tailf:dependency '../b_number';
+  }
+}
+        </pre></div><p>
+          The compiler gives a warning if a <code class="code">must</code>
+          statement lacks a <code class="code">tailf:dependency</code> statement,
+          and it cannot derive the dependency from the expression.
+          The options <code class="option">--fail-on-warnings</code> or
+          <code class="option">-E TAILF_MUST_NEED_DEPENDENCY</code> can be given
+          to force this warning to be treated as an error.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.validation.configuration_policies"></a>9.10.&nbsp;Configuration Policies</h2></div></div></div><p>
+        Configuration policies is an optional mechanism by which the
+        operator of a ConfD-based system can define its own custom
+        validation rules.  A configuration policy enforces custom
+        validation rules on the configuration data.  These rules
+        assert that the user-defined conditions are always true in
+        committed data.  If a configuration change is done such that a
+        policy rule would evaluate to false, the configuration change
+        is rejected by the system.
+      </p><p>
+        As an example, an operator might define a configuration policy
+        that bgp must never be disabled on a device, or define a
+        policy that the MTU on SONET interfaces must be greater than
+        2048.
+      </p><p>
+        The data model for configuration policies is defined in
+        <code class="filename">tailf-configuration-policy.yang</code>, in the
+        directory
+        <code class="filename">$CONFD_DIR/src/confd/configuration_policy/</code>.
+        The YANG model contains a
+        Also included in this directory is a pre-compiled .fxs file,
+        and a <code class="filename">Makefile</code> that can be modified as
+        necessary, for example to compile the fxs file with a
+        <em class="parameter"><code>--export</code></em> parameter to
+        <span class="command"><strong>confdc</strong></span>.
+      </p><p>
+        To enable this optional feature, put the
+        <code class="filename">tailf-configuration-policy.fxs</code> in the
+        load path to ConfD.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e2758"></a>9.10.1.&nbsp;Example</h3></div></div></div><p>
+          These examples, and more, are available in
+          <code class="filename">examples.confd/validate/configuration_policy</code>
+          in the distribution.
+        </p><p>
+          As a first simple example, we define a policy that makes
+          sure that BGP is always enabled on the box.  The example
+          assumes the following data model:
+        </p><div class="informalexample"><pre class="programlisting">
+container protocols {
+  container bgp {
+    presence "enables bgp";
+    // BGP config goes here...
+  }
+}
+        </pre></div><p>
+          The following CLI commands, define the policy we need:
+        </p><div class="informalexample"><pre class="programlisting">
+admin@host% configure
+
+admin@host% set policy rule chk-bgp expr "/protocols/bgp"
+
+admin@host% set policy rule chk-bgp error-message "bgp must be enabled"
+
+admin@host% commit
+Commit complete.
+        </pre></div><p>
+          Now, let's try to disable bgp:
+        </p><div class="informalexample"><pre class="programlisting">
+admin@host% delete protocols bgp
+
+admin@host% commit
+Aborted: bgp must be enabled
+        </pre></div><p>
+          As another example, we define a policy that ensures that the
+          MTU of SONET interfaces are greater than or equal than 2048:
+        </p><div class="informalexample"><pre class="programlisting">
+admin@host&gt; set autowizard false
+
+admin@host&gt; configure
+
+admin@host% set policy rule chk-sonet-mtu
+
+admin@host% edit policy rule chk-sonet-mtu
+
+admin@host% set foreach "/interface[type='sonet']"
+
+admin@host% set expr "mtu &gt;= 2048"
+
+admin@host% set error-message "Sonet interface {name} has MTU {mtu}, must be at least 2048"
+
+admin@host% top
+
+admin@host% commit
+Commit complete.
+[ok][2010-11-02 09:39:00]
+        </pre></div><p>
+          This rule uses the <code class="code">foreach</code> leaf.  When ConfD
+          evaluates this rule, it will first evaluate the
+          <code class="code">foreach</code> expression.  This expression evaluates
+          to a node set with all sonet interfaces.  Then, foreach node
+          in this node set, the <code class="code">expr</code> expression is
+          evaluated.  If it evaluates to false, validation fails with
+          the error message given.
+        </p><p>
+          The error message uses a special notation
+          <code class="code">{&lt;xpath-expression&gt;}</code>.  Before the error
+          message is printed, ConfD substitutes all XPath expressions
+          within <code class="code">{ }</code>, by converting the result to a
+          string.  In this example, there are two such XPath
+          expressions <code class="code">{name}</code> and <code class="code">{mtu}</code>.
+        </p><p>
+          This is best shown in an example:
+        </p><div class="informalexample"><pre class="programlisting">
+mbj@x15% set interface so-1/0 type sonet mtu 4096
+
+mbj@x15% set interface so-1/1 type sonet mtu 4096
+
+mbj@x15% set interface so-1/2 type sonet mtu 1024
+
+mbj@x15% validate
+Failed: Sonet interface so-1/2 has MTU 1024, must be at least 2048
+        </pre></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch08.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch10.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;8.&nbsp;Configuration Meta-Data&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks</td></tr></table></div></body></html>

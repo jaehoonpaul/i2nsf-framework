@@ -1,0 +1,170 @@
+
+1.  Introduction
+
+  This example shows how the optional configuration policy feature in
+  ConfD can be used by an operator.
+
+  A configuration policy enforces custom validation rules on the
+  configuration data.  These rules assert that the user-defined
+  conditions are always true in committed data.  If a configuration
+  change is done such that a policy rule would evaluate to false, the
+  configuration change is rejected by the system.
+
+  tailf-configuration-policy.yang defines the YANG model for how
+  configuration policies are defined.
+
+
+2.  Examples
+
+  To start the examples, do
+
+    $ make clean all start
+
+  All the examples use the test data model config.yang.
+
+  In these examples, XPath trace is enabled in confd.conf.  This log
+  can be useful in order to understand how ConfD evaluates the rules.
+  The logfile is "xpath.trace".
+
+2.1  Ensure that BGP is enabled.
+
+  This example shows how an operator can make sure that BGP is enabled
+  in their system.
+
+  First, start the CLI:
+
+    $ make cli
+
+  Then, define a rule called "chk-bgp":
+
+    set autowizard false
+    configure
+    set policy rule chk-bgp expr "/protocols/bgp"
+    set policy rule chk-bgp error-message "bgp must be enabled"
+    commit
+    
+  The rule works like this:  Whenever ConfD validates a configuration,
+  all rules are evaluated.  The "chk-bgp" rule will evaluate the
+  XPath expression "/protocols/bgp".  If this expression evaluates to
+  "true", the rules passed.  If it evaluates to "false", validation
+  fails with the error message "bgp must be enabled".
+
+  To verify the rule, try:
+
+    delete protocols bgp
+    validate
+    revert no-confirm
+
+
+2.2.  Ensure that the management interface is not disabled.
+
+  This example assumes that there is a special ethernet interface
+  called "mgtm0", which denotes the management interface in the
+  system.  The rule we define ensures that this interface is not
+  deleted or disabled.
+
+    set policy rule chk-mgmt-if
+    edit policy rule chk-mgmt-if
+    set expr "/interface[name='mgmt0'] and not(/interface[name='mgmt0']/disabled)"
+    set error-message "interface mgmt0 must be enabled"
+    top
+    commit
+   
+  To verify the rule, try:
+
+    delete interface mgmt0
+    validate
+    revert no-confirm
+
+  Or
+
+    set interface mgmt0 disabled
+    validate
+    revert no-confirm
+   
+
+2.3.  Check the MTU of SONET interfaces
+
+  This example tests the MTU of SONET/SDH interfaces, reports when the
+  MTU is less than 2048, and causes the commit operation to fail.
+
+    set policy rule chk-sonet-mtu
+    edit policy rule chk-sonet-mtu
+
+    set foreach "/interface[type='sonet']"
+    set expr "mtu >= 2048"
+    set error-message "Sonet interface {name} has MTU {mtu}, must be at least 2048"
+    top
+    commit
+
+  This rule uses the 'foreach' leaf.  When ConfD evaluates this rule,
+  it will first evaluate the 'foreach' expression.  This expression
+  evaluates to a node set with all sonet interfaces.  Then, foreach
+  node in this node set, the 'expr' expression is evaluated.  If it
+  evaluates to 'false', validation fails with the error message given.
+
+  The error message uses a special notation "{<xpath-expression>}".
+  Before the error message is printed, ConfD substitutes all XPath
+  expressions within "{ }", by converting the result to a string.  In
+  this example, there are two such XPath expressions "{name}" and
+  "{mtu}".
+
+  This is best shown in an example:
+
+    set interface so-1/0 type sonet mtu 4096
+    set interface so-1/1 type sonet mtu 4096
+    set interface so-1/2 type sonet mtu 1024
+    validate
+    revert no-confirm
+
+  This will print:
+
+    Failed: Sonet interface so-1/2 has MTU 1024, must be at least 2048
+
+
+2.4.  Check number of ATM VCs.
+
+
+  This example gives a warning if the number of VCs on ATM interfaces
+  exceeds 4.
+
+    set policy rule chk-atm-vc
+    edit policy rule chk-atm-vc
+
+    set foreach "/interface[type='atm']"
+    set expr "count(unit) <= 4"
+    set warning-message "ATM VC limit exceeded on interface {name}"
+    commit
+    exit
+
+  Verify the rule:
+
+    set interface atm-1 type atm unit 0
+    set interface atm-1 type atm unit 1
+    set interface atm-1 type atm unit 2
+    set interface atm-1 type atm unit 3
+    set interface atm-1 type atm unit 4
+    validate
+    revert no-confirm
+
+
+2.4.1  Use tags to skip policy rule
+
+  This example is an extension of the previous one.  It allows the
+  user to explicitly tag an atm interface so that the warning about
+  VCs is not printed.
+
+    edit policy rule chk-atm-vc
+    set expr "count(unit) <= 4 or contains(@tags, ' no-vc-text ')"
+    exit
+
+  When the 'commit' command was given above, ConfD printed the warning
+  message.  Now, let's tag the interface to avoid the warning:
+
+    tag add interface atm-1 no-vc-test
+    commit
+
+  The way this works is that all tags are available in the XML
+  attribute "tags", as a space-separated list of tags, with extra
+  space before the first tag, and after the last tag.  This allows us
+  to distinguish between the tags "foo" and "foobar", for example.

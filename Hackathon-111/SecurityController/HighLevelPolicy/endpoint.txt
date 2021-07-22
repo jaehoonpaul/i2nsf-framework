@@ -1,0 +1,17 @@
+<i2nsf-cfi-policy:policy>
+<endpoint-group>
+          <user-group>
+            <name>employees</name>
+            <range-ip-address>
+              <start-ip-address>221.159.112.1</start-ip-address>
+              <end-ip-address>221.159.112.90</end-ip-address>
+            </range-ip-address>
+          </user-group>
+          <device-group>
+            <name>webservers</name>
+            <ip-address>221.159.112.95</ip-address>
+            <protocol>http</protocol>
+            <protocol>https</protocol>
+          </device-group>
+</endpoint-group>
+</ietf-i2nsf-cfi-policy:policy>

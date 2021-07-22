@@ -1,0 +1,26 @@
+module new {
+  namespace "http://tail-f.com/ns/example/new";
+  prefix new;
+
+  import simple {
+    prefix simple;
+  }
+
+  typedef small-int {
+    type int32 {
+      range "-100000 .. 100000";
+    }
+  }
+
+  augment "/simple:simple" {
+    leaf int {
+      type small-int;
+      default 32;
+    }
+  }
+
+  leaf must-have {
+    type int32;
+    mandatory true;
+  }
+}

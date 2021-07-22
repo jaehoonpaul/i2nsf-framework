@@ -1,0 +1,106 @@
+General
+-------
+
+The `ietf_routing` component provides support for the IETF standard
+ "RFC 8022: A YANG Data Model for Routing Management"
+(http://tools.ietf.org/html/rfc8022).
+
+It enables configuration of both IPv4 and IPv6 static routes.
+
+Requirements
+------------
+
+This should work on any "standard Linux" system, but has been tested
+on Ubuntu 14.04, 16.10
+
+Specific requirements:
+
+ - You must have enabled the `ietf_interfaces` and `ip` `linuxcfg` component.
+
+Installation
+------------
+
+No specific installation required, but no other system should be
+managing the interfaces at the same time.
+
+Example:
+
+Config:
+
+```
+interfaces interface enp0s25 type ethernetCsmacd
+enabled
+ipv4 address 11.0.2.15 prefix-length 24
+ipv6 address 7777::1 prefix-length 64
+commit
+
+routing control-plane-protocols control-plane-protocol static protstatic
+static-routes ipv4 route 14.0.2.0/24 next-hop next-hop-address 11.0.2.16
+commit
+
+routing control-plane-protocols control-plane-protocol static protstatic
+static-routes ipv6 route 6667::/64 next-hop next-hop-address 7777::2
+commit
+```
+
+State (operational) data:
+
+```
+do show routing-state
+routing-state interfaces interface [ lo enp0s3 ]
+routing-state ribs rib system-IPv4
+ address-family ipv4-unicast
+ routes route
+  source-protocol         direct
+  v4ur:destination-prefix 11.0.2.0/24
+  next-hop outgoing-interface enp0s3
+routing-state ribs rib system-IPv6
+ address-family ipv6-unicast
+ routes route
+  route-preference        1024
+  source-protocol         static
+  v6ur:destination-prefix 666c::/64
+```
+
+Action `active-route`:
+
+```
+# routing-state ribs rib system-IPv4 active-route
+  v4ur:destination-address 15.0.6.22
+route {
+    destination-prefix 15.0.6.22/32
+    next-hop {
+        next-hop-address 11.0.2.20
+        outgoing-interface enp0s3
+    }
+}
+```
+
+Limitations
+-----------
+
+- `/confdConfig/cli/reallocateOperTrans` must be set to `true`
+- only `static-routes` can be configured
+- `action active-route` does not report protocol for IPV4 routes
+   (as protocol is not reported by netlink)
+- `receive` special next-hop is not supported
+- validation is not fully implemented (see linuxcfg.log)
+  (e.g. `ipv6` nexthop-address must be different from interface address)
+- RT26183 - disabled when statement check that static routes can be configured
+  only under static protocol type (make sure  control-plane-protocol is
+  of type "static")
+- RT26927 - when statement controlling available config is not working
+- deletion of ipv6 route with next-hop list deletes only first next-hop
+  (different behavior of `iproute2` for ipv4 and ipv6)
+- when interface is changed in a way it has impact on routing table in the
+  system, the routes are not re-applied (routing component is not connected
+  with interface component)
+- 'router-id' state data is not returned
+- 'control-plane-protocols' state data is not returned (in 'routing-state')
+
+Troubleshooting
+---------------
+
+- error messages have to be searched in the linuxcfg.log file
+  (export LINUXCFG_OPTIONS='-i -l' before starting linuxcfg with `make start`
+  or use "-i -l" start-up arguments)

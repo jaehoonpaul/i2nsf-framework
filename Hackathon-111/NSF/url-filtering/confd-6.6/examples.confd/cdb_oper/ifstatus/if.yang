@@ -1,0 +1,78 @@
+module if {
+  namespace "http://tail-f.com/ns/example/if";
+  prefix if;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+
+  container interfaces {
+    list interface {
+      key name;
+      max-elements 1024;
+      leaf name {
+        type string;
+      }
+      list address {
+        key name;
+        max-elements 64;
+        leaf name {
+          type inet:ipv4-address;
+        }
+        leaf prefix-length {
+          type int32;
+          mandatory true;
+        }
+      }
+      container status {
+        config false;
+        tailf:cdb-oper;
+
+        container receive {
+          leaf bytes {
+            type uint64;
+            mandatory true;
+          }
+          leaf packets {
+            type uint64;
+            mandatory true;
+          }
+          leaf errors {
+            type uint32;
+            mandatory true;
+          }
+          leaf dropped {
+            type uint32;
+            mandatory true;
+          }
+        }
+        container transmit {
+          leaf bytes {
+            type uint64;
+            mandatory true;
+          }
+          leaf packets {
+            type uint64;
+            mandatory true;
+          }
+          leaf errors {
+            type uint32;
+            mandatory true;
+          }
+          leaf dropped {
+            type uint32;
+            mandatory true;
+          }
+          leaf collisions {
+            type uint32;
+            mandatory true;
+          }
+        }
+      }
+    }
+  }
+}

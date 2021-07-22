@@ -1,0 +1,308 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package confd</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>confd</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/__init__.py">/lab/build/tailf-src/confddoc.confdbasic.confd-6.6-x86_64/confd_dir/src/confd/pyapi/confd/__init__.py</a></font></td></tr></table>
+    <p><tt>ConfD&nbsp;Python&nbsp;high&nbsp;level&nbsp;module.<br>
+&nbsp;<br>
+This&nbsp;top&nbsp;module&nbsp;imports&nbsp;the&nbsp;following&nbsp;modules:<br>
+&nbsp;<br>
+cdb&nbsp;--&nbsp;placeholder&nbsp;for&nbsp;low-level&nbsp;_confd.cdb&nbsp;items<br>
+dp&nbsp;--&nbsp;data&nbsp;provider,&nbsp;actions<br>
+error&nbsp;--&nbsp;placeholder&nbsp;for&nbsp;low-level&nbsp;_confd.error&nbsp;items<br>
+events&nbsp;--&nbsp;placeholder&nbsp;for&nbsp;low-level&nbsp;_confd.events&nbsp;items<br>
+events&nbsp;--&nbsp;placeholder&nbsp;for&nbsp;low-level&nbsp;_confd.ha&nbsp;items<br>
+log&nbsp;--&nbsp;logging&nbsp;utilities<br>
+maagic&nbsp;--&nbsp;data&nbsp;access&nbsp;module<br>
+maapi&nbsp;--&nbsp;MAAPI&nbsp;interface</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="confd.cdb.html">cdb</a><br>
+<a href="confd.childlist.html">childlist</a><br>
+<a href="confd.dp.html">dp</a><br>
+<a href="confd.error.html">error</a><br>
+</td><td width="25%" valign=top><a href="confd.events.html">events</a><br>
+<a href="confd.experimental.html">experimental</a><br>
+<a href="confd.fsm.html">fsm</a><br>
+<a href="confd.ha.html">ha</a><br>
+</td><td width="25%" valign=top><a href="confd.keypath.html">keypath</a><br>
+<a href="confd.log.html">log</a><br>
+<a href="confd.maagic.html">maagic</a><br>
+<a href="confd.maapi.html">maapi</a><br>
+</td><td width="25%" valign=top><a href="confd.pool.html">pool</a><br>
+<a href="confd.tm.html">tm</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCUMULATE</strong> = 1<br>
+<strong>ALREADY_LOCKED</strong> = -4<br>
+<strong>ATTR_ANNOTATION</strong> = 2147483649<br>
+<strong>ATTR_BACKPOINTER</strong> = 2147483651<br>
+<strong>ATTR_INACTIVE</strong> = 0<br>
+<strong>ATTR_TAGS</strong> = 2147483648<br>
+<strong>CANDIDATE</strong> = 1<br>
+<strong>CONFD_EOF</strong> = -2<br>
+<strong>CONFD_ERR</strong> = -1<br>
+<strong>CONFD_OK</strong> = 0<br>
+<strong>CONFD_PORT</strong> = 4565<br>
+<strong>CS_NODE_CMP_NORMAL</strong> = 0<br>
+<strong>CS_NODE_CMP_SNMP</strong> = 1<br>
+<strong>CS_NODE_CMP_SNMP_IMPLIED</strong> = 2<br>
+<strong>CS_NODE_CMP_UNSORTED</strong> = 4<br>
+<strong>CS_NODE_CMP_USER</strong> = 3<br>
+<strong>CS_NODE_HAS_DISPLAY_WHEN</strong> = 1024<br>
+<strong>CS_NODE_HAS_META_DATA</strong> = 2048<br>
+<strong>CS_NODE_HAS_WHEN</strong> = 512<br>
+<strong>CS_NODE_IS_ACTION</strong> = 8<br>
+<strong>CS_NODE_IS_CASE</strong> = 128<br>
+<strong>CS_NODE_IS_CDB</strong> = 4<br>
+<strong>CS_NODE_IS_CONTAINER</strong> = 256<br>
+<strong>CS_NODE_IS_DYN</strong> = 1<br>
+<strong>CS_NODE_IS_LEAFREF</strong> = 16384<br>
+<strong>CS_NODE_IS_LEAF_LIST</strong> = 8192<br>
+<strong>CS_NODE_IS_LIST</strong> = 1<br>
+<strong>CS_NODE_IS_NOTIF</strong> = 64<br>
+<strong>CS_NODE_IS_PARAM</strong> = 16<br>
+<strong>CS_NODE_IS_RESULT</strong> = 32<br>
+<strong>CS_NODE_IS_WRITE</strong> = 2<br>
+<strong>CS_NODE_IS_WRITE_ALL</strong> = 4096<br>
+<strong>C_BINARY</strong> = 39<br>
+<strong>C_BIT32</strong> = 29<br>
+<strong>C_BIT64</strong> = 30<br>
+<strong>C_BITBIG</strong> = 50<br>
+<strong>C_BOOL</strong> = 17<br>
+<strong>C_BUF</strong> = 5<br>
+<strong>C_CDBBEGIN</strong> = 37<br>
+<strong>C_DATE</strong> = 20<br>
+<strong>C_DATETIME</strong> = 19<br>
+<strong>C_DECIMAL64</strong> = 43<br>
+<strong>C_DEFAULT</strong> = 42<br>
+<strong>C_DOUBLE</strong> = 14<br>
+<strong>C_DQUAD</strong> = 46<br>
+<strong>C_DURATION</strong> = 27<br>
+<strong>C_ENUM_HASH</strong> = 28<br>
+<strong>C_ENUM_VALUE</strong> = 28<br>
+<strong>C_HEXSTR</strong> = 47<br>
+<strong>C_IDENTITYREF</strong> = 44<br>
+<strong>C_INT16</strong> = 7<br>
+<strong>C_INT32</strong> = 8<br>
+<strong>C_INT64</strong> = 9<br>
+<strong>C_INT8</strong> = 6<br>
+<strong>C_IPV4</strong> = 15<br>
+<strong>C_IPV4PREFIX</strong> = 40<br>
+<strong>C_IPV4_AND_PLEN</strong> = 48<br>
+<strong>C_IPV6</strong> = 16<br>
+<strong>C_IPV6PREFIX</strong> = 41<br>
+<strong>C_IPV6_AND_PLEN</strong> = 49<br>
+<strong>C_LIST</strong> = 31<br>
+<strong>C_NOEXISTS</strong> = 1<br>
+<strong>C_OBJECTREF</strong> = 34<br>
+<strong>C_OID</strong> = 38<br>
+<strong>C_PTR</strong> = 36<br>
+<strong>C_QNAME</strong> = 18<br>
+<strong>C_STR</strong> = 4<br>
+<strong>C_SYMBOL</strong> = 3<br>
+<strong>C_TIME</strong> = 23<br>
+<strong>C_UINT16</strong> = 11<br>
+<strong>C_UINT32</strong> = 12<br>
+<strong>C_UINT64</strong> = 13<br>
+<strong>C_UINT8</strong> = 10<br>
+<strong>C_UNION</strong> = 35<br>
+<strong>C_XMLBEGIN</strong> = 32<br>
+<strong>C_XMLBEGINDEL</strong> = 45<br>
+<strong>C_XMLEND</strong> = 33<br>
+<strong>C_XMLTAG</strong> = 2<br>
+<strong>DEBUG</strong> = 1<br>
+<strong>DELAYED_RESPONSE</strong> = 2<br>
+<strong>EOF</strong> = -2<br>
+<strong>ERR</strong> = -1<br>
+<strong>ERRCODE_ACCESS_DENIED</strong> = 3<br>
+<strong>ERRCODE_APPLICATION</strong> = 4<br>
+<strong>ERRCODE_APPLICATION_INTERNAL</strong> = 5<br>
+<strong>ERRCODE_DATA_MISSING</strong> = 8<br>
+<strong>ERRCODE_INCONSISTENT_VALUE</strong> = 2<br>
+<strong>ERRCODE_INTERNAL</strong> = 7<br>
+<strong>ERRCODE_INTERRUPT</strong> = 9<br>
+<strong>ERRCODE_IN_USE</strong> = 0<br>
+<strong>ERRCODE_PROTO_USAGE</strong> = 6<br>
+<strong>ERRCODE_RESOURCE_DENIED</strong> = 1<br>
+<strong>ERRINFO_KEYPATH</strong> = 0<br>
+<strong>ERRINFO_STRING</strong> = 1<br>
+<strong>ERR_ABORTED</strong> = 49<br>
+<strong>ERR_ACCESS_DENIED</strong> = 3<br>
+<strong>ERR_ALREADY_EXISTS</strong> = 2<br>
+<strong>ERR_APPLICATION_INTERNAL</strong> = 39<br>
+<strong>ERR_BADPATH</strong> = 8<br>
+<strong>ERR_BADSTATE</strong> = 17<br>
+<strong>ERR_BADTYPE</strong> = 5<br>
+<strong>ERR_BAD_CONFIG</strong> = 36<br>
+<strong>ERR_BAD_KEYREF</strong> = 14<br>
+<strong>ERR_CLI_CMD</strong> = 59<br>
+<strong>ERR_DATA_MISSING</strong> = 58<br>
+<strong>ERR_EOF</strong> = 45<br>
+<strong>ERR_EXTERNAL</strong> = 19<br>
+<strong>ERR_HA_BADFXS</strong> = 27<br>
+<strong>ERR_HA_BADNAME</strong> = 29<br>
+<strong>ERR_HA_BADTOKEN</strong> = 28<br>
+<strong>ERR_HA_BADVSN</strong> = 52<br>
+<strong>ERR_HA_BIND</strong> = 30<br>
+<strong>ERR_HA_CLOSED</strong> = 26<br>
+<strong>ERR_HA_CONNECT</strong> = 25<br>
+<strong>ERR_HA_NOTICK</strong> = 31<br>
+<strong>ERR_HA_WITH_UPGRADE</strong> = 47<br>
+<strong>ERR_INCONSISTENT_VALUE</strong> = 38<br>
+<strong>ERR_INTERNAL</strong> = 18<br>
+<strong>ERR_INUSE</strong> = 11<br>
+<strong>ERR_INVALID_INSTANCE</strong> = 43<br>
+<strong>ERR_LIB_NOT_INITIALIZED</strong> = 34<br>
+<strong>ERR_LOCKED</strong> = 10<br>
+<strong>ERR_MALLOC</strong> = 20<br>
+<strong>ERR_MISSING_INSTANCE</strong> = 42<br>
+<strong>ERR_MUST_FAILED</strong> = 41<br>
+<strong>ERR_NOEXISTS</strong> = 1<br>
+<strong>ERR_NON_UNIQUE</strong> = 13<br>
+<strong>ERR_NOSESSION</strong> = 22<br>
+<strong>ERR_NOSTACK</strong> = 9<br>
+<strong>ERR_NOTCREATABLE</strong> = 6<br>
+<strong>ERR_NOTDELETABLE</strong> = 7<br>
+<strong>ERR_NOTMOVABLE</strong> = 46<br>
+<strong>ERR_NOTRANS</strong> = 61<br>
+<strong>ERR_NOTSET</strong> = 12<br>
+<strong>ERR_NOT_IMPLEMENTED</strong> = 51<br>
+<strong>ERR_NOT_WRITABLE</strong> = 4<br>
+<strong>ERR_OS</strong> = 24<br>
+<strong>ERR_POLICY_COMPILATION_FAILED</strong> = 54<br>
+<strong>ERR_POLICY_EVALUATION_FAILED</strong> = 55<br>
+<strong>ERR_POLICY_FAILED</strong> = 53<br>
+<strong>ERR_PROTOUSAGE</strong> = 21<br>
+<strong>ERR_RESOURCE_DENIED</strong> = 37<br>
+<strong>ERR_START_FAILED</strong> = 57<br>
+<strong>ERR_SUBAGENT_DOWN</strong> = 33<br>
+<strong>ERR_TIMEOUT</strong> = 48<br>
+<strong>ERR_TOOMANYTRANS</strong> = 23<br>
+<strong>ERR_TOO_FEW_ELEMS</strong> = 15<br>
+<strong>ERR_TOO_MANY_ELEMS</strong> = 16<br>
+<strong>ERR_TOO_MANY_SESSIONS</strong> = 35<br>
+<strong>ERR_UNAVAILABLE</strong> = 44<br>
+<strong>ERR_UNSET_CHOICE</strong> = 40<br>
+<strong>ERR_UPGRADE_IN_PROGRESS</strong> = 60<br>
+<strong>ERR_VALIDATION_WARNING</strong> = 32<br>
+<strong>ERR_XPATH</strong> = 50<br>
+<strong>FALSE</strong> = 0<br>
+<strong>FIND_NEXT</strong> = 0<br>
+<strong>FIND_SAME_OR_NEXT</strong> = 1<br>
+<strong>HKP_MATCH_FULL</strong> = 3<br>
+<strong>HKP_MATCH_HKP</strong> = 2<br>
+<strong>HKP_MATCH_NONE</strong> = 0<br>
+<strong>HKP_MATCH_TAGS</strong> = 1<br>
+<strong>IN_USE</strong> = -5<br>
+<strong>ITER_CONTINUE</strong> = 3<br>
+<strong>ITER_RECURSE</strong> = 2<br>
+<strong>ITER_STOP</strong> = 1<br>
+<strong>ITER_SUSPEND</strong> = 4<br>
+<strong>ITER_UP</strong> = 5<br>
+<strong>ITER_WANT_ANCESTOR_DELETE</strong> = 2<br>
+<strong>ITER_WANT_ATTR</strong> = 4<br>
+<strong>ITER_WANT_CLI_STR</strong> = 8<br>
+<strong>ITER_WANT_LEAF_FIRST_ORDER</strong> = 32<br>
+<strong>ITER_WANT_LEAF_LAST_ORDER</strong> = 64<br>
+<strong>ITER_WANT_LEAF_LIST_AS_LEAF</strong> = 512<br>
+<strong>ITER_WANT_PREV</strong> = 1<br>
+<strong>ITER_WANT_P_CONTAINER</strong> = 256<br>
+<strong>ITER_WANT_REVERSE</strong> = 128<br>
+<strong>ITER_WANT_SCHEMA_ORDER</strong> = 16<br>
+<strong>LIB_API_VSN</strong> = 101056512<br>
+<strong>LIB_API_VSN_STR</strong> = '06060000'<br>
+<strong>LIB_PROTO_VSN</strong> = 66<br>
+<strong>LIB_PROTO_VSN_STR</strong> = '66'<br>
+<strong>LIB_VSN</strong> = 101056512<br>
+<strong>LIB_VSN_STR</strong> = '06060000'<br>
+<strong>LISTENER_CLI</strong> = 8<br>
+<strong>LISTENER_IPC</strong> = 1<br>
+<strong>LISTENER_NETCONF</strong> = 2<br>
+<strong>LISTENER_SNMP</strong> = 4<br>
+<strong>LISTENER_WEBUI</strong> = 16<br>
+<strong>LOAD_SCHEMA_HASH</strong> = 65536<br>
+<strong>LOAD_SCHEMA_NODES</strong> = 1<br>
+<strong>LOAD_SCHEMA_TYPES</strong> = 2<br>
+<strong>MMAP_SCHEMAS_FIXED_ADDR</strong> = 2<br>
+<strong>MMAP_SCHEMAS_KEEP_SIZE</strong> = 1<br>
+<strong>MOP_ATTR_SET</strong> = 6<br>
+<strong>MOP_CREATED</strong> = 1<br>
+<strong>MOP_DELETED</strong> = 2<br>
+<strong>MOP_MODIFIED</strong> = 3<br>
+<strong>MOP_MOVED_AFTER</strong> = 5<br>
+<strong>MOP_VALUE_SET</strong> = 4<br>
+<strong>NO_DB</strong> = 0<br>
+<strong>OK</strong> = 0<br>
+<strong>OPERATIONAL</strong> = 4<br>
+<strong>PORT</strong> = 4565<br>
+<strong>PRE_COMMIT_RUNNING</strong> = 6<br>
+<strong>PROTO_CONSOLE</strong> = 4<br>
+<strong>PROTO_HTTP</strong> = 6<br>
+<strong>PROTO_HTTPS</strong> = 7<br>
+<strong>PROTO_SSH</strong> = 2<br>
+<strong>PROTO_SSL</strong> = 5<br>
+<strong>PROTO_SYSTEM</strong> = 3<br>
+<strong>PROTO_TCP</strong> = 1<br>
+<strong>PROTO_TRACE</strong> = 3<br>
+<strong>PROTO_UDP</strong> = 8<br>
+<strong>PROTO_UNKNOWN</strong> = 0<br>
+<strong>QUERY_HKEYPATH</strong> = 1<br>
+<strong>QUERY_HKEYPATH_VALUE</strong> = 2<br>
+<strong>QUERY_STRING</strong> = 0<br>
+<strong>QUERY_TAG_VALUE</strong> = 3<br>
+<strong>READ</strong> = 1<br>
+<strong>READ_WRITE</strong> = 2<br>
+<strong>RUNNING</strong> = 2<br>
+<strong>SERIAL_HKEYPATH</strong> = 2<br>
+<strong>SERIAL_NONE</strong> = 0<br>
+<strong>SERIAL_TAG_VALUE</strong> = 3<br>
+<strong>SERIAL_VALUE_T</strong> = 1<br>
+<strong>SILENT</strong> = 0<br>
+<strong>SNMP_COL_ROW</strong> = 3<br>
+<strong>SNMP_Counter32</strong> = 6<br>
+<strong>SNMP_Counter64</strong> = 9<br>
+<strong>SNMP_INTEGER</strong> = 1<br>
+<strong>SNMP_Interger32</strong> = 2<br>
+<strong>SNMP_IpAddress</strong> = 5<br>
+<strong>SNMP_NULL</strong> = 0<br>
+<strong>SNMP_OBJECT_IDENTIFIER</strong> = 4<br>
+<strong>SNMP_OCTET_STRING</strong> = 3<br>
+<strong>SNMP_OID</strong> = 2<br>
+<strong>SNMP_Opaque</strong> = 8<br>
+<strong>SNMP_TimeTicks</strong> = 7<br>
+<strong>SNMP_Unsigned32</strong> = 10<br>
+<strong>SNMP_VARIABLE</strong> = 1<br>
+<strong>STARTUP</strong> = 3<br>
+<strong>TIMEZONE_UNDEF</strong> = -111<br>
+<strong>TRACE</strong> = 2<br>
+<strong>TRANSACTION</strong> = 5<br>
+<strong>TRUE</strong> = 1<br>
+<strong>USESS_FLAG_FORWARD</strong> = 1<br>
+<strong>USESS_FLAG_HAS_IDENTIFICATION</strong> = 2<br>
+<strong>USESS_FLAG_HAS_OPAQUE</strong> = 4<br>
+<strong>USESS_LOCK_MODE_EXCLUSIVE</strong> = 2<br>
+<strong>USESS_LOCK_MODE_NONE</strong> = 0<br>
+<strong>USESS_LOCK_MODE_PRIVATE</strong> = 1<br>
+<strong>USESS_LOCK_MODE_SHARED</strong> = 3<br>
+<strong>VALIDATION_FLAG_COMMIT</strong> = 2<br>
+<strong>VALIDATION_FLAG_TEST</strong> = 1<br>
+<strong>VALIDATION_WARN</strong> = -3<br>
+<strong>absolute_import</strong> = _Feature((2, 5, 0, 'alpha', 1), (3, 0, 0, 'alpha', 0), 16384)</td></tr></table>
+</body></html>

@@ -1,0 +1,12 @@
+acl
+dnsmasq # for q-dhcp
+dnsmasq-utils # for dhcp_release
+ebtables
+haproxy # to serve as metadata proxy inside router/dhcp namespaces
+iptables
+iputils
+openvswitch # NOPRIME
+rabbitmq-server # NOPRIME
+radvd # NOPRIME
+sqlite
+sudo

@@ -1,0 +1,52 @@
+<clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="j">
+  <operationalMode>
+    <cmd name="upgrade">
+      <info>Upgrade the system</info>
+      <help>Perform an in-service upgrade.</help>
+      <callback>
+        <exec>
+          <osCommand>./upgrade</osCommand>
+          <options>
+            <uid>confd</uid>
+            <noInput/>
+          </options>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <type><enums>v1 v2 v3</enums></type>
+          <name>to</name>
+          <help>Version to upgrade to</help>
+          <flag>-v</flag>
+        </param>
+        <param>
+          <name>timeout</name>
+          <optional>
+            <default>60</default>
+          </optional>
+          <info>&lt;seconds&gt;</info>
+          <help>Timeout for running transactions to finish</help>
+          <flag>-t</flag>
+        </param>
+        <param>
+          <type><void/></type>
+          <name>force</name>
+          <optional/>
+          <help>Kill remaining transactions on timeout</help>
+          <flag>-f</flag>
+        </param>
+      </params>
+    </cmd>
+    <cmd name="version">
+      <info>Show system version</info>
+      <help>Show the version of the currently running system.</help>
+      <callback>
+        <exec>
+          <osCommand>./pkg/current/version.sh</osCommand>
+          <options><noInput/></options>
+        </exec>
+      </callback>
+    </cmd>
+  </operationalMode>
+  <configureMode/>
+</clispec>

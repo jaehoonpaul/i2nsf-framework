@@ -1,0 +1,143 @@
+'\" t
+.\"     Title: confd_lib
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_LIB" "3" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_lib \- C library for connecting to ConfD
+.SH "LIBRARY"
+.PP
+ConfD Library, (libconfd,
+\fB\-lconfd\fR)
+.SH "DESCRIPTION"
+.PP
+The
+libconfd
+shared library is used to connect to ConfD\&. The documentation for the library is divided into several manual pages:
+.PP
+\m[blue]\fBconfd_lib_lib(3)\fR\m[]
+.RS 4
+Common Library Functions
+.RE
+.PP
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+.RS 4
+The Data Provider API
+.RE
+.PP
+\m[blue]\fBconfd_lib_events(3)\fR\m[]
+.RS 4
+The Event Notification API
+.RE
+.PP
+\m[blue]\fBconfd_lib_ha(3)\fR\m[]
+.RS 4
+The High Availability API
+.RE
+.PP
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]
+.RS 4
+The CDB API
+.RE
+.PP
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+.RS 4
+The Management Agent API
+.RE
+.PP
+There is also a C header file associated with each of these manual pages:
+.PP
+#include <confd_lib\&.h>
+.RS 4
+Common type definitions and prototypes for the functions in the
+\m[blue]\fBconfd_lib_lib(3)\fR\m[]
+manual page\&. Always needed\&.
+.RE
+.PP
+#include <confd_dp\&.h>
+.RS 4
+Needed when functions in the
+\m[blue]\fBconfd_lib_dp(3)\fR\m[]
+manual page are used\&.
+.RE
+.PP
+#include <confd_events\&.h>
+.RS 4
+Needed when functions in the
+\m[blue]\fBconfd_lib_events(3)\fR\m[]
+manual page are used\&.
+.RE
+.PP
+#include <confd_ha\&.h>
+.RS 4
+Needed when functions in the
+\m[blue]\fBconfd_lib_ha(3)\fR\m[]
+manual page are used\&.
+.RE
+.PP
+#include <confd_cdb\&.h>
+.RS 4
+Needed when functions in the
+\m[blue]\fBconfd_lib_cdb(3)\fR\m[]
+manual page are used\&.
+.RE
+.PP
+#include <confd_maapi\&.h>
+.RS 4
+Needed when functions in the
+\m[blue]\fBconfd_lib_maapi(3)\fR\m[]
+manual page are used\&.
+.RE
+.PP
+For backwards compatibility,
+#include <confd\&.h>
+can also be used, and is equivalent to:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+#include <confd_lib\&.h>
+#include <confd_dp\&.h>
+#include <confd_events\&.h>
+#include <confd_ha\&.h>
+.fi
+.if n \{\
+.RE
+.\}
+.SH "SEE ALSO"
+.PP
+The ConfD User Guide
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

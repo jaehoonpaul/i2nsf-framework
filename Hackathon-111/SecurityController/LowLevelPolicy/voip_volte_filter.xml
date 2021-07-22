@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<capabilities>
+<capability>urn:ietf:params:netconf:base:1.0</capability>
+</capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="1" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<edit-config>
+ <target>
+<running />
+</target>
+<config>
+<i2nsf-security-policy xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-policy-rule-for-nsf" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"><system-policy>
+  <system-policy-name>security_policy_for_blocking_malicious_voip_packets</system-policy-name>
+  <rules>
+    <rule-name>Block_malicious_voip_and_volte_packets</rule-name>
+    <condition-clause-container>
+      <packet-security-voice-condition>
+        <pkt-sec-src-voice-id>11111@voip.black.com</pkt-sec-src-voice-id>
+        <pkt-sec-src-voice-id>22222@voip.black.com</pkt-sec-src-voice-id>
+      </packet-security-voice-condition>
+    </condition-clause-container>
+    <action-clause-container>
+      <packet-action>
+        <ingress-action>drop</ingress-action>
+        <egress-action>drop</egress-action>
+      </packet-action>
+    </action-clause-container>
+  </rules>
+</system-policy></i2nsf-security-policy>
+</config>
+</edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="2" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<close-session />
+</rpc>
+]]>]]>

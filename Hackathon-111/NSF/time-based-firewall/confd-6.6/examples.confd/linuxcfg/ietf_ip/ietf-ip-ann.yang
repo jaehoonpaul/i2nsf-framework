@@ -1,0 +1,24 @@
+module ietf-ip-ann {
+  namespace "urn:dummy";
+  prefix "dummy";
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  import ietf-ip {
+    prefix ip;
+  }
+
+  tailf:annotate "/if:interfaces-state/if:interface/ip:ipv4" {
+    tailf:callpoint "ip_state_ipv4";
+  }
+
+  tailf:annotate "/if:interfaces-state/if:interface/ip:ipv6" {
+    tailf:callpoint "ip_state_ipv6";
+  }
+}

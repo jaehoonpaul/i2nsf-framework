@@ -1,0 +1,108 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_ROLLBACKS" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_rollbacks\fR
+.
+.SH "METHOD get_rollbacks"
+Lists all available rollback files
+.
+.SS "RESULT"
+.
+.nf
+
+{"rollbacks": <array of rollback>}
+
+rollback =
+ {"nr": <number>,
+  "creator": <string>,
+  "date": <string>,
+  "via": <"system" | "cli" | "webui" | "netconf">,
+  "comment": <string>,
+  "label": <string>}
+.
+.fi
+.
+.P
+The \fBnr\fR param is a rollback number to be used in calls to \fBload_rollback\fR etc\.
+.
+.P
+The \fBcreator\fR and \fBdate\fR properties identify the name of the user responsible for committing the configuration stored in the rollback file and when it happened\.
+.
+.P
+The \fBvia\fR param identifies the interface that was used to create the rollback file\.
+.
+.P
+The \fBlabel\fR and \fBcomment\fR properties is as given calling the methods \fBset_comment\fR and \fBset_label\fR on the transaction\.
+.
+.SH "METHOD get_rollback"
+Gets the content of a specific rollback file\. The rollback format is as defined in a curly bracket format as defined in the CLI\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"nr": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+<string, rollback file in curly bracket format>
+.
+.fi
+.
+.SH "METHOD install_rollback"
+Installs a specific rollback file into a new transaction and commits it\. The configuration is restored to the one stored in the rollback file and no further operations are needed\. It is the equivalent of creating a new private write private transaction handler with \fBnew_write_trans\fR, followed by calls to the methods \fBload_rollback\fR, \fBvalidate_commit\fR and \fBcommit\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"nr": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD load_rollback"
+Rolls back within an existing transaction, starting with the latest rollback file, down to a specified rollback file, or selecting only the specified rollback file (also known as "selective rollback")\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "nr": <number>,
+ "path": <string>,
+ "selective": <boolean, default: false>}
+.
+.fi
+.
+.P
+The \fBnr\fR param is a rollback number returned by \fBget_rollbacks\fR\.
+.
+.P
+The \fBpath\fR param is a keypath that restrict the rollback to be applied only to a subtree\.
+.
+.P
+The \fBselective\fR param, false by default, can restrict the rollback process to use only the rollback specified by \fBnr\fR, rather than applying all known rollbacks files starting with the latest down to the one specified by \fBnr\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

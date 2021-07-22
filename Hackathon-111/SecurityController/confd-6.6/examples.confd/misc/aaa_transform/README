@@ -1,0 +1,26 @@
+Example to show how we can transform the fairly complicated
+AAA trees which are required by ConfD into a much simpler structure
+which could be incorporated somewhere in an application specific
+context. This example utilizes the transformation technique described
+in the user's guide chapter describing transforms.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+In a real application where we really want to hide tailf-aaa.yang and
+ietf-netconf-acm.yang from all northbound interfaces, we would typically
+use the --export flag when we compile these modules with confdc.
+
+
+
+
+
+
+

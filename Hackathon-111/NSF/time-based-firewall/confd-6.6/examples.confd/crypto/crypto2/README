@@ -1,0 +1,53 @@
+Changing crypto key
+~~~~~~~~~~~~~~~~~~~
+
+This example demonstrated how to use the built in ConfD crypto types,
+and what to do when the encryptions keys in confd.conf are changed.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+The application crypto_keys will read all the encrypted strings and
+print them in clear-text on stdout when invoked with the "-g" command
+line option, or try to write "key=value" pairs received on stdin when
+invoked with the "-s" command line option.
+
+Try "make test" and follow what it does to get the idea. Then if you
+want to experiment on your own you can:
+
+
+    make all      - build everything
+
+    make start    - start the confd daemon
+
+    make set      - store some secrets in the database
+
+    make query    - show database contents
+
+    make decrypt  - decrypt the secrets
+
+    make scramble - decrypt, generate new key, re-encrypt secrets  
+
+    make stop     - stop the confd daemon
+
+
+To create a confd.conf with different encryption keys try
+
+    rm -f confd.conf
+    make confd.conf AESKEY=<hextring> AESVECTOR=<hexstring>
+
+Where <hexstring> is a 32 character long string of hex-digits. (This
+example only uses the AESCFB128EncryptedString type).
+
+
+Then, to read the values in clear-text try
+
+    make decrypt
+

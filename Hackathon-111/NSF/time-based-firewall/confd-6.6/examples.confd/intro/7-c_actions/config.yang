@@ -1,0 +1,122 @@
+module config {
+  namespace "http://tail-f.com/ns/example/config";
+  prefix config;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container config {
+    container system {
+      leaf sysName {
+        type string;
+        default tst;
+      }
+      tailf:action reboot {
+        tailf:actionpoint reboot-point;
+        input {
+        }
+        output {
+        }
+      }
+      tailf:action restart {
+        tailf:actionpoint reboot-point;
+        input {
+          leaf mode {
+            type string;
+            mandatory true;
+          }
+          leaf debug {
+            type empty;
+          }
+          container foo {
+            presence "";
+            leaf debug {
+              type empty;
+            }
+            leaf trace {
+              type string;
+            }
+          }
+        }
+        output {
+          leaf time {
+            type string;
+            mandatory true;
+          }
+        }
+      }
+      tailf:action abort-test {
+        tailf:actionpoint reboot-point;
+        input {
+          leaf mode {
+            type string;
+            mandatory true;
+          }
+        }
+        output {
+        }
+      }
+    }
+
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        tailf:cli-allow-range;
+        type string;
+      }
+      tailf:action reset {
+        tailf:actionpoint reboot-point;
+        input {
+          leaf when {
+            type string;
+            mandatory true;
+          }
+        }
+        output {
+          leaf time {
+            type string;
+            mandatory true;
+          }
+        }
+      }
+    }
+
+    list host {
+      key name;
+      leaf name {
+        type string;
+      }
+      tailf:action ping {
+        tailf:exec "./ping.pl" {
+          tailf:args "-c $(context) -p $(path)";
+        }
+        input {
+          leaf count {
+            type int32;
+            default "3";
+          }
+        }
+        output {
+          leaf header {
+            type string;
+          }
+          list response {
+            leaf data {
+              type string;
+            }
+          }
+          container statistics {
+            leaf packet {
+              type string;
+            }
+            leaf time {
+              type string;
+            }
+          }
+        }
+      }
+    }
+  }
+}

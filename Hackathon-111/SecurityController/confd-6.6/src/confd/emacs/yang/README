@@ -1,0 +1,28 @@
+How to add yang-mode to Emacs
+--------------------------------------------------------------------------
+
+  yang-mode.el is an emacs mode for editing YANG source files
+  Add the following to your .emacs
+
+  
+(setq load-path (cons  "${CONFD_DIR}/src/confd/emacs/yang" load-path))
+(require 'yang-mode nil t)
+
+(defun my-yang-mode-hook ()
+  "Configuration for YANG Mode. Add this to `yang-mode-hook'."
+  (if window-system
+      (progn
+	(c-set-style "BSD")
+	(setq indent-tabs-mode nil)
+	(setq c-basic-offset 2)
+	(setq font-lock-maximum-decoration t)
+	(font-lock-mode 3))))
+
+(add-hook 'yang-mode-hook 'my-yang-mode-hook)
+
+
+The above assumes that CONFD_DIR is set. It is always a good idea
+to set CONFD_DIR. This is most conveniently done by sourcing the confdrc
+script found at the top of the ConfD installation.  
+
+

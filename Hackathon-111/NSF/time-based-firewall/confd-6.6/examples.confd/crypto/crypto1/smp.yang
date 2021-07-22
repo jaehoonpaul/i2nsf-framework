@@ -1,0 +1,26 @@
+module smp {
+  namespace "http://tail-f.com/ns/example/smp";
+  prefix smp;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container strs {
+    list str {
+      key nr;
+      max-elements 64;
+      leaf nr {
+        type int32;
+      }
+      leaf des3_string {
+        type tailf:des3-cbc-encrypted-string;
+        mandatory true;
+      }
+      leaf aes_string {
+        type tailf:aes-cfb-128-encrypted-string;
+        mandatory true;
+      }
+    }
+  }
+}

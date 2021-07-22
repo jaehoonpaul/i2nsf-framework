@@ -1,0 +1,116 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "API" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBAPI\fR \- Messages
+.
+.SH "METHOD send_message"
+Sends a message to another user in the CLI or Web UI
+.
+.SS "PARAMS"
+.
+.nf
+
+{"to": <string>,
+ "message": <string>}
+.
+.fi
+.
+.P
+The \fBto\fR param is the user name of the user to send the message to and the \fBmessage\fR param is the actual message\.
+.
+.P
+\fBNOTE\fR: The username "all" will broadcast the message to all users\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD subscribe_messages"
+Starts a subscriber to messages\.
+.
+.P
+\fBNOTE\fR: the \fBstart_subscription\fR method must be called to actually get the subscription to generate any messages, unless the \fBhandle\fR is provided as input\.
+.
+.P
+\fBNOTE\fR: the \fBunsubscribe\fR method should be used to end the subscription\.
+.
+.P
+\fBNOTE\fR: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the \fBcomet\fR method\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"comet_id": <string>,
+ "handle": <string, optional>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+<string>
+.
+.fi
+.
+.P
+A handle to the subscription is returned (equal to \fBhandle\fR if provided)\.
+.
+.P
+Subscription messages will end up in the \fBcomet\fR method and the format of these messages depend on what has happened\.
+.
+.P
+When a new user has logged in:
+.
+.IP "" 4
+.
+.nf
+
+{"new_user": <number, a session id to be used by "kick_user">
+ "me": <boolean, is it myself?>
+ "user": <string>,
+ "proto": <"ssh" | "tcp" | "console" | "http" | "https" | "system">,
+ "ctx": <"cli" | "webui" | "netconf">
+ "ip": <string, user\'s ip\-address>,
+ "login": <string, login timestamp>}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+When a user logs out:
+.
+.IP "" 4
+.
+.nf
+
+{"del_user": <number, a session id>,
+ "user": <string>}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+When receiving a message:
+.
+.IP "" 4
+.
+.nf
+
+{"sender": <string>,
+ "message": <string>}
+.
+.fi
+.
+.IP "" 0
+

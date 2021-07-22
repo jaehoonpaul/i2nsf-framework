@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <edit-config>
+    <target>
+      <candidate/>
+    </target>
+    <config>
+      <hosts xmlns="http://tail-f.com/ns/example/hst"
+             xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <host nc:operation="create">
+          <name>woody</name>
+          <domain>tail-f.com</domain>
+          <defgw>192.168.1.1</defgw>
+          <interfaces>
+            <interface>
+              <name>eth0</name>
+              <ip>192.168.1.68</ip>
+              <mask>255.255.255.0</mask>
+              <enabled>true</enabled>
+            </interface>
+            <interface>
+              <name>eth1</name>
+              <ip>10.77.1.48</ip>
+              <mask>255.255.0.0</mask>
+              <enabled>false</enabled>
+            </interface>
+            <interface>
+              <name>lo</name>
+              <ip>127.0.0.1</ip>
+              <mask>255.0.0.0</mask>
+              <enabled>true</enabled>
+            </interface>
+          </interfaces>
+        </host>
+      </hosts>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <commit/>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="3">
+  <close-session/>
+</rpc>
+]]>]]>

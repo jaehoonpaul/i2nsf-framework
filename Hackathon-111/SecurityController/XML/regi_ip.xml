@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config>
+  <i2nsf-cfi-policy xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-cfi-policy">
+    <policy-name>Registration-Policy</policy-name>
+    <endpoint-groups>
+      <user-group>
+        <name>employees</name>
+        <range-ipv4-address>
+          <start-ipv4-address>10.0.0.3</start-ipv4-address>
+          <end-ipv4-address>10.0.0.40</end-ipv4-address>
+        </range-ipv4-address>
+      </user-group>
+    </endpoint-groups>
+  </i2nsf-cfi-policy>
+</config>

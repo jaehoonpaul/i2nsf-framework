@@ -1,0 +1,30 @@
+<INFO> 6-Mar-2019::10:38:49.737 nsf-1 confd[8304]: - Writing daemon log to /home/ubuntu/Firewall/confd.log
+<INFO> 6-Mar-2019::10:38:49.741 nsf-1 confd[8304]: - Writing NETCONF log to /home/ubuntu/Firewall/netconf.log
+<INFO> 6-Mar-2019::10:38:49.741 nsf-1 confd[8304]: - Writing audit log to /home/ubuntu/Firewall/audit.log
+<INFO> 6-Mar-2019::10:38:49.741 nsf-1 confd[8304]: - Writing developer log to /home/ubuntu/Firewall/devel.log
+<INFO> 6-Mar-2019::10:38:49.742 nsf-1 confd[8304]: - Daemon logging started
+<DEBUG> 6-Mar-2019::10:38:49.757 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 6-Mar-2019::10:38:49.758 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 6-Mar-2019::10:38:49.759 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 6-Mar-2019::10:38:49.760 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 6-Mar-2019::10:38:49.760 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 6-Mar-2019::10:38:49.761 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 6-Mar-2019::10:38:49.762 nsf-1 confd[8304]: - Loading file ./ietf-i2nsf-policy-rule-for-nsf.fxs
+<DEBUG> 6-Mar-2019::10:38:49.767 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 6-Mar-2019::10:38:49.768 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 6-Mar-2019::10:38:49.769 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 6-Mar-2019::10:38:49.772 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 6-Mar-2019::10:38:49.773 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 6-Mar-2019::10:38:49.774 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 6-Mar-2019::10:38:49.775 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 6-Mar-2019::10:38:49.776 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 6-Mar-2019::10:38:49.777 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 6-Mar-2019::10:38:49.788 nsf-1 confd[8304]: - Loading file ./commands-c.ccl
+<DEBUG> 6-Mar-2019::10:38:49.794 nsf-1 confd[8304]: - Loading file ./commands-j.ccl
+<DEBUG> 6-Mar-2019::10:38:49.795 nsf-1 confd[8304]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 6-Mar-2019::10:38:49.877 nsf-1 confd[8304]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 6-Mar-2019::10:38:50.127 nsf-1 confd[8304]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 6-Mar-2019::10:38:50.288 nsf-1 confd[8304]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 6-Mar-2019::10:38:50.308 nsf-1 confd[8304]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 6-Mar-2019::10:38:50.341 nsf-1 confd[8304]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 6-Mar-2019::10:38:50.445 nsf-1 confd[8304]: - ConfD started vsn: 6.6

@@ -1,0 +1,12 @@
+  # extract data
+  consumer_extractedlist = DFA.extracting_data('HighLevelPolicy/'+policyname, consumer_dfa, consumer_extractedinfo)
+
+  # convert data
+  print('Convert data...')
+  dataconverter.inputExtractedData(consumer_extractedlist)
+  dataconverter.convertData()
+
+  print('Policy provisioning...')
+  # policy provisioning
+  dataconverter.constructDecisionTree()
+  dataconverter.policyprovisioning(cfglist, '10.0.0.6', 55560)

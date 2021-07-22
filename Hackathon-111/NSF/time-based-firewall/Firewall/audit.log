@@ -1,0 +1,12 @@
+<INFO> 4-Mar-2021::00:54:41.662 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:55008 with ssh, member of groups: admin
+<INFO> 4-Mar-2021::00:54:41.663 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged in via netconf from 10.0.0.17:55008 with ssh using local authentication
+<INFO> 4-Mar-2021::00:54:41.680 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/28 assigned to groups: admin
+<INFO> 4-Mar-2021::00:54:41.845 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged out <local> user
+<INFO> 4-Mar-2021::00:54:49.245 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:55010 with ssh, member of groups: admin
+<INFO> 4-Mar-2021::00:54:49.245 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged in via netconf from 10.0.0.17:55010 with ssh using local authentication
+<INFO> 4-Mar-2021::00:54:49.254 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/29 assigned to groups: admin
+<INFO> 4-Mar-2021::00:54:51.760 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged out <local> user
+<INFO> 4-Mar-2021::00:55:13.108 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:55012 with ssh, member of groups: admin
+<INFO> 4-Mar-2021::00:55:13.109 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged in via netconf from 10.0.0.17:55012 with ssh using local authentication
+<INFO> 4-Mar-2021::00:55:13.118 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/30 assigned to groups: admin
+<INFO> 4-Mar-2021::00:55:13.257 ti-30c1-1f6f-4d05-94e5-f6c19556782f-vdu1-vol6uies6h2b confd[1488]: audit user: admin/0 logged out <local> user

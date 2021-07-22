@@ -1,0 +1,402 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_SCHEMA" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_schema\fR
+.
+.SH "METHOD get_schema"
+Exports a JSON schema for a selected part (or all) of a specific YANG module (with optional instance data inserted)
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "namespace": <string, optional>,
+ "path": <string, optional>,
+ "levels": <number, default: \-1>,
+ "insert_values": <boolean, default: false>,
+ "evaluate_when_entries": <boolean, default: false>}
+.
+.fi
+.
+.P
+One of the properties \fBnamespace\fR or \fBpath\fR must be specified\.
+.
+.P
+A \fBnamespace\fR is as specified in a YANG module\.
+.
+.P
+A \fBpath\fR is a tagpath/keypath pointing into a specific sub\-tree of a YANG module\.
+.
+.P
+The \fBlevels\fR param limits the maximum depth of containers and lists from which a JSON schema should be produced (\-1 means unlimited depth)\.
+.
+.P
+The \fBinsert_values\fR param signals that instance data for leafs should be inserted into the schema\. This way the need for explicit forthcoming calls to \fBget_elem\fR are avoided\.
+.
+.P
+The \fBevaluate_when_entries\fR param signals that schema entries should be included in the schema even though their "when" or "tailf:display\-when" statements evaluate to false, i\.e\. instead a boolean \fBevaluated_when_entry\fR param is added to these schema entries\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"meta":
+ {"namespace": <string, optional>,
+  "keypath": <string, optional>,
+  "prefix": <string>,
+  "types": <array of type>},
+ "data": <array of child>}
+
+type = <array of {<string, type name with prefix>: <type_stack>}>
+
+type_stack = <array of type_stack_entry>
+
+type_stack_entry =
+ {"bits": <array of string>, "size": <32 | 64>} |
+ {"leaf_type": <type_stack>, "list_type": <type_stack>} |
+ {"union": <array of type_stack>} |
+ {"name": <primitive_type | "user_defined">,
+  "info": <string, optional>,
+  "readonly": <boolean, optional>,
+  "facets": <array of facet, only if not primitive type>}
+
+primitive_type =
+ "empty" |
+ "binary" |
+ "bits" |
+ "date\-and\-time" |
+ "instance\-identifier" |
+ "int64" |
+ "int32" |
+ "int16" |
+ "uint64" |
+ "uint32" |
+ "uint16" |
+ "uint8" |
+ "ip\-prefix" |
+ "ipv4\-prefix" |
+ "ipv6\-prefix" |
+ "ip\-address\-and\-prefix\-length" |
+ "ipv4\-address\-and\-prefix\-length" |
+ "ipv6\-address\-and\-prefix\-length" |
+ "hex\-string" |
+ "dotted\-quad" |
+ "ip\-address" |
+ "ipv4\-address" |
+ "ipv6\-address" |
+ "gauge32" |
+ "counter32" |
+ "counter64" |
+ "object\-identifier"
+
+facet_entry =
+ {"enumeration": {"label": <string>, "info": <string, optional>}} |
+ {"fraction\-digits": {"value": <number>}} |
+ {"length": {"value": <number>}} |
+ {"max\-length": {"value": <number>}} |
+ {"min\-length": {"value": <number>}} |
+ {"leaf\-list": <boolean>} |
+ {"max\-inclusive": {"value": <number>}} |
+ {"max\-length": {"value": <number>}} |
+ {"range": {"value": <array of range_entry>}} |
+ {"min\-exclusive": {"value": <number>}} |
+ {"min\-inclusive": {"value": <number>}} |
+ {"min\-length": {"value": <number>}} |
+ {"pattern": {"value": <string, regular expression>}} |
+ {"total\-digits": {"value": <number>}}
+
+range_entry =
+ "min" |
+ "max" |
+ <number> |
+ [<number, min value>, <number, max value>]
+
+child =
+ {"kind": <kind>,
+  "name": <string>,
+  "qname": <string, same as "name" but with prefix prepended>,
+  "info": <string>,
+  "namespace": <string>,
+  "is_action_input": <boolean>,
+  "is_action_output": <boolean>,
+  "is_cli_preformatted": <boolean>,
+  "presence": <boolean>,
+  "ordered_by": <boolean>,
+  "is_config_false_callpoint": <boolean>,
+  "key": <boolean>,
+  "exists": <boolean>,
+  "value": <string | number | boolean>,
+  "is_leafref": <boolean>,
+  "hidden": <boolean>,
+  "default_ref":
+  {"namespace": <string>,
+   "tagpath": <string>
+  },
+  "access":
+  {"create": <boolean>,
+   "update": <boolean>,
+   "delete": <boolean>,
+   "execute": <boolean>
+  },
+  "config": <boolean>,
+  "readonly": <boolean>,
+  "suppress_echo": <boolean>,
+  "type":
+  {"name": <primitive_type>,
+   "primitive": <boolean>
+  }
+  "generated_name": <string>,
+  "units": <string>,
+  "leafref_groups": <array of string>,
+  "active": <string, active case, only if "kind" is "choice">,
+  "cases": <array of case, only of "kind" is "choice">,
+  "default": <string | number | boolean>,
+  "mandatory": <boolean>,
+  "children": <children>
+ }
+
+kind =
+ "module" |
+ "access\-denies" |
+ "list\-entry" |
+ "choice" |
+ "key" |
+ "leaf\-list" |
+ "action" |
+ "container" |
+ "leaf" |
+ "list" |
+ "notification"
+
+case_entry =
+ {"kind": "case",
+  "name": <string>,
+  "children": <array of child>
+ }
+.
+.fi
+.
+.P
+This is a fairly complex piece of JSON but it essentially maps what is seen in a YANG module\. Keep that in mind when scrutinizing the above\.
+.
+.P
+The \fBmeta\fR param contains meta\-information about the YANG module such as namespace and prefix but it also contains type stack information for each type used in the YANG module represented in the \fBdata\fR param\. Together with the \fBmeta\fR param, the \fBdata\fR param constitutes a complete YANG module in JSON format\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess11635875109111642;" \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "get_schema", \e
+         "params": {"th": 2, \e
+                    "path": "/aaa:aaa/authentication/users/user{admin}", \e
+                    "levels": \-1, \e
+                    "insert_values": true}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ {"meta":
+  {"namespace": "http://tail\-f\.com/ns/aaa/1\.1",
+   "keypath": "/aaa:aaa/authentication/users/user{admin}",
+   "prefix": "aaa",
+   "types":
+   {"http://tail\-f\.com/ns/aaa/1\.1:passwdStr":
+    [{"name": "http://tail\-f\.com/ns/aaa/1\.1:passwdStr"},
+     {"name": "MD5DigestString"}]}}},
+ "data":
+ {"kind": "list\-entry",
+  "name": "user",
+  "qname": "aaa:user",
+  "access":
+  {"create": true,
+   "update": true,
+   "delete": true},
+  "children":
+  [{"kind": "key",
+    "name": "name",
+    "qname": "aaa:name",
+    "info": {"string": "Login name of the user"},
+    "mandatory": true,
+    "access": {"update": true},
+    "type": {"name": "string", "primitive": true}},
+   \.\.\.]}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD hide_schema"
+Hides data which has been adorned with a "hidden" statement in YANG modules\. "hidden" statements is an extension defined in the tail\-common YANG module (http://tail\-f\.com/yang/common)\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "group_name": <string>
+.
+.fi
+.
+.P
+The \fBgroup_name\fR param is as defined by a "hidden" statement in a YANG module\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD unhide_schema"
+Unhides data which has been adorned with a "hidden" statement in YANG modules\. "hidden" statements is an extension defined in the tail\-common YANG module (http://tail\-f\.com/yang/common)\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "group_name": <string>,
+ "passwd": <string>}
+.
+.fi
+.
+.P
+The \fBgroup_name\fR param is as defined by a "hidden" statement in a YANG module\.
+.
+.P
+The \fBpasswd\fR param is a password needed to hide the data that has been adorned with a "hidden" statement\. The password is as defined in the  file\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD run_action"
+Invokes an action or rpc defined in a YANG module\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "path": <string>,
+ "params": <json, optional>
+ "format": <"normal" | "bracket", default: "normal">,
+ "comet_id": <string, optional>,
+ "handle": <string, optional>}
+.
+.fi
+.
+.P
+Actions are as specified in th YANG module, i\.e\. having a specific name and a well defined set of parameters and result\. the \fBpath\fR param is a keypath pointing to an action or rpc in and the \fBparams\fR param is a JSON object with action parameters\.
+.
+.P
+The \fBformat\fR param defines if the result should be an array of key values or a pre\-formatted string on bracket format as seen in the CLI\. The result is also as specified by the YANG module\.
+.
+.P
+Both a \fBcomet_id\fR and \fBhandle\fR need to be provided in order to receive notifications\.
+.
+.SS "RESULT"
+.
+.nf
+
+<string | array of result>
+
+result = {"name": <string>, "value": <string>}
+.
+.fi
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "action\.invalid_result", "data": {"path": <string, path to invalid result>}}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", id: 1, \e
+         "method": "run_action", \e
+         "params": {"th": 2, \e
+                    "path": "/dhcp:dhcp/set\-clock", \e
+                    "params": {"clockSettings": "2014\-02\-11T14:20:53\.460%2B01:00"}}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": [{"name":"systemClock", "value":"0000\-00\-00T03:00:00+00:00"},
+            {"name":"inlineContainer/bar", "value":"false"},
+            {"name":"hardwareClock","value":"0000\-00\-00T04:00:00+00:00"}]}
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+curl \e
+    \-s \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d\'{"jsonrpc": "2\.0", "id": 1, \e
+        "method": "run_action", \e
+        "params": {"th": 2, \e
+                   "path": "/dhcp:dhcp/set\-clock", \e
+                   "params": {"clockSettings": \e
+    "2014\-02\-11T14:20:53\.460%2B01:00"}, \e
+                   "format": "bracket"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": "systemClock 0000\-00\-00T03:00:00+00:00\eninlineContainer  {\en    \e
+     bar false\en}\enhardwareClock 0000\-00\-00T04:00:00+00:00\en"}
+.
+.fi
+.
+.IP "" 0
+

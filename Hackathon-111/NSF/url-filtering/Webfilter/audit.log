@@ -1,0 +1,108 @@
+<INFO> 4-Mar-2021::06:14:12.190 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35682 with ssh, member of groups: admin
+<INFO> 4-Mar-2021::06:14:12.191 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35682 with ssh using local authentication
+<INFO> 4-Mar-2021::06:14:12.196 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/28 assigned to groups: admin
+<INFO> 4-Mar-2021::06:14:17.350 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 4-Mar-2021::06:15:54.072 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35684 with ssh, member of groups: admin
+<INFO> 4-Mar-2021::06:15:54.073 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35684 with ssh using local authentication
+<INFO> 4-Mar-2021::06:15:54.076 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/29 assigned to groups: admin
+<INFO> 5-Mar-2021::00:57:35.277 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::01:37:49.263 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35708 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::01:37:49.265 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35708 with ssh using local authentication
+<INFO> 5-Mar-2021::01:37:49.268 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/30 assigned to groups: admin
+<INFO> 5-Mar-2021::01:38:37.314 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:13:10.683 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35798 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:13:10.685 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35798 with ssh using local authentication
+<INFO> 5-Mar-2021::04:13:10.689 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/31 assigned to groups: admin
+<INFO> 5-Mar-2021::04:15:19.380 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:17:06.951 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35804 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:17:06.952 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35804 with ssh using local authentication
+<INFO> 5-Mar-2021::04:17:06.955 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/32 assigned to groups: admin
+<INFO> 5-Mar-2021::04:17:21.696 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:18:35.739 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35806 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:18:35.740 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35806 with ssh using local authentication
+<INFO> 5-Mar-2021::04:18:35.743 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/33 assigned to groups: admin
+<INFO> 5-Mar-2021::04:25:45.341 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:26:36.584 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35810 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:26:36.585 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.14:35810 with ssh using local authentication
+<INFO> 5-Mar-2021::04:26:36.588 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/34 assigned to groups: admin
+<INFO> 5-Mar-2021::04:45:27.560 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:48:26.082 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34786 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:48:26.086 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged in via netconf from 10.0.0.17:34786 with ssh using local authentication
+<INFO> 5-Mar-2021::04:48:26.113 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/35 assigned to groups: admin
+<INFO> 5-Mar-2021::04:48:28.468 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:52:03.680 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34788 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:52:03.746 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.17:34788 with ssh using local authentication
+<INFO> 5-Mar-2021::04:52:03.756 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/28 assigned to groups: admin
+<INFO> 5-Mar-2021::04:52:03.937 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:52:17.053 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34790 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:52:17.056 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.17:34790 with ssh using local authentication
+<INFO> 5-Mar-2021::04:52:17.080 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/29 assigned to groups: admin
+<INFO> 5-Mar-2021::04:52:17.209 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:52:39.845 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/30 assigned to groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd,ubuntu
+<INFO> 5-Mar-2021::04:52:46.155 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/30 CLI 'show running-config'
+<INFO> 5-Mar-2021::04:53:45.311 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34792 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:53:45.313 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.17:34792 with ssh using local authentication
+<INFO> 5-Mar-2021::04:53:45.344 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/31 assigned to groups: admin
+<INFO> 5-Mar-2021::04:53:47.627 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:53:55.680 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34794 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::04:53:55.682 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.17:34794 with ssh using local authentication
+<INFO> 5-Mar-2021::04:53:55.710 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/32 assigned to groups: admin
+<INFO> 5-Mar-2021::04:53:55.834 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::04:53:58.487 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/30 CLI aborted
+<INFO> 5-Mar-2021::04:54:01.461 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 assigned to groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd,ubuntu
+<INFO> 5-Mar-2021::04:54:06.263 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'show running-config'
+<INFO> 5-Mar-2021::04:54:21.254 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI aborted
+<INFO> 5-Mar-2021::04:54:24.721 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'config terminal'
+<INFO> 5-Mar-2021::04:54:24.730 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:17.989 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'no i2nsf-security-policy system-policy security_policy_for_ddos_attack rules ddos_attack_rule condition-clause-container packet-security-ipv4-condition pkt-sec-ipv4-src ipv4-address 221.159.112.95'
+<INFO> 5-Mar-2021::04:55:18.011 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:22.521 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'commit'
+<INFO> 5-Mar-2021::04:55:22.529 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:27.341 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'no i2nsf-security-policy system-policy security_policy_for_ddos_attack rules ddos_attack_rule condition-clause-container packet-security-ipv4-condition pkt-sec-ipv4-src ipv4-address 221.159.112.95'
+<INFO> 5-Mar-2021::04:55:27.344 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:31.140 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'commit'
+<INFO> 5-Mar-2021::04:55:31.142 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:32.773 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'exit'
+<INFO> 5-Mar-2021::04:55:32.782 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:55:36.300 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'show running-config'
+<INFO> 5-Mar-2021::04:55:47.262 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI aborted
+<INFO> 5-Mar-2021::04:55:50.319 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'config terminal'
+<INFO> 5-Mar-2021::04:55:50.321 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:56:01.141 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'no i2nsf-security-policy system-policy security_policy_for_ddos_attack rules ddos_attack_rule condition-clause-container packet-security-ipv4-condition pkt-sec-ipv4-dest ipv4-address 221.159.112.95'
+<INFO> 5-Mar-2021::04:56:01.143 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:56:03.640 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'commit'
+<INFO> 5-Mar-2021::04:56:05.787 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:56:07.867 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'exit'
+<INFO> 5-Mar-2021::04:56:07.869 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::04:56:10.504 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'show running-config'
+<INFO> 5-Mar-2021::05:01:24.228 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI aborted
+<INFO> 5-Mar-2021::05:01:45.082 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'cd Webfilter/'
+<INFO> 5-Mar-2021::05:01:45.084 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI done
+<INFO> 5-Mar-2021::05:01:54.706 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/33 CLI 'exit'
+<INFO> 5-Mar-2021::05:03:34.351 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35814 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:03:34.352 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.14:35814 with ssh using local authentication
+<INFO> 5-Mar-2021::05:03:34.355 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/34 assigned to groups: admin
+<INFO> 5-Mar-2021::05:03:36.121 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:03:40.091 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35816 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:03:40.092 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/0 logged in via netconf from 10.0.0.14:35816 with ssh using local authentication
+<INFO> 5-Mar-2021::05:03:40.095 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: audit user: admin/35 assigned to groups: admin
+<INFO> 5-Mar-2021::05:05:05.972 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35818 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:05:05.973 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 logged in via netconf from 10.0.0.14:35818 with ssh using local authentication
+<INFO> 5-Mar-2021::05:05:05.979 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/28 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:35.137 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:06:50.263 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.14:35822 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:50.264 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 logged in via netconf from 10.0.0.14:35822 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:50.267 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/29 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:52.951 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 local authentication succeeded via netconf from 10.0.0.17:34840 with ssh, member of groups: admin
+<INFO> 5-Mar-2021::05:06:52.952 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 logged in via netconf from 10.0.0.17:34840 with ssh using local authentication
+<INFO> 5-Mar-2021::05:06:52.980 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/30 assigned to groups: admin
+<INFO> 5-Mar-2021::05:06:53.179 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 logged out <local> user
+<INFO> 5-Mar-2021::05:41:28.424 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 assigned to groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd,ubuntu
+<INFO> 5-Mar-2021::05:41:33.450 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 CLI 'show running-config'
+<INFO> 5-Mar-2021::05:41:40.610 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 CLI aborted
+<INFO> 5-Mar-2021::05:41:42.935 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 CLI 'show running-config'
+<INFO> 5-Mar-2021::06:13:32.158 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/0 assigned to groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd,ubuntu
+<INFO> 5-Mar-2021::06:13:48.360 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 CLI aborted
+<INFO> 5-Mar-2021::06:13:49.709 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/31 CLI 'exit'
+<INFO> 5-Mar-2021::06:13:51.885 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/32 assigned to groups: admin,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd,ubuntu
+<INFO> 5-Mar-2021::06:13:59.297 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: audit user: admin/32 CLI 'show running-config'

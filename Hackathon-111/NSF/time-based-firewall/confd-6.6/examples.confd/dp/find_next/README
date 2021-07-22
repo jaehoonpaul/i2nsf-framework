@@ -1,0 +1,81 @@
+
+Implementing the find_next() callback
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how to implement the optional data provider
+find_next() callback. Implementing this callback can be a significant
+optimization for large lists in cases where a northbound agent requests
+a specific part of the list.
+
+What the example does
+~~~~~~~~~~~~~~~~~~~~~
+
+The 'portstatus' program is a data provider for an operational
+(i.e. "config false") data list called 'port'. The list is keyed by
+'slot' and 'port' integers, and the entries additionally have a single
+leaf 'status' (enumeration with values "disabled"/"active"/"error"). In
+order to focus on the find_next() implementation, the list is actually
+hardwired in the program - in a real use case, the information would be
+collected e.g. by querying device hardware.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Running the example
+~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD and the portstatus data
+    provide by typing
+
+        $ make all start
+
+    The portstatus data provider will be running in the foreground.
+
+ 2. In another window, do a NETCONF query by typing
+
+        $ make query
+
+    This query uses an XPath filter "/port[slot>2]/status", meaning
+    "return the 'status' value for entries in the '/port' list where the
+    'slot' value is greater than 2".
+
+    If we look at the trace output from the portstatus program in the
+    first window, we can see that this query results in an initial
+    find_next() invocation requesting the first entry where the 'slot'
+    key is 3 or greater, followed by get_next() invocations for
+    subsequent entries.
+
+ 3. In another window, start the CLI and request the entries for all
+    ports in slot 4:
+
+        $ make cli
+        (J) > show status port 4 *
+
+        (C) # show port 4 * | notab
+
+    Similar to the above case, this will cause an initial find_next()
+    invocation "jumping" to the first entry with slot = 4, followed by
+    get_next() invocations until the 'slot' value changes. Note: The
+    YANG model uses the 'tailf:cli-no-key-completion' extension -
+    otherwise CLI completion would potentially request the key values
+    for all list entries (by default, typing the space after '4' would
+    trigger completion).
+
+Other things to try
+~~~~~~~~~~~~~~~~~~~
+
+ 1. XPath evaluation can also be requested via the maapi_xpath_eval()
+    API function. A convenient way to try this is to use the
+    confd_cmd(1) program included in the ConfD distribution. E.g. the
+    same query as in the NETCONF case above can be done with:
+
+        $ confd_cmd -c 'x /port[slot>2]/status'
+
+2. Try disabling the find_next() implementation by just commenting out
+   the line
+
+       data.find_next = find_next;
+
+   in portstatus.c and recompiling with 'make all'. The requests
+   described above will give the same results, but now ConfD has to
+   traverse the list using get_next() from the start of the list.

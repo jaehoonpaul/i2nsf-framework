@@ -1,0 +1,48 @@
+------------------------------------------
+CDB subscriber and cdb_get_modifications()
+------------------------------------------
+
+This example demonstrates use of cdb_get_modifications() procedure. A simple
+one phase CDB subscriber registers for changes in a YANG model. ConfD-lib
+procedure cdb_get_modifications() is used to retrieve list of modifications.
+As an example output, simple body of a NETCONF edit-config message is generated.
+This is not a full NETCONF message - there is no header included, and content
+can serve as an input idea for a more complete solution. Output is printed to
+the standard log output of the subscriber application.
+
+--------------------
+Starting the Example
+--------------------
+
+1. Build the necessary files and start the example by typing:
+
+    $ make all start
+
+This will start ConfD and the subscriber that registers to a "/folder-user"
+path in CDB.
+
+2. In a new terminal[1] Start a CLI e.g .by typing:
+
+    $ make cli-c
+
+3. Committing some arbitrary configuration, e.g.:
+
+    dev2# config
+    Entering configuration mode terminal
+    dev2(config)# folder-user bob auth-none
+    dev2(config-folder-user-bob)# commit
+    Commit complete.
+    dev2(config-folder-user-bob)#
+
+should yield a corresponding "edit-config"-like log in the console running the
+CDB subscriber application:
+
+    ...
+    modifications read by subscriber:
+    <folder-user>
+        <username>bob</username>
+        <auth-none/>
+    </folder-user>
+    ...
+
+This mimics changes done to configuration of the "/folder-user" sub-tree.

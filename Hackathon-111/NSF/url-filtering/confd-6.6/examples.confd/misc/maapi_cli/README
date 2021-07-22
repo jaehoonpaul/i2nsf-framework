@@ -1,0 +1,27 @@
+Example: Using MAAPI, the Management API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is an example application which shows how to use the MAAPI API
+(see confd_lib_maapi(3)) We're using the MAAPI interface here to build
+a small proprietary trivial CLI application.
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+    this will also start the example CLI application.
+
+ 2. In the example shell, type
+
+	#maapi-demo-cli help
+
+    to see a list of available commands.
+
+ 3. Add a server by typing
+
+	#maapi-demo-cli create srv1 192.168.2.3 555
+	#maapi-demo-cli show
+

@@ -1,0 +1,233 @@
+Example #1: Starting ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The aim of this first example is to build a ConfD subscriber
+application.  The subscriber connects to ConfD, reads the relevant
+parts of the configuration, then subscribes to configuration changes.
+
+The ConfD subscriber in this example interfaces with the DHCP client
+configuration.  The next example will then let you interact with the
+running ConfD system.
+
+The focus of the first example will be on rather practical matters of
+the setup, such as editing files and running commands.
+
+
+ConfD Installation
+~~~~~~~~~~~~~~~~~~
+
+If ConfD isn't installed yet, you can install it either in your home
+directory or in a central place accessible by a group of people. See
+the README file in the ConfD installation directory for directions.
+
+In the installation directory, there is a file called confdrc (and
+confdrc.tcsh) which is meant to be sourced before you start using the
+examples. This file contains some useful settings, it adds ConfD to
+the PATH, MANPATH, PYTHONPATH and LD_LIBRARY_PATH. It points out the
+ConfD installation directory to the examples by setting $CONFD_DIR. If
+you wish, you can paste (or source) these settings into (from) your
+shell setup file.
+
+
+What are all the Files?
+~~~~~~~~~~~~~~~~~~~~~~~
+
++ *-README*
+    The README files are the instructions you are reading now.
+
++ Makefile
+    The Makefile describes the commands necessary to build the
+    executable and schema files from the source files.
+    Additionally, it contains the commands necessary for starting and
+    stopping ConfD. Go to the example directory and type 'make' with
+    no arguments to see what make targets there are.
+
++ Makefile.inc
+    Included by Makefile, contains some generic information (paths,
+    compiler flags, etc) used by all the examples.
+
++ dhcpd_conf.c
+    This is the source code for the ConfD subscriber that allows ConfD
+    to see and control the standard Linux DHCP daemon of the target
+    system.
+
++ dhcpd_conf (Appears when building)
+    This is the executable that will be built from the source file
+    above. It acts as a ConfD subscriber, i.e. connects to and
+    registers with ConfD. ConfD then calls the subscriber using
+    callbacks when it needs to get something DHCP related done.
+
++ dhcpd.yang
+    YANG files describe the data model of the configuration. This is
+    the source code description (schema) of what DHCP related elements
+    and attributes there are. These are the 'things' a Configuration
+    Manager can see and configure.
+
++ commands-c.cli commands-j.cli
+    Command line interface (CLI) extension file. Defines two extra
+    commands (ping, ssh) usable in the CLI. The -c file is for the
+    Cisco IOS XR-style CLI, -j for the Juniper JunOS-style CLI.
+
++ dhcpd.fxs (Appears when building)
+    This is the compiled schema file generated from the *.yang files.
+    ConfD reads all fxs files it can find when it starts.
+
++ confd.conf
+    This is the ConfD configuration file(!). ConfD itself needs some
+    configuration in order to know what features should be enabled,
+    what directories to look for compiled schema files in, what type
+    of logging is desired, etc.
+
++ confd-cdb (Appears when building)
+    The CDB (configuration database) directory.
+
++ confd-cdb/aaa_init.xml (Appears when building)
+    Configuration file that lists the initial users and permissions in
+    the ConfD system. Normally this information resides in the
+    configuration database (CDB). Initially, when the database is
+    completely empty, the database AAA tables are initialized from
+    this file (or nobody would be able to log in to add user accounts).
+
++ confd-cdb/*.cdb (Appears when building)
+    The actual database files.
+
++ cmd-*.xml
+    These files contain NETCONF commands, to be used with the trivial
+    NETCONF manager netconf-console and netconf-console-tcp . The
+    queries are sent to ConfD using the NETCONF XML protocol, over SSH
+    or plain TCP.
+
++ dhcpd.{h,o,xsd} dhcpd_conf.o (Appears when building)
+    Intermediate files used while building dhcpd_conf and dhchd.fxs.
+    More details of the build steps are presented below.
+
++ commands-c.ccl commands-j.ccl (Appears when building)
+    Compiled form of commands-c.cli and commands-j.cli.
+
++ netconf-console (Resides in ${CONFD_DIR}/bin directory)
+  netconf-console
+    Trivial NETCONF-manager. Run 'netconf-console --help' for more
+    information on what it can do for you. Normally it communicates
+    with ConfD over SSH (as specified in the NETCONF standard). This
+    requires that you install SSH related software in your system, see
+    below.
+
+    netconf-console-tcp does the same thing, but sets flags to talk
+    over plain TCP instead of SSH. This is outside the NETCONF
+    standard, but useful in a development situation.
+
++ confd_candidate.db (Appears when running)
+    The CDB candidate database.
+
++ *.log (Appears when running)
+    ConfD's log files. Run 'tail -f confd.log' in a terminal window to
+    see what ConfD is doing.
+
+
+Building the Example ConfD Subscriber
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The build process is controlled by the Makefile. Open it up and have a
+look. Near the top, you'll find
+
+    # Where is ConfD installed? Make sure CONFD_DIR points it out
+    CONFD_DIR ?= ../../..
+
+Update the path to where you have ConfD installed. Or, you can define
+an environment variable to point it out. In the bash shell, the syntax
+would be:
+
+    export CONFD_DIR=/home/myname/confd-X.Y
+
+This is what the 'confdrc' file does (see ConfD Installation above),
+among other things. If you are sourcing this file in your shell start
+up, you don't need to do this. We recommend sourcing the confdrc file
+from the confd installation.
+
+To build, all you have to do is 'make all'. To still your curiosity,
+this is how the building works:
+
++ yang to fxs
+    First the data model compiler (confdc) is run on the dhcpd.yang file.
+
+    This will check the data model and produce a compiled form of it
+    called dhcpd.fxs. One or more fxs files are read by ConfD when
+    it starts. The set of fxs files read will form the schema for the database.
+
++ fxs to h
+    Confdc can also generate the headers necessary to interface with
+    ConfD. If you don't plan on using C for your application, you will
+    not need these files at all.
+
++ c to o
+    The generated C files (dhcpd.c, dhcpd.h) and the real DHCP subscriber
+    code in dhcpd_conf.c are compiled to operating system object
+    files.
+
++ o to executable
+    The object files (dhcpd.o, dhcpd_conf.o) are then linked with the
+    ConfD library (libconfd.so or .a) and some system libraries
+    (libpthread.so/.a) to generate the ConfD subscriber executable.
+
+
+Starting the ConfD System
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 1. Did you build the subscriber and fxs schema using 'make all'? If
+    not, do so now.
+
+ 2. When ConfD is started, it reads its confd.conf configuration file
+    to find the location of all fxs files, and many more things. The
+    factory setting in the example configuration is to use the current
+    directory (.) for just about everything. These are not good
+    production settings, but makes it easier for you to get
+    started.
+
+ 3. ConfD is started by just running the confd executable. The only
+    option needed for this example is to point out where the
+    confd.conf configuration file is located with a -c option. 'confd
+    --help' gives a complete list of options.  The easiest way to
+    start the example is to use the Makefile, because the start
+    command above has already been written in it:
+
+        $ make start
+
+ 4. ConfD produces a variety of log messages that tells you what is
+    going on. These messages are essential when it comes to
+    troubleshooting. The example configuration logs these messages to
+    ./confd.log. It's a good idea to constantly monitor this file for
+    new messages in a separate window. A good monitoring command would
+    be:
+
+        $ tail -f confd.log
+
+    The example configuration also sends the same messages to syslog,
+    daemon facility. Typically you can see these messages by tailing
+    /var/log/messages, but this often requires root privileges.
+
+ 5. Once ConfD is up and running, the ConfD subscriber should be
+    started. If you used the make file, the make start command already
+    did that. If not, you need to run ./dhcpd_conf.
+
+    When the ConfD subscriber starts, it will connect to ConfD and
+    register itself. The ConfD subscriber now sits and waits for
+    commands from ConfD, and ultimately from you.
+
+    A convenient way of starting ConfD and the ConfD subscriber in
+    this example is to type 'make start'. That will execute the
+    commands described above. There is also a 'make stop' in case
+    you'd like to shut them down.
+
+While ConfD and the example ConfD subscriber is running, you can send
+commands and queries to ConfD. That is the topic of the next example.
+Now, go on reading the 2-README_query file.
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Introduction to ConfD
++ man 5 confd.conf
++ man 1 confdc
++ man 1 confd
+

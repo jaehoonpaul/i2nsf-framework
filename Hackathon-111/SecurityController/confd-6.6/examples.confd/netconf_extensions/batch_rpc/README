@@ -1,0 +1,59 @@
+Example: Implementing a new NETCONF RPC batch operation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how to implement a batch NETCONF RPC operation.
+A batch operation works like a normal RPC, except that it doesn't
+terminate after sending the reply to the RPC.  Instead the process
+enters batch mode, where it asynchronously can send events to the
+manager.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+The RPC we want to implement will look like this:
+
+  <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <subscribe xmlns="http://example.com/event">
+      <events>3</events>
+    </subscribe
+  </rpc>
+
+and a reply:
+
+  <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+    <ok/>
+  </rpc-reply>
+
+followed by
+
+  <event xmlns="http://example.com/event">
+    <message>A critical event has happened</message>
+  </event>
+  ...
+
+The operation itself is implemented in event.c, which is compiled into
+the executable event.  The new RPC operation is specified in
+event-rpc.yang.
+
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+ 2. To send the query defined in cmd-event.xml, type
+
+        $ make query
+
+ 3. Ctrl-c to terminate the session when the events are received.
+
+        

@@ -1,0 +1,43 @@
+Developer notes
+---------------
+
+Interface
+~~~~~~~~~
+
+The interface for components is defined in the `component` struct that
+can be found in `linuxcfg_api.h` at the top level, this struct has to
+be filled out in the component with the appropriate set of handler.
+Each component then has to be added to `components.c`.
+
+For details it is helpful to check one of the existing components, but
+the structure is meant to allow the top level handler to call each
+component in turn, so that they can all take part in the phases they
+need.
+
+Note that the top level interface also has several useful helpers.
+
+Performace
+~~~~~~~~~~
+
+The system is not performance optimized. Most data is stored in linked
+list for simplicity. This is acceptable as long as the system is
+decently sized but if you for instance plan on having many thousands
+of interfaces, or add and delete interfaces with high frequency you
+will want to replace some datastructures with something more
+efficient.
+
+valgrind
+~~~~~~~~
+
+To run valgrind on linuxcfg you can use the following syntax:
+
+  valgrind --leak-check==full --log-file=valgrind ./linuxcfg -Dtl
+
+Or for heap profiling:
+  valgrind --tool=massif --alloc-fn=xmalloc --alloc-fn=maapi_load_schemas \
+ ./linuxcfg -Dtl
+
+Documentation
+~~~~~~~~~~~~~
+
+This file, as well as the README-files are valid asciidoc.

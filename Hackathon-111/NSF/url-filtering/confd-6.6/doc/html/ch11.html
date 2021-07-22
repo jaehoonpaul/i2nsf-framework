@@ -1,0 +1,377 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;11.&nbsp;Actions</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks"><link rel="next" href="ch12.html" title="Chapter&nbsp;12.&nbsp;Notifications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;11.&nbsp;Actions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch10.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch12.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.actions"></a>Chapter&nbsp;11.&nbsp;Actions</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch11.html#d5e3105">11.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch11.html#d5e3111">11.2. Action as a Callback</a></span></dt><dt><span class="sect1"><a href="ch11.html#d5e3199">11.3. Action as an Executable</a></span></dt><dt><span class="sect1"><a href="ch11.html#d5e3295">11.4. Related functionality</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3105"></a>11.1.&nbsp;Introduction</h2></div></div></div><p>When we want to define operations that do not affect the
+    configuration data store, we can use the <code class="code">tailf:action</code>
+    statement in the YANG data model. The action definition specifies
+    how the action is invoked, including input and output parameters (if
+    any). Once defined, the action is available for invocation from all
+    of NETCONF, CLI and Web UI. The action can be implemented either as
+    a callback function or as an executable. Action support is also
+    discussed in <a class="xref" href="ch15.html" title="Chapter&nbsp;15.&nbsp;The NETCONF Server">Chapter&nbsp;15, <i>The  NETCONF Server</i></a>, <a class="xref" href="ch16.html" title="Chapter&nbsp;16.&nbsp;The CLI agent">Chapter&nbsp;16, <i>The CLI agent</i></a>, and WebUI.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3111"></a>11.2.&nbsp;Action as a Callback</h2></div></div></div><p>To specify that the action is implemented as a callback in an
+    application <a class="xref" href="go01.html#ug.defs.daemon" title="Daemon">Daemon</a>, that registers
+    with ConfD via the C API described in the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page, we use the
+    <code class="code">tailf:actionpoint</code> statement.</p><p>The application must register the callback by calling
+    this function:</p><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_action_cbs</b>(</code></td><td>struct confd_daemon_ctx *<var class="pdparam">dx</var>, </td></tr><tr><td>&nbsp;</td><td>const struct confd_action_cbs *<var class="pdparam">acb</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>The <span class="type">struct confd_action_cbs</span> is defined as:</p><div class="informalexample"><pre class="programlisting"><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_action_cbs {
+    <strong class="hl-keyword">char</strong> actionpoint[MAX_CALLPOINT_LEN];
+    <strong class="hl-keyword">int</strong> (*init)(<strong class="hl-keyword">struct</strong> confd_user_info *uinfo);
+    <strong class="hl-keyword">int</strong> (*abort)(<strong class="hl-keyword">struct</strong> confd_user_info *uinfo);
+    <strong class="hl-keyword">int</strong> (*action)(<strong class="hl-keyword">struct</strong> confd_user_info *uinfo,
+                  <strong class="hl-keyword">struct</strong> xml_tag *name,
+                  confd_hkeypath_t *kp,
+                  confd_tag_value_t *params,
+                  <strong class="hl-keyword">int</strong> nparams);
+    <strong class="hl-keyword">int</strong> (*command)(<strong class="hl-keyword">struct</strong> confd_user_info *uinfo,
+                   <strong class="hl-keyword">char</strong> *path, <strong class="hl-keyword">int</strong> argc, <strong class="hl-keyword">char</strong> **argv);
+    <strong class="hl-keyword">int</strong> (*completion)(<strong class="hl-keyword">struct</strong> confd_user_info *uinfo,
+                      <strong class="hl-keyword">int</strong> cli_style, <strong class="hl-keyword">char</strong> *token, <strong class="hl-keyword">int</strong> completion_char,
+                      confd_hkeypath_t *kp,
+                      <strong class="hl-keyword">char</strong> *cmdpath, <strong class="hl-keyword">char</strong> *cmdparam_id,
+                      <strong class="hl-keyword">struct</strong> confd_qname *simpleType, <strong class="hl-keyword">char</strong> *extra);
+    <strong class="hl-keyword">void</strong> *cb_opaque;        <em class="hl-comment" style="color: silver">/* private user data */</em>
+};</pre></pre></div><p>The <code class="varname">actionpoint</code> element gives the name of
+    the actionpoint from the data model, and the <code class="varname">init</code>
+    and <code class="varname">action</code> elements must point to two callback
+    functions that are called in sequence when the action is invoked. In
+    the <code class="function">init()</code> callback, we must associate a worker
+    socket with the action. This socket will be used for the invocation
+    of the <code class="function">action()</code> callback, which actually
+    carries out the action. Thus in a multi threaded application,
+    actions can be dispatched to different threads.</p><p>The <code class="function">action()</code> callback is invoked with
+    parameters pertaining to the action, in particular a hashed <a class="xref" href="go01.html#ug.defs.keypath" title="Keypath">Keypath</a> that can identify a particular
+    <code class="code">list</code> instance that the action should be applied to, and
+    an array giving the input parameters. The parameters have the form
+    of an XML instance document conforming to the specification in the
+    <code class="code">input</code> statement in the data model, and are represented
+    as described for the Tagged Value Array format in <a class="xref" href="rn02re15.html#man.3.confd_types.xml_structures" title="XML STRUCTURES">the section called &#8220;XML STRUCTURES&#8221;</a> in the <a class="xref" href="rn02re15.html" title="confd_types"><span class="refentrytitle">confd_types</span>(3)</a> manual page. If the action should
+    return any data values, it must call
+    <code class="function">confd_action_reply_values()</code> with an array of
+    values in the same form, conforming to the specification in the
+    <code class="code">output</code> statement in the data model.</p><p>Unlike the callbacks for data and validation, there is no
+    transaction associated with an action callback. However an action is
+    always associated with a user session (NETCONF, CLI, etc), and only
+    one action at a time can be invoked from a given user
+    session.</p><p>See <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.confd_actions" title="CONFD ACTIONS">the section called &#8220;CONFD ACTIONS&#8221;</a> in the
+    <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for additional
+    information about the action callbacks.</p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3151"></a>11.2.1.&nbsp;Example</h3></div></div></div><p>As an example, we will look at one of several actions
+      implemented in <code class="filename">intro/7-c_actions</code> in the ConfD
+      examples collection. The data model defines a list of servers, and
+      an action that allows us to request that a server is reset at some
+      point in time. First, we specify the action in the data model like
+      this:</p><div class="informalexample"><pre class="programlisting">    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        tailf:cli-allow-range;
+        type string;
+      }
+      tailf:action reset {
+        tailf:actionpoint reboot-point;
+        input {
+          leaf when {
+            type string;
+            mandatory true;
+          }
+        }
+        output {
+          leaf time {
+            type string;
+            mandatory true;
+          }
+        }
+      }
+    }
+</pre></div><p>Our implementation must have an <code class="function">init()</code>
+    callback and an <code class="function">action()</code> callback. The
+    <code class="function">init()</code> callback is straightforward:</p><div class="informalexample"><pre class="programlisting">static int init_action(struct confd_user_info *uinfo)
+{
+    int ret = CONFD_OK;
+
+    printf("init_action called\n");
+    confd_action_set_fd(uinfo, workersock);
+    return ret;
+}
+</pre></div><p>I.e. it just tells ConfD that we want the previously connected
+    worker socket to be used for the invocation of the
+    <code class="function">action()</code> callback. The calls to
+    <code class="function">printf(3)</code> in these callback functions are of
+    course only for the purpose of illustration when we run the
+    example. The <code class="function">action()</code> callback, called
+    <code class="function">do_action()</code>, has a twist: we are using the same
+    callback for multiple actions in the data model, and the code looks
+    at the <em class="parameter"><code>name</code></em> parameter (the argument to
+    <code class="code">tailf:action</code> in the data model) to decide what to
+    do:</p><div class="informalexample"><pre class="programlisting">/* This is the action callback function.  In this example, we have a
+   single function for all four actions. */
+static int do_action(struct confd_user_info *uinfo,
+                     struct xml_tag *name,
+                     confd_hkeypath_t *kp,
+                     confd_tag_value_t *params,
+                     int n)
+{
+    confd_tag_value_t reply[3];
+    int i, k;
+    char buf[BUFSIZ];
+    char *p;
+
+    printf("do_action called\n");
+
+    for (i = 0; i &lt; n; i++) {
+        confd_pp_value(buf, sizeof(buf), CONFD_GET_TAG_VALUE(&amp;params[i]));
+        printf("param %2d: %9u:%-9u, %s\n", i, CONFD_GET_TAG_NS(&amp;params[i]),
+               CONFD_GET_TAG_TAG(&amp;params[i]), buf);
+    }
+
+    switch (name-&gt;tag) {
+</pre></div><p>Our "reset" action is handled in this branch:</p><div class="informalexample"><pre class="programlisting">    case config_reset:
+        printf("reset\n");
+        p = CONFD_GET_CBUFPTR(CONFD_GET_TAG_VALUE(&amp;params[0]));
+        i = CONFD_GET_BUFSIZE(CONFD_GET_TAG_VALUE(&amp;params[0]));
+        strncpy(buf, p, i);
+        buf[i] = 0;
+        strcat(buf, "-result");
+        i = 0;
+        CONFD_SET_TAG_STR(&amp;reply[i], config_time, buf); i++;
+        confd_action_reply_values(uinfo, reply, i);
+        break;
+</pre></div><p>The <code class="sgmltag-element">when</code> leaf from the <code class="code">input</code> statement
+    in the data model is the first and only parameter, and is available
+    to the callback in <code class="varname">params[0]</code>.  A real
+    implementation of "reset" would analyze the string, e.g. "now" for
+    immediate reset or a date and time for some point in the future when
+    the reset should be carried out. Here we just append "-result" to
+    the string and return that as a reply for the <code class="sgmltag-element">time</code> leaf
+    in the <code class="code">output</code> statement, by setting the first element
+    in our <code class="varname">reply[]</code> array and calling
+    <code class="function">confd_action_reply_values()</code>. Finally we must
+    register the callbacks:</p><div class="informalexample"><pre class="programlisting">    /* register the action handler callback */
+    memset(&amp;acb, 0, sizeof(acb));
+    strcpy(acb.actionpoint, "reboot-point");
+    acb.init = init_action;
+    acb.action = do_action;
+    acb.abort = abort_action;
+
+    if (confd_register_action_cbs(dctx, &amp;acb) != CONFD_OK)
+        fail("Couldn't register action callbacks");
+</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.actions.threads"></a>11.2.2.&nbsp;Using Threads</h3></div></div></div><p>If we have long-running action callbacks (e.g. file
+      download), it will typically be necessary to use multi-threading
+      for the daemon that handles the callbacks. Without threads, only
+      one invocation of a given action callback can be running at any
+      point in time. Thus if the same action is requested from another
+      user session, the request will block until the currently running
+      invocation has completed.</p><p>Even if we do not want to allow multiple invocations of an
+      action callback to run in parallel, having one thread for the
+      control socket and one for the worker socket will make it possible
+      to return an error from the action <code class="function">init()</code>
+      callback when we are "busy" with a running action, instead of
+      having the user wait for the currently running action to
+      complete. It will also allow us to handle other control socket
+      requests promptly. In the general case, where we
+      <span class="emphasis"><em>do</em></span> want to handle multiple action callback
+      requests in parallel, we need to use multiple worker sockets, with
+      one thread handling each worker socket. We also need one thread to
+      handle the control socket, dispatching the callback requests to
+      the different worker sockets.</p><p>The strategy to use for creating and allocating the worker
+      sockets and threads is up to the application, based on the needs
+      for responsiveness in the user interface, resource usage
+      requirements, and other application-specific considerations. We
+      can set up a fixed pool of sockets and threads on startup, or we
+      can connect worker sockets and spawn threads dynamically on
+      demand, as well as close worker sockets and terminate threads that
+      are no longer in use.</p><p>The <code class="filename">intro/9-c_threads</code> example in the
+      ConfD examples collection demonstrates one such strategy, where
+      worker sockets/threads for action callbacks are created on demand,
+      giving each user session that requests an action its own dedicated
+      action worker thread. The user session <code class="function">stop()</code>
+      callback (see <code class="function">confd_register_usess_cb()</code> in
+      the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page) is used to
+      mark sockets/threads as "idle" and available for assignment as
+      action workers for other user sessions. With this strategy we may
+      need as many threads as there can be concurrent user sessions - by
+      default there is no limit on this, but such limits can be
+      configured in confd.conf
+      (e.g. <code class="sgmltag-element">/confdConfig/sessionLimits/maxSessions</code> for the
+      total number of concurrent user sessions across all northbound
+      interfaces), see the <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a> manual
+      page.</p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3199"></a>11.3.&nbsp;Action as an Executable</h2></div></div></div><p>To specify that the action is implemented as a standalone
+    executable (this could be either a compiled program or a script),
+    that is run to completion on each action invocation, we use the
+    <code class="code">tailf:exec</code> statement. This has several substatements
+    specifying how the executable should be invoked - for the full
+    details, see the <a class="xref" href="rn03re20.html" title="tailf_yang_extensions"><span class="refentrytitle">tailf_yang_extensions</span>(5)</a>
+    manual page:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">tailf:args</code></span></dt><dd><p>A space separated list of argument strings to pass
+      to the executable when it is invoked by ConfD. It may contain
+      variables on the form <code class="varname">$(variablename)</code>, that
+      are expanded before the command is executed. E.g.
+      </p><div class="informalexample"><pre class="programlisting">tailf:args "-p $(path)";</pre></div><p>
+      will result in the first argument being "-p" and the second being
+      the CLI form (space-separated elements) of the path leading to the
+      action's parent container.</p></dd><dt><span class="term"><code class="code">tailf:uid</code></span></dt><dd><p>The user id to use when running the
+      executable.</p></dd><dt><span class="term"><code class="code">tailf:gid</code></span></dt><dd><p>The group id to use when running the
+      executable.</p></dd><dt><span class="term"><code class="code">tailf:wd</code></span></dt><dd><p>The working directory to use when running the
+      executable. If not specified, the home directory of the user
+      invoking the action is used, except for the case of a CLI session
+      invoked via the <span class="command"><strong>confd_cli</strong></span> command - then the
+      directory where <span class="command"><strong>confd_cli</strong></span> was invoked is
+      used.</p></dd><dt><span class="term"><code class="code">tailf:global-no-duplicate</code></span></dt><dd><p>Specifies that only one instance with the name
+      that is given as argument can be run at any time in the
+      system.</p></dd><dt><span class="term"><code class="code">tailf:interrupt</code></span></dt><dd><p>Specifies which signal to use to interrupt the
+      executable when the action invocation is
+      interrupted.</p></dd></dl></div><p>The input parameters are passed to the executable as arguments
+    (following those specified by <code class="code">tailf:args</code>) in the same
+    general form as for a callback invocation. Each tag-value pair
+    results in two arguments, the first is the tag name as a string, the
+    second is the value in string form. The special elements used to
+    indicate the start and end of a list entry or container and a
+    typeless leaf (i.e. C_XMLBEGIN, C_XMLEND, and C_XMLTAG in the C API)
+    have the "values" __BEGIN, __END, and __LEAF. If the action has
+    output parameters, their values should be printed on standard output
+    in the same form.</p><p>If the execution is successful, the executable should exit
+    with code 0. Otherwise it may print error information on standard
+    output before exiting with a non-zero code. The error information
+    can be either a free-form string (corresponding to the
+    <code class="function">confd_action_seterr()</code> function for the
+    callback) or structured information corresponding to the NETCONF
+    form described in <a class="xref" href="rn02re13.html#man.3.confd_lib_lib.extended_error_reporting" title="EXTENDED ERROR REPORTING">the section called &#8220;EXTENDED ERROR REPORTING&#8221;</a> in the
+    <a class="xref" href="rn02re13.html" title="confd_lib_lib"><span class="refentrytitle">confd_lib_lib</span>(3)</a> manual page. It could for
+    example print this on standard output:
+    </p><div class="informalexample"><pre class="programlisting">error-tag resource-denied
+error-message "out of memory"</pre></div><p> The
+    <code class="sgmltag-element">error-tag</code> element is required in this case.</p><p>In the CLI the action is not paginated by default and will
+    only do so if it is piped to more.</p><div class="informalexample"><pre class="programlisting">
+        joe@io&gt; example_action | more
+      </pre></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e3252"></a>11.3.1.&nbsp;Example</h3></div></div></div><p>Another action in <code class="filename">intro/7-c_actions</code> in
+      the examples collection is implemented as a Perl script. Here the
+      data model defines a list of hosts, and an action that allows us
+      to send <span class="command"><strong>ping</strong></span> requests to a host. We
+      specify the action in the data model like this:</p><div class="informalexample"><pre class="programlisting">    list host {
+      key name;
+      leaf name {
+        type string;
+      }
+      tailf:action ping {
+        tailf:exec "./ping.pl" {
+          tailf:args "-c $(context) -p $(path)";
+        }
+        input {
+          leaf count {
+            type int32;
+            default "3";
+          }
+        }
+        output {
+          leaf header {
+            type string;
+          }
+          list response {
+            leaf data {
+              type string;
+            }
+          }
+          container statistics {
+            leaf packet {
+              type string;
+            }
+            leaf time {
+              type string;
+            }
+          }
+        }
+      }
+    }
+</pre></div><p>The "-c $(context) -p $(path)" argument for the
+      <code class="code">tailf:args</code> statement has the effect that the context
+      (cli, netconf, etc) and the data model path will be passed to the
+      script, followed by the <code class="sgmltag-element">count</code> parameter from the
+      <code class="code">input</code> statement in the data model. This parameter may
+      have been given by the user or defaulted according to the data
+      model. Thus, if a host called "earth" exists in the configuration,
+      and we use the J-CLI and type this in operational mode:</p><div class="informalexample"><pre class="screen">request config host earth ping count 5</pre></div><p>Then the script will be invoked as:</p><div class="informalexample"><pre class="programlisting">./ping.pl -c cli -p 'config host earth' count 5</pre></div><p>The script starts by parsing these arguments, in particular
+      picking up the last word of the <code class="option">-p</code> value for the
+      host name (stored in the <code class="varname">$host</code> variable) and
+      the argument for the <em class="parameter"><code>count</code></em> parameter
+      (stored in the <code class="varname">$count</code> variable):</p><div class="informalexample"><pre class="programlisting">while ($#ARGV &gt;= 0) {
+    if ($ARGV[0] eq "-c") {
+        $context = $ARGV[1];
+        shift; shift;
+    } elsif ($ARGV[0] eq "-p") {
+        @path = split(' ', $ARGV[1]);
+        shift; shift;
+    } elsif ($ARGV[0] eq "count") {
+        $count = $ARGV[1];
+        shift; shift;
+    } else {
+        &amp;fail("Unknown argument " . $ARGV[0]);
+    }
+}
+$host = $path[$#path];
+</pre></div><p>In this example, the input parameters are very simple, just
+      a single leaf. If we have lists or containers for
+      <code class="code">input</code> in the data model, the script will receive them
+      with __BEGIN and __END "values", as shown for the output
+      below.</p><p>Having collected the required parameters, and taking some OS
+      dependencies into account, the script proceeds to run the actual
+      <span class="command"><strong>ping</strong></span> command, collecting the output (standard
+      output and standard error) in the <code class="varname">$out</code>
+      variable, and checking the exit code. On a non-zero exit code
+      (indicating failure), the <code class="code">fail</code> function will just
+      print the output from <span class="command"><strong>ping</strong></span> on standard output
+      and exit with code 1.</p><div class="informalexample"><pre class="programlisting">$ENV{'PATH'} = "/bin:/usr/bin:/sbin:/usr/sbin:" . $ENV{'PATH'};
+if (`uname -s` eq "SunOS\n") {
+    $cmd = "ping -s $host 56 $count";
+} else {
+    $cmd = "ping -c $count $host";
+}
+$out = `$cmd 2&gt;&amp;1`;
+if ($? != 0) {
+    &amp;fail($out);
+}
+</pre></div><p>If the execution of <span class="command"><strong>ping</strong></span> is successful,
+      the script splits the output into lines and generates a reply
+      according to the <code class="code">output</code> statement in the data model:
+      each leaf is output with the leaf name followed by the value of
+      the leaf, and __BEGIN and __END "values" indicate the the start
+      and end of each entry in the <code class="sgmltag-element">response</code> list, as well as
+      the start and end of the <code class="sgmltag-element">statistics</code> container:</p><div class="informalexample"><pre class="programlisting">@result = split('\n', $out);
+print "header 'Invoked from " . $context . ": " . $result[0] . "'\n";
+for ($i = 0; $i &lt; $count; $i++) {
+    print "response __BEGIN data '" . $result[$i+1] . "' response __END\n";
+}
+$packets = $result[$#result-1];
+$times = $result[$#result];
+print "statistics __BEGIN\n";
+print "packet '" . $packets . "' time '" . $times . "'\n";
+print "statistics __END\n";
+
+exit 0;
+</pre></div><p>If we run the script interactively, using the command line
+      above, we will get output that looks something like this:</p><div class="informalexample"><pre class="screen">$ ./ping.pl -c cli -p 'config host earth' count 5
+header 'Invoked from cli: PING earth.tail-f.com (192.168.1.42): 56 data bytes'
+response __BEGIN data '64 bytes from 192.168.1.42: icmp_seq=0 ttl=64 time=0.187 ms' response __END
+response __BEGIN data '64 bytes from 192.168.1.42: icmp_seq=1 ttl=64 time=0.150 ms' response __END
+response __BEGIN data '64 bytes from 192.168.1.42: icmp_seq=2 ttl=64 time=0.208 ms' response __END
+response __BEGIN data '64 bytes from 192.168.1.42: icmp_seq=3 ttl=64 time=0.205 ms' response __END
+response __BEGIN data '64 bytes from 192.168.1.42: icmp_seq=4 ttl=64 time=0.204 ms' response __END
+statistics __BEGIN
+packet '5 packets transmitted, 5 packets received, 0.0% packet loss' time 'round-trip min/avg/max/stddev = 0.150/0.191/0.208/0.022 ms'
+statistics __END
+        </pre></div><p>ConfD will parse this output and deliver the data to the
+      requesting northbound agent. Since the values include whitespace,
+      they must be enclosed in quotes - either single quotes (') as in
+      this example or double quotes (") can be used. Arbitrary
+      whitespace can be used to separate node names and values.</p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3295"></a>11.4.&nbsp;Related functionality</h2></div></div></div><p>The action invocation mechanism is also used for some other
+    related purposes:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>A NETCONF RPC (see <a class="xref" href="ch15.html#ug.netconf_agent.extend" title="15.5.&nbsp;Extending the NETCONF Server">Section&nbsp;15.5, &#8220;Extending the NETCONF Server&#8221;</a> in <a class="xref" href="ch15.html" title="Chapter&nbsp;15.&nbsp;The NETCONF Server">Chapter&nbsp;15, <i>The  NETCONF Server</i></a>) can be specified to
+      invoke a callback or an executable (where ConfD translates the
+      XML), via the <code class="code">tailf:actionpoint</code> and
+      <code class="code">tailf:exec</code> statements, respectively. This is
+      implemented via invocation of the <code class="function">action()</code>
+      callback, or running of an executable, exactly as described
+      above. (When the <code class="code">tailf:raw-xml</code> statement is used with
+      <code class="code">tailf:exec</code>, the argument and result passing described
+      above is not applicable.)</p></li><li class="listitem"><p>The CLI can invoke "capi callbacks" for either
+      complete CLI commands or command completion functionality (see
+      <a class="xref" href="ch16.html" title="Chapter&nbsp;16.&nbsp;The CLI agent">Chapter&nbsp;16, <i>The CLI agent</i></a>). This is implemented via invocation
+      of <code class="function">command()</code> and
+      <code class="function">completion()</code> callbacks, respectively, that
+      are registered by the application in the same way as an
+      <code class="function">action()</code> callback. See <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.confd_actions" title="CONFD ACTIONS">the section called &#8220;CONFD ACTIONS&#8221;</a> in the <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a> manual page for the
+      details.</p></li></ul></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch10.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch12.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;10.&nbsp;Transformations, Hooks, Hidden Data and Symlinks&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;12.&nbsp;Notifications</td></tr></table></div></body></html>

@@ -1,0 +1,12 @@
+%% This is an -*- erlang -*- file
+
+{application, ec_transform,
+ [
+  {description, "Transform"},
+  {vsn, "%VSN%"},
+  {modules, [%MODULES%]},
+  {mod, {ec_transform, []}},
+  {registered, [ec_transform_server]},
+  {applications, [stdlib, kernel]},
+  {env, []}
+ ]}.

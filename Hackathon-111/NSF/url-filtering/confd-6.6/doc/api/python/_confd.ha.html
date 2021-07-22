@@ -1,0 +1,107 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module _confd.ha</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="_confd.html"><font color="#ffffff">_confd</font></a>.ha</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Low&nbsp;level&nbsp;module&nbsp;for&nbsp;connecting&nbsp;to&nbsp;ConfD&nbsp;HA&nbsp;subsystem.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;used&nbsp;to&nbsp;connect&nbsp;to&nbsp;the&nbsp;ConfD&nbsp;High&nbsp;Availability&nbsp;(HA)<br>
+subsystem.&nbsp;ConfD&nbsp;can&nbsp;replicate&nbsp;the&nbsp;configuration&nbsp;data&nbsp;on&nbsp;several&nbsp;nodes<br>
+in&nbsp;a&nbsp;cluster.&nbsp;The&nbsp;purpose&nbsp;of&nbsp;this&nbsp;API&nbsp;is&nbsp;to&nbsp;manage&nbsp;the&nbsp;HA<br>
+functionality.&nbsp;The&nbsp;details&nbsp;on&nbsp;usage&nbsp;of&nbsp;the&nbsp;HA&nbsp;API&nbsp;are&nbsp;described&nbsp;in&nbsp;the<br>
+chapter&nbsp;High&nbsp;availability&nbsp;in&nbsp;the&nbsp;User&nbsp;Guide.<br>
+&nbsp;<br>
+This&nbsp;documentation&nbsp;should&nbsp;be&nbsp;read&nbsp;together&nbsp;with&nbsp;the&nbsp;confd_lib_ha(3)&nbsp;man&nbsp;page.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-bemaster"><strong>bemaster</strong></a>(...)</dt><dd><tt><a href="#-bemaster">bemaster</a>(sock,&nbsp;mynodeid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Instruct&nbsp;a&nbsp;HA&nbsp;node&nbsp;to&nbsp;be&nbsp;master&nbsp;and&nbsp;also&nbsp;give&nbsp;the&nbsp;node&nbsp;a&nbsp;name.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket<br>
+mynodeid&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;node&nbsp;(Value&nbsp;or&nbsp;string)</tt></dd></dl>
+ <dl><dt><a name="-benone"><strong>benone</strong></a>(...)</dt><dd><tt><a href="#-benone">benone</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Instruct&nbsp;a&nbsp;node&nbsp;to&nbsp;resume&nbsp;the&nbsp;initial&nbsp;state,&nbsp;i.e.&nbsp;neither&nbsp;master&nbsp;nor&nbsp;slave.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-berelay"><strong>berelay</strong></a>(...)</dt><dd><tt><a href="#-berelay">berelay</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Instruct&nbsp;an&nbsp;established&nbsp;HA&nbsp;slave&nbsp;node&nbsp;to&nbsp;be&nbsp;a&nbsp;relay&nbsp;for&nbsp;other&nbsp;slaves.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket</tt></dd></dl>
+ <dl><dt><a name="-beslave"><strong>beslave</strong></a>(...)</dt><dd><tt><a href="#-beslave">beslave</a>(sock,&nbsp;mynodeid,&nbsp;masterid,&nbsp;masterip,&nbsp;waitreply)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Instruct&nbsp;a&nbsp;NCS&nbsp;HA&nbsp;node&nbsp;to&nbsp;be&nbsp;slave&nbsp;with&nbsp;a&nbsp;named&nbsp;master.&nbsp;If&nbsp;waitreply&nbsp;is&nbsp;True<br>
+the&nbsp;function&nbsp;is&nbsp;synchronous&nbsp;and&nbsp;it&nbsp;will&nbsp;hang&nbsp;until&nbsp;the&nbsp;node&nbsp;has&nbsp;initialized<br>
+its&nbsp;CDB&nbsp;database.&nbsp;This&nbsp;may&nbsp;mean&nbsp;that&nbsp;the&nbsp;CDB&nbsp;database&nbsp;is&nbsp;copied&nbsp;in&nbsp;its<br>
+entirety&nbsp;from&nbsp;the&nbsp;master.&nbsp;If&nbsp;False,&nbsp;we&nbsp;do&nbsp;not&nbsp;wait&nbsp;for&nbsp;the&nbsp;reply,&nbsp;but&nbsp;it&nbsp;is<br>
+possible&nbsp;to&nbsp;use&nbsp;a&nbsp;notifications&nbsp;socket&nbsp;and&nbsp;get&nbsp;notified&nbsp;asynchronously&nbsp;via<br>
+a&nbsp;HA_INFO_BESLAVE_RESULT&nbsp;notification.&nbsp;In&nbsp;both&nbsp;cases,&nbsp;it&nbsp;is&nbsp;also&nbsp;possible<br>
+to&nbsp;use&nbsp;a&nbsp;notifications&nbsp;socket&nbsp;and&nbsp;get&nbsp;notified&nbsp;asynchronously&nbsp;when&nbsp;CDB&nbsp;at<br>
+the&nbsp;slave&nbsp;is&nbsp;initialized.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket<br>
+mynodeid&nbsp;--&nbsp;name&nbsp;of&nbsp;this&nbsp;slave&nbsp;node&nbsp;(Value&nbsp;or&nbsp;string)<br>
+masterid&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;master&nbsp;node&nbsp;(Value&nbsp;or&nbsp;string)<br>
+masterip&nbsp;--&nbsp;ip&nbsp;address&nbsp;of&nbsp;the&nbsp;master&nbsp;node<br>
+waitreply&nbsp;--&nbsp;synchronous&nbsp;or&nbsp;not&nbsp;(bool)</tt></dd></dl>
+ <dl><dt><a name="-connect"><strong>connect</strong></a>(...)</dt><dd><tt>ha_connect(sock,&nbsp;token,&nbsp;ip,&nbsp;port,&nbsp;pstr)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Connect&nbsp;a&nbsp;HA&nbsp;socket&nbsp;which&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;control&nbsp;a&nbsp;NCS&nbsp;HA&nbsp;node.&nbsp;The&nbsp;token<br>
+is&nbsp;a&nbsp;secret&nbsp;string&nbsp;that&nbsp;must&nbsp;be&nbsp;shared&nbsp;by&nbsp;all&nbsp;participants&nbsp;in&nbsp;the&nbsp;cluster.<br>
+There&nbsp;can&nbsp;only&nbsp;be&nbsp;one&nbsp;HA&nbsp;socket&nbsp;towards&nbsp;NCS.&nbsp;A&nbsp;new&nbsp;call&nbsp;to<br>
+ha_connect()&nbsp;makes&nbsp;NCS&nbsp;close&nbsp;the&nbsp;previous&nbsp;connection&nbsp;and&nbsp;reset&nbsp;the&nbsp;token&nbsp;to<br>
+the&nbsp;new&nbsp;value.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;Python&nbsp;socket&nbsp;instance<br>
+token&nbsp;--&nbsp;secret&nbsp;string<br>
+ip&nbsp;--&nbsp;the&nbsp;ip&nbsp;address&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;or&nbsp;AF_INET6&nbsp;(optional)<br>
+port&nbsp;--&nbsp;the&nbsp;port&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_INET&nbsp;or&nbsp;AF_INET6&nbsp;(optional)<br>
+pstr&nbsp;--&nbsp;a&nbsp;filename&nbsp;if&nbsp;socket&nbsp;is&nbsp;AF_UNIX&nbsp;(optional).</tt></dd></dl>
+ <dl><dt><a name="-slave_dead"><strong>slave_dead</strong></a>(...)</dt><dd><tt><a href="#-slave_dead">slave_dead</a>(sock,&nbsp;nodeid)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;must&nbsp;be&nbsp;used&nbsp;by&nbsp;the&nbsp;application&nbsp;to&nbsp;inform&nbsp;NCS&nbsp;HA&nbsp;subsystem<br>
+that&nbsp;another&nbsp;node&nbsp;which&nbsp;is&nbsp;possibly&nbsp;connected&nbsp;to&nbsp;NCS&nbsp;is&nbsp;dead.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket<br>
+nodeid&nbsp;--&nbsp;name&nbsp;of&nbsp;the&nbsp;node&nbsp;(Value&nbsp;or&nbsp;string)</tt></dd></dl>
+ <dl><dt><a name="-status"><strong>status</strong></a>(...)</dt><dd><tt><a href="#-status">status</a>(sock)&nbsp;-&gt;&nbsp;None<br>
+&nbsp;<br>
+Query&nbsp;a&nbsp;ConfD&nbsp;HA&nbsp;node&nbsp;for&nbsp;its&nbsp;status.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;2-tuple&nbsp;of&nbsp;the&nbsp;HA&nbsp;status&nbsp;of&nbsp;the&nbsp;node&nbsp;in&nbsp;the&nbsp;format<br>
+(State,[list_of_nodes])&nbsp;where&nbsp;'list_of_nodes'&nbsp;is&nbsp;the&nbsp;master/slave(s)<br>
+connected&nbsp;with&nbsp;node.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+sock&nbsp;--&nbsp;a&nbsp;previously&nbsp;connected&nbsp;HA&nbsp;socket</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>STATE_MASTER</strong> = 3<br>
+<strong>STATE_NONE</strong> = 1<br>
+<strong>STATE_SLAVE</strong> = 2<br>
+<strong>STATE_SLAVE_RELAY</strong> = 4</td></tr></table>
+</body></html>

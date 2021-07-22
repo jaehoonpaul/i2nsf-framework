@@ -1,0 +1,6 @@
+<INFO> 6-Mar-2019::10:39:06.214 nsf-1 confd[8304]: netconf id=28 new ssh session for user "admin" from 127.0.0.1
+<INFO> 6-Mar-2019::10:39:06.235 nsf-1 confd[8304]: netconf id=28 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 6-Mar-2019::10:39:06.244 nsf-1 confd[8304]: netconf id=28 edit-config target=running attrs: message-id="1"
+<INFO> 6-Mar-2019::10:39:06.373 nsf-1 confd[8304]: netconf id=28 sending rpc-reply, attrs: message-id="1"
+<INFO> 6-Mar-2019::10:39:06.375 nsf-1 confd[8304]: netconf id=28 close-session attrs: message-id="2"
+<INFO> 6-Mar-2019::10:39:06.376 nsf-1 confd[8304]: netconf id=28 sending rpc-reply, attrs: message-id="2"

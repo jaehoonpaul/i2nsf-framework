@@ -1,0 +1,106 @@
+<INFO> 4-Mar-2021::06:14:12.196 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 new ssh session for user "admin" from 10.0.0.14
+<INFO> 4-Mar-2021::06:14:12.315 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:6c967309-0371-4f38-b5e4-5e8013dd5879"
+<INFO> 4-Mar-2021::06:14:12.326 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:6c967309-0371-4f38-b5e4-5e8013dd5879"
+<INFO> 4-Mar-2021::06:14:12.326 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 sending rpc-reply, attrs: message-id="urn:uuid:6c967309-0371-4f38-b5e4-5e8013dd5879"
+<INFO> 4-Mar-2021::06:14:13.990 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:14:17.351 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=28 ssh transport closed
+<INFO> 4-Mar-2021::06:15:54.077 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 new ssh session for user "admin" from 10.0.0.14
+<INFO> 4-Mar-2021::06:15:54.182 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:066af815-7014-46db-9cd8-2b3ddcb12274"
+<INFO> 4-Mar-2021::06:15:54.183 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:066af815-7014-46db-9cd8-2b3ddcb12274"
+<INFO> 4-Mar-2021::06:15:54.183 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending rpc-reply, attrs: message-id="urn:uuid:066af815-7014-46db-9cd8-2b3ddcb12274"
+<INFO> 4-Mar-2021::06:16:10.701 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:16:22.749 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:16:52.018 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:17:21.349 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:19:02.735 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:24:36.908 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:40:00.649 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 4-Mar-2021::06:42:04.887 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::00:57:35.281 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=29 ssh transport closed
+<INFO> 5-Mar-2021::01:37:49.269 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::01:37:49.374 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:224f39a6-8aa1-46d0-801e-6b697df2ae39"
+<INFO> 5-Mar-2021::01:37:49.375 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:224f39a6-8aa1-46d0-801e-6b697df2ae39"
+<INFO> 5-Mar-2021::01:37:49.375 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 sending rpc-reply, attrs: message-id="urn:uuid:224f39a6-8aa1-46d0-801e-6b697df2ae39"
+<INFO> 5-Mar-2021::01:38:26.439 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::01:38:37.316 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=30 ssh transport closed
+<INFO> 5-Mar-2021::04:13:10.689 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::04:13:10.796 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:b52cd76c-539f-4c0a-93b2-7bdaa9cf1640"
+<INFO> 5-Mar-2021::04:13:10.797 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:b52cd76c-539f-4c0a-93b2-7bdaa9cf1640"
+<INFO> 5-Mar-2021::04:13:10.798 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 sending rpc-reply, attrs: message-id="urn:uuid:b52cd76c-539f-4c0a-93b2-7bdaa9cf1640"
+<INFO> 5-Mar-2021::04:13:12.553 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::04:13:50.677 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::04:15:19.410 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 ssh transport closed
+<INFO> 5-Mar-2021::04:15:19.411 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=31 failed to write to closed socket
+<INFO> 5-Mar-2021::04:17:06.956 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=32 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::04:17:07.061 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=32 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:ffdd5c20-4510-4833-8e66-2c89bcfddb18"
+<INFO> 5-Mar-2021::04:17:07.062 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=32 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:ffdd5c20-4510-4833-8e66-2c89bcfddb18"
+<INFO> 5-Mar-2021::04:17:07.063 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=32 sending rpc-reply, attrs: message-id="urn:uuid:ffdd5c20-4510-4833-8e66-2c89bcfddb18"
+<INFO> 5-Mar-2021::04:17:21.697 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=32 ssh transport closed
+<INFO> 5-Mar-2021::04:18:35.743 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::04:18:35.847 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:91c77cbe-affe-4d2e-b831-938cf7295e7e"
+<INFO> 5-Mar-2021::04:18:35.848 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:91c77cbe-affe-4d2e-b831-938cf7295e7e"
+<INFO> 5-Mar-2021::04:18:35.848 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 sending rpc-reply, attrs: message-id="urn:uuid:91c77cbe-affe-4d2e-b831-938cf7295e7e"
+<INFO> 5-Mar-2021::04:18:39.675 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::04:25:45.343 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=33 ssh transport closed
+<INFO> 5-Mar-2021::04:26:36.588 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::04:26:36.694 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:69a3c5ba-8a69-4f40-9d58-18843740ca45"
+<INFO> 5-Mar-2021::04:26:36.695 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:69a3c5ba-8a69-4f40-9d58-18843740ca45"
+<INFO> 5-Mar-2021::04:26:36.695 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 sending rpc-reply, attrs: message-id="urn:uuid:69a3c5ba-8a69-4f40-9d58-18843740ca45"
+<INFO> 5-Mar-2021::04:26:43.052 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::04:45:27.563 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=34 ssh transport closed
+<INFO> 5-Mar-2021::04:48:26.115 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::04:48:26.134 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::04:48:26.143 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::04:48:28.364 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::04:48:28.365 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::04:48:28.365 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[10299]: netconf id=35 sending rpc-reply, attrs: message-id="2"
+<INFO> 5-Mar-2021::04:52:03.757 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::04:52:03.785 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:03.809 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:03.834 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:03.834 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::04:52:03.834 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=28 sending rpc-reply, attrs: message-id="2"
+<INFO> 5-Mar-2021::04:52:17.080 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::04:52:17.092 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:17.095 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:17.106 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::04:52:17.106 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::04:52:17.106 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=29 sending rpc-reply, attrs: message-id="2"
+<INFO> 5-Mar-2021::04:53:45.345 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::04:53:45.355 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:45.359 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:47.524 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:47.524 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::04:53:47.525 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=31 sending rpc-reply, attrs: message-id="2"
+<INFO> 5-Mar-2021::04:53:55.711 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::04:53:55.719 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:55.722 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:55.732 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::04:53:55.732 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::04:53:55.732 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=32 sending rpc-reply, attrs: message-id="2"
+<INFO> 5-Mar-2021::05:03:34.356 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=34 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::05:03:34.461 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=34 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:68f2e983-f699-4d99-b724-366f8ffd507a"
+<INFO> 5-Mar-2021::05:03:34.462 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=34 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:68f2e983-f699-4d99-b724-366f8ffd507a"
+<INFO> 5-Mar-2021::05:03:34.462 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=34 sending rpc-reply, attrs: message-id="urn:uuid:68f2e983-f699-4d99-b724-366f8ffd507a"
+<INFO> 5-Mar-2021::05:03:36.122 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=34 ssh transport closed
+<INFO> 5-Mar-2021::05:03:40.096 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=35 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::05:03:40.200 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=35 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:460bd696-abf0-4432-84ae-f158368998ae"
+<INFO> 5-Mar-2021::05:03:40.201 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=35 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:460bd696-abf0-4432-84ae-f158368998ae"
+<INFO> 5-Mar-2021::05:03:40.201 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[32233]: netconf id=35 sending rpc-reply, attrs: message-id="urn:uuid:460bd696-abf0-4432-84ae-f158368998ae"
+<INFO> 5-Mar-2021::05:05:05.979 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::05:05:06.116 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:c59f8e6e-1b1c-42a9-aaae-fa1bf69a2c35"
+<INFO> 5-Mar-2021::05:05:06.123 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:c59f8e6e-1b1c-42a9-aaae-fa1bf69a2c35"
+<INFO> 5-Mar-2021::05:05:06.125 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 sending rpc-reply, attrs: message-id="urn:uuid:c59f8e6e-1b1c-42a9-aaae-fa1bf69a2c35"
+<INFO> 5-Mar-2021::05:05:14.637 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::05:06:35.141 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=28 ssh transport closed
+<INFO> 5-Mar-2021::05:06:50.268 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=29 new ssh session for user "admin" from 10.0.0.14
+<INFO> 5-Mar-2021::05:06:50.373 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=29 got rpc: {urn:ietf:params:xml:ns:netconf:notification:1.0}create-subscription attrs: message-id="urn:uuid:17e2c399-afb5-40ec-bd4d-bfad7207a526"
+<INFO> 5-Mar-2021::05:06:50.373 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=29 create-subscription stream='I2NSF-Monitoring' attrs: message-id="urn:uuid:17e2c399-afb5-40ec-bd4d-bfad7207a526"
+<INFO> 5-Mar-2021::05:06:50.373 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=29 sending rpc-reply, attrs: message-id="urn:uuid:17e2c399-afb5-40ec-bd4d-bfad7207a526"
+<INFO> 5-Mar-2021::05:06:52.614 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=29 sending notification {urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring}i2nsf-nsf-detection-ddos
+<INFO> 5-Mar-2021::05:06:52.981 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 new ssh session for user "admin" from 10.0.0.17
+<INFO> 5-Mar-2021::05:06:52.989 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 got rpc: {urn:ietf:params:xml:ns:netconf:base:1.0}edit-config attrs: message-id="1"
+<INFO> 5-Mar-2021::05:06:53.025 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 edit-config target=running attrs: message-id="1"
+<INFO> 5-Mar-2021::05:06:53.074 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 sending rpc-reply, attrs: message-id="1"
+<INFO> 5-Mar-2021::05:06:53.075 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 close-session attrs: message-id="2"
+<INFO> 5-Mar-2021::05:06:53.076 ur-9ffa-6573-4974-b137-b7fa04aacbda-vdu1-nvfkcvakonya confd[16603]: netconf id=30 sending rpc-reply, attrs: message-id="2"

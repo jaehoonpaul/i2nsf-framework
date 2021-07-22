@@ -1,0 +1,13 @@
+com.tailf.cdb
+com.tailf.conf
+com.tailf.dp
+com.tailf.dp.annotations
+com.tailf.dp.proto
+com.tailf.dp.services
+com.tailf.ha
+com.tailf.maapi
+com.tailf.navu
+com.tailf.navu.traversal
+com.tailf.notif
+com.tailf.proto
+com.tailf.util

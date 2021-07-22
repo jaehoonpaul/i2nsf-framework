@@ -1,0 +1,16 @@
+This example shows how the external db API works. Note that
+this API is an alternative to CDB, if we use CDB to store our
+config data, this API is not needed. It may however be used together
+with the CDB API - if needed. Also notable is that this API is very
+similar to the API used to provide statistics data, such as in the
+procs example.
+
+To run
+
+% make all
+% make start
+% make estart
+
+And then  in another xterm - start the confd_cli or
+use the netconf-console to read the config
+

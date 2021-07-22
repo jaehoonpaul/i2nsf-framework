@@ -1,0 +1,5 @@
+<top xmlns="http://tail-f.com/ns/example/action">
+  <host>
+    <name>fred</name>
+  </host>
+</top>

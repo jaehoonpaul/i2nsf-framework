@@ -1,0 +1,13 @@
+In-Service Upgrade Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this directory there are examples demonstrating in-service upgrade,
+i.e. upgrade of the data model (.fxs files), clispecs, etc without
+restarting the ConfD daemon.
+
+  simple        - A simple example where the upgrade operations are
+                  performed by ConfD itself, under the control of a
+                  custom command.
+
+  with_helper   - Demonstrates how to use MAAPI to modify the new
+                  database before committing the upgrade.

@@ -1,0 +1,216 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_CMD" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_cmd\fR
+.
+.SH "METHOD get_cmds"
+Get a list of the session\'s batch commands
+.
+.SS "PARAMS"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{"cmds": <array of cmd>}
+
+cmd =
+ {"params": <object>,
+  "comet_id": <string>,
+  "handle": <string>,
+  "tag": <"string">,
+  "started": <boolean>,
+  "stopped": <boolean; should be always false>}
+.
+.fi
+.
+.SH "METHOD init_cmd"
+Starts a batch command
+.
+.P
+.
+.P
+\fBNOTE\fR: the \fBstart_cmd\fR method must be called to actually get the batch command to generate any messages\.
+.
+.P
+\fBNOTE\fR: As soon as the batch command prints anything on stdout it will be sent as a message and turn up as a result to your polling call to the \fBcomet\fR method\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "name": <string>,
+ "args": <string>,
+ "emulate": <boolean, default: false>,
+ "width": <integer, default: 80>,
+ "height": <integer, default: 24>,
+ "scroll": <integer, default: 0>,
+ "comet_id": <string>,
+ "handle": <string, optional>}
+.
+.fi
+.
+.P
+The \fBname\fR param is one on the named commands defined in \.
+.
+.P
+The \fBargs\fR param any extra arguments to be provided to the command expect for the ones specified in \.
+.
+.P
+The \fBemulate\fR param specifies if terminal emulation should be enabled\.
+.
+.P
+The \fBwidth\fR, \fBheight\fR, \fBscroll\fR properties define the screen properties\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"handle": <string>}
+.
+.fi
+.
+.P
+A handle to the batch command is returned (equal to \fBhandle\fR if provided)\.
+.
+.SH "METHOD send_cmd_data"
+Sends data to batch command started with \fBinit_cmd\fR
+.
+.SS "PARAMS"
+.
+.nf
+
+{"handle": <string>,
+ "data": <string>}
+.
+.fi
+.
+.P
+The \fBhandle\fR param is as returned from a call to \fBinit_cmd\fR and the \fBdata\fR param is what is to be sent to the batch command started with \fBinit_cmd\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "cmd\.not_initialized"}
+.
+.fi
+.
+.SH "METHOD start_cmd"
+Signals that a batch command can start to generate output\.
+.
+.P
+\fBNOTE\fR: This method must be called to actually start the activity initiated by calls to one of the methods \fBinit_cmd\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"handle": <string>}
+.
+.fi
+.
+.P
+The \fBhandle\fR param is as returned from a call to \fBinit_cmd\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD suspend_cmd"
+Suspends output from a batch command
+.
+.P
+\fBNOTE\fR: the \fBinit_cmd\fR method must have been called with the \fBemulate\fR param set to true for this to work
+.
+.SS "PARAMS"
+.
+.nf
+
+{"handle": <string>}
+.
+.fi
+.
+.P
+The \fBhandle\fR param is as returned from a call to \fBinit_cmd\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD resume_cmd"
+Resumes a batch command started with \fBinit_cmd\fR
+.
+.P
+\fBNOTE\fR: the \fBinit_cmd\fR method must have been called with the \fBemulate\fR param set to true for this to work
+.
+.SS "PARAMS"
+.
+.nf
+
+{"handle": <string>}
+.
+.fi
+.
+.P
+The \fBhandle\fR param is as returned from a call to \fBinit_cmd\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD stop_cmd"
+Stops a batch command
+.
+.P
+\fBNOTE\fR: This method must be called to stop the activity started by calls to one of the methods \fBinit_cmd\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"handle": <string>}
+.
+.fi
+.
+.P
+The \fBhandle\fR param is as returned from a call to \fBinit_cmd\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

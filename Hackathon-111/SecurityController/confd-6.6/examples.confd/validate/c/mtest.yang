@@ -1,0 +1,14 @@
+module mtest {
+  namespace "http://tail-f.com/ns/example/mtest";
+  prefix mtest;
+  container mtest {
+    leaf a_number {
+      type int64;
+      default 42;
+    }
+    leaf b_number {
+      type int64;
+      default 7;
+    }
+  }
+}

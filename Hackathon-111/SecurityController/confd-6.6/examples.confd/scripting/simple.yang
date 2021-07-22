@@ -1,0 +1,141 @@
+module simple {
+  namespace "http://tail-f.com/ns/simple";
+  prefix simple;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef nameType {
+    type string {
+      length "min .. 255";
+    }
+  }
+
+  container simpleObjects {
+    leaf numberOfServers {
+      type uint16;
+      mandatory false;
+    }
+
+    leaf numberOfHosts {
+      type uint16;
+      mandatory true;
+    }
+
+    leaf maxNumberOfServers {
+      type uint16;
+      mandatory false;
+    }
+
+    leaf maxNumberOfHosts {
+      type uint16;
+      mandatory true;
+    }
+
+    container hosts {
+      list host {
+        key name;
+        max-elements 64;
+
+        leaf name {
+          type nameType;
+        }
+
+        leaf enabled {
+          type boolean;
+          mandatory true;
+        }
+
+        leaf numberOfServers {
+          type uint16;
+          mandatory true;
+        }
+
+        container servers {
+          list server {
+            key name;
+            unique "ip port";
+            max-elements 64;
+
+            leaf name {
+              type nameType;
+            }
+
+            leaf ip {
+              type inet:ipv4-address;
+              mandatory true;
+            }
+
+            leaf port {
+              type inet:port-number;
+              mandatory true;
+            }
+          }
+        }
+      }
+    }
+
+    container services {
+      list service {
+        key "address portNumber";
+        max-elements 64;
+
+        leaf address {
+          type inet:ipv4-address;
+        }
+
+        leaf portNumber {
+          type inet:port-number;
+        }
+
+        leaf hostName {
+          type nameType;
+          mandatory true;
+        }
+
+        leaf serverName {
+          type nameType;
+          mandatory true;
+        }
+      }
+    }
+
+    leaf descr {
+      type nameType;
+      default "test description";
+    }
+  }
+
+  container authentication-key {
+    presence true;
+    tailf:cli-sequence-commands;
+    tailf:cli-incomplete-command;
+    tailf:cli-compact-syntax;
+
+    leaf auth-type {
+      type string;
+      tailf:cli-drop-node-name;
+      tailf:cli-incomplete-command;
+    }
+
+    leaf password {
+      tailf:cli-drop-node-name;
+      type string;
+    }
+
+    leaf send {
+      type string;
+      default "send-and-receive";
+    }
+
+    leaf snp {
+      type string;
+      default "send-and-receive";
+    }
+  }
+}

@@ -1,0 +1,28 @@
+
+Using CDB iteration to discover which value have been changed 
+---------------------------------------------------------------
+
+This example demonstrates how to use cdb_iterate() and
+traverse the change set committed in the transaction.
+The code performs in-place updates. An alternative to the
+strategy demonstrated in this code is to traverse the changeset
+and mark up various parts of the configuration for reload and then
+perform the reload from CDB after the traversal of the changeset.
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD and the CDB client by
+    typing
+
+        $ make all start
+
+    The CDB client will be running in the foreground.
+
+ 2. In another window, 
+
+        $ make cli
+        > configure
+        > set root ......
+
+

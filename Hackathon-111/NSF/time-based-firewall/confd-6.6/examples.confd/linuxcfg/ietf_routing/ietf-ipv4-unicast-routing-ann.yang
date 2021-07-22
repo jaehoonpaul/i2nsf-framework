@@ -1,0 +1,31 @@
+module ietf-ipv4-unicast-routing-ann {
+    namespace "urn:dummy";
+    prefix "dummy";
+
+    import tailf-common {
+        prefix tailf;
+    }
+
+    import ietf-routing {
+        prefix rt;
+    }
+
+    import ietf-ipv4-unicast-routing {
+        prefix v4ur;
+    }
+
+    // default Linux limitation - only one "protocol instance" running;
+    // might by different in case of some VRF / networking namespace
+    // functionality support
+    tailf:annotate "/rt:routing/rt:control-plane-protocols"
+        + "/rt:control-plane-protocol/rt:static-routes"
+        + "/v4ur:ipv4/v4ur:route" {
+        must "count(/rt:routing/rt:control-plane-protocols"
+           + "/rt:control-plane-protocol/rt:static-routes"
+           + "/v4ur:ipv4/v4ur:route[v4ur:destination-prefix=current()"
+           + "/v4ur:destination-prefix]) = 1" {
+             error-message "Cannot configure same destination-prefix of route"
+                         + " on two different control-plane-protocols!";
+        }
+    }
+}

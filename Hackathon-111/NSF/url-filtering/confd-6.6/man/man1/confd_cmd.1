@@ -1,0 +1,208 @@
+'\" t
+.\"     Title: 
+      confd_cmd
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_CMD" "1" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_cmd \- Command line utility that interfaces to common ConfD library functions
+.SH "SYNOPSIS"
+.HP \w'\fBconfd\fR\fB_cmd\fR\ 'u
+\fBconfd\fR\fB_cmd\fR [(1)\ \fIoptions\fR] [\fIfilename\fR]
+.HP \w'\fBconfd\fR\fB_cmd\fR\ 'u
+\fBconfd\fR\fB_cmd\fR [(1)\ \fIoptions\fR] \-c\ \fIstring\fR
+.HP \w'\fBconfd\fR\fB_cmd\fR\ 'u
+\fBconfd\fR\fB_cmd\fR \-h | \-h\ commands | \-h\ \fIcommand\-name\fR...  
+.br
+
+.HP \w'(1)\ 'u
+(1)\ [\-r | \-o | \-e | \-S] [\-f\ [w]\ |\ [p]\ [r\ |\ s]] [\-a\ \fIaddress\fR] [\-p\ \fIport\fR] [\-u\ \fIuser\fR] [\-g\ \fIgroup\fR] [\-x\ \fIcontext\fR] [\-s] [\-m] [\-h] [\-d]
+.SH "DESCRIPTION"
+.PP
+The
+\fBconfd\fR\fB_cmd\fR
+utility is implemented as a wrapper around many common CDB and MAAPI function calls\&. The purpose is to make it easier to prototype and test various ConfD issues using normal scripting tools\&.
+.PP
+Input is provided as a file (default
+stdin
+unless a filename is given) or as directly on the command line using the
+\fB\-c \fR\fB\fIstring\fR\fR
+option\&. The
+\fBconfd\fR\fB_cmd\fR
+expects commands separated by semicolon (;) or newlines\&. A pound (#) sign means that the rest of the line is treated as a comment\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-c get_phase
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Would print the current start\-phase of ConfD, and:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-c "get_phase ; get_txid"
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+would first print the current start\-phase, then the current transaction ID of CDB\&.
+.PP
+Sessions towards CDB, and transactions towards MAAPI are created as\-needed\&. At the end of the script any open CDB sessions are closed, and any MAAPI read/write transactions are committed\&.
+.PP
+Source code to this utility is included in the distribution as
+src/confd/tools/confd_cmd\&.c\&.
+.SH "OPTIONS"
+.PP
+\fB\-d\fR
+.RS 4
+Debug flag\&. Add more to increase debug level\&. All debug output will be to stderr\&.
+.RE
+.PP
+\fB\-m\fR
+.RS 4
+Don\*(Aqt load the schemas at startup\&.
+.RE
+.SH "ENVIRONMENT VARIABLES"
+.PP
+\fBCONFD\fR\fB_IPC_ADDR\fR, \fBCONFD_IPC_EXTADDR\fR
+.RS 4
+The address used to connect to the ConfD daemon, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD\fR\fB_IPC_PORT\fR
+.RS 4
+The port number to connect to the ConfD daemon on, overrides the compiled in default\&.
+.RE
+.PP
+\fBCONFD_IPC_EXTSOPATH\fR
+.RS 4
+The absolute path to the shared object to use for a connection using external IPC when
+\fBCONFD_IPC_EXTADDR\fR
+is given\&.
+.RE
+.SH "EXAMPLES"
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 1.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  1." 4.2
+.\}
+Getting the address of eth0
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-c "get /sys:sys/ifc{eth0}/ip"
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 2.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  2." 4.2
+.\}
+Setting a leaf in CDB operational
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-o \-c "set /sys:sys/ifc{eth0}/stat/tx 88"
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04' 3.\h'+01'\c
+.\}
+.el \{\
+.sp -1
+.IP "  3." 4.2
+.\}
+Making ConfD running on localhost the master, with the name node0
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-c "master node0"
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Then tell the ConfD also running on localhost, but listening on port 4566, slave to the master\&. Calling the slave node1
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+confd_cmd \-p 4566 \-c "slave node1 node0 127\&.0\&.0\&.1"
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.SH "SEE ALSO"
+.PP
+Source code, included in $\fBCONFD_DIR\fR/src/confd/tools/confd_cmd\&.c
+.PP
+\fBconfd_lib_maapi\fR(3)
+\- Confd MAAPI library
+.PP
+\fBconfd_lib_cdb\fR(3)
+\- Confd CDB library
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

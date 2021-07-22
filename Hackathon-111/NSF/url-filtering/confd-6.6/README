@@ -1,0 +1,323 @@
+=========================================================================
+
+    Tail-f ConfD
+
+    On-device software system for configuration management
+    For further information about Tail-f ConfD, see 
+    http://www.tail-f.com
+
+    Copyright Tail-f Systems AB 2005-2018
+
+=========================================================================
+
+
+Installation
+~~~~~~~~~~~~
+
+Welcome to the world of ConfD on-device Configuration Management.
+
+ConfD is delivered as a self-extract archive which is OS/CPU specific
+plus a number of generic tar-archives with documentation, examples,
+etc.  When you run the installation, the self extract archive will
+unpack both itself and the tar-archives, provided that they are
+located in the same directory.
+
+ConfD can be installed either locally in your home directory, or in a
+central location for multiple users to use.
+
+To install ConfD, just run the confd installer with a single argument,
+that is the directory where you'd like ConfD to be installed.  The
+installation directory you specify must either not yet exist, or be
+empty.  No files will be added or modified outside the directory you
+specify.
+
+    $ sh confd-<VERSION>.<OS>.<ARCH>.installer.bin /path/to/install_directory
+
+On a typical system, it looks like this:
+
+    $ sh download/confd-X.X.linux.i686.installer.bin ~/confd-X.X
+    INFO  Unpacked confd-X.X in /home/tempuser/confd-X.X
+    INFO  Found and unpacked corresponding DOCUMENTATION_PACKAGE
+    INFO  Found and unpacked corresponding EXAMPLE_PACKAGE
+    INFO  Generating default SSH hostkey (this may take some time)
+    INFO  SSH hostkey generated
+    INFO  Environment set-up generated in /home/tempuser/confd-X.X/confdrc
+    INFO  ConfD installation script finished
+    $
+
+As you can see, in addition to unpacking the installation files, the
+installation program will create a default SSH hostkey and a file
+'confdrc' with handy environment settings for using this installation.
+
+SEE ALSO (search further down in this document)
+  * Installing ConfD in a Central Location
+  * Moving a ConfD Installation
+  * Removing a ConfD Installation
+  * Installing ConfD for Deployment
+  * Troubleshooting
+
+
+Setting up Your Environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This document refers to the directory where ConfD is installed as
+$CONFD_DIR.  In fact, the example makefiles use precisely that
+environment variable to find the ConfD installation, if you have it
+set.  Similarly, the operating system uses $PATH, $MANPATH and
+$LD_LIBRARY_PATH to find the ConfD executables and man pages.
+
+The installation program creates a shell script file, 'confdrc', in
+each ConfD installation which sets these variables. Source this file
+to get these settings in your shell. You may want to add this sourcing
+command to your login sequence, such as '.bashrc'.  For csh/tcsh users
+there is a 'confdrc.tcsh' file using csh/tcsh syntax. The examples
+below assume that you are using bash - other versions of /bin/sh may
+require that you use '.' instead of 'source'.
+
+    $ source ~/confd-X.X/confdrc
+    $ man confd
+    ...
+
+If you are working with multiple versions of ConfD, just source the
+respective 'confdrc' file to switch between them.
+
+    $ source ~/confd-2.1/confdrc
+    $ man confd
+    ...
+    $ source ~/confd-2.2/confdrc
+    $ man confd
+    ...
+
+
+ConfD Documentation
+~~~~~~~~~~~~~~~~~~~
+
+The ConfD User Guide is the recommended starting point for new users.
+The installation program will unpack the user guide in $CONFD_DIR/doc.
+Both HTML and PDF versions can be found there, as well as Javadoc for
+the ConfD Java API:
+
+    User Guide (HTML): confd-<VERSION>/doc/index.html
+    User Guide (PDF):  confd-<VERSION>/doc/user_guide-<VERSION>.pdf
+    Javadoc:           confd-<VERSION>/doc/java/index.html
+
+The installation program will unpack the ConfD manual pages from the
+documentation archive in $CONFD_DIR/man.  'confdrc' makes an addition
+to $MANPATH, allowing you to use the 'man' command to view them.  Here
+follows a list of the manual pages installed:
+
+    confd(1)
+        command to start and control the ConfD daemon
+    confd_aaa_bridge(1)
+        Populating ConfD aaa_bridge.fxs with external data
+    confd_cli(1)
+        Frontend to the ConfD CLI engine
+    confd_cmd(1)
+        Command line utility that interfaces to common ConfD library functions
+    confd_load(1)
+        Command line utility to load and save ConfD configurations
+    confdc(1)
+        Confdc compiler
+    maapi(1) 
+        command to access an ongoing transaction
+    pyang(1)
+        validate and convert YANG modules to various formats
+    confd_lib(3)
+        library for connecting to ConfD
+    confd_lib_cdb(3)
+        library for connecting to ConfD built in XML database (CDB)
+    confd_lib_dp(3)
+        callback library for connecting data providers to ConfD
+    confd_lib_events(3)
+        library for subscribing to ConfD event notifications
+    confd_lib_ha(3)
+        library for connecting to ConfD HA subsystem
+    confd_lib_lib(3)
+        common library functions for applications connecting to ConfD
+    confd_lib_maapi(3)
+        MAAPI (Management Agent API). A library for connecting to ConfD
+        with a read/write interface inside transactions.
+    confd_types(3)
+        ConfD value representation in C
+    clispec(5)
+        CLI specification file format
+    confd.conf(5)
+        ConfD daemon configuration file format
+    mib_annotations(5)
+        MIB annotations file format
+    tailf_yang_cli_extensions(5)
+        Tail-f YANG CLI extensions
+    tailf_yang_extensions(5)
+        Tail-f YANG extensions
+
+For example, to view the man page describing how a Managed Object
+reads its configuration from the built-in database CDB, you'd type:
+
+    $ man confd_lib_cdb
+
+Apart from the man pages, extensive information about command line
+options can be obtained by running confd and confdc with the --help
+(abbreviated -h) flag.
+
+    $ confd --help
+
+    $ confdc --help
+
+In addition to the ConfD User Guide, we recommend starting by browsing
+the examples.  There are a variety of examples to be found under
+$CONFD_DIR/examples.confd, each one has a README file explaining it's
+purpose and usage.  Start by viewing $CONFD_DIR/examples.confd/README.
+
+If you're eager to get started, skip the rest of this file and go
+there now!
+
+
+Moving a ConfD Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can move the directory where you installed ConfD to a new location
+in your directory tree. Simply move ConfD's root directory to the new
+desired location, and update this file:
+
+  * $CONFD_DIR/confdrc (and confdrc.tcsh if you want)
+    This is a small and handy script that sets up some environment
+    variables for you.  Update the paths to the new location.
+
+If you use the 'smidump' program, you should also update this file:
+
+  * $CONFD_DIR/etc/confd/smi.conf
+    This is a configuration file for use with 'smidump', and includes a
+    'path' statement that adds the mib directory in the ConfD
+    installation. Update the path to the new location (make sure to
+    preserve the leading colon).
+
+The $CONFD_DIR/bin/confd and $CONFD_DIR/bin/confdc scripts will
+determine the location of ConfD's root directory automatically.
+
+
+Removing a ConfD Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ConfD installation program installs ConfD in a single directory,
+and doesn't create or modify any other part of the file system.  To
+uninstall ConfD, simply remove the directory where ConfD is installed.
+
+    $ rm -rf confd-X.X
+
+
+Installing ConfD in a Central Location
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you install ConfD in a central location for the benefit of multiple
+users, all users need read access to all files in the installation.
+In particular the SSH host certificate generated by the installation
+program typically has user read access only. This can be fixed by
+issuing this command:
+
+    $ chmod a+r $CONFD_DIR/etc/confd/ssh/ssh_host_dsa_key
+
+Further, we would recommend each user to make a local copy of the
+examples.  Either the whole example tree:
+
+    $ cp -r /central/location/confd-X.X/examples.confd ~/confd-X.X-examples
+
+Or you can copy specific examples:
+
+    $ cp -r /central/location/confd-X.X/examples.confd/intro/1-2-3-start-query-model\
+    ~/confd-X.X-examples
+
+To set your PATH, MANPATH and LD_LIBRARY_PATH to include ConfD, and
+let the examples find the ConfD installation, make sure you source the
+'confdrc' file in your login sequence (typically in .bashrc) or
+manually before you start using the ConfD examples.
+
+    $ source /central/location/confd-X.X/confdrc
+    $ cd ~/confd-X.X-examples/intro/1-2-3-start-query-model
+    $ make all
+    ...
+
+
+Running Multiple Instances of ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If multiple users will run ConfD on the same host machine, or if one
+user wants to run multiple instances of ConfD at the same time, you
+will need to edit the 'confd.conf' configuration files in each
+example.  Otherwise each ConfD instance will try to open the same
+ports, which will fail for all but one user/one instance.
+
+In the 'confd.conf' file of each example, each user will need to add a
+port statement with a unique port number.  For example, the first user
+could use port 11565, the second 12565, the third 13565, etc.
+
+    <confdIpcAddress>
+        <port>11565</port>
+    </confdIpcAddress>
+
+The above statement needs to go inside the <confdConf> tag in
+'confd.conf'.  You will also have to change all <port> elements to a
+unique value.  Most examples have <port> statements for the NETCONF
+and CLI access, some for Web UI and SNMP as well.
+
+    <netconf>
+        <enabled>true</enabled>
+        <transport>
+            <ssh>
+                <enabled>true</enabled>
+                <ip>0.0.0.0</ip>
+                <port>11022</port>
+            </ssh>
+
+When connecting to ConfD using the various northbound interfaces, you
+will have to specify the port number to make sure you are talking to
+the right ConfD instance (and not your co-workers' ConfD instance).
+You do this in different ways when controlling ConfD from the shell
+and for the different northbound interfaces:
+
+    Shell:    CONFD_IPC_PORT=11565 confd --status
+    CLI:      confd_cli --port=11024 ...
+    NETCONF:  netconf-console --port=11022 ...
+    Web UI:   firefox http://hostname:11008/...
+    SNMP:     snmpwalk hostname:11000 ...
+
+You will also need to change the port number used inside the example
+code in a few places.  Replace occurrences of CONFD_PORT and 4565 with
+your unique port number, e.g. 11565.
+
+See also the section 'ConfD IPC' in the 'Advanced Topics' chapter in the
+ConfD User Guide.
+
+
+Installing ConfD for Deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The installation program installs ConfD in a way suitable for
+development work. To install ConfD for deployment, see the section
+'Installing ConfD on a target system' in the 'Advanced Topics' chapter
+in the ConfD User Guide.
+
+
+Troubleshooting
+~~~~~~~~~~~~~~~
+
+See the 'Troubleshooting' section in the 'Advanced Topics' chapter in
+the ConfD User Guide.
+
+
+Support
+~~~~~~~
+
+If you are evaluating or using ConfD Basic, you must use the ConfD
+User Community Forum for any questions.  The Forum can be found at
+http://discuss.tail-f.com.
+
+If you are evaluating ConfD Premium, you should have a designated
+support contact.  You are also welcome to mail
+eval-support@tail-f.com. 
+
+If you have a ConfD support agreement, please use the support channels
+specified in the agreement.  You are also welcome to mail
+support@tail-f.com.
+
+In either case, please, do not hesitate to send us any questions or
+feedback you may come up with.

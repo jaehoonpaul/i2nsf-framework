@@ -1,0 +1,310 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Glossary</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="rn03re20.html" title="tailf_yang_extensions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Glossary</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn03re20.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="glossary"><div class="titlepage"><div><div><h1 class="title"><a name="ug.defs"></a>Glossary</h1></div></div></div><p>Many of the following entries refer to this example
+    data model, which models a list of "servers":</p><div class="example"><a name="ug.defs.servers_datamodel"></a><p class="title"><b>Example&nbsp;162.&nbsp;The servers YANG model</b></p><div class="example-contents"><pre class="programlisting">module servers {
+    namespace "http://www.example.com/ns/servers";
+    prefix srv;
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    import dataTypes {
+        prefix dt;
+    }
+
+    container servers {
+        list server {
+            key "ip port";
+            max-elements 64;
+            leaf ip {
+                type inet:ip-address;
+            }
+            leaf port {
+                type inet:port-number;
+            }
+            leaf counters {
+                type dt:countersType;
+                mandatory true;
+                config false;
+            }
+        }
+    }
+}</pre></div></div><br class="example-break"><dl><dt><a name="ug.defs.aaa"></a><span class="glossterm">AAA</span></dt><dd class="glossdef"><p>AAA stands for <span class="emphasis"><em>authentication</em></span>,
+        <span class="emphasis"><em>authorization</em></span> and
+        <span class="emphasis"><em>accounting</em></span>.</p><p>ConfD requires the data model defined by the namespace
+        <code class="uri">http://tail-f.com/ns/aaa/VERSION</code> to
+        be loaded. Currently valid values for
+        <span class="emphasis"><em>VERSION</em></span> are 1.0 and 1.1.  The data found
+        there is used to authenticate users and authorize access for
+        users. We usually refer to this namespace as the AAA
+        namespace.</p></dd><dt><span class="glossterm">Accounting</span></dt><dd class="glossdef"><p>
+             Accounting refers to the tracking of the consumption of
+             network resources by users. This information may be used
+             for management, planning, billing, or other
+             purposes. Typical information that is gathered in
+             accounting is the identity of the user, the nature of the
+             service delivered, when the service began, and when it
+             ended.
+           </p><p>See Also <a class="glossseealso" href="go01.html#ug.defs.aaa">AAA</a>.</p></dd><dt><span class="glossterm">Agent</span></dt><dd><p>See <a class="glosssee" href="go01.html#ug.defs.management_agent">Management Agent</a>.</p></dd><dt><span class="glossterm">Annotation</span></dt><dd class="glossdef"><p>
+             When compiling a YANG module, it can be annotated with
+             callpoints, actionpoints and validation elements from a
+             separate annotation file.  This is useful for example
+             when implementing a standard YANG module, without
+             modifying the original file.
+           </p></dd><dt><span class="glossterm">Authentication</span></dt><dd class="glossdef"><p>
+             Authentication refers to the confirmation that a user who
+             is requesting services is a valid user of the network
+             services requested. Authentication is accomplished via
+             the presentation of an identity and credentials. Examples
+             of types of credentials are passwords and digital
+             certificates.
+           </p><p>See Also <a class="glossseealso" href="go01.html#ug.defs.aaa">AAA</a>.</p></dd><dt><span class="glossterm">Authorization</span></dt><dd class="glossdef"><p>
+             Authorization refers to the granting of specific types of
+             service (including "no service") to a user, based on
+             authentication, what services they are requesting, and
+             the current system state. Authorization may be based on
+             restrictions, for example time-of-day restrictions, or
+             physical location restrictions, or restrictions against
+             multiple logins by the same user. Authorization
+             determines the nature of the service which is granted to
+             a user.
+           </p><p>In ConfD all actions are authorized by reading the
+           authorization data found in the AAA namespace <code class="uri">http://tail-f.com/ns/aaa/version</code>.</p><p>See Also <a class="glossseealso" href="go01.html#ug.defs.aaa">AAA</a>.</p></dd><dt><span class="glossterm">Backplane</span></dt><dd><p>See <a class="glosssee" href="go01.html#ug.defs.management_backplane">Management Backplane</a>.</p></dd><dt><span class="glossterm">Candidate datastore</span></dt><dd class="glossdef"><p>
+             The candidate datastore (or just candidate) is one of the
+             three configuration datastores in ConfD. It holds changes
+             to the configuration before they are committed to the
+             <span class="emphasis"><em>running datastore</em></span>.
+           </p></dd><dt><span class="glossterm">CDB</span></dt><dd class="glossdef"><p>
+             CDB is the built-in configuration database provided by
+             ConfD. It is possible to use an <span class="emphasis"><em>external
+             database</em></span> to store the configuration, or to use CDB,
+             as well as a combination of both.
+           </p></dd><dt><span class="glossterm">CDB C API</span></dt><dd class="glossdef"><p>
+             This is the C API towards CDB. It contains functions to
+             read configuration data, read and write operational data,
+             and subscribe to changes in configuration data.
+           </p></dd><dt><a name="ug.defs.cdb_session"></a><span class="glossterm">CDB session</span></dt><dd class="glossdef"><p>
+             A program which uses the CDB C API needs to establish CDB
+             sessions to read configuration data, or read/write
+             operational data. These are short-lived
+             sessions that are established through a call to
+             <code class="function">cdb_start_session()</code>.
+           </p><p>The entire configuration part of CDB is locked for writing
+           while any CDB read session is active.
+           </p></dd><dt><span class="glossterm">CDB upgrade</span></dt><dd class="glossdef"><p>
+             An upgrade is the operation of adapting an existing
+             configuration to a newer version of the configuration
+             schemas.
+           </p></dd><dt><a name="ug.defs.confspec"></a><span class="glossterm">Confspec</span></dt><dd class="glossdef"><p>
+             Confspec is a Tail-f proprietary data modelling language.
+             YANG is a better standards based technology to achieve
+             the same thing.  Confspecs are no longer supported.
+           </p></dd><dt><a name="ug.defs.configuration"></a><span class="glossterm">Configuration</span></dt><dd class="glossdef"><p>
+             A configuration is an instantiated data model.  The data
+             model defines the layout of the configuration.  An
+             example of a configuration which adheres to the data model
+             in <a class="xref" href="go01.html#ug.defs.servers_datamodel" title="Example&nbsp;162.&nbsp;The servers YANG model">Example&nbsp;162, &#8220;The servers YANG model&#8221;</a> is:
+           </p><div class="informalexample"><pre class="programlisting"> &lt;servers&gt;
+   &lt;server&gt;
+     &lt;name&gt;www&lt;/name&gt;
+     &lt;ip&gt;192.168.128.1&lt;/ip&gt;
+     &lt;port&gt;80&lt;/port&gt;
+   &lt;/server&gt;
+   &lt;server&gt;
+     &lt;name&gt;pop&lt;/name&gt;
+     &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+     &lt;port&gt;110&lt;/port&gt;
+   &lt;/server&gt;
+ &lt;/servers&gt;</pre></div><p>The data model also defines "non-configuration" data, also known
+         as statistical or operational data. This
+         data is not part of the configuration.
+         </p></dd><dt><a name="ug.defs.daemon"></a><span class="glossterm">Daemon</span></dt><dd class="glossdef"><p>
+             A daemon is a UNIX process that runs in the
+             background. In the ConfD documentation we refer to the
+             "ConfD daemon" meaning the "confd" process.  We also
+             refer to external database processes as
+             daemons. Typically in a deployment scenario, the programs
+             implementing the external database callbacks will run as
+             daemons.
+           </p></dd><dt><a name="ug.defs.data_provider"></a><span class="glossterm">Data provider</span></dt><dd class="glossdef"><p>
+             Southbound of ConfD we may have several data providers.
+             These can either be <span class="emphasis"><em>daemons</em></span> implementing the ConfD
+             "data callbacks" or the ConfD database <span class="emphasis"><em>CDB</em></span>.
+           </p><p>A data provider has the following responsibilities:
+           </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Read and return data when ConfD requests data
+             to be read</p></li><li class="listitem"><p>Write data into its store when ConfD requests it
+             to write data
+           </p></li><li class="listitem"><p>Obey the two-phase commit protocol used by
+             ConfD when writing data
+           </p></li></ul></div></dd><dt><span class="glossterm">Data store</span></dt><dd><p>See <a class="glosssee" href="go01.html#ug.defs.data_provider">Data provider</a>.</p></dd><dt><span class="glossterm">Export</span></dt><dd class="glossdef"><p>
+             When a data model is compiled, it can be exported
+             to selected northbound interfaces, instead of being visible to
+             all.
+           </p></dd><dt><span class="glossterm">External database</span></dt><dd class="glossdef"><p>
+             We may choose to store all configuration data in
+             an external database, or in plain configuration files. From
+             ConfD's
+             point of view, we then have the configuration in an
+             external database
+             and no data is kept in CDB. There can be multiple external
+             databases simultaneously connected to ConfD.
+             It is also possible to use a combination of CDB and
+             external database(s).
+           </p><p>The C or Java code which implements an
+           "external database" must adhere strictly to the ConfD transaction
+           protocol. This is done by implementing a specific set of
+           callback C functions. This could be viewed as the equivalent
+           of implementing instrumentation functions in an
+           SNMP agent.
+           </p></dd><dt><span class="glossterm">Initialization file</span></dt><dd class="glossdef"><p>
+             An XML file (with suffix .xml) used for initializing the part
+             of the <span class="emphasis"><em>configuration</em></span> which is stored in the
+             <span class="emphasis"><em>CDB</em></span> database.
+           </p></dd><dt><span class="glossterm">Instrumentation</span></dt><dd class="glossdef"><p>
+             This is the task of implementing data callback
+             functions for an <span class="emphasis"><em>external database</em></span>.
+           </p></dd><dt><a name="ug.defs.keypath"></a><span class="glossterm">Keypath</span></dt><dd class="glossdef"><p>
+             A keypath is a string that uniquely identifies a node in
+             a <a class="xref" href="go01.html#ug.defs.configuration" title="Configuration">Configuration</a>.  A keypath
+             is an (older) alternative syntax for a YANG
+             instance-identifier.
+           </p><p> The following are examples of keypaths</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="sgmltag-element">/servers/server{www}/port</code></span></dt><dd><p>which uniquely identifies the data element:
+                 <code class="sgmltag-element">&lt;port&gt;80&lt;/port&gt;</code> in the first
+                 server in <a class="xref" href="go01.html#ug.defs.configuration" title="Configuration">Configuration</a>.</p></dd><dt><span class="term"><code class="sgmltag-element">/servers</code></span></dt><dd><p>which identifies the top level
+                 <code class="sgmltag-element">servers</code> container element.</p></dd></dl></div><p>A keypath is a path down the XML tree. Which path to
+           choose down the tree, i.e. which list entry to choose, must be
+           indicated with a <code class="sgmltag-element">{key}</code> notation.</p><p>The keypath <code class="sgmltag-element">/servers/server{www}/port</code> is
+           equivalent to the instance-identifier
+           <code class="sgmltag-element">/servers/server[name="www"]/port</code>.</p><p>We also have a different notation which is used in
+           the CDB C API to identify data elements. The CDB C API
+           contains a function
+           <code class="function">cdb_num_instances()</code> which returns an
+           integer. In <a class="xref" href="go01.html#ug.defs.configuration" title="Configuration">Configuration</a> we
+           had two different servers, thus
+           <code class="function">cdb_num_instances()</code> would return 2 and
+           the keypath <code class="sgmltag-element">/servers/server[1]/port</code> would
+           uniquely identify the <code class="sgmltag-element">port</code> element in the second
+           <code class="sgmltag-element">server</code> element. A keypath that uses the
+           <span class="emphasis"><em>[index]</em></span> notation in the path is only
+           valid for the current <a class="xref" href="go01.html#ug.defs.cdb_session" title="CDB session">CDB session</a>.
+           </p><p>In the C callback APIs, keypaths in the form of
+           hashed keypaths are represented by the C type
+           <span class="type">confd_hkeypath_t</span>.</p></dd><dt><a name="ug.defs.management_agent"></a><span class="glossterm">Management Agent</span></dt><dd class="glossdef"><p>
+             A Management Agent, or simply Agent, is a software entity
+             which terminates some management protocol and provides a
+             view of the managed system.  The Agents in ConfD are
+             NETCONF, SNMP, CLI, and Web UI, and proprietary agents that
+             utilize the <span class="emphasis"><em>MAAPI</em></span> API.
+           </p></dd><dt><a name="ug.defs.management_backplane"></a><span class="glossterm">Management Backplane</span></dt><dd class="glossdef"><p>
+             This is the layer of software inside ConfD which sits
+             between the northbound agent interfaces and the
+             southbound data providers. The main task of the
+             management backplane is to multiplex and format data
+             between the northbound and the southbound interfaces
+             through transactions.
+           </p></dd><dt><span class="glossterm">MAAPI</span></dt><dd class="glossdef"><p>
+             MAAPI - The Management Agent API - is an API which
+             is used to connect to the ConfD transaction system.
+             ConfD provides MAAPI bindings for C and Java.
+             MAAPI is a northbound interface API which can be
+             used to perform all read and write operations towards
+             ConfD. It is possible to implement any proprietary
+             configuration Agent with MAAPI.
+           </p><p>MAAPI is also used to implement CLI wizards and semantic
+           validation of configuration data in C.
+           </p></dd><dt><span class="glossterm">Path filter</span></dt><dd class="glossdef"><p>
+             Path filters restrict the set of valid elements to a
+             subtree.  The value of an element with the type
+             <span class="type">confd:objectRef</span> is a pointer to another
+             element, and the set of elements to which the value is
+             allowed to point can be restricted by specifying a list
+             of path filters, in XPath syntax.
+           </p><p>
+             Likewise, the CLI <span class="command"><strong>show</strong></span> command can be
+             restricted by a path filter (as a space-separated list of
+             path items).
+           </p></dd><dt><span class="glossterm">Running datastore</span></dt><dd class="glossdef"><p>
+             The running datastore is one of the three configuration
+             datastores in ConfD. It contains the currently active
+             <span class="emphasis"><em>configuration</em></span>.
+           </p></dd><dt><span class="glossterm">Schema</span></dt><dd class="glossdef"><p>
+             A schema defines the structure of data. A schema in ConfD
+             is represented by YANG modules, compiled to a schema file
+             having the file name suffix ".fxs".
+           </p></dd><dt><span class="glossterm">Session</span></dt><dd class="glossdef"><p>
+             See <a class="xref" href="go01.html#ug.defs.cdb_session" title="CDB session">CDB session</a> or
+             <a class="xref" href="go01.html#ug.defs.user_session" title="User session">User session</a>.
+           </p></dd><dt><span class="glossterm">Startup datastore</span></dt><dd class="glossdef"><p>
+             The startup datastore is one of the three configuration
+             datastores in ConfD. It contains a <span class="emphasis"><em>configuration</em></span>
+             to be read by the device each time it reboots.
+           </p></dd><dt><span class="glossterm">Subscription</span></dt><dd class="glossdef"><p>
+             Programs communicating with ConfD using one of the APIs can
+             ask to be notified of certain events, by setting up
+             a subscription. Subscription functionality is available
+             in the CDB C API for notification of CDB configuration changes
+             and for the asynchronous events described in the "Notifications"
+             chapter.
+           </p></dd><dt><span class="glossterm">Tagpath</span></dt><dd class="glossdef"><p>
+             A tagpath is a string and it is similar to a
+             <span class="emphasis"><em>keypath</em></span> with the exception that there are no
+             keys in a tagpath.  For example the string
+             <span class="emphasis"><em>/servers/server/mask</em></span> is a tagpath whereas the
+             string <span class="emphasis"><em>/servers/server{www}/mask</em></span> is a keypath.
+           </p><p>The  keypath above uniquely identifies a single instance of a
+           particular mask in a particular server, namely the server named
+           "www", whereas the tagpath above identifies all masks in all
+           servers in the <span class="emphasis"><em>configuration</em></span>.
+           </p></dd><dt><span class="glossterm">Target device</span></dt><dd class="glossdef"><p>
+             By target device, or just "device", we mean the entire
+             embedded box that is being built, such as the physical
+             router if it is a router that is being configured by
+             ConfD.
+           </p></dd><dt><span class="glossterm">Transaction</span></dt><dd class="glossdef"><p>
+             ConfD implements all writes towards all three possible
+             configuration stores, <span class="emphasis"><em>startup</em></span>, <span class="emphasis"><em>running</em></span>
+             and the <span class="emphasis"><em>candidate</em></span> as two-phase commit
+             transaction.
+           </p><p>
+             A configuration may be stored in several databases. We
+             can have some part of the configuration in CDB and other
+             parts in several <span class="emphasis"><em>external databases</em></span>.  A commit
+             operation may span over several databases and we always
+             want to ensure that all participants, i.e., all involved
+             databases are ready to commit. Thus the C API to
+             implement an external database always requires the
+             external database to implement several callback C
+             functions which will be called during the different
+             phases of the transaction.
+           </p><p>
+             A transaction is always associated with a corresponding
+             <span class="emphasis"><em>user session</em></span>.
+           </p></dd><dt><span class="glossterm">Transformations</span></dt><dd class="glossdef"><p>
+             A transformation is used when we have a data model which we
+             do not want to expose through the northbound Agent
+             interfaces.  We hide the undesired data model, and expose
+             another model which then must <span class="emphasis"><em>transform</em></span> data
+             to and from the hidden model.
+           </p></dd><dt><a name="ug.defs.user_session"></a><span class="glossterm">User session</span></dt><dd class="glossdef"><p>
+             A user session corresponds directly to an SSH/SSL session
+             from a management station to ConfD. A user session is
+             associated with such data as the IP address of the
+             management station and the user name of the user who logged
+             in to ConfD, whether through NETCONF, the CLI or the Web UI.
+           </p></dd><dt><span class="glossterm">Validation</span></dt><dd class="glossdef"><p>
+             Validation is the process of ensuring the correctness of
+             the input configuration data. Syntactic validation is the
+             first phase and it ensures type correctness and all
+             checks that are possible to express in the YANG model.
+             Semantic validation is the second phase and it requires
+             application specific knowledge. The programmer has to
+             write C or Java code which performs the semantic
+             validation.
+           </p></dd><dt><span class="glossterm">XPath</span></dt><dd class="glossdef"><p>
+             XPath is a language for selecting parts of an XML
+             document. ConfD uses XPath (version 1.0) in its full form
+             in NETCONF requests, as well as a very restricted subset
+             to specify <span class="emphasis"><em>path filters</em></span> in elements of the
+             confd:objectRef type.
+           </p></dd></dl></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn03re20.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">tailf_yang_extensions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>

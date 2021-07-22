@@ -1,0 +1,21 @@
+<ietf-i2nsf-cfi-policy:policy>
+  <policy-name>security_policy_for_blocking_malicious_voip_packets</policy-name>
+  <rule>
+    <rule-name>Block_malicious_voip_and_volte_packets</rule-name>
+    <condition>
+      <custom-condition>
+        <source-target>
+          <src-target>malicious-id</src-target>
+        </source-target>
+      </custom-condition>
+      <firewall-condition>
+        <destination-target>
+          <dest-target>employees</dest-target>
+        </destination-target>
+      </firewall-condition>
+    </condition>
+    <action>
+      <primary-action>drop</primary-action>
+    </action>
+  </rule>
+</ietf-i2nsf-cfi-policy:policy>

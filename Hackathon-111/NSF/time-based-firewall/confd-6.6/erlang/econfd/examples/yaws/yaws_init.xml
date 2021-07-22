@@ -1,0 +1,23 @@
+<yaws xmlns="http://tail-f.com/ns/example/yaws">
+  <logdir>/var/log/yaws</logdir>
+  <id>myid</id>
+  <trace>http</trace>
+  <log_wrap_size>1000000</log_wrap_size>
+  <copy_error_log>true</copy_error_log>
+  <pick_first_virthost_on_nomatch>true</pick_first_virthost_on_nomatch>
+  <vservers>
+    <vserver>
+      <index>1</index>
+      <listen>0.0.0.0</listen>
+      <port>80</port>
+      <servers>
+        <server>
+          <index>1</index>
+          <rhost>guld</rhost>
+          <deflate>true</deflate>
+          <docroot>/tmp/docoot</docroot>
+        </server>
+      </servers>
+    </vserver>
+  </vservers>
+</yaws>

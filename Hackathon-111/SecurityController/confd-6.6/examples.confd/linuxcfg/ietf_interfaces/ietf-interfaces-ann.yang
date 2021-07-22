@@ -1,0 +1,34 @@
+module ietf-interfaces-ann {
+  namespace "urn:dummy";
+  prefix "dummy";
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-interfaces {
+    prefix if;
+  }
+
+  tailf:annotate-module "ietf-interfaces" {
+    tailf:annotate-statement "container[name='interfaces']" {
+      tailf:annotate-statement "list[name='interface']" {
+        tailf:annotate-statement "leaf[name='link-up-down-trap-enable']" {
+          tailf:annotate-statement "type[name='enumeration']" {
+            tailf:annotate-statement "enum[name='enabled']" {
+              tailf:code-name "enum-enabled";
+            }
+          }
+        }
+      }
+    }
+  }
+
+  tailf:annotate "/if:interfaces-state" {
+    tailf:callpoint "if_state_dp";
+  }
+
+  tailf:annotate "/if:interfaces/if:interface/if:name" {
+    tailf:cli-completion-actionpoint comp_if_name;
+  }
+}

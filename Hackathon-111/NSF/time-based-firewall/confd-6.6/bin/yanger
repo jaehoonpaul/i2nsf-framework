@@ -1,0 +1,35 @@
+#!/bin/sh
+
+bindir=`dirname $0`
+case $bindir in
+    /*) confddir=`dirname $bindir`;;
+    *)  confddir=`(cd $bindir/..; pwd)`;;
+esac
+
+if [ -d $confddir/confd_dir ]; then
+    confddir=$confddir/confd_dir
+fi
+if [ -d $confddir/lib/confd/lib/confdc/ ]; then
+    # release
+    PATH=$confddir/lib/confd/bin:$PATH
+    export PATH
+    yanger=$confddir/lib/confd/lib/confdc/yanger/bin/yanger
+else
+    # local build
+    libdir=$confddir/../lib
+    ERL_AFLAGS="-pa $libdir/yanger/ebin \
+                    $libdir/msc/ebin \
+                    $libdir/util/ebin \
+                    $libdir/xpath/ebin"
+    export ERL_AFLAGS
+    yanger=$libdir/yanger/bin/yanger
+fi
+
+if [ "x$YANG_MODPATH" != "x" ]; then
+    YANG_MODPATH=$confddir/src/confd/yang:$YANG_MODPATH
+else
+    YANG_MODPATH=$confddir/src/confd/yang
+fi
+export YANG_MODPATH
+
+exec $yanger "$@"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"  message-id="1">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <dp xmlns="http://tail-f.com/ns/example/simple">
+        <servers>
+          <server>
+            <name>www</name>
+            <number>2</number>
+            <obj xmlns:smp="http://tail-f.com/ns/example/simple">/smp:dp/smp:servers/smp:server[smp:name="frobozz"][smp:number="42"]/smp:obj</obj>
+            <refs xmlns:smp="http://tail-f.com/ns/example/simple">/smp:dp/smp:servers/smp:server[smp:name="foo"][smp:number="1"]/smp:obj</refs>
+            <refs xmlns:smp="http://tail-f.com/ns/example/simple">/smp:dp/servers/smp:server[smp:name="bar"][smp:number="17"]/smp:obj</refs>
+          </server>
+        </servers>
+      </dp>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>
+]]>]]>

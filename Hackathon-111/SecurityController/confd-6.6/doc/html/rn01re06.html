@@ -1,0 +1,488 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confdc</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01re05.html" title="confd_load"><link rel="next" href="rn01re07.html" title="maapi"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center"><span class="phrase">confdc</span>
+    </th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01re05.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01re07.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.confdc"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.confdc.name"></a><h2>Name</h2><p>confdc &#8212; Confdc compiler</p></div><div class="refsynopsisdiv"><a name="man.1.confdc.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   -c   [-a | --annotate
+      <em class="replaceable"><code>YangAnnotationFile</code></em>] [--deviation <em class="replaceable"><code>DeviationFile</code></em>
+      ] [-o <em class="replaceable"><code>FxsFile</code></em>] [--verbose] [--fail-on-warnings] [-E | --error <em class="replaceable"><code>ErrorCode</code></em>...] [-W | --warning
+      <em class="replaceable"><code>ErrorCode</code></em>...] [-w | --no-warning
+      <em class="replaceable"><code>ErrorCode</code></em>...] [--strict-yang] [--no-yang-source] [--use-description [always] ] [[--no-features] |  [-F | --features <em class="replaceable"><code>Features</code></em>
+        ...]] [--ignore-unknown-features] [-p | --prefix
+      <em class="replaceable"><code>Prefix</code></em>] [--subagent
+      <em class="replaceable"><code>MountPath</code></em>] [--yangpath <em class="replaceable"><code>YangDir</code></em>] [--export <em class="replaceable"><code>Agent</code></em>
+       [-f <em class="replaceable"><code>FxsFileOrDir</code></em>...]
+      ...]  -- <em class="replaceable"><code>YangFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --strip-yang-source    <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --list-errors </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   -c   [-o <em class="replaceable"><code>CclFile</code></em>]  <em class="replaceable"><code>ClispecFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   -c   [-o <em class="replaceable"><code>BinFile</code></em>] [-I <em class="replaceable"><code>Dir</code></em>]  <em class="replaceable"><code>MibFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   -c   [-o <em class="replaceable"><code>BinFile</code></em>] [--read-only] [--verbose] [-I <em class="replaceable"><code>Dir</code></em>] [--include-file <em class="replaceable"><code>BinFile</code></em>] [--fail-on-warnings] [--warn-on-type-errors ] [--warn-on-access-mismatch ] [--mib-annotation <em class="replaceable"><code>MibA</code></em>] [-f <em class="replaceable"><code>FxsFileOrDir</code></em>...]  -- <em class="replaceable"><code>MibFile</code></em>   <em class="replaceable"><code>FxsFile</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-h <em class="replaceable"><code>HFile</code></em>  [--macro-prefix <em class="replaceable"><code>Prefix</code></em>] [--include-type ] [--exclude-enums ] [--fail-on-warnings ]  <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-h <em class="replaceable"><code>HFile</code></em>  [-a | --annotate
+      <em class="replaceable"><code>YangAnnotationFile</code></em>] [--deviation <em class="replaceable"><code>DeviationFile</code></em>
+      ] [--strict-yang] [[--no-features] |  [-F | --features <em class="replaceable"><code>Features</code></em>
+        ...]] [--ignore-unknown-features] [--yangpath <em class="replaceable"><code>YangDir</code></em>] [--macro-prefix <em class="replaceable"><code>Prefix</code></em>] [--include-type ] [--exclude-enums ] [--fail-on-warnings ]  <em class="replaceable"><code>YangFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-java <em class="replaceable"><code>JFile</code></em>  [--print-java-filename ] [--java-disable-prefix ] [--java-package <em class="replaceable"><code>Package</code></em>] [--exclude-enums ] [--fail-on-warnings ] [-f <em class="replaceable"><code>FxsFileOrDir</code></em>
+      ...]  <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-python <em class="replaceable"><code>PyFile</code></em>  [--print-python-filename ] [--no-init-py ] [--python-disable-prefix ] [--exclude-enums ] [--fail-on-warnings ] [-f <em class="replaceable"><code>FxsFileOrDir</code></em>
+      ...]  <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-hrl <em class="replaceable"><code>HrlFile</code></em>  [--macro-prefix <em class="replaceable"><code>Prefix</code></em>] [--include-type ] [--exclude-enums ] [--fail-on-warnings ]  <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-hrl <em class="replaceable"><code>HrlFile</code></em>  [-a | --annotate
+      <em class="replaceable"><code>YangAnnotationFile</code></em>] [--deviation <em class="replaceable"><code>DeviationFile</code></em>
+      ] [--strict-yang] [[--no-features] |  [-F | --features <em class="replaceable"><code>Features</code></em>
+        ...]] [--ignore-unknown-features] [--yangpath <em class="replaceable"><code>YangDir</code></em>] [--macro-prefix <em class="replaceable"><code>Prefix</code></em>] [--include-type ] [--exclude-enums ] [--fail-on-warnings ]  <em class="replaceable"><code>YangFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --emit-mib <em class="replaceable"><code>MibFile</code></em>  [ --join-names <em class="replaceable"><code>capitalize</code></em>  |   <em class="replaceable"><code>hyphen</code></em> ] [--oid <em class="replaceable"><code>OID</code></em>] [--top <em class="replaceable"><code>Name</code></em>] [--tagpath <em class="replaceable"><code>Path</code></em>] [--import <em class="replaceable"><code>Module</code></em> <em class="replaceable"><code>Name</code></em>] [--module <em class="replaceable"><code>Module</code></em>] [--generate-oids ] [--generate-yang-annotation] [--skip-symlinks] [--top <em class="replaceable"><code>Top</code></em>] [--fail-on-warnings ] [--no-comments ] [--read-only ]  -- <em class="replaceable"><code>FxsFile</code></em>... </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --mib2yang-std  [-p <em class="replaceable"><code>Prefix</code></em>] [-o <em class="replaceable"><code>YangFile</code></em>]  -- <em class="replaceable"><code>MibFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --mib2yang-mods  [--mib-annotation <em class="replaceable"><code>MibA</code></em>] [--keep-readonly] [--namespace <em class="replaceable"><code>Uri</code></em>] [--revision <em class="replaceable"><code>Date</code></em>] [-o <em class="replaceable"><code>YangDeviationFile</code></em>]  -- <em class="replaceable"><code>MibFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --mib2yang  [--mib-annotation <em class="replaceable"><code>MibA</code></em>] [--emit-doc] [--snmp-name] [--read-only] [-u <em class="replaceable"><code>Uri</code></em>] [-p <em class="replaceable"><code>Prefix</code></em>] [-o <em class="replaceable"><code>YangFile</code></em>]  -- <em class="replaceable"><code>MibFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --snmpuser <em class="replaceable"><code>EngineID</code></em>   <em class="replaceable"><code>User</code></em>   <em class="replaceable"><code>AuthType</code></em>   <em class="replaceable"><code>PrivType</code></em>   <em class="replaceable"><code>PassPhrase</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --get-info    <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --get-uri    <em class="replaceable"><code>FxsFile</code></em> </p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confdc</span></code>   --version  </p></div></div><div class="refsect1"><a name="man.1.confdc.description"></a><h2>DESCRIPTION</h2><p>During startup the ConfD daemon loads .fxs files describing 
+    our configuration data models. A .fxs file is the result of a
+    compiled YANG data model file.
+    The daemon also loads clispec files describing customizations to
+    the auto-generated CLI.
+    The clispec files are described in
+    <a class="link" href="rn03re16.html" title="clispec">clispec(5)</a>.
+    </p><p>A yang file by convention uses .yang (or .yin) filename suffix. YANG
+    files are directly transformed into .fxs files by <span class="phrase">confdc</span>.</p><p>We can use any number of .fxs files when working with the
+    ConfD daemon.</p><p>The <code class="option">--emit-h</code> option is used to generate a
+    .h file from a .fxs or YANG (.yang/.yin) file. How to use the generated
+    .h files is described in the ConfD User Guide.</p><p>The <code class="option">--emit-java</code> option is used to generate
+    a .java file from a .fxs file. The java file is used in
+    combination with the Java library for Java based applications.
+    </p><p>The <code class="option">--emit-python</code> option is used to generate
+    a .py file from a .fxs file. The python file is used in
+    combination with the Python library for Python based applications.
+    </p><p>The <code class="option">--emit-hrl</code> option is used to generate a
+    .hrl file from a .fxs or YANG (.yang/.yin) file. The .hrl file can
+    be used for Erlang based applications.</p><p>The <code class="option">--print-java-filename</code> option is used to print
+    the resulting name of the would be generated .java file.
+    </p><p>The <code class="option">--print-python-filename</code> option is used to print
+    the resulting name of the would be generated .py file.
+    </p><p>The <code class="option">--python-disable-prefix</code> option is used to prevent
+    prepending the Yang module prefix to each symbol in the generated .py file.
+    </p><p>The <code class="option">--emit-mib</code> option is used to generate
+    an SNMP MIB from .fxs files.</p><p>The <code class="option">--snmpuser</code> option is used to generate
+    localized keys for SNMP v3.</p><p>A clispec file by convention uses a .cli filename suffix. We
+    use the <span class="phrase">confdc</span> command to compile a clispec into a loadable format
+    (with a .ccl suffix).</p><p> A mib file by convention uses a .mib filename suffix. The
+    <span class="phrase">confdc</span> command is used for compiling the mib with one or more fxs
+    files (containing OID to YANG mappings) into a loadable format (with a .bin suffix). See
+    the ConfD
+    User Guide for more information about compiling the
+    mib.</p><p>Take a look at the EXAMPLE section for a crash course.</p></div><div class="refsect1"><a name="man.1.confdc.options"></a><h2>OPTIONS</h2><div class="refsect2"><a name="man.1.confdc.options.common"></a><h3>Common options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-f</code>, </span><span class="term"><code class="option">--fxsdep</code> <em class="replaceable"><code>FxsFileOrDir</code></em>...</span></dt><dd><p>.fxs files (or directories containing .fxs files) to
+            be used to resolve cross namespace dependencies.</p></dd><dt><span class="term">
+            <code class="option">--yangpath</code> <em class="replaceable"><code>YangModuleDir</code></em>
+          </span></dt><dd><p> YangModuleDir is a directory containing other YANG
+            modules and submodules.  This flag must be used when we
+            import or include other YANG modules or submodules that
+            reside in another directory.</p></dd><dt><span class="term"><code class="option">-o</code>, </span><span class="term"><code class="option">--output</code> <em class="replaceable"><code>File</code></em></span></dt><dd><p>Put the resulting file in the location given by File.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.compile"></a><h3>Compile options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-c</code>, </span><span class="term"><code class="option">--compile</code> <em class="replaceable"><code>File</code></em></span></dt><dd><p>Compile a YANG file (.yang/.yin) to a .fxs file
+            or a clispec (.cli
+            file) to a .ccl file,
+            or a MIB (.mib file) to a .bin file
+          </p></dd><dt><span class="term"><code class="option">-a</code>, </span><span class="term"><code class="option">--annotate</code> <em class="replaceable"><code>AnnotationFile</code></em></span></dt><dd><p>YANG users that are utilizing the tailf:annotate
+            extension must use this flag to indicate the YANG
+            annotation file(s).</p><p>This parameter can be given multiple times.</p></dd><dt><span class="term"><code class="option">--deviation </code><em class="replaceable"><code>DeviationFile</code></em></span></dt><dd><p>Indicates that deviations from the module in
+            <span class="emphasis"><em>DeviationFile</em></span> should be present in
+            the fxs file.</p><p>This parameter can be given multiple times.</p></dd><dt><span class="term"><code class="option">-F</code><em class="replaceable"><code>features</code></em>, </span><span class="term"><code class="option">--feature </code><em class="replaceable"><code>features</code></em></span></dt><dd><p>
+              Indicates that support for the YANG
+              <span class="emphasis"><em>features</em></span> should be present in the
+              fxs file.  <em class="replaceable"><code>features</code></em> is a
+              string on the form
+              <em class="replaceable"><code>modulename</code></em>:[<em class="replaceable"><code>feature</code></em>(,<em class="replaceable"><code>feature</code></em>)*]
+            </p><p>
+              This option is used to prune the data model by removing
+              all nodes that are defined with a "if-feature" that is
+              not listed as <em class="replaceable"><code>feature</code></em>.
+            </p><p>
+              This option can be given multiple times.
+            </p><p>
+              If this option is not given, nothing is pruned, i.e., it works
+              as if all features were explicitly listed.
+            </p><p>
+              If the module uses a feature defined in an imported YANG
+              module, it must be given as
+              <em class="replaceable"><code>modulename:feature</code></em>.
+            </p></dd><dt><span class="term"><code class="option">--no-yang-source</code></span></dt><dd><p>By default, the YANG module and submodules source is
+            included in the fxs file, so that a NETCONF or RESTCONF
+            client can download the module from the server.</p><p>
+              If this option is given, the YANG source is not included.
+            </p></dd><dt><span class="term"><code class="option">--no-features</code></span></dt><dd><p>Indicates that no YANG features from the given module
+            are supported.</p></dd><dt><span class="term"><code class="option">--ignore-unknown-features</code></span></dt><dd><p>
+              Instructs the compiler to not give an error if an unknown
+              feature is specified with <code class="option">--feature</code>.
+            </p></dd><dt><span class="term"><code class="option">-p</code>, </span><span class="term"><code class="option">--prefix</code> <em class="replaceable"><code>Prefix</code></em></span></dt><dd><p>
+              <span class="phrase">ConfD</span> needs to have a unique prefix
+              for each loaded YANG module, which is used e.g. in the CLI
+              and in the APIs. By default the prefix defined in the YANG
+              module is used, but this prefix is not required to be
+              unique across modules. This option can be used to specify
+              an alternate prefix in case of conflicts. The special
+              value 'module-name' means that the module name will be
+              used for this prefix.
+            </p></dd><dt><span class="term"><code class="option">--use-description [always]</code></span></dt><dd><p>
+              Normally, 'description' statements are ignored by
+              <span class="phrase">confdc</span>.  Instead the 'tailf:info'
+              statement is used as help and information text in the
+              CLI and Web UI.  When this option is specified, text in
+              'description' statements is used if no 'tailf:info'
+              statement is present.  If the option
+              <span class="emphasis"><em>always</em></span> is given, 'description' is
+              used even if 'tailf:info' is present.
+            </p></dd><dt><span class="term"><code class="option">--export</code> <em class="replaceable"><code>Agent</code></em> ...</span></dt><dd><p>Makes the namespace visible to Agent. Agent is
+            either "none", "all", "netconf", "snmp", "cli", "webui",
+            "rest" or a free-text string.  This option overrides any
+            <code class="code">tailf:export</code> statements in the module.  The option
+            "all" makes it visible to all agents. Use
+            "none" to make it invisible to all agents.</p></dd><dt><span class="term">
+            <code class="option">--subagent</code> <em class="replaceable"><code>MountPath</code></em>
+          </span></dt><dd><p>This option is used to compile a subagent's
+            YANG modules for the master agent. It tells the
+            master agent that this namespace is handled by a
+            subagent. MountPath is an XPath expression (without instance
+            selectors) where the namespace is mounted in the master
+            agent's data hierarchy.</p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>Make compilation fail on warnings.</p></dd><dt><span class="term">
+            <code class="option">-W</code>
+            <em class="replaceable"><code>ErrorCode</code></em>
+          </span></dt><dd><p>
+              Treat <em class="replaceable"><code>ErrorCode</code></em> as a warning,
+              even if <code class="option">--fail-on-warnings</code> is given.
+              <em class="replaceable"><code>ErrorCode</code></em> must be a warning
+              or a minor error.
+            </p><p>
+            Use <code class="option">--list-errors</code> to get a listing of all
+            errors and warnings.
+            </p><p>
+              The following example treats all warnings except the
+              warning for dependency mismatch as errors:
+            </p><div class="informalexample"><pre class="screen">$ <span class="phrase">confdc</span> -c --fail-on-warnings -W TAILF_DEPENDENCY_MISMATCH</pre></div></dd><dt><span class="term">
+            <code class="option">-w</code>
+            <em class="replaceable"><code>ErrorCode</code></em>
+          </span></dt><dd><p>
+              Do not report the warning <em class="replaceable"><code>ErrorCode</code></em>,
+              even if <code class="option">--fail-on-warnings</code> is given.
+              <em class="replaceable"><code>ErrorCode</code></em> must be a warning.
+            </p><p>
+            Use <code class="option">--list-errors</code> to get a listing of all
+            errors and warnings.
+            </p><p>
+              The following example ignores the warning
+              TAILF_DEPENDENCY_MISMATCH:
+            </p><div class="informalexample"><pre class="screen">$ <span class="phrase">confdc</span> -c -w TAILF_DEPENDENCY_MISMATCH</pre></div></dd><dt><span class="term">
+            <code class="option">-E</code>
+            <em class="replaceable"><code>ErrorCode</code></em>
+          </span></dt><dd><p>
+              Treat the warning <em class="replaceable"><code>ErrorCode</code></em> as
+              an error.
+            </p><p>
+              Use <code class="option">--list-errors</code> to get a listing of all
+              errors and warnings.
+            </p><p>
+              The following example treats only the warning for unused
+              import as an error:
+            </p><div class="informalexample"><pre class="screen">$ <span class="phrase">confdc</span> -c -E UNUSED_IMPORT</pre></div></dd><dt><span class="term"><code class="option">--strict-yang</code></span></dt><dd><p>Force strict YANG compliance.  Currently this checks
+            that the deref() function is not used in XPath expressions
+            and leafrefs.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.mib2yang-std"></a><h3>Standard MIB to YANG options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--mib2yang-std <em class="replaceable"><code>MibFile</code></em></code></span></dt><dd><p>Generate a YANG file from the MIB module (.mib file), in
+                  accordance with the IETF standard, RFC-6643.</p><p>
+              If the MIB IMPORTs other MIBs, these MIBs must be
+              available (as .mib files) to the compiler when a YANG
+              module is generated.  By default, all MIBs in the
+              current directory and all builtin MIBs are available.
+              Since the compiler uses the tool
+              <span class="command"><strong>smidump</strong></span> to perform the conversion to
+              YANG, the environment variable
+              <code class="varname">SMIPATH</code> can be set to a
+              colon-separated list of directories to search for MIB
+              files.
+            </p></dd><dt><span class="term"><code class="option">-p</code>, </span><span class="term"><code class="option">--prefix</code> <em class="replaceable"><code>Prefix</code></em></span></dt><dd><p>
+              Specify a prefix to use in the generated YANG module.
+            </p><p>
+              An appendix to the RFC describes how the prefix is automatically
+              generated, but such an automatically generated prefix is not always
+              unique, and
+              ConfD
+              requires unique prefixes in all loaded modules.
+            </p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.mib2yang-mods"></a><h3>Standard MIB to YANG modification options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--mib2yang-mods <em class="replaceable"><code>MibFile</code></em></code></span></dt><dd><p>Generate a combined YANG deviation/annotation file from the MIB
+                  module (.mib file), which can be used to compile the yang
+                  file generated by --mib2yang-std, to achieve a similar result
+                  as with the non-standard --mib2yang translation.
+              </p></dd><dt><span class="term"><code class="option">-p</code>, </span><span class="term"><code class="option">--prefix</code> <em class="replaceable"><code>Prefix</code></em></span></dt><dd><p>
+              Specify a prefix to use in the generated YANG module.
+            </p><p>
+              An appendix to the RFC describes how the prefix is automatically
+              generated, but such an automatically generated prefix is not
+              always unique, and
+              ConfD
+              requires unique prefixes in all loaded modules.
+            </p></dd><dt><span class="term"><code class="option">--mib-annotation</code> <em class="replaceable"><code>MibA</code></em></span></dt><dd><p>
+              Provide a MIB annotation file to control how to override the
+              standard translation of specific MIB objects to YANG. See
+              <a class="link" href="rn03re18.html" title="mib_annotations">mib_annotations(5)</a>.
+            </p></dd><dt><span class="term"><code class="option">--revision <em class="replaceable"><code>Date</code></em></code></span></dt><dd><p>
+              Generate a revision statement with the provided Date as value in
+              the deviation/annotation file.
+            </p></dd><dt><span class="term"><code class="option">--namespace</code> <em class="replaceable"><code>Uri</code></em></span></dt><dd><p>
+              Specify a uri to use as namespace in the generated
+              deviation/annotation module.
+            </p></dd><dt><span class="term"><code class="option">--keep-readonly</code></span></dt><dd><p>
+              Do not generate any deviations of the standard config (false)
+              statements. Without this flag, config statements will be
+              deviated to true on yang nodes corresponding to writable MIB
+              objects.
+            </p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.mib2yang"></a><h3>MIB to YANG options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--mib2yang <em class="replaceable"><code>MibFile</code></em></code></span></dt><dd><p>Generate a YANG file from the MIB module (.mib file).</p><p>
+              If the MIB IMPORTs other MIBs, these MIBs must be
+              available (as .mib files) to the compiler when a YANG
+              module is generated.  By default, all MIBs in the
+              current directory and all builtin MIBs are available.
+              Since the compiler uses the tool
+              <span class="command"><strong>smidump</strong></span> to perform the conversion to
+              YANG, the environment variable
+              <code class="varname">SMIPATH</code> can be set to a
+              colon-separated list of directories to search for MIB
+              files.
+            </p></dd><dt><span class="term"><code class="option">-u</code>, </span><span class="term"><code class="option">--uri</code> <em class="replaceable"><code>Uri</code></em></span></dt><dd><p>
+              Specify a uri to use as namespace in the generated YANG module.
+            </p></dd><dt><span class="term"><code class="option">-p</code>, </span><span class="term"><code class="option">--prefix</code> <em class="replaceable"><code>Prefix</code></em></span></dt><dd><p>
+              Specify a prefix to use in the generated YANG module.
+            </p></dd><dt><span class="term"><code class="option">--mib-annotation</code> <em class="replaceable"><code>MibA</code></em></span></dt><dd><p>
+              Provide a MIB annotation file to control how to translate
+              specific MIB objects to YANG.  See <a class="link" href="rn03re18.html" title="mib_annotations">mib_annotations(5)</a>.
+            </p></dd><dt><span class="term"><code class="option">--snmp-name</code></span></dt><dd><p>
+              Generate the YANG statement "tailf:snmp-name" instead of
+              "tailf:snmp-oid".
+            </p></dd><dt><span class="term"><code class="option">--read-only</code></span></dt><dd><p>
+              Generate a YANG module where all nodes are "config false".
+            </p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.mibcompiler"></a><h3>MIB compiler options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-c</code>, </span><span class="term"><code class="option">--compile</code> <em class="replaceable"><code>MibFile</code></em></span></dt><dd><p>Compile a MIB module (.mib file) to a .bin file.
+            </p><p>
+              If the MIB IMPORTs other MIBs, these MIBs must be
+              available (as compiled .bin files) to the compiler.  By
+              default, all compiled MIBs in the current directory and
+              all builtin MIBs are available.  Use the parameters
+              <span class="emphasis"><em>--include-dir</em></span> or
+              <span class="emphasis"><em>--include-file</em></span> to specify where the
+              compiler can find the compiled MIBs.
+            </p></dd><dt><span class="term"><code class="option">--verbose</code></span></dt><dd><p>Print extra debug info during compilation.</p></dd><dt><span class="term"><code class="option">--read-only</code></span></dt><dd><p>Compile the MIB as read-only.  All SET attempts over
+            SNMP will be rejected.</p></dd><dt><span class="term"><code class="option">-I</code>, </span><span class="term"><code class="option">--include-dir</code> <em class="replaceable"><code>Dir</code></em></span></dt><dd><p>
+              Add the directory Dir to the list of directories to be
+              searched for IMPORTed MIBs (.bin files).
+            </p></dd><dt><span class="term"><code class="option">--include-file</code> <em class="replaceable"><code>File</code></em></span></dt><dd><p>Add File to the list of files of IMPORTed
+            (compiled) MIB files.  File must be a .bin file.</p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>Make compilation fail on warnings.</p></dd><dt><span class="term"><code class="option">--warn-on-type-errors</code></span></dt><dd><p>Warn rather than give error on type checks performed
+            by the MIB compiler.</p></dd><dt><span class="term"><code class="option">--warn-on-access-mismatch</code></span></dt><dd><p>Give a warning if an SNMP object has read only
+            access to a config object.</p></dd><dt><span class="term"><code class="option">--mib-annotation</code> <em class="replaceable"><code>MibA</code></em></span></dt><dd><p>Provide a MIB annotation file to fine-tune how
+            specific MIB objects should behave in the SNMP agent.  See <a class="link" href="rn03re18.html" title="mib_annotations">mib_annotations(5)</a>.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.emit-h"></a><h3>Emit C header file options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--emit-h</code> <em class="replaceable"><code>HFile</code></em></span></dt><dd><p>Generate a .h utility header file to be used when
+            working with the ConfD C APIs.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>When the header file is generated from a YANG
+            (.yang/.yin) file, the YANG file is currently compiled to a
+            temporary .fxs file as an intermediary step.</p></div></dd><dt><span class="term">
+            <code class="option">--macro-prefix</code> <em class="replaceable"><code>Prefix</code></em>
+          </span></dt><dd><p>Without this option, all macro definitions in the
+            generated .h file are prepended with the argument of the
+            <code class="code">prefix</code> statement in the YANG module. If this
+            option is used, the macro definitions are prepended with
+            Prefix instead.</p></dd><dt><span class="term"><code class="option">--include-type</code></span></dt><dd><p>If this option is used all macro definitions for
+            enums in the generated .h file have the type name as part
+            of their name.</p></dd><dt><span class="term"><code class="option">--exclude-enums</code></span></dt><dd><p>If this option is used, macro definitions for enums
+            are omitted from the generated .h file. This can in some
+            cases be useful to avoid conflicts between enum symbols, or
+            between enums and other symbols.</p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>If this option is used all warnings are treated as
+            errors and <span class="phrase">confdc</span> will fail its execution.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.emit-hrl"></a><h3>Emit Erlang header file options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">--emit-hrl</code> <em class="replaceable"><code>HrlFile</code></em></span></dt><dd><p>Generate a .hrl utility header file to be used when
+            working with the ConfD Erlang APIs.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>When the header file is generated from a YANG
+            (.yang/.yin) file, the YANG file is currently compiled to a
+            temporary .fxs file as an intermediary step.</p></div></dd><dt><span class="term">
+            <code class="option">--macro-prefix</code> <em class="replaceable"><code>Prefix</code></em>
+          </span></dt><dd><p>Without this option, all macro definitions in the
+            generated .hrl file are prepended with the argument of the
+            <code class="code">prefix</code> statement in the YANG module. If this
+            option is used, the macro definitions are prepended with
+            Prefix instead.</p></dd><dt><span class="term"><code class="option">--include-type</code></span></dt><dd><p>If this option is used all macro definitions for
+            enums in the generated .hrl file have the type name as part
+            of their name.</p></dd><dt><span class="term"><code class="option">--exclude-enums</code></span></dt><dd><p>If this option is used, macro definitions for enums
+            are omitted from the generated .hrl file. This can in some
+            cases be useful to avoid conflicts between enum symbols, or
+            between enums and other symbols.</p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>If this option is used all warnings are treated as
+            errors and <span class="phrase">confdc</span> will fail its execution.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.emit-mib"></a><h3>Emit SMIv2 MIB options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+            <code class="option">--emit-mib</code> <em class="replaceable"><code>MibFile</code></em>
+          </span></dt><dd><p>Generates a MIB file for use with SNMP
+            agents/managers.  See the appropriate section in the SNMP
+            agent chapter in the ConfD User Guide for more
+            information.</p></dd><dt><span class="term"><code class="option">--join-names capitalize</code></span></dt><dd><p>
+              Join element names without separator, but
+              capitalizing, to get the MIB name. This is the default.
+            </p></dd><dt><span class="term"><code class="option">--join-names hyphen</code></span></dt><dd><p>
+              Join element names with hyphens to get the MIB name.
+            </p></dd><dt><span class="term"><code class="option">--join-names force-capitalize</code></span></dt><dd><p>
+              The characters '.' and '_' can occur in YANG identifiers
+              but not in SNMP identifiers; they are converted to
+              hyphens, unless this option is given.  In this case,
+              such identifiers are capitalized (to lowerCamelCase).
+            </p></dd><dt><span class="term"><code class="option">--oid</code> <em class="replaceable"><code>OID</code></em></span></dt><dd><p>
+              Let <span class="emphasis"><em>OID</em></span> be the top object's OID. If
+              the first component of the OID is a name not defined in
+              SNMPv2-SMI, the <code class="option">--import</code> option is also
+              needed in order to produce a valid MIB module, to import
+              the name from the proper module. If this option is not
+              given, a <code class="code">tailf:snmp-oid</code> statement must be
+              specified in the YANG header.
+            </p></dd><dt><span class="term"><code class="option">--tagpath Path</code></span></dt><dd><p>
+              Generate the MIB only for a subtree of the module.  The
+              <span class="emphasis"><em>Path</em></span> argument is an absolute schema
+              node identifier, and it must refer to container nodes
+              only.
+            </p></dd><dt><span class="term"><code class="option">--import</code> <em class="replaceable"><code>Module</code></em> <em class="replaceable"><code>Name</code></em> </span></dt><dd><p>
+              Add an IMPORT statement which imports
+              <span class="emphasis"><em>Name</em></span> from
+              the MIB <span class="emphasis"><em>Module</em></span>.
+            </p></dd><dt><span class="term"><code class="option">--top</code> <em class="replaceable"><code>Name</code></em></span></dt><dd><p>
+              Let <span class="emphasis"><em>Name</em></span> be the name of the top object.
+            </p></dd><dt><span class="term"><code class="option">--module</code> <em class="replaceable"><code>Name</code></em></span></dt><dd><p>
+              Let <span class="emphasis"><em>Name</em></span> be the module name. If
+              a <code class="code">tailf:snmp-mib-module-name</code> statement is in
+              the YANG header, the two names must be equal.
+            </p></dd><dt><span class="term"><code class="option">--generate-oids</code></span></dt><dd><p>
+              Translate all data nodes into MIB objects, and generate OIDs
+              for data nodes without <code class="code">tailf:snmp-oid</code> statements.
+            </p></dd><dt><span class="term"><code class="option">--generate-yang-annotation</code></span></dt><dd><p>
+              Generate a YANG annotation file containing the
+              <code class="code">tailf:snmp-oid</code>,
+              <code class="code">tailf:snmp-mib-module-name</code> and
+              <code class="code">tailf:snmp-row-status-column</code> statements for the
+              nodes. Implies <code class="code">--skip-symlinks</code>.
+            </p></dd><dt><span class="term"><code class="option">--skip-symlinks</code></span></dt><dd><p>
+              Do not generate MIB objects for data nodes modeled through
+              symlinks.
+            </p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>If this option is used all warnings are treated as
+            errors and <span class="phrase">confdc</span> will fail its execution.</p></dd><dt><span class="term"><code class="option">--no-comments</code></span></dt><dd><p>
+              If this option is used no additional comments will be
+              generated in the MIB.
+            </p></dd><dt><span class="term"><code class="option">--read-only</code></span></dt><dd><p>
+              If this option is used all objects in the MIB will be
+              read only.
+            </p></dd><dt><span class="term"><code class="option">--prefix</code> <em class="replaceable"><code>String</code></em></span></dt><dd><p>
+              Prefix all MIB object names with
+              <span class="emphasis"><em>String</em></span>.
+            </p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.emit-snmpuser"></a><h3>Emit SNMP user options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+            <code class="option">--snmpuser</code>
+            <em class="replaceable"><code>EngineID</code></em>
+            <em class="replaceable"><code>User</code></em>
+            <em class="replaceable"><code>AuthType</code></em>
+            <em class="replaceable"><code>PrivType</code></em>
+            <em class="replaceable"><code>PassPhrase</code></em>
+          </span></dt><dd><p>Generates a user entry with localized keys for the
+            specified engine identifier. The output is an usmUserEntry
+            in XML format that can be used in an initiation file for
+            the SNMP-USER-BASED-SM-MIB::usmUserTable.  In short this
+            command provides key generation for users in SNMP v3.
+            This option takes five arguments: The EngineID is either a
+            string or a colon separated hexlist, or a dot separated
+            octet list.  The User argument is a string specifying the
+            user name.  The AuthType argument is one of md5, sha, or
+            none.  The PrivType argument is one of des, aes, or none.
+            The PassPhrase argument is a string.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.emit-java"></a><h3>Emit Java options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+            <code class="option">--emit-java</code> <em class="replaceable"><code>JFile</code></em>
+          </span></dt><dd><p>Generate a .java ConfNamespace file from a .fxs file
+            to be used when working with the Java library.
+            The file is useful, but not necessary when working with the
+            NAVU library. JFile could either be a file or a directory. If
+            JFile is a directory the resulting .java file will be created
+            in that directory with a name based on the module name in the
+            YANG module. If JFile is not a directory that file is created.
+            Use <span class="emphasis"><em>--print-java-filename</em></span>
+            to get the resulting file name.
+            </p></dd><dt><span class="term">
+            <code class="option">--print-java-filename</code>
+          </span></dt><dd><p>Only print the resulting java file name. Due to
+            restrictions of identifiers in Java the name of the Class
+            and thus the name of the file might get changed if
+            non Java characters are used in the name of the file or in the
+            name of the module. If this option is used no file is emitted
+            the name of the file which would be created is just printed on
+            stdout.
+            </p></dd><dt><span class="term">
+            <code class="option">--java-package</code> <em class="replaceable"><code>Package</code></em>
+          </span></dt><dd><p>If this option is used the generated java file will
+            have the given package declaration at the top.</p></dd><dt><span class="term"><code class="option">--exclude-enums</code></span></dt><dd><p>If this option is used, definitions for enums
+            are omitted from the generated java file. This can in some
+            cases be useful to avoid conflicts between enum symbols, or
+            between enums and other symbols.</p></dd><dt><span class="term"><code class="option">--fail-on-warnings</code></span></dt><dd><p>If this option is used all warnings are treated as
+            errors and <span class="phrase">confdc</span> will fail its execution.</p></dd><dt><span class="term"><code class="option">-f</code>, </span><span class="term"><code class="option">--fxsdep</code> <em class="replaceable"><code>FxsFileOrDir</code></em>...</span></dt><dd><p>.fxs files (or directories containing .fxs files) to
+            be used to resolve cross namespace dependencies.</p></dd></dl></div></div><div class="refsect2"><a name="man.1.confdc.options.misc"></a><h3>Misc options</h3><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+            <code class="option">--strip-yang-source</code>
+            <em class="replaceable"><code>FxsFile</code></em>
+          </span></dt><dd><p>Removes included YANG source from the fxs file.
+            This makes the file smaller, but it means that the YANG
+            module and submodules cannot be downloaded from the
+            server, unless they are present in the load path.</p></dd><dt><span class="term">
+            <code class="option">--get-info</code>
+            <em class="replaceable"><code>FxsFile</code></em>
+          </span></dt><dd><p>Various info about the file is printed on standard
+            output, including the names of the source files used to
+            produce this file, which <span class="phrase">confdc</span>
+             version was used, and for
+            fxs files, namespace URI, other namespaces the file
+            depends on, namespace prefix, and mount point.</p></dd><dt><span class="term">
+            <code class="option">--get-uri</code> <em class="replaceable"><code>FxsFile</code></em>
+          </span></dt><dd><p>Extract the namespace URI.</p></dd><dt><span class="term"><code class="option">--version</code></span></dt><dd><p>Reports the <span class="phrase">confdc</span>
+             version.</p></dd></dl></div></div></div><div class="refsect1"><a name="man.1.confdc.example"></a><h2>EXAMPLE</h2><p>
+      Assume we have the file  <code class="filename">system.yang</code>:
+    </p><div class="informalexample"><pre class="programlisting">module system {
+  namespace "http://example.com/ns/gargleblaster";
+  prefix "gb";
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  container servers {
+    list server {
+      key name;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ip-address;
+      }
+      leaf port {
+        type inet:port-number;
+      }
+    }
+  }
+}</pre></div><p>To compile this file we do:</p><div class="informalexample"><pre class="screen">$ confdc -c system.yang</pre></div><p>If we intend to access data from this module from
+    our C
+    programs, it is meaningful to generate a .h file like this:</p><div class="informalexample"><pre class="screen">$ confdc -c --emit-h blaster.h system.fxs</pre></div><p>The .h file contains <code class="code">#define</code>
+    entries for the
+    different nodes in system.yang. C code that needs to
+    manipulate or read data from this module will typically need to include the
+    generated .h file.</p><p>
+      If we intend to manipulate this data from our Java programs, we
+      must typically also invoke:
+    </p><div class="informalexample"><pre class="screen">
+$ confdc --emit-java blaster.java system.fxs
+    </pre></div><p>Finally we show how to compile a clispec into a loadable
+    format:</p><div class="informalexample"><pre class="screen">$ confdc -c mycli.cli
+$ ls mycli.ccl
+myccl.ccl</pre></div></div><div class="refsect1"><a name="man.1.confdc.diagnostics"></a><h2>DIAGNOSTICS</h2><p>On success exit status is 0. On failure 1. Any error message
+    is printed to stderr.</p></div><div class="refsect1"><a name="d5e17704"></a><h2>YANG 1.1</h2><p>
+      <span class="phrase">ConfD</span>
+       supports YANG 1.1, as
+      defined in RFC 7950, with the following
+      exceptions:
+      </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+            Type <code class="varname">empty</code> in unions and in list keys
+            is not supported.
+          </p></li><li class="listitem"><p>
+            Type <code class="varname">leafref</code> in unions are not
+            validated, and treated as a string internally.
+          </p></li><li class="listitem"><p>
+            <span class="command"><strong>anydata</strong></span> is not supported.
+          </p></li><li class="listitem"><p>
+            The new scoping rules for submodules are not implemented.
+            Specifically, a submodule must still include other
+            submodules in order to access definitions defined there.
+          </p></li><li class="listitem"><p>
+            Inline <span class="command"><strong>notification</strong></span> statements are handled by the
+            compiler, but not supported in the APIs.
+          </p></li><li class="listitem"><p>
+            The new XPath functions <code class="function">derived-from()</code> and
+            <code class="function">derived-from-or-self()</code> can only be
+            used with literal strings in the second argument.
+          </p></li><li class="listitem"><p>
+            Leafref paths without prefixes in top-level typedefs are
+            handled as in YANG 1.
+          </p></li></ul></div><p>
+    </p></div><div class="refsect1"><a name="man.1.confdc.see_also"></a><h2>SEE ALSO</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term">The <span class="phrase">ConfD</span>
+         User Guide</span></dt><dd><p></p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle"><span class="phrase">confd</span>
+            </span>(1)</span>
+        </span></dt><dd><p>command to start and control the
+          <span class="phrase">ConfD</span>
+           daemon</p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">
+            <span class="phrase">confd.conf</span>
+            </span>(5)</span>
+        </span></dt><dd><p><span class="phrase">ConfD</span>
+          
+          daemon configuration file format</p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">clispec</span>(5)</span>
+        </span></dt><dd><p>CLI specification file format</p></dd><dt><span class="term">
+          <span class="citerefentry"><span class="refentrytitle">mib_annotations</span>(5)</span>
+        </span></dt><dd><p>MIB annotations file format</p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01re05.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01re07.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top"><span class="phrase">confd</span>_load&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;maapi</td></tr></table></div></body></html>

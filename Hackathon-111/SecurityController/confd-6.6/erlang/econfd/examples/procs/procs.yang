@@ -1,0 +1,46 @@
+module procs {
+  namespace "http://tail-f.com/ns/example/procs";
+  prefix procs;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  typedef Priority {
+    type enumeration {
+      enum low;
+      enum normal;
+      enum high;
+      enum max;
+    }
+  }
+  container procs {
+    config false;
+    tailf:callpoint proc_cp;
+    list proc {
+      key pid;
+      leaf pid {
+        type string;
+      }
+      leaf heap_size {
+        type int32;
+        mandatory true;
+      }
+      leaf stack_size {
+        type int32;
+        mandatory true;
+      }
+      leaf registered_name {
+        type string;
+      }
+      leaf trap_exit {
+        type boolean;
+        mandatory true;
+      }
+      leaf priority {
+        type Priority;
+        mandatory true;
+      }
+    }
+  }
+}

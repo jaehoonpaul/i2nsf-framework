@@ -1,0 +1,562 @@
+#!/bin/sh
+
+bindir=`dirname $0`
+case $bindir in
+    /*) confd_dir=`dirname $bindir`;;
+    *)  confd_dir=`(cd $bindir/..; pwd)`;;
+esac
+libdir=$confd_dir/lib
+conffile=$confd_dir/etc/confd/confd.conf
+
+confdversion=6.6
+
+# Default max time for connect attempts in --wait-xxx
+WAIT_TRY_TIME=5
+
+# Use default no. of threads for async I/O ("+A0" disables)
+async=""
+
+
+usage()
+{
+    cat <<EOF
+Usage: confd [--conf ConfFile] [--addloadpath Dir] [--nolog] [--smp Nr]
+             [--foreground [-v | --verbose ] [--stop-on-eof ]]
+             [--ignore-initial-validation] [--full-upgrade-validation]
+             [--start-phase0]
+             [--epoll {true|false}] [--cd Dir]
+
+Usage: confd {--wait-phase0 [ TryTime]  | --start-phase1 | --start-phase2 |
+              --wait-started [ TryTime]  | --clear-aaa-cache | --reload |
+              --areload | --status | --check-callbacks [ Namespace | Path ] |
+              --loadfile File |
+              --rollback Nr | --debug-dump File | --cli-j-dump File |
+              --cli-i-dump File | --cli-c-dump File | --cli-check-templates |
+              --loadxmlfiles File... | --mergexmlfiles File... |
+              --cdb-backup File | --stop}
+             [--timeout MaxTime]
+
+Usage: confd {--version | --cdb-debug-dump Directory | --printlog |
+              --set-snmp-engine-boots Nr}
+
+ -c, --conf ConfFile
+     ConfFile is the absolute path to a confd.conf file;
+     default is ${conffile}
+
+ --nolog
+     Don't log inital startup messages to syslog.
+
+ --smp Nr
+     Number of threads to run for Symmetric Multiprocessing
+     (SMP). The default is 1, i.e. no SMP support.
+
+ --cd Dir
+     Change working directory
+
+ --ignore-initial-validation
+     Do not invoke validation callpoints in the (CDB initiated)
+     init and upgrade transactions.
+
+ --full-upgrade-validation
+     Perform a full validation of the entire database if the data models
+     have been upgraded.  This is useful in order to trigger external
+     validation to run even if the database content has not been modified.
+
+ --start-phase0
+     Start the daemon, but only bring up CDB (used to control
+     the confd daemon when upgrading database layout).
+
+ --start-phase1
+     Finish start phase0, do not start the subsystems that
+     listens to the management ip address.
+
+ --start-phase2
+     Must be called after the management interface has been
+     brought up, if --start-phase1 has been used. Starts
+     the subsystems that listens to the management ip address.
+
+ --foreground [ -v | --verbose ] [ --stop-on-eof ]
+     Do not daemonize. Can be used to start ConfD from a
+     process manager. In combination with -v or --verbose,
+     all log messages are printed to stdout. Useful during
+     development. In combination with --stop-on-eof, ConfD
+     will stop if it receives EOF (ctrl-d) on standard input.
+     Note that to stop ConfD when run in foreground, send EOF
+     (if --stop-on-eof was used) or use confd --stop. Do not
+     terminate with ctrl-c, since ConfD in that case won't
+     have the chance to close the database files.
+
+ --addloadpath Dir
+     Add Dir to the ConfD loadPath. Convenient way to make
+     ConfD load some additional fxs/ccl files
+
+ --epoll {true|false}
+     Determines whether ConfD should use an enhanced poll()
+     function (e.g. Linux epoll(7)). The default is false.
+
+ --wait-phase0 [ TryTime ]
+     This call hangs until ConfD has initialized start phase0.
+     After this call has returned, it is safe to register
+     validation callbacks, upgrade CDB etc.
+     This function is useful when ConfD has been started with
+     --foreground and --start-phase0.
+     It will keep trying the initial connection to ConfD
+     for at most TryTime seconds (default 5)
+
+ --wait-started [ TryTime ]
+     This call hangs until ConfD is completely started.
+     This function is useful when ConfD has been started with
+     --foreground.
+     It will keep trying the initial connection to ConfD
+     for at most TryTime seconds (default 5)
+
+ --status
+     Print status about the ConfD daemon.
+
+ --debug-dump File
+     Write internal ConfD information to File for troubleshooting
+     purposes.
+
+ --cli-j-dump File
+     Write CLI structure of Juniper style CLI on XML-format to File.
+
+ --cli-c-dump File
+     Write CLI structure of Cisco XR style CLI on XML-format to File.
+
+ --cli-i-dump File
+     Write CLI structure of Cisco IOS style CLI on XML-format to File.
+
+ --cli-check-templates
+     Validates the paths in the CLI display templates and prints
+     warnings for invalid paths.
+
+ --stop
+     Stop the ConfD daemon.
+
+ --reload
+     Reload the ConfD daemon configuration. All log files are
+     closed and reopened, which means that confd --reload can
+     be used from e.g. logrotate(8). Note: If you update a .fxs
+     file it is not enough to do a reload; the dameon has to be
+     restarted.
+
+ --areload
+     Asynchronously reload the ConfD daemon configuration.
+
+ --loadfile File
+     Load configuration from File in curly bracket format.
+
+ --rollback Nr
+     Load saved configuration from rollback file Nr.
+
+ --loadxmlfiles File ...
+     Replace configuration with data from Files in XML format.
+
+ --mergexmlfiles File ...
+     Merge configuration with data from Files in XML format.
+
+ --clear-aaa-cache
+     Clear the ConfD AAA cache.
+
+ --cdb-backup File
+     Take a snapshot of the CDB database and store it in File.
+
+ --check-callbacks [ Namespace | Path ]
+     Walks through the entire data tree (config and stat), or only the
+     Namespace or Path, and verifies that all read-callbacks are
+     implemented for all elements, and verifies their return values.
+
+ --timeout MaxTime
+     Specify the maximum time to wait for the ConfD daemon to
+     complete the command, in seconds. If this option is not given,
+     no timeout is used.
+
+ --cdb-debug-dump Directory
+     Dumps information about CDB files in Directory as text to stdout
+     (runs standalone and does not require a running ConfD).
+
+ --version
+     Report version without communicating with the ConfD daemon
+
+ --printlog BaseFileName
+     Print the contents of the ConfD errorLog. This is normally only
+     useful for Tail-f support and developers, since the information
+     pertains to internal details of the ConfD software components.
+
+ --set-snmp-engine-boots Nr
+     The value of snmpEngineBoots to use when ConfD is started with
+     the current directory as state dir.
+
+ --help
+     Print help text
+
+EOF
+}
+
+is_numeric()
+{
+    test "`echo $1 | grep '^[0-9][0-9]*$'`"
+}
+
+is_arg()
+{
+    test "`echo $1 | grep '^[^-].*$'`"
+}
+
+error()
+{
+    if [ ! -z "$1" ]; then
+        echo >&2
+        echo >&2 "*** $1"
+    fi
+    echo >&2 " Try confd --help to get usage text"
+    exit 1
+}
+
+# Default values
+heart=""
+cmd=""
+cmd_opts=""
+phase=""
+nolog=""
+daemon=" -delayed-detach "
+fg_args=""
+smp_opt="1"
+alloc_enable="H"
+addloadpath=""
+epoll="+K false"
+pkg_reload=""
+iiv=""
+fuv=""
+st_depth="-stacktrace_depth 24"
+
+while [ $# -gt 0 ]; do
+    arg="$1"
+    shift
+    case "$arg" in
+        --addloadpath)
+            if [ -z "${addloadpath}" ]; then
+                addloadpath="-addloadpath $1"
+            else
+                addloadpath="${addloadpath} $1"
+            fi
+            shift;;
+        --version)
+            echo ${confdversion}
+            exit 0;;
+        -l|--libdir)
+            libdir=$1
+            if [ ! -d "${libdir}" ]; then
+                error "bad directory ${libdir} to option -l"
+            fi
+            shift;;
+        -c|--conf)
+            conffile=$1
+            if [ ! -f "${conffile}" ]; then
+                error "bad file ${conffile} to option -c"
+            fi
+            shift;;
+        --cd)
+            cd="-cd $1"
+            shift;;
+        --start-phase0)
+            phase="-start_phase0";;
+        --wait-phase0)
+            if is_numeric $1; then
+                cmd="wait_phase0 $1"
+                shift
+            else
+                cmd="wait_phase0 $WAIT_TRY_TIME"
+            fi;;
+        --start-phase1)
+            cmd="start_phase1";;
+        --start-phase2)
+            cmd="start_phase2";;
+        --wait-started)
+            if is_numeric $1; then
+                cmd="wait_started $1"
+                shift
+            else
+                cmd="wait_started $WAIT_TRY_TIME"
+            fi;;
+        --clear-aaa-cache)
+            cmd="clear_aaa_cache";;
+        --check-callbacks)
+            if is_arg $1; then
+                cmd="check_callbacks $1"
+                shift
+            else
+                cmd="check_callbacks"
+            fi;;
+        --cdb-backup)
+            cmd="cdb_backup $1"
+            if [ ! -d "`dirname $1`" ]; then
+                error "bad file to --cdb-backup: can only take backup to an existing directory"
+            fi
+            shift
+            ;;
+        --cdb-debug-dump)
+            cmd_opts="$1" ; shift
+            while :; do
+                case "$1" in
+                    "") break ;;
+                    -*) break ;;
+                    *)  cmd_opts="$cmd_opts $1" ; shift ;;
+                esac
+            done
+            cmd="cdb_debug_dump"
+            ;;
+        -r|--reload)
+            cmd="reload";;
+        --areload)
+            cmd="areload";;
+        --stop)
+            cmd="stop";;
+        --status)
+            cmd="status";;
+        --debug-dump)
+            if [ $# -lt 1 ]; then
+                error "Need a file to dump to"
+            fi
+            dumpfile=$1
+            shift
+            cmd="debug_dump ${dumpfile}";;
+        --cli-j-dump)
+            if [ $# -lt 1 ]; then
+                error "Need a file to dump to"
+            fi
+            dumpfile=$1
+            shift
+            cmd="cli_juniper_dump ${dumpfile}";;
+        --cli-c-dump)
+            if [ $# -lt 1 ]; then
+                error "Need a file to dump to"
+            fi
+            dumpfile=$1
+            shift
+            cmd="cli_cisco_dump ${dumpfile}";;
+        --cli-i-dump)
+            if [ $# -lt 1 ]; then
+                error "Need a file to dump to"
+            fi
+            dumpfile=$1
+            shift
+            cmd="cli_ios_dump ${dumpfile}";;
+        --cli-check-templates)
+            cmd="cli_check_templates";;
+        --loadfile)
+            loadfile=$1;
+            if [ ! -f "${loadfile}" ]; then
+                error "bad file ${loadfile} to option --loadfile"
+            fi
+            cmd="loadfile ${loadfile}"
+            shift
+            ;;
+        --rollback)
+            if [ -z "$1" ]; then
+                error "bad rollback number to option --rollback"
+            fi
+            cmd="rollback $1"
+            shift
+            ;;
+        --loadxmlfiles)
+            while [ $# -gt 0 ]; do
+                case $1 in
+                    --)
+                        shift
+                        break;;
+                    -*)
+                        break;;
+                    /*)
+                        f=$1
+                        if [ ! -f $f ]; then
+                            error "bad file $1 to option --loadxmlfiles"
+                        fi
+                        files="${files} $f"
+                        shift
+                        ;;
+                    *)
+                        f=`pwd`/$1
+                        if [ ! -f $f ]; then
+                            error "bad file $1 to option --loadxmlfiles"
+                        fi
+                        files="${files} $f"
+                        shift
+                        ;;
+                esac
+            done
+            if [ -z "${files}" ]; then
+                error "missing argument to --loadxmlfiles"
+            fi
+            cmd="loadxmlfiles replace ${files}"
+            ;;
+        --mergexmlfiles)
+            while [ $# -gt 0 ]; do
+                case $1 in
+                    --)
+                        shift
+                        break;;
+                    -*)
+                        break;;
+                    /*)
+                        f=$1
+                        if [ ! -f $f ]; then
+                            error "bad file $1 to option --mergexmlfiles"
+                        fi
+                        files="${files} $f"
+                        shift
+                        ;;
+                    *)
+                        f=`pwd`/$1
+                        if [ ! -f $f ]; then
+                            error "bad file $1 to option --mergexmlfiles"
+                        fi
+                        files="${files} $f"
+                        shift
+                        ;;
+                esac
+            done
+            if [ -z "${files}" ]; then
+                error "missing argument to --mergexmlfiles"
+            fi
+            cmd="loadxmlfiles merge ${files}"
+            ;;
+        --heart)
+            heart="-delayed-heart";;
+        --nolog)
+            nolog="-nolog";;
+        --foreground)
+            daemon="-noinput -foreground";;
+        --stop-on-eof)
+            fg_args="$fg_args -stop_on_eof";;
+        -v | --verbose)
+            fg_args="$fg_args -verbose";;
+        --ignore-initial-validation)
+            iiv="-ignore_initial_validation" ;;
+        --full-upgrade-validation)
+            fuv="-full_upgrade_validation" ;;
+        --stacktrace-depth)
+            if is_numeric $1; then
+                st_depth="-stacktrace_depth $1"
+                shift
+            else
+                error "bad argument $1 to option --stacktrace-depth"
+            fi;;
+        --timeout)
+            if is_numeric $1; then
+                cmd_opts="$cmd_opts -timeout $1"
+                shift
+            else
+                error "bad argument $1 to option --timeout"
+            fi;;
+        --smp)
+            case $1 in
+                [1-9]|[1-9][0-9]|[1-9][0-9][0-9])
+                    smp_opt=$1
+                    shift;;
+                *)
+                    error "bad argument $1 to option --smp";;
+            esac;;
+        --epoll)
+            case $1 in
+                true)
+                    case `uname -s` in
+                        QNX)
+                            error "enhanced poll is not supported on this OS";;
+                        *)
+                            epoll="+K true"
+                            shift;;
+                    esac;;
+                false)
+                    epoll="+K false"
+                    shift;;
+                *)
+                    error "bad argument $1 to option --epoll";;
+            esac;;
+        --mem-debug)
+            # change memory allocation logic to allow
+            # inclusion of size info in --debug-dump
+            alloc_enable="u";;
+        --printlog)
+            logfile=$1
+            shift
+            cmd="printlog ${logfile}";;
+        --show-debug-dump)
+            dumpfile=$1
+            shift
+            cmd="show_debug_dump ${dumpfile}";;
+        --set-snmp-engine-boots)
+            case $1 in
+                *[!0-9]*)
+                    error "bad argument $1 to option --set-snmp-engine-boots";;
+                *)
+                    cmd="set_snmp_engine_boots $1";
+                    shift;;
+            esac;;
+        -h | --help)
+            usage
+            exit;;
+        *)
+            error "${arg}: Unknown option"
+    esac
+done
+
+ROOTDIR=${libdir}/confd
+BINDIR=${ROOTDIR}/erts/bin
+PROGNAME=confd
+EMU=confd
+HOME=${HOME-"/"}
+TOPDIR=${confd_dir}
+export ROOTDIR BINDIR PROGNAME EMU HOME TOPDIR
+
+case ${smp_opt} in
+    '')
+        if [ -f ${BINDIR}/confd -a -f ${BINDIR}/confd.smp ]; then
+            smp="-smp auto"
+        elif [ -f ${BINDIR}/confd ]; then
+            smp="-smp disable"
+        else
+            smp="-smp enable"
+        fi
+        ;;
+    1)
+        if [ -f ${BINDIR}/confd ]; then
+            smp="-smp disable"
+        else
+            smp="-smp enable +S 1"
+        fi
+        ;;
+    *)
+        if [ -f ${BINDIR}/confd.smp ]; then
+            smp="-smp enable +S $smp_opt"
+        else
+            error "SMP support requires ${BINDIR}/confd.smp"
+        fi
+        ;;
+esac
+
+util_cmd="${BINDIR}/confdexec ${smp} +B ${async} -boot confdc -noinput -run confd_rcmd"
+daemon_cmd="${BINDIR}/confdexec ${smp} ${epoll} +B ${async} +M${alloc_enable}e true -boot confd ${daemon} ${iiv} ${fuv} ${st_depth} ${fg_args} ${addloadpath} -shutdown_time 30000"
+
+max_fds=`ulimit -n`
+if [ "${max_fds}" -gt 1024 ]; then
+    ERL_MAX_ETS_TABLES=`expr ${max_fds} + 1000`
+    export ERL_MAX_ETS_TABLES
+fi
+
+
+if [ "${cmd}" = "areload" ]; then
+    echo "running in background"
+    ${util_cmd} reload > /dev/null &
+    exit 0
+fi
+
+if [ "${cmd}" != "" ]; then
+    exec ${util_cmd} ${cmd} ${cmd_opts}
+    exit $?
+fi
+
+cmd="${daemon_cmd} ${heart} -conffile ${conffile} ${nolog} ${phase} -max_fds ${max_fds}"
+HEART_COMMAND="${cmd}"
+export HEART_COMMAND
+exec ${cmd}

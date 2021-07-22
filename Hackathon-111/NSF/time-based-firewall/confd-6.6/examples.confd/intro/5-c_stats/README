@@ -1,0 +1,73 @@
+Example #5: Read-only Instrumentation in C
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how you can instrument C applications to
+become ConfD sources of read-only data, typically statistics or
+operational information. To do this, the read-only part of the data
+provider API is used.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+The "arpstat" application is monitoring the operating system ARP
+tables by running '/sbin/arp -an' whenever a manager asks for the
+current status.  Arpstat is using the data provider API (read-only),
+so to ConfD it's acting as an external read-only database, but it's
+really drastically simpler than it sounds.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+ 2. To see what's happening inside ConfD, optionally tail the ConfD
+    log file. Unless you have changed the default configuration for
+    this example (see confd.conf) the command would be
+
+        $ tail -f ./confd.log
+
+ 3. Start the CLI with 'make cli' and try some commands
+
+       (J) > show status arpentries
+
+       (C) > show arpentries
+
+    Remember to use <TAB> to speed up command entry. Since the data is
+    read-only, there really isn't much more you can do here. Type
+    'exit' to terminate the CLI.
+
+ 4. You can also compose the same queries using NETCONF. Try the
+    cmd-*.xml commands in the example:
+
+       netconf-console cmd-get-all.xml
+       netconf-console cmd-get-arpstat.xml
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Using ConfD with external Data
++ man 3 confd_lib
++ man 3 confd_types
+
+
+Exercises
+~~~~~~~~~~
+
+X1. Add support for IProute2 information, as in Example #4.

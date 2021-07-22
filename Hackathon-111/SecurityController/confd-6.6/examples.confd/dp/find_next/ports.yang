@@ -1,0 +1,29 @@
+module ports {
+  namespace "http://tail-f.com/ns/example/ports";
+  prefix ports;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  list port {
+    key "slot port";
+    config false;
+    tailf:callpoint ps;
+    tailf:cli-no-key-completion;
+    leaf slot {
+      type int8;
+    }
+    leaf port {
+      type int8;
+    }
+    leaf status {
+      type enumeration {
+        enum "disabled";
+        enum "active";
+        enum "error";
+      }
+      mandatory true;
+    }
+  }
+}

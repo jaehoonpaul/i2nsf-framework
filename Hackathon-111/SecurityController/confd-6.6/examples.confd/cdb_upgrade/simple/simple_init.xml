@@ -1,0 +1,8 @@
+<simple:simple xmlns:simple="http://tail-f.com/ns/example/simple">
+  <simple:color>green</simple:color>
+  <simple:value1>5</simple:value1>
+  <simple:value2>30000</simple:value2>
+  <simple:value3>-5</simple:value3>
+  <simple:value4>99</simple:value4>
+  <simple:value6>-999</simple:value6>
+</simple:simple>

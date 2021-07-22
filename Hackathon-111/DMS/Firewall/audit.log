@@ -1,0 +1,4 @@
+<INFO> 6-Mar-2019::10:39:06.183 nsf-1 confd[8304]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:58876 with ssh, member of groups: admin
+<INFO> 6-Mar-2019::10:39:06.183 nsf-1 confd[8304]: audit user: admin/0 logged in via netconf from 127.0.0.1:58876 with ssh using local authentication
+<INFO> 6-Mar-2019::10:39:06.213 nsf-1 confd[8304]: audit user: admin/28 assigned to groups: admin
+<INFO> 6-Mar-2019::10:39:06.478 nsf-1 confd[8304]: audit user: admin/0 logged out <local> user

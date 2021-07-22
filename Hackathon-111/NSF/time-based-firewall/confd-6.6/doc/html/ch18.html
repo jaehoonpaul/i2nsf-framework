@@ -1,0 +1,677 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;18.&nbsp;Web UI Development</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch17.html" title="Chapter&nbsp;17.&nbsp;The SNMP Agent"><link rel="next" href="ch19.html" title="Chapter&nbsp;19.&nbsp;The JSON-RPC API"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;18.&nbsp;Web UI Development</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch17.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch19.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.webui_intro"></a>Chapter&nbsp;18.&nbsp;Web UI Development</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch18.html#d5e9639">18.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch18.html#d5e9656">18.2. Example of a common flow</a></span></dt><dt><span class="sect1"><a href="ch18.html#d5e9677">18.3. Example of a JSON-RPC client</a></span></dt><dt><span class="sect1"><a href="ch18.html#d5e9682">18.4. Example of a Comet client</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9639"></a>18.1.&nbsp;Introduction</h2></div></div></div><p>
+      Web UI development is thought to be in the hands of the customer's
+      frontend developers - they will know best the requirements and how
+      to fulfill those requirements in terms of esthetics, functionality
+      and tool chain (frameworks, libraries, external data sources and
+      services).
+    </p><p>
+      ConfD
+      comes with a nortbound interface in the shape of a JSON-RPC API. This API
+      is designed with Web UI applications in mind, and it complies with <a class="link" href="http://www.jsonrpc.org/specification" target="_top">the JSON-RPC 2.0
+      specification [http://www.jsonrpc.org/specification]</a>, while using
+      HTTP/S as the transport mechanism.
+    </p><p>
+      The JSON-RPC API contains a handful of methods with well defined input
+      <span class="emphasis"><em>method</em></span> and <span class="emphasis"><em>params</em></span>, along with
+      the output <span class="emphasis"><em>result</em></span>.
+    </p><p>
+      In addition, the API also implements a Comet model, as long polling,
+      to allow the client to subscribe to different server events and receive
+      event notifications about those events in near real time.
+    </p><p>
+      You can call these from a browser via AJAX (e.g. XMLHTTPRequest, <a class="link" href="https://jquery.com/" target="_top">jQuery [https://jquery.com/]</a>)
+      or from the command line (e.g. <a class="link" href="https://github.com/bagder/curl" target="_top">curl
+      [https://github.com/bagder/curl]</a>, <a class="link" href="https://github.com/jkbr/httpie" target="_top">httpie
+      [https://github.com/jkbr/httpie]</a>):
+    </p><pre class="programlisting">
+      <em class="hl-comment" style="color: silver">// with jQuery</em>
+      $.ajax({
+        type: <strong class="hl-string"><em style="color:red">'post'</em></strong>,
+        url: <strong class="hl-string"><em style="color:red">'/jsonrpc'</em></strong>,
+        contentType: <strong class="hl-string"><em style="color:red">'application/json'</em></strong>,
+        data: JSON.stringify({
+        jsonrpc: <strong class="hl-string"><em style="color:red">'2.0'</em></strong>,
+        id: <span class="hl-number">1</span>,
+        method: <strong class="hl-string"><em style="color:red">'login'</em></strong>,
+        params: {
+          <strong class="hl-string"><em style="color:red">'user'</em></strong>: <strong class="hl-string"><em style="color:red">'joe'</em></strong>,
+          <strong class="hl-string"><em style="color:red">'passwd'</em></strong>: <strong class="hl-string"><em style="color:red">'SWkkasE32'</em></strong>
+        }
+        }),
+        dataType: <strong class="hl-string"><em style="color:red">'json'</em></strong>
+      })
+      .done(<strong class="hl-keyword">function</strong>(data) {
+        <strong class="hl-keyword">if</strong> (data.result)
+        alert(data.result);
+        <strong class="hl-keyword">else</strong>
+        alert(data.error.type);
+        });
+    </pre><p>
+      or
+    </p><pre class="programlisting">
+      # with curl
+      curl \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -d '{"jsonrpc": "2.0", "id": 1, \
+      "method": "login", \
+      "params": {"user": "joe", \
+      "passwd": "SWkkasE32"}}' \
+      http://127.0.0.1:8008/jsonrpc
+
+      # with httpie
+      http POST http://127.0.0.1:8008/jsonrpc \
+      jsonrpc=2.0 id:=1 \
+      method=login \
+      params:='{"user": "joe", "passwd": "SWkkasE32"}'
+    </pre></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9656"></a>18.2.&nbsp;Example of a common flow</h2></div></div></div><p>
+      You can read in the JSON-RPC API chapter about all the available methods
+      and their signatures, but here is a working example of how a common flow
+      would look like:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>login</p></li><li class="listitem"><p>create a new read transaction</p></li><li class="listitem"><p>read a value</p></li><li class="listitem"><p>
+          create a new webui (read-write) transaction,
+          in preparation for changing the value
+        </p></li><li class="listitem"><p>change a value</p></li><li class="listitem"><p>commit (save) the changes</p></li><li class="listitem"><p>meanwhile, subscribe to changes and receive a notification</p></li></ul></div><p>
+      In the release package, under
+      <code class="code">${CONFD_DIR}/var/confd/webui/example</code>,
+      you will find working code to run the example below.
+    </p><pre class="programlisting">
+      <em class="hl-comment" style="color: silver">/*jshint devel:true*/</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+<em class="hl-comment" style="color: silver">// The following code is purely for example purposes.</em>
+<em class="hl-comment" style="color: silver">// The code has inline comments for a better understanding.</em>
+<em class="hl-comment" style="color: silver">// Your mileage might vary.</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+
+define([
+  <strong class="hl-string"><em style="color:red">'lodash'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'bluebird'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'./JsonRpc'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'./Comet'</em></strong>
+], <strong class="hl-keyword">function</strong>(
+  _,
+  Promise,
+  JsonRpc,
+  Comet
+) {
+  <strong class="hl-string"><em style="color:red">'use strict'</em></strong>;
+
+  <em class="hl-comment" style="color: silver">// CHANGE AT LEAST THESE</em>
+  <em class="hl-comment" style="color: silver">// IN ORDER TO MAKE THIS EXAMPLE WORK IN YOUR SETUP</em>
+  <strong class="hl-keyword">var</strong> jsonrpcUrl = <strong class="hl-string"><em style="color:red">'/jsonrpc'</em></strong>, <em class="hl-comment" style="color: silver">// 'http://localhost:8008/jsonrpc';</em>
+      path = <strong class="hl-string"><em style="color:red">'/dhcp:dhcp/max-lease-time'</em></strong>,
+      value = <strong class="hl-keyword">Math</strong>.floor(<strong class="hl-keyword">Math</strong>.random() * <span class="hl-number">800</span>) + <span class="hl-number">7200</span>;
+
+  <strong class="hl-keyword">var</strong> log,
+      jsonRpc,
+      comet,
+      funs = {},
+      ths = {
+        read: <strong class="hl-keyword">undefined</strong>,
+        webui: <strong class="hl-keyword">undefined</strong>
+      };
+
+  <em class="hl-comment" style="color: silver">// UTILITY</em>
+  log = <strong class="hl-keyword">function</strong>(msg) {
+    document.body.innerHTML =
+      <strong class="hl-string"><em style="color:red">'&lt;pre&gt;'</em></strong> +
+      msg +
+      <strong class="hl-string"><em style="color:red">'&lt;/pre&gt;'</em></strong> +
+      document.body.innerHTML;
+  };
+
+  <em class="hl-comment" style="color: silver">// SETUP</em>
+  jsonRpc = <strong class="hl-keyword">new</strong> JsonRpc({
+    url: jsonrpcUrl,
+    onError: <strong class="hl-keyword">function</strong>(method, params, deferred, reply) {
+      <strong class="hl-keyword">var</strong> error = reply.error,
+          msg = [method,
+                 params,
+                 reply.id,
+                 error.code,
+                 error.type,
+                 error.message
+                ];
+
+      <strong class="hl-keyword">if</strong> (method === <strong class="hl-string"><em style="color:red">'comet'</em></strong>) {
+        <strong class="hl-keyword">return</strong>;
+      }
+
+      window.alert(<strong class="hl-string"><em style="color:red">'JsonRpc error: '</em></strong> + msg);
+    }
+  });
+
+  comet = <strong class="hl-keyword">new</strong> Comet({
+    jsonRpc: jsonRpc,
+    onError: <strong class="hl-keyword">function</strong>(reply) {
+      <strong class="hl-keyword">var</strong> error = reply.error,
+          msg = [reply.id, error.code, error.type, error.message];
+
+      window.alert(<strong class="hl-string"><em style="color:red">'Comet error: '</em></strong> + msg);
+    }
+  });
+
+  <em class="hl-comment" style="color: silver">// CALLS FOR A COMMON SCENARIO</em>
+  funs.login = <strong class="hl-keyword">function</strong>() {
+    log(<strong class="hl-string"><em style="color:red">'Logging in as admin:admin...'</em></strong>);
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'login'</em></strong>, {
+      user: <strong class="hl-string"><em style="color:red">'admin'</em></strong>,
+      passwd: <strong class="hl-string"><em style="color:red">'admin'</em></strong>
+    }).done(<strong class="hl-keyword">function</strong>() {
+      log(<strong class="hl-string"><em style="color:red">'Logged in.'</em></strong>);
+    });
+  };
+
+  funs.getSystemSetting = <strong class="hl-keyword">function</strong>() {
+    log(<strong class="hl-string"><em style="color:red">'Getting system settings...'</em></strong>);
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'get_system_setting'</em></strong>).done(<strong class="hl-keyword">function</strong>(result) {
+      log(JSON.stringify(result, null, <span class="hl-number">1</span>));
+    });
+  };
+
+  funs.newReadTrans = <strong class="hl-keyword">function</strong>() {
+    log(<strong class="hl-string"><em style="color:red">'Create a new read-only transaction...'</em></strong>);
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'new_read_trans'</em></strong>, {
+      db: <strong class="hl-string"><em style="color:red">'running'</em></strong>
+    }).done(<strong class="hl-keyword">function</strong>(result) {
+      ths.read = result.th;
+      log(<strong class="hl-string"><em style="color:red">'Read-only transaction with th (transaction handle) id: '</em></strong> +
+          result.th + <strong class="hl-string"><em style="color:red">'.'</em></strong>);
+    });
+  };
+
+  funs.newWebuiTrans = <strong class="hl-keyword">function</strong>() {
+    log(<strong class="hl-string"><em style="color:red">'Create a new webui (read-write) transaction...'</em></strong>);
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'new_webui_trans'</em></strong>, {
+      conf_mode: <strong class="hl-string"><em style="color:red">'private'</em></strong>,
+      db: <strong class="hl-string"><em style="color:red">'candidate'</em></strong>
+    }).done(<strong class="hl-keyword">function</strong>(result) {
+      ths.webui = result.th;
+      log(<strong class="hl-string"><em style="color:red">'webui (read-write) transaction with th (transaction handle) id: '</em></strong> +
+          result.th + <strong class="hl-string"><em style="color:red">'.'</em></strong>);
+    });
+  };
+
+  funs.getValue = <strong class="hl-keyword">function</strong>(args <em class="hl-comment" style="color: silver">/*{th, path}*/</em>) {
+    log(<strong class="hl-string"><em style="color:red">'Get value for '</em></strong> + args.path + <strong class="hl-string"><em style="color:red">' in '</em></strong> + args.th + <strong class="hl-string"><em style="color:red">' transaction...'</em></strong>);
+    <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">typeof</strong> args.th === <strong class="hl-string"><em style="color:red">'string'</em></strong>) {
+      args.th = ths[args.th];
+    }
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'get_value'</em></strong>, {
+      th: args.th,
+      path: path
+    }).done(<strong class="hl-keyword">function</strong>(result) {
+      log(path + <strong class="hl-string"><em style="color:red">' is now set to: '</em></strong> + result.value + <strong class="hl-string"><em style="color:red">'.'</em></strong>);
+    });
+  };
+
+  funs.setValue = <strong class="hl-keyword">function</strong>(args <em class="hl-comment" style="color: silver">/*{th, path, value}*/</em>) {
+    log(<strong class="hl-string"><em style="color:red">'Set value for '</em></strong> + args.path +
+        <strong class="hl-string"><em style="color:red">' to '</em></strong> + args.value +
+        <strong class="hl-string"><em style="color:red">' in '</em></strong> + args.th + <strong class="hl-string"><em style="color:red">' transaction...'</em></strong>);
+    <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">typeof</strong> args.th === <strong class="hl-string"><em style="color:red">'string'</em></strong>) {
+      args.th = ths[args.th];
+    }
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'set_value'</em></strong>, {
+      th: args.th,
+      path: path,
+      value: args.value
+    }).done(<strong class="hl-keyword">function</strong>(result) {
+      log(path + <strong class="hl-string"><em style="color:red">' is now set to: '</em></strong> + result.value + <strong class="hl-string"><em style="color:red">'.'</em></strong>);
+    });
+  };
+
+  funs.validate = <strong class="hl-keyword">function</strong>(args <em class="hl-comment" style="color: silver">/*{th}*/</em>) {
+    log(<strong class="hl-string"><em style="color:red">'Validating changes in '</em></strong> + args.th + <strong class="hl-string"><em style="color:red">' transaction...'</em></strong>);
+    <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">typeof</strong> args.th === <strong class="hl-string"><em style="color:red">'string'</em></strong>) {
+      args.th = ths[args.th];
+    }
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'validate_commit'</em></strong>, {
+      th: args.th
+    }).done(<strong class="hl-keyword">function</strong>() {
+      log(<strong class="hl-string"><em style="color:red">'Validated.'</em></strong>);
+    });
+  };
+
+  funs.commit = <strong class="hl-keyword">function</strong>(args <em class="hl-comment" style="color: silver">/*{th}*/</em>) {
+    log(<strong class="hl-string"><em style="color:red">'Commiting changes in '</em></strong> + args.th + <strong class="hl-string"><em style="color:red">' transaction...'</em></strong>);
+    <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">typeof</strong> args.th === <strong class="hl-string"><em style="color:red">'string'</em></strong>) {
+      args.th = ths[args.th];
+    }
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'commit'</em></strong>, {
+      th: args.th
+    }).done(<strong class="hl-keyword">function</strong>() {
+      log(<strong class="hl-string"><em style="color:red">'Commited.'</em></strong>);
+    });
+  };
+
+  funs.subscribeChanges = <strong class="hl-keyword">function</strong>(args <em class="hl-comment" style="color: silver">/*{path, handle}*/</em>) {
+    log(<strong class="hl-string"><em style="color:red">'Subcribing to changes of '</em></strong> + args.path +
+        <strong class="hl-string"><em style="color:red">' (with handle '</em></strong> + args.handle + <strong class="hl-string"><em style="color:red">')...'</em></strong>);
+    <strong class="hl-keyword">return</strong> jsonRpc.call(<strong class="hl-string"><em style="color:red">'subscribe_changes'</em></strong>, {
+      comet_id: comet.id,
+      path: args.path,
+      handle: args.handle,
+    }).done(<strong class="hl-keyword">function</strong>(result) {
+      log(<strong class="hl-string"><em style="color:red">'Subscribed with handle id '</em></strong> + result.handle + <strong class="hl-string"><em style="color:red">'.'</em></strong>);
+    });
+  };
+
+  <em class="hl-comment" style="color: silver">// RUN</em>
+  Promise.resolve([
+    funs.login,
+    funs.getSystemSetting,
+    funs.newReadTrans,
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.getValue({th: <strong class="hl-string"><em style="color:red">'read'</em></strong>, path: path});
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">var</strong> handle = comet.id + <strong class="hl-string"><em style="color:red">'-max-lease-time'</em></strong>;
+      comet.on(handle, <strong class="hl-keyword">function</strong>(msg) {
+        log(<strong class="hl-string"><em style="color:red">'&gt;&gt;&gt; Notification &gt;&gt;&gt;\n'</em></strong> +
+            JSON.stringify(msg, null, <span class="hl-number">2</span>) +
+            <strong class="hl-string"><em style="color:red">'\n&lt;&lt;&lt; Notification &lt;&lt;&lt;'</em></strong>);
+      });
+      <strong class="hl-keyword">return</strong> funs.subscribeChanges({th: <strong class="hl-string"><em style="color:red">'read'</em></strong>, path: path, handle: handle});
+    },
+    funs.newWebuiTrans,
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.setValue({th: <strong class="hl-string"><em style="color:red">'webui'</em></strong>, path: path, value: value.toString()});
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.getValue({th: <strong class="hl-string"><em style="color:red">'webui'</em></strong>, path: path});
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.validate({th: <strong class="hl-string"><em style="color:red">'webui'</em></strong>});
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.commit({th: <strong class="hl-string"><em style="color:red">'webui'</em></strong>});
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> <strong class="hl-keyword">new</strong> Promise(<strong class="hl-keyword">function</strong>(resolve) {
+        log(<strong class="hl-string"><em style="color:red">'Waiting 2.5 seconds before one last call to get_value'</em></strong>);
+        window.setTimeout(<strong class="hl-keyword">function</strong>() {
+          resolve();
+        }, <span class="hl-number">2500</span>);
+      });
+    },
+    <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">return</strong> funs.getValue({th: <strong class="hl-string"><em style="color:red">'read'</em></strong>, path: path});
+    },
+  ]).each(<strong class="hl-keyword">function</strong>(fn){
+    <strong class="hl-keyword">return</strong> fn().then(<strong class="hl-keyword">function</strong>() {
+      log(<strong class="hl-string"><em style="color:red">'--------------------------------------------------'</em></strong>);
+    });
+  });
+});
+
+
+<em class="hl-comment" style="color: silver">// Local Variables:</em>
+<em class="hl-comment" style="color: silver">// mode: js</em>
+<em class="hl-comment" style="color: silver">// js-indent-level: 2</em>
+<em class="hl-comment" style="color: silver">// End:</em>
+
+    </pre></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9677"></a>18.3.&nbsp;Example of a JSON-RPC client</h2></div></div></div><p>
+      In the example above describing a common flow, a reference is made to
+      using a JSON-RPC client to make the RPC calls.
+    </p><p>
+      An example implementation of a JSON-RPC client, used in the example above:
+    </p><pre class="programlisting">
+      <em class="hl-comment" style="color: silver">/*jshint devel:true*/</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+<em class="hl-comment" style="color: silver">// The following code is purely for example purposes.</em>
+<em class="hl-comment" style="color: silver">// The code has inline comments for a better understanding.</em>
+<em class="hl-comment" style="color: silver">// Your mileage might vary.</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+
+define([
+  <strong class="hl-string"><em style="color:red">'jquery'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'lodash'</em></strong>
+], <strong class="hl-keyword">function</strong>(
+  $,
+  _
+) {
+  <strong class="hl-string"><em style="color:red">'use strict'</em></strong>;
+
+  <strong class="hl-keyword">var</strong> JsonRpc;
+
+  JsonRpc = <strong class="hl-keyword">function</strong>(params) {
+    $.extend(<strong class="hl-keyword">this</strong>, {
+      <em class="hl-comment" style="color: silver">// API</em>
+
+      <em class="hl-comment" style="color: silver">// Call a JsonRpc method with params</em>
+      call: <strong class="hl-keyword">undefined</strong>,
+
+      <em class="hl-comment" style="color: silver">// API (OPTIONAL)</em>
+
+      <em class="hl-comment" style="color: silver">// Decide what to do when there is no active session</em>
+      onNoSession: <strong class="hl-keyword">undefined</strong>,
+      <em class="hl-comment" style="color: silver">// Decide what to do when the request errors</em>
+      onError: <strong class="hl-keyword">undefined</strong>,
+      <em class="hl-comment" style="color: silver">// Set an id to start using in requests</em>
+      id: <span class="hl-number">0</span>,
+      <em class="hl-comment" style="color: silver">// Set another url for the JSON-RPC API</em>
+      url: <strong class="hl-string"><em style="color:red">'/jsonrpc'</em></strong>,
+
+
+      <em class="hl-comment" style="color: silver">// INTERNAL</em>
+
+      makeOnCallDone: <strong class="hl-keyword">undefined</strong>,
+      makeOnCallFail: <strong class="hl-keyword">undefined</strong>
+    }, params || {});
+
+    _.bindAll(<strong class="hl-keyword">this</strong>, [
+      <strong class="hl-string"><em style="color:red">'call'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'onNoSession'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'onError'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'makeOnCallDone'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'makeOnCallFail'</em></strong>
+    ]);
+  };
+
+  JsonRpc.<strong class="hl-keyword">prototype</strong> = {
+    call: <strong class="hl-keyword">function</strong>(method, params, timeout) {
+      <strong class="hl-keyword">var</strong> deferred = $.Deferred();
+
+      <em class="hl-comment" style="color: silver">// Easier to associate request/response logs</em>
+      <em class="hl-comment" style="color: silver">// when the id is unique to each request</em>
+      <strong class="hl-keyword">this</strong>.id = <strong class="hl-keyword">this</strong>.id + <span class="hl-number">1</span>;
+
+      $.ajax({
+        <em class="hl-comment" style="color: silver">// HTTP method is always POST for the JSON-RPC API</em>
+        type: <strong class="hl-string"><em style="color:red">'POST'</em></strong>,
+        <em class="hl-comment" style="color: silver">// Let's show &lt;method&gt; rather than just "jsonrpc"</em>
+        <em class="hl-comment" style="color: silver">// in the browsers' Developer Tools - Network tab - Name column</em>
+        url: <strong class="hl-keyword">this</strong>.url + <strong class="hl-string"><em style="color:red">'/'</em></strong> + method,
+        <em class="hl-comment" style="color: silver">// Content-Type is mandatory</em>
+        <em class="hl-comment" style="color: silver">// and is always "application/json" for the JSON-RPC API</em>
+        contentType: <strong class="hl-string"><em style="color:red">'application/json'</em></strong>,
+        <em class="hl-comment" style="color: silver">// Optionally set a timeout for the request</em>
+        timeout: timeout,
+        <em class="hl-comment" style="color: silver">// Request payload</em>
+        data: JSON.stringify({
+          jsonrpc: <strong class="hl-string"><em style="color:red">'2.0'</em></strong>,
+          id: <strong class="hl-keyword">this</strong>.id,
+          method: method,
+          params: params
+        }),
+        dataType: <strong class="hl-string"><em style="color:red">'json'</em></strong>,
+        <em class="hl-comment" style="color: silver">// Just in case you are doing cross domain requests</em>
+        <em class="hl-comment" style="color: silver">// NOTE: make sure you are setting CORS headers similarly to</em>
+        <em class="hl-comment" style="color: silver">// --</em>
+        <em class="hl-comment" style="color: silver">// Access-Control-Allow-Origin: http://server1.com, http://server2.com</em>
+        <em class="hl-comment" style="color: silver">// Access-Control-Allow-Credentials: true</em>
+        <em class="hl-comment" style="color: silver">// Access-Control-Allow-Headers: Origin, Content-Type, Accept</em>
+        <em class="hl-comment" style="color: silver">// Access-Control-Request-Method: POST</em>
+        <em class="hl-comment" style="color: silver">// --</em>
+        <em class="hl-comment" style="color: silver">// if you want to allow JSON-RPC calls from server1.com and server2.com</em>
+        crossDomain: true,
+        xhrFields: {
+          withCredentials: true
+        }
+      })
+      <em class="hl-comment" style="color: silver">// When done, or on failure,</em>
+      <em class="hl-comment" style="color: silver">// call a function that has access to both</em>
+      <em class="hl-comment" style="color: silver">// the request and the response information</em>
+      .done(<strong class="hl-keyword">this</strong>.makeOnCallDone(method, params, deferred))
+      .fail(<strong class="hl-keyword">this</strong>.makeOnCallFail(method, params, deferred));
+      <strong class="hl-keyword">return</strong> deferred.promise();
+    },
+
+    makeOnCallDone: <strong class="hl-keyword">function</strong>(method, params, deferred) {
+      <strong class="hl-keyword">var</strong> me = <strong class="hl-keyword">this</strong>;
+
+      <strong class="hl-keyword">return</strong> <strong class="hl-keyword">function</strong>(reply<em class="hl-comment" style="color: silver">/*, status, xhr*/</em>) {
+        <strong class="hl-keyword">if</strong> (reply.error) {
+          <strong class="hl-keyword">return</strong> me.onError(method, params, deferred, reply);
+        }
+        deferred.resolve(reply.result);
+      };
+    },
+
+    onNoSession: <strong class="hl-keyword">function</strong>() {
+      <em class="hl-comment" style="color: silver">// It is common practice that when missing a session identifier</em>
+      <em class="hl-comment" style="color: silver">// or when the session crashes or it times out due to inactivity</em>
+      <em class="hl-comment" style="color: silver">// the user is taken back to the login page</em>
+      _.defer(<strong class="hl-keyword">function</strong>() {
+        window.location.href = <strong class="hl-string"><em style="color:red">'login.html'</em></strong>;
+      });
+    },
+
+    onError: <strong class="hl-keyword">function</strong>(method, params, deferred, reply) {
+      <strong class="hl-keyword">if</strong> (reply.error.type === <strong class="hl-string"><em style="color:red">'session.missing_sessionid'</em></strong> ||
+          reply.error.type === <strong class="hl-string"><em style="color:red">'session.invalid_sessionid'</em></strong>) {
+        <strong class="hl-keyword">this</strong>.onNoSession();
+      }
+
+      deferred.reject(reply.error);
+    },
+
+    makeOnCallFail: <strong class="hl-keyword">function</strong>(method, params, deferred) {
+      <strong class="hl-keyword">return</strong> <strong class="hl-keyword">function</strong>(xhr, status, errorMessage) {
+        <strong class="hl-keyword">var</strong> error;
+
+        error = $.extend(<strong class="hl-keyword">new</strong> <strong class="hl-keyword">Error</strong>(errorMessage), {
+          type: <strong class="hl-string"><em style="color:red">'ajax.response.error'</em></strong>,
+          detail: JSON.stringify({method: method, params: params})
+        });
+
+        deferred.reject(error);
+      };
+    }
+  };
+
+  <strong class="hl-keyword">return</strong> JsonRpc;
+});
+
+<em class="hl-comment" style="color: silver">// Local Variables:</em>
+<em class="hl-comment" style="color: silver">// mode: js</em>
+<em class="hl-comment" style="color: silver">// js-indent-level: 2</em>
+<em class="hl-comment" style="color: silver">// End:</em>
+
+    </pre></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e9682"></a>18.4.&nbsp;Example of a Comet client</h2></div></div></div><p>
+      In the example above describing a common flow, a reference is made to
+      starting a Comet channel and subscribing to changes on a specific path.
+    </p><p>
+      An example implementation of a Comet client, used in the example above:
+    </p><pre class="programlisting">
+      <em class="hl-comment" style="color: silver">/*jshint devel:true*/</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+<em class="hl-comment" style="color: silver">// The following code is purely for example purposes.</em>
+<em class="hl-comment" style="color: silver">// The code has inline comments for a better understanding.</em>
+<em class="hl-comment" style="color: silver">// Your mileage might vary.</em>
+<em class="hl-comment" style="color: silver">// !!!</em>
+
+define([
+  <strong class="hl-string"><em style="color:red">'jquery'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'lodash'</em></strong>,
+  <strong class="hl-string"><em style="color:red">'./JsonRpc'</em></strong>
+], <strong class="hl-keyword">function</strong>(
+  $,
+  _,
+  JsonRpc
+) {
+  <strong class="hl-string"><em style="color:red">'use strict'</em></strong>;
+
+  <strong class="hl-keyword">var</strong> Comet;
+
+  Comet = <strong class="hl-keyword">function</strong>(params) {
+    $.extend(<strong class="hl-keyword">this</strong>, {
+      <em class="hl-comment" style="color: silver">// API</em>
+
+      <em class="hl-comment" style="color: silver">// Add a callback for a notification handle</em>
+      on: <strong class="hl-keyword">undefined</strong>,
+      <em class="hl-comment" style="color: silver">// Remove a specific callback or all callbacks for a notification handle</em>
+      off: <strong class="hl-keyword">undefined</strong>,
+      <em class="hl-comment" style="color: silver">// Stop all comet notifications</em>
+      stop: <strong class="hl-keyword">undefined</strong>,
+
+      <em class="hl-comment" style="color: silver">// API (OPTIONAL)</em>
+
+      <em class="hl-comment" style="color: silver">// Decide what to do when the comet errors</em>
+      onError: <strong class="hl-keyword">undefined</strong>,
+      <em class="hl-comment" style="color: silver">// Optionally set a different id for this comet channel</em>
+      id: <strong class="hl-string"><em style="color:red">'main-1.'</em></strong> + <strong class="hl-keyword">String</strong>(<strong class="hl-keyword">Math</strong>.random()).substring(<span class="hl-number">2</span>),
+      <em class="hl-comment" style="color: silver">// Optionally give an existing JsonRpc client</em>
+      jsonRpc: <strong class="hl-keyword">new</strong> JsonRpc(),
+      <em class="hl-comment" style="color: silver">// Optionally wait 1 second in between polling the comet channel</em>
+      sleep: <span class="hl-number">1</span> * <span class="hl-number">1000</span>,
+
+      <em class="hl-comment" style="color: silver">// INTERNAL</em>
+
+      handlers: [],
+      polling: false,
+      poll: <strong class="hl-keyword">undefined</strong>,
+      onPollDone: <strong class="hl-keyword">undefined</strong>,
+      onPollFail: <strong class="hl-keyword">undefined</strong>
+    }, params || {});
+
+    _.bindAll(<strong class="hl-keyword">this</strong>, [
+      <strong class="hl-string"><em style="color:red">'on'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'off'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'stop'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'onError'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'poll'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'onPollDone'</em></strong>,
+      <strong class="hl-string"><em style="color:red">'onPollFail'</em></strong>
+    ]);
+  };
+
+  Comet.<strong class="hl-keyword">prototype</strong> = {
+    on: <strong class="hl-keyword">function</strong>(handle, callback) {
+      <strong class="hl-keyword">if</strong> (!callback) {
+        <strong class="hl-keyword">throw</strong> <strong class="hl-keyword">new</strong> <strong class="hl-keyword">Error</strong>(<strong class="hl-string"><em style="color:red">'Missing a callback for handle '</em></strong> + handle);
+      }
+
+      <em class="hl-comment" style="color: silver">// Add a handler made of handle id and a callback function</em>
+      <strong class="hl-keyword">this</strong>.handlers.push({handle: handle, callback: callback});
+
+      <em class="hl-comment" style="color: silver">// Start polling</em>
+      _.defer(<strong class="hl-keyword">this</strong>.poll);
+    },
+
+    off: <strong class="hl-keyword">function</strong>(handle, callback) {
+      <strong class="hl-keyword">if</strong> (!handle) {
+        <strong class="hl-keyword">throw</strong> <strong class="hl-keyword">new</strong> <strong class="hl-keyword">Error</strong>(<strong class="hl-string"><em style="color:red">'Missing a handle'</em></strong>);
+      }
+
+      <em class="hl-comment" style="color: silver">// Remove all handlers matching the handle,</em>
+      <em class="hl-comment" style="color: silver">// and optionally also the callback function</em>
+      _.remove(<strong class="hl-keyword">this</strong>.handlers, {handle: handle, callback: callback});
+
+      <em class="hl-comment" style="color: silver">// If there are no more handlers matching the handle,</em>
+      <em class="hl-comment" style="color: silver">// then unsubscribe from notifications, in order to releave</em>
+      <em class="hl-comment" style="color: silver">// the server and the network from redundancy</em>
+      <strong class="hl-keyword">if</strong> (!_.find(<strong class="hl-keyword">this</strong>.handlers, {handle: handle}).length) {
+        <strong class="hl-keyword">this</strong>.jsonRpc.call(<strong class="hl-string"><em style="color:red">'unsubscribe'</em></strong>, {handle: handle});
+      }
+    },
+
+    stop: <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">var</strong> me = <strong class="hl-keyword">this</strong>,
+          deferred = $.Deferred(),
+          deferreds = [];
+
+      <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">this</strong>.polling) {
+        <em class="hl-comment" style="color: silver">// Unsubcribe from all known notifications, in order to releave</em>
+        <em class="hl-comment" style="color: silver">// the server and the network from redundancy</em>
+        _.each(<strong class="hl-keyword">this</strong>.handlers, <strong class="hl-keyword">function</strong>(handler) {
+          deferreds.push(me.jsonRpc(<strong class="hl-string"><em style="color:red">'unsubscribe'</em></strong>, {
+            handle: handler.handle
+          }));
+        });
+
+        $.when.apply($, deferreds).done(<strong class="hl-keyword">function</strong>() {
+          deferred.resolve();
+        }).fail(<strong class="hl-keyword">function</strong>(err) {
+          deferred.reject(err);
+        }).always(<strong class="hl-keyword">function</strong>() {
+          me.polling = false;
+          me.handlers = [];
+        });
+      } <strong class="hl-keyword">else</strong> {
+        deferred.resolve();
+      }
+
+      <strong class="hl-keyword">return</strong> deferred.promise();
+    },
+
+    poll: <strong class="hl-keyword">function</strong>() {
+      <strong class="hl-keyword">var</strong> me = <strong class="hl-keyword">this</strong>;
+
+      <strong class="hl-keyword">if</strong> (<strong class="hl-keyword">this</strong>.polling) {
+        <strong class="hl-keyword">return</strong>;
+      }
+
+      <strong class="hl-keyword">this</strong>.polling = true;
+
+      <strong class="hl-keyword">this</strong>.jsonRpc.call(<strong class="hl-string"><em style="color:red">'comet'</em></strong>, {
+        comet_id: <strong class="hl-keyword">this</strong>.id
+      }).done(<strong class="hl-keyword">function</strong>(notifications) {
+        me.onPollDone(notifications);
+      }).fail(<strong class="hl-keyword">function</strong>(err) {
+        me.onPollFail(err);
+      }).always(<strong class="hl-keyword">function</strong>() {
+        me.polling = false;
+      });
+    },
+
+    onPollDone: <strong class="hl-keyword">function</strong>(notifications) {
+      <strong class="hl-keyword">var</strong> me = <strong class="hl-keyword">this</strong>;
+
+      <em class="hl-comment" style="color: silver">// Polling has stopped meanwhile</em>
+      <strong class="hl-keyword">if</strong> (!<strong class="hl-keyword">this</strong>.polling) {
+        <strong class="hl-keyword">return</strong>;
+      }
+
+      _.each(notifications, <strong class="hl-keyword">function</strong>(notification) {
+        <strong class="hl-keyword">var</strong> handle = notification.handle,
+            message = notification.message,
+            handlers = _.where(me.handlers, {handle: handle});
+
+        <em class="hl-comment" style="color: silver">// If we received a notification that we cannot handle,</em>
+        <em class="hl-comment" style="color: silver">// then unsubcribe from it, in order to releave</em>
+        <em class="hl-comment" style="color: silver">// the server and the network from redundancy</em>
+        <strong class="hl-keyword">if</strong> (!handlers.length) {
+          <strong class="hl-keyword">return</strong> <strong class="hl-keyword">this</strong>.jsonRpc.call(<strong class="hl-string"><em style="color:red">'unsubscribe'</em></strong>, {handle: handle});
+        }
+
+        _.each(handlers, <strong class="hl-keyword">function</strong>(handler) {
+          _.defer(<strong class="hl-keyword">function</strong>() {handler.callback(message);});
+        });
+      });
+
+      _.defer(<strong class="hl-keyword">this</strong>.poll);
+    },
+
+    onPollFail: <strong class="hl-keyword">function</strong>(error) {
+      <strong class="hl-keyword">switch</strong> (error.type) {
+        <strong class="hl-keyword">case</strong> <strong class="hl-string"><em style="color:red">'comet.duplicated_channel'</em></strong>:
+        <strong class="hl-keyword">this</strong>.onError(error);
+        <strong class="hl-keyword">break</strong>;
+
+        <strong class="hl-keyword">default</strong>:
+        <strong class="hl-keyword">this</strong>.onError(error);
+        _.wait(<strong class="hl-keyword">this</strong>.poll, <strong class="hl-keyword">this</strong>.sleep);
+      }
+    },
+
+    onError: <strong class="hl-keyword">function</strong>(reply) {
+      <strong class="hl-keyword">var</strong> error = reply.error,
+          msg = [reply.id, error.code, error.type, error.message].join(<strong class="hl-string"><em style="color:red">' '</em></strong>);
+
+      console.error(<strong class="hl-string"><em style="color:red">'Comet error: '</em></strong> + msg);
+    }
+  };
+
+  <strong class="hl-keyword">return</strong> Comet;
+});
+
+<em class="hl-comment" style="color: silver">// Local Variables:</em>
+<em class="hl-comment" style="color: silver">// mode: js</em>
+<em class="hl-comment" style="color: silver">// js-indent-level: 2</em>
+<em class="hl-comment" style="color: silver">// End:</em>
+
+    </pre></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch17.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch19.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;17.&nbsp;The SNMP Agent&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;19.&nbsp;The JSON-RPC API</td></tr></table></div></body></html>
