@@ -372,6 +372,13 @@ $ python3 subscribe-url-filtering.py
 $ stress --cpu 2 --vm 6 --timeout 5s
 ```
 
+4. Create a DDoS attacker using the ddos.py targeting the NSF.
+```
+$ python ddos.py
+```
+
+5. The web graph should be updated
+
 ## Termination
 
 1. Security Controller
