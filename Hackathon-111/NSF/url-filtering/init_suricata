@@ -1,5 +1,0 @@
-sleep 10
-sudo rm /var/run/suricata.pid
-sudo iptables -I FORWARD -j NFQUEUE
-sudo suricata -D -c /etc/suricata/suricata.yaml -q 0
-sudo sysctl net.ipv4.ip_forward=1

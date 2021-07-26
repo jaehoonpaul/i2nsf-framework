@@ -1,7 +1,0 @@
-
-%% File automatically generated to bump libversion
-
--define(LIB_VSN, 16#%lib_vsn%).
--define(LIB_PROTO_VSN, %lib_proto_vsn%).
-
-
