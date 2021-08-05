@@ -45,7 +45,7 @@ $ touch local.conf
 ```
 6. Edit the local.conf file with the file from:
 
-https://github.com/jaehoonpaul/i2nsf-framework/blob/master/Hackathon-111/devstack/local.conf
+https://github.com/jaehoonpaul/i2nsf-framework/blob/master/Hackathon-110/devstack/local.conf
 
 Note: Make sure to change the IP address according to your IP
 address in local.conf
