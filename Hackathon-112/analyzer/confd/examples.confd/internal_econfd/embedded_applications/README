@@ -1,0 +1,31 @@
+Running application code inside ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The examples in this directory show how to use the Erlang ConfD API
+("econfd") to run Erlang application code internally in the ConfD
+daemon.
+
+  transform - An implementation of the same transform as in the
+              misc/aaa_transform example, but written in Erlang and
+              running inside ConfD.
+
+  user_type - An Erlang implementation of the callbacks for one of
+              the user-defined types in the misc/user_type example.
+
+For more information about this, read the section "Running application
+code inside ConfD" in the "Advanced Topics" chapter of the User Guide.
+
+  erlang-skeleton -   A skeleton for an embedded Erlang application.
+                      On top there is an erlang-lib directory which may
+                      contain one or more applications. In this case it
+                      is just one application called app_skel. In the
+                      (generated) .app-file a callback module (app_skel)
+                      is registered. app_skel:start/2 starts a top
+                      supervisor (app_skel_sup) which starts a
+                      gen_server (app_skel_server).
+
+  change-file-names - A script which simplifies creation of a new
+                      application using the erlang-skeleton, changing
+                      file names and contents according to the new
+                      application name. See the output from
+                      "./change-file-names -h" for more info.

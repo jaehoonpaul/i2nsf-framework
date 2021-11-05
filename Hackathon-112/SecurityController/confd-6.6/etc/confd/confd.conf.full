@@ -1,0 +1,2822 @@
+<!-- -*- nxml -*- -->
+<!--
+    This is confd.conf.full. It tries to list every configurable option
+    avaialble for ConfD. And (when possible) each item is set to their
+    default value. It is intended as reference, for a simple configuration
+    file usable as a starting point use confd.conf.example instead.
+-->
+
+<confdConfig xmlns="http://tail-f.com/ns/confd_cfg/1.0">
+  <!--
+      ConfD listens to <confdIpcAddress/> for incoming TCP connections
+      from CDB, MAAPI, the CLI, the external
+      database API, as well as commands from the confd script (such as
+      e.g. "confd -\-stop").
+
+      The address and port can be changed. If they are changed, all
+      clients using MAAPI, CDB et.c. must be re-compiled to handle
+      this. See the deployment user-guide on how to do this.
+
+      Note that there are severe security implications involved if ConfD
+      is instructed to bind() to anything but localhost.  Read more
+      about this in the deployment user-guide. Use the ip 0.0.0.0 if you
+      want ConfD to to listen() on all IPs and on all interfaces.
+  -->
+  <confdIpcAddress>
+    <ip>127.0.0.1</ip>
+    <port>4565</port>
+  </confdIpcAddress>
+
+  <!--
+      To explicitly bind several additional listen IPs on the same port
+  -->
+
+  <confdIpcExtraListenIp>192.168.218.1</confdIpcExtraListenIp>
+  <confdIpcExtraListenIp>10.1.2.3</confdIpcExtraListenIp>
+
+
+  <!--
+      ConfD can be set up to use a different protocol than TCP for the
+      IPC connections, see the deployment chapter in the User Guide for
+      the details. In this case confdExternalIpc should be enabled, and
+      the address to use must be given in string form. Enabling
+      confdExternalIpc causes any settings for confdIpcAddress to be
+      ignored.
+  -->
+  <confdExternalIpc>
+    <enabled>false</enabled>
+    <address></address>
+  </confdExternalIpc>
+
+  <!--
+      The maximum length to which the queue of pending connections
+      for the IPC sockets may grow.
+  -->
+  <confdIpcListenBacklog>25</confdIpcListenBacklog>
+
+  <!--
+      ConfD can be configured to restrict access for incoming
+      connections to the IPC listener sockets. The access check
+      requires that connecting clients prove possession of a
+      shared secret.
+  -->
+  <confdIpcAccessCheck>
+    <enabled>false</enabled>
+    <filename/>
+  </confdIpcAccessCheck>
+
+
+  <!--
+      If "true", then a C program will be started that loads the schema into
+      shared memory (which then can be accessed by e.g Python).</para>
+  -->
+  <enableSharedMemorySchema>false</enableSharedMemorySchema>
+
+  <!--
+      The executable that setup the shared memory holding the schema.
+      Note that if the default value is changed ('mmap_schema'),
+      it must be specified as an absolute path (i.e containing the root
+      directory and all other subdirectories leading to the executable).
+  -->
+  <sharedMemorySchemaExecutable/>
+
+
+  <!--
+      The loadPath is searched for .fxs files etc.
+
+      NOTE: if you change the loadPath, the daemon must be restarted,
+      or the "In-service Data Model Upgrade" procedure described in
+      the User Guide can be used - 'confd - -reload' is not enough.
+  -->
+  <loadPath>
+    <!--
+        Several directories can be specified here, without any <dir/>
+        items you will not be able to load any .fxs files.
+
+        Example: <dir>/etc/confd</dir>
+    -->
+  </loadPath>
+
+  <!--
+      This is where ConfD writes persistent state data.  Currently the
+      only state files are 'running.invalid' which exists only if the
+      running database status is invalid, which it will be if one of
+      the database implementation fails during the two-phase commit
+      protocol, 'global.data' which is used to store some data
+      that needs to be retained across reboots, and CLI history
+      files in the cli-history directory.
+  -->
+  <stateDir>/var/confd/state</stateDir>
+
+  <!--
+      Where reloadble ConfD items are stored. In confd.conf or in an
+      external namespace stored in CDB.
+  -->
+  <runtimeReconfiguration>config-file</runtimeReconfiguration>
+
+  <!--
+      By default (false) Confd will refuse to start if
+      any of its nortbound agents fails to bind their
+      respective ports. When enabled, this parameter
+      forces Confd to ignore that fatal error situation
+      and instead it just issues a warning and disables
+      the failing agent. The agent may be enabled by
+      dynamically re-configuring the failing agent to
+      use another port and restart Confd.
+  -->
+  <ignoreBindErrors>
+    <enabled>false</enabled>
+  </ignoreBindErrors>
+
+  <!--
+      A hide group cannot be unhidden unless it has been listed
+      here. A missing or empty password indicates that no password
+      needs to be given when unhiding the group.
+
+      If the group is not listed below then it cannot be unhidden
+      at all.
+
+      Multiple hideGroups can be specified in the file.
+  -->
+  <hideGroup>
+    <name>debug</name>
+    <password></password>
+    <callback>hidepasswd</callback>
+  </hideGroup>
+
+  <!--
+      Operational data cache.
+  -->
+  <opcache>
+    <enabled>false</enabled>
+    <timeout>5</timeout>
+  </opcache>
+
+  <!--
+      Enable only if ConfD runs as a master agent talking to
+      subagents.
+  -->
+  <subagents>
+    <enabled>false</enabled>
+    <subagent>
+      <name>my interfaces subagent</name>
+      <enabled>true</enabled>
+      <tcp>
+        <ip>127.0.0.1</ip>
+        <port>2023</port>
+        <confdAuth>
+          <user>master</user>
+          <group>master</group>
+        </confdAuth>
+      </tcp>
+      <ssh>
+        <ip>127.0.0.1</ip>
+        <port>2022</port>
+        <user>master</user>
+        <password>master</password>
+      </ssh>
+
+      <mount>
+        <path>/</path>
+        <node xmlns:if="http://example.com/interfaces/1.0">if:interfaces</node>
+      </mount>
+      <disableSubtreeOptimization>false</disableSubtreeOptimization>
+    </subagent>
+  </subagents>
+
+  <!--
+      Available notification streams
+  -->
+  <notifications>
+    <eventStreams>
+      <stream>
+        <name>NETCONF</name>
+        <description>Default netconf event stream</description>
+        <replaySupport>true</replaySupport>
+        <builtinReplayStore>
+          <enabled>false</enabled>
+          <dir>./</dir>
+          <maxSize>S10M</maxSize>
+          <maxFiles>50</maxFiles>
+        </builtinReplayStore>
+      </stream>
+      <stream>
+        <name>snmp</name>
+        <description>SNMP notifications</description>
+        <replaySupport>false</replaySupport>
+        <builtinReplayStore>
+          <enabled>false</enabled>
+          <dir>./</dir>
+          <maxSize>S10M</maxSize>
+          <maxFiles>50</maxFiles>
+        </builtinReplayStore>
+      </stream>
+    </eventStreams>
+  </notifications>
+
+  <!--
+       Settings for the SNMP gateway for communication with an
+       external SNMP agent
+  -->
+  <snmpgw>
+    <enabled>false</enabled>
+    <trapPort>5000</trapPort>
+    <agent>
+      <name>a1</name>
+      <subscriptionId>a1</subscriptionId>
+      <forwardNotifStream>snmp</forwardNotifStream>
+      <enabled>true</enabled>
+      <community>private</community>
+      <version>v2c</version>
+      <timeout>PT5S</timeout>
+      <ip>127.0.0.1</ip>
+      <port>161</port>
+      <module>IF-MIB</module>
+    </agent>
+  </snmpgw>
+
+  <!--
+      Disable cdb only if you're using your own configuration database
+      to store all data, including the AAA data.
+  -->
+  <cdb>
+    <enabled>false</enabled>
+    <persistent>true</persistent>
+    <dbDir>/var/confd/cdb</dbDir>
+    <!--
+        Before searching dbDir for init files the directories listed
+         in initPath will be searched
+    -->
+    <initPath>
+      <dir>/var/confd/cdb-init</dir>
+    </initPath>
+    <clientTimeout>infinity</clientTimeout>
+    <replication>sync</replication>
+    <subscriptionReplay>
+      <enabled>false</enabled>
+    </subscriptionReplay>
+
+    <!--
+        The operational datastore is used when operational data is to be
+        stored in CDB.
+    -->
+    <operational>
+      <enabled>false</enabled>
+      <!--
+          Control of whether operational data is persistent or not. One
+          of always, never, or confspec (the default).
+      -->
+      <persistent>confspec</persistent>
+      <!--
+          Control of whether operational data should be replicated in
+          HA mode.
+      -->
+      <replication>persistent</replication>
+      <!--
+          Control of whether operational data should be replicated
+          synchronously or asynchronously in HA mode.
+      -->
+      <replicationMode>async</replicationMode>
+    </operational>
+  </cdb>
+
+  <!--
+      High availability mode
+  -->
+  <ha>
+    <enabled>false</enabled>
+    <ip>0.0.0.0</ip>
+    <port>4569</port>
+    <externalIpc>
+      <enabled>false</enabled>
+      <address></address>
+    </externalIpc>
+    <tickTimeout>PT20S</tickTimeout>
+  </ha>
+
+  <!--
+      These keys are used to encrypt values adhering to the types
+      tailf:des3-cbc-encrypted-string and tailf:aes-cfb-128-encrypted-string
+      as defined in the tailf-common YANG module. These types are
+      described in confd_types(3).
+  -->
+  <encryptedStrings>
+    <DES3CBC>
+      <key1>0123456789abcdef</key1>
+      <key2>0123456789abcdef</key2>
+      <key3>0123456789abcdef</key3>
+      <initVector>0123456789abcdef</initVector>
+    </DES3CBC>
+
+    <AESCFB128>
+      <key>0123456789abcdef0123456789abcdef</key>
+      <initVector>0123456789abcdef0123456789abcdef</initVector>
+    </AESCFB128>
+  </encryptedStrings>
+
+  <cryptHash>
+    <algorithm>md5</algorithm>
+    <rounds>5000</rounds>
+  </cryptHash>
+
+  <logs>
+    <!--
+        Shared settings for how to log to syslog.
+        Each log can be configured to log to file and/or syslog.  If a
+        log is configured to log to syslog, the settings below are used.
+    -->
+    <syslogConfig>
+      <!--
+          version is 'bsd' (traditional syslog) or '1' (new IETF syslog
+          format). '1' implies that udp MUST be enabled.
+      -->
+      <version>bsd</version>
+      <!--
+          facility can be 'daemon', 'local0' ... 'local7' or an integer
+      -->
+      <facility>daemon</facility>
+      <!--
+          if udp is not enabled, messages will be sent to local syslog
+      -->
+      <udp>
+        <enabled>false</enabled>
+        <host>syslogsrv.example.com</host>
+        <port>514</port>
+      </udp>
+    </syslogConfig>
+
+    <!--
+        'confdlog' is a normal daemon log.  Check this log for
+        startup problems of confd itself.
+        By default, it logs directly to a local file, but it can be
+        configured to send to a local or remote syslog as well.
+    -->
+    <confdLog>
+      <enabled>true</enabled>
+      <file>
+        <enabled>false</enabled>
+        <name>/var/confd/log/confd.log</name>
+      </file>
+      <syslog>
+        <enabled>false</enabled>
+        <facility>daemon</facility>
+      </syslog>
+    </confdLog>
+
+    <!--
+        The developer logs are supposed to be used as debug logs
+        for troubleshooting user-written  C code.  Enable
+        and check these logs for problems with validation code, etc.
+    -->
+    <developerLog>
+      <enabled>true</enabled>
+      <file>
+        <enabled>false</enabled>
+        <name>/var/confd/log/devel.log</name>
+      </file>
+      <syslog>
+        <enabled>false</enabled>
+        <facility>daemon</facility>
+      </syslog>
+    </developerLog>
+    <!--
+        Valid values are error, info, and trace.
+    -->
+    <developerLogLevel>info</developerLogLevel>
+
+    <auditLog>
+      <enabled>true</enabled>
+      <file>
+        <enabled>false</enabled>
+        <name>/var/confd/log/audit.log</name>
+      </file>
+      <syslog>
+        <enabled>false</enabled>
+        <facility>daemon</facility>
+      </syslog>
+    </auditLog>
+    <auditLogCommit>false</auditLogCommit>
+
+    <!--
+        The netconf log can be used to troubleshoot NETCONF operations,
+        such as checking why e.g. a filter operation didn't return the
+        data requested.
+    -->
+    <netconfLog>
+      <enabled>true</enabled>
+      <file>
+        <enabled>false</enabled>
+        <name>/var/confd/log/netconf.log</name>
+      </file>
+      <syslog>
+        <enabled>false</enabled>
+        <facility>daemon</facility>
+      </syslog>
+    </netconfLog>
+
+    <webuiBrowserLog>
+      <enabled>false</enabled>
+      <filename>/var/confd/log/confd/browser.log</filename>
+    </webuiBrowserLog>
+
+    <webuiAccessLog>
+      <enabled>false</enabled>
+      <trafficLog>false</trafficLog>
+      <dir>/var/confd/log/confd</dir>
+    </webuiAccessLog>
+
+    <snmpLog>
+      <enabled>true</enabled>
+      <file>
+        <enabled>false</enabled>
+        <name>/var/confd/log/snmp.log</name>
+      </file>
+      <syslog>
+        <enabled>false</enabled>
+        <facility>daemon</facility>
+      </syslog>
+    </snmpLog>
+    <!--
+        Valid values are error and info.
+    -->
+    <snmpLogLevel>info</snmpLogLevel>
+
+    <netconfTraceLog>
+      <enabled>false</enabled>
+      <filename>/var/confd/log/netconf.trace</filename>
+      <format>pretty</format>
+    </netconfTraceLog>
+
+    <xpathTraceLog>
+      <enabled>false</enabled>
+      <filename>/var/confd/log/xpath.trace</filename>
+    </xpathTraceLog>
+
+    <!--
+        The error log is used for internal logging from the confd
+        daemon.  It is used for troubleshooting the confd daemon
+        itself, and should normally be disabled.
+    -->
+    <errorLog>
+      <enabled>false</enabled>
+      <filename>/tmp/confderr.log</filename>
+      <maxSize>S1M</maxSize>
+    </errorLog>
+
+    <progressTrace>
+      <enabled>true</enabled>
+      <dir>.</dir>
+    </progressTrace>
+  </logs>
+
+  <!--
+      Defines which datastores confd will handle.
+  -->
+  <datastores>
+    <!--
+        'startup' means that the system keeps separate running and
+        startup configuration databases.  When the system reboots for
+        whatever reason, the running config database is lost, and the
+        startup is read.
+        Enable this only if your system uses a separate startup and
+        running database.
+    -->
+    <startup>
+      <enabled>false</enabled>
+    </startup>
+
+    <!--
+        The 'candidate' is a shared, named alternative configuration
+        database which can be modified without impacting the running
+        configuration.  Changes in the candidate can be commit to running,
+        or discarded.
+        Enable this if you want your users to use this feature from
+        NETCONF, CLI or Web UI, or other agents.
+    -->
+    <candidate>
+      <enabled>true</enabled>
+      <!--
+          By default, confd implements the candidate configuration
+          without impacting the application.  But if your system
+          already implements the candidate itself, set 'implementation' to
+          'external'.
+      -->
+      <implementation>confd</implementation>
+      <!--
+           Storage is one of:
+             disk - Always store the candidate on disk.
+             ram - Always store the candidate in ram.
+                NOTE: If this alternative is used, the implementation is
+                not fully NETCONF compliant if also confirmed-commit is
+                enabled. The reason is that when confirmed-commit is
+                used, the system must rollback to the previous configuration
+                if it reboots.
+             auto - Store the candidate on disk if absolutely necessary for
+                proper operation; otherwise store it in ram.
+      -->
+      <storage>auto</storage>
+      <filename>/var/confd/candidate/candidate.db</filename>
+
+      <confirmedCommit>
+        <revertByCommit>false</revertByCommit>
+      </confirmedCommit>
+
+    </candidate>
+
+    <!--
+        By default, the running configuration is writable.  This means
+        that the application must be prepared to handle changes to
+        the configuration dynamically.  If this is not the case, set
+        'access' to 'read-only'.  If running is read-only, 'startup'
+        must be enabled, and 'candidate' must be disabled.  This means that
+        the application reads the configuration at startup, and then
+        the box must reboot in order for the application to re-read its
+        configuration.
+
+        NOTE: this is not the same as the NETCONF capability
+              :writable-running, which merely controls which NETCONF
+              operations are allowed to write to the running configuration.
+
+        NOTE: The default value of read-write here is somewhat unfortunate.
+              If the candidate is enbled it is better to set the value
+              writable-through-candidate. When a NETCONF manager reconfigures
+              a node that has the candidate and also read-write running, the
+              manager can never know that running is up to date with the
+              candidate and must thus always (logically) copy running
+              to the candidate prior to modifying the candidate.
+
+    -->
+    <running>
+      <access>read-write</access>
+    </running>
+  </datastores>
+
+  <!--
+      It is possible to add scripts to control various things in
+      ConfD. New CLI commands can be added. Callbacks can be invoked post-commit
+      callbacks, policy (validation) callbacks and event callbacks. The scripts
+      must be stored under /confdConf/scripts/dir where there is a
+      sub-directory for each script category. For some script
+      categories it suffices to just add a script in the correct
+      sub-directory in order to enable the script. For others some
+      configuration needs to be done.
+  -->
+  <scripts>
+  <!--
+      The directory path to the location of plug-and-play scripts. The
+      scripts directory must have the following sub-directories:
+
+        scripts/command/
+                policy/
+                post-commit/
+  -->
+    <dir/>
+  </scripts>
+
+  <!--
+      defaultHandlingModeType is either "explicit", "trim", or
+      "report-all". This parameter controls how default values for leafs
+      are handled in the northbound interfaces.
+
+           explicit
+               If a value is set over a northbound interface, it is not
+               considered default.
+
+               Default values are not displayed in northbound interfaces,
+               unless asked for by the user.
+
+           trim
+               If a value is set over a northbound interface, it is considered
+               default if it is equal to the data model´s default value.
+
+               Values equal to the data model´s default value are not
+               displayed in northbound interfaces, unless asked for by the
+               user.
+
+           report-all
+               All values are logically stored in the data store, and
+               displayed in northbound interfaces.
+
+      If the data store has the capability to handle default values,
+      which for example CDB has, it will work with all values for this
+      parameter. In this case, default values are never actaully
+      stored in the data store. The value of this parameter should be
+      choosen to give the end-user the best experience.
+
+      If the data store does not have the capability to handle default
+      values, this parameter should be set to 'report-all'.
+  -->
+  <defaultHandlingMode>explicit</defaultHandlingMode>
+
+  <!--
+      This parameter controls how ConfD lists newly created, not yet
+      committed dynamic elements.  If this value is set to 'false',
+      ConfD will list all new elements before listing existing data.
+      This was the only behavior in pre 2.5 versions of ConfD.
+
+      If this value is set to 'true', ConfD will merge new and
+      existing entries, and provide one sorted view of the data.  This
+      behavior works well when CDB is used to store configuration
+      data, but if an external data provider is used, ConfD does not
+      know the sort order, and can thus not merge the new entries
+      correctly.  If an external data provider is used for
+      configuration data, and the sort order differs from CDB's sort
+      order, this parameter should be set to 'false'.
+  -->
+  <sortTransactions>true</sortTransactions>
+
+  <!--
+          This parameter controls if ConfD's attribute feature should
+          be enabled or not.  Currently there are two attributes,
+          annotations and tags.  These are available in northbound
+          interfaces (e.g. the annotate command in the CLI, and
+          annotation XML attribute in NETCONF), but in order to be
+          useful they need support from the underlying configuration
+          data provider.  CDB supports attributes, but if an external
+          data provider is used for configuration data, and it does
+          not support the attribute callbacks, this parameter should
+          be set to 'false'.
+  -->
+  <enableAttributes>false</enableAttributes>
+
+  <!--
+          This parameter controls if the ConfD's inactive feature
+          should be enabled or not.  This feature also requires
+          enableAttributes to be enabled.
+  -->
+  <enableInactive>false</enableInactive>
+
+
+  <sessionLimits>
+    <!--
+        These parameters controls the maximum number of concurrent
+        sessions towards ConfD. 'context' is 'cli', 'netconf',  'webui'
+        or a context string as defined by a MAAPI user.
+    -->
+    <maxSessions>unbounded</maxSessions>
+    <sessionLimit>
+      <context>cli</context>
+      <maxSessions>1</maxSessions>
+    </sessionLimit>
+    <sessionLimit>
+      <context>netconf</context>
+      <maxSessions>10</maxSessions>
+    </sessionLimit>
+
+    <!--
+        These parameters controls the maximum number of concurrent
+        configuration sessions towards ConfD. 'context' is 'cli',
+        'netconf',  'webui' or a context string as defined by
+        a MAAPI user.
+    -->
+    <maxConfigSessions>unbounded</maxConfigSessions>
+    <configSessionLimit>
+      <context>cli</context>
+      <maxSessions>10</maxSessions>
+    </configSessionLimit>
+  </sessionLimits>
+
+  <aaa>
+    <sshServerKeyDir>/etc/confd/ssh</sshServerKeyDir>
+    <sshPubkeyAuthentication>system</sshPubkeyAuthentication>
+    <sshLoginGraceTime>PT10M</sshLoginGraceTime>
+    <sshMaxAuthTries>unbounded</sshMaxAuthTries>
+    <!--
+        See man page confd_aaa_bridge(1) for a description of this
+    -->
+    <aaaBridge>
+      <enabled>false</enabled>
+      <file>/etc/confd/aaa.conf</file>
+    </aaaBridge>
+    <defaultGroup>users</defaultGroup>
+    <authOrder>localAuthentication pam externalAuthentication</authOrder>
+    <expirationWarning>ignore</expirationWarning>
+    <auditUserName>always</auditUserName>
+    <pam>
+      <!--
+          If pam is enabled and we want to use pam for login
+          confd must typically run as root. This depends on how
+          pam is configured locally. However the default "system-auth"
+          will typically require root since the pam libs then read
+          /etc/shadow
+      -->
+      <enabled>false</enabled>
+      <service>common-auth</service>
+      <timeout>PT10S</timeout>
+    </pam>
+    <rest>
+      <!--
+          For REST API and RESTCONF It is possible to customize the amount of
+          time that the authentication credentials are cached, before it
+          queries the AAA server again.
+      -->
+      <authCacheTTL>PT10S</authCacheTTL>
+      <enableAuthCacheClientIp>false</enableAuthCacheClientIp>
+    </rest>
+    <externalAuthentication>
+      <enabled>false</enabled>
+      <executable>/usr/local/sbin/myradclient --myflag</executable>
+      <useBase64>false</useBase64>
+      <includeExtra>false</includeExtra>
+    </externalAuthentication>
+    <localAuthentication>
+      <enabled>true</enabled>
+    </localAuthentication>
+    <authenticationCallback>
+      <enabled>false</enabled>
+    </authenticationCallback>
+    <validationOrder>externalValidation</validationOrder>
+    <externalValidation>
+      <enabled>false</enabled>
+      <executable>/usr/local/sbin/mytokclient --myflag</executable>
+      <useBase64>false</useBase64>
+      <includeExtra>false</includeExtra>
+    </externalValidation>
+    <validationCallback>
+      <enabled>false</enabled>
+    </validationCallback>
+    <authorization>
+      <enabled>true</enabled>
+      <callback>
+        <enabled>false</enabled>
+      </callback>
+      <nacmCompliant>true</nacmCompliant>
+    </authorization>
+    <namespace>http://tail-f.com/ns/aaa/1.1</namespace>
+    <prefix>/</prefix>
+  </aaa>
+
+  <rollback>
+    <!--
+         To enable rollback file creation set enabled to true.
+         You also have to configure a directory for the rollback files.
+         A rollback file (rollback0-rollback<historySize>) will be
+         created whenever a new configuration is committed
+    -->
+    <enabled>false</enabled>
+    <directory>/var/confd/rollback</directory>
+    <historySize>35</historySize>
+    <!--
+         If "full" is specified, then a full configuration dump is
+         stored in each rollback file.  Rollback file 0 will always
+         contain the running configuration.  If "delta" is used, then
+         only the changes are stored in the rollback file. Rollback
+         file 0 will contain the changes from the last configuration.
+
+         Using deltas is more space and time efficient for large
+         configurations.  Full rollback files are more robust when
+         multiple external databases are used. If the external
+         databases becomes inconsistent a previous configuration can
+         always be restored using a full rollback file.
+    -->
+    <type>delta</type>
+    <!--
+        rollbackNumbering is either "fixed" or "rolling". If set
+        to "rolling" then rollback file "0" will always contain the
+        last commit. When using "fixed" each rollback will get
+        a unique increasing number.
+    -->
+    <rollbackNumbering>rolling</rollbackNumbering>
+  </rollback>
+  <!--
+            Commit timeout in the CLI. This timeout controls for how
+            long the commit operation will attempt to complete the
+            operation when some other entity is locking the database,
+            e.g. some other commit is in progress or some managed
+            object is locking the database.
+
+            There is a similiar configuration parameter,
+            /confdConfig/commitRetry, which sets a timeout for all
+            ConfD transactions, not just for CLI transactions.
+  -->
+  <commitRetryTimeout>PT0S</commitRetryTimeout>
+  <!--
+      Controls how many validation errors are collected and
+      presented to the user at a time.
+  -->
+  <maxValidationErrors>1</maxValidationErrors>
+  <ssh>
+    <!--
+            The maximum time that an authenticated connection to the SSH
+            server is allowed to exist without open channels.
+    -->
+    <idleConnectionTimeout>PT10M</idleConnectionTimeout>
+    <algorithms>
+        <serverHostKey></serverHostKey>
+        <kex></kex>
+        <dhGroup>
+          <minSize>2048</minSize>
+          <maxSize>4096</maxSize>
+        </dhGroup>
+        <mac></mac>
+        <encryption></encryption>
+    </algorithms>
+    <clientAliveInterval>infinity</clientAliveInterval>
+    <clientAliveCountMax>3</clientAliveCountMax>
+  </ssh>
+  <cli>
+    <!--
+        allowImplicitWildcard is either "true" or "false".
+        If set to "true", then users of the CLI are allowed
+        to omit entering "*" explicitly to see all list instances.
+        If set to "false", users must explicitly enter "*" to
+        see all list instances.
+    -->
+    <allowImplicitWildcard>true</allowImplicitWildcard>
+    <!--
+        startupScriptNonInteractive is either "true" or "false". If
+        set to "true" then a CLI startup script will be evalueated
+        also for non-interactive sessions.
+    -->
+    <startupScriptNonInteractive>false</startupScriptNonInteractive>
+    <!--
+            useShortEnabled is either "true" or "false". If set to
+            "true" then the CLI will display "enabled" or "disabled"
+            in place of "enabled true" and "enabled false".
+    -->
+    <useShortEnabled>true</useShortEnabled>
+    <!--
+            smartRenameFiltering is either "true" or "false". If set to
+            "true" then only paths that leads to existing instances
+            will be presented when doing completion. This will lead to
+            some extra calls to get_next() in order to determine if
+            a path has instances or not. When set to "false" all paths
+            with potentialy instances are presented.
+    -->
+    <smartRenameFiltering>true</smartRenameFiltering>
+    <enabled>true</enabled>
+    <!--
+         singleElemPattern is either "true" or "false". If set to
+         "true" then a pattern can be used to specify that only
+         a single child to a dynamic node should be displayed.
+    -->
+    <singleElemPattern>true</singleElemPattern>
+    <!--
+         multiPatternOperation is one of "any", and "all". When set
+         to "any" a pattern is true if at least one match is found,
+         if set to "all", all patterns needs to be found for the
+         pattern expression to be considered true.
+    -->
+    <multiPatternOperation>any</multiPatternOperation>
+    <!--
+            displayEmptyConfigContainers is either "true" or "false". If set to
+            "true" then 'show status' in the J-style CLI will display
+            empty dynamic nodes that are not config="false" even when
+            there is no data to display. If set to "false" the those
+            containers will not be shown.
+    -->
+    <displayEmptyConfigContainers>true</displayEmptyConfigContainers>
+    <!--
+            sortSubmodeCmds is either "true" or "false". If set to
+            "true" then local submode commands are listed before
+            global commands when the user enters ? in a submode
+            in C and I-style.
+    -->
+    <sortSubmodeCmds>true</sortSubmodeCmds>
+    <!--
+            allowOldStyleModeCmds is either "true" or "false". If set to
+            "true" then CLI commands in I and C-style are interpreted
+            as mode commands if the path coincide with a dynamic element
+            in the data-model. The recommended way to mount commands in
+            a submode is instead to use the "mount" attribute.
+    -->
+    <allowOldStyleModeCmds>false</allowOldStyleModeCmds>
+    <!--
+            continueOnErrorCmdStack is either "true" or "false". If set to
+            "true" then command stack execution will continue even if an
+            earlier command in the stack failed with an error, ie
+                show xx ; show zz
+            will execute both 'show xx' and 'show zz' even if 'show xx'
+            failed with an error.
+            If set to "false" then command execution will be aborted as
+            soon as a command fails.
+    -->
+    <continueOnErrorCmdStack>false</continueOnErrorCmdStack>
+    <!--
+            topLevelCmdsInSubMode is either "true" or "false". If set
+            to "true" all top level commands in I and C-style CLI are
+            available in sub modes.
+    -->
+    <topLevelCmdsInSubMode>false</topLevelCmdsInSubMode>
+    <!--
+            mixedMode is either "true" or "false". If set to "true"
+            all oper mode commands are available in config mode.
+    -->
+    <mixedMode>false</mixedMode>
+    <!--
+        completionShowOldVal is either "true" or "false". If set to
+        "true" a leaf's old value will be displayed inside brackets
+        during command line completion. If set to "false" it will not
+        be shown.
+    -->
+    <completionShowOldVal>true</completionShowOldVal>
+    <!--
+            completionMetaInfo is either "false", "alt1" or "alt2".
+            If set to "alt1" then the alternatives shown for
+            possible completions will be prefixed as follows:
+
+              containers with >
+              lists with +
+              leaf-lists +
+
+            for example
+
+              Possible completions:
+              ...
+              > applications
+              + apply-groups
+              ...
+              + dns-servers
+              ...
+
+            If set to "alt2", then possible comopletions will be prefixed
+            as follows
+
+              containers with >
+              lists with children with +>
+              lists without children +
+
+            for example
+
+              Possible completions:
+              ...
+              > applications
+              +>apply-groups
+              ...
+              + dns-servers
+              ...
+            This only applies to the J-style CLI.
+    -->
+    <completionMetaInfo>false</completionMetaInfo>
+    <!--
+            reportInvalidCompletionInput is either true or false. If
+            set to 'true' the CLI will display an error message during
+            completion when the user press '?' to indicate if an
+            invalid token has been entered on the command line.
+    -->
+    <reportInvalidCompletionInput>true</reportInvalidCompletionInput>
+    <!--
+            sortLocalCms is either "true" or "false". If set to
+            "true" and sortSubmodeCmds are also set to true, then
+            local submode commands are listed before
+            global commands when the user enters ? in a submode
+            in C and I-style, and the order of the commands is
+            alphabetically ordered. If set to false then the order
+            of the local submode commands are the same as in the
+            confspec.
+    -->
+    <sortLocalCmds>true</sortLocalCmds>
+    <!--
+            showEditors is either true or false. If set to true
+            then a list of current editors will be displayed when
+            a user enters configure mode.
+    -->
+    <showEditors>true</showEditors>
+    <!--
+            whoShowMode is either "true" or "false". If set to
+            "true" then an 'Config Mode' column will be added
+            to the table shown when issuing the 'who' command
+            in C- and I-mode.
+    -->
+    <whoShowMode>true</whoShowMode>
+    <!--
+            whoHistoryDateTimeFormat decides if the date should always
+            include the date (long), or only include the date when different
+            from today (short).
+    -->
+    <whoHistoryDateTimeFormat>short</whoHistoryDateTimeFormat>
+    <!--
+            showTableLabelsIfMultiple is either "true" or "false".
+            If set to "true" then table labels will only be displayed
+            if multiple tables, or a table and additional data is
+            displayed. If set to "false" then table labels are
+            always shown if they exists and tableLabel is enabled.
+    -->
+    <showTableLabelsIfMultiple>false</showTableLabelsIfMultiple>
+    <!--
+            tableLabel is either "true" or "false". If "true"
+            then tables displayed in C and I style CLI will have
+            a relative location label to make it possible to know which
+            table is displayed.
+    -->
+    <tableLabel>false</tableLabel>
+    <!--
+            addExtraTableSpacing is either "true" or "false". If
+            set to "true" then an additional newline will be added
+            on each side of the table.
+    -->
+    <addExtraTableSpacing>false</addExtraTableSpacing>
+    <!--
+            The tableLookAhead element tells confd how many rows to
+            pre-fetch when displaying a table. The prefetched rows are
+            used for calculating the required column widths for the
+            table. If set to a small number it is recommended to explicitly
+            configure the column widhts in the clispec file.
+    -->
+    <tableLookAhead>50</tableLookAhead>
+    <!--
+        moreBufferLines is used to limit the buffering done by the more
+        process. It can be "unbounded" or a possitive integer describing
+        the maximum number of lines to buffer.
+    -->
+    <moreBufferLines>5000</moreBufferLines>
+    <!--
+         editWrapMode is either "wrap", "newline" or "vt100".
+         If "wrap" or "vt100" is
+         used then cut-and-paste will work in xterms (and other
+         terminal emulators) but the CLI may behave oddly if
+         the screen width is manually configured to something
+         other than the true screen width.
+         If "vt100" is used then no <space><backspace> sequence
+         is used to force line wrapping. This makes it easier for
+         scripts that rely on command line echoing but the cursor
+         will disappear at the end of the line temporarily.
+    -->
+    <editWrapMode>wrap</editWrapMode>
+    <!--
+        supportQuoteEOL is either "true" or "false". If set to "true"
+        then a final backslash (\) on a line means that the next
+        line will be concatenated with the previous line, similarly
+        to a Linux Shell.
+    -->
+    <supportQuotedEOL>true</supportQuotedEOL>
+    <!--
+        allowWildcard is either "true" or "false". If "true"
+        then wildcard expressions are allowed in show commands.
+    -->
+    <allowWildcard>true</allowWildcard>
+    <!--
+        allowAllAsWildcard is either "true" or "false". If "true"
+        then "all" can be used in place of "*" as wildcard.
+    -->
+    <allowAllAsWildcard>false</allowAllAsWildcard>
+    <!--
+        allowRangeExpression is either "true" or "false". If "true"
+        then range expressions are allowed for all key values
+        of type basic type integer. An alternative is to
+        specify hasRange for each path in the clispec.
+    -->
+    <allowRangeExpression>true</allowRangeExpression>
+    <!--
+        allowRangeExpressionAllTypes is either "true" or "false". If "true"
+        then range expressions are allowed for all key values
+        regardless of type. An alternative is to specify hasRange for
+        each element in the yang files.
+    -->
+    <allowRangeExpressionAllTypes>true</allowRangeExpressionAllTypes>
+    <!--
+        suppressRangeKeyword is either "true" or "false". If "true"
+        then 'range' keyword is not allowed in C- and I-style for
+        range expressions.
+    -->
+    <!--
+        useDoubleDotRanges is either "true" or "false". If "true"
+        then range expressions are types as 1..3, if set to "false"
+        then ranges are given as 1-3.
+    -->
+    <useDoubleDotRanges>false</useDoubleDotRanges>
+    <suppressRangeKeyword>false</suppressRangeKeyword>
+    <!--
+        exitModeOnEmptyRange is either "true" or "false". If "true" and if
+        standing in a range submode, the CLI will exit to the parent
+        submode if all instances in the range has been deleted by the user.
+    -->
+    <exitModeOnEmptyRange>false</exitModeOnEmptyRange>
+    <!--
+         defaultTableBehavior is either "dynamic", "suppress", or
+         "enforce". If set to "dynamic" then list nodes will be displayed
+         as tables if the resulting table will fit on the screen.
+         If set to suppress, then list nodes will not be displayed
+         as tables unless a table has been specified by some other
+         means (ie through a setting in the clispec-file or through
+         a command line parameter), if set to "enforce" then list
+         nodes will always be displayed as tables unless otherwise
+         specified in the clispec-file or on the command line.
+    -->
+    <defaultTableBehavior>dynamic</defaultTableBehavior>
+    <!--
+         If a table is too wide to fit in the terminal it will
+         instead be shown as a path - value list. When table
+         overflow is allowed it will be displayed as a table
+         even when the table is to wide to fit on the screen
+      -->
+    <allowTableOverflow>false</allowTableOverflow>
+    <!--
+         tableOverflowTruncate is either "true" or "false". If "true"
+         then overflowing tables will be truncated instead of wrapped.
+    -->
+    <tableOverflowTruncate>false</tableOverflowTruncate>
+    <!--
+         allowTableCellWrap is either "true" or "false". If "true"
+         then tables displayed in a Cisco style CLI will be allowed
+         to wrap if the initial cell-width estimate proves to be too
+         narrow.  If "false" a too wide table cell will overflow
+         instead, pushing the rest of the line to the right.
+    -->
+    <allowTableCellWrap>true</allowTableCellWrap>
+    <!--
+         If showAllNs is true then all elem names will be prefixed
+         with the namespace prefix in the CLI. This is visible
+         when setting values and when showing the configuratin
+    -->
+    <showAllNs>false</showAllNs>
+    <!--
+        useExposeNsPrefix is either "true" or "false". If "true" then all
+        nodes annotated with the tailf:cli-expose-ns-prefix will
+        result in the namespace prefix being shown/required.
+        If set to "false" then the tailf:cli-expose-ns-prefix annotation
+        will be ignored.
+    -->
+    <useExposeNsPrefix>true</useExposeNsPrefix>
+    <!--
+        modeInfoInAudit is either "true", "false" or "path", If "true",
+        then all commands will be prefixed with major and minor mode
+        name when logged as audit messages. This means that it is
+        possible to differentiate between commands with the same
+        name in different modes. Major mode is "operational" or
+        "configure" and minor mode is "top" in J-style and the name
+        of the submode in C- and I-mode. On the top-level in C- and
+        I-mode it is also "top". If set to "path" the major mode
+        will be followed by the full command path to the submode.
+    -->
+    <modeInfoInAudit>false</modeInfoInAudit>
+    <!--
+         To log all CLI activity use 'all', to only log
+         attempts to execute unauthorized commands, use denied,
+         for only logging actually executed commands use allowed,
+         and for no logging use 'none'
+    -->
+    <auditLogMode>all</auditLogMode>
+    <style>j</style>
+    <completionShowMax>100</completionShowMax>
+    <!--
+        If set to true then AAA rules will be applied when a rollback
+        file is loaded. This means that rollback may not be possible
+        if some other user have made changes that the current user
+        does not have access privileges to.
+    -->
+    <rollbackAAA>false</rollbackAAA>
+    <!--
+        Maximum number of configuration changes to allow for rollback
+        through the CLI.
+    -->
+    <rollbackMax>1000</rollbackMax>
+    <!--
+        rollbackNumbering is either "fixed" or "rolling". If set
+        to "rolling" then rollback file "0" will always contain the
+        last commit. When using "fixed" each rollback will get
+        a unique increasing number.
+    -->
+    <rollbackNumbering>rolling</rollbackNumbering>
+    <!--
+        rollbackNumberingInitial is the starting point of the rollback
+        numbering when the "increasing" rollback numbering scheme is
+        used.
+    -->
+    <rollbackNumberingInitial>10000</rollbackNumberingInitial>
+    <!--
+        The inconsistentDatabaseSuffix is a message that is appended
+        to the warning message which the CLI displays when it detects
+        that the running database have got inconsistent.
+    -->
+    <inconsistentDatabaseSuffix></inconsistentDatabaseSuffix>
+    <!--
+         Controls if transactions should be used in the CLI or not.
+         Old style Cisco IOS does not use transactions, Juniper and
+         Cisco XR does. The commit command is disabled if transactions
+         are disabled. All modifications are applied immediately.
+         NOTE: this requires that you have default values for ALL
+         settings and no complex validation rules.
+    -->
+    <transactions>true</transactions>
+    <!--
+        transactionCtrlCmds is either "true" or "false". If
+        "true", then the CLI will have commands for enabling
+        and disabling transactions in configure mode, ie
+        "enable transactions" and "disable transactions".
+        If set to "false" no such commands will be present.
+    -->
+    <transactionCtrlCmds>false</transactionCtrlCmds>
+    <!--
+        exitConfigModeOnCtrlC is either "true" or "false". If set to
+        "false" the user will not be thrown out of config mode when
+        ctrl-c is pressed on an empty command line.
+    -->
+    <exitConfigModeOnCtrlC>true</exitConfigModeOnCtrlC>
+    <!--
+         oldDetailsArg is either "true" or "false". If "false" then
+         commands that display the configuration will not have a
+         "details" argument but instead have a pipe flag called
+         "details". The setting is present for backwards compatability,
+         the recommended setting for future use is "false".
+    -->
+    <oldDetailsArg>false</oldDetailsArg>
+    <!--
+        DEPRECATED - use /confdConfig/defaultHandlingMode instead
+
+        If withDefults is set to false then all leaves which are set
+        to their default values will be hidden and the user has to use
+        the "details" option to the show command to see them. This is
+        very useful when there are lots of settings which are seldom
+        used.
+         -->
+    <withDefaults>false</withDefaults>
+    <!--
+        When set to 'true' ConfD will ignore the annotation
+        tailf:cli-show-with-default when displaying the configuration
+        changes in the C-style CLI.
+    -->
+    <ignoreShowWithDefaultOnDiff>false</ignoreShowWithDefaultOnDiff>
+    <!--
+         trimDefaultShow is either "true" or "false". If "true" then
+         leaf nodes that have the same value as the default value will
+         not be displayed even when explicitly configured to have that
+         value. When set to "false" such leaves will be displayed if
+         explicitly configured to have the value. This setting applies
+         to show commands, ie show running-config and show config.
+    -->
+    <trimDefaultShow>false</trimDefaultShow>
+    <!--
+        trimDefaultSave is either "true" or "false". If "true" then
+        leaf nodes that have the same value as the default value will
+        not be displayed even when explicitly configured to have that
+        value. When set to "false" such leaves will be displayed if
+        explicitly configured to have the value. This setting applies
+        to the save command.
+    -->
+    <trimDefaultSave>false</trimDefaultSave>
+
+    <defaultPrefix></defaultPrefix>
+    <!--
+            jWarningPrefix is a string that is placed in front of warnings
+            when they are displayed in the CLI. J-style CLI.
+    -->
+    <jWarningPrefix>Warning: </jWarningPrefix>
+    <!--
+            jAbortedPrefix is a string that is placed in front of aborted
+            messages when they are displayed in the CLI. J-style CLI.
+    -->
+    <jAbortedPrefix>Aborted: </jAbortedPrefix>
+    <!--
+            jErrorPrefix is a string that is placed in front of error
+            messages when they are displayed in the CLI. J-style CLI.
+    -->
+    <jErrorPrefix>Error: </jErrorPrefix>
+    <!--
+            cWarningPrefix is a string that is placed in front of warnings
+            when they are displayed in the CLI. I- and C-style CLI.
+    -->
+    <cWarningPrefix>Warning: </cWarningPrefix>
+    <!--
+            cAbortedPrefix is a string that is placed in front of aborted
+            messages when they are displayed in the CLI. I- and C-style CLI.
+    -->
+    <cAbortedPrefix>Aborted: </cAbortedPrefix>
+    <!--
+            cErrorPrefix is a string that is placed in front of error
+            messages when they are displayed in the CLI. I- and C-style CLI.
+    -->
+    <cErrorPrefix>Error: </cErrorPrefix>
+    <invalidDataString>--ERROR--</invalidDataString>
+    <!--
+         showDefaults is either "true" or "false". If "true" then
+         default values will be shown when displaying the
+         configuration. The default value is shown inside a comment
+         on the same line as the value. Showing default values can
+         also be enabled in the CLI per session using the operational
+         mode command "set show defaults true".
+    -->
+    <showDefaults>false</showDefaults>
+    <!--
+         reallocateOperTrans is either "true" or "false". If "true" then
+         a new read transaction will be allocated for each oper-mode
+         command. When set to "false" a single oper transaction will
+         be used for the entire  CLI session.
+    -->
+    <reallocateOperTrans>false</reallocateOperTrans>
+    <!--
+            quickSshTeardown controls if CLI sessions initiated through
+            an SSH sessions should be torn down directly when the socket
+            is closed, or not. When set to 'true' the socket will be closed
+            as soon as the CLI receives a tcp shutdown, if set to 'false'
+            it will wait until all pending data has been written.
+    -->
+    <quickSshTeardown>false</quickSshTeardown>
+
+    <!--
+        cAlignLeafValues is either "true" or "false". If "true" then
+        the leaf values of all siblings in a container or list will
+        be aligned.
+    -->
+    <cAlignLeafValues>true</cAlignLeafValues>
+    <!--
+        jAlignLeafValues is either "true" or "false". If "true" then
+        the leaf values of all siblings in a container or list will
+        be aligned.
+    -->
+    <jAlignLeafValues>true</jAlignLeafValues>
+    <!--
+       docWrap is either "true" or "false". If "false" then certain
+       documentation texts will not be enclosed in "<" and ">", if
+       set to "true" they will be.
+    -->
+    <docWrap>true</docWrap>
+    <!--
+         infoOnMatch is either "true" or "false". If "true"
+         then the CLI will add info texts when displaying
+         possible match completions. If set to "false" then
+         the info text will not be shown.
+    -->
+    <infoOnMatch>true</infoOnMatch>
+    <infoOnTab>true</infoOnTab>
+    <infoOnSpace>true</infoOnSpace>
+    <newLogout>true</newLogout>
+    <!--
+            newInsert is either "true" or "false". If "false" then the old
+            insert command will be used. If set to "true" then the new
+            insert command, capable of inserting ordered-by-user list
+            elements, will be used.
+    -->
+    <newInsert>true</newInsert>
+    <!--
+        messageFormat controls how messages between users and from
+        the system should be presented to the user. The format string may
+        contain the variables $(sender), $(time), $(message), $(date),
+        $(time12), $(time12ampm), $(time12hm), $(host), $(hostname), and
+        $(user).
+    -->
+    <messageFormat>\nMessage from $(sender) at $(time)...\n$(message)\nEOF\n</messageFormat>
+    <!--
+        messageWordWrap is either "true" or "false". If set to "true"
+        then all system/user/prio messages in the CLI will be word-wrapped
+        to the current terminal width.
+    -->
+    <messageWordWrap>false</messageWordWrap>
+    <!--
+        Some messages are not displayed in the CLI when a command
+        executed, but are delayed until the current command execution
+        has finished. The size of the queue of pending messages is
+        configured in messageQueueSize.
+    -->
+    <messageQueueSize>10</messageQueueSize>
+    <!--
+         Example: <banner>Welcome to the ConfD CLI</banner>
+    -->
+    <banner></banner>
+    <!--
+         Example: echo "Welcome to the ConfD CLI" > banner.txt
+                  <bannerFile>banner.txt</bannerFile>
+    -->
+    <bannerFile></bannerFile>
+    <!--
+         Prompt1 is used in operational mode and prompt2 in
+         configuration mode. The string may contain a number of
+         backslash-escaped special characters that are decoded
+         as follows:
+
+              \d     the date in YYYY-MM-DD format (e.g., "2006-01-18")
+              \h     the hostname up to the first `.'
+              \H     the hostname
+              \s     the client source ip
+              \S     the argument provided in the -H argument to confd_cli
+              \t     the current time in 24-hour HH:MM:SS format
+              \T     the current time in 12-hour HH:MM:SS format
+              \@     the current time in 12-hour am/pm format
+              \A     the current time in 24-hour HH:MM format
+              \u     the username of the current user
+              \m     mode name in the Cisco-style CLI
+              \M     mode name inside parenthesis if set
+    -->
+    <prompt1>\u@\h\M> </prompt1>
+    <prompt2>\u@\h\M% </prompt2>
+    <cPrompt1>\h\M# </cPrompt1>
+    <cPrompt2>\h(\m)# </cPrompt2>
+    <!--
+        If set to true then the \m and \M will be expandes just as in C-
+        and I-style
+    -->
+    <cStylePromptInJStyle>false</cStylePromptInJStyle>
+    <promptHostnameDelimiter>.</promptHostnameDelimiter>
+    <!--
+            asyncPromptRefresh is either "true" or "false". If set to
+            "true" the CLI prompt will be refreshed when asynchronous
+            tasks prints messages in the CLI, such as messages from
+            other users.
+    -->
+    <asyncPromptRefresh>true</asyncPromptRefresh>
+
+    <!--
+        promptEnumLimit controls how many enumerations should be
+         included in the prompt when prompting the user for a value where
+         there are a number of alternatives. If the number of alternatives
+         exceeds the below configured limit then the list will be truncated
+         and the string "..." will be added.
+    -->
+    <promptEnumLimit>4</promptEnumLimit>
+    <showLogDirectory>/var/log</showLogDirectory>
+    <commitRetryTimeout>PT0S</commitRetryTimeout>
+    <!--
+        Idle timeout in CLI. Set to PT0M for infinity. Will be silently
+        capped to 49 days and 17 hours
+    -->
+    <idleTimeout>PT30M</idleTimeout>
+    <!--
+        promptSessionsCLI is either "true" or "false". If set to "true"
+        then only the current CLI sessions will be displayed when the user
+        tries to start a new CLI session and the maximum number of sessions
+        has been reached. Note that MAAPI sessions with their context set to
+        "cli" would be regarded as CLI sessions and would be listed as such.
+    -->
+    <promptSessionsCLI>false</promptSessionsCLI>
+    <!--
+           disableIdleTimeoutOnCmd is either "true" or "false". If
+            set to "false" then the idle timeout will trigger even
+            when a command is running in the CLI. If set to "true"
+            the idle timeout will only trigger if the user is idling
+            at the CLI prompt.
+    -->
+    <disableIdleTimeoutOnCmd>true</disableIdleTimeoutOnCmd>
+    <!--
+    -->
+    <timezone>local</timezone>
+    <utcOffset>0</utcOffset>
+    <timestamp>
+      <enabled>false</enabled>
+      <clock24>true</clock24>
+      <format>\d{l,4}\m{l,5}\D{l,3}\H{r,2,0}:\t{r,2,0}:\s{r,2,0}.\c{l,3,0} UTC\u{l,1}\o{r,2,0}:\k{r,2,0}</format>
+    </timestamp>
+    <!--
+    -->
+    <commandTimeout>infinity</commandTimeout>
+    <!--
+        orderedShowConfig is either "true" or "false". If "true" then
+        the commands displayed when running the "show configuration"
+        command in C-mode will take leafrefs and cli-diff-dependency
+        into account.
+    -->
+    <orderedShowConfig>true</orderedShowConfig>
+    <!--
+        suppressFastShow is either "true" or "false". If "true" then
+        the fast show optimization will be suppressed in the C-style
+        CLI. The fast show optimization is somewhat experimental and
+        may break certain operations.
+    -->
+    <suppressFastShow>false</suppressFastShow>
+    <leafPrompting>true</leafPrompting>
+    <spaceCompletion>
+      <enabled>true</enabled>
+    </spaceCompletion>
+    <autoWizard>
+      <enabled>true</enabled>
+    </autoWizard>
+    <ssh>
+      <enabled>true</enabled>
+      <ip>0.0.0.0</ip>
+      <port>2024</port>
+      <extraIpPorts/>
+      <dscp>0</dscp>
+      <banner></banner>
+      <bannerFile></bannerFile>
+    </ssh>
+    <!--
+        showSubsystemMessages is either "true" or "false". If "true"
+        the CLI will display a system message whenever a connected
+        daemon is started or stopped.
+    -->
+    <showSubsystemMessages>true</showSubsystemMessages>
+    <!--
+        ignoreSubsystemFailures is either "true" or "false". If
+        "true" the CLI will make a best effort to display data
+        even if a data provider is unavailable.
+    -->
+    <ignoreSubsystemFailures>false</ignoreSubsystemFailures>
+    <!--
+    -->
+    <jStatusFormat>[$(status)][$(time)]\n</jStatusFormat>
+    <!--
+    -->
+    <commitMessage>true</commitMessage>
+    <!--
+    -->
+    <commitMessageFormat>\nSystem message at $(time)...\nCommit performed by $(user) via $(proto) using $(ctx).\n</commitMessageFormat>
+  <!--
+      Suppress commit messages from certain contexts, such as system.
+  -->
+  <suppressCommitMessages>
+    <!--
+        Several contexts can be specified here, without any <context/>
+        items no commit messages will be suppressed.
+
+        Example: <context>system</context>
+    -->
+  </suppressCommitMessages>
+    <!--
+        forceExitFormat controls which message to display when
+        a user is forced out of configure mode by another user. The format
+        string may contain the variables $(user), $(time),
+        $(date), $(time12), $(time12ampm), $(time12hm), $(host) and
+        $(hostname).
+    -->
+    <forcedExitFormat>\nYou are forced out of configure mode by $(sender).\n</forcedExitFormat>
+    <!--
+    -->
+    <showEmptyContainers>false</showEmptyContainers>
+    <!--
+        showTags is either "true" or "false". If "true"
+        the CLI will display configuration tags if they are present.
+        If set to "false" then the tags will not be displayed by
+        default.
+    -->
+    <showTags>true</showTags>
+    <!--
+        showAnnotations is either "true" or "false". If "true"
+        the CLI will display configuration annotations if they are present.
+        If set to "false" then the annotations will not be displayed by
+        default.
+    -->
+    <showAnnotations>true</showAnnotations>
+    <!-- NCS specific, ignore here -->
+    <showServiceMetaData>false</showServiceMetaData>
+    <suppressNedErrors>false</suppressNedErrors>
+    <showNedErrorAsInfo>true</showNedErrorAsInfo>
+    <!--
+        jExtendedShow is either "true" or "false". If set to
+        "true" then the J-style CLI will have auto-rendered
+        show commands in the same style as the C and I-style
+        CLIs. The 'show status' command can still be used for
+        viewing config="false" data.
+    -->
+    <jExtendedShow>true</jExtendedShow>
+    <!--
+        jShowUnset is either "true" or "false". If set to
+        "true" then the J-style CLI will show unset leaves
+        with the value UNSET when doing "show configuration".
+    -->
+    <jShowUnset>false</jShowUnset>
+    <!--
+        Silently ignore deletes of non-existing instances.
+    -->
+    <cSilentNo>true</cSilentNo>
+    <!--
+        cModeExitFormat is the string used in the CLI when
+        displaying the running configuration to indicate
+        exit from a submode.
+    -->
+    <cModeExitFormat>!</cModeExitFormat>
+    <!--
+        If a leaf value is given when an optional leaf is deleted,
+        the given value is normally ignored and the node is deleted
+        regardless of the value. When cRestrictiveNo is set to
+        "true", the given value is required to be equal to the old
+        value in order to the delete operation to be allowed.
+    -->
+    <cRestrictiveNo>false</cRestrictiveNo>
+    <!--
+        Extend the available submode commands to all commands in
+        parent (and grand-parent) modes. These commands are not
+        visible during completion but will be executed if entered.
+        If set to "false" then only commands for entering other
+        submodes are available in parent and grand-parent modes,
+        if set to "true" all commands in parent and grand-parent
+        modes are available.
+    -->
+    <cExtendedCmdSearch>true</cExtendedCmdSearch>
+    <!--
+        Prevent non-local commands from being executed. This
+        negates the effect of cExtendedCmdSearch above. It is
+        recommended to also set cModeExitFormat to "exit" when
+        this option is set to true.
+    -->
+    <cSuppressCmdSearch>false</cSuppressCmdSearch>
+    <!--
+            enterSubmodeOnLeaf is either "true" or "false". If set
+            to "true" (the default) then setting a leaf in a submode
+            from a parent mode results in entering the submode after
+            the command has completed. If set to "false" then an
+            explicit command for entering the submode is needed.
+            For example, if running the command
+
+               interface FastEthernet 1/1/1 mtu 1400
+
+            from the top level in config mode. If enterSubmodeOnLeaf
+            is true the CLI will end up in the "interface FastEthernet
+            1/1/1" submode after the command execution. If set to
+            "false" then the CLI will remain at the top level.
+            To enter the submode when set to "false" the command
+
+               interface FastEthernet 1/1/1
+
+            is needed.
+            Applied to the C- and I- style CLI.
+    -->
+    <enterSubmodeOnLeaf>true</enterSubmodeOnLeaf>
+    <!--
+        prioritizeSubmodeCmds is either "true" or "false". If set to
+        "true" then local submode commands are prioritized before
+        commands in parent (and grand-parent) modes in C and
+        I-style. This means that if a command in local submode is
+        ambiguous with a command in parent (or grand-parent) mode
+        the local submode command is executed. See also
+        cExtendedCmdSearch.
+    -->
+    <prioritizeSubmodeCmds>true</prioritizeSubmodeCmds>
+    <!--
+        noFollowIncompleteCommand is either "true" or "false". If set to
+        "true" then the 'no' command will take incomplete-command
+        declarations into account. If set to "false" it will not.
+   -->
+    <noFollowIncompleteCommand>false</noFollowIncompleteCommand>
+    <!--
+         jShowUnsetText is the text printed for unset values
+         if jShowUnset has been set to true.
+      -->
+
+    <jShowUnsetText>UNSET</jShowUnsetText>
+    <!--
+        jShowCR is either "true" or "false". If set to
+        "true" then the J-style CLI will show &gt;cr&lt; in
+        the completion list whenever it is legal to press cr.
+    -->
+    <jShowCR>false</jShowCR>
+    <!--
+        showPipe is either "true" or "false". If set to "true" the
+        completion list will contain | in operational mode if it
+        is legal to enter |. In J-style the jShowCR must also be
+        set to enable this. If disablePipe is set to "true", it
+        will override the setting of showPipe and imply the same
+        behavior as if showPipe is "false".
+    -->
+    <showPipe>true</showPipe>
+    <!--
+        showPipeConfig is either "true" or "false". If set to
+        "true" the completion list will contain | in configure
+        mode if it is legal to enter |. In J-style the jShowCR
+        must also be set to enable this. If disablePipeConfig is
+        set, to "true", it will override the setting of
+        showPipeConfig and imply the same behavior as if
+        showPipeConfig is "false".
+    -->
+    <showPipeConfig>false</showPipeConfig>
+    <!--
+        disablePipe is either "true" or "false". If set to "true"
+        then the pipe commands are disabled in operational mode.
+    -->
+    <disablePipe>false</disablePipe>
+    <!--
+        disablePipeConfig is either "true" or "false". If set to
+        "true" then the pipe commands are disabled in configure mode.
+    -->
+    <disablePipeConfig>false</disablePipeConfig>
+    <!--
+        If showPipe is set to true, then pipeHelpMode determines
+        how the pipe option will be displayed to the user. If set
+        to "auto", then the description text "Output modifiers" will
+        only be displayed if there are any other options with help
+        texts, otherwise it will not be shown. If set to "always" then
+        the help text will always be displayed, if set to "never"
+        then it will never be displayed.
+    -->
+    <pipeHelpMode>auto</pipeHelpMode>
+    <!--
+         jAllowDeleteAll is either "true" or "false". If set to
+         "true" then the J-style CLI will show the command "delete"
+         without argumets, if set to "false" then an argument
+         is required.
+    -->
+    <jAllowDeleteAll>true</jAllowDeleteAll>
+    <!--
+         jShowTableRecursive is either "true" or "false". If "true" the
+         J-style CLI will attempt to display the result of the command
+         "show table" as a table even when a dynamic node is not directly
+         specified. If set to "false" then a table will only be produced
+         if a dynamic node is specified as argument to "show table".
+    -->
+    <jShowTableRecursive>false</jShowTableRecursive>
+    <!--
+         cPrivate is either "true" or "false". If set to "true" then
+         the term "private" will be used in place of "terminal" for
+         denoting the private/terminal configuration mode. When set
+         to "false" the term "terminal" will be used instead.
+    -->
+    <cPrivate>false</cPrivate>
+    <!--
+        cTab is either "true" or "false". If "true" the Cisco style
+        CLI will not display any help text when the user enters TAB.  If
+        "false" then help text will be shown when entering TAB, similarly
+        to the Juniper-style CLI.
+    -->
+    <cTab>false</cTab>
+    <!--
+        cHelp is either "true" or "false". If "true" the Cisco style
+        CLI will not display any desc text when the user enters '?'.
+        If "false" then desc text will be shown when entering '?',
+        similarly to the Juniper-style CLI.
+    -->
+    <cHelp>true</cHelp>
+    <!--
+        jHideHelp is either "true" or "false". If "true" the
+        Juniper style CLI will not display any desc text when the user
+        enters '?'.  If "false" then desc text will be shown when
+        entering '?'.
+    -->
+    <jHideHelp>false</jHideHelp>
+    <!--
+        cTabInfo is either "true" or "false". If "false" the Cisco
+        style CLI will not display any info text when the user
+        enters TAB. If "true" then info text will be shown when
+        entering TAB, similarly to the Juniper-style CLI.
+    -->
+    <cTabInfo>false</cTabInfo>
+    <!--
+        tabExtend is either "true" or "false". If "true" the CLI will
+        extend the current token to the next longer alternative.
+    -->
+    <tabExtend>true</tabExtend>
+    <!--
+         If set to true then CLI users are only allowed to enter
+         files in their home directory or their current working
+         directory as arguments to CLI commands. -->
+    <restrictedFileAccess>false</restrictedFileAccess>
+    <!--
+        hideDotFile is either "true" or "false". If "true"
+        then files starting with a '.' will not be visible in
+        the CLI..
+    -->
+    <hideDotFiles>false</hideDotFiles>
+    <!--
+    -->
+    <restrictedFileRegexp></restrictedFileRegexp>
+    <!--
+         Mode name style is only used by the Cisco style CLIs.
+         It controls how to calculate the mode name when entering
+         a submode. If set to 'full' then the entire path will be
+         used in the mode name, if set to 'short' then only the
+         last element + dynamic key will be used. If 'two' then
+         the two last modes will be displayed.
+    -->
+    <modeNameStyle>short</modeNameStyle>
+    <!--
+    -->
+    <messageMaxSize>10000</messageMaxSize>
+    <!--
+        If set to "true" then the CLI history will be saved
+        between CLI sessions. The history is stored in the state
+        directory.
+    -->
+    <historySave>true</historySave>
+    <!--
+    -->
+    <historyMaxSize>1000</historyMaxSize>
+    <!--
+    -->
+    <historyRemoveDuplicates>false</historyRemoveDuplicates>
+    <!--
+    -->
+    <compactShow>false</compactShow>
+    <!--
+    -->
+    <compactStatsShow>false</compactStatsShow>
+    <!--
+        Default setting for prettifying, ie changing _ and - to space
+        in element names when displaying config='false' data in key-value
+        listings.
+    -->
+    <prettifyStatsName>false</prettifyStatsName>
+    <!--
+        showCommitProgress can be either "true" or "false". If set to
+        "true" then the commit operation in the CLI will provide
+        some progress information if the output is piped to 'details'.
+    -->
+    <showCommitProgress>false</showCommitProgress>
+    <!--
+        commitActivityClock can be either "true" or "false". If set to
+        "true" then a |/-\| style animation will be displayed if
+        the commit operation takes more than 200 ms to complete.
+    -->
+    <commitActivityClock>false</commitActivityClock>
+    <!--
+        If set to 'prompt' then the user will be prompted whether to discard
+        uncommited changes or not. If set to 'discard' then uncommited changes
+        will be discarded without prompting the user. If set to 'commit'
+        then uncommited changes will be automatically commited without asking
+        the user.
+    -->
+    <!--
+        If set to 'prompt' then the user will be prompted whether to discard
+        uncommited changes or not. If set to 'discard' then uncommited changes
+        will be discarded without prompting the user. If set to 'commit'
+        then uncommited changes will be automatically commited without asking
+        the user.
+    -->
+    <confirmUncommitedOnExit>prompt</confirmUncommitedOnExit>
+    <!--
+        If set to true the user will have to re-confirm non-echoing
+        values in the CLI. Ie, when the CLI prompts the user for a value
+        that is not echoed the user will be asked to enter it twice.
+    -->
+    <reconfirmHidden>false</reconfirmHidden>
+    <!--
+         If set to true the value that the user entered will be
+         dequoted, ie if the user enters \n it will be interpreted
+         as a newline. This is the default behavior for all other
+         leaf types. If set to false then no unquoting will be
+         performed for hidden (non-echoing) data types when the
+         CLI explicitly prompts for their values. Dequoting will
+         still be performed for values entered directly on the
+         command line.
+    -->
+    <dequoteHidden>false</dequoteHidden>
+    <!--
+        If set to true the CLI will add the text
+        <keyname:enumeration> whenever it is displaying a completion
+        list for entering a key value that is an enumeration.
+    -->
+    <enumKeyInfo>false</enumKeyInfo>
+    <!--
+        columnStats is either "true" or "false". If "false" then the
+        container element is repeated on each line when displaying
+        config="false" data in the C and I style CLIs using the "show"
+        command. If set to "true" then the name of the container will not
+        be repeated, instead all leaves will be indented.
+    -->
+    <columnStats>false</columnStats>
+    <!--
+        allowAbbrevCmds is either "true" or "false". If "false" then
+        commands are not allowed to be abbreviated in the CLI.
+    -->
+    <allowAbbrevCmds>true</allowAbbrevCmds>
+    <!--
+        allowAbbrevCmdsOnLoad is either "true" or "false". If "false" then
+        commands are not allowed to be abbreviated in the CLI in non
+        interactive mode, ie when loading configurations from file.
+    -->
+    <allowAbbrevCmdsOnLoad>true</allowAbbrevCmdsOnLoad>
+    <!--
+        allowAbbrevKeys is either "true" or "false". If "false" then
+        key elements are not allowed to be abbreviated in the CLI. This is
+        relevant in the J-style CLI when using the commands 'delete' and
+        'edit'. In the C/I-style CLIs when using the commands 'no', 'show
+        configuration' and for commands to enter submodes.
+    -->
+    <allowAbbrevKeys>false</allowAbbrevKeys>
+    <!--
+        allowAbbrevEnums is either "true" or "false". If "false"
+        then enums entered in the cli cannot be abbreviated.
+    -->
+    <allowAbbrevEnums>true</allowAbbrevEnums>
+    <!--
+        allowCaseInsensitiveEnums is either "true" or "false". If
+        "false" then enums entered in the cli must match in case, ie you
+        cannot enter FALSE if the cli asks for 'true' or 'false'.
+    -->
+    <allowCaseInsensitiveEnums>true</allowCaseInsensitiveEnums>
+    <!--
+        allowAbbrevParamNames is either "true" or "false". If
+        "false" then cli command parameter names, ie
+        <name>xx</name>;, cannot be abbreviated.
+    -->
+    <allowAbbrevParamNames>false</allowAbbrevParamNames>
+    <!--
+        strictRefsOnLoad is either "true" or "false". If "false" then
+        keyref/leafref targets does not have to exist when loading
+        a config from a file. If set to "true" then the target creation
+        must appear earlier in the loaded file than the reference to the
+        target. Note that there is a rather heavy performance penalty
+        for loading files with many keyrefs when this is set to true,
+        or for piping CLI commands into confd_cli.
+    -->
+    <strictRefsOnLoad>false</strictRefsOnLoad>
+    <!--
+        enableDisplayLevel is either "true", "false" or "pipe". If "false"
+        then the 'displaylevel' option to the show command will not
+        be available in the CLIs. If set to "pipe" then a special
+        pipe target called 'display-level' will be available.
+
+        The displaylevel option can be used to limit how many levels
+        will be displayed by the show command. If a display level of
+        1 is specified then only the direct children of an
+        element will be shown.  If a display level of 3 is specified
+        then only elements at depth 3 below a given element
+        will be displayed, etc.
+
+        A user can also modify the default display level for a given
+        CLI- session using the display-level setting in the CLI,
+        similarly to the screen-width, or idle-timeout settings.
+    -->
+    <enableDisplayLevel>pipe</enableDisplayLevel>
+    <!--
+        enableDisplayGroups is either "true" or "false". If "false"
+        then the user will not be able to provide a set of display
+        groups when issuing the show command.
+    -->
+    <enableDisplayGroups>true</enableDisplayGroups>
+    <!--
+        autocommitLoad is either "true" or "false". If "true" then
+        when executing the 'load' command each line will be commited
+        as soon as it has been read. Note that this is normally not a good
+        idea.
+    -->
+    <autocommitLoad>false</autocommitLoad>
+    <!--
+        autocommitLoadChunkSize is used to avoid auto commit:ing
+        after each line but instead commit after a chunk of lines
+        have been read.
+    -->
+    <autocommitLoadChunkSize>1</autocommitLoadChunkSize>
+    <!--
+        allOrNothingLoad is either true or false. If set to true
+        then the transaction will be reset and all changes discarded
+        if an error is encountered when loading a file. This behavior
+        will not happen when the 'best effort' pipe target is used,
+        nor when stopLoadOnError is set to false, nor when
+        autocommitLoad is set to true.
+    -->
+    <allOrNothingLoad>false</allOrNothingLoad>
+    <!--
+        stopLoadOnError is either "true" or "false". If "false" then
+        the 'load' command in the C and I-style CLIs will not terminate
+        on the first error but continue to process commands form
+        the file. Only applies when transactions are disabled.
+    -->
+    <stopLoadOnError>true</stopLoadOnError>
+    <!--
+        enableLoadMerge is either "true" or "false". If "false" then
+        the 'load' command in the C and I-style CLIs will not have an
+        option for how to load a config file. If set to "true" then the
+        'load' command will have an additional option for loading the file
+        either in 'override' mode or in 'merge' mode. 'override' is the
+        mode used if enableLoadMerge is set to 'false'.
+    -->
+    <enableLoadMerge>true</enableLoadMerge>
+    <!--
+        loadtActivityClock can be either "true" or "false". If set to
+        "true" then a |/-\| style animation will be displayed if
+        the load operation takes more than 200 ms to complete.
+    -->
+    <loadActivityClock>false</loadActivityClock>
+    <!--
+        instanceDescription is either "true" or "false". If "true"
+        then the CLI will look for description elems and add their values
+        as info texts when displaying possible completions in the
+        CLI. This makes it easier to identify the different instances.
+    -->
+    <instanceDescription>true</instanceDescription>
+    <!--
+        The externalActionErrorMsg value is displayed whenever an
+        external error occurs when executing an action in the CLI.
+    -->
+    <externalActionErrorMsg>external error</externalActionErrorMsg>
+    <!--
+         addErrorPrefixSuffix is either "true" or "false". If "true"
+         then the CLI will add "Error: " or "Aborted: " and when operations
+         fail in the CLI. If set to "false" then the prefix will not be
+         added for errors generated by some callback.
+    -->
+    <addErrorPrefixSuffix>true</addErrorPrefixSuffix>
+    <!--
+         If enableDisplayLevel is set to "true" then this settings
+         controls the default display level used if no explicit display
+         level is specified. It is also used as the initial value of the
+         (set) 'display-level' command in the CLI.
+    -->
+    <defaultDisplayLevel>99999999</defaultDisplayLevel>
+    <!--
+         If set to "true" then the 'show history' command will
+         display the unified command history, ie the command history from
+         all modes. If set to "false" then only the command history from
+         the current mode will be shown.
+    -->
+    <unifiedHistory>false</unifiedHistory>
+    <!--
+        execNavigationCmds is either "true" or "false". If set to
+        "true" then it is possible to enter a submode also in
+        exec mode in C- and I-style CLI.
+    -->
+    <execNavigationCmds>false</execNavigationCmds>
+    <!--
+        modeInfoInAAA is either "true", "false" or "path", If "true", then
+        all commands will be prefixed with major and minor mode name
+        when processed by the AAA-rules. This means that it is
+        possible to differentiate between commands with the same
+        name in different modes. Major mode is "operational" or
+        "configure" and minor mode is "top" in J-style and the name
+        of the submode in C- and I-mode. On the top-level in C- and
+        I-mode it is also "top". If set to "path" the major mode
+        will be followed by the full command path to the submode.
+    -->
+    <modeInfoInAAA>false</modeInfoInAAA>
+    <!--
+        cmdAAAForAutowizard si either "true" or "false". If set to
+        "true" then the CLI will generate synthetic commands, and
+        perform AAA command rule checks for, for all paths and
+        values requested by the autowizard functionality.
+    -->
+    <cmdAAAForAutowizard>false</cmdAAAForAutowizard>
+    <!--
+         quoteStyle is either "quote" or "backslash". If set to
+         "quote" then the quote characters will be used on the CLI command
+         line for quoting strings with troublesome characters. If set to
+         "backslash" then a backslash will be used.
+    -->
+    <quoteStyle>backslash</quoteStyle>
+    <!--
+         laxBarQuoting is either "true" or "false". If set to "true"
+         then | and ; are only quoted if they appear by them selves.
+         A consequence of this is that the user must have whitespace
+         on both sides of | and ; on the command line when these
+         characters are used as pipe (|) or concatenator (;).
+    -->
+    <laxBarQuoting>false</laxBarQuoting>
+    <!--
+         expandAliasOnCompletion is either true or false. If set to
+         true then aliases will be expanded before invoking the
+         completion code.
+    -->
+    <expandAliasOnCompletion>true</expandAliasOnCompletion>
+    <!--
+        expandAliasEscape is either false or a character. If set to
+        a character then expanding an alias can be prevented by putting
+        the character in front of the alias.
+    -->
+    <expandAliasEscape>false</expandAliasEscape>
+    <!--
+            allowParenQuotes is either "true" or "false". If set to
+            "true" then parentheses are treated as quotes, ie the
+            string (xx yy) will be equivalent to "xx yy" and
+            xx\ yy on the CLI command line.
+    -->
+    <allowParenQuotes>false</allowParenQuotes>
+    <!--
+            allowOverwriteOnCopy is either "true" or "false". If set to
+            "true" then the copy command in the CLI will overwrite the
+            target if it exists. If set to "false" then an error will
+            be displayed if the target exists.
+    -->
+    <allowOverwriteOnCopy>false</allowOverwriteOnCopy>
+    <!--
+        inheritPaginate is either "true" or "false". If set to
+        "true" then when running a command, the paginate setting of that
+        command will affect any trailing pipe commands. If set to "false",
+        the output from pipe commands will not paginate unless pagination
+        for that pipe command has been overridden in a clispec file.
+    -->
+    <inheritPaginate>true</inheritPaginate>
+    <!--
+        safeScriptExecution is either "true" or "false". If set to
+        "true" then 'exit', 'abort', 'end', and 'commit' are not
+        allowed inside a script loaded through maapi with
+        maapi_load_config().
+    -->
+    <safeScriptExecution>true</safeScriptExecution>
+    <!--
+            caseInsensitive is either "true" or "false". If "false" then
+            all CLI commands must have the correct case. If set to
+            "true" then case is mostly ignored. Note that if set to
+            "true" then all data model files and clispec-files must be
+            written with this in mind. You cannot have two confspec
+            elems that conflict in case.
+    -->
+    <caseInsensitive>false</caseInsensitive>
+    <!--
+            caseInsensitiveKeys is either "true" or "false". If "false" then
+            all user defined instance names must have correct case. If set to
+            "true" then case is mostly ignored. Note that if set to
+            "true" then all data model files and clispec-files must be
+            written with this in mind. You cannot have two confspec
+            elems that conflict in case.
+    -->
+    <caseInsensitiveKeys>false</caseInsensitiveKeys>
+    <!--
+        ignoreLeadingWhitespace is either "true" or "false". If
+        "false" then the CLI will show completion help when the user
+        enters TAB or SPACE as the first characters on a row. If set to
+        "true" then leading SPACE and TAB are ignored. The user can enter
+        '?' to get a list of possible alternatives. Setting the value to
+        "true" makes it easier to paste scripts into the CLI.
+    -->
+    <ignoreLeadingWhitespace>false</ignoreLeadingWhitespace>
+    <!--
+        indentTemplates is either "true" or "false". If set to "true"
+        then the text resulting from a show template will be indented
+        to the same level as the surrounding auto-rendered show text.
+        If set to "false" then no automatic indentation will occur.
+        The automatic variable ".indent" may be used in the templates
+        to do manual indentation.
+    -->
+    <indentTemplates>false</indentTemplates>
+    <!--
+        compListCompact is either "true" or "false". If "true"
+        then the CLI will display items with an associated info
+        text one per line, and all the rest in compact format.
+    -->
+    <compListCompact>false</compListCompact>
+    <!--
+        completionListLine is either "true" or "false". If "true"
+        then the CLI will display completion lists one item per
+        line. If set to "false" one-line presentation will be
+        used for itmes with info texts and compact for the rest.
+        (if compListCompact above is set to "true" there may be a
+        mix of the to formats in the same listing)
+    -->
+    <completionListLine>false</completionListLine>
+    <!--
+            showMatchBeforePossible is either "true" or "false". If set to
+            "true" then the match completions will be displayed before
+            the other possible completions, if set to "false" then
+            the match completions will be displayed after.
+    -->
+    <showMatchBeforePossible>false</showMatchBeforePossible>
+    <!--
+            possibleCompletionsFormat is the string displayed before the
+            displaying the actual completion possibilities.
+    -->
+    <possibleCompletionsFormat>Possible completions:</possibleCompletionsFormat>
+    <!--
+            matchCompletionsFormat is the string displayed before the
+            displaying the actual match completion possibilities.
+    -->
+    <matchCompletionsFormat>Possible match completions:</matchCompletionsFormat>
+    <!--
+        noMatchCompletionsFormat is the string displayed when there
+        are no matching completion possibilities. The string is empty
+        by default.
+    -->
+    <noMatchCompletionsFormat></noMatchCompletionsFormat>
+    <!--
+            showDescription is either true or false. If set to false then
+            the Description: xx text will not be displayed.
+    -->
+    <showDescription>true</showDescription>
+    <!--
+            wrapInfo is either "true" or "false". If "false" then the
+            CLI will not automatically wrap the info field in "Possible
+            completion:" listings. If set to "true" then the info text
+            will be word-wrapped and indented.
+    -->
+    <wrapInfo>true</wrapInfo>
+    <!--
+            wrapPrompt is either "true" or "false". If "false" then the
+            CLI will not automatically word wrap the prompt when prompting
+            the user for some input. If set to "true" then the prompt
+            will be word-wrapped according to the current terminal width.
+    -->
+    <wrapPrompt>false</wrapPrompt>
+    <!--
+        sortShowElems is either "true" or "false". If "false" then
+        the show commands will display the elements in the order they
+        appear in the data model. If set to "true" then all
+        non-dynamic elements will appear before the dynamic ones.  This
+        setting only applies to the C- and I-style CLIs.
+    -->
+    <sortShowElems>true</sortShowElems>
+    <!--
+         Only applicable to J-style CLI.
+         When explicitSetCreate is set to 'true' then instances
+         cannot be created using the 'set' command. Instead they
+         must be created using a new 'create' command. Note that
+         this does not conform to the Juniper style CLI where 'set'
+         can be used for creating instances, and 'create' does not
+         exist as a command.
+         -->
+    <explicitSetCreate>false</explicitSetCreate>
+    <!--
+        mapActions is either "both", "config", or "oper". If "both",
+        then actions are available both in operational mode and in
+        configure mode. If "oper" then they are
+        only available in operational mode, and if "config" then they are
+        only available in configure mode.
+    -->
+    <mapActions>both</mapActions>
+    <!--
+        compactTable is either "true" or "false". If "true" then
+        tables with multiple dynamic levels will be displayed more
+        compactly. The first instance of the sub-element will appear on
+        the same row as the parent instance. When set to "false" all new
+        instances will appear on a new row.     -->
+    <compactTable>true</compactTable>
+    <!--
+        showKeyName is either "true" or "false". If "true" then the
+        key name will be displayed in the completion list during
+        completion.
+    -->
+    <showKeyName>true</showKeyName>
+
+    <!--
+        User defined template filters must be listed here. They
+        can be used in show templates in the same manner as the
+        builtin ones. A template filter takes a string as input in
+        'argv[1]' and returns a modified version of it by invoking
+        'confd_action_reply_command'. It can also take extra
+        arguments. For example '|a_filter:foo:42' implies
+        'argv[2]="foo"' and 'argv[3]="42".
+    -->
+
+    <!--
+        <templateFilter>
+           <name>a_filter</name>
+           <callback>a_function</callback>
+        </templateFilter>
+    -->
+    <!--
+        Display attributes on non-presence containers similar to how
+        attributes are displayed on presence containers. Default is
+        false (off).
+        -->
+    <displayNonPresenceAttributes>false</displayNonPresenceAttributes>
+    <!--
+        escapeBackslash is either "true" or "false". If "true" then
+        backslash is escaped in the CLI.
+    -->
+    <escapeBackslash>false</escapeBackslash>
+    <defaultLeafListStyle>flat-list</defaultLeafListStyle>
+    <!--
+        bypassAllowAbbrevKeys is either "true" or "false". If "true" then
+        then /confdConfig/cli/allowAbbrevKeys setting does not take any
+        effect. It means that no matter what is set for
+        /confdConfig/cli/allowAbbrevKeys, the key elements are not allowed
+        to be abbreviated in the CLI. This is relevant in the J-style CLI
+        when using the commands 'delete' and 'edit'. In the C/I-style CLIs
+        when using the commands 'no', 'show configuration' and for commands
+        to enter submodes.
+    -->
+    <bypassAllowAbbrevKeys>false</bypassAllowAbbrevKeys>
+  </cli>
+
+  <webui>
+    <enabled>false</enabled>
+    <serverName>localhost</serverName>
+    <matchHostName>false</matchHostName>
+    <cacheRefreshSecs>0</cacheRefreshSecs>
+    <maxRefEntries>100</maxRefEntries>
+    <docroot>/var/confd/webui/docroot</docroot>
+    <webuiIndexUrl>/index.html</webuiIndexUrl>
+    <!--
+        loginDir may be used if a custom login directory is to be used
+        instead of the builtin ditto.
+    -->
+    <loginDir>/var/www/login</loginDir>
+    <!--
+        customDir should be used if the Web UI is to be customized as
+        described in the User Guide.
+    -->
+    <customDir>/var/www/custom</customDir>
+    <customHeaders>
+    <!--
+        Several headers can be specified here. They will be added to
+        /login.html, /index.html and all JSONRPC HTTP responses.
+
+        Example:
+        <header>
+        <name>Access-Control-Allow-Origin</name>
+        <value>http://www.tail-f.com</value>
+        </header>
+    -->
+    </customHeaders>
+
+    <!--
+        By default the X-Frame-Options header is set to DENY for the
+        /login.html and /index.html pages. With this header can be
+        set to SAMORIGIN or ALLOW-FROM for these pages instead.
+    -->
+    <X-Frame-Options>DENY</X-Frame-Options>
+
+    <disableAuth>
+      <!--
+          Several directories can be specified here. If no <dir/> items
+          are specifed the following directories and files will not be
+          restricted by the AAA engine: "/login" and "/login.html".
+
+          Example: <dir>/etc/confd</dir>
+      -->
+    </disableAuth>
+    <allowSymlinks>true</allowSymlinks>
+    <transport>
+      <ssl>
+        <enabled>false</enabled>
+        <disableNonAuthRedirect>false</disableNonAuthRedirect>
+        <redirect>https//127.0.0.1:8008</redirect>
+        <ip>0.0.0.0</ip>
+        <port>8888</port>
+        <extraIpPorts/>
+        <dscp>0</dscp>
+        <keyFile>/var/confd/webui/cert/host.key</keyFile>
+        <certFile>/var/confd/webui/cert/host.cert</certFile>
+        <caCertFile>/var/confd/webui/ca_cert/ca.cert</caCertFile>
+        <verify>1</verify>
+        <depth>1</depth>
+        <ciphers>DEFAULT</ciphers>
+        <protocols>DEFAULT</protocols>
+      </ssl>
+      <tcp>
+        <enabled>true</enabled>
+        <disableNonAuthRedirect>false</disableNonAuthRedirect>
+        <redirect>https://127.0.0.1:8888</redirect>
+        <ip>0.0.0.0</ip>
+        <port>8008</port>
+        <extraIpPorts/>
+        <dscp>0</dscp>
+      </tcp>
+    </transport>
+    <cgi>
+      <enabled>false</enabled>
+      <dir>cgi-bin</dir>
+      <php>
+        <enabled>false</enabled>
+      </php>
+    </cgi>
+    <idleTimeout>PT30M</idleTimeout>
+    <absoluteTimeout>PT16H</absoluteTimeout>
+    <rateLimiting>1000000</rateLimiting>
+    <audit>false</audit>
+    <useForwardedClientIp>
+      <!--
+          Name of the HTTP headers that contain the true Client IP address.
+      -->
+      <proxyHeaders/>
+      <!--
+          Trusted (proxy) sources to provide a Client IP address.
+      -->
+      <allowedProxyIpPrefix>10.10.10.0/24</allowedProxyIpPrefix>
+    </useForwardedClientIp>
+    <namedCommands>
+      <exec>
+        <name>cli</name>
+        <osCommand>./confd_cli</osCommand>
+        <args>-u$(user) -g$(groups) --ip $(ip) --proto http</args>
+        <options>
+          <uid>42</uid>
+          <wd>/tmp</wd>
+          <globalNoDuplicate/>
+        </options>
+      </exec>
+    </namedCommands>
+  </webui>
+
+  <!--
+      REST api
+  -->
+  <rest>
+    <enabled>false</enabled>
+    <showHidden>false</showHidden>
+    <customHeaders>
+      <!--
+          The customHeaders element contains any number of header
+          elements, with a valid header-field as defined in RFC7230.
+
+          Example:
+          <header>
+          <name>Access-Control-Allow-Origin</name>
+          <value>http://www.tail-f.com</value>
+          </header>
+      -->
+    </customHeaders>
+  </rest>
+
+  <!--
+      RESTCONF api
+  -->
+  <restconf>
+    <enabled>false</enabled>
+    <!--
+        The RESTCONF root resource is the first part of the RESTCONF API path.
+    -->
+    <rootResource>restconf</rootResource>
+    <schemaServerUrl>http://10.0.0.0:7000</schemaServerUrl>
+    <tokenResponse>
+      <xAuthToken>false</xAuthToken>
+      <tokenCookie>
+        <name></name>
+        <directives></directives>
+      </tokenCookie>
+    </tokenResponse>
+    <customHeaders>
+      <!--
+          The customHeaders element contains any number of header
+          elements, with a valid header-field as defined in RFC7230.
+
+          Example:
+          <header>
+          <name>Access-Control-Allow-Origin</name>
+          <value>http://www.tail-f.com</value>
+          </header>
+      -->
+    </customHeaders>
+  </restconf>
+
+  <capi>
+    <newSessionTimeout>PT30S</newSessionTimeout>
+    <queryTimeout>PT120S</queryTimeout>
+    <connectTimeout>PT60S</connectTimeout>
+    <objectCacheTimeout>PT2S</objectCacheTimeout>
+    <eventReplyTimeout>PT120S</eventReplyTimeout>
+  </capi>
+
+  <proxyForwarding>
+    <enabled>false</enabled>
+    <autoLogin>false</autoLogin>
+    <proxy>
+      <target>remote-host-name</target>
+      <address>10.0.0.2</address>
+      <netconf>
+        <ssh>
+          <port>2022</port>
+        </ssh>
+      </netconf>
+      <cli>
+        <ssh>
+          <port>22</port>
+        </ssh>
+      </cli>
+    </proxy>
+  </proxyForwarding>
+
+  <snmpAgent>
+    <!--
+        Enable only if snmp agent should be started
+    -->
+    <enabled>false</enabled>
+    <!--
+        Configure the IP address and port that the SNMP Agent
+        should listen to
+    -->
+    <ip>0.0.0.0</ip>
+    <port>161</port>
+    <extraIpPorts/>
+    <!--
+        Differentiated Services Code Point, 6 bits
+    -->
+    <dscp>0</dscp>
+    <!--
+        List mibs that should be loaded into the SNMP Agent
+        at startup.
+        With no mibs loaded, the SNMP agent will start with the built-in
+        standard mibs only.  See the User's Guide for details.
+    -->
+    <mibs>
+      <!--
+      <file>/etc/confd/mibs/EXAMPLE-MIB.bin</file>
+      -->
+      <!--
+          Dynamically load all MIBs found in the load path
+      -->
+      <fromLoadPath>false</fromLoadPath>
+    </mibs>
+
+    <!--
+        The time (in seconds) the agent keeps temporary table entries before
+        deleting them.  A table entry is temporary if its
+        RowStatus columen is 'notReady' or 'notInService'.
+    -->
+    <temporaryStorageTime>300</temporaryStorageTime>
+
+    <!--
+        List the SNMP versions the agent should implement
+    -->
+    <snmpVersions>
+      <v1>true</v1>
+      <v2c>true</v2c>
+      <v3>true</v3>
+    </snmpVersions>
+
+    <!--
+         The SNMP Engine ID is a hexList and can be constructed
+         in many ways. See the SNMP-FRAMEWORK-MIB for more
+         information about this.
+         The MaxMessageSize can be set, but should normally not be
+         modified.
+    -->
+    <snmpEngine>
+      <snmpEngineID>80:00:61:81:05:01</snmpEngineID>
+      <snmpEngineMaxMessageSize>50000</snmpEngineMaxMessageSize>
+    </snmpEngine>
+    <!--
+        notifyName for authenticationFailure traps
+    -->
+    <authenticationFailureNotifyName/>
+
+      <!--
+            If true, the SNMP Agent will consider requests originating
+            from one and the same IP Address, and using the same security
+            name, as related, regardless of source port.
+            Per default, the SNMP Agent will consider requests originating
+            from one and the same IP Address and port, and using the same
+            security name, as related.
+            Related requests are handled in the same user session. This is
+            absolutely necessary for achieving good performance when processing
+            consecutive get-next requests, as during SNMP walks.
+      -->
+      <sessionIgnorePort>false</sessionIgnorePort>
+
+    <!--
+        Directives for how to manage locks and changes to the candidate
+        when processing SNMP set requests in systems where
+        /confdConfig/datastores/running/access is
+        writable-through-candidate.
+        When running with this datastore setup, the SNMP Agent must
+        lock the candidate before making changes to it and committing
+        those to the running configuration.
+    -->
+    <candidate>
+      <!--
+          If the candidate is locked by another user session, the SNMP
+          Agent will send a resourceUnavailable response unless the
+          candidate becomes available for locking within this time period.
+          The default value is PT0S, which means the error response will
+          be sent immediately.
+      -->
+      <maxLockWait>PT0S</maxLockWait>
+      <!--
+          If there are pending changes in the candidate when the SNMP
+          Agent attempts to lock it, these will be discarded (continue) or
+          the lock will not be taken and the SNMP request will fail with
+          resourceUnavailable (fail). The default value is continue.
+      -->
+      <pendingChangesAction>continue</pendingChangesAction>
+    </candidate>
+
+    <!--
+          Whenever a set request cannot be completed, due to competing
+          actions (typically CDB clients, or other transactions) preventing
+          the SNMP Agent from taking the required locks on configuration
+          stores and data providers affected by the request, the SNMP Agent
+          will respond to the set request with an "in use" error.
+          If dropWhenInUse is true, the SNMP Agent will silently drop the
+          request instead.
+    -->
+    <dropWhenInUse>false</dropWhenInUse>
+
+    <!--
+        Known contexts, in addition to the empty context.
+     -->
+    <contexts/>
+
+    <!--
+        Values for some standard variables
+    -->
+    <system>
+      <sysDescr>Tail-f ConfD agent</sysDescr>
+      <sysObjectID>1.3.6.1.4.1.24961</sysObjectID>
+      <sysServices>72</sysServices>
+      <!--
+          The sysORTable stores capabilities that this agent supports
+      -->
+      <sysORTable>
+        <!--
+            Example of a capability:
+        -->
+        <sysOREntry>
+          <sysORIndex>1</sysORIndex>
+          <sysORID>1.3.6.1.4.1.24961.1</sysORID>
+          <sysORDescr>Example capability</sysORDescr>
+        </sysOREntry>
+      </sysORTable>
+    </system>
+  </snmpAgent>
+
+  <netconf>
+    <enabled>true</enabled>
+
+    <versions>
+      <!--
+          Setting the value to true will enable NETCONF version
+          1.0, as defined in RFC 4741.
+      -->
+      <v1.0>true</v1.0>
+      <!--
+          Setting the value to true will enable NETCONF version
+          1.1, as defined in draft-ietf-netconf-4741bis-10.txt.
+      -->
+      <v1.1>true</v1.1>
+    </versions>
+
+    <transport>
+      <ssh>
+        <enabled>true</enabled>
+        <ip>0.0.0.0</ip>
+        <!--
+            Note that the standard port for NETCONF over SSH is 830
+        -->
+        <port>2022</port>
+        <extraIpPorts/>
+        <dscp>0</dscp>
+      </ssh>
+
+      <!--
+          NETCONF over TCP is not standardized, but it can be useful
+          during development in order to use e.g. netcat for scripting.
+      -->
+      <tcp>
+        <enabled>false</enabled>
+        <ip>0.0.0.0</ip>
+        <port>2023</port>
+        <extraIpPorts/>
+        <dscp>0</dscp>
+      </tcp>
+    </transport>
+
+    <!--
+         If extendedSessions are enabled, all ConfD sessions can be
+         terminated using <kill-session>, i.e. not only can other
+         NETCONF session be terminated, but also CLI sessions, WebUI
+         sessions etc.  If such a session holds a lock, its session
+         id will be returned in the <lock-denied>, instead of "0".
+
+         Strictly speaking, this extension is not covered by the
+         NETCONF specification; therefore it's false by default.
+    -->
+    <extendedSessions>false</extendedSessions>
+
+    <!--
+         Controls how many concurrent NETCONF batch processes there
+         can be at any time.  A batch process can be started by the
+         agent if a new NETCONF rpc operation is implemented  as  a
+         batch  operation.
+    -->
+    <maxBatchProcesses>unbounded</maxBatchProcesses>
+
+    <!--
+        DEPRECATED - use /confdConfig/defaultHandlingMode instead
+    -->
+    <sendDefaults>false</sendDefaults>
+
+    <rpcErrors>close</rpcErrors>
+    <idleTimeout>PT0S</idleTimeout>
+    <writeTimeout>PT0S</writeTimeout>
+
+    <capabilities>
+      <!--
+          enable only if /confdConfig/datastores/startup is enabled
+      -->
+      <startup>
+        <enabled>false</enabled>
+      </startup>
+
+      <!--
+          enable only if /confdConfig/datastores/candidate is enabled
+      -->
+      <candidate>
+        <enabled>true</enabled>
+      </candidate>
+
+      <confirmed-commit>
+        <enabled>true</enabled>
+      </confirmed-commit>
+
+      <!--
+           enable only if /confdConfig/datastores/running is read-write
+      -->
+      <writable-running>
+        <enabled>true</enabled>
+      </writable-running>
+
+      <rollback-on-error>
+        <enabled>true</enabled>
+      </rollback-on-error>
+
+      <no-continue-on-error>
+        <enabled>false</enabled>
+      </no-continue-on-error>
+
+      <validate>
+        <enabled>true</enabled>
+        <test-only>false</test-only>
+      </validate>
+
+      <!--
+          Turn on the URL capability options you want to support
+      -->
+      <url>
+        <enabled>false</enabled>
+        <file>
+          <enabled>true</enabled>
+          <rootDir>/var/confd/state</rootDir>
+        </file>
+        <ftp>
+          <enabled>true</enabled>
+        </ftp>
+        <sftp>
+          <enabled>true</enabled>
+        </sftp>
+      </url>
+
+      <xpath>
+        <enabled>true</enabled>
+      </xpath>
+
+      <!--
+          Enable this to turn on NETCONF Notifications support.
+      -->
+      <notification>
+        <enabled>false</enabled>
+        <!--
+            Enable this to make the agent handle RPCs while sending
+            notifications.
+        -->
+        <interleave>
+          <enabled>false</enabled>
+        </interleave>
+      </notification>
+
+      <!--
+           Enable this to turn on NETCONF partial lock support.
+      -->
+      <partial-lock>
+        <enabled>false</enabled>
+      </partial-lock>
+
+      <!--
+           Controls the non-standard generic action capability.  Enable
+           this to invoke data model actions through NETCONF.
+      -->
+      <actions>
+        <enabled>false</enabled>
+      </actions>
+
+      <!--
+           Controls the non-standard transaction capability.  Enable
+           this if ConfD runs as a subagent.
+      -->
+      <transactions>
+        <enabled>false</enabled>
+      </transactions>
+
+      <!--
+          enabled is either "true" or "false". If "true", the
+          with-defaults capability, defined in
+          draft-ietf-netconf-with-defaults-14, is enabled.
+
+          The NETCONF server will advertise its ´basic-mode´ and
+          ´also-supported´ modes depending on the parameter
+          /confdConfig/defaultHandlingMode.
+      -->
+      <ietf-with-defaults>
+        <enabled>true</enabled>
+      </ietf-with-defaults>
+
+      <!--
+           DEPRECATED - use ietf-with-defaults instead
+
+           Controls the non-standard with-defaults capability.  Enable
+           this to let NETCONF clients control if default values are
+           returned in <get>, <get-config> and <copy-config>.
+      -->
+      <with-defaults>
+        <enabled>false</enabled>
+      </with-defaults>
+
+      <!--
+           Controls the non-standard proxy forwarding capability.
+           Enable this to let NETCONF clients use the server as a
+           proxy forwarder to other NETCONF servers.
+      -->
+      <forward>
+        <enabled>false</enabled>
+      </forward>
+
+      <!--
+          DEPRECATED - this feature is available in NETCONF 1.1.
+
+          Controls the non-standard extended commit capability.  This
+          capability lets clients specify if a confirmed commit should
+          persist if the session dies, and also adds a new cancel-commit
+          operation.
+      -->
+      <tailf-commit>
+        <enabled>false</enabled>
+      </tailf-commit>
+
+      <!--
+        enabled is either "true" or "false". If "true", the
+        "http://tail-f.com/ns/netconf/query" capability is enabled.
+      -->
+      <query>
+        <enabled>false</enabled>
+      </query>
+
+      <!--
+        enabled is either "true" or "false". If "true", the
+        "http://tail-f.com/ns/netconf/extensions" capability is enabled.
+      -->
+      <extensions>
+        <enabled>true</enabled>
+      </extensions>
+
+      <!--
+        enabled is either "true" or "false". If "true", the
+        "http://tail-f.com/ns/netconf/inactive/1.0" capability is enabled.
+      -->
+      <inactive>
+        <enabled>false</enabled>
+      </inactive>
+
+      <!--
+          List custom capabilities, as many as are applicable
+
+          Example:
+            <capability>http://example.com/math/1.0</capability>
+            <capability>http://example.com/event/1.0</capability>
+      -->
+
+    </capabilities>
+  </netconf>
+</confdConfig>

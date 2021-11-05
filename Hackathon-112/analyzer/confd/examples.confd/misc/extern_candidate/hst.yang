@@ -1,0 +1,56 @@
+module hst {
+  namespace "http://tail-f.com/ns/example/hst";
+  prefix hst;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  /* A set of host structures  */
+  container hosts {
+    tailf:callpoint hcp;
+
+    list host {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf domain {
+        type string;
+        mandatory true;
+      }
+      leaf defgw {
+        type inet:ip-address;
+        mandatory true;
+      }
+      /* Write a validation rule to check that the defgw   */
+      /* resides on exactly one of the networks defined below  */
+      container interfaces {
+        tailf:callpoint icp;
+        list interface {
+          key name;
+          max-elements 64;
+          leaf name {
+            type string;
+          }
+          leaf ip {
+            type inet:ip-address;
+            mandatory true;
+          }
+          leaf mask {
+            type inet:ip-address;
+            mandatory true;
+          }
+          leaf enabled {
+            type boolean;
+            mandatory true;
+          }
+        }
+      }
+    }
+  }
+}

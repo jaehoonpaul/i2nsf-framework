@@ -1,0 +1,17 @@
+CDB Upgrade Examples
+~~~~~~~~~~~~~~~~~~~~
+
+In this directory there are four examples demonstrating the automatic
+upgrade feature of the ConfD database, CDB.
+
+  simple        - The simplest possible example, completely automatic upgrade
+
+  using_file    - Demonstrates how to have CDB use the init file for the
+                  new version of the configuration
+
+  using_maapi   - Demonstrates how to use MAAPI to modify the new
+                  database before committing the upgrade transaction
+
+  moved_servers - How to use CDB C-API to read old values, and MAAPI
+                  to write new ones, for more complex upgrade situations
+

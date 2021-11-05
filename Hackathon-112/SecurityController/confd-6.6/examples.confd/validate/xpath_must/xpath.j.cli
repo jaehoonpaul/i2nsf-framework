@@ -1,0 +1,80 @@
+<?xml version="1.0"?>                               <!-- -*- mode: nxml -*- -->
+
+<clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="j">
+
+  <operationalMode>
+    <cmd name="xpath">
+      <info>Evaluate xpath expression</info>
+      <help>Evaluate xpath expression</help>
+      <callback>
+        <exec>
+          <osCommand>maapi</osCommand>
+          <args>--xpath-initial-path '$(ipath)'</args>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <optional/>
+          <type><void/></type>
+          <name>trace</name>
+          <prefix>--verbose</prefix>
+        </param>
+        <param>
+          <info>&lt;expression&gt;</info>
+          <help>XPath expression to evaluate</help>
+          <flag>--xpath</flag>
+        </param>
+      </params>
+    </cmd>
+  </operationalMode>
+
+  <configureMode>
+    <cmd name="must">
+      <info>Evaluate xpath must expression</info>
+      <help>Evaluate xpath must expression</help>
+      <callback>
+        <exec>
+          <osCommand>maapi</osCommand>
+          <args>--xpath-initial-path '$(ipath)'</args>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <optional/>
+          <type><void/></type>
+          <name>trace</name>
+          <prefix>--verbose</prefix>
+        </param>
+        <param>
+          <info>&lt;expression&gt;</info>
+          <help>XPath must expression to evaluate</help>
+          <flag>--xpath-must</flag>
+        </param>
+      </params>
+    </cmd>
+
+    <cmd name="xpath">
+      <info>Evaluate xpath expression</info>
+      <help>Evaluate xpath expression</help>
+      <callback>
+        <exec>
+          <osCommand>maapi</osCommand>
+          <args>--xpath-initial-path '$(ipath)'</args>
+        </exec>
+      </callback>
+      <params>
+        <param>
+          <optional/>
+          <type><void/></type>
+          <name>trace</name>
+          <prefix>--verbose</prefix>
+        </param>
+        <param>
+          <info>&lt;expression&gt;</info>
+          <help>XPath expression to evaluate</help>
+          <flag>--xpath</flag>
+        </param>
+      </params>
+    </cmd>
+  </configureMode>
+</clispec>

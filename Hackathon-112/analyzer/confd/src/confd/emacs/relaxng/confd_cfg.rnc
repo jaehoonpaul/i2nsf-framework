@@ -1,0 +1,1143 @@
+namespace local = ""
+default namespace confd = "http://tail-f.com/ns/confd_cfg/1.0"
+
+
+
+bsdFacilityType = (
+   xsd:string "local7" |
+   xsd:string "local6" |
+   xsd:string "local5" |
+   xsd:string "local4" |
+   xsd:string "local3" |
+   xsd:string "local2" |
+   xsd:string "local1" |
+   xsd:string "local0" |
+   xsd:string "daemon" |
+   xsd:string "authpriv"
+   )
+
+confirmUncommitedOnExitType =
+   (xsd:Name "prompt" | xsd:Name "discard" | xsd:Name "commit")
+
+completionMetaInfoType =
+   (xsd:Name "false" | xsd:Name "alt1" | xsd:Name "alt2")
+
+aliasEscapeType =
+   (xsd:Name "false" | xsd:string { minLength="1" maxLength="1" })
+
+multiPatternOperationType =
+   (xsd:Name "any" | xsd:Name "all")
+
+whoHistoryDateTimeFormatType =
+   (xsd:Name "long" | xsd:Name "short")
+
+XFrameOptionsType =
+   (xsd:Name "DENY" | xsd:Name "SAMEORIGIN" | xsd:Name "ALLOW-FROM")
+
+intFacilityType = xsd:unsignedInt
+# restrict to 2147483647?
+
+syslogFacilityType =
+   (bsdFacilityType | intFacilityType)
+
+pendingChangesActionType =
+   (xsd:Name "continue" | xsd:Name "fail")
+
+logType =
+   element enabled {xsd:boolean}? ,
+   element file {
+      element enabled {xsd:boolean}? &
+      element name {xsd:string}
+   }? ,
+   element syslog {
+      element enabled {xsd:boolean}? &
+      element facility {syslogFacilityType}?
+   }?
+
+netconfTraceFormatType = (
+     xsd:string "pretty" |
+     xsd:string "raw"
+)
+
+
+hex8ValueType = (xsd:string {pattern = "[a-f0-9]{16}"})
+
+unboundedType = (xsd:string "unbounded")
+infinityType = (xsd:string "infinity")
+# should be confd_atom
+
+candidateImplementationType = (xsd:string "external" | xsd:string "confd")
+
+limitType = (xsd:unsignedInt | unboundedType)
+
+timeoutType =
+   (xsd:duration | infinityType)
+
+rpcErrorType = (
+   xsd:string "close" |
+   xsd:string "inline"
+)
+
+editWrapModeType = (
+   xsd:string "wrap" |
+   xsd:string "newline" |
+   xsd:string "vt100"
+)
+
+rollNumbering = (
+   xsd:string "fixed" |
+   xsd:string "rolling"
+)
+
+pipeHelpModeType = (
+   xsd:string "always" |
+   xsd:string "auto" |
+   xsd:string "never"
+)
+
+cliAuditLogType = (
+   xsd:string "allowed" |
+   xsd:string "denied" |
+   xsd:string "none" |
+   xsd:string "all"
+   )
+
+tableBehaviorType = (
+   xsd:string "dynamic" |
+   xsd:string "suppress" |
+   xsd:string "enforce"
+   )
+
+cliActionMapType = (
+   xsd:string "both" |
+   xsd:string "oper" |
+   xsd:string "config"
+   )
+
+cliTimezoneType = (
+   xsd:string "utc" |
+   xsd:string "local"
+   )
+
+cliLeafListStyleType = (
+   xsd:string "flat-list" |
+   xsd:string "range-list"
+   )
+
+quoteStyleType = (
+   xsd:string "backslash" |
+   xsd:string "quote"
+   )
+
+modeInfoInAuditType = (
+   xsd:string "true" |
+   xsd:string "path" |
+   xsd:string "false"
+   )
+
+modeInfoInAAAType = (
+   xsd:string "true" |
+   xsd:string "path" |
+   xsd:string "false"
+   )
+
+enableDisplayLevelType = (
+   xsd:string "true" |
+   xsd:string "pipe" |
+   xsd:string "false"
+   )
+
+cliModeNameStyleType = (
+   xsd:string "full" |
+   xsd:string "two" |
+   xsd:string "short"
+   )
+
+cliStyle = (
+   xsd:string "j" |
+   xsd:string "c"
+   )
+
+rollbackType = (
+   xsd:string "full" |
+   xsd:string "delta"
+   )
+
+cliMax =
+   (xsd:unsignedInt {
+      minInclusive = "5"
+      maxInclusive = "2147483647"
+   })
+
+rollMax =
+   (xsd:unsignedInt {
+      minInclusive = "0"
+      maxInclusive = "2147483647"
+   })
+
+pubkeyAuthenticationType = (
+   xsd:string "none" | xsd:string "local" | xsd:string "system")
+
+expirationWarningType = (
+   xsd:string "ignore" | xsd:string "display" | xsd:string "prompt")
+
+auditUserNameType = (
+   xsd:string "always" | xsd:string "known" | xsd:string "never")
+
+temporaryStorageType =
+   (xsd:string "ram" | xsd:string "disk")
+
+defaultHandlingModeType =
+   (xsd:string "explicit" | xsd:string "trim" | xsd:string "report-all")
+
+syslogVersionType =
+   (xsd:string "1" | xsd:string "bsd")
+
+snmpVersionType =
+   (xsd:string "v1" | xsd:string "v2c")
+
+dscpType =
+   (xsd:unsignedByte {
+      minInclusive = "0"
+      maxInclusive = "63"
+   })
+
+hex16ValueType = (xsd:string {pattern = "[a-f0-9]{32}"})
+
+
+candidateStorageType =
+   (xsd:string "auto" | xsd:string "ram" | xsd:string "disk")
+
+dbAccessType = (
+   xsd:string "writable-through-candidate" |
+   xsd:string "read-write" |
+   xsd:string "read-only"
+)
+
+configurationReplicationType =
+   (xsd:string "async" | xsd:string "sync")
+
+operationalPersistentType =
+   (xsd:string "confspec" | xsd:string "always" | xsd:string "never")
+
+operationalReplicationType =
+   (xsd:string "always" | xsd:string "never" | xsd:string "persistent")
+
+operationalReplicationModeType =
+   (xsd:string "async" | xsd:string "sync")
+
+develLogLevelType =
+   (xsd:string "error" | xsd:string "info" | xsd:string "trace")
+
+snmpLogLevelType =
+   (xsd:string "error" | xsd:string "info")
+
+cryptHashAlgorithmType =
+   (xsd:string "md5" | xsd:string "sha-256" | xsd:string "sha-512")
+
+cryptHashRoundsType =
+   (xsd:unsignedInt {
+      minInclusive = "1000"
+      maxInclusive = "999999999"
+   })
+
+runtimeReconfigurationType =
+   (xsd:string "config-file" | xsd:string "namespace")
+
+verifyType =
+   (xsd:unsignedInt {
+      minInclusive = "1"
+      maxInclusive = "3"
+   })
+
+# atom is not actually defined in confd.xsd
+confd_atom = xsd:string
+
+confd_hexList = (xsd:string {pattern = "(|([0-9a-fA-F][0-9a-fA-F]:)*([0-9a-fA-F][0-9a-fA-F]))"})
+
+confd_inetAddress = (confd_inetAddressIP | confd_inetAddressDNS)
+
+confd_inetAddressIP = (confd_inetAddressIPv4 | confd_inetAddressIPv6)
+
+confd_inetAddressIPv4 =
+   (xsd:string {
+      minLength = "7"
+      maxLength = "15"
+      pattern = "(([0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.)" ~
+         "{1,3}([0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])"
+   })
+
+confd_inetAddressIPv6 =
+   (xsd:string {
+      maxLength = "39"
+      pattern = "(([0-9a-fA-F]{1,4}:){7})([0-9a-fA-F]{1,4})"
+#      pattern = "(([0-9a-fA-F]{1,4}:){6})(([0-9a-fA-F]{1,4}:[0-9a-fA-F]{1,4})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))"
+#      pattern ="(([0-9a-fA-F]{1,4}:)*|([0-9a-fA-F]{1,4}))*(::)(([0-9a-fA-F]{1,4}:)*|([0-9a-fA-F]{1,4}))*"
+# For the time being, I don't understand the second two patterns.
+   })
+
+confd_inetAddressDNS =
+   (xsd:string {pattern = "([\p{L}\p{N}]+\.)*[\p{L}\p{N}]+"})
+# Corrected from confd.xsd.
+
+confd_inetPortNumber =
+   (xsd:unsignedInt {
+      minInclusive = "1"
+      maxInclusive = "65535"
+   })
+
+confd_size =
+   (xsd:string {
+      pattern = "S([0-9]+G)?([0-9]+M)?([0-9]+K)?([0-9]+B)?"
+   })
+
+confd_oid = (xsd:string {pattern = "(([0-9]?[0-9]*)\.)*([0-9]?[0-9]*)?"})
+
+start =
+   element confdConfig {
+      element runtimeReconfiguration { runtimeReconfigurationType }? &
+      element ignoreBindErrors {
+         element enabled {xsd:boolean}?
+      }? &
+
+      element commitRetryTimeout { timeoutType }? &
+      element maxValidationErrors { limitType }? &
+      element confdIpcAddress {
+         element ip {confd_inetAddressIP}? &
+         element port {confd_inetPortNumber}?
+      }? &
+      element confdIpcExtraListenIp  {confd_inetAddressIP}* &
+      element confdExternalIpc {
+         element enabled {xsd:boolean}? &
+         element address {xsd:string}
+      }? &
+      element confdIpcListenBacklog {xsd:int}? &
+      element confdIpcAccessCheck {
+         element enabled {xsd:boolean}? &
+         element filename {xsd:string}
+      }? &
+      element enableSharedMemorySchema {xsd:boolean}? &
+      element sharedMemorySchemaExecutable {xsd:string}? &
+      element stateDir {xsd:string}? &
+      element loadPath {
+         element dir {xsd:string}*
+      }? &
+      element opcache {
+         element enabled {xsd:boolean}? &
+         element timeout {xsd:nonNegativeInteger}?
+      }? &
+      element subagents {
+         element enabled {xsd:boolean}? &
+         element subagent {
+            element name {xsd:token}? &
+            element enabled {xsd:boolean}? &
+            element tcp {
+               element ip {confd_inetAddressIP} &
+               element port {confd_inetPortNumber}? &
+               element confdAuth {
+                  element user {xsd:string}? &
+                  element group {xsd:string}?
+               }
+            }? &
+            element ssh {
+               element ip {confd_inetAddressIP} &
+               element port {confd_inetPortNumber}? &
+               element user {xsd:string} &
+               element password {xsd:string}
+            }? &
+            element mount {
+               element path {xsd:string}* &
+               element node {xsd:QName}*
+            }? &
+            element disableSubtreeOptimization {xsd:boolean}?
+         }*
+      }? &
+      element notifications {
+         element eventStreams {
+            element stream {
+               element name {xsd:string} &
+               element description {xsd:string} &
+               element replaySupport {xsd:boolean} &
+               element builtinReplayStore {
+                  element enabled {xsd:boolean} &
+                  element dir {xsd:string} &
+                  element maxSize {xsd:string} &
+                  element maxFiles {xsd:integer}
+               }?
+            }*
+         }?
+      }? &
+      element snmpgw {
+         element enabled {xsd:boolean}? &
+         element trapPort {confd_inetPortNumber}? &
+         element agent {
+            element name {xsd:token} &
+            element subscriptionId {xsd:token}? &
+            element forwardNotifStream {xsd:token}? &
+            element enabled {xsd:boolean}? &
+            element version {snmpVersionType}? &
+            element timeout {xsd:duration}? &
+            element community {xsd:token}? &
+            element community_bin {xsd:hexBinary}? &
+            element ip {confd_inetAddressIP} &
+            element port {confd_inetPortNumber}? &
+            element module {xsd:string}*
+         }*
+      }? &
+      element cdb {
+         element enabled {xsd:boolean}? &
+         element persistent {xsd:boolean}? &
+         element dbDir {xsd:string}? &
+         element initPath {
+             element dir {xsd:string}*
+         }? &
+         element clientTimeout {timeoutType}? &
+         element replication {configurationReplicationType}? &
+         element subscriptionReplay {
+             element enabled {xsd:boolean}?
+         }? &
+         element operational {
+            element enabled {xsd:boolean}? &
+            element persistent {operationalPersistentType}? &
+            element replication {operationalReplicationType}? &
+            element replicationMode {operationalReplicationModeType}?
+         }?
+      }? &
+      element ha {
+         element enabled {xsd:boolean}? &
+         element ip {confd_inetAddressIP}? &
+         element port {confd_inetPortNumber}? &
+         element externalIpc {
+            element enabled {xsd:boolean}? &
+            element address {xsd:string}
+         }? &
+         element tickTimeout {xsd:duration}?
+      }? &
+      element encryptedStrings {
+         element DES3CBC {
+            element key1 {hex8ValueType},
+            element key2 {hex8ValueType},
+            element key3 {hex8ValueType},
+            element initVector {hex8ValueType}?
+         }? &
+         element AESCFB128 {
+            element key {hex16ValueType},
+            element initVector {hex16ValueType}?
+         }?
+      }? &
+      element cryptHash {
+         element algorithm {cryptHashAlgorithmType}? &
+         element rounds {cryptHashRoundsType}?
+      }? &
+      element logs {
+         element syslogConfig {
+            element version {syslogVersionType}? &
+            element facility {syslogFacilityType}? &
+            (( element udp {
+               element enabled {xsd:boolean}? &
+               element host {confd_inetAddress} &
+               element port {confd_inetPortNumber}?
+            }? ) | (
+            element syslogServers {
+               element server {
+                  element host {confd_inetAddress},
+                  ( element port {confd_inetPortNumber}? &
+                    element version {syslogVersionType}? &
+                    element facility {syslogFacilityType}? &
+                    element enabled {xsd:boolean}? )
+               }*
+            }? ))
+         }? &
+         element confdLog {logType}? &
+         element developerLog {logType}? &
+         element developerLogLevel {develLogLevelType}? &
+         element auditLog {logType}? &
+         element auditLogCommit {xsd:boolean}? &
+         element netconfLog {logType}? &
+         element snmpLog {logType}? &
+         element snmpLogLevel {snmpLogLevelType}? &
+         element webuiAccessLog {
+            element enabled {xsd:boolean}? &
+            element trafficLog {xsd:boolean}? &
+            element dir {xsd:string}
+         }? &
+         element webuiBrowserLog {
+            element enabled {xsd:boolean}? &
+            element filename {xsd:string}
+         }? &
+         element netconfTraceLog {
+            element enabled {xsd:boolean}? &
+            element filename {xsd:string} &
+            element format {netconfTraceFormatType}?
+#            element perSessionFiles {xsd:boolean}?
+         }? &
+         element xpathTraceLog {
+            element enabled {xsd:boolean}? &
+            element filename {xsd:string}
+         }? &
+         element errorLog {
+            element enabled {xsd:boolean}? &
+            element filename {xsd:string} &
+            element maxSize {confd_size}? &
+            element debug {
+               element enabled {xsd:boolean}? &
+               element level {xsd:unsignedShort}? &
+               element tag {confd_atom}*
+            }?
+         }? &
+         element progressTrace {
+             element enabled {xsd:boolean}? &
+             element dir {xsd:string}?
+         }?
+      }? &
+      element datastores {
+         element startup {
+            element enabled {xsd:boolean}?
+         } &
+         element candidate {
+            element enabled {xsd:boolean}? &
+            element implementation {candidateImplementationType}? &
+            element storage {candidateStorageType}? &
+            element filename {xsd:string}? &
+            element confirmedCommit {
+               element revertByCommit {xsd:boolean}?
+            }?
+         } &
+         element running {
+            element access {dbAccessType}?
+         }?
+      }? &
+      element scripts {
+         element dir {xsd:string}*
+      }? &
+      element temporaryDataStorage {
+         element storage {temporaryStorageType}? &
+         element dir {xsd:string}
+      }? &
+      element defaultHandlingMode {defaultHandlingModeType}? &
+      element sortTransactions {xsd:boolean}? &
+      element enableAttributes {xsd:boolean}? &
+      element enableInactive {xsd:boolean}? &
+      element sessionLimits {
+         element maxSessions {limitType}? &
+         element sessionLimit {
+            element context {xsd:token}? ,
+            element maxSessions {limitType}
+         }* &
+         element maxConfigSessions {limitType}? &
+         element configSessionLimit {
+            element context {xsd:token}? ,
+            element maxSessions {limitType}
+         }*
+      }? &
+      element aaa {
+         element sshServerKeyDir {xsd:string}? &
+         element sshPubkeyAuthentication {pubkeyAuthenticationType}? &
+         element sshLoginGraceTime {xsd:duration}? &
+         element sshMaxAuthTries {limitType}? &
+         element aaaBridge {
+            element enabled {xsd:boolean}? &
+            element file {xsd:string}?
+         }? &
+         element defaultGroup {xsd:string}? &
+         element authOrder {xsd:string}? &
+         element validationOrder {xsd:string}? &
+         element expirationWarning {expirationWarningType}? &
+         element auditUserName {auditUserNameType}? &
+         element pam {
+            element enabled {xsd:boolean}? &
+            element service {xsd:string}? &
+            element timeout {xsd:duration}?
+         }? &
+         element rest {
+             element authCacheTTL {xsd:duration}? &
+             element enableAuthCacheClientIp {xsd:boolean}?
+         }? &
+         element externalAuthentication {
+            element enabled {xsd:boolean}? &
+            element executable {xsd:string}? &
+            element useBase64 {xsd:boolean}? &
+            element includeExtra {xsd:boolean}?
+         }? &
+         element localAuthentication {
+            element enabled {xsd:boolean}?
+         }? &
+         element authenticationCallback {
+            element enabled {xsd:boolean}?
+         }? &
+         element externalValidation {
+            element enabled {xsd:boolean}? &
+            element executable {xsd:string}? &
+            element useBase64 {xsd:boolean}? &
+            element includeExtra {xsd:boolean}?
+         }? &
+         element validationCallback {
+            element enabled {xsd:boolean}?
+         }? &
+         element authorization {
+            element enabled {xsd:boolean}? &
+            element callback {
+               element enabled {xsd:boolean}?
+            }? &
+            element nacmCompliant {xsd:boolean}?
+         }? &
+         element namespace {xsd:anyURI}? &
+         element prefix {xsd:string}?
+      }? &
+      element rollback {
+         element enabled {xsd:boolean}? &
+         element directory {xsd:string} &
+         element type {rollbackType}? &
+         element historySize {xsd:unsignedInt}? &
+         element rollbackNumbering {rollNumbering}?
+      }? &
+      element ssh {
+         element idleConnectionTimeout {xsd:duration}? &
+         element algorithms {
+             element serverHostKey {xsd:string}? &
+             element kex {xsd:string}? &
+             element dhGroup {
+                 element minSize {xsd:unsignedInt}? &
+                 element maxSize {xsd:unsignedInt}?
+             }? &
+             element mac {xsd:string}? &
+             element encryption {xsd:string}?
+         }? &
+         element clientAliveInterval {timeoutType}? &
+         element clientAliveCountMax {xsd:unsignedInt}?
+      }? &
+      element cli {
+         element enabled {xsd:boolean}? &
+         element allowImplicitWildcard {xsd:boolean}? &
+         element startupScriptNonInteractive {xsd:boolean}? &
+         element allowOldStyleModeCmds {xsd:boolean}? &
+         element continueOnErrorCmdStack {xsd:boolean}? &
+         element topLevelCmdsInSubMode {xsd:boolean}? &
+         element mixedMode {xsd:boolean}? &
+         element completionShowOldVal {xsd:boolean}? &
+         element completionMetaInfo {completionMetaInfoType}? &
+         element reportInvalidCompletionInput {xsd:boolean}? &
+         element useShortEnabled {xsd:boolean}? &
+         element execNavigationCmds {xsd:boolean}? &
+         element allowOverwriteOnCopy {xsd:boolean}? &
+         element inheritPaginate {xsd:boolean}? &
+         element safeScriptExecution {xsd:boolean}? &
+         element allowParenQuotes {xsd:boolean}? &
+         element addExtraTableSpacing {xsd:boolean}? &
+         element tableLabel {xsd:boolean}? &
+         element tableLookAhead {xsd:positiveInteger}? &
+         element moreBufferLines {limitType}? &
+         element singleElemPattern {xsd:boolean}? &
+         element supportQuotedEOL {xsd:boolean}? &
+         element multiPatternOperation {multiPatternOperationType}? &
+         element showEditors {xsd:boolean}? &
+         element whoShowMode {xsd:boolean}? &
+         element whoHistoryDateTimeFormat {whoHistoryDateTimeFormatType}? &
+         element displayEmptyConfigContainers {xsd:boolean}? &
+         element exitConfigModeOnCtrlC {xsd:boolean}? &
+         element sortSubmodeCmds {xsd:boolean}? &
+         element showTableLabelsIfMultiple {xsd:boolean}? &
+         element sortLocalCmds {xsd:boolean}? &
+         element defaultTableBehavior {tableBehaviorType}? &
+         element allowTableOverflow {xsd:boolean}? &
+         element tableOverflowTruncate {xsd:boolean}? &
+         element allowTableCellWrap {xsd:boolean}? &
+         element showAllNs {xsd:boolean}? &
+         element useExposeNsPrefix {xsd:boolean}? &
+         element modeInfoInAudit {modeInfoInAuditType}? &
+         element auditLogMode {cliAuditLogType}? &
+         element banner {xsd:string}? &
+         element bannerFile {xsd:string}? &
+         element style {cliStyle}? &
+         element modeNameStyle {cliModeNameStyleType}? &
+         element completionShowMax {cliMax}? &
+         element suppressFastShow {xsd:boolean}? &
+         element rollbackAAA {xsd:boolean}? &
+         element rollbackMax {rollMax}? &
+         element rollbackNumbering {rollNumbering}? &
+         element rollbackNumberingInitial {xsd:integer}? &
+         element inconsistentDatabaseSuffix {xsd:string}? &
+         element oldDetailsArg {xsd:boolean}? &
+         element withDefaults {xsd:boolean}? &
+         element ignoreShowWithDefaultOnDiff {xsd:boolean}? &
+         element trimDefaultShow {xsd:boolean}? &
+         element trimDefaultSave {xsd:boolean}? &
+         element defaultPrefix {xsd:string}? &
+         element jWarningPrefix {xsd:string}? &
+         element jAbortedPrefix {xsd:string}? &
+         element jErrorPrefix {xsd:string}? &
+         element cWarningPrefix {xsd:string}? &
+         element cAbortedPrefix {xsd:string}? &
+         element cErrorPrefix {xsd:string}? &
+         element invalidDataString {xsd:string}? &
+         element showDefaults {xsd:boolean}? &
+         element reallocateOperTrans {xsd:boolean}? &
+         element quickSshTeardown {xsd:boolean}? &
+         element cAlignLeafValues {xsd:boolean}? &
+         element jAlignLeafValues {xsd:boolean}? &
+         element transactions {xsd:boolean}? &
+         element transactionCtrlCmds {xsd:boolean}? &
+         element prompt1 {xsd:string}? &
+         element prompt2 {xsd:string}? &
+         element cPrompt1 {xsd:string}? &
+         element cPrompt2 {xsd:string}? &
+         element cStylePromptInJStyle {xsd:boolean}? &
+         element promptHostnameDelimiter {xsd:string}? &
+         element asyncPromptRefresh {xsd:string}? &
+         element smartRenameFiltering {xsd:boolean}? &
+         element showLogDirectory {xsd:string}? &
+         element showSubsystemMessages {xsd:boolean}? &
+         element ignoreSubsystemFailures {xsd:boolean}? &
+         element commitMessage {xsd:boolean}? &
+         element commitMessageFormat {xsd:string}? &
+         element suppressCommitMessages {
+           element context {xsd:string}*
+         }? &
+         element jStatusFormat {xsd:string}? &
+         element forcedExitFormat {xsd:string}? &
+         element jExtendedShow {xsd:boolean}? &
+         element jShowCR {xsd:boolean}? &
+         element showPipe {xsd:boolean}? &
+         element showPipeConfig {xsd:boolean}? &
+         element disablePipe {xsd:boolean}? &
+         element disablePipeConfig {xsd:boolean}? &
+         element pipeHelpMode {pipeHelpModeType}? &
+         element jAllowDeleteAll {xsd:boolean}? &
+         element cSilentNo {xsd:boolean}? &
+         element promptSessionsCLI {xsd:boolean}? &
+         element cModeExitFormat {xsd:string}? &
+         element noFollowIncompleteCommand {xsd:boolean}? &
+         element cRestrictiveNo {xsd:boolean}? &
+         element cExtendedCmdSearch {xsd:boolean}? &
+         element cSuppressCmdSearch {xsd:boolean}? &
+         element enterSubmodeOnLeaf {xsd:boolean}? &
+         element prioritizeSubmodeCmds {xsd:boolean}? &
+         element compListCompact {xsd:boolean}? &
+         element completionListLine {xsd:boolean}? &
+         element jShowUnset {xsd:boolean}? &
+         element jShowUnsetText {xsd:string}? &
+         element showMatchBeforePossible {xsd:boolean}? &
+         element possibleCompletionsFormat {xsd:string}? &
+         element matchCompletionsFormat {xsd:string}? &
+         element noMatchCompletionsFormat {xsd:string}? &
+         element showDescription {xsd:boolean}? &
+         element showEmptyContainers {xsd:boolean}? &
+         element showTags {xsd:boolean}? &
+         element showAnnotations {xsd:boolean}? &
+         element showServiceMetaData {xsd:boolean}? &
+         element suppressNedErrors {xsd:boolean}? &
+         element prettifyStatsName {xsd:boolean}? &
+         element confirmUncommitedOnExit {confirmUncommitedOnExitType}? &
+         element showCommitProgress {xsd:boolean}? &
+         element commitActivityClock {xsd:boolean}? &
+         element cPrivate {xsd:boolean}? &
+         element cTab {xsd:boolean}? &
+         element cTabInfo {xsd:boolean}? &
+         element tabExtend {xsd:boolean}? &
+         element cHelp {xsd:boolean}? &
+         element jHideHelp {xsd:boolean}? &
+         element promptEnumLimit {xsd:nonNegativeInteger}? &
+         element restrictedFileAccess {xsd:boolean}? &
+         element hideDotFiles {xsd:boolean}? &
+         element restrictedFileRegexp {xsd:string}? &
+         element idleTimeout {xsd:duration}? &
+         element disableIdleTimeoutOnCmd {xsd:boolean}? &
+         element commandTimeout {timeoutType}? &
+         element editWrapMode {editWrapModeType}? &
+         element historySave {xsd:boolean}? &
+         element historyRemoveDuplicates {xsd:boolean}? &
+         element historyMaxSize {xsd:integer}? &
+         element messageMaxSize {xsd:integer}? &
+         element compactShow {xsd:boolean}? &
+         element compactStatsShow {xsd:boolean}? &
+         element enumKeyInfo {xsd:boolean}? &
+         element reconfirmHidden {xsd:boolean}? &
+         element dequoteHidden {xsd:boolean}? &
+         element columnStats {xsd:boolean}? &
+         element allowWildcard {xsd:boolean}? &
+         element allowAllAsWildcard {xsd:boolean}? &
+         element allowRangeExpression {xsd:boolean}? &
+         element allowRangeExpressionAllTypes {xsd:boolean}? &
+         element useDoubleDotRanges {xsd:boolean}? &
+         element suppressRangeKeyword {xsd:boolean}? &
+         element exitModeOnEmptyRange {xsd:boolean}? &
+         element allowAbbrevCmds {xsd:boolean}? &
+         element allowAbbrevCmdsOnLoad {xsd:boolean}? &
+         element strictRefsOnLoad {xsd:boolean}? &
+         element allowAbbrevKeys {xsd:boolean}? &
+         element jShowTableRecursive {xsd:boolean}? &
+         element allowAbbrevParamNames {xsd:boolean}? &
+         element allowAbbrevEnums {xsd:boolean}? &
+         element displayNonPresenceAttributes {xsd:boolean}? &
+         element escapeBackslash {xsd:boolean}? &
+         element showNedErrorAsInfo {xsd:boolean}? &
+         element bypassAllowAbbrevKeys {xsd:boolean}? &
+         element allowCaseInsensitiveEnums {xsd:boolean}? &
+         element commitRetryTimeout {timeoutType}? &
+         element enableDisplayLevel {enableDisplayLevelType}? &
+         element enableDisplayGroups {xsd:boolean}? &
+         element instanceDescription {xsd:boolean}? &
+         element addErrorPrefixSuffix {xsd:boolean}? &
+         element externalActionErrorMsg {xsd:string}? &
+         element compactTable {xsd:boolean}? &
+         element showKeyName {xsd:boolean}? &
+         element timezone {cliTimezoneType}? &
+         element utcOffset {xsd:integer}? &
+         element timestamp {
+            element enabled {xsd:boolean}? &
+            element clock24 {xsd:boolean}? &
+            element format {xsd:string}?
+         }? &
+         element orderedShowConfig {xsd:boolean}? &
+         element leafPrompting {xsd:boolean}? &
+         element infoOnMatch {xsd:boolean}? &
+         element unifiedHistory {xsd:boolean}? &
+         element stopLoadOnError {xsd:boolean}? &
+         element autocommitLoad {xsd:boolean}? &
+         element autocommitLoadChunkSize {xsd:positiveInteger}? &
+         element allOrNothingLoad {xsd:boolean}? &
+         element enableLoadMerge {xsd:boolean}? &
+         element loadActivityClock {xsd:boolean}? &
+         element quoteStyle {quoteStyleType}? &
+         element laxBarQuoting {xsd:boolean}? &
+         element expandAliasOnCompletion {xsd:boolean}? &
+         element expandAliasEscape {aliasEscapeType}? &
+         element defaultDisplayLevel {xsd:integer}? &
+         element modeInfoInAAA {modeInfoInAAAType}? &
+         element cmdAAAForAutowizard {xsd:boolean}? &
+         element docWrap {xsd:boolean}? &
+         element infoOnTab {xsd:boolean}? &
+         element infoOnSpace {xsd:boolean}? &
+         element newLogout {xsd:boolean}? &
+         element newInsert {xsd:boolean}? &
+         element messageFormat {xsd:string}? &
+         element messageWordWrap {xsd:boolean}? &
+         element messageQueueSize {xsd:integer}? &
+         element caseInsensitive {xsd:boolean}? &
+         element caseInsensitiveKeys {xsd:boolean}? &
+         element ignoreLeadingWhitespace {xsd:boolean}? &
+         element indentTemplates {xsd:boolean}? &
+         element wrapInfo {xsd:boolean}? &
+         element wrapPrompt {xsd:boolean}? &
+         element sortShowElems {xsd:boolean}? &
+         element explicitSetCreate {xsd:boolean}? &
+         element mapActions {cliActionMapType}? &
+         element spaceCompletion {
+            element enabled {xsd:boolean}?
+         }? &
+         element autoWizard {
+            element enabled {xsd:boolean}?
+         }? &
+         element ssh {
+            element enabled {xsd:boolean}? &
+            element ip {confd_inetAddressIP}? &
+            element port {confd_inetPortNumber}? &
+            element extraIpPorts {xsd:string}* &
+            element dscp {dscpType}? &
+            element banner {xsd:string}? &
+            element bannerFile {xsd:string}?
+         }? &
+         element defaultLeafListStyle {cliLeafListStyleType}? &
+         element templateFilter {
+            element name {xsd:string} &
+            element callback {xsd:string}
+         }*
+      }? &
+      element hideGroup {
+         element name {xsd:string}? &
+         element password {xsd:string}? &
+         element callback {xsd:string}? &
+         element showWhenSet {xsd:boolean}?
+      }* &
+      element javascript {
+         element enabled {xsd:boolean}? &
+         element branchLimit {intFacilityType}?
+      }? &
+      element capi {
+         element newSessionTimeout {xsd:duration}? &
+         element queryTimeout {xsd:duration}? &
+         element connectTimeout {xsd:duration}? &
+         element objectCacheTimeout {xsd:duration}? &
+         element eventReplyTimeout {xsd:duration}?
+      }? &
+      element proxyForwarding {
+         element enabled {xsd:boolean}? &
+         element autoLogin {xsd:boolean}? &
+         element proxy {
+           element target {xsd:token}? &
+           element address {confd_inetAddress}? &
+           element netconf {
+             (element ssh {
+                element port {confd_inetPortNumber}?
+              } |
+             element tcp {
+                element port {confd_inetPortNumber}?
+             })?
+           }? &
+           element cli {
+             (element ssh {
+                element port {confd_inetPortNumber}?
+              } |
+             element telnet {
+                element port {confd_inetPortNumber}?
+              })?
+           }?
+         }*
+      }? &
+      element webui {
+         element enabled {xsd:boolean}? &
+         element serverName {xsd:string}? &
+         element matchHostName {xsd:boolean}? &
+         element cacheRefreshSecs {xsd:nonNegativeInteger}? &
+         element maxRefEntries {xsd:nonNegativeInteger}? &
+         element docroot {xsd:string}? &
+         element webuiIndexUrl {xsd:string}? &
+         element webuiOneUrl {xsd:string}? &
+         element loginDir {xsd:string}? &
+         element customDir {xsd:string}? &
+         element customHeaders {
+             element header {
+                 element name{xsd:string}? &
+                 element value{xsd:string}?
+             }*
+         }? &
+         element X-Frame-Options {XFrameOptionsType}? &
+         element disableAuth {
+             element dir {xsd:string}*
+         }? &
+         element allowSymlinks {xsd:boolean}? &
+         element transport {
+            element ssl {
+               element enabled {xsd:boolean}? &
+               element disableNonAuthRedirect {xsd:string}? &
+               element redirect {xsd:string}? &
+               element ip {confd_inetAddressIP}? &
+               element port {confd_inetPortNumber}? &
+               element extraIpPorts {xsd:string}* &
+               element dscp {dscpType}? &
+               element keyFile {xsd:string} &
+               element certFile {xsd:string} &
+               element caCertFile {xsd:string}? &
+               element verify {verifyType}? &
+               element depth {xsd:nonNegativeInteger}? &
+               element ciphers {xsd:string}? &
+               element protocols {xsd:string}?
+            }? &
+            element tcp {
+               element enabled {xsd:boolean}? &
+               element disableNonAuthRedirect {xsd:string}? &
+               element redirect {xsd:string}? &
+               element ip {confd_inetAddressIP}? &
+               element port {confd_inetPortNumber}? &
+               element extraIpPorts {xsd:string}* &
+               element dscp {dscpType}?
+            }?
+         }? &
+         element cgi {
+            element enabled {xsd:boolean}? &
+            element dir {xsd:string} &
+            element php {
+              element enabled {xsd:boolean}?
+            }?
+         }? &
+         element idleTimeout {xsd:duration}? &
+         element absoluteTimeout {xsd:duration}? &
+         element rateLimiting {xsd:nonNegativeInteger}? &
+         element audit {xsd:boolean}? &
+         element useForwardedClientIp {
+            element proxyHeaders {xsd:string}? &
+            element allowedProxyIpPrefix {xsd:string}?
+         }? &
+         element namedCommands {
+             element exec {
+                 element name {xsd:token}? &
+                 element osCommand {xsd:string}? &
+                 element args {xsd:string}* &
+                 element options {
+                   element uid {xsd:string}? &
+                   element wd {xsd:string}? &
+                   element globalNoDuplicate {xsd:string}?
+                 }?
+             }*
+         }?
+      }? &
+      element rest {
+         element enabled {xsd:boolean}? &
+         element showHidden {xsd:boolean}? &
+         element customHeaders {
+             element header {
+                 element name{xsd:string}? &
+                 element value{xsd:string}?
+             }*
+         }?
+      }? &
+      element restconf {
+         element enabled {xsd:boolean}? &
+         element rootResource {xsd:string}? &
+         element schemaServerUrl {xsd:string}? &
+         element tokenResponse {
+            element xAuthToken {xsd:boolean}? &
+            element tokenCookie {
+               element enabled {xsd:boolean}? &
+               element name {xsd:string}? &
+               element directives {xsd:string}?
+            }?
+         }? &
+         element customHeaders {
+            element header {
+               element name{xsd:string}? &
+               element value{xsd:string}?
+            }*
+         }?
+      }? &
+      element netconf {
+         element enabled {xsd:boolean}? &
+         element versions {
+            element v1.0 {xsd:boolean}? &
+            element v1.1 {xsd:boolean}?
+         }? &
+         element transport {
+            element ssh {
+               element enabled {xsd:boolean}? &
+               element ip {confd_inetAddressIP}? &
+               element port {confd_inetPortNumber}? &
+               element extraIpPorts {xsd:string}* &
+               element dscp {dscpType}?
+            }? &
+            element tcp {
+               element enabled {xsd:boolean}? &
+               element ip {confd_inetAddressIP}? &
+               element port {confd_inetPortNumber}? &
+               element extraIpPorts {xsd:string}* &
+               element dscp {dscpType}?
+            }?
+         }? &
+         element extendedSessions {xsd:boolean}? &
+         element sendDefaults {xsd:boolean}? &
+         element rpcErrors {rpcErrorType}? &
+         element idleTimeout {xsd:duration}? &
+         element writeTimeout {xsd:duration}? &
+         element maxBatchProcesses {limitType}? &
+         element capabilities {
+            element startup {
+               element enabled {xsd:boolean}?
+            }? &
+            element candidate {
+               element enabled {xsd:boolean}?
+            }? &
+            element confirmed-commit {
+               element enabled {xsd:boolean}?
+            }? &
+            element writable-running {
+               element enabled {xsd:boolean}?
+            }? &
+            element rollback-on-error {
+               element enabled {xsd:boolean}?
+            }? &
+            element no-continue-on-error {
+               element enabled {xsd:boolean}?
+            }? &
+            element validate {
+               element enabled {xsd:boolean}? &
+               element test-only {xsd:boolean}?
+            }? &
+            element url {
+               element enabled {xsd:boolean}? &
+               element file {
+                  element enabled {xsd:boolean}? &
+                  element rootDir {xsd:string}?
+               }? &
+               element ftp {
+                  element enabled {xsd:boolean}?
+               }?&
+               element sftp {
+                  element enabled {xsd:boolean}?
+               }?
+            }? &
+            element xpath {
+               element enabled {xsd:boolean}?
+            }? &
+            element notification {
+               element enabled {xsd:boolean}? &
+               element interleave {
+                  element enabled {xsd:boolean}?
+               }?
+            }? &
+            element actions {
+               element enabled {xsd:boolean}?
+            }? &
+            element transactions {
+               element enabled {xsd:boolean}?
+            }? &
+            element query {
+               element enabled {xsd:boolean}?
+            }? &
+            element extensions {
+               element enabled {xsd:boolean}?
+            }? &
+            element ietf-with-defaults {
+               element enabled {xsd:boolean}?
+            }? &
+            element with-defaults {
+               element enabled {xsd:boolean}?
+            }? &
+            element partial-lock {
+               element enabled {xsd:boolean}?
+            }? &
+            element forward {
+               element enabled {xsd:boolean}?
+            }? &
+            element tailf-commit {
+               element enabled {xsd:boolean}?
+            }? &
+            element tailf-query {
+               element enabled {xsd:boolean}?
+            }? &
+            element inactive {
+               element enabled {xsd:boolean}?
+            }? &
+            element capability {xsd:anyURI}*
+         }?
+      }? &
+      element snmpAgent {
+         element enabled {xsd:boolean}? &
+         element ip {confd_inetAddressIP}? &
+         element port {confd_inetPortNumber}? &
+         element extraIpPorts {xsd:string}* &
+         element dscp {dscpType}? &
+         element mibs {
+            element file {xsd:string}* &
+            element fromLoadPath {xsd:boolean}?
+         }? &
+         element temporaryStorageTime {xsd:unsignedInt}? &
+         element snmpVersions {
+            element v1 {xsd:boolean}? &
+            element v2c {xsd:boolean}? &
+            element v3 {xsd:boolean}?
+         }? &
+         element snmpEngine {
+            element snmpEngineID {confd_hexList}? &
+            element snmpEngineMaxMessageSize {xsd:nonNegativeInteger}?
+         }? &
+         element authenticationFailureNotifyName {xsd:string}? &
+         element candidate {
+            element maxLockWait {xsd:duration}? &
+            element pendingChangesAction {pendingChangesActionType}?
+         }? &
+         element sessionIgnorePort {xsd:boolean}? &
+         element dropWhenInUse {xsd:boolean}? &
+         element contexts {xsd:string}* &
+         element system {
+            element sysDescr {xsd:string}? &
+            element sysObjectID {confd_oid}? &
+            element sysServices {xsd:nonNegativeInteger}? &
+            element sysORTable {
+               element sysOREntry {
+                  element sysORIndex {xsd:nonNegativeInteger} &
+                  element sysORID {confd_oid} &
+                  element sysORDescr {xsd:string}
+               }*
+            }?
+         }?
+      }?
+   }

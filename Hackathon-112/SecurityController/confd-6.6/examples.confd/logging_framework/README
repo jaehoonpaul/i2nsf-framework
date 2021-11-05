@@ -1,0 +1,88 @@
+Logging Framework (traceh.h) integration with ConfD
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This illustrates how to use logging framework (traceh.h) in C/C++
+application and how to integrate it with ConfD.
+
+The logging framework header file is located in example directory
+(examples.confd/include). It is recommended to set CFLAGS to
+add this into include path:
+
+CFLAGS += -I$(CONFD_DIR)/examples.confd/include
+
+The framework consists of one header. It can included like this:
+
+#define _TRACE_DECLARE
+#include <traceh.h>
+
+If you include 'trace.h' in several files, use ''#define _TRACE_DECLARE'
+only in one of them! This instructs the logging framework to
+define supporting functions which should be done only once.
+
+The default compiled logging level is set to level INFO in
+the Makefile with line:
+
+CFLAGS += -DT_LOG_INFO
+
+It can be changed to:
+T_LOG_FATAL, T_LOG_WARN, T_LOG_INFO, T_LOG_DEBUG or T_LOG_TRACE
+
+The runtime controlled logging level is set with use of subscriber.
+
+Validation checks that runtime level has not higher verbosity
+than compiled logging level (e.g. it is not possible to use TRACE level
+in runtime, if compiled level is only INFO).
+
+The data provider provides state data.
+
+Building and running
+~~~~~~~~~~~~~~~~~~~~
+
+To build and start this example, run:
+
+# make clean all start
+
+If you want to stop the ConfD daemon, run:
+
+# make stop
+
+If you want to login via the CLI, run:
+
+# make cli
+
+Use case (in CLI)
+~~~~~~~~~~~~~~~~~~
+
+1) See state (operational) data
+
+# show logging-state
+logging-state console-level info
+logging-state stream-level info
+logging-state syslog-level info
+logging-state compiled-level info
+logging-state syslog_initialized false
+logging-state streams_initialized false
+
+
+2) Configure
+
+# config
+Entering configuration mode terminal
+(config)# logging console-level warn
+# commit
+Commit complete.
+# do show logging-state
+logging-state console-level warn
+logging-state stream-level info
+logging-state syslog-level info
+logging-state compiled-level info
+logging-state syslog_initialized false
+logging-state streams_initialized false
+
+3) See validation in action
+
+# logging console-level trace
+(config)# commit
+Aborted: 'logging console-level': Level TRACE cannot be set as it is more
+          detailed than compiled level INFO!
+(config)#

@@ -1,0 +1,130 @@
+
+This example illustrates the following techniques
+
+  1) The use of a start script to bring ConfD up in phases
+
+  2) Using the cdb_trigger_subscriptions() function
+
+  3) Using different priorities on CDB subscribers to handle events in order
+
+  4) Different ways of reacting to subscription triggers
+
+
+The components are:
+
+  start_system.sh        The start-script
+
+  example.yang	         The data-model
+
+  example_init.xml       The initial configuration
+
+  trigger_subscribers.c  A program that can trigger CDB subscribers
+
+  cdb_client_A.c         A CDB client responsible for hardware
+                         aspects of interfaces
+
+  cdb_client_B.c         A CDB client responsible for IP addresses
+
+  confd_cmd.c            A command-line interface to some ConfD/CDB
+                         functions (used by start_system.sh)
+
+
+The example is rather simplistic in its data-model which consisting of
+a number of interfaces. The interfaces each have some settings, a
+couple of hardware settings and can be configured with a number of IP
+addresses. For the sake of the example handling of interfaces have
+been divided between cdb_client_A (responsible for settings under
+/sys/ifc/hw) and cdb_client_B (responsible for settings under
+/sys/ifc/ip). Again to illustrate the priorities and that they work
+with the new cdb_trigger_subscriptions() function cdb_client_B
+subscribes twice, at different priorities, while cdb_client_A
+subscribes once at a priority in between the two subscription
+priorities that B has.
+
+Again, for the sake of the example, cdb_client_A and B uses different
+ways of reading the configuration. A always reads the whole thing in
+reaction to a subscription trigger, while B makes use of
+cdb_diff_iterate() to only change things that have been modified in
+the current transaction. Notice how cdb_diff_iterate() work when
+cdb_trigger_subscriptions() is called: everything looks like it has
+been set and created. Notice how the subscription priorities are used
+to make cdb_client_B run first to check for deleted addresses, then
+cdb_client_A gets to configure hardware, and lastly cdb_client_B is
+run again to configure any added addresses.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+
+How to run:
+
+  Start by building everything, make sure you have the CONFD_DIR
+  variable set and then type "make", after it has been built try "make
+  start" to start the system:
+
+      % make start
+      sh ./start_system.sh
+      ConfD started in phase0
+      ConfD started in phase1
+      cdb_client_A: started
+      cdb_client_B: started
+
+      cdb_client_B: ======== subid 4 triggered
+    ...
+
+  Notice how the subscription points are triggered at startup, by the
+  use of ./trigger_subscribers in the ./start_system.sh.
+
+  In another terminal window run "confd_cli" to start a CLI session.
+
+      % confd_cli
+
+      admin connected from 127.0.0.1 using console on venus.tail-f.com
+      (J) admin@venus> show configuration sys ifc 
+      
+      (C) venus# show sys ifc 
+
+      ifc port-0 {
+          enabled     false;
+          ip 192.168.1.88 {
+             prefix-length 24;
+          }
+     ...
+
+  Try different settings and see how the CDB clients react in the
+  other window. For example:
+
+      (J) admin@venus> configure 
+      Entering configuration mode private
+
+      (J) admin@venus% set sys ifc port-0 enabled 
+
+      (J) admin@venus% commit
+      Commit complete.
+
+      (J) admin@venus% set sys ifc port-0 ip 192.168.3.77 prefix-length 24
+
+      (J) admin@venus% set sys ifc port-0 ip 192.168.4.77 prefix-length 24
+
+      (J) admin@venus% commit
+      Commit complete.
+      [ok]
+
+
+
+      (C) venus# config
+      Entering configuration mode terminal
+
+      (C) venus(config)# sys ifc port-0 enabled 
+
+      (C) admin@venus% commit
+      Commit complete.
+
+      (C) venus(config-ifc-port-0)# ip 192.168.3.77 prefix-length 24
+      (C) venus(config-ip-192.168.3.77)# top
+      (C) venus(config)# sys ifc port-0 ip 192.168.4.77 prefix-length 24
+
+      (C) venus(config-ip-192.168.4.77)# commit
+      Commit complete.
+
+

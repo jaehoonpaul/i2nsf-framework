@@ -1,0 +1,88 @@
+= The ietf_system component.
+
+The 'ietf_system' component provides support for the IETF standard
+RFC7317 model as described at
+http://www.rfc-editor.org/rfc/rfc7317.txt
+
+It implements the yang model taken from:
+http://dld.netconfcentral.org/src/ietf-system@2014-05-14.yang
+
+and also uses the iana-crypt-hash YANG module from:
+http://www.iana.org/assignments/iana-crypt-hash/iana-crypt-hash
+
+This implementation handles control over dns-resolvers, ntp servers
+and the local clock as well as the hostname.
+
+IMPORTANT: The authentication and radius branches are not implemented
+in this release.
+
+Requirements
+------------
+
+This should work on any "standard Linux" system, but has been tested
+on Ubuntu 14.04.
+
+Specific requirements:
+
+  - The timezone settings requires the zic command.
+
+  - The NTP functionality requires ntpd to be installed to have any
+    effect.  The module has been tested with ntpd version 4.2.6p5, but
+    should work on any recent version.
++
+No other subsystem may control ntpd, it must be started and stopped
+only through linuxcfg.
+
+  - Hostname uses the hostname command.
+
+Installation
+------------
+
+You must have installed the template config for ntp, preferably using
+`../scripts/setup_ntp.sh`.
+
+If your system uses `apparmor`, make sure `/etc/ntp/** r,` line
+is present in the `etc/apparmor.d/usr.sbin.ntpd` file (usually it is present
+by default and no change to the file is required).
+
+Configuration notes
+-------------------
+
+Generic::
+
+The commands and constants used are defined at the beginning of each
+c-file, there you can also find the appropriate flags to change the
+commands at compile-time.
+
+NTP::
+
+By default ntp-servers are stored in /etc/ntp-servers.conf to change
+this you must modify both ../templates/ntp.conf.in and the NTP_CONFIG
+define in ntp.c. NTP should be initialized by ../scripts/setup_ntp.sh
+(which just copies ntp.conf.in into /etc).
+
+NOTE: If AppArmor is used, make sure that read access for
+/etc/ntp-servers.conf is enabled in /etc/apparmor.d/usr.sbin.ntpd or
+/etc/apparmor.d/local/usr.sbin.ntpd.
+
+DNS::
+
+DNS is configured by modifying /etc/resolv.conf.  No other process on
+the system may modify the file at the same time or risk having its
+changes overwritten.
+
+Timezones::
+
+The paths used are defined at the top of tz.c. Which timezones are
+available will depend on what is installed on the system. It will by
+default modify /etc/timezone and /etc/localtime.
+
+Operational data::
+
+Nodes under the system-state/platform subtree contains nodes such as
+os-name and os-version that many users will want to customize, instead
+of having it taken from uname.
+
+This can be done by setting the defines `SYSTEM_OS_NAME`,
+`SYSTEM_OS_VERSION`, `SYSTEM_OS_RELEASE` or `SYSTEM_MACHINE` to the desired
+strings at compile time.

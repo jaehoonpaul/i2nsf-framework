@@ -1,0 +1,770 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;12.&nbsp;Notifications</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Actions"><link rel="next" href="ch13.html" title="Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;12.&nbsp;Notifications</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch11.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch13.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.notifications"></a>Chapter&nbsp;12.&nbsp;Notifications</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch12.html#d5e3318">12.1. ConfD Asynchronous Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3393">12.2. Audit Messages</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3424">12.3. Syslog Messages</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3450">12.4. Commit Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3500">12.5. Commit Failure Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3506">12.6. Confirmed Commit Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3511">12.7. Commit Progress Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3517">12.8. User Sessions</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3525">12.9. High Availability - Cluster Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3586">12.10. Subagent Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3603">12.11. SNMP Agent Audit Log</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3624">12.12. Forwarding Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3629">12.13. In-service Upgrade Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3635">12.14. Heartbeat and Health Check Events</a></span></dt><dt><span class="sect1"><a href="ch12.html#d5e3641">12.15. Notification stream Events</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3318"></a>12.1.&nbsp;ConfD Asynchronous Events</h2></div></div></div><p>
+      ConfD can deliver various classes of events to subscribing
+      applications. The architecture is based on notification
+      sockets. The application(s) connect a notifications socket to
+      ConfD. The application provides a bit mask indicating which types
+      of events the application is interested in. The application
+      polls the socket and invokes the API function
+      <code class="function">confd_read_notification()</code> whenever the
+      socket is ready to read. The API function populates a
+      <code class="function">struct confd_notification</code> structure.
+    </p><p>
+      The following is a list of the different asynchronous event
+      classes that can be delivered from ConfD to the application(s).
+      See also the <a class="xref" href="rn02re11.html" title="confd_lib_events"><span class="refentrytitle">confd_lib_events</span>(3)</a> manual page.
+      The program
+      <code class="filename">misc/notifications/confd_notifications.c</code> in
+      the examples collection illustrates subscription and processing
+      for all these events, and can also be used standalone in a
+      development environment to monitor ConfD events.
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_AUDIT</code> - Audit events.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_AUDIT_SYNC</code> - Indicates that
+          audit notifications (CONFD_NOTIF_AUDIT) must be synced by the
+          application.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_DAEMON</code> - Syslog events that
+          also go to <code class="sgmltag-element">/confdConf/logs/confdLog</code>.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_NETCONF</code> - Syslog events that
+          also go to <code class="sgmltag-element">/confdConf/logs/netconfLog</code>.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_DEVEL</code> - Syslog events that
+          also go to <code class="sgmltag-element">/confdConf/logs/developerLog</code>.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_TAKEOVER_SYSLOG</code> - Syslog control.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_COMMIT_SIMPLE</code> - Commit message.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_COMMIT_DIFF</code> - A
+          complete diff compared to previous configuration.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_COMMIT_FAILED</code> -
+          Possible data inconsistency event.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_CONFIRMED_COMMIT</code> - Events
+          concerning confirmed commit processing.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_COMMIT_PROGRESS</code> - Events
+          with commit progress information.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_USER_SESSION</code> - Whenever
+          a user session is started or stopped.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_HA_INFO</code> - Changes in
+          ConfD's perception of the cluster configuration.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_HA_INFO_SYNC</code> - Indicates that
+          HA notifications (CONFD_NOTIF_HA_INFO) must be synced by the
+          application.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_SUBAGENT_INFO</code> -
+          Subagent related events.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_SNMPA</code> - SNMP agent
+          audit log.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_FORWARD_INFO</code> - Events related
+          to forwarding (proxying) of northbound agents.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_UPGRADE_EVENT</code> - Events
+          generated for in-service upgrade.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_HEARTBEAT</code> - Heartbeat events.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_HEALTH_CHECK</code> - Health check events.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_NOTIF_STREAM_EVENT</code> - Notification
+          stream events.
+        </p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3393"></a>12.2.&nbsp;Audit Messages</h2></div></div></div><p>
+      Many applications need explicit control over where and in which
+      format the various audit messages are sent.  By audit messages
+      here we mean any message related to user login/logout/reconfig
+      activity. The list of different audit messages that are possible
+      to receive can be found in the file
+      <code class="filename">confd_logsyms.h</code>
+    </p><p>
+      In order to receive the audit message we must first
+      connect a notifications socket.
+    </p><div class="example"><a name="d5e3398"></a><p class="title"><b>Example&nbsp;12.1.&nbsp;Creating a notification socket</b></p><div class="example-contents"><pre class="programlisting">confd_init("Foobar", stderr, debuglevel);
+if ((notsock = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+    confd_fatal("Failed to open notsocket\n");
+
+inet_aton("127.0.0.1", &amp;in);
+addr.sin_addr.s_addr = in.s_addr;
+addr.sin_family = AF_INET;
+addr.sin_port = htons(CONFD_PORT);
+dflag = CONFD_NOTIF_AUDIT;
+if (confd_notifications_connect(
+        notsock,
+        (struct sockaddr*)&amp;addr,
+        sizeof (struct sockaddr_in), dflag) &lt; 0 ) {
+    confd_fatal("Failed to confd_connect() to confd \n");
+}</pre></div></div><br class="example-break"><p>
+      The <code class="varname">dflags</code> argument is bit mask indicating which
+      classes of notifications messages we wish to receive over the socket.
+      It is possible to receive several different
+      classes of notifications messages over the same socket.
+    </p><p>Once we have the socket setup, we add it to our pollset
+    and invoke <code class="function">confd_read_notification()</code> once the socket
+    is ready to read.
+    </p><div class="example"><a name="d5e3405"></a><p class="title"><b>Example&nbsp;12.2.&nbsp;reading the audit data</b></p><div class="example-contents"><pre class="programlisting">while (1) {
+     struct pollfd set[1];
+     struct confd_notification n;
+     set[0].fd = notsock;
+     set[0].events = POLLIN;
+     set[0].revents = 0;
+
+     if (poll(&amp;set[0], 1, -1) &lt; 0) {
+         perror("Poll failed:");
+         continue;
+     }
+
+     if (set[0].revents &amp; POLLIN) {
+         if (confd_read_notification(notsock, &amp;n) != CONFD_OK)
+             exit(1);
+         switch(n.type) {
+         case CONFD_NOTIF_AUDIT:
+             printf("audit: sym=%d, user=%s/%d %s\n",
+                    n.n.audit.logno,
+                    n.n.audit.user, n.n.audit.usid, n.n.audit.msg);
+             break;
+             .......</pre></div></div><br class="example-break"><p>
+      The structure <span class="type">struct confd_notification</span> is defined as:
+    </p><div class="informalexample"><pre class="programlisting">enum confd_notification_type {
+    CONFD_NOTIF_AUDIT                  = (1 &lt;&lt; 0),
+    CONFD_NOTIF_DAEMON                 = (1 &lt;&lt; 1),
+    CONFD_NOTIF_TAKEOVER_SYSLOG        = (1 &lt;&lt; 2),
+    CONFD_NOTIF_COMMIT_SIMPLE          = (1 &lt;&lt; 3),
+    CONFD_NOTIF_COMMIT_DIFF            = (1 &lt;&lt; 4),
+    CONFD_NOTIF_USER_SESSION           = (1 &lt;&lt; 5),
+    CONFD_NOTIF_HA_INFO                = (1 &lt;&lt; 6),
+    CONFD_NOTIF_SUBAGENT_INFO          = (1 &lt;&lt; 7),
+    CONFD_NOTIF_COMMIT_FAILED          = (1 &lt;&lt; 8),
+    CONFD_NOTIF_SNMPA                  = (1 &lt;&lt; 9),
+    CONFD_NOTIF_FORWARD_INFO           = (1 &lt;&lt; 10),
+    CONFD_NOTIF_NETCONF                = (1 &lt;&lt; 11),
+    CONFD_NOTIF_DEVEL                  = (1 &lt;&lt; 12),
+    CONFD_NOTIF_HEARTBEAT              = (1 &lt;&lt; 13),
+    CONFD_NOTIF_CONFIRMED_COMMIT       = (1 &lt;&lt; 14),
+    CONFD_NOTIF_UPGRADE_EVENT          = (1 &lt;&lt; 15),
+    CONFD_NOTIF_COMMIT_PROGRESS        = (1 &lt;&lt; 16),
+    CONFD_NOTIF_AUDIT_SYNC             = (1 &lt;&lt; 17),
+    CONFD_NOTIF_HEALTH_CHECK           = (1 &lt;&lt; 18),
+    CONFD_NOTIF_STREAM_EVENT           = (1 &lt;&lt; 19),
+    CONFD_NOTIF_HA_INFO_SYNC           = (1 &lt;&lt; 20),
+    NCS_NOTIF_PACKAGE_RELOAD           = (1 &lt;&lt; 21),
+    NCS_NOTIF_CQ_PROGRESS              = (1 &lt;&lt; 22),
+    CONFD_NOTIF_REOPEN_LOGS            = (1 &lt;&lt; 23)
+};
+
+struct confd_notification {
+    enum confd_notification_type type;
+    union {
+        struct confd_audit_notification audit;
+        struct confd_syslog_notification syslog;
+        struct confd_commit_notification commit;
+        struct confd_commit_diff_notification commit_diff;
+        struct confd_user_sess_notification user_sess;
+        struct confd_ha_notification hnot;
+        struct confd_subagent_notification subagent;
+        struct confd_forward_notification forward;
+        struct confd_commit_failed_notification cfail;
+        struct confd_snmpa_notification snmpa;
+        struct confd_confirmed_commit_notification confirm;
+        struct confd_upgrade_notification upgrade;
+        struct confd_progress_notification progress;
+        struct confd_stream_notification stream;
+        struct ncs_cq_progress_notification cq_progress;
+    } n;
+};
+</pre></div><p>
+      Where the field <code class="varname">type</code> indicates the type
+      of the message.  Depending on the type, one of the other
+      union structures is populated by the
+      <code class="function">confd_read_notification()</code> API function
+    </p><p>
+      In our case with audit messages, we get a <span class="type">struct
+      confd_audit_notification</span> structure populated.
+    </p><div class="informalexample"><pre class="programlisting">struct confd_audit_notification {
+    int logno;   /* number from confd_logsyms.h */
+    char user[MAXUSERNAMELEN];
+    char msg[BUFSIZ];
+    int usid;   /* session id (0 means - not applicable ) */
+};
+</pre></div><p>
+      The <code class="varname">logno</code> is an integer which defines the
+      event. All log and audit events generated by confd are
+      enumerated and documented in the include file
+      <code class="filename">confd_logsyms.h</code>.
+    </p><p>
+      If we have indicated that we want to synchronize audit messages
+      with ConfD, we must call <code class="function">confd_sync_audit_notification()</code>
+      after receiving an audit message, to signal ConfD that it can continue
+      processing.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3424"></a>12.3.&nbsp;Syslog Messages</h2></div></div></div><p>
+      Some applications have explicit requirements not only where
+      to send syslog messages (this can be easily configured in
+      <code class="filename">confd.conf</code>) but also how and on which
+      format to send the syslog messages.  By default, ConfD will
+      simply invoke the standard libc
+      <code class="function">syslog()</code> function.
+    </p><p>
+      It is possible to subscribe to ConfD syslog messages and also at
+      the same time suppress ConfD's own syslogging. To subscribe to
+      syslog messages, the application needs to use one or more of the
+      flags <code class="constant">CONFD_NOTIF_DAEMON</code>,
+      <code class="constant">CONFD_NOTIF_NETCONF</code>, and
+      <code class="constant">CONFD_NOTIF_DEVEL</code> in the mask given to
+      <code class="function">confd_notifications_connect()</code>.
+    </p><p>
+      If the mask given to
+      <code class="function">confd_notifications_connect()</code> contains
+      the flag <code class="constant">CONFD_NOTIF_TAKEOVER_SYSLOG</code>,
+      ConfD will not invoke the regular
+      <code class="function">syslog()</code> function. Thus in this case,
+      it is entirely up to the application to actually report the
+      messages.
+    </p><p>
+      If all notifications subscribers that have requested the
+      <code class="constant">CONFD_NOTIF_TAKEOVER_SYSLOG</code> feature
+      close their notifications sockets, ConfD will revert to the
+      behavior of invoking libc
+      <code class="function">syslog()</code>. Similarly, when ConfD is
+      starting, before any application processes has connected and
+      requested the
+      <code class="constant">CONFD_NOTIF_TAKEOVER_SYSLOG</code> feature,
+      ConfD will of course use the standard
+      <code class="function">syslog()</code> functionality
+    </p><p>
+      When subscribing to syslog messages we receive a populated
+      <span class="type">struct confd_syslog_notification</span> structure:
+    </p><div class="informalexample"><pre class="programlisting">struct confd_syslog_notification {
+    int prio;   /* from syslog.h */
+    int logno;  /* number from confd_logsyms.h */
+    char msg[BUFSIZ];
+};
+</pre></div><p>
+      The <code class="varname">logno</code> is an integer which defines the
+      event. All syslog and audit events generated by confd are
+      enumerated and documented in the include file
+      <code class="filename">confd_logsyms.h</code>.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3450"></a>12.4.&nbsp;Commit Events</h2></div></div></div><p>
+      There are two different types of commit events we can
+      subscribe to. One really simple which just indicates that a
+      commit from a north bound agent has occurred.  This is
+      achieved by setting the subscription bitmask to contain the
+      flag: <code class="constant">CONFD_NOTIF_COMMIT_SIMPLE</code>. The
+      message we receive contains a <span class="type">struct
+      confd_commit_notification</span> structure:
+    </p><div class="informalexample"><pre class="programlisting">struct confd_commit_notification {
+    enum confd_dbname database;
+    int diff_available;
+    struct confd_user_info uinfo;
+    int flags;
+};
+</pre></div><p>
+      This just provides information on which user committed to
+      which database e.g. running or the candidate. The other
+      commit notification is considerably more complex and it
+      provides information on exactly which nodes were changed.
+    </p><p>
+      The flag value is
+      <code class="constant">CONFD_NOTIF_COMMIT_DIFF</code>, and the
+      structure we receive is:
+    </p><div class="informalexample"><pre class="programlisting">struct confd_commit_diff_notification {
+    enum confd_dbname database;
+    struct confd_user_info uinfo;
+    struct confd_trans_ctx  *tctx;
+    int flags;
+    char comment[MAX_COMMENT_LEN];
+    char label[MAX_LABEL_LEN];
+};
+</pre></div><p>
+      The structure contains a transaction context which we can choose
+      to use with <code class="function">maapi_attach()</code>and thus attach
+      to the currently executing transaction. When the event is
+      generated, this transaction has successfully been committed by all
+      data providers, but the commit operation has not completed and it
+      is hanging, waiting for the application to invoke
+      <code class="function">confd_diff_notification_done()</code>. The structure
+      also includes the "comment" and "label" given for the commit, if
+      any (if not given, the <code class="varname">comment</code> and/or
+      <code class="varname">label</code> elements are zero-length strings).
+    </p><p>
+      <code class="function">maapi_attach()</code> attaches a transaction
+      context. We can then use that transaction context to read
+      from the transaction.  The transaction has a list of nodes which
+      constitute the configuration changes in the transaction.  We can
+      traverse this list using the function
+      <code class="function">maapi_diff_iterate()</code> which will invoke
+      a user supplied function for each and every modification in the
+      transaction.
+    </p><p>
+      The purpose of this feature is not to be able to check the
+      commit diff. All such checking should be done using the
+      normal validation routines. The purpose is rather to be able
+      to log diffs on a per commit basis.
+    </p><p>
+      Thus the first thing we need if we want to traverse the
+      diff list is a function to be invoked
+      for every diff item. Our example here will just format the
+      data and print to stdout.
+    </p><div class="informalexample"><pre class="programlisting">static enum maapi_iter_ret iter(confd_hkeypath_t *kp,
+                                enum maapi_iter_op op,
+                                confd_value_t *oldv,
+                                confd_value_t *v,
+                                void *state)
+{
+    char path[BUFSIZ];
+    char value[BUFSIZ];
+    char *opstr;
+    struct confd_cs_node *node;
+    confd_hkeypath_t *dkp;
+    int i;
+
+    confd_pp_kpath(path, sizeof(path), kp);
+    value[0] = 0;
+    switch (op) {
+    case MOP_CREATED:
+        opstr = "created";
+        break;
+    case MOP_DELETED:
+        opstr = "deleted";
+        break;
+    case MOP_MODIFIED:
+        opstr = "modified";
+        break;
+    case MOP_VALUE_SET:
+        opstr = "value_set";
+        node = confd_find_cs_node(kp, kp-&gt;len);
+        confd_val2str(node-&gt;info.type, v, value, sizeof(value));
+        break;
+    case MOP_MOVED_AFTER:
+        if (v == NULL) {
+            opstr = "moved first";
+        } else {
+            opstr = "moved after";
+            /* create+print a hkeypath for the entry this one was moved after */
+            dkp = confd_hkeypath_dup(kp);
+            for (i = 0; v[i].type != C_NOEXISTS; i++) {
+                confd_free_value(&amp;dkp-&gt;v[0][i]);
+                confd_value_dup_to(&amp;v[i], &amp;dkp-&gt;v[0][i]);
+            }
+            confd_pp_kpath(value, sizeof(value), dkp);
+            confd_free_hkeypath(dkp);
+        }
+        break;
+    case MOP_ATTR_SET:
+        if (v[1].type == C_NOEXISTS) {
+            opstr = "attr_del";
+            snprintf(value, sizeof(value), "%s", attr_str(&amp;v[0]));
+        } else {
+            opstr = "attr_set";
+            i = snprintf(value, sizeof(value), "%s -&gt; ", attr_str(&amp;v[0]));
+            confd_pp_value(&amp;value[i], sizeof(value) - i, &amp;v[1]);
+        }
+        break;
+    }
+    printf ("ITER %s %s %s\n", path, opstr, value);
+    return ITER_RECURSE;
+}
+</pre></div><p>
+      The iteration function must return an <span class="type">enum maapi_iter_ret</span>
+      indicating to ConfD what to continue to do. We have the
+      following possible return values:
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          <code class="constant">ITER_STOP</code> - Stop. Do not invoke the
+          iteration function any more for this transaction
+        </p></li><li class="listitem"><p>
+          <code class="constant">ITER_RECURSE</code> - Iteration continues with
+          all children of the modified node.
+        </p></li><li class="listitem"><p>
+          <code class="constant">ITER_CONTINUE</code> - Iteration ignores the
+          children of the node and continues with the node's
+          sibling.
+        </p></li></ul></div><p>
+      The iteration function is called for each modified node in the
+      configuration. See the description of
+      <code class="function">maapi_diff_iterate()</code> in <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> for a detailed description
+      of when the different <em class="parameter"><code>op</code></em> values
+      <code class="constant">MOP_CREATED</code>,
+      <code class="constant">MOP_DELETED</code>,
+      <code class="constant">MOP_MODIFIED</code>,
+      <code class="constant">MOP_VALUE_SET</code>, and
+      <code class="constant">MOP_MOVED_AFTER</code> are used.
+    </p><p>
+      Finally we must have a function which is invoked whenever we
+      receive a notification of type
+      <code class="constant">CONFD_NOTIF_COMMIT_DIFF</code>.  The function must
+      use the supplied transaction context and attach, and when it is
+      done traversing the diff it must call
+      <code class="function">confd_diff_notification_done()</code>.
+    </p><div class="informalexample"><pre class="programlisting">static void handle_diff_notif(struct confd_trans_ctx *tctx)
+{
+    /* first we need a maapi socket */
+    int maapi_socket;
+
+    if ((maapi_socket = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0 )
+        confd_fatal("Failed to open socket\n");
+
+    if (maapi_connect(maapi_socket, (struct sockaddr*)&amp;addr,
+                      sizeof (struct sockaddr_in)) &lt; 0)
+        confd_fatal("Failed to confd_connect() to confd \n");
+
+    /* no namespace needed for this */
+    OK(maapi_attach(maapi_socket, -1, tctx));
+
+    /* Now we can iterate through the currently hanging transaction */
+    /* and read out all the diffs */
+    OK(maapi_diff_iterate(maapi_socket, tctx-&gt;thandle, iter,
+                          ITER_WANT_ATTR, NULL));
+
+    /* and finally call done to release data and let  */
+    /* the transaction finish */
+
+    OK(confd_diff_notification_done(notif_socket, tctx));
+    close(maapi_socket);
+}
+</pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3500"></a>12.5.&nbsp;Commit Failure Events</h2></div></div></div><p>
+      The <code class="constant">CONFD_NOTIF_COMMIT_FAILED</code> event is
+      generated when a data provider fails in its commit
+      callback.  ConfD executes a two-phase commit procedure towards
+      all data providers when committing transactions. When a provider
+      fails in commit, the system is an unknown state. See <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> and the function
+      <code class="function">maapi_get_running_db_status()</code>. If the
+      provider is "external", the name of the failing daemon is
+      provided. If the provider is another NETCONF agent, the IP
+      address and port of that agent is provided.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3506"></a>12.6.&nbsp;Confirmed Commit Events</h2></div></div></div><p>
+      When a a user has started a confirmed commit, when a confirming
+      commit is issued, or when a confirmed commit is aborted, a
+      <code class="constant">CONFD_NOTIF_CONFIRMED_COMMIT</code> event is
+      generated. The application receives a <span class="type">struct
+      confd_confirmed_commit_notification</span>, which gives the specific
+      action and user session info for the committer. For a confirmed
+      commit, the timeout value is also given.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3511"></a>12.7.&nbsp;Commit Progress Events</h2></div></div></div><p>
+      By subscribing to the
+      <code class="constant">CONFD_NOTIF_COMMIT_PROGRESS</code> event, the
+      application can receive the same commit progress information that
+      is reported when the <span class="command"><strong>commit | details</strong></span> CLI
+      command is used. The application receives a <span class="type">struct
+      confd_progress_notification</span> structure.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3517"></a>12.8.&nbsp;User Sessions</h2></div></div></div><p>
+      We can get notifications on user sessions and on user session
+      events. A user session corresponds to an
+      actual user logging in to the system, for example a NETCONF
+      manager
+    </p><p>
+      The <span class="type">struct confd_user_sess_notification</span> structure
+      is defined as:
+    </p><div class="informalexample"><pre class="programlisting">enum confd_user_sess_type {
+    CONFD_USER_SESS_START = 1,       /* a user session is started */
+    CONFD_USER_SESS_STOP = 2,
+    CONFD_USER_SESS_LOCK = 3,        /* a database is locked */
+    CONFD_USER_SESS_UNLOCK = 4,
+    CONFD_USER_SESS_START_TRANS = 5, /* a database transaction is started */
+    CONFD_USER_SESS_STOP_TRANS = 6
+};
+
+struct confd_user_sess_notification {
+    enum confd_user_sess_type type;
+    struct confd_user_info uinfo;
+    enum confd_dbname database;
+};
+</pre></div><p>
+      This means that we can follow the progress of a user session,
+      which databases are touched by the session etc.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3525"></a>12.9.&nbsp;High Availability - Cluster Events</h2></div></div></div><p>
+      ConfD HA capabilities are described in <a class="xref" href="ch24.html" title="Chapter&nbsp;24.&nbsp;High Availability">Chapter&nbsp;24, <i>High Availability</i></a>. This section describes the various
+      events that are asynchronously produced by ConfD when the
+      cluster configuration is changed. These changes may be
+      induced explicitly by the application through invocation of
+      the various HA related API functions in
+      <code class="filename">libconfd</code> or they may be induced by
+      ConfD itself when the sockets between the HA nodes get
+      closed.  It is vital that the High-Availability-Framework
+      (HAFW) subscribes to these messages and acts accordingly.
+    </p><p>
+      The <span class="type">struct confd_notification</span> structure
+      received by <code class="function">confd_read_notification()</code>
+      will populate the <code class="varname">hnot</code> field with a
+      <span class="type">struct confd_ha_notification</span>. This in its turn
+      is yet another union structure with a type field.
+    </p><div class="informalexample"><pre class="programlisting">struct confd_ha_notification {
+    enum confd_ha_info_type type;
+    /* additional info for various info types */
+    union {
+        int nomaster;                      /* CONFD_HA_INFO_NOMASTER  */
+        struct confd_ha_node slave_died;   /* CONFD_HA_INFO_SLAVE_DIED */
+        struct confd_ha_node slave_arrived;/* CONFD_HA_INFO_SLAVE_ARRIVED*/
+        int cdb_initialized_by_copy;       /* CONFD_HA_INFO_SLAVE_INITIALIZED */
+        int beslave_result;                /* CONFD_HA_INFO_BESLAVE_RESULT */
+    } data;
+};
+</pre></div><p>
+      We start with a listing of types of the different HA related
+      events that ConfD can send to the subscribing
+      application. The enum is defined as:
+    </p><div class="informalexample"><pre class="programlisting">enum confd_ha_info_type {
+    CONFD_HA_INFO_NOMASTER          = 1,   /* we have no master */
+    CONFD_HA_INFO_SLAVE_DIED        = 2,   /* a slave disappeared */
+    CONFD_HA_INFO_SLAVE_ARRIVED     = 3,   /* a slave arrived to us */
+    CONFD_HA_INFO_SLAVE_INITIALIZED = 4,   /* CDB is initialized */
+    CONFD_HA_INFO_IS_MASTER         = 5,   /* we are now master */
+    CONFD_HA_INFO_IS_NONE           = 6,   /* we are now none */
+    CONFD_HA_INFO_BESLAVE_RESULT    = 7    /* result of async beslave() */
+};
+</pre></div><p>
+      Each of the different informational messages has additional
+      data associated to it.
+    </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_NOMASTER</code> A node
+          (which is a slave node) has lost contact with the master
+          and is now in HA state
+          <code class="constant">CONFD_HA_STATE_NONE</code>. Only sent on
+          the slave node.
+        </p><p>
+          Whenever we receive this message the
+          <code class="varname">nomaster</code> field is populated. This is
+          either the integer
+          <code class="constant">CONFD_ERR_HA_CLOSED</code> if the slave
+          lost contact with master due to the socket getting
+          closed or the integer
+          <code class="constant">CONFD_ERR_HA_NOTICK</code> if the slave
+          has not received any live ticks from the master.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_SLAVE_DIED</code> A master
+          node lost contact with a slave node. Only sent on the
+          master node.  The field <code class="varname">slave_died</code> is
+          populated with a <span class="type">struct confd_ha_node</span>
+          indicating which particular slave died.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_SLAVE_ARRIVED</code> A
+          master node was connected to by a slave
+          node. Authentication was ok and the slave is initializing
+          its CDB database. Only sent at the master node.  The
+          field <code class="varname">slave_arrived</code> is populated with
+          a <span class="type">struct confd_ha_node</span> indicating which
+          slave arrived.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_SLAVE_INITIALIZED</code> A
+          slave node has just finished its initialization and
+          synchronization of the database. The slave is now fully
+          operational.  Only sent at slave nodes.  The field
+          <code class="varname">cdb_initialized_by_copy</code> is set to
+          <span class="emphasis"><em>1</em></span> if ConfD concluded that the
+          entire CDB database has to be copied and
+          <span class="emphasis"><em>0</em></span> if a copy was avoided.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_IS_MASTER</code> The
+          node has been successfully elevated to master.
+          This is only sent at the master node, i.e. the node that
+          just became master.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_IS_NONE</code> The
+          node has been set to <span class="emphasis"><em>NONE</em></span> mode.
+        </p></li><li class="listitem"><p>
+          <code class="constant">CONFD_HA_INFO_BESLAVE_RESULT</code> If we use
+          asynchronous invocation of the
+          <code class="function">confd_ha_beslave()</code> function, i.e. with
+          the parameter <em class="parameter"><code>waitreply</code></em> set to 0, this
+          message is sent when the operation has completed. The field
+          <code class="varname">beslave_result</code> is set to indicate the
+          result which would have been returned by a synchronous
+          invocation of <code class="function">confd_ha_beslave()</code>. Thus if
+          <code class="varname">beslave_result</code> is 0, the node has
+          successfully become a slave, otherwise
+          <code class="varname">beslave_result</code> is one of the
+          <code class="varname">confd_errno</code> values that can be returned by
+          <code class="function">synchronous invocation of confd_ha_beslave()</code>.
+        </p></li></ul></div><p>
+      If we have indicated that we want to synchronize HA messages
+      with ConfD, we must call <code class="function">confd_sync_ha_notification()</code>
+      after receiving a HA message, to signal ConfD that it can continue
+      processing.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3586"></a>12.10.&nbsp;Subagent Events</h2></div></div></div><p>
+      The subagent mechanism is described in <a class="xref" href="ch26.html" title="Chapter&nbsp;26.&nbsp;Subagents and Proxies">Chapter&nbsp;26, <i>Subagents and Proxies</i></a>. This section describes the related
+      events which ConfD generates when acting as a master agent.
+    </p><p>
+      When the notification type is
+      <code class="constant">CONFD_NOTIF_SUBAGENT_INFO</code>, the
+      <span class="type">struct confd_notification</span> structure received by
+      <code class="function">confd_read_notification()</code> will populate
+      the <code class="varname">subagent</code> field with a <span class="type">struct
+      confd_subagent_notification</span>.
+    </p><div class="informalexample"><pre class="programlisting">struct confd_subagent_notification {
+    enum confd_subagent_info_type type;
+    char name[MAXAGENTNAMELEN];
+};
+</pre></div><p>
+      The <code class="varname">type</code> field is one of the values
+      <code class="constant">CONFD_SUBAGENT_INFO_UP</code> or
+      <code class="constant">CONFD_SUBAGENT_INFO_DOWN</code>.
+    </p><p>
+      At first, each subagent is marked as being down.  When ConfD
+      successfully communicates with a subagent, it is marked as
+      up, and a corresponding event is generated.  A down event is
+      generated only if ConfD tries to communicate with a
+      subagent, but fails.  Thus, if a subagent closes an idle
+      connection to the master agent, it is not marked as down.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3603"></a>12.11.&nbsp;SNMP Agent Audit Log</h2></div></div></div><p>
+      The SNMP agent log is activated through the
+      <code class="sgmltag-element">/confdCfg/logs/snmpLog</code> element in the
+      <code class="filename">confd.conf</code> configuration file.
+    </p><p>
+      The SNMP audit log messages can also be received and
+      processed by an external C program over a notification
+      socket.  The application receives a <span class="type">struct
+      confd_snmpa_notification</span> structure. The structure
+      contains a series of fields describing the sent or received
+      SNMP PDU. It also contains a list of all varbinds in the PDU.
+    </p><p>
+      Each varbind contains a <span class="type">confd_value_t</span> with the
+      string representation of the SNMP value. Thus the type of the
+      value in a varbind is always <code class="constant">C_BUF</code>. See
+      <code class="filename">confd_events.h</code> include file for the details of the
+      received structure.
+    </p><p>
+      The following code exemplifies how we write a program which
+      establishes a notification socket and subscribes to all SNMP
+      PDUs in and out of the system.
+    </p><p>
+      We start off with some auxiliary function to format
+      the PDU type and the type of a "varbind"
+    </p><div class="informalexample"><pre class="programlisting">
+char *vb_type(struct confd_snmp_varbind *vb) {
+    switch (vb-&gt;vartype) {
+    case CONFD_SNMP_NULL: return "NULL";
+    case CONFD_SNMP_INTEGER: return "INTEGER";
+    case CONFD_SNMP_Interger32: return "Integer32";
+    case CONFD_SNMP_OCTET_STRING: return "OCTET STRING";
+    case CONFD_SNMP_OBJECT_IDENTIFIER: return "OBJECT IDENTIFIER";
+    case CONFD_SNMP_IpAddress: return "IpAddress";
+    case CONFD_SNMP_Counter32: return "Counter32";
+    case CONFD_SNMP_TimeTicks: return "TimeTicks";
+    case CONFD_SNMP_Opaque: return "Opaque";
+    case CONFD_SNMP_Counter64: return "Counter64";
+    case CONFD_SNMP_Unsigned32: return "Unsigned32";
+    }
+    return "";
+}
+
+char *pdutype(struct confd_snmpa_notification *snmp) {
+    switch (snmp-&gt;pdu_type) {
+    case CONFD_SNMPA_PDU_V1TRAP: return("V1TRAP");
+    case CONFD_SNMPA_PDU_V2TRAP: return("V2TRAP");
+    case CONFD_SNMPA_PDU_INFORM: return("INFORM");
+    case CONFD_SNMPA_PDU_GET_RESPONSE: return("GET_RESPONSE");
+    case CONFD_SNMPA_PDU_GET_REQUEST: return("GET_REQUEST");
+    case CONFD_SNMPA_PDU_GET_NEXT_REQUEST: return("GET_NEXT_REQUEST");
+    case CONFD_SNMPA_PDU_REPORT: return("REPORT");
+    case CONFD_SNMPA_PDU_GET_BULK_REQUEST: return("GET_BULK_REQUEST");
+    case CONFD_SNMPA_PDU_SET_REQUEST: return("SET_REQUEST");
+    default: return "";
+    }
+}
+
+</pre></div><p>
+      Following that we show the code which invokes
+      <code class="function">confd_read_notification()</code> and reads a C
+      structure of the type <span class="type">struct
+      confd_snmpa_notification</span>
+    </p><p>
+      The structure contains the type of the PDU, various other
+      fields and also the complete SNMP "varbind" lists in the
+      PDU. The code prints the PDU type and then loops through all
+      the varbinds and prints the value of each varbind.
+    </p><div class="informalexample"><pre class="programlisting">    if (confd_read_notification(notsock, &amp;n) != CONFD_OK)
+        exit(1);
+    switch(n.type) {
+    case CONFD_NOTIF_SNMPA: {
+        int i,j;
+
+        char buf[BUFSIZ];
+        buf[0] = 0;
+        char *ptr = &amp;buf[0];
+        struct confd_snmpa_notification *snmp = &amp;n.n.snmpa;
+        ptr += sprintf(ptr, "%s ", pdutype(snmp));
+        ptr += sprintf(ptr,"Id = %d ", snmp-&gt;request_id);
+        struct confd_ip *ip = &amp;(snmp-&gt;ip);
+        ptr += sprintf(ptr, " %s:%d ",
+                       inet_ntoa(ip-&gt;ip.v4),
+                       snmp-&gt;port);
+        if ((snmp-&gt;error_status !=0 || snmp-&gt;error_index != 0)) {
+            ptr += sprintf(ptr, "ErrIx = %d ", snmp-&gt;error_index);
+        }
+        else if (snmp-&gt;pdu_type == CONFD_SNMPA_PDU_V1TRAP) {
+            ptr += sprintf(ptr,"Generic=%d Specific=%d",
+                           snmp-&gt;v1_trap-&gt;generic_trap,
+                           snmp-&gt;v1_trap-&gt;specific_trap);
+            struct confd_snmp_oid *enterp = &amp;snmp-&gt;v1_trap-&gt;enterprise;
+            ptr += sprintf(ptr, " Enterprise=");
+            for(i=0; i &lt; enterp-&gt;len; i++) {
+                ptr += sprintf(ptr,".%d", enterp-&gt;oid[i]);
+            }
+        }
+        for (i=0; i &lt; snmp-&gt;num_variables; i++) {
+            struct confd_snmp_varbind *vb = &amp;snmp-&gt;vb[i];
+            ptr += sprintf(ptr,"\n   ");
+            switch (vb-&gt;type) {
+            case CONFD_SNMP_VARIABLE:
+                ptr += sprintf(ptr, " %s ", vb_type(vb));
+                ptr += sprintf(ptr,"%s=", vb-&gt;var.name);
+                break;
+            case CONFD_SNMP_OID:
+                ptr += sprintf(ptr, " %s ", vb_type(vb));
+                for (j=0; j &lt; vb-&gt;var.oid.len; j++) {
+                    ptr += sprintf(ptr,"%d", vb-&gt;var.oid.oid[j]);
+                    if (j != vb-&gt;var.oid.len-1)
+                        ptr += sprintf(ptr,".");
+                }
+                break;
+            case CONFD_SNMP_COL_ROW:
+                ptr += sprintf(ptr, " %s ", vb_type(vb));
+                ptr += sprintf(ptr, "%s", vb-&gt;var.cr.column);
+                for(j=0; j&lt;vb-&gt;var.cr.rowindex.len; j++) {
+                    ptr += sprintf(ptr,".%d",
+                                   vb-&gt;var.cr.rowindex.oid[j]);
+                }
+                break;
+            }
+            if (vb-&gt;val.type == C_BUF) {
+                char buf2[BUFSIZ];
+                confd_pp_value(buf2, BUFSIZ, &amp;vb-&gt;val);
+                ptr += sprintf(ptr, "=%s", buf2);
+            }
+        }
+        printf("%s\n\n", buf);
+        confd_free_notification(&amp;n);
+    }
+</pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3624"></a>12.12.&nbsp;Forwarding Events</h2></div></div></div><p>
+      ConfD can forward (proxy) connections from northbound agents.
+      When forwarding starts, ends, or fails, a
+      <code class="constant">CONFD_NOTIF_FORWARD_INFO</code> event is generated.
+      The application receives a <span class="type">struct
+      confd_forward_notification</span> structure which gives
+      the type of forwarding event, the name of the target for the
+      forwarding, and user session information for the user that
+      requested the forwarding.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3629"></a>12.13.&nbsp;In-service Upgrade Events</h2></div></div></div><p>
+      During in-service upgrade, the CONFD_NOTIF_UPGRADE_EVENT event is
+      generated with different values for the <span class="type">enum
+      confd_upgrade_event_type event</span>.  The events correspond to
+      the different phases of the upgrade, see <a class="xref" href="ch13.html" title="Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade">Chapter&nbsp;13, <i>In-service Data Model Upgrade</i></a> and <a class="xref" href="rn02re14.html" title="confd_lib_maapi"><span class="refentrytitle">confd_lib_maapi</span>(3)</a> for a detailed description.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3635"></a>12.14.&nbsp;Heartbeat and Health Check Events</h2></div></div></div><p>
+      The <code class="constant">CONFD_NOTIF_HEARTBEAT</code> and
+      <code class="constant">CONFD_NOTIF_HEALTH_CHECK</code> events can be used
+      by applications that wish to monitor the health and liveness of
+      ConfD itself. See <a class="xref" href="rn02re11.html" title="confd_lib_events"><span class="refentrytitle">confd_lib_events</span>(3)</a> for
+      more details about this.
+    </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e3641"></a>12.15.&nbsp;Notification stream Events</h2></div></div></div><p>
+      The <code class="constant">CONFD_NOTIF_STREAM_EVENT</code> event is
+      generated for a notification stream, i.e. event notifications sent
+      by an application as described in <a class="xref" href="rn02re10.html#man.3.confd_lib_dp.notification_streams" title="NOTIFICATION STREAMS">the section called &#8220;NOTIFICATION STREAMS&#8221;</a> of <a class="xref" href="rn02re10.html" title="confd_lib_dp"><span class="refentrytitle">confd_lib_dp</span>(3)</a>. See <a class="xref" href="rn02re11.html" title="confd_lib_events"><span class="refentrytitle">confd_lib_events</span>(3)</a> for more details about
+      this.
+    </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch11.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch13.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;11.&nbsp;Actions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;13.&nbsp;In-service Data Model Upgrade</td></tr></table></div></body></html>

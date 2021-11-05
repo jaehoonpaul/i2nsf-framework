@@ -1,0 +1,97 @@
+= The ietf_interfaces component.
+
+The 'ietf_interfaces' component provides support for the IETF standard
+ "RFC 7223: A YANG Data Model for Interface Management"
+(http://tools.ietf.org/html/rfc7223)
+
+This module provides the low-level interface management, in practice
+extensions are needed, such as the 'ietf_ip' module which provides
+management of IPv4 and IPv6 addresses on the interface. For this
+reason the module has been written to be easy to extend, see the
+developer hints section for more information on how to extend the
+module.
+
+It implements the yang model taken from:
+ http://www.netconfcentral.org/modulereport/ietf-interfaces
+
+In particular the yang file is from:
+ http://dld.netconfcentral.org/src/ietf-interfaces@2014-05-08.yang
+
+The module also uses the iana-if-type YANG module from:
+ http://www.iana.org/assignments/iana-if-type-yang/iana-if-type-yang
+
+Requirements
+------------
+
+This should work on any "standard Linux" system, but has been tested
+on Ubuntu 14.04.
+
+Specific requirements:
+
+- The `ip` command has to be available.
+- The dynip part uses the `netlink` interface to the kernel.
+
+Installation
+------------
+
+No specific installation required, but no other system should be
+managing the interfaces at the same time or the interference may give
+unexpected results.
+
+
+Configuration notes
+-------------------
+
+Generic::
+
+The commands and constants used are defined at the beginning of each
+c-file, there you can also find the appropriate flags to change the
+commands at compile-time.
+
+Operational data::
+
+Operational data is synchronized with that from the IF-MIB by relying
+on functions from the 'ifmib' module for gathering counters.
+
+Developer hints
+---------------
+
+dyn_iface
+~~~~~~~~~
+
+The helper module `dyn_iface` contains a handler for the interfaces on
+the node, allowing the interface module (or any extensions of it!) to
+subscribe to state changes.
+
+Layered interfaces
+~~~~~~~~~~~~~~~~~~
+
+By default no layered interfaces exist since they are dependant on
+specific interface types.
+
+If support for a layered interface is added, the operational data in
+`ietf-interfaces/interfaces-state/` has to be extended.
+
+Interface types
+~~~~~~~~~~~~~~~
+
+To add support for specific if-types recommended to extend interfaces
+with a simple API for over-riding parts of the handling for specific
+if-types.
+
+ietf_interfaces_api.h
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To enable extensions to the 'ietf_interfaces' module we provide
+`_ietf_interfaces_api.h`, this allows an extension to register
+handlers for sub-trees of the `/ietf-interfaces/interfaces` tree, and
+when the state of an interfaces changes - either because a top-level
+change to enable/disable or because the interface has just been
+created in the system.
+
+The advantages of this is that the extension can be sure that it has
+always received a notification of state change of an interface before
+the iterator handler is called.
+
+NOTE: This mechanism is preliminary and might be refactored in later
+releases.

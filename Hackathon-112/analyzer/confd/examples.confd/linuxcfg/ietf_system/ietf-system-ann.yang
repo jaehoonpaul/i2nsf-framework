@@ -1,0 +1,90 @@
+module ietf-system-ann {
+  namespace "urn:dummy";
+  prefix "dummy";
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-system {
+    prefix s;
+  }
+
+  augment "/s:system" {
+
+      leaf secretlocation {
+        type string;
+        tailf:hidden full;
+        description
+          "True storage for location when the SNMP mib is not
+           available.";
+      }
+      leaf secretcontact {
+        type string;
+        tailf:hidden full;
+        description
+          "True storage for contact when the SNMP mib is not
+           available.";
+      }
+
+  }
+
+  tailf:annotate-module "ietf-system" {
+    tailf:annotate-statement "container[name='system']" {
+
+      tailf:annotate-statement "leaf[name='contact']" {
+        tailf:callpoint transcontact {
+          tailf:transform true;
+        }
+      }
+
+      tailf:annotate-statement "leaf[name='location']" {
+        tailf:callpoint transcontact {
+          tailf:transform true;
+        }
+      }
+
+      tailf:annotate-statement "container[name='ntp']" {
+        tailf:annotate-statement "list[name='server']" {
+          tailf:annotate-statement "leaf[name='association-type']" {
+            tailf:annotate-statement "type[name='enumeration']" {
+              tailf:annotate-statement "enum[name='server']" {
+                tailf:code-name "assoc_server";
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    tailf:annotate-statement "rpc[name='set-current-datetime']" {
+      tailf:actionpoint system_setdt;
+    }
+
+    tailf:annotate-statement "rpc[name='system-restart']" {
+      tailf:actionpoint system_restart;
+    }
+
+    tailf:annotate-statement "rpc[name='system-shutdown']" {
+      tailf:actionpoint system_shutdown;
+    }
+
+  }
+
+  tailf:annotate "/s:system/s:clock" {
+    tailf:validate system_tz {
+      tailf:dependency ".";
+    }
+  }
+
+  tailf:annotate "/s:system/s:clock/s:timezone"
+               + "/s:timezone-name/s:timezone-name" {
+    tailf:cli-completion-actionpoint comp_sys_tz;
+  }
+
+  tailf:annotate "/s:system-state" {
+    tailf:callpoint system_dp;
+  }
+
+}

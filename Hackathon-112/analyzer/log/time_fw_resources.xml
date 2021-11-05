@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"><eventTime>2021-07-21T06:07:11.741403+00:00</eventTime>
+<i2nsf-log xmlns='urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring'>
+  <i2nsf-system-res-util-log>
+    <system-status>Running</system-status>
+    <cpu-usage>100</cpu-usage>
+    <memory-usage>17</memory-usage>
+    <disk-usage>70</disk-usage>
+    <disk-left>29</disk-left>
+    <in-traffic-speed>844862</in-traffic-speed>
+    <out-traffic-speed>447817</out-traffic-speed>
+    <acquisition-method xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:subscription</acquisition-method>
+    <emission-type xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:on-change</emission-type>
+    <dampening-type xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:on-repetition</dampening-type>
+    <nsf-name>time_based_firewall</nsf-name>
+  </i2nsf-system-res-util-log>
+</i2nsf-log>
+</notification>

@@ -1,0 +1,200 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_TX\-CHANGES" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_tx\-changes\fR
+.
+.SH "METHOD is_trans_modified"
+Checks if any modifications has been done to a transaction
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{"modified": <boolean>}
+.
+.fi
+.
+.SH "METHOD get_trans_changes"
+Extracts modifications done to a transaction
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{"changes": <array of change>}
+
+change =
+ {"keypath": <string>,
+  "op": <"created" | "deleted" | "modified" | "value_set">,
+  "value": <string,>,
+  "old": <string>
+ }
+.
+.fi
+.
+.P
+The \fBvalue\fR param is only interesting if \fBop\fR is set to one of \fBcreated\fR, \fBmodified\fR or \fBvalue_set\fR\.
+.
+.P
+The \fBold\fR param is only interesting if \fBop\fR is set to \fBmodified\fR\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+        "method": "changes", \e
+        "params": {"th": 2}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ [{"keypath":"/dhcp:dhcp/default\-lease\-time",
+   "op": "value_set",
+   "value": "100",
+   "old": ""}]}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD validate_trans"
+Validates a transaction
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.P
+or
+.
+.IP "" 4
+.
+.nf
+
+{"warnings": <array of warning>}
+
+warning = {"paths": <array of string>, "message": <string>}
+.
+.fi
+.
+.IP "" 0
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "trans\.resolve_needed", "data": {"users": <array string>}}
+.
+.fi
+.
+.P
+The \fBdata\.users\fR param is an array of conflicting usernames\.
+.
+.IP "" 4
+.
+.nf
+
+{"type": "trans\.validation_failed", "data": {"errors": <array of error>}}
+
+error = {"paths": <array of string>, "message": <string>}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The \fBdata\.errors\fR param points to a keypath that is invalid\.
+.
+.SH "METHOD get_trans_conflicts"
+Gets the conflicts registered in a transaction
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{"conflicts:" <array of conflicts>}
+
+conflict =
+ {"keypath": <string>,
+  "op": <"created" | "deleted" | "modified" | "value_set">,
+  "value": <string>,
+  "old": <string>}
+.
+.fi
+.
+.P
+The \fBvalue\fR param is only interesting if \fBop\fR is set to one of \fBcreated\fR, \fBmodified\fR or \fBvalue_set\fR\.
+.
+.P
+The \fBold\fR param is only interesting if \fBop\fR is set to \fBmodified\fR\.
+.
+.SH "METHOD resolve_trans"
+Tells the server that the conflicts have been resolved
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

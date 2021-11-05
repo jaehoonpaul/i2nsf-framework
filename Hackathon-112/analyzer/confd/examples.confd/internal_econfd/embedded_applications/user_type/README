@@ -1,0 +1,37 @@
+This example shows how we can implement a user-defined type in Erlang.
+The "port-type" type has the same syntax and internal representation as
+the "portType" type in the misc/user_type example for C. This example
+only demonstrates registration of the type callbacks for use internally
+in ConfD, but the exact same code can be used for an application running
+in its own Erlang VM, in order to provide local string <-> value
+translation in that VM.
+
+Since the "types.yang" data model has a leaf "/system/mgmt-port" with a
+default value, we need to tell ConfD to load the callback module early
+enough in the startup to handle the string -> value translation for
+this. This is done by giving the module a name starting with
+"ec_user_type" - here we simply used that as the actual name.
+
+The callback functions make use of the possibility to just fail,
+i.e. cause a runtime error, to indicate an invalid string or value.
+This makes it possible to write very succinct code, but obviously
+doesn't allow for giving a user-friendly error message if there is
+e.g. a syntax error.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+NOTE: To run this example, you need to either use $CONFD_DIR/bin/erlc
+or have an Erlang/OTP installation with a version that is not newer
+than the one listed in the $CONFD_DIR/VERSION file, and the 'erlc'
+compiler from that installation in your $PATH.
+
+For more information, read the section "Running application code inside
+ConfD" in the "Advanced Topics" chapter of the User Guide.

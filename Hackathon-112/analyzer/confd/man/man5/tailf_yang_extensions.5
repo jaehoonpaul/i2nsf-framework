@@ -1,0 +1,2331 @@
+'\" t
+.\"     Title: tailf_yang_extensions
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "TAILF_YANG_EXTENSION" "5" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+tailf_yang_extensions \- Tail\-f YANG extensions
+.SH "SYNOPSIS"
+.HP \w'\fBtailf:action\fR\ 'u
+\fBtailf:action\fR
+.HP \w'\fBtailf:actionpoint\fR\ 'u
+\fBtailf:actionpoint\fR
+.HP \w'\fBtailf:alt\-name\fR\ 'u
+\fBtailf:alt\-name\fR
+.HP \w'\fBtailf:annotate\fR\ 'u
+\fBtailf:annotate\fR
+.HP \w'\fBtailf:annotate\-module\fR\ 'u
+\fBtailf:annotate\-module\fR
+.HP \w'\fBtailf:callpoint\fR\ 'u
+\fBtailf:callpoint\fR
+.HP \w'\fBtailf:cdb\-oper\fR\ 'u
+\fBtailf:cdb\-oper\fR
+.HP \w'\fBtailf:code\-name\fR\ 'u
+\fBtailf:code\-name\fR
+.HP \w'\fBtailf:confirm\-text\fR\ 'u
+\fBtailf:confirm\-text\fR
+.HP \w'\fBtailf:default\-ref\fR\ 'u
+\fBtailf:default\-ref\fR
+.HP \w'\fBtailf:dependency\fR\ 'u
+\fBtailf:dependency\fR
+.HP \w'\fBtailf:display\-column\-name\fR\ 'u
+\fBtailf:display\-column\-name\fR
+.HP \w'\fBtailf:display\-groups\fR\ 'u
+\fBtailf:display\-groups\fR
+.HP \w'\fBtailf:display\-hint\fR\ 'u
+\fBtailf:display\-hint\fR
+.HP \w'\fBtailf:display\-status\-name\fR\ 'u
+\fBtailf:display\-status\-name\fR
+.HP \w'\fBtailf:display\-when\fR\ 'u
+\fBtailf:display\-when\fR
+.HP \w'\fBtailf:error\-info\fR\ 'u
+\fBtailf:error\-info\fR
+.HP \w'\fBtailf:exec\fR\ 'u
+\fBtailf:exec\fR
+.HP \w'\fBtailf:export\fR\ 'u
+\fBtailf:export\fR
+.HP \w'\fBtailf:hidden\fR\ 'u
+\fBtailf:hidden\fR
+.HP \w'\fBtailf:id\fR\ 'u
+\fBtailf:id\fR
+.HP \w'\fBtailf:id\-value\fR\ 'u
+\fBtailf:id\-value\fR
+.HP \w'\fBtailf:indexed\-view\fR\ 'u
+\fBtailf:indexed\-view\fR
+.HP \w'\fBtailf:info\fR\ 'u
+\fBtailf:info\fR
+.HP \w'\fBtailf:info\-html\fR\ 'u
+\fBtailf:info\-html\fR
+.HP \w'\fBtailf:java\-class\-name\fR\ 'u
+\fBtailf:java\-class\-name\fR
+.HP \w'\fBtailf:junos\-val\-as\-xml\-tag\fR\ 'u
+\fBtailf:junos\-val\-as\-xml\-tag\fR
+.HP \w'\fBtailf:junos\-val\-with\-prev\-xml\-tag\fR\ 'u
+\fBtailf:junos\-val\-with\-prev\-xml\-tag\fR
+.HP \w'\fBtailf:key\-default\fR\ 'u
+\fBtailf:key\-default\fR
+.HP \w'\fBtailf:link\fR\ 'u
+\fBtailf:link\fR
+.HP \w'\fBtailf:lower\-case\fR\ 'u
+\fBtailf:lower\-case\fR
+.HP \w'\fBtailf:meta\-data\fR\ 'u
+\fBtailf:meta\-data\fR
+.HP \w'\fBtailf:ncs\-device\-type\fR\ 'u
+\fBtailf:ncs\-device\-type\fR
+.HP \w'\fBtailf:ned\-data\fR\ 'u
+\fBtailf:ned\-data\fR
+.HP \w'\fBtailf:ned\-default\-handling\fR\ 'u
+\fBtailf:ned\-default\-handling\fR
+.HP \w'\fBtailf:ned\-ignore\-compare\-config\fR\ 'u
+\fBtailf:ned\-ignore\-compare\-config\fR
+.HP \w'\fBtailf:no\-dependency\fR\ 'u
+\fBtailf:no\-dependency\fR
+.HP \w'\fBtailf:no\-leafref\-check\fR\ 'u
+\fBtailf:no\-leafref\-check\fR
+.HP \w'\fBtailf:non\-strict\-leafref\fR\ 'u
+\fBtailf:non\-strict\-leafref\fR
+.HP \w'\fBtailf:operation\fR\ 'u
+\fBtailf:operation\fR
+.HP \w'\fBtailf:override\-auto\-dependencies\fR\ 'u
+\fBtailf:override\-auto\-dependencies\fR
+.HP \w'\fBtailf:path\-filters\fR\ 'u
+\fBtailf:path\-filters\fR
+.HP \w'\fBtailf:secondary\-index\fR\ 'u
+\fBtailf:secondary\-index\fR
+.HP \w'\fBtailf:snmp\-delete\-value\fR\ 'u
+\fBtailf:snmp\-delete\-value\fR
+.HP \w'\fBtailf:snmp\-exclude\-object\fR\ 'u
+\fBtailf:snmp\-exclude\-object\fR
+.HP \w'\fBtailf:snmp\-lax\-type\-check\fR\ 'u
+\fBtailf:snmp\-lax\-type\-check\fR
+.HP \w'\fBtailf:snmp\-mib\-module\-name\fR\ 'u
+\fBtailf:snmp\-mib\-module\-name\fR
+.HP \w'\fBtailf:snmp\-name\fR\ 'u
+\fBtailf:snmp\-name\fR
+.HP \w'\fBtailf:snmp\-ned\-accessible\-column\fR\ 'u
+\fBtailf:snmp\-ned\-accessible\-column\fR
+.HP \w'\fBtailf:snmp\-ned\-delete\-before\-create\fR\ 'u
+\fBtailf:snmp\-ned\-delete\-before\-create\fR
+.HP \w'\fBtailf:snmp\-ned\-modification\-dependent\fR\ 'u
+\fBtailf:snmp\-ned\-modification\-dependent\fR
+.HP \w'\fBtailf:snmp\-ned\-recreate\-when\-modified\fR\ 'u
+\fBtailf:snmp\-ned\-recreate\-when\-modified\fR
+.HP \w'\fBtailf:snmp\-ned\-set\-before\-row\-modification\fR\ 'u
+\fBtailf:snmp\-ned\-set\-before\-row\-modification\fR
+.HP \w'\fBtailf:snmp\-oid\fR\ 'u
+\fBtailf:snmp\-oid\fR
+.HP \w'\fBtailf:snmp\-row\-status\-column\fR\ 'u
+\fBtailf:snmp\-row\-status\-column\fR
+.HP \w'\fBtailf:sort\-order\fR\ 'u
+\fBtailf:sort\-order\fR
+.HP \w'\fBtailf:sort\-priority\fR\ 'u
+\fBtailf:sort\-priority\fR
+.HP \w'\fBtailf:step\fR\ 'u
+\fBtailf:step\fR
+.HP \w'\fBtailf:structure\fR\ 'u
+\fBtailf:structure\fR
+.HP \w'\fBtailf:suppress\-echo\fR\ 'u
+\fBtailf:suppress\-echo\fR
+.HP \w'\fBtailf:symlink\fR\ 'u
+\fBtailf:symlink\fR
+.HP \w'\fBtailf:transaction\fR\ 'u
+\fBtailf:transaction\fR
+.HP \w'\fBtailf:typepoint\fR\ 'u
+\fBtailf:typepoint\fR
+.HP \w'\fBtailf:unique\-selector\fR\ 'u
+\fBtailf:unique\-selector\fR
+.HP \w'\fBtailf:validate\fR\ 'u
+\fBtailf:validate\fR
+.HP \w'\fBtailf:value\-length\fR\ 'u
+\fBtailf:value\-length\fR
+.HP \w'\fBtailf:writable\fR\ 'u
+\fBtailf:writable\fR
+.HP \w'\fBtailf:xpath\-root\fR\ 'u
+\fBtailf:xpath\-root\fR
+.SH "DESCRIPTION"
+.PP
+This manpage describes all the Tail\-f extensions to YANG\&. The YANG extensions consist of YANG statements and XPath functions to be used in YANG data models\&.
+.PP
+The YANG source file
+$CONFD_DIR/src/confd/yang/tailf\-common\&.yang
+gives the exact YANG syntax for all Tail\-f YANG extension statements \- using the YANG language itself\&.
+.PP
+Most of the concepts implemented by the extensions listed below are described in the ConfD User Guide\&. For example user defined validation is described in the Validation chapter\&. The YANG syntax is described here though\&.
+.SH "YANG STATEMENTS"
+.SS "tailf:action \fIname\fR"
+.PP
+Defines an action (method) in the data model\&.
+.PP
+When the action is invoked, the instance on which the action is invoked is explicitly identified by an hierarchy of configuration or state data\&.
+.PP
+The action statement can have either a \*(Aqtailf:actionpoint\*(Aq or a \*(Aqtailf:exec\*(Aq substatement\&. If the action is implemented as a callback in an application daemon, \*(Aqtailf:actionpoint\*(Aq is used, whereas \*(Aqtailf:exec\*(Aq is used for an action implemented as a standalone executable (program or script)\&. Additionally, \*(Aqaction\*(Aq can have the same substatements as the standard YANG \*(Aqrpc\*(Aq statement, e\&.g\&., \*(Aqdescription\*(Aq, \*(Aqinput\*(Aq, and \*(Aqoutput\*(Aq\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    container sys {
+      list interface {
+        key name;
+        leaf name {
+          type string;
+        }
+        tailf:action reset {
+          tailf:actionpoint my\-ap;
+          input {
+            leaf after\-seconds {
+              mandatory false;
+              type int32;
+            }
+          }
+        }
+      }
+    }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+We can also add a \*(Aqtailf:confirm\-text\*(Aq, which defines a string to be used in the user interfaces to prompt the user for confirmation before the action is executed\&. The optional \*(Aqtailf:confirm\-default\*(Aq and \*(Aqtailf:cli\-batch\-confirm\-default\*(Aq can be set to control if the default is to proceed or to abort\&. The latter will only be used during batch processing in the CLI (e\&.g\&. non\-interactive mode)\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    tailf:action reset {
+      tailf:actionpoint my\-ap;
+      input {
+        leaf after\-seconds {
+          mandatory false;
+          type int32;
+        }
+      }
+      tailf:confirm\-text \*(AqReally want to do this?\*(Aq {
+        tailf:confirm\-default true;
+      }
+    }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The \*(Aqtailf:actionpoint\*(Aq statement can have a \*(Aqtailf:opaque\*(Aq substatement, to define an opaque string that is passed to the callback function\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    tailf:action reset {
+      tailf:actionpoint my\-ap {
+        tailf:opaque \*(Aqreset\-interface\*(Aq;
+      }
+      input {
+        leaf after\-seconds {
+          mandatory false;
+          type int32;
+        }
+      }
+    }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+When we use the \*(Aqtailf:exec\*(Aq substatement, the argument to exec specifies the program or script that should be executed\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+    tailf:action reboot {
+      tailf:exec \*(Aq/opt/sys/reboot\&.sh\*(Aq {
+        tailf:args \*(Aq\-c $(context) \-p $(path)\*(Aq;
+      }
+      input {
+        leaf when {
+          type enumeration {
+            enum now;
+            enum 10secs;
+            enum 1min;
+          }
+        }
+      }
+    }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIaction\fR
+statement can be used in:
+\fIaugment\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIgrouping\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:actionpoint\fR
+.PP
+\fItailf:alt\-name\fR
+.PP
+\fItailf:cli\-mount\-point\fR
+.PP
+\fItailf:cli\-configure\-mode\fR
+.PP
+\fItailf:cli\-operational\-mode\fR
+.PP
+\fItailf:cli\-oper\-info\fR
+.PP
+\fItailf:code\-name\fR
+.PP
+\fItailf:confirm\-text\fR
+.PP
+\fItailf:display\-when\fR
+.PP
+\fItailf:exec\fR
+.PP
+\fItailf:hidden\fR
+.PP
+\fItailf:info\fR
+.PP
+\fItailf:info\-html\fR
+.SS "tailf:actionpoint \fIname\fR"
+.PP
+Identifies the callback in a data provider that implements the action\&. See confd_lib_dp(3) for details on the API\&.
+.PP
+The
+\fIactionpoint\fR
+statement can be used in:
+\fIrpc\fR,
+\fIaction\fR,
+\fItailf:action\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:opaque\fR
+Defines an opaque string which is passed to the callback function in the context\&.
+.PP
+\fItailf:internal\fR
+For internal ConfD / NCS use only\&.
+.SS "tailf:alt\-name \fIname\fR"
+.PP
+This property is used to specify an alternative name for the node in the CLI\&. It is used instead of the node name in the CLI, both for input and output\&.
+.PP
+The
+\fIalt\-name\fR
+statement can be used in:
+\fIrpc\fR,
+\fIaction\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:annotate \fItarget\fR"
+.PP
+Annotates an existing statement with a \*(Aqtailf\*(Aq statement or a validation statement\&. This is useful in order to add tailf statements to a module without touching the module source\&. Annotation statements can be put in a separate annotation module, and then passed to \*(Aqconfdc\*(Aq (or \*(Aqpyang\*(Aq) when the original module is compiled\&.
+.PP
+Any \*(Aqtailf\*(Aq statement, except \*(Aqsymlink\*(Aq and \*(Aqaction\*(Aq can be annotated\&. The statements \*(Aqsymlink\*(Aq and \*(Aqaction\*(Aq modifies the data model, and are thus not allowed\&.
+.PP
+The validation statements \*(Aqmust\*(Aq, \*(Aqmin\-elements\*(Aq, \*(Aqmax\-elements\*(Aq, \*(Aqmandatory\*(Aq, \*(Aqunique\*(Aq, and \*(Aqwhen\*(Aq can also be annotated\&.
+.PP
+A \*(Aqdescription\*(Aq can also be annotated\&.
+.PP
+\*(Aqtailf:annotate\*(Aq can occur on the top\-level in a module, or in another \*(Aqtailf:annotate\*(Aq statement\&.
+.PP
+The argument is a \*(Aqschema\-nodeid\*(Aq, i\&.e\&. the same as for \*(Aqaugment\*(Aq, or a \*(Aq*\*(Aq\&. It identifies a target node in the schema tree to annotate with new statements\&. The special value \*(Aq*\*(Aq can be used within another \*(Aqtailf:annotate\*(Aq statetement, to select all children for annotation\&.
+.PP
+The target node is searched for after \*(Aquses\*(Aq and \*(Aqaugment\*(Aq expansion\&. All substatements to \*(Aqtailf:annotate\*(Aq are treated as if they were written inline in the target node, with the exception of any \*(Aqtailf:annotate\*(Aq substatements\&. These are treated recursively\&. For example, the following snippet adds one callpoint to /x and one to /x/y:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ tailf:annotate /x {
+   tailf:callpoint xcp;
+   tailf:annotate y {
+     tailf:callpoint ycp;
+   }
+ }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIannotate\fR
+statement can be used in:
+\fImodule\fR
+and
+\fIsubmodule\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:annotate\fR
+.SS "tailf:annotate\-module \fImodule\-name\fR"
+.PP
+Annotates an existing module or submodule statement with a \*(Aqtailf\*(Aq statement\&. This is useful in order to add tailf statements to a module without touching the module source\&. Annotation statements can be put in a separate annotation module, and then passed to \*(Aqconfdc\*(Aq (or \*(Aqpyang\*(Aq) when the original module is compiled\&.
+.PP
+\*(Aqtailf:annotate\-module\*(Aq can occur on the top\-level in a module, and is used to add \*(Aqtailf\*(Aq statements to the module statement itself\&.
+.PP
+The argument is a name of the module or submodule to annotate\&.
+.PP
+The
+\fIannotate\-module\fR
+statement can be used in:
+\fImodule\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:snmp\-oid\fR
+.PP
+\fItailf:snmp\-mib\-module\-name\fR
+.PP
+\fItailf:id\fR
+.PP
+\fItailf:id\-value\fR
+.PP
+\fItailf:export\fR
+.PP
+\fItailf:unique\-selector\fR
+.PP
+\fItailf:annotate\-statement\fR
+Annotates an existing statement with a \*(Aqtailf\*(Aq statement, a validation statement, or a type restrcition statement\&. This is useful in order to add tailf statements to a module without touching the module source\&. Annotation statements can be put in a separate annotation module, and then passed to \*(Aqconfdc\*(Aq (or \*(Aqpyang\*(Aq) when the original module is compiled\&.
+.PP
+Any \*(Aqtailf\*(Aq statement, except \*(Aqsymlink\*(Aq and \*(Aqaction\*(Aq can be annotated\&. The statements \*(Aqsymlink\*(Aq and \*(Aqaction\*(Aq modifies the data model, and are thus not allowed\&.
+.PP
+The validation statements \*(Aqmust\*(Aq, \*(Aqmin\-elements\*(Aq, \*(Aqmax\-elements\*(Aq, \*(Aqmandatory\*(Aq, \*(Aqunique\*(Aq, and \*(Aqwhen\*(Aq can also be annotated\&.
+.PP
+The type restriction statement \*(Aqpattern\*(Aq can also be annotated\&.
+.PP
+A \*(Aqdescription\*(Aq can also be annotated\&.
+.PP
+The argument is an XPath\-like expression that selects a statement to annotate\&. The syntax is:
+.PP
+<statement\-name> ( \*(Aq[\*(Aq <arg\-name> \*(Aq=\*(Aq <arg\-value> \*(Aq]\*(Aq )
+.PP
+where <statement\-name> is the name of the statement to annotate, and if there are more than one such statement in the parent, <arg\-value> is the quoted value of the statement\*(Aqs argument\&.
+.PP
+All substatements to \*(Aqtailf:annotate\-statement\*(Aq are treated as if they were written inline in the target node, with the exception of any \*(Aqtailf:annotate\-statement\*(Aq substatements\&. These are treated recursively\&.
+.PP
+For example, given the grouping:
+.PP
+grouping foo { leaf bar { type string; } leaf baz { type string; } }
+.PP
+the following snippet adds a callpoint to the leaf \*(Aqbaz\*(Aq:
+.PP
+tailf:annotate\-statement grouping[name=\*(Aqfoo\*(Aq] { tailf:annotate\-statement leaf[name=\*(Aqbaz\*(Aq] { tailf:callpoint xcp; } }
+.SS "tailf:callpoint \fIid\fR"
+.PP
+Identifies a callback in a data provider\&. A data provider implements access to external data, either configuration data in a database or operational data\&. By default ConfD uses the embedded database (CDB) to store all data\&. However, some or all of the configuration data may be stored in an external source\&. In order for ConfD to be able to manipulate external data, a data provider registers itself using the callpoint id as described in confd_lib_dp(3)\&.
+.PP
+A callpoint is inherited to all child nodes unless another \*(Aqcallpoint\*(Aq or an \*(Aqcdb\-oper\*(Aq is defined\&.
+.PP
+The
+\fIcallpoint\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrefine\fR, and
+\fIgrouping\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:config\fR
+If this statement is present, the callpoint is applied to nodes with a matching value of their \*(Aqconfig\*(Aq property\&.
+.PP
+\fItailf:transform\fR
+If set to \*(Aqtrue\*(Aq, the callpoint is a transformation callpoint\&. How transformation callpoints are used is described in the \*(AqTransformations, Hooks, Hidden Data and Symlinks\*(Aq chapter in the User\*(Aqs Guide\&.
+.PP
+\fItailf:set\-hook\fR
+Set hooks are a means to associate user code to the transaction\&. Whenever an element gets written, created, or deleted, user code gets invoked and can optionally write more data into the same transaction\&.
+.PP
+The difference between set\- and transaction hooks are that set hooks are invoked immediately when a write operation is requested by a north bound agent, and transaction hooks are invoked at commit time\&.
+.PP
+The value \*(Aqsubtree\*(Aq means that all nodes in the configuration below where the hook is defined are affected\&.
+.PP
+The value \*(Aqobject\*(Aq means that the hook only applies to the list where it is defined, i\&.e\&. it applies to all child nodes that are not themselves lists\&.
+.PP
+The value \*(Aqnode\*(Aq means that the hook only applies to the node where it is defined and none of its children\&.
+.PP
+For more details on hooks, see the \*(AqTransformations, Hooks, Hidden Data and Symlinks\*(Aq chapter in the User\*(Aqs Guide\&.
+.PP
+\fItailf:transaction\-hook\fR
+Transaction hooks are a means to associate user code to the transaction\&. Whenever an element gets written, created, or deleted, user code gets invoked and can optionally write more data into the same transaction\&.
+.PP
+The difference between set\- and transaction hooks are that set hooks are invoked immediately when an element is modified, but transaction hooks are invoked at commit time\&.
+.PP
+The value \*(Aqsubtree\*(Aq means that all nodes in the configuration below where the hook is defined are affected\&.
+.PP
+The value \*(Aqobject\*(Aq means that the hook only applies to the list where it is defined, i\&.e\&. it applies to all child nodes that are not themselves lists\&.
+.PP
+The value \*(Aqnode\*(Aq means that the hook only applies to the node where it is defined and none of its children\&.
+.PP
+For more details on hooks, see the \*(AqTransformations, Hooks, Hidden Data and Symlinks\*(Aq chapter in the User\*(Aqs Guide\&.
+.PP
+\fItailf:cache\fR
+If set to \*(Aqtrue\*(Aq, the operational data served by the callpoint will be cached by ConfD\&. If set to \*(Aqtrue\*(Aq in a node that represents configuration data, the statement \*(Aqtailf:config\*(Aq must be present and set to \*(Aqfalse\*(Aq\&. This feature is further described in the section \*(AqCaching operational data\*(Aq in the \*(AqOperational data\*(Aq chapter in the User\*(Aqs Guide\&.
+.PP
+\fItailf:opaque\fR
+Defines an opaque string which is passed to the callback function in the context\&.
+.PP
+\fItailf:internal\fR
+For internal ConfD / NCS use only\&.
+.SS "tailf:cdb\-oper"
+.PP
+Indicates that operational data nodes below this node are stored in CDB\&.
+.PP
+The
+\fIcdb\-oper\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:persistent\fR
+If it is set to \*(Aqtrue\*(Aq, the operational data is stored on disk\&. If set to \*(Aqfalse\*(Aq, the operational data is not persistent across ConfD restarts\&. The default is \*(Aqfalse\*(Aq\&.
+.SS "tailf:code\-name \fIname\fR"
+.PP
+Used to give another name to the enum or node name in generated header files\&. This statement is typically used to avoid name conflicts if there is a data node with the same name as the enumeration, if there are multiple enumerations in different types with the same name but different values, or if there are multiple node names that are mapped to the same name in the header file\&.
+.PP
+The
+\fIcode\-name\fR
+statement can be used in:
+\fIenum\fR,
+\fIbit\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrpc\fR,
+\fIaction\fR,
+\fIidentity\fR,
+\fInotification\fR, and
+\fItailf:action\fR\&.
+.SS "tailf:confirm\-text \fItext\fR"
+.PP
+A string which is used in the user interfaces to prompt the user for confirmation before the action is executed\&. The optional \*(Aqconfirm\-default\*(Aq and \*(Aqcli\-batch\-confirm\-default\*(Aq can be set to control if the default is to proceed or to abort\&. The latter will only be used during batch processing in the CLI (e\&.g\&. non\-interactive mode)\&.
+.PP
+The
+\fIconfirm\-text\fR
+statement can be used in:
+\fIrpc\fR,
+\fIaction\fR, and
+\fItailf:action\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:confirm\-default\fR
+Specifies if the default is to proceed or abort the action when a confirm\-text is set\&. If this value is not specified, a ConfD global default value can be set in clispec(5)\&.
+.PP
+\fItailf:cli\-batch\-confirm\-default\fR
+.SS "tailf:default\-ref \fIpath\fR"
+.PP
+This statement defines a dynamic default value\&. It is a reference to some other leaf in the datamodel\&. If no value has been set for this leaf, it defaults to the value of the leaf that the \*(Aqdefault\-ref\*(Aq argument points to\&.
+.PP
+The textual format of a \*(Aqdefault\-ref\*(Aq is an XPath location path with no predicates\&.
+.PP
+The type of the leaf with a \*(Aqdefault\-ref\*(Aq will be set to the type of the referred leaf\&. This means that the type statement in the leaf with the \*(Aqdefault\-ref\*(Aq is ignored, but it SHOULD match the type of the referred leaf\&.
+.PP
+Here is an example, where a group without a \*(Aqhold\-time\*(Aq will get as default the value of another leaf up in the hierarchy:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ leaf hold\-time {
+     mandatory true;
+     type int32;
+ }
+ list group {
+     key \*(Aqname\*(Aq;
+     leaf name {
+         type string;
+     }
+     leaf hold\-time {
+         type int32;
+         tailf:default\-ref \*(Aq\&.\&./\&.\&./hold\-time\*(Aq;
+     }
+ }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIdefault\-ref\fR
+statement can be used in:
+\fIleaf\fR
+and
+\fIrefine\fR\&.
+.SS "tailf:dependency \fIpath\fR"
+.PP
+This statement is used to specify that the must or when expression or validation function depends on a set of subtrees in the data store\&. Whenever a node in one of those subtrees are modified, the must or when expression is evaluated, or validation code executed\&.
+.PP
+The textual format of a \*(Aqdependency\*(Aq is an XPath location path with no predicates\&.
+.PP
+If the node that declares the dependency is a leaf, there is an implicit dependency to the leaf itself\&.
+.PP
+For example, with the leafs below, the validation code for\*(Aqvp\*(Aq will be called whenever \*(Aqa\*(Aq or \*(Aqb\*(Aq is modified\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ leaf a {
+     type int32;
+     tailf:validate vp {
+         tailf:dependency \*(Aq\&.\&./b\*(Aq;
+     }
+ }
+ leaf b {
+     type int32;
+ }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+For \*(Aqwhen\*(Aq and \*(Aqmust\*(Aq expressions, the compiler can derive the dependencies automatically from the XPath expression in most cases\&. The exception is if any wildcards are used in the expression\&.
+.PP
+For \*(Aqwhen\*(Aq expressions to work, a \*(Aqtailf:dependency\*(Aq statement must be given, unless the compiler can figure out the dependency by itself\&.
+.PP
+Note that having \*(Aqtailf:validate\*(Aq statements without dependencies impacts the overall performance of the system, since all such validation functions are evaluated at every commit\&.
+.PP
+The
+\fIdependency\fR
+statement can be used in:
+\fImust\fR,
+\fIwhen\fR, and
+\fItailf:validate\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.SS "tailf:display\-column\-name \fIname\fR"
+.PP
+This property is used to specify an alternative column name for the leaf in the CLI\&. It is used when displaying the leaf in a table in the CLI\&.
+.PP
+The
+\fIdisplay\-column\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR, and
+\fIrefine\fR\&.
+.SS "tailf:display\-groups \fIvalue\fR"
+.PP
+This property is used in the CLI when \*(AqenableDisplayGroups\*(Aq has been set to true in the confd\&.conf(5) file\&. Display groups are used to control which elements should be displayed by the show command\&.
+.PP
+The argument is a space\-separated string of tags\&.
+.PP
+In the J\-style CLI the \*(Aqshow status\*(Aq, \*(Aqshow table\*(Aq and \*(Aqshow all\*(Aq commands use display groups\&. In the C\- and I\-style CLIs the \*(Aqshow <pattern>\*(Aq command uses display groups\&.
+.PP
+If no display groups are specified when running the commands, the node will be displayed if it does not have the \*(Aqdisplay\-groups\*(Aq property, or if the property value includes the special value \*(Aqnone\*(Aq\&.
+.PP
+If display groups are specified when running the command, then the node will be displayed only if its \*(Aqdisplay\-group\*(Aq property contains one of the specified display groups\&.
+.PP
+The
+\fIdisplay\-groups\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:display\-hint \fIhint\fR"
+.PP
+This statement can be used to add a display\-hint to a leaf or typedef of type binary\&. The display\-hint is used in the CLI and WebUI instead of displaying the binary as a base64\-encoded string\&. It is also used for input\&.
+.PP
+The value of a \*(Aqdisplay\-hint\*(Aq is defined in RFC 2579\&.
+.PP
+For example, with the display\-hint value \*(Aq1x:\*(Aq, the value is printed and inputted as a colon\-separated hex list\&.
+.PP
+The
+\fIdisplay\-hint\fR
+statement can be used in:
+\fIleaf\fR
+and
+\fItypedef\fR\&.
+.SS "tailf:display\-status\-name \fIname\fR"
+.PP
+This property is used to specify an alternative name for the element in the CLI\&. It is used when displaying status information in the C\- and I\-style CLIs\&.
+.PP
+The
+\fIdisplay\-status\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:display\-when \fIcondition\fR"
+.PP
+The argument contains an XPath expression which specifies when the node should be displayed in the CLI and WebUI\&. For example, when the CLI performs completion, and one of the candidates is a node with a \*(Aqdisplay\-when\*(Aq expression, the expression is evaluated by the CLI\&. If the XPath expression evaluates to true, the node is shown as a possible completion candidate, otherwise not\&.
+.PP
+For a list, the display\-when expression is evaluated once for the entire list\&. In this case, the XPath context node is the list\*(Aqs parent node\&.
+.PP
+This feature is further described in the \*(AqTransformations, Hooks, Hidden Data and Symlinks\*(Aq chapter in the User Guide\&.
+.PP
+The
+\fIdisplay\-when\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.SS "tailf:error\-info"
+.PP
+Declares a set of data nodes to be used in the NETCONF <error\-info> element\&.
+.PP
+A data provider can use one of the confd_*_seterr_extended_info() functions (see confd_lib_dp(3)) to set these data nodes on errors\&.
+.PP
+This statement may be used multiple times\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+   tailf:error\-info {
+      leaf severity {
+        type enumeration {
+          enum info;
+          enum error;
+          enum critical;
+        }
+      }
+      container detail {
+        leaf class {
+          type uint8;
+        }
+        leaf code {
+          type uint8;
+        }
+      }
+    }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIerror\-info\fR
+statement can be used in:
+\fImodule\fR
+and
+\fIsubmodule\fR\&.
+.SS "tailf:exec \fIcmd\fR"
+.PP
+Specifies that the rpc or action is implemented as an OS executable\&. The argument \*(Aqcmd\*(Aq is the path to the executable file\&. If the command is in the $PATH of ConfD, the \*(Aqcmd\*(Aq can be just the name of the executable\&.
+.PP
+The
+\fIexec\fR
+statement can be used in:
+\fIrpc\fR,
+\fIaction\fR, and
+\fItailf:action\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:args\fR
+Specifies arguments to send to the executable when it is invoked by ConfD\&. The argument \*(Aqvalue\*(Aq is a space separated list of argument strings\&. It may contain variables on the form $(variablename)\&. These variables will be expanded before the command is executed\&. The following variables are always available:
+.PP
+$(user) The name of the user which runs the operation\&.
+.PP
+$(groups) A comma separated string of the names of the groups the user belongs to\&.
+.PP
+$(ip) The source ip address of the user session\&.
+.PP
+$(uid) The user id of the user\&.
+.PP
+$(gid) The group id of the user\&.
+.PP
+When the parent \*(Aqexec\*(Aq statement is a substatement of \*(Aqaction\*(Aq, the following additional variablenames are available:
+.PP
+$(keypath) The path that identifies the parent container of \*(Aqaction\*(Aq in string keypath form, e\&.g\&., \*(Aq/sys:host{earth}/interface{eth0}\*(Aq\&.
+.PP
+$(path) The path that identifies the parent container of \*(Aqaction\*(Aq in CLI path form, e\&.g\&., \*(Aqhost earth interface eth0\*(Aq\&.
+.PP
+$(context) cli | webui | netconf | any string provided by MAAPI
+.PP
+For example: args \*(Aq\-user $(user) $(uid)\*(Aq; might expand to: \-user bob 500
+.PP
+\fItailf:uid\fR
+Specifies which user id to use when executing the command\&.
+.PP
+If \*(Aquid\*(Aq is an integer value, the command is run as the user with this user id\&.
+.PP
+If \*(Aquid\*(Aq is set to either \*(Aquser\*(Aq, \*(Aqroot\*(Aq or an integer user id, the ConfD daemon must have been started as root (or setuid), or the ConfD executable program \*(Aqcmdwrapper\*(Aq must have setuid root permissions\&.
+.PP
+\fItailf:gid\fR
+Specifies which group id to use when executing the command\&.
+.PP
+If \*(Aqgid\*(Aq is an integer value, the command is run as the group with this group id\&.
+.PP
+If \*(Aqgid\*(Aq is set to either \*(Aquser\*(Aq, \*(Aqroot\*(Aq or an integer group id, the ConfD daemon must have been started as root (or setuid), or the ConfD executable program \*(Aqcmdwrapper\*(Aq must have setuid root permissions\&.
+.PP
+\fItailf:wd\fR
+Specifies which working directory to use when executing the command\&. If not given the command is executed from the homedir of the user logged in to ConfD\&.
+.PP
+\fItailf:global\-no\-duplicate\fR
+Specifies that only one instance with the same name can be run at any one time in the system\&. The command can be started either from the CLI, the WebUI or through NETCONF\&. If a client tries to execute this command while another operation with the same \*(Aqglobal\-no\-duplicate\*(Aq name is running, a \*(Aqresource\-denied\*(Aq error is generated\&.
+.PP
+\fItailf:raw\-xml\fR
+Specifies that ConfD should not convert the RPC XML parameters to command line arguments\&. Instead, ConfD just passes the raw XML on stdin to the program\&.
+.PP
+This statement is not allowed in \*(Aqtailf:action\*(Aq\&.
+.PP
+\fItailf:interruptible\fR
+Specifies whether the client can abort the execution of the executable\&.
+.PP
+\fItailf:interrupt\fR
+This statement specifies which signal is sent to executable by ConfD in case the client terminates or aborts the execution\&.
+.PP
+If not specified, \*(Aqsigkill\*(Aq is sent\&.
+.SS "tailf:export \fIagent\fR"
+.PP
+Makes this data model visible in the northbound interface \*(Aqagent\*(Aq\&.
+.PP
+This statement makes it possible to have a data model visible through some northbound interface but not others\&. For example, if a MIB is used to generate a YANG module, the resulting YANG module can be exposed through SNMP only\&.
+.PP
+Use the special agent \*(Aqnone\*(Aq to make the data model completely hidden to all notherbound interfaces\&.
+.PP
+The agent can also be a free\-form string\&. In this case, the data model will be visible to maapi applications using this string as its \*(Aqcontext\*(Aq\&.
+.PP
+The
+\fIexport\fR
+statement can be used in:
+\fImodule\fR\&.
+.SS "tailf:hidden \fItag\fR"
+.PP
+This statement can be used to hide a node from some, or all, northbound interfaces\&. All nodes with the same value are considered a hide group and are treated the same with regards to being visible or not in a northbound interface\&.
+.PP
+A node with an hidden property is not shown in the northbound user interfaces (CLI and Web UI) unless an \*(Aqunhide\*(Aq operation has been performed in the user interface\&.
+.PP
+The hidden value \*(Aqfull\*(Aq indicates that the node should be hidden from all northbound interfaces, including programmatical interfaces such as NETCONF\&.
+.PP
+The value \*(Aq*\*(Aq is not valid\&.
+.PP
+A hide group can be unhidden only if this has been explicitly allowed in the confd\&.conf(5) daemon configuration\&.
+.PP
+Multiple hide groups can be specified by giving this statement multiple times\&. The node is shown if any of the specified hide groups has been given in the \*(Aqunhide\*(Aq operation\&.
+.PP
+Note that if a mandatory node is hidden, a hook callback function (or similar) might be needed in order to set the element\&.
+.PP
+The
+\fIhidden\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:action\fR,
+\fIrefine\fR,
+\fItailf:symlink\fR,
+\fIrpc\fR, and
+\fIaction\fR\&.
+.SS "tailf:id \fIname\fR"
+.PP
+This statement is used when old confspec models are translated to YANG\&. It needs to be present if systems deployed with data based on confspecs are updated to YANG based data models\&.
+.PP
+In confspec, the \*(Aqid\*(Aq of a data model was a string that never would change, even if the namespace URI would change\&. It is not needed in YANG, since the namespace URi cannot change as a module is updated\&.
+.PP
+This statement is typically present in YANG modules generated by cs2yang\&. If no live upgrade needs to be done from a confspec based system to a YANG based system, this statement can be removed from such a generated module\&.
+.PP
+The
+\fIid\fR
+statement can be used in:
+\fImodule\fR\&.
+.SS "tailf:id\-value \fIvalue\fR"
+.PP
+This statement lets you specify a hard wired numerical id value to associate with the parent node\&. This id value is normally auto generated by confdc and is used when working with the ConfD API to refer to a tag name, to avoid expensive string comparison\&. Under certain rare circumstances this auto generated hash value may collide with a hash value generated for a node in another data model\&. Whenever such a collision occurs the ConfD daemon fails to start and instructs the developer to use the \*(Aqid\-value\*(Aq statement to resolve the collision\&.
+.PP
+A thorough discussion on id\-value can be found in the section Hash Values and the id\-value Statement in the YANG chapter in the User Guide\&.
+.PP
+The
+\fIid\-value\fR
+statement can be used in:
+\fImodule\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrpc\fR,
+\fIaction\fR,
+\fIidentity\fR,
+\fInotification\fR,
+\fIchoice\fR,
+\fIcase\fR, and
+\fItailf:action\fR\&.
+.SS "tailf:indexed\-view"
+.PP
+This element can only be used if the list has a single key of an integer type\&.
+.PP
+It is used to signal that lists instances uses an indexed view, i\&.e\&., making it possible to insert a new list entry at a certain position\&. If a list entry is inserted at a certain position, list entries following this position are automatically renumbered by the system, if needed, to make room for the new entry\&.
+.PP
+This statement is mainly provided for backwards compatibility with confspecs\&. New data models should consider using YANG\*(Aqs ordered\-by user statement instead\&.
+.PP
+The
+\fIindexed\-view\fR
+statement can be used in:
+\fIlist\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:auto\-compact\fR
+If an indexed\-view list is marked with this statement, it means that the server will automatically renumber entires after a delete operation so that the list entries are strictly monotonically increasing, starting from 1, with no holes\&. New list entries can either be insterted anywhere in the list, or created at the end; but it is an error to try to create a list entry with a key that would result in a hole in the sequence\&.
+.PP
+For example, if the list has entries 1,2,3 it is an error to create entry 5, but correct to create 4\&.
+.SS "tailf:info \fItext\fR"
+.PP
+Contains a textual description of the definition, suitable for being presented to the CLI and WebUI users\&.
+.PP
+The first sentence of this textual description is used in the CLI as a summary, and displayed to the user when a short explanation is presented\&.
+.PP
+The \*(Aqdescription\*(Aq statement is related, but targeted to the module reader, rather than the CLI or WebUI user\&.
+.PP
+The info string may contain a \*(Aq;;\*(Aq keyword\&. It is used in type descriptions for leafs when the builtin type info needs to be customized\&. A \*(Aqnormal\*(Aq info string describing a type is assumed to contain a short textual description\&. When \*(Aq;;\*(Aq is present it works as a delimiter where the text before the keyword is assumed to contain a short description and the text after the keyword a long(er) description\&. In the context of completion in the CLI the text will be nicely presented in two columns where both descriptions are aligned when displayed\&.
+.PP
+The
+\fIinfo\fR
+statement can be used in:
+\fItypedef\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrpc\fR,
+\fIaction\fR,
+\fIidentity\fR,
+\fItype\fR,
+\fIenum\fR,
+\fIbit\fR,
+\fIlength\fR,
+\fIpattern\fR,
+\fIrange\fR,
+\fIrefine\fR,
+\fIaction\fR,
+\fItailf:action\fR,
+\fItailf:symlink\fR, and
+\fItailf:cli\-exit\-command\fR\&.
+.SS "tailf:info\-html \fItext\fR"
+.PP
+This statement works exactly as \*(Aqtailf:info\*(Aq, with the exception that it can contain HTML markup\&. The WebUI will display the string with the HTML markup, but the CLI will remove all HTML markup before displaying the string to the user\&. In most cases, using this statement avoids using special descriptions in webspecs and clispecs\&.
+.PP
+If this statement is present, \*(Aqtailf:info\*(Aq cannot be given at the same time\&.
+.PP
+The
+\fIinfo\-html\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrpc\fR,
+\fIaction\fR,
+\fIidentity\fR,
+\fItailf:action\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:java\-class\-name \fIname\fR"
+.PP
+Used to give another name than the default name to generated Java classes\&. This statemement is typically used to avoid name conflicts in the Java classes\&.
+.PP
+The
+\fIjava\-class\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:junos\-val\-as\-xml\-tag"
+.PP
+Internal extension to handle non\-YANG JUNOS data models\&. Use only for key enumeration leafs\&.
+.PP
+The
+\fIjunos\-val\-as\-xml\-tag\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:junos\-val\-with\-prev\-xml\-tag"
+.PP
+Internal extension to handle non\-YANG JUNOS data models\&. Use only for keys where previous key is marked with \*(Aqtailf:junos\-val\-as\-xml\-tag\*(Aq\&.
+.PP
+The
+\fIjunos\-val\-with\-prev\-xml\-tag\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:key\-default \fIvalue\fR"
+.PP
+Must be used for key leafs only\&.
+.PP
+Specifies a value that the CLI and WebUI will use when a list entry is created, and this key leaf is not given a value\&.
+.PP
+If one key leaf has a key\-default value, all key leafs that follow this key leaf must also have key\-default values\&.
+.PP
+The
+\fIkey\-default\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:link \fItarget\fR"
+.PP
+This statement specifies that the data node should be implemented as a link to another data node, called the target data node\&. This means that whenever the node is modified, the system modifies the target data node instead, and whenever the data node is read, the system returns the value of target data node\&.
+.PP
+Note that if the data node is a leaf, the target node MUST also be a leaf, and if the data node is a leaf\-list, the target node MUST also be a leaf\-list\&.
+.PP
+Note that the type of the data node MUST be the same as the target data node\&. Currently the compiler cannot check this\&.
+.PP
+The argument is an XPath absolute location path\&. If the target lies within lists, all keys must be specified\&. A key either has a value, or is a reference to a key in the path of the source node, using the function current() as starting point for an XPath location path\&. For example:
+.PP
+/a/b[k1=\*(Aqpaul\*(Aq][k2=current()/\&.\&./k]/c
+.PP
+The
+\fIlink\fR
+statement can be used in:
+\fIleaf\fR
+and
+\fIleaf\-list\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:inherit\-set\-hook\fR
+This statement specifies that a \*(Aqtailf:set\-hook\*(Aq statement should survive through symlinks\&. If set to true a set hook gets called as soon as the value is set via a symlink but also during commit\&. The normal behaviour is to only call the set hook during commit time\&.
+.SS "tailf:lower\-case"
+.PP
+Use for config false leafs and leaf\-lists only\&.
+.PP
+This extension serves as a hint to the system that the leaf\*(Aqs type has the implict pattern \*(Aq[^A\-Z]*\*(Aq, i\&.e\&., all strings returned by the data provider are lower case (in the 7\-bit ASCII range)\&.
+.PP
+The CLI uses this hint when it is run in case\-insensitive mode to optimize the lookup calls towards the data provider\&.
+.PP
+The
+\fIlower\-case\fR
+statement can be used in:
+\fIleaf\fR
+and
+\fIleaf\-list\fR\&.
+.SS "tailf:meta\-data \fIvalue\fR"
+.PP
+Extra meta information attached to the node\&. The instance data part of this information is accessible using MAAPI\&. It is also printed in communication with CLI NEDs, but is not visible to normal users of the CLI\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+To CLI NEDs, the output will be printed as comments like this:
+! meta\-data :: /ncs:devices/device{xyz}/config/xyz:AA :: A_STRING
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The schema information is available to the ConfD C\-API through the confd_cs_node struct, and to the JSON\-RPC API through get\-schema\&.
+.PP
+Note: Can\*(Aqt be used on key leafs\&.
+.PP
+The
+\fImeta\-data\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:meta\-value\fR
+This statement contains a string value for the meta data key\&.
+.PP
+The output from the CLI to CLI NEDs will be similar to comments like this: ! meta\-data :: /ncs:devices/device{xyz}/config/xyz:AA :: A_KEY :: A_VALUE
+.SS "tailf:ncs\-device\-type \fItype\fR"
+.PP
+Internal extension to tell NCS what type of device the data model is used for\&.
+.PP
+The
+\fIncs\-device\-type\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIrefine\fR, and
+\fImodule\fR\&.
+.SS "tailf:ned\-data \fIpath\-expression\fR"
+.PP
+Dynamic meta information to be added by the NCS device manager\&.
+.PP
+In the cases where NCS can\*(Aqt provide the complete \*(Aqto\*(Aq and \*(Aqfrom\*(Aq transactions to the NED to read from (most notably when using the commit queue) this annotation can be used to tell the NCS device manager to save part of the \*(Aqto\*(Aq and / or \*(Aqfrom\*(Aq transaction so that the NED will be able to read from these parts as needed\&.
+.PP
+The \*(Aqpath\-expression\*(Aq will be used as an XPath filter to indicate which data will be preserved\&. Use the \*(Aqtransaction\*(Aq substatement to choose which transaction to apply the filter on\&. The context node of the XPath filter is always the instance data node corresponding to the schema node where the \*(Aqned\-data\*(Aq extension is added\&.
+.PP
+Note that the filter will only be applied if the node that has this annotation is in the diffset of the transaction\&. The \*(Aqoperation\*(Aq substatement can be used to further limit when the filter should be applied\&.
+.PP
+The
+\fIned\-data\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:transaction\fR
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:operation\fR
+.SS "tailf:ned\-default\-handling \fImode\fR"
+.PP
+This statement can only be used in NEDs for devices that have irregular handling of defaults\&. It sets a special default handling mode for the leaf, regardless of the device\*(Aqs native default handling mode\&.
+.PP
+The
+\fIned\-default\-handling\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:ned\-ignore\-compare\-config"
+.PP
+Typically used for ignoring device encrypted leafs in the compare\-config output\&.
+.PP
+The
+\fIned\-ignore\-compare\-config\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:no\-dependency"
+.PP
+This optional statements can be used to explicitly say that a \*(Aqmust\*(Aq expression or a validation function is evaluated at every commit\&. Use this with care, since the overall performance of the system is impacted if this statement is used\&.
+.PP
+The
+\fIno\-dependency\fR
+statement can be used in:
+\fImust\fR
+and
+\fItailf:validate\fR\&.
+.SS "tailf:no\-leafref\-check"
+.PP
+This statement can be used to let \*(Aqleafref\*(Aq type statements reference non\-existing leafs\&. While similar to the \*(Aqtailf:non\-strict\-leafref\*(Aq statement, this does not allow reference from config to non\-config\&.
+.PP
+The
+\fIno\-leafref\-check\fR
+statement can be used in:
+\fItype\fR\&.
+.SS "tailf:non\-strict\-leafref"
+.PP
+This statement can be used in leafs and leaf\-lists similar to \*(Aqleafref\*(Aq, but allows reference to non\-existing leafs, and allows reference from config to non\-config\&.
+.PP
+This statement takes no argument, but expects the core YANG statement \*(Aqpath\*(Aq as a substatement\&. The function \*(Aqderef\*(Aq cannot be used in the path, since it works on nodes of type leafref only\&.
+.PP
+The type of the leaf or leaf\-list must be exactly the same as the type of the target\&.
+.PP
+This statement can be viewed as a substitute for a standard \*(Aqrequire\-instance false\*(Aq on leafrefs, which isn\*(Aqt allowed\&.
+.PP
+The CLI uses this statement to provide completion with existing values, and the WebUI uses it to provide a drop\-down box with existing values\&.
+.PP
+The
+\fInon\-strict\-leafref\fR
+statement can be used in:
+\fIleaf\fR
+and
+\fIleaf\-list\fR\&.
+.SS "tailf:operation \fIop\fR"
+.PP
+Only evaluate the XPath filter when the operation matches\&.
+.SS "tailf:override\-auto\-dependencies"
+.PP
+This optional statement can be used to instruct the compiler to use the provided tailf:dependency statements instead of the dependencies that the compiler calculates from the expression\&.
+.PP
+Use with care, and only if you are sure that the provided dependecies are correct\&.
+.PP
+The
+\fIoverride\-auto\-dependencies\fR
+statement can be used in:
+\fImust\fR
+and
+\fIwhen\fR\&.
+.SS "tailf:path\-filters \fIvalue\fR"
+.PP
+Used for type \*(Aqinstance\-identifier\*(Aq only\&.
+.PP
+The argument is a space separated list of absolute or relative XPath expressions\&.
+.PP
+This statement declares that the instance\-identifier value must match one of the specified paths, according to the following rules:
+.PP
+1\&. each XPath expression is evaluated, and returns a node set\&.
+.PP
+2\&. if there is no \*(Aqtailf:no\-subtree\-match\*(Aq statement, the instance\-identifier matches if it refers to a node in this node set, or if it refers to any descendant node of this node set\&.
+.PP
+3\&. if there is a \*(Aqtailf:no\-subtree\-match\*(Aq statement, the instance\-identifier matches if it refers to a node in this node set\&.
+.PP
+For example:
+.PP
+The value /a/b[key=\*(Aqk1\*(Aq]/c matches the XPath expression /a/b[key=\*(Aqk1\*(Aq]/c\&.
+.PP
+The value /a/b[key=\*(Aqk1\*(Aq]/c matches the XPath expression /a/b/c\&.
+.PP
+The value /a/b[key=\*(Aqk1\*(Aq]/c matches the XPath expression /a/b, if there is no \*(Aqtailf:no\-subtree\-match\*(Aq statement\&.
+.PP
+The value /a/b[key=\*(Aqk1\*(Aq] matches the XPath expression /a/b, if there is a \*(Aqtailf:no\-subtree\-match\*(Aq statement\&.
+.PP
+The
+\fIpath\-filters\fR
+statement can be used in:
+\fItype\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:no\-subtree\-match\fR
+See tailf:path\-filters\&.
+.SS "tailf:secondary\-index \fIname\fR"
+.PP
+This statement creates a secondary index with a given name in the parent list\&. The secondary index can be used to control the displayed sort order of the instances of the list\&.
+.PP
+Read more about sort order in \*(AqThe ConfD Command\-Line Interface (CLI)\*(Aq chapters in the User Guide, confd_lib_dp(3), and confd_lib_maapi(3)\&.
+.PP
+NOTE: Currently secondary\-index is not supported for config false data stored in CDB\&.
+.PP
+The
+\fIsecondary\-index\fR
+statement can be used in:
+\fIlist\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:index\-leafs\fR
+This statement contains a space separated list of leaf names\&. Each such leaf must be a direct child to the list\&. The secondary index is kept sorted according to the values of these leafs\&.
+.PP
+\fItailf:sort\-order\fR
+.PP
+\fItailf:display\-default\-order\fR
+Specifies that the list should be displayed sorted according to this secondary index in the show command\&.
+.PP
+If the list has more than one secondary index, \*(Aqdisplay\-default\-order\*(Aq must be present in one index only\&.
+.PP
+Used in J\-, I\- and C\-style CLIs and WebUI\&.
+.SS "tailf:snmp\-delete\-value \fIvalue\fR"
+.PP
+This statement is used to define a value to be used in SNMP to delete an optional leaf\&. The argument to this statement is the special value\&. This special value must not be part of the value space for the YANG leaf\&.
+.PP
+If the optional leaf does not exists, reading it over SNMP returns \*(AqnoSuchInstance\*(Aq, unless the statement \*(Aqtailf:snmp\-send\-delete\-value\*(Aq is used, in which case the same value as used to delete the node is returned\&.
+.PP
+For example, the YANG leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+     leaf opt\-int {
+       type int32 {
+         range \*(Aq1\&.\&.255\*(Aq;
+       }
+       tailf:snmp\-delete\-value 0 {
+         tailf:snmp\-send\-delete\-value;
+       }
+     }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+can be mapped to a SMI object with syntax:
+.PP
+SYNTAX Integer32 (0\&.\&.255)
+.PP
+Setting such an object to \*(Aq0\*(Aq over SNMP will delete the node from the datastore\&. If the node does not exsist, reading it over SNMP will return \*(Aq0\*(Aq\&.
+.PP
+The
+\fIsnmp\-delete\-value\fR
+statement can be used in:
+\fIleaf\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:snmp\-send\-delete\-value\fR
+See tailf:snmp\-delete\-value\&.
+.SS "tailf:snmp\-exclude\-object"
+.PP
+Used when an SNMP MIB is generated from a YANG module, using the \-\-generate\-oids option to confdc\&.
+.PP
+If this statement is present, confdc will exclude this object from the resulting MIB\&.
+.PP
+The
+\fIsnmp\-exclude\-object\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:snmp\-lax\-type\-check \fIvalue\fR"
+.PP
+Normally, the ConfD MIB compiler checks that the data type of an SNMP object matches the data type of the corresponding YANG leaf\&. If both objects are writeble, the data types need to precisely match, but if the SNMP object is read\-only, or if snmp\-lax\-type\-check is set to \*(Aqtrue\*(Aq, the compiler accepts the object if the SNMP type\*(Aqs value space is a superset of the YANG type\*(Aqs value space\&.
+.PP
+If snmp\-lax\-type\-check is true and the MIB object is writable, the SNMP agent will reject values outside the YANG data type range in runtime\&.
+.PP
+The
+\fIsnmp\-lax\-type\-check\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:snmp\-mib\-module\-name \fIname\fR"
+.PP
+Used when the YANG module is mapped to an SNMP module\&.
+.PP
+Specifies the name of the SNMP MIB module where the SNMP objects are defined\&.
+.PP
+This property is inherited by all child nodes\&.
+.PP
+The
+\fIsnmp\-mib\-module\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fImodule\fR, and
+\fIrefine\fR\&.
+.SS "tailf:snmp\-name \fIname\fR"
+.PP
+Used when the YANG module is mapped to an SNMP module\&.
+.PP
+When the parent node is mapped to an SNMP object, this statement specifies the name of the SNMP object\&.
+.PP
+If the parent node is mapped to multiple SNMP objects, this statement can be given multiple times\&. The first statement specifies the primary table\&.
+.PP
+In a list, the argument is interpreted as:
+.PP
+[MIB\-MODULE\-NAME:]TABLE\-NAME
+.PP
+For a leaf representing a table column, it is interpreted as:
+.PP
+[[MIB\-MODULE\-NAME:]TABLE\-NAME:]NAME
+.PP
+For a leaf representing a scalar variable, it is interpreted as:
+.PP
+[MIB\-MODULE\-NAME:]NAME
+.PP
+If a YANG list is mapped to multiple SNMP tables, each such SNMP table must be specified with a \*(Aqtailf:snmp\-name\*(Aq statement\&. If the table is defined in another MIB than the MIB specified in \*(Aqtailf:snmp\-mib\-module\-name\*(Aq, the MIB name must be specified in this argument\&.
+.PP
+A leaf in a list that is mapped to multiple SNMP tables must specify the name of the table it is mapped to if it is different from the primary table\&.
+.PP
+In the following example, a single YANG list \*(Aqinterface\*(Aq is mapped to the MIB tables ifTable, ifXTable, and ipv4InterfaceTable:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ list interface {
+   key index;
+   tailf:snmp\-name \*(AqifTable\*(Aq; // primary table
+   tailf:snmp\-name \*(AqifXTable\*(Aq;
+   tailf:snmp\-name \*(AqIP\-MIB:ipv4InterfaceTable\*(Aq;
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+   leaf index {
+     type int32;
+   }
+   leaf description {
+     type string;
+     tailf:snmp\-name \*(AqifDescr\*(Aq;  // mapped to primary table
+   }
+   leaf name {
+     type string;
+     tailf:snmp\-name \*(AqifXTable:ifName\*(Aq;
+   }
+   leaf ipv4\-enable {
+     type boolean;
+     tailf:snmp\-name
+       \*(AqIP\-MIB:ipv4InterfaceTable:ipv4InterfaceEnableStatus\*(Aq;
+   }
+   \&.\&.\&.
+ }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+When emitting a mib from yang, enum labels are used as\-is if they follow the SMI rules for labels (no \*(Aq\&.\*(Aq or \*(Aq_\*(Aq characters and beginning with a lowercase letter)\&. Any label that doesn\*(Aqt satisfy the SMI rules will be converted as follows:
+.PP
+An initial uppercase character will be downcased\&.
+.PP
+If the initial character is not a letter it will be prepended with an \*(Aqa\*(Aq\&.
+.PP
+Any \*(Aq\&.\*(Aq or \*(Aq_\*(Aq characters elsewhere in the label will be substituted with \*(Aq\-\*(Aq characters\&.
+.PP
+In the resulting label, any multiple \*(Aq\-\*(Aq character sequence will be replaced with a single \*(Aq\-\*(Aq character\&.
+.PP
+If this automatic conversion is not suitable, snmp\-name can be used to specify the label to use when emitting a MIB\&.
+.PP
+The
+\fIsnmp\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR,
+\fIenum\fR, and
+\fIrefine\fR\&.
+.SS "tailf:snmp\-ned\-accessible\-column \fIleaf\-name\fR"
+.PP
+The name or subid number of an accessible column that is instantiated in all table entries in a table\&. The column does not have to be writable\&. The SNMP NED will use this column when it uses GET\-NEXT to loop through the list entries, and when doing existence tests\&.
+.PP
+If this column is not given, the SNMP NED uses the following algorithm:
+.PP
+1\&. If there is a RowStatus column, it will be used\&. 2\&. If an INDEX leaf is accessible, it will be used\&. 3\&. Otherwise, use the first accessible column returned by the SNMP agent\&.
+.PP
+The
+\fIsnmp\-ned\-accessible\-column\fR
+statement can be used in:
+\fIlist\fR\&.
+.SS "tailf:snmp\-ned\-delete\-before\-create"
+.PP
+This statement is used in a list to make the SNMP NED always send deletes before creates\&. Normally, creates are sent before deletes\&.
+.PP
+The
+\fIsnmp\-ned\-delete\-before\-create\fR
+statement can be used in:
+\fIlist\fR\&.
+.SS "tailf:snmp\-ned\-modification\-dependent"
+.PP
+This statement is used on all columns in a table that require the usage of the column marked with tailf:snmp\-ned\-set\-before\-row\-modification\&.
+.PP
+This statement can be used on any column in a table where one leaf is marked with tailf:snmp\-ned\-set\-before\-row\-modification, or a table that AUGMENTS such a table, or a table with a foreign index in such a table\&.
+.PP
+The
+\fIsnmp\-ned\-modification\-dependent\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:snmp\-ned\-recreate\-when\-modified"
+.PP
+This statement is used in a list to make the SNMP NED delete and recreate the row when a column in the row is modified\&.
+.PP
+The
+\fIsnmp\-ned\-recreate\-when\-modified\fR
+statement can be used in:
+\fIlist\fR\&.
+.SS "tailf:snmp\-ned\-set\-before\-row\-modification \fIvalue\fR"
+.PP
+If this statement is present on a leaf, it tells the SNMP NED that if a column in the row is modified, and it is marked with \*(Aqtailf:snmp\-ned\-modification\-dependent\*(Aq, then the column marked with \*(Aqtailf:snmp\-ned\-set\-before\-modification\*(Aq needs to be set to <value> before the other column is modified\&. After all such columns have been modified, the column marked with \*(Aqtailf:snmp\-ned\-set\-before\-modification\*(Aq is reset to its initial value\&.
+.PP
+The
+\fIsnmp\-ned\-set\-before\-row\-modification\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:snmp\-oid \fIoid\fR"
+.PP
+Used when the YANG module is mapped to an SNMP module\&.
+.PP
+If this statement is present as a direct child to \*(Aqmodule\*(Aq, it indicates the top level OID for the module\&.
+.PP
+When the parent node is mapped to an SNMP object, this statement specifies the OID of the SNMP object\&. It may be either a full OID or just a suffix (a period, followed by an integer)\&. In the latter case, a full OID must be given for some ancestor element\&.
+.PP
+NOTE: when this statement is set in a list, it refers to the OID of the correspondig table, not the table entry\&.
+.PP
+The
+\fIsnmp\-oid\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR,
+\fImodule\fR, and
+\fIrefine\fR\&.
+.SS "tailf:snmp\-row\-status\-column \fIvalue\fR"
+.PP
+Used when an SNMP module is generated from the YANG module\&.
+.PP
+When the parent list node is mapped to an SNMP table, this statement specifies the column number of the generated RowStatus column\&. If it is not specified, the generated RowStatus column will be the last in the table\&.
+.PP
+The
+\fIsnmp\-row\-status\-column\fR
+statement can be used in:
+\fIlist\fR
+and
+\fIrefine\fR\&.
+.SS "tailf:sort\-order \fIhow\fR"
+.PP
+This statement can be used for \*(Aqordered\-by system\*(Aq lists and leaf\-lists only\&. It indicates in which way the list entries are sorted\&.
+.PP
+The
+\fIsort\-order\fR
+statement can be used in:
+\fIlist\fR,
+\fIleaf\-list\fR, and
+\fItailf:secondary\-index\fR\&.
+.SS "tailf:sort\-priority \fIvalue\fR"
+.PP
+This extension takes an integer parameter specifying the order and can be placed on leafs, containers, lists and leaf\-lists\&. When showing, or getting configuration, leaf values will be returned in order of increasing sort\-priority\&.
+.PP
+The default sort\-priority is 0\&.
+.PP
+The
+\fIsort\-priority\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:step \fIvalue\fR"
+.PP
+Used to further restrict the range of integer and decimal types\&. The argument is a positive integer or decimal value greater than zero\&. The allowed values for the type is further restricted to only those values that matches the expression:
+.PP
+\*(Aqlow\*(Aq + n * \*(Aqstep\*(Aq
+.PP
+where \*(Aqlow\*(Aq is the lowest allowed value in the range, n is a non\-negative integer\&.
+.PP
+For example, the following type:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  type int32 {
+    range \*(Aq\-2 \&.\&. 9\*(Aq {
+      tailf:step 3;
+    }
+  }
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+has the value space { \-2, 1, 4, 7 }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The
+\fIstep\fR
+statement can be used in:
+\fIrange\fR\&.
+.SS "tailf:structure \fIname\fR"
+.PP
+Internal extension to define a data structure without any semantics attached\&.
+.PP
+The
+\fIstructure\fR
+statement can be used in:
+\fImodule\fR
+and
+\fIsubmodule\fR\&.
+.SS "tailf:suppress\-echo \fIvalue\fR"
+.PP
+If this statetement is set to \*(Aqtrue\*(Aq, leafs of this type will not have their values echoed when input in the webui or when the CLI prompts for the value\&. The value will also not be included in the audit log in clear text but will appear as ***\&.
+.PP
+The
+\fIsuppress\-echo\fR
+statement can be used in:
+\fItypedef\fR,
+\fIleaf\fR, and
+\fIleaf\-list\fR\&.
+.SS "tailf:symlink \fIname\fR"
+.PP
+DEPRECATED: Use tailf:link instead\&. There are no plans to remove tailf:symlink\&.
+.PP
+This statement defines a \*(Aqsymbolic link\*(Aq from a node to some other node\&. The argument is the name of the new node, and the mandatory substatement \*(Aqtailf:path\*(Aq points to the node which is linked to\&.
+.PP
+The
+\fIsymlink\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fImodule\fR,
+\fIsubmodule\fR,
+\fIaugment\fR, and
+\fIcase\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:alt\-name\fR
+.PP
+\fItailf:cli\-add\-mode\fR
+.PP
+\fItailf:cli\-allow\-join\-with\-key\fR
+.PP
+\fItailf:cli\-allow\-join\-with\-value\fR
+.PP
+\fItailf:cli\-allow\-key\-abbreviation\fR
+.PP
+\fItailf:cli\-allow\-range\fR
+.PP
+\fItailf:cli\-allow\-wildcard\fR
+.PP
+\fItailf:cli\-autowizard\fR
+.PP
+\fItailf:cli\-boolean\-no\fR
+.PP
+\fItailf:cli\-break\-sequence\-commands\fR
+.PP
+\fItailf:cli\-column\-align\fR
+.PP
+\fItailf:cli\-column\-stats\fR
+.PP
+\fItailf:cli\-column\-width\fR
+.PP
+\fItailf:cli\-compact\-stats\fR
+.PP
+\fItailf:cli\-compact\-syntax\fR
+.PP
+\fItailf:cli\-completion\-actionpoint\fR
+.PP
+\fItailf:cli\-custom\-error\fR
+.PP
+\fItailf:cli\-custom\-range\fR
+.PP
+\fItailf:cli\-custom\-range\-actionpoint\fR
+.PP
+\fItailf:cli\-custom\-range\-enumerator\fR
+.PP
+\fItailf:cli\-delayed\-auto\-commit\fR
+.PP
+\fItailf:cli\-delete\-container\-on\-delete\fR
+.PP
+\fItailf:cli\-delete\-when\-empty\fR
+.PP
+\fItailf:cli\-diff\-dependency\fR
+.PP
+\fItailf:cli\-disabled\-info\fR
+.PP
+\fItailf:cli\-disallow\-value\fR
+.PP
+\fItailf:cli\-display\-empty\-config\fR
+.PP
+\fItailf:cli\-display\-separated\fR
+.PP
+\fItailf:cli\-drop\-node\-name\fR
+.PP
+\fItailf:cli\-no\-keyword\fR
+.PP
+\fItailf:cli\-enforce\-table\fR
+.PP
+\fItailf:cli\-embed\-no\-on\-delete\fR
+.PP
+\fItailf:cli\-exit\-command\fR
+.PP
+\fItailf:cli\-explicit\-exit\fR
+.PP
+\fItailf:cli\-expose\-key\-name\fR
+.PP
+\fItailf:cli\-expose\-ns\-prefix\fR
+.PP
+\fItailf:cli\-flat\-list\-syntax\fR
+.PP
+\fItailf:cli\-flatten\-container\fR
+.PP
+\fItailf:cli\-full\-command\fR
+.PP
+\fItailf:cli\-full\-no\fR
+.PP
+\fItailf:cli\-full\-show\-path\fR
+.PP
+\fItailf:cli\-hide\-in\-submode\fR
+.PP
+\fItailf:cli\-ignore\-modified\fR
+.PP
+\fItailf:cli\-incomplete\-command\fR
+.PP
+\fItailf:cli\-incomplete\-no\fR
+.PP
+\fItailf:cli\-incomplete\-show\-path\fR
+.PP
+\fItailf:cli\-instance\-info\-leafs\fR
+.PP
+\fItailf:cli\-key\-format\fR
+.PP
+\fItailf:cli\-list\-syntax\fR
+.PP
+\fItailf:cli\-min\-column\-width\fR
+.PP
+\fItailf:cli\-mode\-name\fR
+.PP
+\fItailf:cli\-mode\-name\-actionpoint\fR
+.PP
+\fItailf:cli\-multi\-value\fR
+.PP
+\fItailf:cli\-multi\-word\-key\fR
+.PP
+\fItailf:cli\-multi\-line\-prompt\fR
+.PP
+\fItailf:cli\-no\-key\-completion\fR
+.PP
+\fItailf:cli\-no\-match\-completion\fR
+.PP
+\fItailf:cli\-no\-name\-on\-delete\fR
+.PP
+\fItailf:cli\-no\-value\-on\-delete\fR
+.PP
+\fItailf:cli\-oper\-info\fR
+.PP
+\fItailf:cli\-optional\-in\-sequence\fR
+.PP
+\fItailf:cli\-prefix\-key\fR
+.PP
+\fItailf:cli\-preformatted\fR
+.PP
+\fItailf:cli\-range\-delimiters\fR
+.PP
+\fItailf:cli\-range\-list\-syntax\fR
+.PP
+\fItailf:cli\-recursive\-delete\fR
+.PP
+\fItailf:cli\-remove\-before\-change\fR
+.PP
+\fItailf:cli\-reset\-container\fR
+.PP
+\fItailf:cli\-run\-template\fR
+.PP
+\fItailf:cli\-run\-template\-enter\fR
+.PP
+\fItailf:cli\-run\-template\-footer\fR
+.PP
+\fItailf:cli\-run\-template\-legend\fR
+.PP
+\fItailf:cli\-sequence\-commands\fR
+.PP
+\fItailf:cli\-show\-config\fR
+.PP
+\fItailf:cli\-show\-no\fR
+.PP
+\fItailf:cli\-show\-order\-tag\fR
+.PP
+\fItailf:cli\-show\-order\-taglist\fR
+.PP
+\fItailf:cli\-show\-template\fR
+.PP
+\fItailf:cli\-show\-template\-enter\fR
+.PP
+\fItailf:cli\-show\-template\-footer\fR
+.PP
+\fItailf:cli\-show\-template\-legend\fR
+.PP
+\fItailf:cli\-show\-with\-default\fR
+.PP
+\fItailf:cli\-strict\-leafref\fR
+.PP
+\fItailf:cli\-suppress\-key\-abbreviation\fR
+.PP
+\fItailf:cli\-suppress\-key\-sort\fR
+.PP
+\fItailf:cli\-suppress\-list\-no\fR
+.PP
+\fItailf:cli\-suppress\-mode\fR
+.PP
+\fItailf:cli\-suppress\-no\fR
+.PP
+\fItailf:cli\-suppress\-range\fR
+.PP
+\fItailf:cli\-suppress\-shortenabled\fR
+.PP
+\fItailf:cli\-suppress\-show\-conf\-path\fR
+.PP
+\fItailf:cli\-suppress\-show\-match\fR
+.PP
+\fItailf:cli\-suppress\-show\-path\fR
+.PP
+\fItailf:cli\-suppress\-silent\-no\fR
+.PP
+\fItailf:cli\-suppress\-validation\-warning\-prompt\fR
+.PP
+\fItailf:cli\-suppress\-wildcard\fR
+.PP
+\fItailf:cli\-table\-footer\fR
+.PP
+\fItailf:cli\-table\-legend\fR
+.PP
+\fItailf:cli\-trim\-default\fR
+.PP
+\fItailf:cli\-value\-display\-template\fR
+.PP
+\fItailf:display\-when\fR
+.PP
+\fItailf:hidden\fR
+.PP
+\fItailf:inherit\-set\-hook\fR
+This statement specifies that a \*(Aqtailf:set\-hook\*(Aq statement should survive through symlinks\&. If set to true a set hook gets called as soon as the value is set via a symlink but also during commit\&. The normal behaviour is to only call the set hook during commit time\&.
+.PP
+\fItailf:info\fR
+.PP
+\fItailf:info\-html\fR
+.PP
+\fItailf:path\fR
+This statement specifies which node a symlink points to\&.
+.PP
+The textual format of a symlink is an XPath absolute location path\&. If the target lies within lists, all keys must be specified\&. A key either has a value, or is a reference to a key in the path of the source node, using the function current() as starting point for an XPath location path\&. For example:
+.PP
+/a/b[k1=\*(Aqpaul\*(Aq][k2=current()/\&.\&./k]/c
+.PP
+\fItailf:snmp\-exclude\-object\fR
+.PP
+\fItailf:snmp\-name\fR
+.PP
+\fItailf:snmp\-oid\fR
+.PP
+\fItailf:sort\-priority\fR
+.SS "tailf:transaction \fIdirection\fR"
+.PP
+Which transaction that the result of the XPath filter will be applied to, when set to \*(Aqboth\*(Aq it will apply to both the \*(Aqto\*(Aq and the \*(Aqfrom\*(Aq transaction\&.
+.SS "tailf:typepoint \fIid\fR"
+.PP
+If a typedef, leaf, or leaf\-list has a \*(Aqtypepoint\*(Aq statement, a user\-defined type is specified, as opposed to a derivation or specification of an existing type\&. The implementation of a user\-defined type must be provided in the form of a shared object with C callback functions that is loaded into the ConfD daemon at startup time\&. Read more about user\-defined types in the confd_types(3) manual page\&.
+.PP
+The argument defines the ID associated with a typepoint\&. This ID is provided by the shared object, and used by the ConfD daemon to locate the implementation of a specific user\-defined type\&.
+.PP
+The
+\fItypepoint\fR
+statement can be used in:
+\fItypedef\fR,
+\fIleaf\fR, and
+\fIleaf\-list\fR\&.
+.SS "tailf:unique\-selector \fIcontext\-path\fR"
+.PP
+The standard YANG statement \*(Aqunique\*(Aq can be used to check for uniqueness within a single list only\&. Specifically, it cannot be used to check for uniqueness of leafs within a sublist\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  container a {
+    list b {
+      \&.\&.\&.
+      unique \*(Aqserver/ip server/port\*(Aq;
+      list server {
+        \&.\&.\&.
+        leaf ip { \&.\&.\&. };
+        leaf port { \&.\&.\&. };
+      }
+    }
+  }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+The unique expression above is not legal\&. The intention is that there must not be any two \*(Aqserver\*(Aq entries in any \*(Aqb\*(Aq with the same combination of ip and port\&. This would be illegal:
+.PP
+<a> <b> <name>b1</name> <server> <ip>10\&.0\&.0\&.1</ip> <port>80</port> </server> </b> <b> <name>b2</name> <server> <ip>10\&.0\&.0\&.1</ip> <port>80</port> </server> </b> </a>
+.PP
+With \*(Aqtailf:unique\-selector\*(Aq and \*(Aqtailf:unique\-leaf\*(Aq, this kind of constraint can be defined\&.
+.PP
+The argument to \*(Aqtailf:unique\-selector\*(Aq is an XPath descendant location path (matches the rule \*(Aqdescendant\-schema\-nodeid\*(Aq in RFC 6020)\&. The first node in the path MUST be a list node, and it MUST be defined in the same module as the tailf:unique\-selector\&. For example, the following is illegal:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  module y {
+    \&.\&.\&.
+    import x {
+      prefix x;
+    }
+    tailf:unique\-selector \*(Aq/x:server\*(Aq { // illegal
+      \&.\&.\&.
+    }
+  }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+For each instance of the node where the selector is defined, it is evaluated, and for each node selected by the selector, a tuple is constructed by evaluating the \*(Aqtailf:unique\-leaf\*(Aq expression\&. All such tuples must be unique\&. If a \*(Aqtailf:unique\-leaf\*(Aq expression refers to a non\-existing leaf, the corresponding tuple is ignored\&.
+.PP
+In the example above, the unique expression can be replaced by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  container a {
+    tailf:unique\-selector \*(Aqb/server\*(Aq {
+      tailf:unique\-leaf \*(Aqip\*(Aq;
+      tailf:unique\-leaf \*(Aqport\*(Aq;
+    }
+    list b {
+      \&.\&.\&.
+    }
+  }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+For each container \*(Aqa\*(Aq, the XPath expression \*(Aqb/server\*(Aq is evaluated\&. For each such server, a 2\-tuple is constructed with the \*(Aqip\*(Aq and \*(Aqport\*(Aq leafs\&. Each such 2\-tuple is guaranteed to be unique\&.
+.PP
+The
+\fIunique\-selector\fR
+statement can be used in:
+\fImodule\fR,
+\fIsubmodule\fR,
+\fIgrouping\fR,
+\fIaugment\fR,
+\fIcontainer\fR, and
+\fIlist\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:unique\-leaf\fR
+See \*(Aqtailf:unique\-selector\*(Aq for a description of how this statement is used\&.
+.PP
+The argument is an XPath descendant location path (matches the rule \*(Aqdescendant\-schema\-nodeid\*(Aq in RFC 6020), and it MUST refer to a leaf\&.
+.SS "tailf:validate \fIid\fR"
+.PP
+Identifies a validation callback which is invoked when a configuration value is to be validated\&. The callback validates a value and typically checks it towards other values in the data store\&. Validation callbacks are used when the YANG built\-in validation constructs (\*(Aqmust\*(Aq, \*(Aqunique\*(Aq) are not expressive enough\&.
+.PP
+Callbacks use the API described in confd_lib_maapi(3) to access whatever other configuration values needed to perform the validation\&.
+.PP
+Validation callbacks are typically assigned to individual nodes in the data model, but it may be feasible to use a single validation callback on a root node\&. In that case the callback is responsible for validation of all values and their relationships throughout the data store\&.
+.PP
+The \*(Aqvalidate\*(Aq statment should in almost all cases have a \*(Aqtailf:dependency\*(Aq substatement\&. If such a statement is not given, the validate function is evaluated at every commit, leading to overall performance degradation\&.
+.PP
+If the \*(Aqvalidate\*(Aq statement is defined in a \*(Aqmust\*(Aq statement, validation callback is called instead of evaluating the must expression\&. This is useful if the evaluation of the must statement uses too much resources, and the condition expressed with the must statement is easier to check with a validation callback function\&.
+.PP
+The
+\fIvalidate\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIgrouping\fR,
+\fIrefine\fR, and
+\fImust\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:call\-once\fR
+This optional statement can be used only if the parent statement is a list or a leaf\-list\&. If \*(Aqcall\-once\*(Aq is \*(Aqtrue\*(Aq, the validation callback is only called once even though there exists many list or leaf\-list entries in the data store\&. This is useful if we have a huge amount of instances or if values assigned to each instance have to be validated in comparison with its siblings\&.
+.PP
+\fItailf:dependency\fR
+.PP
+\fItailf:opaque\fR
+Defines an opaque string which is passed to the callback function in the context\&.
+.PP
+\fItailf:internal\fR
+For internal ConfD / NCS use only\&.
+.PP
+\fItailf:priority\fR
+This extension takes an integer parameter specifying the order validation code will be evaluated, in order of increasing priority\&.
+.PP
+The default priority is 0\&.
+.SS "tailf:value\-length \fIvalue\fR"
+.PP
+Used only for the types: yang:object\-identifier yang:object\-identifier\-128 yang:phys\-address yang:hex\-string tailf:hex\-list tailf:octet\-list xs:hexBinary
+.PP
+This type restriction is used to limit the length of the value\-space value of the type\&. Note that since all these types are derived from \*(Aqstring\*(Aq, the standard \*(Aqlength\*(Aq statement restricts the lexical representation of the value\&.
+.PP
+The argument is a length expression string, with the same syntax as for the standard YANG \*(Aqlength\*(Aq statement\&.
+.PP
+The
+\fIvalue\-length\fR
+statement can be used in:
+\fItype\fR\&.
+.SS "tailf:writable \fIvalue\fR"
+.PP
+This extension makes operational data (i\&.e\&., config false data) writable\&. Only valid for leafs\&.
+.PP
+The
+\fIwritable\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:xpath\-root \fIvalue\fR"
+.PP
+Internal extension to \*(Aqchroot\*(Aq XPath expressions
+.PP
+The
+\fIxpath\-root\fR
+statement can be used in:
+\fImust\fR,
+\fIwhen\fR,
+\fIpath\fR,
+\fItailf:display\-when\fR,
+\fItailf:cli\-diff\-dependency\fR,
+\fItailf:cli\-diff\-before\fR,
+\fItailf:cli\-diff\-delete\-before\fR,
+\fItailf:cli\-diff\-set\-before\fR,
+\fItailf:cli\-diff\-create\-before\fR,
+\fItailf:cli\-diff\-modify\-before\fR,
+\fItailf:cli\-diff\-after\fR,
+\fItailf:cli\-diff\-delete\-after\fR,
+\fItailf:cli\-diff\-set\-after\fR,
+\fItailf:cli\-diff\-create\-after\fR, and
+\fItailf:cli\-diff\-modify\-after\fR\&.
+.SH "YANG TYPES"
+.SS "aes\-cfb\-128\-encrypted\-string"
+.PP
+The aes\-cfb\-128\-encrypted\-string works exactly like des3\-cbc\-encrypted\-string but AES/128bits in CFB mode is used to encrypt the string\&. The prefix for encrypted values is \*(Aq$8$\*(Aq\&.
+.SS "des3\-cbc\-encrypted\-string"
+.PP
+The des3\-cbc\-encrypted\-string type automatically encrypts a value adhering to this type using DES in CBC mode followed by a base64 conversion\&. If the value isn\*(Aqt encrypted already, that is\&.
+.PP
+This is best explained using an example\&. Suppose we have a leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+   leaf enc {
+       type tailf:des3\-cbc\-encrypted\-string;
+   }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+A valid configuration is:
+.PP
+<enc>$0$In god we trust\&.</enc>
+.PP
+The \*(Aq$0$\*(Aq prefix signals that this is plain text\&. When a plain text value is received by the server, the value is DES3/Base64 encrypted, and the string \*(Aq$7$\*(Aq is prepended\&. The resulting string is stored in the configuration data store\&.
+.PP
+When a value of this type is read, the encrypted value is always returned\&. In the example above, the following value could be returned:
+.PP
+<enc>$7$Qxxsn8BVzxphCdflqRwZm6noKKmt0QoSWnRnhcXqocg=</enc>
+.PP
+If a value starting with \*(Aq$7$\*(Aq is received, the server knows that the value is already encrypted, and stores it as is in the data store\&.
+.PP
+A value adhering to this type must have a \*(Aq$0$\*(Aq or a \*(Aq$7$\*(Aq prefix\&.
+.PP
+ConfD uses a configurable set of encryption keys to encrypt the string\&. For details, see \*(AqencryptedStrings\*(Aq in the confd\&.conf(5) manual page\&.
+.SS "hex\-list"
+.PP
+DEPRECATED: Use yang:hex\-string instead\&. There are no plans to remove tailf:hex\-list\&.
+.PP
+A list of colon\-separated hexa\-decimal octets e\&.g\&. \*(Aq4F:4C:41:71\*(Aq\&.
+.PP
+The statement tailf:value\-length can be used to restrict the number of octets\&. Note that using the \*(Aqlength\*(Aq restriction limits the number of characters in the lexical representation\&.
+.SS "ip\-address\-and\-prefix\-length"
+.PP
+The ip\-address\-and\-prefix\-length type represents a combination of an IP address and a prefix length and is IP version neutral\&. The format of the textual representations implies the IP version\&.
+.SS "ipv4\-address\-and\-prefix\-length"
+.PP
+The ipv4\-address\-and\-prefix\-length type represents a combination of an IPv4 address and a prefix length\&. The prefix length is given by the number following the slash character and must be less than or equal to 32\&.
+.SS "ipv6\-address\-and\-prefix\-length"
+.PP
+The ipv6\-address\-and\-prefix\-length type represents a combination of an IPv6 address and a prefix length\&. The prefix length is given by the number following the slash character and must be less than or equal to 128\&.
+.SS "md5\-digest\-string"
+.PP
+The md5\-digest\-string type automatically computes a MD5 digest for a value adhering to this type\&.
+.PP
+This is best explained using an example\&. Suppose we have a leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+   leaf key {
+       type tailf:md5\-digest\-string;
+   }
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+A valid configuration is:
+.PP
+<key>$0$In god we trust\&.</key>
+.PP
+The \*(Aq$0$\*(Aq prefix signals that this is plain text\&. When a plain text value is received by the server, an MD5 digest is calculated, and the string \*(Aq$1$<salt>$\*(Aq is prepended to the result, where <salt> is a random eight character salt used to generate the digest\&. This value is stored in the configuration data store\&.
+.PP
+When a value of this type is read, the computed MD5 value is always returned\&. In the example above, the following value could be returned:
+.PP
+<key>$1$fB$ndk2z/PIS0S1SvzWLqTJb\&.</key>
+.PP
+If a value starting with \*(Aq$1$\*(Aq is received, the server knows that the value already represents an MD5 digest, and stores it as is in the data store\&.
+.PP
+A value adhering to this type must have a \*(Aq$0$\*(Aq or a \*(Aq$1$<salt>$\*(Aq prefix\&.
+.PP
+If a default value is specified, it must have a \*(Aq$1$<salt>$\*(Aq prefix\&.
+.PP
+The digest algorithm used is the same as the md5 crypt function used for encrypting passwords for various UNIX systems, see e\&.g\&. http://www\&.freebsd\&.org/cgi/cvsweb\&.cgi/~checkout/~/src/lib/libcrypt/crypt\&.c
+.SS "octet\-list"
+.PP
+A list of dot\-separated octets e\&.g\&. \*(Aq192\&.168\&.255\&.1\&.0\*(Aq\&.
+.PP
+The statement tailf:value\-length can be used to restrict the number of octets\&. Note that using the \*(Aqlength\*(Aq restriction limits the number of characters in the lexical representation\&.
+.SS "sha\-256\-digest\-string"
+.PP
+The sha\-256\-digest\-string type automatically computes a SHA\-256 digest for a value adhering to this type\&.
+.PP
+A value of this type matches one of the forms:
+.PP
+$0$<clear text password> $5$<salt>$<password hash> $5$rounds=<number>$<salt>$<password hash>
+.PP
+The \*(Aq$0$\*(Aq prefix signals that this is plain text\&. When a plain text value is received by the server, a SHA\-256 digest is calculated, and the string \*(Aq$5$<salt>$\*(Aq is prepended to the result, where <salt> is a random 16 character salt used to generate the digest\&. This value is stored in the configuration data store\&. The algorithm can be tuned via the /confdConfig/cryptHash/rounds parameter, which if set to a number other than the default will cause \*(Aq$5$rounds=<number>$<salt>$\*(Aq to be prepended instead of only \*(Aq$5$<salt>$\*(Aq\&.
+.PP
+If a value starting with \*(Aq$5$\*(Aq is received, the server knows that the value already represents a SHA\-256 digest, and stores it as is in the data store\&.
+.PP
+If a default value is specified, it must have a \*(Aq$5$\*(Aq prefix\&.
+.PP
+The digest algorithm used is the same as the SHA\-256 crypt function used for encrypting passwords for various UNIX systems, see e\&.g\&. http://www\&.akkadia\&.org/drepper/SHA\-crypt\&.txt
+.SS "sha\-512\-digest\-string"
+.PP
+The sha\-512\-digest\-string type automatically computes a SHA\-512 digest for a value adhering to this type\&.
+.PP
+A value of this type matches one of the forms:
+.PP
+$0$<clear text password> $6$<salt>$<password hash> $6$rounds=<number>$<salt>$<password hash>
+.PP
+The \*(Aq$0$\*(Aq prefix signals that this is plain text\&. When a plain text value is received by the server, a SHA\-512 digest is calculated, and the string \*(Aq$6$<salt>$\*(Aq is prepended to the result, where <salt> is a random 16 character salt used to generate the digest\&. This value is stored in the configuration data store\&. The algorithm can be tuned via the /confdConfig/cryptHash/rounds parameter, which if set to a number other than the default will cause \*(Aq$6$rounds=<number>$<salt>$\*(Aq to be prepended instead of only \*(Aq$6$<salt>$\*(Aq\&.
+.PP
+If a value starting with \*(Aq$6$\*(Aq is received, the server knows that the value already represents a SHA\-512 digest, and stores it as is in the data store\&.
+.PP
+If a default value is specified, it must have a \*(Aq$6$\*(Aq prefix\&.
+.PP
+The digest algorithm used is the same as the SHA\-512 crypt function used for encrypting passwords for various UNIX systems, see e\&.g\&. http://www\&.akkadia\&.org/drepper/SHA\-crypt\&.txt
+.SS "size"
+.PP
+A value that represents a number of bytes\&. An example could be S1G8M7K956B; meaning 1GB + 8MB + 7KB + 956B = 1082138556 bytes\&. The value must start with an S\&. Any byte magnifier can be left out, e\&.g\&. S1K1B equals 1025 bytes\&. The order is significant though, i\&.e\&. S1B56G is not a valid byte size\&.
+.PP
+In ConfD, a \*(Aqsize\*(Aq value is represented as an uint64\&.
+.SH "XPATH FUNCTIONS"
+.PP
+This section describes XPath functions that can be used for example in "must" expressions in YANG modules\&.
+.PP
+\fInode\-set\fR \fBderef\fR(\fInode\-set\fR)
+.RS 4
+The
+\fBderef()\fR
+function follows the reference defined by the first node in document order in the argument node\-set, and returns the nodes it refers to\&.
+.sp
+If the first argument node is an
+\fBinstance\-identifier\fR, the function returns a node\-set that contains the single node that the instance identifier refers to, if it exists\&. If no such node exists, an empty node\-set is returned\&.
+.sp
+If the first argument node is a
+\fBleafref\fR, the function returns a node\-set that contains the nodes that the leafref refers to\&.
+.sp
+If the first argument node is of any other type, an empty node\-set is returned\&.
+.RE
+.PP
+\fIbool\fR \fBre\-match\fR(\fIstring\fR, \fIstring\fR)
+.RS 4
+The
+\fBre\-match()\fR
+function returns
+\fBtrue\fR
+if the string in the first argument matches the regular expression in the second argument; otherwise it returns
+\fBfalse\fR\&.
+.sp
+For example:
+re\-match(\*(Aq1\&.22\&.333\*(Aq, \*(Aq\ed{1,3}\e\&.\ed{1,3}\e\&.\ed{1,3}\*(Aq)
+returns
+\fBtrue\fR\&. To count all logical interfaces called eth0\&.\fInumber\fR:
+count(/sys/ifc[re\-match(name,\*(Aqeth0\e\&.\ed+\*(Aq)])\&.
+.sp
+The regular expressions used are the XML Schema regular expressions, as specified by W3C in
+\m[blue]\fB\%http://www.w3.org/TR/xmlschema-2/#regexs\fR\m[]\&. Note that this includes implicit anchoring of the regular expression at the head and tail, i\&.e\&. if you want to match an interface that has a name that starts with \*(Aqeth\*(Aq then the regular expression must be
+\*(Aqeth\&.*\*(Aq\&.
+.RE
+.PP
+\fInumber\fR \fBstring\-compare\fR(\fIstring\fR, \fIstring\fR)
+.RS 4
+The
+\fBstring\-compare()\fR
+function returns \-1, 0, or 1 depending on whether the value of the string of the first argument is respectively less than, equal to, or greater than the value of the string of the second argument\&.
+.RE
+.PP
+\fInumber\fR \fBcompare\fR(\fIExpression\fR, \fIExpression\fR)
+.RS 4
+The
+\fBcompare()\fR
+function returns \-1, 0, or 1 depending on whether the value of the first argument is respectively less than, equal to, or greater than the value of the second argument\&.
+.sp
+The expressions are evaluated in a special way: If they both are XPath constants they are compared using the
+\fBstring\-compare()\fR
+function\&. But, more interestingly, if the expressions results in node\-sets with at least one node, and that node is an existing leaf that leafs value is compared with the other expression, and if the other expression is a constant that expression is converted to an internal value with the same type as the expression that resulted in a leaf\&. Thus making it possible to order values based on the internal representation rather than the string representation\&. For example, given a leaf:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+leaf foo {
+  type enumeration {
+    enum ccc;
+    enum bbb;
+    enum aaa;
+  }
+}
+.fi
+.if n \{\
+.RE
+.\}
+it would be possible to call
+compare(foo, \*(Aqbbb\*(Aq)
+(which, for example, would return \-1 if foo=\*(Aqccc\*(Aq)\&. Or to have a must expression like this:
+must "compare(\&.,\*(Aqbbb\*(Aq) >= 0";
+which would require foo to be set to \*(Aqbbb\*(Aq or \*(Aqaaa\*(Aq\&.
+.sp
+If one of the expressions result in an empty node\-set, a non\-leaf node, or if the constant can\*(Aqt be converted to the other expressions type then
+\fBNaN\fR
+is returned\&.
+.RE
+.PP
+\fInumber\fR \fBmin\fR(\fInode\-set\fR)
+.RS 4
+Returns the numerically smallest number in the node\-set, or
+\fBNaN\fR
+if the node\-set is empty\&.
+.RE
+.PP
+\fInumber\fR \fBmax\fR(\fInode\-set\fR)
+.RS 4
+Returns the numerically largest number in the node\-set, or
+\fBNaN\fR
+if the node\-set is empty\&.
+.RE
+.PP
+\fInumber\fR \fBavg\fR(\fInode\-set\fR)
+.RS 4
+Returns the numerical average of the node\-set, or
+\fBNaN\fR
+if the node\-set is empty, or if any numerical conversion of a node failed\&.
+.RE
+.PP
+\fInumber\fR \fBband\fR(\fInumber\fR, \fInumber\fR)
+.RS 4
+Returns the result of bitwise AND:ing the two numbers\&. Unless the numbers are integers NaN will be returned\&.
+.RE
+.PP
+\fInumber\fR \fBbor\fR(\fInumber\fR, \fInumber\fR)
+.RS 4
+Returns the result of bitwise OR:ing the two numbers\&. Unless the numbers are integers NaN will be returned\&.
+.RE
+.PP
+\fInumber\fR \fBbxor\fR(\fInumber\fR, \fInumber\fR)
+.RS 4
+Returns the result of bitwise Exclusive OR:ing the two numbers\&. Unless the numbers are integers NaN will be returned\&.
+.RE
+.PP
+\fInumber\fR \fBbnot\fR(\fInumber\fR)
+.RS 4
+Returns the result of bitwise NOT on number\&. Unless the number is an integer NaN will be returned\&.
+.RE
+.PP
+\fInode\-set\fR \fBsort\-by\fR(\fInode\-set\fR, \fIstring\fR)
+.RS 4
+The
+\fBsort\-by()\fR
+function makes it possible to order a node\-set according to a secondary index (see the
+\m[blue]\fBtailf:secondary\-index\fR\m[]
+extension)\&. The first argument must be an expression that evaluates to a node\-set, where the nodes in the node\-set are all list instances of the same list\&. The second argument must be the name of an existing secondary index on that list\&. For example given the YANG model:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+  container sys {
+    list host {
+      key name;
+      unique number;
+      tailf:secondary\-index number {
+        tailf:index\-leafs "number";
+      }
+      leaf name {
+        type string;
+      }
+      leaf number {
+        type uint32;
+        mandatory true;
+      }
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+    \&.\&.\&.
+    }
+  }
+
+.fi
+.if n \{\
+.RE
+.\}
+The expression
+sort\-by(/sys/host,"number")
+would result in all hosts, sorted by their number\&. And the expression,
+sort\-by(/sys/host[enabled=\*(Aqtrue\*(Aq],"number")
+would result in all enabled hosts, sorted by number\&. Note also that since the function returns a node\-set it is also legal to add location steps to the result\&. I\&.e\&. the expression
+sort\-by(/sys/host[enabled=\*(Aqtrue\*(Aq],"number")/name
+results in all host names sorted by the hosts number\&.
+.RE
+.SH "SEE ALSO"
+.PP
+\fBtailf_yang_cli_extensions\fR(5)
+.RS 4
+Tail\-f YANG CLI extensions
+.RE
+.PP
+The ConfD User Guide
+.RS 4
+.RE
+.PP
+\fBconfdc\fR(1)
+.RS 4
+Confdc compiler
+.RE
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

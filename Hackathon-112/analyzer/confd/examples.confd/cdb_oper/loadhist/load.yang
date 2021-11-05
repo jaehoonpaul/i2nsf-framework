@@ -1,0 +1,48 @@
+module load {
+  namespace "http://tail-f.com/ns/example/load";
+  prefix load;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container load {
+    config false;
+    tailf:cdb-oper {
+        tailf:persistent true;
+    }
+    list sample {
+      key time;
+      leaf time {
+        type yang:date-and-time;
+      }
+      leaf cpu_percent {
+        type cpuPercent;
+        mandatory true;
+      }
+      list average {
+        key minutes;
+        leaf minutes {
+          type int32;
+        }
+        leaf load {
+          type loadAverage;
+          mandatory true;
+        }
+      }
+    }
+  }
+  typedef cpuPercent {
+    type decimal64 {
+      fraction-digits 1;
+    }
+  }
+  typedef loadAverage {
+    type decimal64 {
+      fraction-digits 2;
+    }
+  }
+}

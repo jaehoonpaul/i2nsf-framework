@@ -1,0 +1,7 @@
+
+Examples of specific data provider functionality
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. find_next - implementation of the find_next() callback
+
+See the README file in the respective directory for further details.

@@ -1,0 +1,109 @@
+Example #9: Using threads in C for a data provider
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how you can distribute the callback
+processing for a data provider written in C across multiple
+threads. In real applications, the use of threads will often be very
+application dependant, and many applications may not need to use
+threads at all. The example shows how threads fit into the
+control/worker socket concept of the data provider API, and
+illustrates some cases where using threads is particularly relevant
+for the API:
+
+- Callback requests received on the control socket should generally
+  be handled "quickly", and thus not need to wait for the completion
+  of more complex callback processing.
+
+- Action callbacks may be long-running, in which case we need to be
+  able to run multiple such callbacks in parallel - otherwise
+  different user sessions requesting the same action have to wait
+  for each other.
+
+- If a callback triggers invocation of another callback in the same
+  process, use of threads is required to avoid a deadlock.
+
+The code in this example is a bit more complex than the other
+"intro" examples, and you may want to return to it after having
+become more familiar with the ConfD APIs.
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+In order to focus on the use of threading, the example only
+implements some "dummy" tasks:
+
+1. It provides read-only data supposedly representing the processes
+   in the system and the amount of CPU time they have used - but
+   this is actually just constant data stored in memory.
+
+2. It implements an action called 'sleep', which does nothing more
+   than sleep(3) for the number of seconds given as its argument,
+   reporting the elapsed time from invocation to the end of the
+   sleep as the result.
+
+3. It implements an action called 'totals', that uses the MAAPI API
+   to read the data in item 1, and calculates and reports the number
+   of processes and the sum of the CPU time they have used.
+
+Considering the points above, the thread structure is as follows:
+
+One thread serves the control socket, i.e. it will only handle the
+data and action init() callbacks, plus the "New user session" and
+"Close user session" callbacks that are processed internally by
+libconfd.
+
+Multiple worker sockets are used, with one thread serving each
+socket:
+
+One thread/socket handles the transaction and data callbacks
+(finish(), get_next(), get_elem()) for all transactions.
+
+For the action callbacks, one thread and worker socket is created
+dynamically for each user session that invokes an action.
+
+The example also shows how to cleanup and reconnect to ConfD in case
+the connection is lost, e.g. due to ConfD being restarted.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+ 2. Start the CLI with 'make cli' in a different window and try some
+    commands 
+
+        (J)> show status dm proc
+        (J)> request dm sleep time 3
+        (J)> request dm totals
+        
+        (C)> show dm proc
+        (C)> dm sleep time 3
+        (C)> dm totals
+
+    Without threads, the 'totals' action invocation would have
+    resulted in deadlock.
+
+ 3. Start another CLI session with 'make cli' in a third window, and
+    start a "long-running action" in the original CLI session with
+    'request dm sleep time 60'. Run the commands in step 2 in the
+    new CLI session. Without threads, the 'show' and 'sleep' would
+    have blocked waiting for the "long-runnnig action" to complete. 
+    (Not supported in ConfD Free)
+
+ 4. Exit one of the CLI sessions and do 'make restart'. This
+    restarts only the ConfD daemon, and in the original window the
+    data provider daemon reports the loss of connection and
+    subsequent reconnect.
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD User Guide: Operational Data
++ ConfD User Guide: Actions
++ man 3 confd_lib

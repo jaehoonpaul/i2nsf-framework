@@ -1,0 +1,23 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	notification = {{ notification_list|safe }};
+	$(document).ready(function() {
+		var list = "";
+		for (i = 0; i < notification.length; i++) {
+			list += "<li><a href='/"+notification[i]+"'>"+notification[i]+"</a></li>";
+		}
+		$(".ulNotif").append(list);
+	});
+</script>
+
+<div class="notif">
+	<ul class="ulNotif">
+	</ul>
+</div>
+
+<form method="POST">
+    <input name="text">
+    <input type="submit">
+</form>
+</html>

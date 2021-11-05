@@ -1,0 +1,36 @@
+CDB upgrade Example using CDB C-API and MAAPI
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Whenever upgrades get a bit more complicated it might be necessary to
+have access to both the old data and the upgraded to complete the
+upgrade. This example shows how that is done.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Running the Example
+~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing
+
+        $ make all start
+
+Now ConfD is running with the first version of the servers.yang
+data model. Inspect the current db using "make query" and use the
+command line interface to add/delete servers under /servers/server. Or
+proceed directly to step 2:
+
+ 2. Stop ConfD, build the new version of the .fxs file, and re-start
+    ConfD using start-phases. All in one go:
+
+        $ make start-v2
+
+Notice how the database is upgraded to fit with the new schema. Again
+use "make query" and "make cli" to inspect.

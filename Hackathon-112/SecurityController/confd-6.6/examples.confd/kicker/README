@@ -1,0 +1,157 @@
+This example illustrates how to use the kicker support, as described
+in tailf-kicker.yang, to achieve a subset of what is shown in the
+../cdb_subscription example.
+
+The kicker support makes it possible to trigger an action whenever
+configuration *or* operational data changes in CDB or any other data
+provider.
+
+This without any need to write and install a CDB subscriber, i.e. just
+specify the name of the action and an xpath expression specifying when
+to trigger the the action as an entry in the tailf-kicker.yang data
+model.
+
+The components are:
+
+  example.yang           The data-model
+
+  example_init.xml       The initial configuration
+
+  action.py              The actions to be triggered. See kicker_init.xml
+
+  kicker_init.xml        The specification on when to trigger kick.sh
+
+The example is rather simplistic in its data-model which consisting of
+a number of interfaces. The interfaces each have some settings, a
+couple of hardware settings and can be configured with a number of IP
+addresses.
+
+How to run:
+
+  Make sure you have the CONFD_DIR variable set and then type "make
+  clean all start" to start the system:
+
+      % make clean all start
+      ...
+      Build complete
+
+
+  The action.py implements two actions, "kick_me" and "iter_me" which
+  differs in the input parameters.
+  The "kick_me" action has no input parameters while "iter_me" has
+  input parameters as defined by the grouping
+  kicker:action-input-params which is defined in tailf-kicker.yang.
+
+  If the kicker action has input parameters identifiable as the ones in
+  the kicker:action-input-params grouping then the kicker action
+  when triggered will be supplied with the
+    - current kicker id
+    - current monitor instance-identifier
+    - the transaction id to a read only transaction containing the
+      changes in the tree under the monitor path.
+
+  This is helpful for the action to take decision. For instance the
+  transaction belonging to the transaction id can be attached and diff
+  iterated. The "iter_me" is an example of exactly this.
+
+  If the kicker action has no input parameters or parameters that is NOT
+  identifiable as the ones in the kicker:action-input-params grouping
+  then the kicker action is invoked without parameters.
+
+  The python daemon writes output to the file ./action.log as soon
+  as the action is triggered. In another terminal window run "tail -f
+  action.log" to keep track of when the kick_me or iter_me actions
+  are triggered.
+
+      % tail -f ./action.log
+
+  In yet another terminal window start the CLI:
+
+      % make cli
+      admin connected from 127.0.0.1 using console on carriedas
+      admin@carriedas>
+
+  Kickers are normally hidden using the hide group "debug".
+  In the example, this hide group is defined in confd.conf.
+  To inspect the kicker settings initialized by kicker_init.xml
+  we first have to unhide the "debug" hide group:
+
+      admin@carriedas> unhide debug
+      [ok][2016-03-04 11:11:10]
+
+  Now we can see all defined kickers:
+
+      admin@carriedas> configure
+      Entering configuration mode private
+      [ok][2016-03-04 11:11:22]
+
+      [edit]
+      admin@carriedas% show kickers
+      data-kicker k1 {
+          monitor      /example:sys/ifc[name='port-0'];
+          trigger-expr "hw/mtu > 100";
+          trigger-type enter;
+          kick-node    /example:sys;
+          action-name  kick_me;
+      }
+      data-kicker k2 {
+          monitor      /example:sys/ifc;
+          trigger-expr "hw/mtu <= 100";
+          trigger-type enter;
+          kick-node    /example:sys;
+          action-name  iter_me;
+      }
+      [ok][2016-03-04 11:11:29]
+
+  Note how the action "kick_me" under the instance /example:sys will be
+  triggered if the leaf instance value /example:sys/ifc[name='port-0']/hw/mtu
+  is set to something larger than 100.
+  Also the action "iter_me" will be triggered for all instances of
+  /example:sys/ifc if the same leaf mtu will be set to something <= 100.
+
+  Lets try this:
+
+      admin@carriedas% top
+      [ok][2016-03-04 11:16:58]
+
+      admin@carriedas% set sys ifc port-0 hw mtu 101
+      [ok][2016-03-04 11:17:36]
+
+      [edit]
+      admin@carriedas% commit
+      Commit complete.
+      [ok][2016-03-04 11:17:38]
+
+  This change will trigger kick.sh action and it will in turn print an
+  entry to action.log as seen in the "tail -f action.log" terminal
+  window:
+
+      % tail -f ./action.log
+      init_action called
+      action called
+      ::: kick_me :::
+
+  If we now replace the mtu value for the same instance to something
+  smaller than 100 we will find that the "iter_me" kicker will be
+  triggered, which will do a diff iteration over the change set:
+
+      admin@carriedas% set sys ifc port-0 hw mtu 87
+      [ok][2016-03-04 11:17:36]
+
+      [edit]
+      admin@carriedas% commit
+      Commit complete.
+      [ok][2016-03-04 11:17:38]
+
+
+  And if we now inspect the action.log we will find the following:
+
+      % tail -f ./action.log
+      init_action called
+      action called
+      param 0 value k2
+      param 1 value /example:sys/ifc{port-0}
+      param 2 value [0-9]*
+      ::: iter_me :::
+      kp=/example:sys/ifc{port-0}, op=3, oldv=None, newv=None
+      kp=/example:sys/ifc{port-0}/hw/mtu, op=4, oldv=None, newv=87

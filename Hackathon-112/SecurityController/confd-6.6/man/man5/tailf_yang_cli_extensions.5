@@ -1,0 +1,2938 @@
+'\" t
+.\"     Title: tailf_yang_cli_extensions
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "TAILF_YANG_CLI_EXTEN" "5" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+tailf_yang_cli_extensions \- Tail\-f YANG CLI extensions
+.SH "SYNOPSIS"
+.HP \w'\fBtailf:cli\-add\-mode\fR\ 'u
+\fBtailf:cli\-add\-mode\fR
+.HP \w'\fBtailf:cli\-allow\-join\-with\-key\fR\ 'u
+\fBtailf:cli\-allow\-join\-with\-key\fR
+.HP \w'\fBtailf:cli\-allow\-join\-with\-value\fR\ 'u
+\fBtailf:cli\-allow\-join\-with\-value\fR
+.HP \w'\fBtailf:cli\-allow\-key\-abbreviation\fR\ 'u
+\fBtailf:cli\-allow\-key\-abbreviation\fR
+.HP \w'\fBtailf:cli\-allow\-range\fR\ 'u
+\fBtailf:cli\-allow\-range\fR
+.HP \w'\fBtailf:cli\-allow\-wildcard\fR\ 'u
+\fBtailf:cli\-allow\-wildcard\fR
+.HP \w'\fBtailf:cli\-autowizard\fR\ 'u
+\fBtailf:cli\-autowizard\fR
+.HP \w'\fBtailf:cli\-boolean\-no\fR\ 'u
+\fBtailf:cli\-boolean\-no\fR
+.HP \w'\fBtailf:cli\-break\-sequence\-commands\fR\ 'u
+\fBtailf:cli\-break\-sequence\-commands\fR
+.HP \w'\fBtailf:cli\-case\-insensitive\fR\ 'u
+\fBtailf:cli\-case\-insensitive\fR
+.HP \w'\fBtailf:cli\-case\-sensitive\fR\ 'u
+\fBtailf:cli\-case\-sensitive\fR
+.HP \w'\fBtailf:cli\-column\-align\fR\ 'u
+\fBtailf:cli\-column\-align\fR
+.HP \w'\fBtailf:cli\-column\-stats\fR\ 'u
+\fBtailf:cli\-column\-stats\fR
+.HP \w'\fBtailf:cli\-column\-width\fR\ 'u
+\fBtailf:cli\-column\-width\fR
+.HP \w'\fBtailf:cli\-compact\-stats\fR\ 'u
+\fBtailf:cli\-compact\-stats\fR
+.HP \w'\fBtailf:cli\-compact\-syntax\fR\ 'u
+\fBtailf:cli\-compact\-syntax\fR
+.HP \w'\fBtailf:cli\-completion\-actionpoint\fR\ 'u
+\fBtailf:cli\-completion\-actionpoint\fR
+.HP \w'\fBtailf:cli\-configure\-mode\fR\ 'u
+\fBtailf:cli\-configure\-mode\fR
+.HP \w'\fBtailf:cli\-custom\-error\fR\ 'u
+\fBtailf:cli\-custom\-error\fR
+.HP \w'\fBtailf:cli\-custom\-range\fR\ 'u
+\fBtailf:cli\-custom\-range\fR
+.HP \w'\fBtailf:cli\-custom\-range\-actionpoint\fR\ 'u
+\fBtailf:cli\-custom\-range\-actionpoint\fR
+.HP \w'\fBtailf:cli\-custom\-range\-enumerator\fR\ 'u
+\fBtailf:cli\-custom\-range\-enumerator\fR
+.HP \w'\fBtailf:cli\-delayed\-auto\-commit\fR\ 'u
+\fBtailf:cli\-delayed\-auto\-commit\fR
+.HP \w'\fBtailf:cli\-delete\-container\-on\-delete\fR\ 'u
+\fBtailf:cli\-delete\-container\-on\-delete\fR
+.HP \w'\fBtailf:cli\-delete\-when\-empty\fR\ 'u
+\fBtailf:cli\-delete\-when\-empty\fR
+.HP \w'\fBtailf:cli\-diff\-after\fR\ 'u
+\fBtailf:cli\-diff\-after\fR
+.HP \w'\fBtailf:cli\-diff\-before\fR\ 'u
+\fBtailf:cli\-diff\-before\fR
+.HP \w'\fBtailf:cli\-diff\-create\-after\fR\ 'u
+\fBtailf:cli\-diff\-create\-after\fR
+.HP \w'\fBtailf:cli\-diff\-create\-before\fR\ 'u
+\fBtailf:cli\-diff\-create\-before\fR
+.HP \w'\fBtailf:cli\-diff\-delete\-after\fR\ 'u
+\fBtailf:cli\-diff\-delete\-after\fR
+.HP \w'\fBtailf:cli\-diff\-delete\-before\fR\ 'u
+\fBtailf:cli\-diff\-delete\-before\fR
+.HP \w'\fBtailf:cli\-diff\-dependency\fR\ 'u
+\fBtailf:cli\-diff\-dependency\fR
+.HP \w'\fBtailf:cli\-diff\-modify\-after\fR\ 'u
+\fBtailf:cli\-diff\-modify\-after\fR
+.HP \w'\fBtailf:cli\-diff\-modify\-before\fR\ 'u
+\fBtailf:cli\-diff\-modify\-before\fR
+.HP \w'\fBtailf:cli\-diff\-set\-after\fR\ 'u
+\fBtailf:cli\-diff\-set\-after\fR
+.HP \w'\fBtailf:cli\-diff\-set\-before\fR\ 'u
+\fBtailf:cli\-diff\-set\-before\fR
+.HP \w'\fBtailf:cli\-disabled\-info\fR\ 'u
+\fBtailf:cli\-disabled\-info\fR
+.HP \w'\fBtailf:cli\-disallow\-value\fR\ 'u
+\fBtailf:cli\-disallow\-value\fR
+.HP \w'\fBtailf:cli\-display\-empty\-config\fR\ 'u
+\fBtailf:cli\-display\-empty\-config\fR
+.HP \w'\fBtailf:cli\-display\-separated\fR\ 'u
+\fBtailf:cli\-display\-separated\fR
+.HP \w'\fBtailf:cli\-drop\-node\-name\fR\ 'u
+\fBtailf:cli\-drop\-node\-name\fR
+.HP \w'\fBtailf:cli\-embed\-no\-on\-delete\fR\ 'u
+\fBtailf:cli\-embed\-no\-on\-delete\fR
+.HP \w'\fBtailf:cli\-enforce\-table\fR\ 'u
+\fBtailf:cli\-enforce\-table\fR
+.HP \w'\fBtailf:cli\-exit\-command\fR\ 'u
+\fBtailf:cli\-exit\-command\fR
+.HP \w'\fBtailf:cli\-explicit\-exit\fR\ 'u
+\fBtailf:cli\-explicit\-exit\fR
+.HP \w'\fBtailf:cli\-expose\-key\-name\fR\ 'u
+\fBtailf:cli\-expose\-key\-name\fR
+.HP \w'\fBtailf:cli\-expose\-ns\-prefix\fR\ 'u
+\fBtailf:cli\-expose\-ns\-prefix\fR
+.HP \w'\fBtailf:cli\-flat\-list\-syntax\fR\ 'u
+\fBtailf:cli\-flat\-list\-syntax\fR
+.HP \w'\fBtailf:cli\-flatten\-container\fR\ 'u
+\fBtailf:cli\-flatten\-container\fR
+.HP \w'\fBtailf:cli\-full\-command\fR\ 'u
+\fBtailf:cli\-full\-command\fR
+.HP \w'\fBtailf:cli\-full\-no\fR\ 'u
+\fBtailf:cli\-full\-no\fR
+.HP \w'\fBtailf:cli\-full\-show\-path\fR\ 'u
+\fBtailf:cli\-full\-show\-path\fR
+.HP \w'\fBtailf:cli\-hide\-in\-submode\fR\ 'u
+\fBtailf:cli\-hide\-in\-submode\fR
+.HP \w'\fBtailf:cli\-ignore\-modified\fR\ 'u
+\fBtailf:cli\-ignore\-modified\fR
+.HP \w'\fBtailf:cli\-incomplete\-command\fR\ 'u
+\fBtailf:cli\-incomplete\-command\fR
+.HP \w'\fBtailf:cli\-incomplete\-no\fR\ 'u
+\fBtailf:cli\-incomplete\-no\fR
+.HP \w'\fBtailf:cli\-incomplete\-show\-path\fR\ 'u
+\fBtailf:cli\-incomplete\-show\-path\fR
+.HP \w'\fBtailf:cli\-instance\-info\-leafs\fR\ 'u
+\fBtailf:cli\-instance\-info\-leafs\fR
+.HP \w'\fBtailf:cli\-key\-format\fR\ 'u
+\fBtailf:cli\-key\-format\fR
+.HP \w'\fBtailf:cli\-list\-syntax\fR\ 'u
+\fBtailf:cli\-list\-syntax\fR
+.HP \w'\fBtailf:cli\-min\-column\-width\fR\ 'u
+\fBtailf:cli\-min\-column\-width\fR
+.HP \w'\fBtailf:cli\-mode\-name\fR\ 'u
+\fBtailf:cli\-mode\-name\fR
+.HP \w'\fBtailf:cli\-mode\-name\-actionpoint\fR\ 'u
+\fBtailf:cli\-mode\-name\-actionpoint\fR
+.HP \w'\fBtailf:cli\-mount\-point\fR\ 'u
+\fBtailf:cli\-mount\-point\fR
+.HP \w'\fBtailf:cli\-multi\-line\-prompt\fR\ 'u
+\fBtailf:cli\-multi\-line\-prompt\fR
+.HP \w'\fBtailf:cli\-multi\-value\fR\ 'u
+\fBtailf:cli\-multi\-value\fR
+.HP \w'\fBtailf:cli\-multi\-word\-key\fR\ 'u
+\fBtailf:cli\-multi\-word\-key\fR
+.HP \w'\fBtailf:cli\-no\-key\-completion\fR\ 'u
+\fBtailf:cli\-no\-key\-completion\fR
+.HP \w'\fBtailf:cli\-no\-keyword\fR\ 'u
+\fBtailf:cli\-no\-keyword\fR
+.HP \w'\fBtailf:cli\-no\-match\-completion\fR\ 'u
+\fBtailf:cli\-no\-match\-completion\fR
+.HP \w'\fBtailf:cli\-no\-name\-on\-delete\fR\ 'u
+\fBtailf:cli\-no\-name\-on\-delete\fR
+.HP \w'\fBtailf:cli\-no\-value\-on\-delete\fR\ 'u
+\fBtailf:cli\-no\-value\-on\-delete\fR
+.HP \w'\fBtailf:cli\-only\-in\-autowizard\fR\ 'u
+\fBtailf:cli\-only\-in\-autowizard\fR
+.HP \w'\fBtailf:cli\-oper\-info\fR\ 'u
+\fBtailf:cli\-oper\-info\fR
+.HP \w'\fBtailf:cli\-operational\-mode\fR\ 'u
+\fBtailf:cli\-operational\-mode\fR
+.HP \w'\fBtailf:cli\-optional\-in\-sequence\fR\ 'u
+\fBtailf:cli\-optional\-in\-sequence\fR
+.HP \w'\fBtailf:cli\-prefix\-key\fR\ 'u
+\fBtailf:cli\-prefix\-key\fR
+.HP \w'\fBtailf:cli\-preformatted\fR\ 'u
+\fBtailf:cli\-preformatted\fR
+.HP \w'\fBtailf:cli\-range\-delimiters\fR\ 'u
+\fBtailf:cli\-range\-delimiters\fR
+.HP \w'\fBtailf:cli\-range\-list\-syntax\fR\ 'u
+\fBtailf:cli\-range\-list\-syntax\fR
+.HP \w'\fBtailf:cli\-recursive\-delete\fR\ 'u
+\fBtailf:cli\-recursive\-delete\fR
+.HP \w'\fBtailf:cli\-remove\-before\-change\fR\ 'u
+\fBtailf:cli\-remove\-before\-change\fR
+.HP \w'\fBtailf:cli\-replace\-all\fR\ 'u
+\fBtailf:cli\-replace\-all\fR
+.HP \w'\fBtailf:cli\-reset\-container\fR\ 'u
+\fBtailf:cli\-reset\-container\fR
+.HP \w'\fBtailf:cli\-run\-template\fR\ 'u
+\fBtailf:cli\-run\-template\fR
+.HP \w'\fBtailf:cli\-run\-template\-enter\fR\ 'u
+\fBtailf:cli\-run\-template\-enter\fR
+.HP \w'\fBtailf:cli\-run\-template\-footer\fR\ 'u
+\fBtailf:cli\-run\-template\-footer\fR
+.HP \w'\fBtailf:cli\-run\-template\-legend\fR\ 'u
+\fBtailf:cli\-run\-template\-legend\fR
+.HP \w'\fBtailf:cli\-sequence\-commands\fR\ 'u
+\fBtailf:cli\-sequence\-commands\fR
+.HP \w'\fBtailf:cli\-show\-config\fR\ 'u
+\fBtailf:cli\-show\-config\fR
+.HP \w'\fBtailf:cli\-show\-long\-obu\-diffs\fR\ 'u
+\fBtailf:cli\-show\-long\-obu\-diffs\fR
+.HP \w'\fBtailf:cli\-show\-no\fR\ 'u
+\fBtailf:cli\-show\-no\fR
+.HP \w'\fBtailf:cli\-show\-obu\-comments\fR\ 'u
+\fBtailf:cli\-show\-obu\-comments\fR
+.HP \w'\fBtailf:cli\-show\-order\-tag\fR\ 'u
+\fBtailf:cli\-show\-order\-tag\fR
+.HP \w'\fBtailf:cli\-show\-order\-taglist\fR\ 'u
+\fBtailf:cli\-show\-order\-taglist\fR
+.HP \w'\fBtailf:cli\-show\-template\fR\ 'u
+\fBtailf:cli\-show\-template\fR
+.HP \w'\fBtailf:cli\-show\-template\-enter\fR\ 'u
+\fBtailf:cli\-show\-template\-enter\fR
+.HP \w'\fBtailf:cli\-show\-template\-footer\fR\ 'u
+\fBtailf:cli\-show\-template\-footer\fR
+.HP \w'\fBtailf:cli\-show\-template\-legend\fR\ 'u
+\fBtailf:cli\-show\-template\-legend\fR
+.HP \w'\fBtailf:cli\-show\-with\-default\fR\ 'u
+\fBtailf:cli\-show\-with\-default\fR
+.HP \w'\fBtailf:cli\-strict\-leafref\fR\ 'u
+\fBtailf:cli\-strict\-leafref\fR
+.HP \w'\fBtailf:cli\-suppress\-key\-abbreviation\fR\ 'u
+\fBtailf:cli\-suppress\-key\-abbreviation\fR
+.HP \w'\fBtailf:cli\-suppress\-key\-sort\fR\ 'u
+\fBtailf:cli\-suppress\-key\-sort\fR
+.HP \w'\fBtailf:cli\-suppress\-list\-no\fR\ 'u
+\fBtailf:cli\-suppress\-list\-no\fR
+.HP \w'\fBtailf:cli\-suppress\-mode\fR\ 'u
+\fBtailf:cli\-suppress\-mode\fR
+.HP \w'\fBtailf:cli\-suppress\-no\fR\ 'u
+\fBtailf:cli\-suppress\-no\fR
+.HP \w'\fBtailf:cli\-suppress\-quotes\fR\ 'u
+\fBtailf:cli\-suppress\-quotes\fR
+.HP \w'\fBtailf:cli\-suppress\-range\fR\ 'u
+\fBtailf:cli\-suppress\-range\fR
+.HP \w'\fBtailf:cli\-suppress\-shortenabled\fR\ 'u
+\fBtailf:cli\-suppress\-shortenabled\fR
+.HP \w'\fBtailf:cli\-suppress\-show\-conf\-path\fR\ 'u
+\fBtailf:cli\-suppress\-show\-conf\-path\fR
+.HP \w'\fBtailf:cli\-suppress\-show\-match\fR\ 'u
+\fBtailf:cli\-suppress\-show\-match\fR
+.HP \w'\fBtailf:cli\-suppress\-show\-path\fR\ 'u
+\fBtailf:cli\-suppress\-show\-path\fR
+.HP \w'\fBtailf:cli\-suppress\-silent\-no\fR\ 'u
+\fBtailf:cli\-suppress\-silent\-no\fR
+.HP \w'\fBtailf:cli\-suppress\-table\fR\ 'u
+\fBtailf:cli\-suppress\-table\fR
+.HP \w'\fBtailf:cli\-suppress\-validation\-warning\-prompt\fR\ 'u
+\fBtailf:cli\-suppress\-validation\-warning\-prompt\fR
+.HP \w'\fBtailf:cli\-suppress\-warning\fR\ 'u
+\fBtailf:cli\-suppress\-warning\fR
+.HP \w'\fBtailf:cli\-suppress\-wildcard\fR\ 'u
+\fBtailf:cli\-suppress\-wildcard\fR
+.HP \w'\fBtailf:cli\-table\-footer\fR\ 'u
+\fBtailf:cli\-table\-footer\fR
+.HP \w'\fBtailf:cli\-table\-legend\fR\ 'u
+\fBtailf:cli\-table\-legend\fR
+.HP \w'\fBtailf:cli\-trim\-default\fR\ 'u
+\fBtailf:cli\-trim\-default\fR
+.HP \w'\fBtailf:cli\-value\-display\-template\fR\ 'u
+\fBtailf:cli\-value\-display\-template\fR
+.SH "DESCRIPTION"
+.PP
+This manpage describes all the Tail\-f CLI extension statements\&.
+.PP
+The YANG source file
+$CONFD_DIR/src/confd/yang/tailf\-cli\-extensions\&.yang
+gives the exact YANG syntax for all Tail\-f YANG CLI extension statements \- using the YANG language itself\&.
+.PP
+Most of the concepts implemented by the extensions listed below are described in the User Guide\&.
+.SH "YANG STATEMENTS"
+.SS "tailf:cli\-add\-mode"
+.PP
+Creates a mode of the container\&.
+.PP
+Can be used in config nodes only\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-add\-mode\fR
+statement can be used in:
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-allow\-join\-with\-key"
+.PP
+Indicates that the list name may be written together with the first key, without requiring a whitespace in between, ie allowing both interface ethernet1/1 and interface ethernet 1/1
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-allow\-join\-with\-key\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-display\-joined\fR
+Specifies that the joined version should be used when displaying the configuration in C\- and I\- mode\&.
+.SS "tailf:cli\-allow\-join\-with\-value"
+.PP
+Indicates that the leaf name may be written together with the value, without requiring a whitespace in between, ie allowing both interface ethernet1/1 and interface ethernet 1/1
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-allow\-join\-with\-value\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-display\-joined\fR
+Specifies that the joined version should be used when displaying the configuration in C\- and I\- mode\&.
+.SS "tailf:cli\-allow\-key\-abbreviation"
+.PP
+Key values can be abbreviated\&.
+.PP
+In the J\-style CLI this is relevant when using the commands \*(Aqdelete\*(Aq and \*(Aqedit\*(Aq\&.
+.PP
+In the I\- and C\-style CLIs this is relevant when using the commands \*(Aqno\*(Aq, \*(Aqshow configuration\*(Aq and for commands to enter submodes\&.
+.PP
+See also /confdConfig/cli/allowAbbrevKeys in confd\&.conf(5)\&.
+.PP
+The
+\fIcli\-allow\-key\-abbreviation\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-allow\-range"
+.PP
+Means that the non\-integer key should allow range expressions\&.
+.PP
+Can be used in key leafs only\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-allow\-range\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-allow\-wildcard"
+.PP
+Means that the list allows wildcard expressions in the \*(Aqshow\*(Aq pattern\&.
+.PP
+See also /confdConfig/cli/allowWildcard in confd\&.conf(5)\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-allow\-wildcard\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-autowizard"
+.PP
+Specifies that the autowizard should include this leaf even if the leaf is optional\&.
+.PP
+One use case is when implementing pre\-configuration of devices\&. A config false node can be defined for showing if the configuration is active or not (preconfigured)\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-autowizard\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-boolean\-no"
+.PP
+Specifies that a leaf of type boolean should be displayed as \*(Aq<leafname>\*(Aq if set to true, and \*(Aqno <leafname>\*(Aq if set to false\&.
+.PP
+Cannot be used in conjunction with tailf:cli\-hide\-in\-submode or tailf:cli\-compact\-syntax\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-boolean\-no\fR
+statement can be used in:
+\fItypedef\fR,
+\fIleaf\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-reversed\fR
+Specified that true should be displayed as \*(Aqno <name>\*(Aq and false as \*(Aqname\*(Aq\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-break\-sequence\-commands"
+.PP
+Specifies that previous cli\-sequence\-command declaration should stop at this point\&. Only applicable when a cli\-sequence\-command declaration has been used in the parent container\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-break\-sequence\-commands\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-case\-insensitive"
+.PP
+Specifies that node is case\-insensitive\&. If applied to a container or a list, any nodes below will also be case\-insensitive\&.
+.PP
+Node names are discovered without care of the case\&. Also affect matching of key values in lists\&. However it doesn\*(Aqt affect the storing of a leaf value\&. E\&.g\&. a modification of a leaf value from upper case to lower case is still considered a modification of data\&.
+.PP
+Note that this will override any case\-insensitivity settings configured in confd\&.conf
+.PP
+The
+\fIcli\-case\-insensitive\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR, and
+\fIleaf\fR\&.
+.SS "tailf:cli\-case\-sensitive"
+.PP
+Specifies that this node is case\-sensitive\&. If applied to a container or a list, any nodes below will also be case\-sensitive\&.
+.PP
+This negates the cli\-case\-insensitive extension (see below)\&.
+.PP
+Note that this will override any case\-sensitivity settings configured in confd\&.conf
+.PP
+The
+\fIcli\-case\-sensitive\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR, and
+\fIleaf\fR\&.
+.SS "tailf:cli\-column\-align \fIvalue\fR"
+.PP
+Specifies the alignment of the data in the column in the auto\-rendered tables\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-column\-align\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-column\-stats"
+.PP
+Display leafs in the container as columns, i\&.e\&., do not repeat the name of the container on each line, but instead indent each leaf under the container\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-column\-stats\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.SS "tailf:cli\-column\-width \fIvalue\fR"
+.PP
+Set a fixed width for the column in the auto\-rendered tables\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-column\-width\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-compact\-stats"
+.PP
+Instructs the CLI engine to use the compact representation for this node\&. The compact representation means that all leaf elements are shown on a single line\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-compact\-stats\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-wrap\fR
+If present, the line will be wrapped at screen width\&.
+.PP
+\fItailf:cli\-width\fR
+Specifies a fixed terminal width to use before wrapping line\&. It is only used when tailf:cli\-wrap is present\&. If a width is not specified the line is wrapped when the terminal width is reached\&.
+.PP
+\fItailf:cli\-delimiter\fR
+Specifies a string to print between the leaf name and its value when displaying leaf values\&.
+.PP
+\fItailf:cli\-prettify\fR
+If present, dashes (\-) and underscores (_) in leaf names are replaced with spaces\&.
+.PP
+\fItailf:cli\-spacer\fR
+Specifies a string to print between the nodes\&.
+.SS "tailf:cli\-compact\-syntax"
+.PP
+Instructs the CLI engine to use the compact representation for this node in the \*(Aqshow running\-configuration\*(Aq command\&. The compact representation means that all leaf elements are shown on a single line\&.
+.PP
+Cannot be used in conjunction with tailf:cli\-boolean\-no\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-compact\-syntax\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-completion\-actionpoint \fIvalue\fR"
+.PP
+Specifies that completion for the leaf values is done through a callback function\&.
+.PP
+The argument is the name of an actionpoint, which must be implemented by custom code\&. In the actionpoint, the completion() callback function will be invoked\&. See confd_lib_dp(3) for details\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-completion\-actionpoint\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-completion\-id\fR
+Specifies a string which is passed to the callback when invoked\&. This makes it possible to use the same callback at several locations and still keep track of which point it is invoked from\&.
+.SS "tailf:cli\-configure\-mode"
+.PP
+An action or rpc with this attribute will be available in configure mode, but not in operational mode\&.
+.PP
+The default is that the action or rpc is available in both configure and operational mode\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-configure\-mode\fR
+statement can be used in:
+\fItailf:action\fR
+and
+\fIrpc\fR\&.
+.SS "tailf:cli\-custom\-error \fItext\fR"
+.PP
+This statement specifies a custom error message to be displayed when the user enters an invalid value\&.
+.PP
+The
+\fIcli\-custom\-error\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-custom\-range"
+.PP
+Specifies that the key should support ranges\&. A type matching the range expression must be supplied\&.
+.PP
+Can be used in key leafs only\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-custom\-range\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-range\-type\fR
+This statement contains the name of a derived type, possibly with a prefix\&. If no prefix is given, the type must be defined in the local module\&. For example:
+.PP
+cli\-range\-type p:my\-range\-type;
+.PP
+All range expressions must match this type, and a valid key value must not match this type\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-custom\-range\-actionpoint \fIvalue\fR"
+.PP
+Specifies that the list supports range expressions and that a custom function will be invoked to determine if an instance belong in the range or not\&. At least one key element needs a cli\-custom\-range statement\&.
+.PP
+The argument is the name of an actionpoint, which must be implemented by custom code\&. In the actionpoint, the completion() callback function will be invoked\&. See confd_lib_dp(3) for details\&.
+.PP
+When a range expression value which matches the type is given in the CLI, the CLI engine will invoke the callback with each existing list entry instance\&. If the callback returns CONFD_OK, it matches the range expression, and if it returns CONFD_ERR, it doesn\*(Aqt match\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-custom\-range\-actionpoint\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-completion\-id\fR
+Specifies a string which is passed to the callback when invoked\&. This makes it possible to use the same callback at several locations and still keep track of which point it is invoked from\&.
+.PP
+\fItailf:cli\-allow\-caching\fR
+Allow caching of the evaluation results between different parent paths\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-custom\-range\-enumerator \fIvalue\fR"
+.PP
+Specifies a callback to invoke to get an array of instances matching a regular expression\&. This is used when instances should be allowed to be created using a range expression in set\&.
+.PP
+The callback is not used for delete or show operations\&.
+.PP
+The callback is allowed to return a superset of all matching instances since the instances will be filtered using the range expression afterwards\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-custom\-range\-enumerator\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-completion\-id\fR
+Specifies a string which is passed to the callback when invoked\&. This makes it possible to use the same callback at several locations and still keep track of which point it is invoked from\&.
+.PP
+\fItailf:cli\-allow\-caching\fR
+Allow caching of the evaluation results between different parent paths\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-delayed\-auto\-commit"
+.PP
+Enables transactions while in a specific submode (or submode of that mode)\&. The modifications performed in that mode will not take effect until the user exits that submode\&.
+.PP
+Can be used in config nodes only\&. If used in a container, the container must also have a tailf:cli\-add\-mode statement, and if used in a list, the list must not also have a tailf:cli\-suppress\-mode statement\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-delayed\-auto\-commit\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-delete\-container\-on\-delete"
+.PP
+Specifies that the parent container should be deleted when \&. this leaf is deleted\&.
+.PP
+The
+\fIcli\-delete\-container\-on\-delete\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-delete\-when\-empty"
+.PP
+Instructs the CLI engine to delete the list when the last list instance is deleted\*(Aq\&. Requires that cli\-suppress\-mode is set\&.
+.PP
+The behavior is recursive\&. If all optional leafs in a list instance are deleted the list instance itself is deleted\&. If that list instance happens to be the last list instance in a list it is also deleted\&. And so on\&. Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-delete\-when\-empty\fR
+statement can be used in:
+\fIlist\fR
+and
+\fIcontainer\fR\&.
+.SS "tailf:cli\-diff\-after \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any changes made to this node after any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when any changes (created, modified or deleted) has been made to this node while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-after\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-before \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any changes made to this node before any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when any changes (created, modified or deleted) has been made to this node while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-before\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-create\-after \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any create operations made on this node after any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been created while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-create\-after\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-create\-before \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any create operations made on this node before any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been created while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-create\-before\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-delete\-after \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any delete operations made on this node after any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been deleted while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-delete\-after\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-delete\-before \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any delete operations made on this node before any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been deleted while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-delete\-before\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-dependency \fIpath\fR"
+.PP
+Tells the \*(Aqshow configuration\*(Aq command, and the diff generator that this node depends on another node\&. When removing the node with this declaration, it should be removed before the node it depends on is removed, ie the declaration controlls the ordering of the commands in the \*(Aqshow configuration\*(Aq output\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-dependency\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-trigger\-on\-set\fR
+Specify that the dependency should trigger on set/modify of the target path, but deletion of the target will trigger the current node to be placed in front of the target\&.
+.PP
+The annotation can be used to get the diff behavior where one leaf is first deleted before the other leaf is set\&. For example, having the data model below:
+.PP
+container X { leaf A { tailf:cli\-diff\-dependency "\&.\&./B" { tailf:cli\-trigger\-on\-set; } type empty; } leaf B { tailf:cli\-diff\-dependency "\&.\&./A" { tailf:cli\-trigger\-on\-set; } type empty; } }
+.PP
+produces the following diffs when setting one leaf and deleting the other
+.PP
+no X A X B
+.PP
+and
+.PP
+no X B X A
+.PP
+this can also be done with list instances, for example
+.PP
+list a { key id;
+.PP
+leaf id { tailf:cli\-diff\-dependency "/c[id=current()/\&.\&./id]" { tailf:cli\-trigger\-on\-set; } type string; } }
+.PP
+list c { key id; leaf id { tailf:cli\-diff\-dependency "/a[id=current()/\&.\&./id]" { tailf:cli\-trigger\-on\-set; } type string; } }
+.PP
+we get
+.PP
+no a foo c foo !
+.PP
+and
+.PP
+no c foo a foo !
+.PP
+In the above case if we have the same id in list "a" and "c" and we delete the instance in one list, and add it in the other, then the deletion will always preceed the create\&.
+.PP
+\fItailf:cli\-trigger\-on\-delete\fR
+This annotation can be used togeter with tailf:cli\-trigger\-on\-set to also get the behavior that when deleting the target display changes to this node first\&. For exmaple:
+.PP
+container settings { tailf:cli\-add\-mode;
+.PP
+leaf opmode { tailf:cli\-no\-value\-on\-delete;
+.PP
+type enumeration { enum nat; enum transparent; } }
+.PP
+leaf manageip { when "\&.\&./opmode = \*(Aqtransparent\*(Aq"; mandatory true; tailf:cli\-no\-value\-on\-delete; tailf:cli\-diff\-dependency \*(Aq\&.\&./opmode\*(Aq { tailf:cli\-trigger\-on\-set; tailf:cli\-trigger\-on\-delete; }
+.PP
+type string; } }
+.PP
+What we are trying to achieve here is that if manageip is deleted, it should be displayed before opmode, but if we configure both opmode and manageip, we should display opmode first, ie get the diffs:
+.PP
+settings opmode transparent manageip 1\&.1\&.1\&.1 !
+.PP
+and
+.PP
+settings no manageip opmode nat !
+.PP
+and
+.PP
+settings no manageip no opmode !
+.PP
+The cli\-trigger\-on\-set annotation will cause the \*(Aqno manageip\*(Aq command to be displayed before setting opmode\&. The tailf:cli\-trigger\-on\-delete will cause \*(Aqno manageip\*(Aq to be placed before \*(Aqno opmode\*(Aq when both are deleted\&.
+.PP
+In the first diff where both are created, opmode will come first due to the diff\-dependency setting, regardless of the cli\-trigger\-on\-delete and cli\-trigger\-on\-set\&.
+.PP
+\fItailf:cli\-trigger\-on\-all\fR
+Specify that the dependency should always trigger\&. It is the same as placing one element before another in the data model\&. For example, given the data model:
+.PP
+container X { leaf A { tailf:cli\-diff\-dependency \*(Aq\&.\&./B\*(Aq { tailf:cli\-trigger\-on\-all; } type empty; } leaf B { type empty; } }
+.PP
+We get the diffs
+.PP
+X B X A
+.PP
+and
+.PP
+no X B no X A
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-modify\-after \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any modify operations made on this node after any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been modified (not created or deleted) while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-modify\-after\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-modify\-before \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any modify operations made on this node before any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been modified (not created or deleted) while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-modify\-before\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-set\-after \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any set operations (created or modified) made on this node after any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been set (created or modified) while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-set\-after\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-diff\-set\-before \fIpath\fR"
+.PP
+When displaying C\-style configuration diffs, display any set operations (created or modified) made on this node before any changes made to the target node(s)\&.
+.PP
+Thus, the dependency will trigger when this node has been set (created or modified) while any changes (created, modified or deleted) has been made to the target node(s)\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-diff\-set\-before\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:xpath\-root\fR
+.PP
+\fItailf:cli\-when\-target\-set\fR
+Specify that the dependency should trigger when the target node(s) has been set (created or modified)\&. Note; using this sub\-statement is equivalent with using both tailf:cli\-when\-target\-create and tailf:cli\-when\-target\-modify
+.PP
+\fItailf:cli\-when\-target\-create\fR
+Specify that the dependency should trigger when the target node(s) has been created
+.PP
+\fItailf:cli\-when\-target\-modify\fR
+Specify that the dependency should trigger when the target node(s) has been modified (not created or deleted)
+.PP
+\fItailf:cli\-when\-target\-delete\fR
+Specify that the dependency should trigger when the target node(s) has been deleted
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-disabled\-info \fIvalue\fR"
+.PP
+Specifies an info string that will be used as a descriptive text for the value \*(Aqdisable\*(Aq (false) of boolean\-typed leafs when the confd\&.conf(5) setting /confdConfig/cli/useShortEnabled is set to \*(Aqtrue\*(Aq\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-disabled\-info\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-disallow\-value \fIvalue\fR"
+.PP
+Specifies that a pattern for invalid values\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-disallow\-value\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.SS "tailf:cli\-display\-empty\-config"
+.PP
+Specifies that the node will be included when doing a \*(Aqshow stats\*(Aq, even if it is a non\-config node, provided that the list contains at least one non\-config node\&.
+.PP
+Used in J\-style CLI\&.
+.PP
+The
+\fIcli\-display\-empty\-config\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-display\-separated"
+.PP
+Tells CLI engine to display this container as a separate line item even when it has children\&. Only applies to presence containers\&.
+.PP
+Applicable for optional containers in the C\- and I\- style CLIs\&.
+.PP
+The
+\fIcli\-display\-separated\fR
+statement can be used in:
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-drop\-node\-name"
+.PP
+Specifies that the name of a node is not present in the CLI\&.
+.PP
+If tailf:cli\-drop\-node\-name is given on a child to a list node, we recommend that you also use tailf:cli\-suppress\-mode on that list node, otherwise the CLI will be very confusing\&.
+.PP
+For example, consider this data model, from the tailf\-aaa module:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+list alias {
+ key name;
+ leaf name {
+   type string;
+ }
+ leaf expansion {
+   type string;
+   mandatory true;
+   tailf:cli\-drop\-node\-name;
+ }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If you type \*(Aqalias foo\*(Aq in the CLI, you would end up in the \*(Aqalias\*(Aq submode\&. But since the expansion is dropped, you would end up specifying the expansion value without typing any command\&.
+.PP
+If, on the other hand, the \*(Aqalias\*(Aq list had a tailf:cli\-suppress\-mode statement, you would set an expansion \*(Aqbar\*(Aq by typing \*(Aqalias foo bar\*(Aq\&.
+.PP
+tailf:cli\-drop\-node\-name cannot be used inside tailf:action\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-drop\-node\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-embed\-no\-on\-delete"
+.PP
+Embed no in front of the element name insead of at the beginning of the line\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-embed\-no\-on\-delete\fR
+statement can be used in:
+\fIleaf\fR,
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-enforce\-table"
+.PP
+Forces the generation of a table for a list element node regardless of whether the table will be too wide or not\&. This applies to the tables generated by the auto\-rendred show commands for non\-config data\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-enforce\-table\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-exit\-command \fIvalue\fR"
+.PP
+Tells the CLI to add an explicit exit\-from\-submode command\&. The tailf:info substatement can be used for adding a custom info text for the command\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-exit\-command\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:info\fR
+.SS "tailf:cli\-explicit\-exit"
+.PP
+Tells the CLI to add an explicit exit command when displaying the configuration\&. It will not be added if cli\-exit\-command is defined as well\&. The annotation is inherited by all sub\-modes\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-explicit\-exit\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.SS "tailf:cli\-expose\-key\-name"
+.PP
+Force the user to enter the name of the key and display the key name when displaying the running\-configuration\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-expose\-key\-name\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-expose\-ns\-prefix"
+.PP
+When used force the CLI to display namespace prefix of all children\&.
+.PP
+The
+\fIcli\-expose\-ns\-prefix\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-flat\-list\-syntax"
+.PP
+Specifies that elements in a leaf\-list should be entered without surrounding brackets\&. Also, multiple elements can be added to a list or deleted from a list\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-flat\-list\-syntax\fR
+statement can be used in:
+\fIleaf\-list\fR
+and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-replace\-all\fR
+.SS "tailf:cli\-flatten\-container"
+.PP
+Allows the CLI to exit the container and continue to input from the parent container when all leaves in the current container has been set\&.
+.PP
+Can be used in config nodes only\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-flatten\-container\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-full\-command"
+.PP
+Specifies that an auto\-rendered command should be considered complete, ie, no additional leaves or containers can be entered on the same command line\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-full\-command\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-full\-no"
+.PP
+Specifies that an auto\-rendered \*(Aqno\*(Aq\-command should be considered complete, ie, no additional leaves or containers can be entered on the same command line\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-full\-no\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-full\-show\-path"
+.PP
+Specifies that a path to the show command is considered complete, i\&.e\&., no more elements can be added to the path\&. It can also be used to specify a maximum number of keys to be given for lists\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-full\-show\-path\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-max\-keys\fR
+Specifies the maximum number of allowed keys for the show command\&.
+.SS "tailf:cli\-hide\-in\-submode"
+.PP
+Hide leaf when submode has been entered\&. Mostly useful when leaf has to be entered in order to enter a submode\&. Also works for flattened containers\&.
+.PP
+Cannot be used in conjunction with tailf:cli\-boolean\-no\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-hide\-in\-submode\fR
+statement can be used in:
+\fIleaf\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-ignore\-modified"
+.PP
+Tells the cdb_cli_diff_iterate system call to not generate a CLI string when this container is modified\&. The string will instead be generated for the modified sub\-element\&.
+.PP
+Applies to C\-style and I\-style
+.PP
+The
+\fIcli\-ignore\-modified\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-incomplete\-command"
+.PP
+Specifies that an auto\-rendered command should be considered incomplete\&. Can be used to prevent <cr> from appearing in the completion list for optional internal nodes, for example, or to ensure that the user enters all leaf values in a container (if used in combination with cli\-sequence\-commands)\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-incomplete\-command\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-incomplete\-no"
+.PP
+Specifies that an auto\-rendered \*(Aqno\*(Aq\-command should not be considered complete, ie, additional leaves or containers must be entered on the same command line\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-incomplete\-no\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-incomplete\-show\-path"
+.PP
+Specifies that a path to the show command is considered incomplete, i\&.e\&., it needs more elements added to the path\&. It can also be used to specify a minimum number of keys to be given for lists\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-incomplete\-show\-path\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-min\-keys\fR
+Specifies the minimum number of required keys for the show command\&.
+.SS "tailf:cli\-instance\-info\-leafs \fIvalue\fR"
+.PP
+This statement is used to specifiy how list entries are displayed when doing completion in the CLI\&. By default, a list entry is displayed by listing its key values, and the value of a leaf called \*(Aqdescription\*(Aq, if such a leaf exists in the list entry\&.
+.PP
+The \*(Aqcli\-instance\-info\-leafs\*(Aq statement takes as its argument a space separated string of leaf names\&. When a list entry is displayed, the values of these leafs are concatenated with a space character as separator and shown to the user\&.
+.PP
+For example, when asked to specify an interface the CLI will display a list of possible interface instances, say 1 2 3 4\&. If the cli\-instance\-info\-leafs property is set to \*(Aqdescription\*(Aq then the CLI might show:
+.PP
+Possible completions: 1 \- internet 2 \- lab 3 \- dmz 4 \- wlan
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-instance\-info\-leafs\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-key\-format \fIvalue\fR"
+.PP
+The format string is used when parsing a key value and when generating a key value for an existing configuration\&. The key items are numbered from 1\-N and the format string should indicate how they are related by using $(X) (where X is the key number)\&. For example:
+.PP
+tailf:cli\-key\-format \*(Aq$(1)\-$(2)\*(Aq means that the first key item is concatenated with the second key item by a \*(Aq\-\*(Aq\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-key\-format\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-list\-syntax"
+.PP
+Specifies that each entry in a leaf\-list should be displayed as a separate element\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-list\-syntax\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-multi\-word\fR
+Specifies that a multi\-word value may be entered without quotes\&.
+.SS "tailf:cli\-min\-column\-width \fIvalue\fR"
+.PP
+Set a minimum width for the column in the auto\-rendered tables\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-min\-column\-width\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-mode\-name \fIvalue\fR"
+.PP
+Specifies a custom mode name, instead of the default which is the name of the list or container node\&.
+.PP
+Can be used in config nodes only\&. If used in a container, the container must also have a tailf:cli\-add\-mode statement, and if used in a list, the list must not also have a tailf:cli\-suppress\-mode statement\&.
+.PP
+Variables for the list keys in the current mode are available\&. For examples, \*(Aqconfig\-foo\-xx$(name)\*(Aq (privided the key leaf is called \*(Aqname\*(Aq)\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-mode\-name\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-mode\-name\-actionpoint \fIvalue\fR"
+.PP
+Specifies that a custom function will be invoked to find out the mode name, instead of using the default with is the name of the list or container node\&.
+.PP
+The argument is the name of an actionpoint, which must be implemented by custom code\&. In the actionpoint, the command() callback function will be invoked, and it must return a string with the mode name\&. See confd_lib_dp(3) for details\&.
+.PP
+Can be used in config nodes only\&. If used in a container, the container must also have a tailf:cli\-add\-mode statement, and if used in a list, the list must not also have a tailf:cli\-suppress\-mode statement\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-mode\-name\-actionpoint\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-mount\-point \fIvalue\fR"
+.PP
+By default actions are mounted under the \*(Aqrequest\*(Aq command in the J\-style CLI and at the top\-level in the I\- and C\-style CLIs\&. This annotation allowes the action to be mounted under other top level commands
+.PP
+The
+\fIcli\-mount\-point\fR
+statement can be used in:
+\fItailf:action\fR
+and
+\fIrpc\fR\&.
+.SS "tailf:cli\-multi\-line\-prompt"
+.PP
+Tells the CLI to automatically enter multi\-line mode when prompting the user for a value to this leaf\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-multi\-line\-prompt\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-multi\-value"
+.PP
+Specifies that all remaining tokens on the command line should be considered a value for this leaf\&. This prevents the need for quoting values containing spaces, but also prevents multiple leaves from being set on the same command line once a multi\-value leaf has been given on a line\&.
+.PP
+If the tailf:cli\-max\-words substatements is used then additional leaves may be entered\&.
+.PP
+Note: This extension isn\*(Aqt applicable in actions
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-multi\-value\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-max\-words\fR
+Specifies the maximum number of allowed words for the key or value\&.
+.SS "tailf:cli\-multi\-word\-key"
+.PP
+Specifies that the key should allow multiple tokens for the value\&. Proper type restrictions needs to be used to limit the range of the leaf value\&.
+.PP
+Can be used in key leafs only\&.
+.PP
+Note: This extension isn\*(Aqt applicable in actions
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-multi\-word\-key\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-max\-words\fR
+Specifies the maximum number of allowed words for the key or value\&.
+.SS "tailf:cli\-no\-key\-completion"
+.PP
+Specifies that the CLI engine should not perform completion for key leafs in the list\&. This is to avoid querying the data provider for all existing keys\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-no\-key\-completion\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-no\-keyword"
+.PP
+Specifies that the name of a node is not present in the CLI\&.
+.PP
+Note that is must be used with some care, just like tailf:cli\-drop\-node\-name\&. The resulting data model must still be possible to parse deterministically\&. For example, consider the data model
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+container interfaces {
+   list traffic {
+       tailf:cli\-no\-keyword;
+       key id;
+       leaf id { type string; }
+       leaf mtu { type uint16; }
+   }
+   list management {
+       tailf:cli\-no\-keyword;
+       key id;
+       leaf id { type string; }
+       leaf mtu { type uint16; }
+   }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+In this case it is impossible to determine if the config
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+interfaces {
+   eth0 {
+      mtu 1400;
+    }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Means that there should be an traffic interface instance named \*(Aqeth0\*(Aq or a management interface instance maned \*(Aqeth0\*(Aq\&. If, on the other hand, a restriction on the type was used, for example
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+container interfaces {
+   list traffic {
+       tailf:cli\-no\-keyword;
+       key id;
+       leaf id { type string; pattern \*(Aqeth\&.*\*(Aq; }
+       leaf mtu { type uint16; }
+   }
+   list management {
+       tailf:cli\-no\-keyword;
+       key id;
+       leaf id { type string; pattern \*(Aqlo\&.*\*(Aq;}
+       leaf mtu { type uint16; }
+   }
+}
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+then the problem would disappear\&.
+.PP
+Used in the J\-style CLIs\&.
+.PP
+The
+\fIcli\-no\-keyword\fR
+statement can be used in:
+\fIleaf\fR,
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-no\-match\-completion"
+.PP
+Specifies that the CLI engine should not provide match completion for the key leafs in the list\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-no\-match\-completion\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-no\-name\-on\-delete"
+.PP
+When displaying the deleted version of this element do not include the name\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-no\-name\-on\-delete\fR
+statement can be used in:
+\fIleaf\fR,
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-no\-value\-on\-delete"
+.PP
+When displaying the deleted version of this leaf do not include the old value\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-no\-value\-on\-delete\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-only\-in\-autowizard"
+.PP
+Force leaf values to be entered in the autowizard\&. This is intended to prevent users from entering passwords and other sensitive information in plain text\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-only\-in\-autowizard\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:cli\-oper\-info \fItext\fR"
+.PP
+This statement works exactly as tailf:info, with the exception that it is used when displaying the element info in the context of stats\&.
+.PP
+Both tailf:info and tailf:cli\-oper\-info can be present at the same time\&.
+.PP
+The
+\fIcli\-oper\-info\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrpc\fR,
+\fIidentity\fR,
+\fItailf:action\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-operational\-mode"
+.PP
+An action or rpc with this attribute will be available in operational mode, but not in configure mode\&.
+.PP
+The default is that the action or rpc is available in both configure and operational mode\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-operational\-mode\fR
+statement can be used in:
+\fItailf:action\fR
+and
+\fIrpc\fR\&.
+.SS "tailf:cli\-optional\-in\-sequence"
+.PP
+Specifies that this element is optional in the sequence\&. If it is set it must be set in the right sequence but may be skipped\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-optional\-in\-sequence\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-prefix\-key"
+.PP
+This leaf has to be given as a prefix before entering the actual list keys\&. Very backwards but a construct that exists in some Cisco CLIs\&.
+.PP
+The construct can be used also for leaf\-lists but only when then tailf:cli\-range\-list\-syntax is also used\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-prefix\-key\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR,
+\fIrefine\fR, and
+\fIleaf\-list\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-before\-key\fR
+Specifies before which key the prefix element should be inserted\&. The first key has number 1\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-preformatted"
+.PP
+Suppresses quoting of non\-config elements when displaying them\&. Newlines will be preserved in strings etc\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-preformatted\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-range\-delimiters \fIvalue\fR"
+.PP
+Allows for custom delimiters to be defined for range expressions\&. By default only / is considered a delimiter, ie when processing a key like 1/2/3 then each of 1, 2 and 3 will be matched separately agains range expressions, ie given the expression 1\-3/5\-6/7,8 1 will be matched with 1\-3, 2 with 5\-6, and 3 with 7,8\&. If, for example, the delimiters value is set to \*(Aq/\&.\*(Aq then both \*(Aq/\*(Aq and \*(Aq\&.\*(Aq will be considered delimiters and an key such as 1/2/3\&.4 will consist of the enteties 1,2,3,4, all matched separately\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-range\-delimiters\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-range\-list\-syntax"
+.PP
+Specifies that elements in a leaf\-list or a list should be entered without surrounding brackets and presented as ranges\&. The element in the list should be separated by a comma\&. For example:
+.PP
+vlan 1,3,10\-20,30,32,300\-310
+.PP
+When this statement is used for lists, the list must have a single key\&. The elements are be presented as ranges as above\&.
+.PP
+The type of the list key, or the leaf\-list, must be integer based\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-range\-list\-syntax\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fIlist\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-recursive\-delete"
+.PP
+When generating configuration diffs delete all contents of a container or list before deleting the node\&.
+.PP
+Applies to C\-style
+.PP
+The
+\fIcli\-recursive\-delete\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-remove\-before\-change"
+.PP
+Instructs the CLI engine to generate a no\-commnd before modifying an existing instance\&. It only applies when generating diffs, eg \*(Aqshow configuration\*(Aq in C\-style\&.
+.PP
+The
+\fIcli\-remove\-before\-change\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-replace\-all"
+.PP
+Specifies that the new leaf\-list value(s) should replace the old, as opposed to be added to the old leaf\-list\&.
+.PP
+The
+\fIcli\-replace\-all\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fItailf:cli\-flat\-list\-syntax\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-reset\-container"
+.PP
+Specifies that all sibling leaves in the container should be reset when this element is set\&.
+.PP
+When used on a container its content is cleared when set\&.
+.PP
+The
+\fIcli\-reset\-container\fR
+statement can be used in:
+\fIleaf\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-run\-template \fIvalue\fR"
+.PP
+Specifies a template string to be used by the \*(Aqshow running\-config\*(Aq command in operational mode\&. It is primarily intended for displaying config data but non\-config data may be included in the template as well\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-run\-template\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-run\-template\-enter \fIvalue\fR"
+.PP
+Specifies a template string to be printed before each list entry is printed\&.
+.PP
+When used on a container it only has effect when the container also has a tailf:cli\-add\-mode, and when tailf:cli\-show\-no isn\*(Aqt used on the container\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+The variable \&.reenter is set to \*(Aqtrue\*(Aq when the \*(Aqshow configuration\*(Aq command is executed and the list or container isn\*(Aqt created\&. This allow, for example, to display
+.PP
+create foo
+.PP
+when an instance is created
+.PP
+edit foo
+.PP
+when something inside the instance is modified\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-run\-template\-enter\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-run\-template\-footer \fIvalue\fR"
+.PP
+Specifies a template string to be printed after all list entries are printed\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-run\-template\-footer\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-run\-template\-legend \fIvalue\fR"
+.PP
+Specifies a template string to be printed before all list entries are printed\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-run\-template\-legend\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-sequence\-commands"
+.PP
+Specifies that an auto\-rendered command should only accept arguments in the same order as they are specified in the YANG model\&. This, in combination with tailf:cli\-drop\-node\-name, can be used to create CLI commands for setting multiple leafs in a container without having to specify the leaf names\&.
+.PP
+In almost all cases this annotation should be accompanied by the tailf:cli\-compact\-syntax annotation\&. Otherwise the output from \*(Aqshow running\-config\*(Aq will not be correct, and the sequence \*(Aqsave xx\*(Aq \*(Aqload override xx\*(Aq will not work\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-sequence\-commands\fR
+statement can be used in:
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-reset\-siblings\fR
+Specifies that all sibling leaves in the sequence should be reset whenever the first leaf in the sequence is set\&.
+.PP
+\fItailf:cli\-reset\-all\-siblings\fR
+Specifies that all sibling leaves in the container should be reset whenever the first leaf in the sequence is set\&.
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-show\-config"
+.PP
+Specifies that the node will be included when doing a \*(Aqshow running\-configuration\*(Aq, even if it is a non\-config node\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-config\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.SS "tailf:cli\-show\-long\-obu\-diffs"
+.PP
+Instructs the CLI engine to not generate \*(Aqinsert\*(Aq comments when displaying configuration changes of ordered\-by user lists, but instead explicitly remove old instances with \*(Aqno\*(Aq and then add the instances following a newly inserted instance\&. Should not be used together with tailf:cli\-show\-obu\-comments
+.PP
+The
+\fIcli\-show\-long\-obu\-diffs\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.PP
+\fItailf:cli\-reset\-full\fR
+Indicates that the list should be fully printed out on change\&.
+.SS "tailf:cli\-show\-no"
+.PP
+Specifies that an optional leaf node or presence container should be displayed as \*(Aqno <name>\*(Aq when it does not exist\&. For example, if a leaf \*(Aqshutdown\*(Aq has this property and does not exist, \*(Aqno shutdown\*(Aq is displayed\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-no\fR
+statement can be used in:
+\fIleaf\fR,
+\fIlist\fR,
+\fIleaf\-list\fR,
+\fIrefine\fR,
+\fItailf:symlink\fR, and
+\fIcontainer\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-show\-obu\-comments"
+.PP
+Enforces the CLI engine to generate \*(Aqinsert\*(Aq comments when displaying configuration changes of ordered\-by user lists\&. Should not be used together with tailf:cli\-show\-long\-obu\-diffs
+.PP
+The
+\fIcli\-show\-obu\-comments\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-show\-order\-tag \fIvalue\fR"
+.PP
+Specifies a custom display order for nodes with the tailf:cli\-show\-order\-tag attribute\&. Nodes will be displayed in the order indicated by a cli\-show\-order\-taglist attribute in a parent node\&.
+.PP
+The scope of a tag reaches until a new taglist is encountered\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-order\-tag\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-show\-order\-taglist \fIvalue\fR"
+.PP
+Specifies a custom display order for nodes with the tailf:cli\-show\-order\-tag attribute\&. Nodes will be displayed in the order indicated in the list\&. Nodes without a tag will be displayed after all nodes with a tag have been displayed\&.
+.PP
+The scope of a taglist is until a new taglist is encountered\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-order\-taglist\fR
+statement can be used in:
+\fIcontainer\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-show\-template \fIvalue\fR"
+.PP
+Specifies a template string to be used by the \*(Aqshow\*(Aq command in operational mode\&. It is primarily intended for displaying non\-config data but config data may be included in the template as well\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Some restrictions includes not applying templates on a leaf that is the key in a list\&. It is recommended to use the template directly on the list to format the whole list instead\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-template\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-auto\-legend\fR
+Specifies that the legend should be automatically rendered if not already displayed\&. Useful when using templates for rendering tables\&.
+.SS "tailf:cli\-show\-template\-enter \fIvalue\fR"
+.PP
+Specifies a template string to be printed before each list entry is printed\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-template\-enter\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-show\-template\-footer \fIvalue\fR"
+.PP
+Specifies a template string to be printed after all list entries are printed\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-template\-footer\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-show\-template\-legend \fIvalue\fR"
+.PP
+Specifies a template string to be printed before all list entries are printed\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-template\-legend\fR
+statement can be used in:
+\fIlist\fR
+and
+\fIrefine\fR\&.
+.SS "tailf:cli\-show\-with\-default"
+.PP
+This leaf will be displayed even when it has its default value\&. Note that this will somewhat result in a slightly different behaviour when you save a config and then load it again\&. With this setting in place a leaf that has not been configured will be configured after the load\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-show\-with\-default\fR
+statement can be used in:
+\fIleaf\fR,
+\fIrefine\fR, and
+\fItailf:symlink\fR\&.
+.SS "tailf:cli\-strict\-leafref"
+.PP
+Specifies that the leaf should only be allowed to be assigned references to existing instances when the command is executed\&. Without this annotation the requirement is that the instance exists on commit time\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-strict\-leafref\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-key\-abbreviation"
+.PP
+Key values cannot be abbreviated\&. The user must always give complete values for keys\&.
+.PP
+In the J\-style CLI this is relevant when using the commands \*(Aqdelete\*(Aq and \*(Aqedit\*(Aq\&.
+.PP
+In the I\- and C\-style CLIs this is relevant when using the commands \*(Aqno\*(Aq, \*(Aqshow configuration\*(Aq and for commands to enter submodes\&.
+.PP
+See also /confdConfig/cli/allowAbbrevKeys in confd\&.conf(5)\&.
+.PP
+The
+\fIcli\-suppress\-key\-abbreviation\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-key\-sort"
+.PP
+Instructs the CLI engine to not sort the keys in alphabetical order when presenting them to the user during TAB completion\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-key\-sort\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-list\-no"
+.PP
+Specifies that the CLI should not accept deletion of the entire list or leaf\-list\&. Only specific instances should be deletable not the entire list in one command\&. ie, \*(Aqno foo <instance>\*(Aq should be allowed but not \*(Aqno foo\*(Aq\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-list\-no\fR
+statement can be used in:
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-mode"
+.PP
+Instructs the CLI engine to not make a mode of the list node\&.
+.PP
+Can be used in config nodes only\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-mode\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-suppress\-no"
+.PP
+Specifies that the CLI should not auto\-render \*(Aqno\*(Aq commands for this element\&. An element with this annotation will not appear in the completion list to the \*(Aqno\*(Aq command\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-no\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-quotes"
+.PP
+Specifies that configuration data for a leaf should never be wrapped with quotes\&. All internal data will be escaped to make sure it can be presented correctly\&.
+.PP
+Can\*(Aqt be used for keys\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-quotes\fR
+statement can be used in:
+\fIleaf\fR\&.
+.SS "tailf:cli\-suppress\-range"
+.PP
+Means that the integer key should not allow range expressions\&.
+.PP
+Can be used in key leafs only\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-range\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.PP
+The following substatements can be used:
+.PP
+\fItailf:cli\-suppress\-warning\fR
+.SS "tailf:cli\-suppress\-shortenabled"
+.PP
+Suppresses the confd\&.conf(5) setting /confdConfig/cli/useShortEnabled\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-shortenabled\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-show\-conf\-path"
+.PP
+Specifies that the show running\-config command cannot be invoked with the path, ie the path is suppressed when auto\-rendering show running\- config commands for config=\*(Aqtrue\*(Aq data\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-show\-conf\-path\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fIcontainer\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-show\-match"
+.PP
+Specifies that a specific completion match (i\&.e\&., a filter match that appear at list nodes as an alternative to specifying a single instance) to the show command should not be available\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-show\-match\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-show\-path"
+.PP
+Specifies that the show command cannot be invoked with the path, ie the path is suppressed when auto\-rendering show commands for config=\*(Aqfalse\*(Aq data\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-show\-path\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-silent\-no \fIvalue\fR"
+.PP
+Specifies that the confd\&.cnof directive cSilentNo should be suppressed for a leaf and that a custom error message should be displayed when the user attempts to delete a non\-existing element\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-silent\-no\fR
+statement can be used in:
+\fIleaf\fR,
+\fIleaf\-list\fR,
+\fIlist\fR,
+\fItailf:symlink\fR,
+\fIcontainer\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-table"
+.PP
+Instructs the CLI engine to not print the list as a table in the \*(Aqshow\*(Aq command\&.
+.PP
+Can be used in non\-config nodes only\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-table\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-validation\-warning\-prompt"
+.PP
+Instructs the CLI engine to not prompt the user whether to proceed or not if a warning is generated for this node\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-validation\-warning\-prompt\fR
+statement can be used in:
+\fIlist\fR,
+\fIleaf\fR,
+\fIcontainer\fR,
+\fIleaf\-list\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-suppress\-warning \fIvalue\fR"
+.PP
+Avoid involving specific CLI\-extension related YANG statements in warnings related to certain yanger error codes\&. For a list of yanger error codes do \*(Aqyanger \-e\*(Aq\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-warning\fR
+statement can be used in:
+\fItailf:cli\-run\-template\-enter\fR,
+\fItailf:cli\-sequence\-commands\fR,
+\fItailf:cli\-hide\-in\-submode\fR,
+\fItailf:cli\-boolean\-no\fR,
+\fItailf:cli\-compact\-syntax\fR,
+\fItailf:cli\-break\-sequence\-commands\fR,
+\fItailf:cli\-show\-long\-obu\-diffs\fR,
+\fItailf:cli\-show\-obu\-comments\fR,
+\fItailf:cli\-suppress\-range\fR,
+\fItailf:cli\-suppress\-mode\fR,
+\fItailf:cli\-custom\-range\fR,
+\fItailf:cli\-custom\-range\-actionpoint\fR,
+\fItailf:cli\-custom\-range\-enumerator\fR,
+\fItailf:cli\-drop\-node\-name\fR,
+\fItailf:cli\-add\-mode\fR,
+\fItailf:cli\-mode\-name\fR,
+\fItailf:cli\-incomplete\-command\fR,
+\fItailf:cli\-full\-command\fR,
+\fItailf:cli\-mode\-name\-actionpoint\fR,
+\fItailf:cli\-optional\-in\-sequence\fR,
+\fItailf:cli\-prefix\-key\fR,
+\fItailf:cli\-show\-no\fR,
+\fItailf:cli\-show\-order\-tag\fR,
+\fItailf:cli\-diff\-dependency\fR, and
+\fIcontainer\fR\&.
+.SS "tailf:cli\-suppress\-wildcard"
+.PP
+Means that the list does not allow wildcard expressions in the \*(Aqshow\*(Aq pattern\&.
+.PP
+See also /confdConfig/cli/allowWildcard in confd\&.conf(5)\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-suppress\-wildcard\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-table\-footer \fIvalue\fR"
+.PP
+Specifies a template string to be printed after all list entries are printed\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-table\-footer\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-table\-legend \fIvalue\fR"
+.PP
+Specifies a template string to be printed before all list entries are printed\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-table\-legend\fR
+statement can be used in:
+\fIlist\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-trim\-default"
+.PP
+Do not display value if it is same as default\&.
+.PP
+Used in I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-trim\-default\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SS "tailf:cli\-value\-display\-template \fIvalue\fR"
+.PP
+Specifies a template string to be used when formating the value of a leaf for display\&. Note that other leaves cannot be referenced from a display template of one leaf\&. The only value accessible is the leaf\*(Aqs own value, accessed through $(\&.)\&.
+.PP
+See the defintion of cli\-template\-string for more info\&.
+.PP
+Used in J\-, I\- and C\-style CLIs\&.
+.PP
+The
+\fIcli\-value\-display\-template\fR
+statement can be used in:
+\fIleaf\fR,
+\fItailf:symlink\fR, and
+\fIrefine\fR\&.
+.SH "YANG TYPES"
+.SS "cli\-template\-string"
+.PP
+A template is a text string which is expanded by the CLI engine, and then displayed to the user\&.
+.PP
+The template may contain a mix of text and expandable entries\&. Expandable entries all start with $( and end with a matching )\&. Parentheses and dollar signs need to be quoted in plain text\&.
+.PP
+(Disclaimer: tailf:cli\-template\-string will not respect all CLI YANG extensions existing from expandable entries\&. For instance, tailf:cli\-no\-name\-on\-delete will have no effect when the value of a node with this extension is fetched as a result of expanding CLI templates\&.)
+.PP
+The template is expanded as follows:
+.PP
+A parameter is either a relative or absolute path to a leaf element (eg /foo/bar, foo/bar), or one of the builtin variables: \&.selected, \&.entered, \&.legend_shown, \&.user, \&.groups, \&.ip, \&.display_groups, \&.path, \&.ipath or \&.licounter\&. In addition the variables \&.spath and \&.ispath are available when a command is executed from a show path\&.
+.PP
+\&.selected
+.PP
+The \&.selected variable contains the list of selected paths to be shown\&. The show template can inspect this element to determine if a given element should be displayed or not\&. For example:
+.PP
+$(\&.selected~=hwaddr?HW Address)
+.PP
+\&.entered
+.PP
+The \&.entered variable is true if the "entered" text has been displayed (either the auto generated text or a showTemplateEnter)\&. This is useful when having a non\-table template where each instance should have a text\&.
+.PP
+$(\&.entered?:host $(name))
+.PP
+\&.legend_shown
+.PP
+The \&.legend_shown variable is true if the "legend" text has been displayed (either the auto generated table header or a showTemplateLegend)\&. This is useful to inspect when displaying a table row\&. If the user enteres the path to a specific instance the builtin table header will not be displayed and the showTemplateLegend will not be invoked and it may be useful to render the legend specifically for this instance\&.
+.PP
+$(\&.legend_shown!=true?Address Interface)
+.PP
+\&.user
+.PP
+The \&.user variable contains the name of the current user\&. This can be used for differentiating the content displayed for a specific user, or in paths\&. For exapmle:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+        $(user{$(\&.user)}/settings)
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\&.groups
+.PP
+The \&.groups variable contains the a list of groups that the user belongs to\&.
+.PP
+\&.display_groups
+.PP
+The \&.display_groups variable contains a list of selected display groups\&. This can be used to display different content depending on the selected display group\&. For example:
+.PP
+$(\&.display_groups~=details?details\&.\&.\&.)
+.PP
+\&.ip
+.PP
+The \&.ip variable contains the ip address that the user connected from\&.
+.PP
+\&.path
+.PP
+The \&.path variable contains the path to the entry, formated in CLI style\&.
+.PP
+\&.ipath
+.PP
+The \&.ipath variable contains the path to the entry, formated in template style\&.
+.PP
+\&.spath
+.PP
+The \&.spath variable contains the show path, formated in CLI style\&.
+.PP
+\&.ispath
+.PP
+The \&.ispath variable contains the show path, formated in template style\&.
+.PP
+\&.licounter
+.PP
+The \&.licounter variable contains a counter that is incremented for each instance in a list\&. This means that it will be 0 in the legend, contain the total number of list instances in the footer and something in between in the basic show template\&.
+.PP
+$(parameter)
+.PP
+The value of \*(Aqparameter\*(Aq is substituted\&.
+.PP
+$(cond?word1:word2)
+.PP
+The expansion of \*(Aqword1\*(Aq is substituted if \*(Aqcond\*(Aq evaluates to true, otherwise the expansion of \*(Aqword2\*(Aq is substituted\&.
+.PP
+\*(Aqcond\*(Aq may be one of
+.PP
+parameter
+.PP
+Evaluates to true if the node exists\&.
+.PP
+parameter == <value>
+.PP
+Evaluates to true if the value of the parameter equals <value>\&.
+.PP
+parameter != <value>
+.PP
+Evalutes to true if the value of the parameter does not equal <value>
+.PP
+parameter ~= <value>
+.PP
+Provided that the value of the parameter is a list (i\&.e\&., the node that the parameter refers to is a leaf\-list), this expression evaluates to true if <value> is a member of the list\&.
+.PP
+Note that it is also possible to omit \*(Aq:word2\*(Aq in order to print the entire statement, or nothing\&. As an example $(conf?word1) will print \*(Aqword1\*(Aq if conf exists, otherwise it will print nothing\&.
+.PP
+$(cond??word1)
+.PP
+Double question marks can be used to achieve the same effect as above, but with the distinction that the \*(Aqcond\*(Aq variable needs to be explicitly configured, in order to be evaluated as existing\&. This is needed in the case of evaluating leafs with default values, where the single question mark operator would evaluate to existing even if not explicitly configured\&.
+.PP
+$(parameter|filter)
+.PP
+The value of \*(Aqparameter\*(Aq processed by \*(Aqfilter\*(Aq is substituted\&. Filters may be either one of the built\-ins or a customized filter defined in a callback\&. See /confdConfig/cli/templateFilter\&.
+.PP
+A built\-in \*(Aqfilter\*(Aq may be one of:
+.PP
+capfirst
+.PP
+Capitalizes the first character of the value\&.
+.PP
+lower
+.PP
+Converts the value into lowercase\&.
+.PP
+upper
+.PP
+Converts the value into uppercase\&.
+.PP
+filesizeformat
+.PP
+Formats the value in a human\-readable format (e\&.g\&., \*(Aq13 KB\*(Aq, \*(Aq4\&.10 MB\*(Aq, \*(Aq102 bytes\*(Aq etc), where K means 1024, M means 1024*1024 etc\&.
+.PP
+When used without argument the default number of decimals displayed is 2\&. When used with a numeric integer argument, filesizeformat will display the given number of decimal places\&.
+.PP
+humanreadable
+.PP
+Similar to filesizeformat except no bytes suffix is added (e\&.g\&., \*(Aq13\&.00 k\*(Aq, \*(Aq4\&.10 M\*(Aq \*(Aq102\*(Aq etc), where k means 1000, M means 1000*1000 etc\&.
+.PP
+When used without argument the default number of decimals displayed is 2\&. When used with a numeric integer argument, humanreadable will display the given number of decimal places\&.
+.PP
+commasep
+.PP
+Separate the numerical values into groups of three digits using a comma (e\&.g\&., 1234567 \-> 1,234,567)
+.PP
+hex
+.PP
+Display integer as hex number\&. An argument can be used to indicate how many digits should be used in the output\&. If the hex number is too long it will be truncated at the front, if it is too short it will be padded with zeros at the front\&. If the width is a negative number then at most that number of digits will be used, but short numbers will not be padded with zeroes\&. Another argument can be given to indicate if the hex numbers should be written with lower or upper case\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+       value            Template                       Output
+       12345           {{ value|hex }}                 3039
+       12345           {{ value|hex:2 }}               39
+       12345           {{ value|hex:8 }}               00003039
+       12345           {{ value|hex:\-8 }}              3039
+       14911           {{ value|hex:\-8:upper }}        3A3F
+       14911           {{ value|hex:\-8:lower }}        3a3f
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+hexlist
+.PP
+Display integer as hex number with : between pairs\&. An argument can be used to indicate how many digits should be used in the output\&. If the hex number is too long it will be truncated at the front, if it is too short it will be padded with zeros at the front\&. If the width is a negative number then at most that number of digits will be used, but short numbers will not be padded with zeroes\&. Another argument can be given to indicate if the hex numbers should be written with lower or upper case\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+       value            Template                       Output
+       12345           {{ value|hexlist }}             30:39
+       12345           {{ value|hexlist:2 }}           39
+       12345           {{ value|hexlist:8 }}           00:00:30:39
+       12345           {{ value|hexlist:\-8 }}          30:39
+       14911           {{ value|hexlist:\-8:upper }}    3A:3F
+       14911           {{ value|hexlist:\-8:lower }}    3a:3f
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+floatformat
+.PP
+Used for type \*(Aqfloat\*(Aq in tailf\-xsd\-types\&. We recommend that the YANG built\-in type \*(Aqdecimal64\*(Aq is used instead of \*(Aqfloat\*(Aq\&.
+.PP
+When used without an argument, rounds a floating\-point number to one decimal place \-\- but only if there is a decimal part to be displayed\&.
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+       value           Template                        Output
+       34\&.23234        {{ value|floatformat }}         34\&.2
+       34\&.00000        {{ value|floatformat }}         34
+       34\&.26000        {{ value|floatformat }}         34\&.3
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If used with a numeric integer argument, floatformat rounds a number to that many decimal places\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+       value           Template                        Output
+       34\&.23234        {{ value|floatformat:3 }}       34\&.232
+       34\&.00000        {{ value|floatformat:3 }}       34\&.000
+       34\&.26000        {{ value|floatformat:3 }}       34\&.260
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+If the argument passed to floatformat is negative, it will round a number to that many decimal places \-\- but only if there\*(Aqs a decimal part to be displayed\&. For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+       value           Template                        Output
+       34\&.23234        {{ value|floatformat:\-3 }}      34\&.232
+       34\&.00000        {{ value|floatformat:\-3 }}      34
+       34\&.26000        {{ value|floatformat:\-3 }}      34\&.260
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Using floatformat with no argument is equivalent to using floatformat with an argument of \-1\&.
+.PP
+ljust:width
+.PP
+Left\-align the value given a width\&.
+.PP
+rjust:width
+.PP
+Right\-align the value given a width\&.
+.PP
+trunc:width
+.PP
+Truncate value to a given width\&.
+.PP
+lower
+.PP
+Convert the value into lowercase\&.
+.PP
+upper
+.PP
+Convert the value into uppercase\&.
+.PP
+show:<dictionary>
+.PP
+Substitutes the result of invoking the default display function for the parameter\&. The dictionary can be used for introducing own variables that can be accessed in the same manner as builtin variables\&. The user defined variables overrides builtin variables\&. The dictionary is specified as a string on the following form:
+.PP
+(key=value)(:key=value)*
+.PP
+For example, with the following expression:
+.PP
+$(foo|show:myvar1=true:myvar2=Interface)
+.PP
+the user defined variables can be accessed like this:
+.PP
+$(\&.myvar1!=true?Address) $(\&.myvar2)
+.PP
+A special case is the dict variable \*(Aqindent\*(Aq\&. It controls the indentation level of the displayed path\&. The current indent level can be incremented and decremented using =+ and =\-\&.
+.PP
+For example:
+.PP
+$(foobar|show:indent=+2) $(foobar|show:indent=\-1) $(foobar|show:indent=10)
+.PP
+Another special case is he dict variable \*(Aqnoalign\*(Aq\&. It may be used to suppress the default aligning that may occur when displaying an element\&.
+.PP
+For example:
+.PP
+$(foobar|show:noalign)
+.PP
+dict:<dictionary>
+.PP
+Translates the value using the dictionary\&. Can for example be used for displaying on/off instead of true/false\&. The dictionary is specified as a string on the following form:
+.PP
+(key=value)(:key=value)*
+.PP
+For example, with the following expression:
+.PP
+$(foo|dict:true=on:false=off)
+.PP
+if the leaf \*(Aqfoo\*(Aq has value \*(Aqtrue\*(Aq, it is displayed as \*(Aqon\*(Aq, and if its value is \*(Aqfalse\*(Aq it is displayed as \*(Aqoff\*(Aq\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ Nested invocations are allowed, ie it is possible to have expressions
+ like $((state|dict:yes=Yes:no=No)|rjust:14), or $(/foo{$(\&.\&./bar)})
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+For example:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ list interface {
+   key name;
+   leaf name { \&.\&.\&. }
+   leaf status { \&.\&.\&. }
+   container line {
+     leaf status { \&.\&.\&. }
+   }
+   leaf mtu { \&.\&.\&. }
+   leaf bw { \&.\&.\&. }
+   leaf encapsulation { \&.\&.\&. }
+   leaf loopback { \&.\&.\&. }
+   tailf:cli\-show\-template
+     \*(Aq$(name) is administratively $(status),\*(Aq
+   + \*(Aq line protocol is $(line/status)\en\*(Aq
+   + \*(AqMTU $(mtu) bytes, BW $(bw|humanreadable)bit, \en\*(Aq
+   + \*(AqEncap $(encapsulation|upper), $(loopback?:loopback not set)\en\*(Aq;
+ }
+.fi
+.if n \{\
+.RE
+.\}
+.SH "SEE ALSO"
+.PP
+The User Guide
+.RS 4
+.RE
+.PP
+\fBconfdc\fR(1)
+.RS 4
+ConfD compiler
+.RE
+.PP
+\fBtailf_yang_extensions\fR(5)
+.RS 4
+Tail\-f YANG extensions
+.RE
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

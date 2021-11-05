@@ -1,0 +1,886 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;19.&nbsp;The JSON-RPC API</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch18.html" title="Chapter&nbsp;18.&nbsp;Web UI Development"><link rel="next" href="ch20.html" title="Chapter&nbsp;20.&nbsp;The web server"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;19.&nbsp;The JSON-RPC API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch18.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch20.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.jsonrpc"></a>Chapter&nbsp;19.&nbsp;The JSON-RPC API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.jsonrpc">19.1. JSON-RPC</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodscommands">19.2. Methods - commands</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodscommandssubscribe">19.3. Methods - commands - subscribe</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdata">19.4. Methods - data</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdataattrs">19.5. Methods - data - attrs</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdataleafs">19.6. Methods - data - leafs</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdataleafref">19.7. Methods - data - leafref</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdatalists">19.8. Methods - data - lists</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdataquery">19.9. Methods - data - query</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsdatabase">19.10. Methods - database</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsgeneral">19.11. Methods - general</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsmessages">19.12. Methods - messages</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsrollbacks">19.13. Methods - rollbacks</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodsschema">19.14. Methods - schema</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodssession">19.15. Methods - session</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodssessiondata">19.16. Methods - session data</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodstransaction">19.17. Methods - transaction</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodstransactionchanges">19.18. Methods - transaction - changes</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodstransactioncommitchanges">19.19. Methods - transaction - commit changes</a></span></dt><dt><span class="sect1"><a href="ch19.html#ug.jsonrpc.methodstransactionwebui">19.20. Methods - transaction - webui</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.jsonrpc"></a>19.1.&nbsp;JSON-RPC</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.protocoloverview"></a>19.1.1.&nbsp;Protocol overview</h3></div></div></div><p><a class="link" href="http://www.jsonrpc.org/specification" target="_top">The JSON-RPC 2.0 Specification [http://www.jsonrpc.org/specification]</a> contains all the details you need in order to understand the protocol but here is the short version.</p><p>A request payload typically looks like this:</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "method": "subtract",
+ "params": [42, 23]}</pre><p>where the <span class="emphasis"><em>method</em></span> and <span class="emphasis"><em>params</em></span> properties are as defined in this manual page.</p><p>A response payload typically looks like this:</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": 19}</pre><p>or</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "error":
+ {"code": -32601,
+   "type": "rpc.request.method.not_found",
+   "message": "Method not found"}}</pre><p>The request <span class="emphasis"><em>id</em></span> param is returned as-is in the response to make it easy to pair requests and responses.</p><p>The batch JSON-RPC standard is dependent on matching requests and responses by <span class="emphasis"><em>id</em></span>, since the server processes requests in any order it sees fit e.g.:</p><pre class="programlisting">[{"jsonrpc": "2.0",
+  "id": 1,
+  "method": "subtract",
+  "params": [42, 23]}
+,{"jsonrpc": "2.0",
+  "id": 2,
+  "method": "add",
+  "params": [42, 23]}]</pre><p>with a possible response like (first result for "add", second result for "substract"):</p><pre class="programlisting">[{"jsonrpc": "2.0",
+  "id": 2,
+  "result": 65}
+,{"jsonrpc": "2.0",
+  "id": 1,
+  "result": 19}]</pre></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.commonconcepts"></a>19.1.2.&nbsp;Common concepts</h3></div></div></div><p>The URL for the JSON-RPC API is `/jsonrpc`. For logging and debugging purposes, you can add anything as a subpath to the URL, for example turning the URL into `/jsonrpc/&lt;method&gt;` which will allow you to see the exact method in different browsers' *Developer Tools* - <span class="emphasis"><em>Network</em></span> tab - <span class="emphasis"><em>Name</em></span> column, rather than just an opaque "jsonrpc".</p><p>For brevity, in the upcoming descriptions of each methods, only the input <span class="emphasis"><em>params</em></span> and the output <span class="emphasis"><em>result</em></span> are mentioned, although they are part of a fully formed JSON-RPC payload.</p><p>Authorization is based on HTTP cookies. The response to a successful call to <span class="emphasis"><em>login</em></span> would create a session, and set a HTTP-only cookie, and even a HTTP-only secure cookie over HTTPS, named <span class="emphasis"><em>sessionid</em></span>. All subsequent calls are authorized by the presence and the validity of this cookie.</p><p>The <span class="emphasis"><em>th</em></span> param is a transaction handle identifier as returned from a call to <span class="emphasis"><em>new_read_trans</em></span> or <span class="emphasis"><em>new_write_trans</em></span>.</p><p>The <span class="emphasis"><em>comet_id</em></span> param is a unique id (decided by the client) which must be given first in a call to the <span class="emphasis"><em>comet</em></span> method, and then to upcoming calls which trigger comet notifications.</p><p>The <span class="emphasis"><em>handle</em></span> param needs to a semantic value (not just a counter) prefixed with the comet id (for disambiguation), and overrides the handle that would have otherwise been returned by the call. This gives more freedom to the client and set semantic handles.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.commonconcepts.commonerrors"></a>Common errors</h4></div></div></div><p>The JSON-RPC specification defines the following error <span class="emphasis"><em>code</em></span> values:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>-32700 - Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text.</p></li><li class="listitem"><p>-32600 - The JSON sent is not a valid Request object.</p></li><li class="listitem"><p>-32601 - The method does not exist / is not available.</p></li><li class="listitem"><p>-32602 - Invalid method parameter(s).</p></li><li class="listitem"><p>-32603 - Internal JSON-RPC error.</p></li><li class="listitem"><p>-32000 to -32099 - Reserved for application defined errors (see below)</p></li></ul></div><p>To make server errors easier to read, along the numeric <span class="emphasis"><em>code</em></span>, we use a <span class="emphasis"><em>type</em></span> param that yields a literal error token. For all application defined errors, the <span class="emphasis"><em>code</em></span> is always -32000. It's best to ignore the <span class="emphasis"><em>code</em></span> and just use the <span class="emphasis"><em>type</em></span> param.</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "method": "login",
+ "params":
+ {"foo": "joe",
+  "bar": "SWkkasE32"}}</pre><p>which results in:</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "error":
+ {"code": -32602,
+  "type": "rpc.method.unexpected_params",
+  "message": "Unexpected params",
+  "data":
+  {"param": "foo"}}}</pre><p>The <span class="emphasis"><em>message</em></span> param is a free text string in English meant for human consumption, which is a one-to-one match with the <span class="emphasis"><em>type</em></span> param. To remove noise from the examples, this param is omitted from the following descriptions.</p><p>An additional method-specific <span class="emphasis"><em>data</em></span> param may be added to give further details on the error, most predominantly a <span class="emphasis"><em>reason</em></span> param which is also a free text string in English meant for human consumption. To remove noise from the examples, this param is omitted from the following descriptions. But any additional <span class="emphasis"><em>data</em></span> params will be noted by each method description.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.commonconcepts.applicationdefinederrors"></a>Application defined errors</h4></div></div></div><p>All methods may return one of the following JSON RPC or application defined errors, in addition to others, specific to each method.</p><pre class="programlisting">{"type": "rpc.request.parse_error"}
+{"type": "rpc.request.invalid"}
+{"type": "rpc.method.not_found"}
+{"type": "rpc.method.invalid_params", "data": {"param": &lt;string&gt;}}
+{"type": "rpc.internal_error"}
+
+
+{"type": "rpc.request.eof_parse_error"}
+{"type": "rpc.request.multipart_broken"}
+{"type": "rpc.request.too_big"}
+{"type": "rpc.request.method_denied"}
+
+
+{"type": "rpc.method.unexpected_params", "data": {"param": &lt;string&gt;}}
+{"type": "rpc.method.invalid_params_type", "data": {"param": &lt;string&gt;}}
+{"type": "rpc.method.missing_params", "data": {"param": &lt;string&gt;}}
+{"type": "rpc.method.unknown_params_value", "data": {"param": &lt;string&gt;}}
+
+
+{"type": "rpc.method.failed"}
+{"type": "rpc.method.denied"}
+{"type": "rpc.method.timeout"}
+
+{"type": "session.missing_sessionid"}
+{"type": "session.invalid_sessionid"}
+{"type": "session.overload"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.faq"></a>19.1.3.&nbsp;FAQ</h3></div></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.faq.whatarethesecuritycharacteristicsofthejsonrpcapi"></a>What are the security characteristics of the JSON-RPC api?</h4></div></div></div><p>JSON-RPC runs on top the embedded web server (see "The web server" chapter), which accepts HTTP and/or HTTPS.</p><p>The JSON-RPC session ties the client and the server via an HTTP cookie, named "sessionid" which contains a randomly server-generated number. This cookie is not only secure (when the requests come over HTTPS), meaning that HTTPS cookies do not leak over HTTP, but even more importantly this cookie is also http-only, meaning that only the server and the browser (e.g. not the JavaScript code) have access to the cookie. Furthermore, this cookie is a session cookie, meaning that a browser restart would delete the cookie altogether.</p><p>The JSON-RPC session lives as long as the user does not request to logout, as long as the user is active within a 30 minute (default value, which is configurable) time frame, as long as there are no severe server crashes. When the session dies, the server will reply with the intention to delete any "sessionid" cookies stored in the browser (to prevent any leaks).</p><p>When used in a browser, the JSON-RPC API does not accept cross-domain requests by default, but can be configured to do so via the custom headers functionality in the embedded web server, or by adding a reverse-proxy (see "The web server" chapter).</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.faq.whatistheproperwaytousethejsonrpcapiinacorssetup"></a>What is the proper way to use the JSON-RPC api in a cors setup?</h4></div></div></div><p>The embedded server allows for custom headers to be se, in this case CORS headers, like:</p><pre class="programlisting">Access-Control-Allow-Origin: http://webpage.com
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: Origin, Content-Type, Accept
+Access-Control-Request-Method: POST</pre><p>A server hosted at http://server.com responding with these headers, would mean that the JSON-RPC API can be contacted from a browser which is showing a web page from http://webpage.com, and will allow the browser to make POST requests, with a limited amount of headers and with credentials (i.e. cookies).</p><p>This is not enough though, because the browser also needs to be told that your JavaScript code really wants to make a CORS request. A jQuery example would show like this:</p><pre class="programlisting">// with jQuery
+$.ajax({
+  type: 'post',
+  url: 'http://server.com/jsonrpc',
+  contentType: 'application/json',
+  data: JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'login',
+    params: {
+      'user': 'joe',
+      'passwd': 'SWkkasE32'
+    }
+  }),
+  dataType: 'json',
+  crossDomain: true,       // CORS specific
+  xhrFields: {             // CORS specific
+    withCredentials: true  // CORS specific
+  }                        // CORS specific
+})</pre><p>Without this setup, you will notice that the browser will not send the "sessionid" cookie on post-login JSON-RPC calls.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.faq.whatisatagkeypath"></a>What is a tag/keypath?</h4></div></div></div><p>A <span class="emphasis"><em>tagpath</em></span> is a path pointing to a specific position in a YANG module's schema.</p><p>A <span class="emphasis"><em>keypath</em></span> is a path pointing to specific position in a YANG module's instance.</p><p>These kind of paths are used for several of the API methods (e.g. <span class="emphasis"><em>set_value</em></span>, <span class="emphasis"><em>get_value</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>), and could be seen as XPath path specifications in abbreviated format.</p><p>Lets look at some examples using the following YANG module as input:</p><pre class="programlisting">module devices {
+    namespace "http://acme.com/ns/devices";
+    prefix d;
+
+    container config {
+        leaf description { type string; }
+        list device {
+            key "interface";
+            leaf interface { type string; }
+            leaf date { type string; }
+        }
+    }
+}</pre><p>Valid tagpaths:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>`/d:config/description`</p></li><li class="listitem"><p>`/d:config/device/interface`</p></li></ul></div><p>Valid keypaths:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>`/d:config/device{eth0}/date` - the date leaf value within a device with an <span class="emphasis"><em>interface</em></span> key set to <span class="emphasis"><em>eth0</em></span></p></li></ul></div><p>Note how the prefix is prepended to the first tag in the path. This prefix is compulsory.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.faq.restrictingaccesstomethods"></a>Restricting access to methods</h4></div></div></div><p>The AAA infrastructure can be used to restrict access to library functions using command rules:</p><pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;cmdrule</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/yang/acm"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;name&gt;</strong>webui<strong class="hl-tag" style="color: #000096">&lt;/name&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;context</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://tail-f.com/yang/acm"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>webui<strong class="hl-tag" style="color: #000096">&lt;/context&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;command&gt;</strong>::jsonrpc:: get_schema<strong class="hl-tag" style="color: #000096">&lt;/command&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;access-operations&gt;</strong>read exec<strong class="hl-tag" style="color: #000096">&lt;/access-operations&gt;</strong>
+  <strong class="hl-tag" style="color: #000096">&lt;action&gt;</strong>deny<strong class="hl-tag" style="color: #000096">&lt;/action&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/cmdrule&gt;</strong></pre><p>Note how the command is prefixed with "::jsonrpc:: ". This tells the AAA engine to apply the command rule to JSON-RPC API functions.</p><p>You can read more about command rules in "The AAA infrastructure" chapter in this User Guide.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.faq.whatissession.overloaderror"></a>What is session.overload error?</h4></div></div></div><p>A series of limits are imposed on the load that one session can put on the system.</p><p>This reduces the risk that a session takes overs the whole system and brings it into a DoS situation.</p><p>The response will include details about the limit that triggered the error.</p><p>Known limits:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>only 10000 commands/subscriptions are allowed per session</p></li></ul></div></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodscommands"></a>19.2.&nbsp;Methods - commands</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetcmds"></a>19.2.1.&nbsp;Method get_cmds</h3></div></div></div><p>Get a list of the session's batch commands</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetcmds.params"></a>Params</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetcmds.result"></a>Result</h4></div></div></div><pre class="programlisting">{"cmds": &lt;array of cmd&gt;}
+
+cmd =
+ {"params": &lt;object&gt;,
+  "comet_id": &lt;string&gt;,
+  "handle": &lt;string&gt;,
+  "tag": &lt;"string"&gt;,
+  "started": &lt;boolean&gt;,
+  "stopped": &lt;boolean; should be always false&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodinitcmd"></a>19.2.2.&nbsp;Method init_cmd</h3></div></div></div><p>Starts a batch command</p><p><span class="phrase"><span class="emphasis"><em>NOTE</em></span>: The batch command must be listed as a named command in confd.conf or else it can not be started. Read more about named commands in the confd.conf.5 manual page.</span></p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_cmd</em></span> method must be called to actually get the batch command to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as the batch command prints anything on stdout it will be sent as a message and turn up as a result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodinitcmd.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "name": &lt;string&gt;,
+ "args": &lt;string&gt;,
+ "emulate": &lt;boolean, default: false&gt;,
+ "width": &lt;integer, default: 80&gt;,
+ "height": &lt;integer, default: 24&gt;,
+ "scroll": &lt;integer, default: 0&gt;,
+ "comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;}</pre><p>The <span class="emphasis"><em>name</em></span> param is one on the named commands defined in <span class="phrase">confd.conf</span>.</p><p>The <span class="emphasis"><em>args</em></span> param any extra arguments to be provided to the command expect for the ones specified in <span class="phrase">confd.conf</span>.</p><p>The <span class="emphasis"><em>emulate</em></span> param specifies if terminal emulation should be enabled.</p><p>The <span class="emphasis"><em>width</em></span>, <span class="emphasis"><em>height</em></span>, <span class="emphasis"><em>scroll</em></span> properties define the screen properties.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodinitcmd.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the batch command is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsendcmddata"></a>19.2.3.&nbsp;Method send_cmd_data</h3></div></div></div><p>Sends data to batch command started with <span class="emphasis"><em>init_cmd</em></span></p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsendcmddata.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;,
+ "data": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>init_cmd</em></span>
+and the <span class="emphasis"><em>data</em></span> param is what is to be sent to the batch command started with <span class="emphasis"><em>init_cmd</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsendcmddata.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsendcmddata.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "cmd.not_initialized"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodstartcmd"></a>19.2.4.&nbsp;Method start_cmd</h3></div></div></div><p>Signals that a batch command can start to generate output.</p><p><span class="emphasis"><em>NOTE</em></span>: This method must be called to actually start the activity initiated by calls to one of the methods <span class="emphasis"><em>init_cmd</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartcmd.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>init_cmd</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartcmd.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsuspendcmd"></a>19.2.5.&nbsp;Method suspend_cmd</h3></div></div></div><p>Suspends output from a batch command</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>init_cmd</em></span> method must have been called with the <span class="emphasis"><em>emulate</em></span> param set to true for this to work</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsuspendcmd.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>init_cmd</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsuspendcmd.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodresumecmd"></a>19.2.6.&nbsp;Method resume_cmd</h3></div></div></div><p>Resumes a batch command started with <span class="emphasis"><em>init_cmd</em></span></p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>init_cmd</em></span> method must have been called with the <span class="emphasis"><em>emulate</em></span> param set to true for this to work</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresumecmd.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>init_cmd</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresumecmd.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodstopcmd"></a>19.2.7.&nbsp;Method stop_cmd</h3></div></div></div><p>Stops a batch command</p><p><span class="emphasis"><em>NOTE</em></span>: This method must be called to stop the activity started by calls to one of the methods <span class="emphasis"><em>init_cmd</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstopcmd.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>init_cmd</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstopcmd.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodscommandssubscribe"></a>19.3.&nbsp;Methods - commands - subscribe</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetsubscriptions"></a>19.3.1.&nbsp;Method get_subscriptions</h3></div></div></div><p>Get a list of the session's subscriptions</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsubscriptions.params"></a>Params</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsubscriptions.result"></a>Result</h4></div></div></div><pre class="programlisting">{"subscriptions": &lt;array of subscription&gt;}
+
+subscription =
+ {"params": &lt;object&gt;,
+  "comet_id": &lt;string&gt;,
+  "handle": &lt;string&gt;,
+  "tag": &lt;"string"&gt;,
+  "started": &lt;boolean&gt;,
+  "stopped": &lt;boolean; should be always false&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribecdboper"></a>19.3.2.&nbsp;Method subscribe_cdboper</h3></div></div></div><p>Starts a subscriber to operational data in CDB. Changes done to configuration data will not be seen here.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribecdboper.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;,
+ "path": &lt;string&gt;,
+ "leaf_list_as_leaf": &lt;boolean&gt;, default: false} (DEPRECATED)</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath restricting the subscription messages to only be about changes done under that specific keypath.</p><p>The <span class="emphasis"><em>leaf_list_as_leaf</em></span> parameter is deprecated and
+                    will be removed in future versions. It can be used to preserve backwards
+                    compatibility for leaf-list. If this parameter is not set (or <span class="emphasis"><em>false</em></span>)
+                    the result for leaf-list changes will be represented as <span class="emphasis"><em>created</em></span>
+                    or <span class="emphasis"><em>deleted</em></span> operations. With this parameter set to
+                    <span class="emphasis"><em>true</em></span> the result will be represented as a
+                    <span class="emphasis"><em>value_set</em></span> operation.
+                </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribecdboper.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method and the format of that message will be an array of changes of the same type as returned by the <span class="emphasis"><em>changes</em></span> method. See above.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribecdboper.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "db.cdb_operational_not_enabled"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribechanges"></a>19.3.3.&nbsp;Method subscribe_changes</h3></div></div></div><p>Starts a subscriber to configuration data in CDB. Changes done to operational data in CDB data will not be seen here. Furthermore, subscription messages will only be generated when a transaction is successfully committed.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribechanges.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;,
+ "path": &lt;string&gt;,
+ "skip_local_changes": &lt;boolean, default: false&gt;,
+ "hide_changes": &lt;boolean, default: false&gt;,
+ "hide_values": &lt;boolean, default: false&gt;,
+ "leaf_list_as_leaf": &lt;boolean&gt;, default: false} (DEPRECATED)</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath restricting the subscription messages to only be about changes done under that specific keypath.</p><p>The <span class="emphasis"><em>skip_local_changes</em></span> param specifies if configuration changes done by the owner of the read-write transaction should generate subscription messages.</p><p>The <span class="emphasis"><em>hide_changes</em></span> and <span class="emphasis"><em>hide_values</em></span> params specify a lower level of information in subscription messages, in case it is enough to receive just a "ping" or a list of changed keypaths, respectively, but not the new values resulted in the changes.</p><p>The <span class="emphasis"><em>leaf_list_as_leaf</em></span> parameter is deprecated and
+                    will be removed in future versions. It can be used to preserve backwards
+                    compatibility for leaf-list. If this parameter is not set (or <span class="emphasis"><em>false</em></span>)
+                    the result for leaf-list changes will be represented as <span class="emphasis"><em>created</em></span>
+                    or <span class="emphasis"><em>deleted</em></span> operations. With this parameter set to
+                    <span class="emphasis"><em>true</em></span> the result will be represented as a
+                    <span class="emphasis"><em>value_set</em></span> operation.
+                </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribechanges.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method and the format of that message will be an object such as:</p><pre class="programlisting">{"db": &lt;"running" | "startup" | "candidate"&gt;,
+ "user": &lt;string&gt;,
+ "ip": &lt;string&gt;,
+ "changes": &lt;array&gt;}</pre><p>The <span class="emphasis"><em>user</em></span> and <span class="emphasis"><em>ip</em></span> properties are the username and ip-address of the committing user.</p><p>The <span class="emphasis"><em>changes</em></span> param is an array of changes of the same type as returned by the <span class="emphasis"><em>changes</em></span> method. See above.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribepollleaf"></a>19.3.4.&nbsp;Method subscribe_poll_leaf</h3></div></div></div><p>Starts a polling subscriber to any type of operational and configuration data (outside of CDB as well).</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribepollleaf.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "interval": &lt;integer between 0 and 3600&gt;,
+ "comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to a leaf value.</p><p>The <span class="emphasis"><em>interval</em></span> is a timeout in seconds between when to poll the value.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribepollleaf.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method and the format of is a simple string value.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribeupgrade"></a>19.3.5.&nbsp;Method subscribe_upgrade</h3></div></div></div><p>Starts a subscriber to upgrade messages.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribeupgrade.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribeupgrade.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method and the format of that message will be an object such as:</p><pre class="programlisting">{"upgrade_state": &lt;"wait_for_init" | "init" | "abort" | "commit"&gt;,
+ "timeout": &lt;number, only if "upgrade_state" === "wait_for_init"&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribejsonrpcbatch"></a>19.3.6.&nbsp;Method subscribe_jsonrpc_batch</h3></div></div></div><p>Starts a subscriber to JSONRPC messages for batch requests.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribejsonrpcbatch.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribejsonrpcbatch.result"></a>Result</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method having exact same structure like a JSONRPC response:</p><pre class="programlisting">{"jsonrpc":"2.0",
+ "result":"admin",
+ "id":1}</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "error":
+ {"code": -32602,
+  "type": "rpc.method.unexpected_params",
+  "message": "Unexpected params",
+  "data":
+  {"param": "foo"}}}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodstartsubscription"></a>19.3.7.&nbsp;Method start_subscription</h3></div></div></div><p>Signals that a subscribe command can start to generate output.</p><p><span class="emphasis"><em>NOTE</em></span>: This method must be called to actually start the activity initiated by calls to one of the methods <span class="emphasis"><em>subscribe_cdboper</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>, <span class="emphasis"><em>subscribe_messages</em></span>, <span class="emphasis"><em>subscribe_poll_leaf</em></span> or <span class="emphasis"><em>subscribe_upgrade</em></span> **with no <span class="emphasis"><em>handle</em></span></p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartsubscription.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>subscribe_cdboper</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>, <span class="emphasis"><em>subscribe_messages</em></span>, <span class="emphasis"><em>subscribe_poll_leaf</em></span> or <span class="emphasis"><em>subscribe_upgrade</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartsubscription.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodunsubscribe"></a>19.3.8.&nbsp;Method unsubscribe</h3></div></div></div><p>Stops a subscriber</p><p><span class="emphasis"><em>NOTE</em></span>: This method must be called to stop the activity started by calls to one of the methods <span class="emphasis"><em>subscribe_cdboper</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>, <span class="emphasis"><em>subscribe_messages</em></span>, <span class="emphasis"><em>subscribe_poll_leaf</em></span> or <span class="emphasis"><em>subscribe_upgrade</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunsubscribe.params"></a>Params</h4></div></div></div><pre class="programlisting">{"handle": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>handle</em></span> param is as returned from a call to <span class="emphasis"><em>subscribe_cdboper</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>, <span class="emphasis"><em>subscribe_messages</em></span>, <span class="emphasis"><em>subscribe_poll_leaf</em></span> or <span class="emphasis"><em>subscribe_upgrade</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunsubscribe.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdata"></a>19.4.&nbsp;Methods - data</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcreate"></a>19.4.1.&nbsp;Method create</h3></div></div></div><p>Create a list entry, a presence container, or a leaf of type empty</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcreate.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to data to be created.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcreate.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcreate.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "db.locked"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methoddelete"></a>19.4.2.&nbsp;Method delete</h3></div></div></div><p>Deletes an existing list entry, a presence container, or an optional leaf and all its children (if any)</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoddelete.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to data to be deleted.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoddelete.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoddelete.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "db.locked"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodexists"></a>19.4.3.&nbsp;Method exists</h3></div></div></div><p>Checks if optional data exists</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodexists.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to data to be checked for existence.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodexists.result"></a>Result</h4></div></div></div><pre class="programlisting">{"exists": &lt;boolean&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetcase"></a>19.4.4.&nbsp;Method get_case</h3></div></div></div><p>Get the case of a choice leaf</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetcase.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "choice": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to data that contains the choice leaf given by the <span class="emphasis"><em>choice</em></span> param.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetcase.result"></a>Result</h4></div></div></div><pre class="programlisting">{"case": &lt;string&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodshowconfig"></a>19.4.5.&nbsp;Method show_config</h3></div></div></div><p>Retrieves a compact string representation of the configuration</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodshowconfig.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;
+ "result_as": &lt;"string" | "json", default: "string"&gt;
+ "with_oper": &lt;boolean, default: false&gt;
+ "max_size": &lt;"integer", default: 0&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath to the configuration to be returned. <span class="emphasis"><em>result_as</em></span> controls the output format, string for a compact string format and json for json. <span class="emphasis"><em>max_size</em></span> sets the maximum size of the data field in kb, set to 0 to disable the limit.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodshowconfig.result"></a>Result</h4></div></div></div><p><span class="emphasis"><em>result_as</em></span> string</p><pre class="programlisting">{"config": &lt;string&gt;}</pre><p><span class="emphasis"><em>result_as</em></span> json</p><pre class="programlisting">{"data": &lt;json&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodload"></a>19.4.6.&nbsp;Method load</h3></div></div></div><p>Load XML configuration into current transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodload.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "data": &lt;string&gt;
+ "path": &lt;string, default: "/"&gt;
+ "format": &lt;"json" | "xml", default: "xml"&gt;
+ "mode": &lt;"create" | "merge" | "replace", default: "merge"&gt;}</pre><p>The <span class="emphasis"><em>data</em></span> param is the data to be loaded into the transaction. <span class="emphasis"><em>mode</em></span> controls how the data is loaded into the transaction, analogous with the CLI command load.<span class="emphasis"><em>format</em></span> informs load about which format <span class="emphasis"><em>data</em></span> is in. If <span class="emphasis"><em>format</em></span> is xml the data must be an XML document encoded as a string. If <span class="emphasis"><em>format</em></span> is json data can either be a JSON document encoded as a string or the JSON data itself.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodload.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodload.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"row": &lt;integer&gt;, "message": &lt;string&gt;}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdataattrs"></a>19.5.&nbsp;Methods - data - attrs</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetattrs"></a>19.5.1.&nbsp;Method get_attrs</h3></div></div></div><p>Get node attributes</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetattrs.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "names": &lt;array of string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to the node
+and the <span class="emphasis"><em>names</em></span> param is a list of attribute names that you want to retrieve.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetattrs.result"></a>Result</h4></div></div></div><pre class="programlisting">{"attrs": &lt;object of attribute name/value&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsetattrs"></a>19.5.2.&nbsp;Method set_attrs</h3></div></div></div><p>Set node attributes</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsetattrs.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "attrs": &lt;object of attribute name/value&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to the node
+and the <span class="emphasis"><em>attrs</em></span> param is an object that maps attribute names to their values.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsetattrs.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdataleafs"></a>19.6.&nbsp;Methods - data - leafs</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetvalue"></a>19.6.1.&nbsp;Method get_value</h3></div></div></div><p>Gets a leaf value</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetvalue.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "check_default": &lt;boolean, default: false&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to a value.</p><p>The <span class="emphasis"><em>check_default</em></span> param adds <span class="emphasis"><em>is_default</em></span> to the result if set to true. <span class="emphasis"><em>is_default</em></span> is set to true if the default value handling returned the value.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetvalue.result"></a>Result</h4></div></div></div><pre class="programlisting">{"value": &lt;string&gt;}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10297"></a><p class="title"><b>Example&nbsp;19.1.&nbsp;Method get_value</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "get_value", \
+         "params": {"th": 4711, \
+                    "path": "/dhcp:dhcp/max-lease-time"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {"value": "7200"}
+}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetvalues"></a>19.6.2.&nbsp;Method get_values</h3></div></div></div><p>Get leaf values</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetvalues.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "leafs": &lt;array of string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to a container. the <span class="emphasis"><em>leafs</em></span> param is an array of children names residing under the parent container in the YANG module.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetvalues.result"></a>Result</h4></div></div></div><pre class="programlisting">{"values": &lt;array of value/error&gt;}
+
+value  = {"value": &lt;string&gt;, "access": &lt;access&gt;}
+error  = {"error": &lt;string&gt;, "access": &lt;access&gt;} |
+         {"exists": true, "access": &lt;access&gt;} |
+         {"not_found": true, "access": &lt;access&gt;}
+access = {"read": true, write: true}</pre><p><span class="emphasis"><em>NOTE</em></span>: The access object has no "read" and/or "write" properties if there are no read and/or access rights.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsetvalue"></a>19.6.3.&nbsp;Method set_value</h3></div></div></div><p>Sets a leaf value</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsetvalue.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "value": &lt;string | boolean | integer | array | null&gt;,
+ "dryrun": &lt;boolean, default: false}</pre><p>The <span class="emphasis"><em>path</em></span> param is the keypath to give a new value as specified with the <span class="emphasis"><em>value</em></span> param.</p><p><span class="emphasis"><em>value</em></span> can be an array when the <span class="emphasis"><em>path</em></span> is a leaf-list node.</p><p>When <span class="emphasis"><em>value</em></span> is <span class="emphasis"><em>null</em></span>, the <span class="emphasis"><em>set_value</em></span> method acts like <span class="emphasis"><em>delete</em></span>.</p><p>When <span class="emphasis"><em>dryrun</em></span> is <span class="emphasis"><em>true</em></span>, this function can be used to test if a value is valid or not.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsetvalue.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsetvalue.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "data.already_exists"}
+{"type": "data.not_found"}
+{"type": "data.not_writable"}
+{"type": "db.locked"}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10343"></a><p class="title"><b>Example&nbsp;19.2.&nbsp;Method set_value</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "set_value", \
+         "params": {"th": 4711, \
+                    "path": "/dhcp:dhcp/max-lease-time", \
+                    "value": "4500"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {}
+}</pre></div></div><br class="example-break"></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdataleafref"></a>19.7.&nbsp;Methods - data - leafref</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodderef"></a>19.7.1.&nbsp;Method deref</h3></div></div></div><p>Dereferences a leaf with a leafref type</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodderef.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "result_as": &lt;"paths" | "target" | "list-target", default: "paths"&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> param is a keypath pointing to a leaf with a leafref type.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodderef.result"></a>Result</h4></div></div></div><pre class="programlisting">{"paths": &lt;array of string, a keypath to a leaf&gt;}</pre><pre class="programlisting">{"target": &lt;a keypath to a leaf&gt;}</pre><pre class="programlisting">{"list-target": &lt;a keypath to a list&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetleafrefvalues"></a>19.7.2.&nbsp;Method get_leafref_values</h3></div></div></div><p>Gets all possible values for a leaf with a leafref type</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetleafrefvalues.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "skip_grouping": &lt;boolean, default: false&gt;,
+ "keys": &lt;object&gt;}</pre><p>The <span class="emphasis"><em>th</em></span> param is as returned from a call to <span class="emphasis"><em>new_read_trans</em></span> or
+<span class="emphasis"><em>new_write_trans</em></span>. The <span class="emphasis"><em>path</em></span> param is a keypath pointing to a leaf
+with a leafref type.</p><p>The <span class="emphasis"><em>skip_grouping</em></span> param is by default set to false and is only
+needed to be set to true if if a set of sibling leafref leafs points to
+a list instance with multiple keys <span class="emphasis"><em>and</em></span> if <span class="emphasis"><em>get_leafref_values</em></span>
+should return an array of possible leaf values instead an array of
+arrays with possible key value combinations.</p><p>The <span class="emphasis"><em>keys</em></span> param is an optional array of values that should be set
+if a more than one leafref statement is used within action/rpc input
+parameters <span class="emphasis"><em>and</em></span> if they refer to each other using `deref()` or
+`current()` XPath functions. For example consider this model:
+</p><pre class="programlisting">
+  <strong class="hl-keyword">rpc</strong> create-service {
+    tailf:exec <strong class="hl-string"><em style="color:red">"./run.sh"</em></strong>;
+    <strong class="hl-keyword">input</strong> {
+      <strong class="hl-keyword">leaf</strong> name {
+        <strong class="hl-keyword">type</strong> leafref {
+          <strong class="hl-keyword">path</strong> <strong class="hl-string"><em style="color:red">"/myservices/service/name"</em></strong>;
+        }
+      }
+      <strong class="hl-keyword">leaf</strong> if {
+        <strong class="hl-keyword">type</strong> leafref {
+          <strong class="hl-keyword">path</strong> <strong class="hl-string"><em style="color:red">"/myservices/service[name=current()/../name]/interfaces/name"</em></strong>
+        }
+      }
+    }
+    <strong class="hl-keyword">output</strong> {
+      <strong class="hl-keyword">leaf</strong> result { <strong class="hl-keyword">type</strong> string; }
+    }
+  }
+</pre><p>
+The leaf <span class="emphasis"><em>if</em></span> refers to leaf <span class="emphasis"><em>name</em></span> in its XPath expression
+so to be able to successfully run <span class="emphasis"><em>get_leafref_values</em></span> on that node you need to
+provide a valid value for the <span class="emphasis"><em>name</em></span> leaf using the <span class="emphasis"><em>keys</em></span>
+parameter. The <span class="emphasis"><em>keys</em></span> parameter could for example look like this:
+</p><pre class="programlisting">{"/create-service/name": "service1"}</pre><p>
+</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetleafrefvalues.result"></a>Result</h4></div></div></div><pre class="programlisting">{"values": &lt;array of string&gt;,
+ "source": &lt;string&gt; | false}</pre><p>The <span class="emphasis"><em>source</em></span> param will point to the keypath where the values originate. If the keypath cannot be resolved due to missing/faulty items in the <span class="emphasis"><em>keys</em></span> parameter <span class="emphasis"><em>source</em></span> will be <span class="emphasis"><em>false</em></span>.</p></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdatalists"></a>19.8.&nbsp;Methods - data - lists</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodrenamelistentry"></a>19.8.1.&nbsp;Method rename_list_entry</h3></div></div></div><p>Renames a list entry.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrenamelistentry.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "from_path": &lt;string&gt;,
+ "to_keys": &lt;array of string&gt;}</pre><p>The <span class="emphasis"><em>from_path</em></span> is a keypath pointing out the list entry to be renamed.</p><p>The list entry to be renamed will, under the hood, be deleted all together and then recreated with the content from the deleted list entry copied in.</p><p>The <span class="emphasis"><em>to_keys</em></span> param is an array with the new key values. The array must contain a full set of key values.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrenamelistentry.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrenamelistentry.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "data.already_exists"}
+{"type": "data.not_found"}
+{"type": "data.not_writable"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcopylistentry"></a>19.8.2.&nbsp;Method copy_list_entry</h3></div></div></div><p>Copies a list entry.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcopylistentry.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "from_path": &lt;string&gt;,
+ "to_keys": &lt;array of string&gt;}</pre><p>The <span class="emphasis"><em>from_path</em></span> is a keypath pointing out the list entry to be copied.</p><p>The <span class="emphasis"><em>to_keys</em></span> param is an array with the new key values. The array must contain a full set of key values.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcopylistentry.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcopylistentry.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "data.already_exists"}
+{"type": "data.not_found"}
+{"type": "data.not_writable"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodmovelistentry"></a>19.8.3.&nbsp;Method move_list_entry</h3></div></div></div><p>Moves an ordered-by user list entry relative to its siblings.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodmovelistentry.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "from_path": &lt;string&gt;,
+ "to_path": &lt;string&gt;,
+ "mode": &lt;"first" | "last" | "before" | "after"&gt;}</pre><p>The <span class="emphasis"><em>from_path</em></span> is a keypath pointing out the list entry to be moved.</p><p>The list entry to be moved can either be moved to the first or the last position, i.e. if the <span class="emphasis"><em>mode</em></span> param is set to <span class="emphasis"><em>first</em></span> or <span class="emphasis"><em>last</em></span> the <span class="emphasis"><em>to_path</em></span> keypath param has no meaning.</p><p>If the <span class="emphasis"><em>mode</em></span> param is set to <span class="emphasis"><em>before</em></span> or <span class="emphasis"><em>after</em></span> the <span class="emphasis"><em>to_path</em></span> param must be specified, i.e. the list entry will be moved to the position before or after the list entry which the <span class="emphasis"><em>to_path</em></span> keypath param points to.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodmovelistentry.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodmovelistentry.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "db.locked"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodappendlistentry"></a>19.8.4.&nbsp;Method append_list_entry</h3></div></div></div><p>Append a list entry to a leaf-list.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodappendlistentry.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "value": &lt;string%gt;}</pre><p>The <span class="emphasis"><em>path</em></span> is a keypath pointing to a leaf-list.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodappendlistentry.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcountlistkeys"></a>19.8.5.&nbsp;Method count_list_keys</h3></div></div></div><p>Counts the number of keys in a list.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcountlistkeys.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;
+ "path": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>path</em></span> parameter is a keypath pointing to a list.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcountlistkeys.result"></a>Result</h4></div></div></div><pre class="programlisting">{"count": &lt;integer&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetlistkeys"></a>19.8.6.&nbsp;Method get_list_keys</h3></div></div></div><p>Enumerates keys in a list.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetlistkeys.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "chunk_size": &lt;integer greater than zero, optional&gt;,
+ "start_with": &lt;array of string, optional&gt;,
+ "lh": &lt;integer, optional&gt;}</pre><p>The <span class="emphasis"><em>th</em></span> parameter is the transaction handle.</p><p>The <span class="emphasis"><em>path</em></span> parameter is a keypath pointing to a list. Required on first invocation - optional in following.</p><p>The <span class="emphasis"><em>chunk_size</em></span> parameter is the number of requested keys in the result. Optional - default is unlimited.</p><p>The <span class="emphasis"><em>start_with</em></span> parameter will be used to filter out all those keys that do not start with the provided strings.
+The parameter supports multiple keys e.g. if the list has two keys, then <span class="emphasis"><em>start_with</em></span> can hold two items.</p><p>The <span class="emphasis"><em>lh</em></span> (list handle) parameter is optional (on the first invocation) but must be used in following invocations.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetlistkeys.result"></a>Result</h4></div></div></div><pre class="programlisting">{"keys": &lt;array of array of string&gt;,
+ "total_count": &lt;integer&gt;,
+ "lh": &lt;integer, optional&gt;}</pre><p>Each invocation of <span class="emphasis"><em>get_list_keys</em></span> will return at most <span class="emphasis"><em>chunk_size</em></span> keys.
+The returned <span class="emphasis"><em>lh</em></span> must be used in following invocations to retrieve
+next chunk of keys. When no more keys are available the returned <span class="emphasis"><em>lh</em></span>
+will be set to `-1`.</p><p>On the first invocation <span class="emphasis"><em>lh</em></span> can either be omitted or set to `-1`.</p></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdataquery"></a>19.9.&nbsp;Methods - data - query</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodquery"></a>19.9.1.&nbsp;Method query</h3></div></div></div><p>Starts a new query attached to a transaction handle, retrieves the results, and stops the query immediately. This is a convenience method for calling <span class="emphasis"><em>start_query</em></span>, <span class="emphasis"><em>run_query</em></span> and <span class="emphasis"><em>stop_query</em></span> in a one-time sequence.</p><p>This method should not be used for paginated results, as it results in performance degradation - use <span class="emphasis"><em>start_query</em></span>, multiple <span class="emphasis"><em>run_query</em></span>and <span class="emphasis"><em>stop_query</em></span>instead.</p><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10519"></a><p class="title"><b>Example&nbsp;19.3.&nbsp;Method query</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie "sessionid=sess11635875109111642;"
+    -X POST
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "query", \
+         "params": {"th": 1, \
+                    "xpath_expr": "/dhcp:dhcp/dhcp:foo", \
+                    "result_as": "keypath-value"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ {"current_position": 2,
+  "total_number_of_results": 4,
+  "number_of_results": 2,
+  "number_of_elements_per_result": 2,
+  "results": ["foo", "bar"]}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodstartquery"></a>19.9.2.&nbsp;Method start_query</h3></div></div></div><p>Starts a new query attached to a transaction handle. On success a query handle is returned to be in subsequent calls to
+<span class="emphasis"><em>run_query</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartquery.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "xpath_expr": &lt;string, optional if path is given%gt;,
+ "path": &lt;string, keypath, optional if xpath_expr is given%gt;,
+ "selection": &lt;array of xpath expressions, optional&gt;
+ "chunk_size": &lt;integer greater than zero, optional&gt;
+ "initial_offset": &lt;integer, optional&gt;,
+ "sort", &lt;array of xpath expressions, optional&gt;,
+ "sort_order": &lt;"ascending" | "descending", optional&gt;,
+ "include_total": &lt;boolean, default: true&gt;,
+ "context_node": &lt;string, keypath, optional&gt;,
+ "result_as": &lt;"string" | "keypath-value" | "leaf_value_as_string", default: "string"&gt;}</pre><p>The <span class="emphasis"><em>xpath_expr</em></span> param is the primary XPath expression to base the query on. Alternatively, one can give a keypath as the <span class="emphasis"><em>path</em></span> param, and internally the keypath will be translated into an XPath expression.</p><p>A query is a way of evaluating an XPath expression and returning the results in chunks.
+The primary XPath expression must evaluate to a node-set, i.e. the result.
+For each node in the result a <span class="emphasis"><em>selection</em></span> Xpath expression is evaluated with the result node as its context node.</p><p><span class="emphasis"><em>Note</em></span>: The terminology used here is as defined in http://en.wikipedia.org/wiki/XPath.</p><p>For example, given this YANG snippet:</p><pre class="programlisting">list interface {
+  key name;
+  unique number;
+  leaf name {
+    type string;
+  }
+  leaf number {
+    type uint32;
+    mandatory true;
+  }
+  leaf enabled {
+    type boolean;
+    default true;
+  }
+}</pre><p>The <span class="emphasis"><em>xpath_expr</em></span> could be `/interface[enabled='true']` and <span class="emphasis"><em>selection</em></span> could be `{ "name", "number" }`.</p><p>Note that the <span class="emphasis"><em>selection</em></span> expressions must be valid XPath expressions, e.g. to figure out the name of an interface and whether its number is even or not, the expressions must look like: `{ "name", "(number mod 2) == 0" }`.</p><p>The result are then fetched using <span class="emphasis"><em>run_query</em></span>, which returns the result on the format specified by <span class="emphasis"><em>result_as</em></span> param.</p><p>There are two different types of result:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><span class="emphasis"><em>string</em></span> result is just an array with resulting strings of evaluating the <span class="emphasis"><em>selection</em></span> XPath expressions</p></li><li class="listitem"><p>`keypath-value` result is an array the keypaths or values of the node that the <span class="emphasis"><em>selection</em></span> XPath expression evaluates to.</p></li></ul></div><p>This means that care must be taken so that the combination of <span class="emphasis"><em>selection</em></span> expressions and return types actually yield sensible results (for example `1 + 2` is a valid <span class="emphasis"><em>selection</em></span> XPath expression, and would result in the string <span class="emphasis"><em>3</em></span> when setting the result type to <span class="emphasis"><em>string</em></span> - but it is not a node, and thus have no keypath-value.</p><p>It is possible to sort the result using the built-in XPath function `sort-by()` but it is also also possible to sort the result using expressions specified by the <span class="emphasis"><em>sort</em></span> param. These expressions will be used to construct a temporary index which will live as long as the query is active. For example to start a query sorting first on the enabled leaf, and then on number one would call:</p><pre class="programlisting">$.post("/jsonrpc", {
+  jsonrpc: "2.0",
+  id: 1,
+  method: "start_query",
+  params:  {
+    th: 1,
+    xpath_expr: "/interface[enabled='true']",
+    selection: ["name", "number", "enabled"],
+    sort: ["enabled", "number"]
+  }
+})
+    .done(...);</pre><p>The <span class="emphasis"><em>context_node</em></span> param is a keypath pointing out the node to apply the query on;
+only taken into account when the <span class="emphasis"><em>xpath_expr</em></span> uses relatives paths.
+Lack of a <span class="emphasis"><em>context_node</em></span>, turns relatives paths into absolute paths.</p><p>The <span class="emphasis"><em>chunk_size</em></span> param specifies how many result entries to return at a time. If set to 0 a default number will be used.</p><p>The <span class="emphasis"><em>initial_offset</em></span> param is the result entry to begin with (1 means to start from the beginning).</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstartquery.result"></a>Result</h4></div></div></div><pre class="programlisting">{"qh": &lt;integer&gt;}</pre><p>A new query handler handler id to be used when calling <span class="emphasis"><em>run_query</em></span> etc</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10579"></a><p class="title"><b>Example&nbsp;19.4.&nbsp;Method start_query</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie "sessionid=sess11635875109111642;"
+    -X POST
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "start_query", \
+         "params": {"th": 1, \
+                    "xpath_expr": "/dhcp:dhcp/dhcp:foo", \
+                    "result_as": "keypath-value"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": 47}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodrunquery"></a>19.9.3.&nbsp;Method run_query</h3></div></div></div><p>Retrieves the result to a query (as chunks). For more details on queries please read the description of "start_query".</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrunquery.params"></a>Params</h4></div></div></div><pre class="programlisting">{"qh": &lt;integer&gt;}</pre><p>The <span class="emphasis"><em>qh</em></span> param is as returned from a call to "start_query".</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrunquery.result"></a>Result</h4></div></div></div><pre class="programlisting">{"position": &lt;integer&gt;,
+ "total_number_of_results": &lt;integer&gt;,
+ "number_of_results": &lt;integer&gt;,
+ "chunk_size": &lt;integer greater than zero, optional&gt;,
+ "result_as": &lt;"string" | "keypath-value" | "leaf_value_as_string"&gt;,
+ "results": &lt;array of result&gt;}
+
+result = &lt;string&gt; |
+         {"keypath": &lt;string&gt;, "value": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>position</em></span> param is the number of the first result entry in this chunk, i.e. for the first chunk it will be 1.</p><p>How many result entries there are in this chunk is indicated by the <span class="emphasis"><em>number_of_results</em></span> param. It will be 0 for the last chunk.</p><p>The <span class="emphasis"><em>chunk_size</em></span> and the <span class="emphasis"><em>result_as</em></span> properties are as given in the call to <span class="emphasis"><em>start_query</em></span>.</p><p>The <span class="emphasis"><em>total_number_of_results</em></span> param is total number of result entries retrieved so far.</p><p>The <span class="emphasis"><em>result</em></span> param is as described in the description of <span class="emphasis"><em>start_query</em></span>.</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10609"></a><p class="title"><b>Example&nbsp;19.5.&nbsp;Method run_query</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie "sessionid=sess11635875109111642;" \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "run_query", \
+         "params": {"qh": 22}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ {"current_position": 2,
+  "total_number_of_results": 4,
+  "number_of_results": 2,
+  "number_of_elements_per_result": 2,
+  "results": ["foo", "bar"]}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodresetquery"></a>19.9.4.&nbsp;Method reset_query</h3></div></div></div><p>Reset/rewind a running query so that it starts from the beginning again. Next call to "run_query" will then return the first chunk of result entries.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresetquery.params"></a>Params</h4></div></div></div><pre class="programlisting">{"qh": &lt;integer&gt;}</pre><p>The <span class="emphasis"><em>qh</em></span> param is as returned from a call to <span class="emphasis"><em>start_query</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresetquery.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10627"></a><p class="title"><b>Example&nbsp;19.6.&nbsp;Method reset_query</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "reset_query", \
+         "params": {"qh": 67}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": true}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodstopquery"></a>19.9.5.&nbsp;Method stop_query</h3></div></div></div><p>Stops the running query identified by query handler. If a query is not explicitly closed using this call it will be cleaned up when the transaction the query is linked to ends.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstopquery.params"></a>Params</h4></div></div></div><pre class="programlisting">{"qh": &lt;integer&gt;}</pre><p>The <span class="emphasis"><em>qh</em></span> param is as returned from a call to "start_query".</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodstopquery.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10644"></a><p class="title"><b>Example&nbsp;19.7.&nbsp;Method stop_query</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "stop_query", \
+         "params": {"qh": 67}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": true}</pre></div></div><br class="example-break"></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsdatabase"></a>19.10.&nbsp;Methods - database</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodresetcandidatedb"></a>19.10.1.&nbsp;Method reset_candidate_db</h3></div></div></div><p>Resets the candidate datastore</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresetcandidatedb.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodlockdb"></a>19.10.2.&nbsp;Method lock_db</h3></div></div></div><p>Takes a database lock</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlockdb.params"></a>Params</h4></div></div></div><pre class="programlisting">{"db": &lt;"startup" | "running" | "candidate"&gt;}</pre><p>The <span class="emphasis"><em>db</em></span> param specifies which datastore to lock.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlockdb.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlockdb.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "db.locked", "data": {"sessions": &lt;array of string&gt;}}</pre><p>The `data.sessions` param is an array of strings describing the current sessions of the locking user, e.g. an array of "admin tcp (cli from 192.245.2.3) on since 2006-12-20 14:50:30 exclusive".</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodunlockdb"></a>19.10.3.&nbsp;Method unlock_db</h3></div></div></div><p>Releases a database lock</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunlockdb.params"></a>Params</h4></div></div></div><pre class="programlisting">{"db": &lt;"startup" | "running" | "candidate"&gt;}</pre><p>The <span class="emphasis"><em>db</em></span> param specifies which datastore to unlock.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunlockdb.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcopyrunningtostartupdb"></a>19.10.4.&nbsp;Method copy_running_to_startup_db</h3></div></div></div><p>Copies the running datastore to the startup datastore</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcopyrunningtostartupdb.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsgeneral"></a>19.11.&nbsp;Methods - general</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcomet"></a>19.11.1.&nbsp;Method comet</h3></div></div></div><p>Listens on a comet channel, i.e. all asynchronous messages from batch commands started by calls to <span class="emphasis"><em>start_cmd</em></span>, <span class="emphasis"><em>subscribe_cdboper</em></span>, <span class="emphasis"><em>subscribe_changes</em></span>, <span class="emphasis"><em>subscribe_messages</em></span>, <span class="emphasis"><em>subscribe_poll_leaf</em></span> or <span class="emphasis"><em>subscribe_upgrade</em></span> ends up on the comet channel.</p><p>You are expected to have a continuous long polling call to the <span class="emphasis"><em>comet</em></span> method at any given time. As soon as the browser or server closes the socket, due to browser or server connect timeout, the <span class="emphasis"><em>comet</em></span> method should be called again.</p><p>As soon as the <span class="emphasis"><em>comet</em></span> method returns with values they should be dispatched and the <span class="emphasis"><em>comet</em></span> method should be called again.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcomet.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcomet.result"></a>Result</h4></div></div></div><pre class="programlisting">[{"handle": &lt;integer&gt;,
+  "message": &lt;a context specific json object, see example below&gt;},
+ ...]</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcomet.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "comet.duplicated_channel"}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10716"></a><p class="title"><b>Example&nbsp;19.8.&nbsp;Method comet</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "subscribe_changes", \
+         "params": {"comet_id": "main", \
+                    "path": "/dhcp:dhcp"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {"handle": "2"}}</pre><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "batch_init_done", \
+         "params": {"handle": "2"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {}}</pre><pre class="programlisting">curl \
+    -m 15 \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "comet", \
+         "params": {"comet_id": "main"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><p>hangs... and finally...</p><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ [{"handle": "1",
+   "message":
+   {"db": "running",
+    "changes":
+    [{"keypath": "/dhcp:dhcp/default-lease-time",
+      "op": "value_set",
+      "value": "100"}],
+    "user": "admin",
+    "ip": "127.0.0.1"}}]}</pre><p>In this case the admin user seems to have set `/dhcp:dhcp/default-lease-time` to <span class="emphasis"><em>100</em></span>.</p></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetsystemsetting"></a>19.11.2.&nbsp;Method get_system_setting</h3></div></div></div><p>Extracts system settings such as capabilities, supported datastores, etc.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsystemsetting.params"></a>Params</h4></div></div></div><pre class="programlisting">{"operation": &lt;"capabilities" | "customizations" | "models" | "user" | "version" | "all" | "namespaces", default: "all"&gt;}</pre><p>The <span class="emphasis"><em>operation</em></span> param specifies which system setting to get:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><span class="emphasis"><em>capabilities</em></span> - the server-side settings are returned, e.g. is rollback and confirmed commit supported</p></li><li class="listitem"><p><span class="emphasis"><em>customizations</em></span> - an array of all webui customizations</p></li><li class="listitem"><p><span class="emphasis"><em>models</em></span> - an array of all loaded YANG modules are returned, i.e. prefix, namespace, name</p></li><li class="listitem"><p><span class="emphasis"><em>user</em></span> - the username of the currently logged in user is returned</p></li><li class="listitem"><p><span class="emphasis"><em>version</em></span> - the system version</p></li><li class="listitem"><p><span class="emphasis"><em>all</em></span> - all of the above is returned.</p></li><li class="listitem"><p>(DEPRECATED) <span class="emphasis"><em>namespaces</em></span> - an object of all loaded YANG modules are returned, i.e. prefix to namespace</p></li></ul></div></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsystemsetting.result"></a>Result</h4></div></div></div><pre class="programlisting">{"user:" &lt;string&gt;,
+ "models:" &lt;array of YANG modules&gt;,
+ "version:" &lt;string&gt;,
+ "customizations": &lt;array of customizations&gt;,
+ "capabilities":
+ {"rollback": &lt;boolean&gt;,
+  "copy_running_to_startup": &lt;boolean&gt;,
+  "exclusive": &lt;boolean&gt;,
+  "confirmed_commit": &lt;boolean&gt;
+ },
+ "namespaces": &lt;object of YANG modules prefix/namespace&gt;}</pre><p>The above is the result if using the <span class="emphasis"><em>all</em></span> operation.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodabort"></a>19.11.3.&nbsp;Method abort</h3></div></div></div><p>Abort a JSON-RPC method by its associated id.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodabort.params"></a>Params</h4></div></div></div><pre class="programlisting">{"id": &lt;integer&gt;}</pre><p>The <span class="emphasis"><em>xpath_expr</em></span> param is the XPath expression to be evaluated.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodabort.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodevalxpath"></a>19.11.4.&nbsp;Method eval_XPath</h3></div></div></div><p>Evaluates an xpath expression on the server side</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodevalxpath.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "xpath_expr": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>xpath_expr</em></span> param is the XPath expression to be evaluated.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodevalxpath.result"></a>Result</h4></div></div></div><pre class="programlisting">{"value": &lt;string&gt;}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsmessages"></a>19.12.&nbsp;Methods - messages</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsendmessage"></a>19.12.1.&nbsp;Method send_message</h3></div></div></div><p>Sends a message to another user in the CLI or Web UI</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsendmessage.params"></a>Params</h4></div></div></div><pre class="programlisting">{"to": &lt;string&gt;,
+ "message": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>to</em></span> param is the user name of the user to send the message to and the <span class="emphasis"><em>message</em></span> param is the actual message.</p><p><span class="emphasis"><em>NOTE</em></span>: The username "all" will broadcast the message to all users.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsendmessage.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsubscribemessages"></a>19.12.2.&nbsp;Method subscribe_messages</h3></div></div></div><p>Starts a subscriber to messages.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>start_subscription</em></span> method must be called to actually get the subscription to generate any messages, unless the <span class="emphasis"><em>handle</em></span> is provided as input.</p><p><span class="emphasis"><em>NOTE</em></span>: the <span class="emphasis"><em>unsubscribe</em></span> method should be used to end the subscription.</p><p><span class="emphasis"><em>NOTE</em></span>: As soon as a subscription message is generated it will be sent as a message and turn up as result to your polling call to the <span class="emphasis"><em>comet</em></span> method.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribemessages.params"></a>Params</h4></div></div></div><pre class="programlisting">{"comet_id": &lt;string&gt;,
+ "handle": &lt;string, optional&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsubscribemessages.result"></a>Result</h4></div></div></div><pre class="programlisting">&lt;string&gt;</pre><p>A handle to the subscription is returned (equal to <span class="emphasis"><em>handle</em></span> if provided).</p><p>Subscription messages will end up in the <span class="emphasis"><em>comet</em></span> method and the format of these messages depend on what has happened.</p><p>When a new user has logged in:</p><pre class="programlisting">{"new_user": &lt;integer, a session id to be used by "kick_user"&gt;
+ "me": &lt;boolean, is it myself?&gt;
+ "user": &lt;string&gt;,
+ "proto": &lt;"ssh" | "tcp" | "console" | "http" | "https" | "system"&gt;,
+ "ctx": &lt;"cli" | "webui" | "netconf"&gt;
+ "ip": &lt;string, user's ip-address&gt;,
+ "login": &lt;string, login timestamp&gt;}</pre><p> When a user logs out:</p><pre class="programlisting">{"del_user": &lt;integer, a session id&gt;,
+ "user": &lt;string&gt;}</pre><p> When receiving a message:</p><pre class="programlisting">{"sender": &lt;string&gt;,
+ "message": &lt;string&gt;}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsrollbacks"></a>19.13.&nbsp;Methods - rollbacks</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetrollbacks"></a>19.13.1.&nbsp;Method get_rollbacks</h3></div></div></div><p>Lists all available rollback files</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetrollbacks.result"></a>Result</h4></div></div></div><pre class="programlisting">{"rollbacks": &lt;array of rollback&gt;}
+
+rollback =
+ {"nr": &lt;integer&gt;,
+  "creator": &lt;string&gt;,
+  "date": &lt;string&gt;,
+  "via": &lt;"system" | "cli" | "webui" | "netconf"&gt;,
+  "comment": &lt;string&gt;,
+  "label": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>nr</em></span> param is a rollback number to be used in calls to <span class="emphasis"><em>load_rollback</em></span> etc.</p><p>The <span class="emphasis"><em>creator</em></span> and <span class="emphasis"><em>date</em></span> properties identify the name of the user responsible for committing the configuration stored in the rollback file and when it happened.</p><p>The <span class="emphasis"><em>via</em></span> param identifies the interface that was used to create the rollback file.</p><p>The <span class="emphasis"><em>label</em></span> and <span class="emphasis"><em>comment</em></span> properties is as given calling the methods <span class="emphasis"><em>set_comment</em></span> and <span class="emphasis"><em>set_label</em></span> on the transaction.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetrollback"></a>19.13.2.&nbsp;Method get_rollback</h3></div></div></div><p>Gets the content of a specific rollback file. The rollback format is as defined in a curly bracket format as defined in the CLI.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetrollback.params"></a>Params</h4></div></div></div><pre class="programlisting">{"nr": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetrollback.result"></a>Result</h4></div></div></div><pre class="programlisting">&lt;string, rollback file in curly bracket format&gt;</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodinstallrollback"></a>19.13.3.&nbsp;Method install_rollback</h3></div></div></div><p>Installs a specific rollback file into a new transaction and commits it. The configuration is restored to the one stored in the rollback file and no further operations are needed. It is the equivalent of creating a new private write private transaction handler with <span class="emphasis"><em>new_write_trans</em></span>, followed by calls to the methods <span class="emphasis"><em>load_rollback</em></span>, <span class="emphasis"><em>validate_commit</em></span> and <span class="emphasis"><em>commit</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodinstallrollback.params"></a>Params</h4></div></div></div><pre class="programlisting">{"nr": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodinstallrollback.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodloadrollback"></a>19.13.4.&nbsp;Method load_rollback</h3></div></div></div><p>Rolls back within an existing transaction, starting with the latest rollback file, down to a specified rollback file, or selecting only the specified rollback file (also known as "selective rollback").</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodloadrollback.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "nr": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "selective": &lt;boolean, default: false&gt;}</pre><p>The <span class="emphasis"><em>nr</em></span> param is a rollback number returned by <span class="emphasis"><em>get_rollbacks</em></span>.</p><p>The <span class="emphasis"><em>path</em></span> param is a keypath that restrict the rollback to be applied only to a subtree.</p><p>The <span class="emphasis"><em>selective</em></span> param, false by default, can restrict the rollback process to use only the rollback specified by <span class="emphasis"><em>nr</em></span>, rather than applying all known rollbacks files starting with the latest down to the one specified by <span class="emphasis"><em>nr</em></span>.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodloadrollback.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodsschema"></a>19.14.&nbsp;Methods - schema</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetschema"></a>19.14.1.&nbsp;Method get_schema</h3></div></div></div><p>Exports a JSON schema for a selected part (or all) of a specific YANG module (with optional instance data inserted)</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetschema.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "namespace": &lt;string, optional&gt;,
+ "path": &lt;string, optional&gt;,
+ "levels": &lt;integer, default: -1&gt;,
+ "insert_values": &lt;boolean, default: false&gt;,
+ "evaluate_when_entries": &lt;boolean, default: false&gt;
+ "stop_on_list": &lt;boolean, default: false&gt;}</pre><p>One of the properties <span class="emphasis"><em>namespace</em></span> or <span class="emphasis"><em>path</em></span> must be specified.</p><p>A <span class="emphasis"><em>namespace</em></span> is as specified in a YANG module.</p><p>A <span class="emphasis"><em>path</em></span> is a tagpath/keypath pointing into a specific sub-tree of a YANG module.</p><p>The <span class="emphasis"><em>levels</em></span> param limits the maximum depth of containers and lists from which a JSON schema should be produced (-1 means unlimited depth).</p><p>The <span class="emphasis"><em>insert_values</em></span> param signals that instance data for leafs should be inserted into the schema. This way the need for explicit forthcoming calls to <span class="emphasis"><em>get_elem</em></span> are avoided.</p><p>The <span class="emphasis"><em>evaluate_when_entries</em></span> param signals that schema entries should be included in the schema even though their "when" or "tailf:display-when" statements evaluate to false, i.e. instead a boolean <span class="emphasis"><em>evaluated_when_entry</em></span> param is added to these schema entries.</p><p>The <span class="emphasis"><em>stop_on_list</em></span> param limits the schema generation to one level under the list when true.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetschema.result"></a>Result</h4></div></div></div><pre class="programlisting">{"meta":
+ {"namespace": &lt;string, optional&gt;,
+  "keypath": &lt;string, optional&gt;,
+  "prefix": &lt;string&gt;,
+  "types": &lt;array of type&gt;},
+ "data": &lt;array of child&gt;}
+
+type = &lt;array of {&lt;string, type name with prefix&gt;: &lt;type_stack&gt;}&gt;
+
+type_stack = &lt;array of type_stack_entry&gt;
+
+type_stack_entry =
+ {"bits": &lt;array of string&gt;, "size": &lt;32 | 64&gt;} |
+ {"leaf_type": &lt;type_stack&gt;, "list_type": &lt;type_stack&gt;} |
+ {"union": &lt;array of type_stack&gt;} |
+ {"name": &lt;primitive_type | "user_defined"&gt;,
+  "info": &lt;string, optional&gt;,
+  "readonly": &lt;boolean, optional&gt;,
+  "facets": &lt;array of facet, only if not primitive type&gt;}
+
+primitive_type =
+ "empty" |
+ "binary" |
+ "bits" |
+ "date-and-time" |
+ "instance-identifier" |
+ "int64" |
+ "int32" |
+ "int16" |
+ "uint64" |
+ "uint32" |
+ "uint16" |
+ "uint8" |
+ "ip-prefix" |
+ "ipv4-prefix" |
+ "ipv6-prefix" |
+ "ip-address-and-prefix-length" |
+ "ipv4-address-and-prefix-length" |
+ "ipv6-address-and-prefix-length" |
+ "hex-string" |
+ "dotted-quad" |
+ "ip-address" |
+ "ipv4-address" |
+ "ipv6-address" |
+ "gauge32" |
+ "counter32" |
+ "counter64" |
+ "object-identifier"
+
+facet_entry =
+ {"enumeration": {"label": &lt;string&gt;, "info": &lt;string, optional&gt;}} |
+ {"fraction-digits": {"value": &lt;integer&gt;}} |
+ {"length": {"value": &lt;integer&gt;}} |
+ {"max-length": {"value": &lt;integer&gt;}} |
+ {"min-length": {"value": &lt;integer&gt;}} |
+ {"leaf-list": &lt;boolean&gt;} |
+ {"max-inclusive": {"value": &lt;integer&gt;}} |
+ {"max-length": {"value": &lt;integer&gt;}} |
+ {"range": {"value": &lt;array of range_entry&gt;}} |
+ {"min-exclusive": {"value": &lt;integer&gt;}} |
+ {"min-inclusive": {"value": &lt;integer&gt;}} |
+ {"min-length": {"value": &lt;integer&gt;}} |
+ {"pattern": {"value": &lt;string, regular expression&gt;}} |
+ {"total-digits": {"value": &lt;integer&gt;}}
+
+range_entry =
+ "min" |
+ "max" |
+ &lt;integer&gt; |
+ [&lt;integer, min value&gt;, &lt;integer, max value&gt;]
+
+child =
+ {"kind": &lt;kind&gt;,
+  "name": &lt;string&gt;,
+  "qname": &lt;string, same as "name" but with prefix prepended&gt;,
+  "info": &lt;string&gt;,
+  "namespace": &lt;string&gt;,
+  "is_action_input": &lt;boolean&gt;,
+  "is_action_output": &lt;boolean&gt;,
+  "is_cli_preformatted": &lt;boolean&gt;,
+  "presence": &lt;boolean&gt;,
+  "ordered_by": &lt;boolean&gt;,
+  "is_config_false_callpoint": &lt;boolean&gt;,
+  "key": &lt;boolean&gt;,
+  "exists": &lt;boolean&gt;,
+  "value": &lt;string | number | boolean&gt;,
+  "is_leafref": &lt;boolean&gt;,
+  "leafref_target": &lt;string&gt;,
+  "when_targets": &lt;array of string&gt;,
+  "deps": &lt;array of string&gt;
+  "hidden": &lt;boolean&gt;,
+  "default_ref":
+  {"namespace": &lt;string&gt;,
+   "tagpath": &lt;string&gt;
+  },
+  "access":
+  {"create": &lt;boolean&gt;,
+   "update": &lt;boolean&gt;,
+   "delete": &lt;boolean&gt;,
+   "execute": &lt;boolean&gt;
+  },
+  "config": &lt;boolean&gt;,
+  "readonly": &lt;boolean&gt;,
+  "suppress_echo": &lt;boolean&gt;,
+  "type":
+  {"name": &lt;primitive_type&gt;,
+   "primitive": &lt;boolean&gt;
+  }
+  "generated_name": &lt;string&gt;,
+  "units": &lt;string&gt;,
+  "leafref_groups": &lt;array of string&gt;,
+  "active": &lt;string, active case, only if "kind" is "choice"&gt;,
+  "cases": &lt;array of case, only of "kind" is "choice"&gt;,
+  "default": &lt;string | number | boolean&gt;,
+  "mandatory": &lt;boolean&gt;,
+  "children": &lt;children&gt;
+ }
+
+kind =
+ "module" |
+ "access-denies" |
+ "list-entry" |
+ "choice" |
+ "key" |
+ "leaf-list" |
+ "action" |
+ "container" |
+ "leaf" |
+ "list" |
+ "notification"
+
+case_entry =
+ {"kind": "case",
+  "name": &lt;string&gt;,
+  "children": &lt;array of child&gt;
+ }</pre><p>This is a fairly complex piece of JSON but it essentially maps what is seen in a YANG module. Keep that in mind when scrutinizing the above.</p><p>The <span class="emphasis"><em>meta</em></span> param contains meta-information about the YANG module such as namespace and prefix but it also contains type stack information for each type used in the YANG module represented in the <span class="emphasis"><em>data</em></span> param. Together with the <span class="emphasis"><em>meta</em></span> param, the <span class="emphasis"><em>data</em></span> param constitutes a complete YANG module in JSON format.</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10926"></a><p class="title"><b>Example&nbsp;19.9.&nbsp;Method get_schema</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie "sessionid=sess11635875109111642;" \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "get_schema", \
+         "params": {"th": 2, \
+                    "path": "/aaa:aaa/authentication/users/user{admin}", \
+                    "levels": -1, \
+                    "insert_values": true}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ {"meta":
+  {"namespace": "http://tail-f.com/ns/aaa/1.1",
+   "keypath": "/aaa:aaa/authentication/users/user{admin}",
+   "prefix": "aaa",
+   "types":
+   {"http://tail-f.com/ns/aaa/1.1:passwdStr":
+    [{"name": "http://tail-f.com/ns/aaa/1.1:passwdStr"},
+     {"name": "MD5DigestString"}]}}},
+ "data":
+ {"kind": "list-entry",
+  "name": "user",
+  "qname": "aaa:user",
+  "access":
+  {"create": true,
+   "update": true,
+   "delete": true},
+  "children":
+  [{"kind": "key",
+    "name": "name",
+    "qname": "aaa:name",
+    "info": {"string": "Login name of the user"},
+    "mandatory": true,
+    "access": {"update": true},
+    "type": {"name": "string", "primitive": true}},
+   ...]}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodhideschema"></a>19.14.2.&nbsp;Method hide_schema</h3></div></div></div><p>Hides data which has been adorned with a "hidden" statement in YANG modules. "hidden" statements is an extension defined in the tail-common YANG module (http://tail-f.com/yang/common).</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodhideschema.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "group_name": &lt;string&gt;</pre><p>The <span class="emphasis"><em>group_name</em></span> param is as defined by a "hidden" statement in a YANG module.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodhideschema.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodunhideschema"></a>19.14.3.&nbsp;Method unhide_schema</h3></div></div></div><p>Unhides data which has been adorned with a "hidden" statement in YANG modules. "hidden" statements is an extension defined in the tail-common YANG module (http://tail-f.com/yang/common).</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunhideschema.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "group_name": &lt;string&gt;,
+ "passwd": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>group_name</em></span> param is as defined by a "hidden" statement in a YANG module.</p><p>The <span class="emphasis"><em>passwd</em></span> param is a password needed to hide the data that has been adorned with a "hidden" statement. The password is as defined in the <span class="phrase">confd.conf</span> file.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodunhideschema.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetmoduleprefixmap"></a>19.14.4.&nbsp;Method get_module_prefix_map</h3></div></div></div><p>Returns a map from module name to module prefix.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetmoduleprefixmap.params"></a>Params</h4></div></div></div><p>Method takes no parameters.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetmoduleprefixmap.result"></a>Result</h4></div></div></div><pre class="programlisting">&lt;key-value object&gt;
+
+result = {"module-name": "module-prefix"}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10966"></a><p class="title"><b>Example&nbsp;19.10.&nbsp;Method get_module_prefix_map</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", id: 1, \
+         "method": "get_module_prefix_map", \
+         "params": {}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {
+     "cli-builtin": "cli-builtin",
+     "confd_cfg": "confd_cfg",
+     "iana-crypt-hash": "ianach",
+     "ietf-inet-types": "inet",
+     "ietf-netconf": "nc",
+     "ietf-netconf-acm": "nacm",
+     "ietf-netconf-monitoring": "ncm",
+     "ietf-netconf-notifications": "ncn",
+     "ietf-netconf-with-defaults": "ncwd",
+     "ietf-restconf": "rc",
+     "ietf-restconf-monitoring": "rcmon",
+     "ietf-yang-library": "yanglib",
+     "ietf-yang-types": "yang",
+     "tailf-aaa": "aaa",
+     "tailf-acm": "tacm",
+     "tailf-common-monitoring": "tfcg",
+     "tailf-confd-monitoring": "tfcm",
+     "tailf-kicker": "kicker",
+     "tailf-netconf-extensions": "tfnce",
+     "tailf-netconf-monitoring": "tncm",
+     "tailf-netconf-query": "tfncq",
+     "tailf-rest-error": "tfrerr",
+     "tailf-rest-query": "tfrestq",
+     "tailf-rollback": "rollback",
+     "tailf-webui": "webui",
+    }
+}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodrunaction"></a>19.14.5.&nbsp;Method run_action</h3></div></div></div><p>Invokes an action or rpc defined in a YANG module.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrunaction.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "path": &lt;string&gt;,
+ "params": &lt;json, optional&gt;
+ "format": &lt;"normal" | "bracket" | "json", default: "normal"&gt;,
+ "comet_id": &lt;string, optional&gt;,
+ "handle": &lt;string, optional&gt;}</pre><p>Actions are as specified in th YANG module, i.e. having a specific name and a well defined set of parameters and result. the <span class="emphasis"><em>path</em></span> param is a keypath pointing to an action or rpc in and the <span class="emphasis"><em>params</em></span> param is a JSON object with action parameters.</p><p>The <span class="emphasis"><em>format</em></span> param defines if the result should be an array of key values or a pre-formatted string on bracket format as seen in the CLI. The result is also as specified by the YANG module.</p><p>Both a <span class="emphasis"><em>comet_id</em></span> and <span class="emphasis"><em>handle</em></span> need to be provided in order to receive notifications.</p><p><span class="emphasis"><em>NOTE</em></span> This method is often used to call an action that uploads binary data (e.g. images) and retrieving them at a later time. While retrieval is not a problem, uploading is a problem, because JSON-RPC request payloads have a size limitation (e.g. 64 kB). The limitation is needed for performance concerns because the payload is first buffered, before the JSON string is parsed and the request is evaluated. When you have scenarios that need binary uploads, please use the CGI functionality instead which has a size limitation that can be configured, and which is not limited to JSON payloads, so one can use streaming techniques.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrunaction.result"></a>Result</h4></div></div></div><pre class="programlisting">&lt;string | array of result | key-value object&gt;
+
+result = {"name": &lt;string&gt;, "value": &lt;string&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodrunaction.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "action.invalid_result", "data": {"path": &lt;string, path to invalid result&gt;}}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e10994"></a><p class="title"><b>Example&nbsp;19.11.&nbsp;Method run_action</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", id: 1, \
+         "method": "run_action", \
+         "params": {"th": 2, \
+                    "path": "/dhcp:dhcp/set-clock", \
+                    "params": {"clockSettings": "2014-02-11T14:20:53.460%2B01:00"}}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": [{"name":"systemClock", "value":"0000-00-00T03:00:00+00:00"},
+            {"name":"inlineContainer/bar", "value":"false"},
+            {"name":"hardwareClock","value":"0000-00-00T04:00:00+00:00"}]}</pre><pre class="programlisting">curl \
+    -s \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d'{"jsonrpc": "2.0", "id": 1, \
+        "method": "run_action", \
+        "params": {"th": 2, \
+                   "path": "/dhcp:dhcp/set-clock", \
+                   "params": {"clockSettings": \
+    "2014-02-11T14:20:53.460%2B01:00"}, \
+                   "format": "bracket"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": "systemClock 0000-00-00T03:00:00+00:00\ninlineContainer  {\n    \
+                    bar false\n}\nhardwareClock 0000-00-00T04:00:00+00:00\n"}</pre><pre class="programlisting">curl \
+    -s \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d'{"jsonrpc": "2.0", "id": 1, \
+        "method": "run_action", \
+        "params": {"th": 2, \
+                   "path": "/dhcp:dhcp/set-clock", \
+                   "params": {"clockSettings": \
+    "2014-02-11T14:20:53.460%2B01:00"}, \
+                   "format": "json"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {"systemClock": "0000-00-00T03:00:00+00:00",
+            "inlineContainer": {"bar": false},
+            "hardwareClock": "0000-00-00T04:00:00+00:00"}}</pre></div></div><br class="example-break"></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodssession"></a>19.15.&nbsp;Methods - session</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodlogin"></a>19.15.1.&nbsp;Method login</h3></div></div></div><p>Creates a user session and sets a browser cookie</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlogin.params"></a>Params</h4></div></div></div><pre class="programlisting">{"user": &lt;string&gt;, "passwd": &lt;string&gt;, "ack_warning": &lt;boolean, default: false&gt;}</pre><p>The <span class="emphasis"><em>user</em></span> and <span class="emphasis"><em>passwd</em></span> are the credentials to be used in order to create a user session. The common AAA engine in ConfD is used to verify the credentials.</p><p>If the method fails with a warning, the warning needs to be displayed to the user, along with a checkbox to allow the user to acknowledge the warning. The acknowledgement of the warning translates to setting <span class="emphasis"><em>ack_warning</em></span> to true.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlogin.result"></a>Result</h4></div></div></div><pre class="programlisting">{"warning": &lt;string, optional&gt;}</pre><p><span class="emphasis"><em>NOTE</em></span> The response will have a `Set-Cookie` HTTP header with a <span class="emphasis"><em>sessionid</em></span> cookie which will be your authentication token for upcoming JSON-RPC requests.</p><p>The <span class="emphasis"><em>warning</em></span> is a free-text string that should be displayed to the user after a successful login. This is not to be mistaken with a failed login that has a <span class="emphasis"><em>warning</em></span> as well. In case of a failure, the user should also acknowledge the warning, not just have it displayed for optional reading.</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e11026"></a><p class="title"><b>Example&nbsp;19.12.&nbsp;Method login</b></p><div class="example-contents"><pre class="programlisting">curl \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "login", \
+         "params": {"user": "joe", \
+                    "passwd": "SWkkasE32"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "error":
+ {"code": -32000,
+  "type": "rpc.method.failed",
+  "message": "Method failed"}}</pre><pre class="programlisting">curl \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "login", \
+         "params": {"user": "admin", \
+         "passwd": "admin"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {}}</pre><p><span class="emphasis"><em>NOTE</em></span> <span class="emphasis"><em>sessionid</em></span> cookie is set at this point in your User Agent (browser). In our examples, we set the cookie explicitly in the upcoming requests for clarity.</p><pre class="programlisting">curl \
+    --cookie "sessionid=sess4245223558720207078;" \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "get_trans"}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {"trans": []}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodlogout"></a>19.15.2.&nbsp;Method logout</h3></div></div></div><p>Removes a user session and invalidates the browser cookie</p><p>The HTTP cookie identifies the user session so no input parameters are needed.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlogout.params"></a>Params</h4></div></div></div><p>None.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodlogout.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e11049"></a><p class="title"><b>Example&nbsp;19.13.&nbsp;Method logout</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie "sessionid=sess4245223558720207078;" \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "logout"}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": {}}</pre><pre class="programlisting">curl \
+    --cookie "sessionid=sess4245223558720207078;" \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "logout"}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "error":
+ {"code": -32000,
+  "type": "session.invalid_sessionid",
+  "message": "Invalid sessionid"}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodkickuser"></a>19.15.3.&nbsp;Method kick_user</h3></div></div></div><p>Kills a user session, i.e. kicking out the user</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodkickuser.params"></a>Params</h4></div></div></div><pre class="programlisting">{"user": &lt;string | number&gt;}</pre><p>The <span class="emphasis"><em>user</em></span> param is either the username of a logged in user or session id.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodkickuser.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodssessiondata"></a>19.16.&nbsp;Methods - session data</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetsessiondata"></a>19.16.1.&nbsp;Method get_session_data</h3></div></div></div><p>Gets session data from the session store</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsessiondata.params"></a>Params</h4></div></div></div><pre class="programlisting">{"key": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>key</em></span> param for which to get the stored data for. Read more about the session store in the <span class="emphasis"><em>put_session_data</em></span> method.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetsessiondata.result"></a>Result</h4></div></div></div><pre class="programlisting">{"value": &lt;string&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodputsessiondata"></a>19.16.2.&nbsp;Method put_session_data</h3></div></div></div><p>Puts session data into the session store. The session store is small key-value server-side database where data can be stored under a unique key. The data may be an arbitrary object, but not a function object. The object is serialized into a JSON string and then stored on the server.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodputsessiondata.params"></a>Params</h4></div></div></div><pre class="programlisting">{"key": &lt;string&gt;,
+ "value": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>key</em></span> param is the unique key for which the data in the <span class="emphasis"><em>value</em></span> param is to be stored.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodputsessiondata.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methoderasesessiondata"></a>19.16.3.&nbsp;Method erase_session_data</h3></div></div></div><p>Erases session data previously stored with "put_session_data".</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoderasesessiondata.params"></a>Params</h4></div></div></div><pre class="programlisting">{"key": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>key</em></span> param for which all session data will be erased. Read more about the session store in the <span class="emphasis"><em>put_session_data</em></span> method.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoderasesessiondata.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodstransaction"></a>19.17.&nbsp;Methods - transaction</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgettrans"></a>19.17.1.&nbsp;Method get_trans</h3></div></div></div><p>Lists all transactions</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettrans.params"></a>Params</h4></div></div></div><p>None.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{"trans": &lt;array of transaction&gt;}
+
+transaction =
+ {"db": &lt;"running" | "startup" | "candidate"&gt;,
+  "mode": &lt;"read" | "read_write", default: "read"&gt;,
+  "conf_mode": &lt;"private" | "shared" | "exclusive", default: "private"&gt;,
+  "tag": &lt;string&gt;,
+  "th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e11117"></a><p class="title"><b>Example&nbsp;19.14.&nbsp;Method get_trans</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "get_trans"}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ {"trans":
+  [{"db": "running",
+    "th": 2}]}}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodnewtrans"></a>19.17.2.&nbsp;Method new_trans</h3></div></div></div><p>Creates a new transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodnewtrans.params"></a>Params</h4></div></div></div><pre class="programlisting">{"db": &lt;"startup" | "running" | "candidate", default: "running"&gt;,
+ "mode": &lt;"read" | "read_write", default: "read"&gt;,
+ "conf_mode": &lt;"private" | "shared" | "exclusive", default: "private"&gt;,
+ "tag": &lt;string&gt;,
+ "th": &lt;integer&gt;,
+ "on_pending_changes": &lt;"reuse" | "reject" | "discard", default: "reuse"&gt;}</pre><p>The <span class="emphasis"><em>conf_mode</em></span> param specifies which transaction semantics to use when it comes to lock and commit strategies. These three modes mimics the modes available in the CLI.</p><p>The meaning of <span class="emphasis"><em>private</em></span>, <span class="emphasis"><em>shared</em></span> and <span class="emphasis"><em>exclusive</em></span> have slightly different meaning depending on how the system is configured; with a writable running, startup or candidate configuration.</p><p><span class="emphasis"><em>private</em></span> (*writable running enabled*) - Edit a private copy of the running configuration, no lock is taken.</p><p><span class="emphasis"><em>private</em></span> (*writable running disabled, startup enabled*) - Edit a private copy of the startup configuration, no lock is taken.</p><p><span class="emphasis"><em>exclusive</em></span> (*candidate enabled*) - Lock the running configuration and the candidate configuration and edit the candidate configuration.</p><p><span class="emphasis"><em>exclusive</em></span> (*candidate disabled, startup enabled*) - Lock the running configuration (if enabled) and the startup configuration and edit the startup configuration.</p><p><span class="emphasis"><em>shared</em></span> (*writable running enabled, candidate enabled*) - Edit the candidate configuration without locking it.</p><p>The <span class="emphasis"><em>tag</em></span> param is a way to tag transactions with a keyword, so that they can be filtered out when you call the <span class="emphasis"><em>get_trans</em></span> method.</p><p>The <span class="emphasis"><em>th</em></span> param is a way to create transactions within other read_write transactions.</p><p>The <span class="emphasis"><em>on_pending_changes</em></span> param decides what to do if the candidate already has been written to, e.g. a CLI user has started a shared configuration session and changed a value in the configuration (without committing it). If this parameter is omitted the default behavior is to silently reuse the candidate. If "reject" is specified the call to the "new_trans" method will fail if the candidate is non-empty. If "discard" is specified the candidate is silently cleared if it is non-empty.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodnewtrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre><p>A new transaction handler id</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodnewtrans.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "trans.confirmed_commit_in_progress"}
+{"type": "db.locked", "data": {"sessions": &lt;array of string&gt;}}</pre><p>The `data.sessions` param is an array of strings describing the current sessions of the locking user, e.g. an array of "admin tcp (cli from 192.245.2.3) on since 2006-12-20 14:50:30 exclusive".</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e11160"></a><p class="title"><b>Example&nbsp;19.15.&nbsp;Method new_trans</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+         "method": "new_trans", \
+         "params": {"db": "running", \
+                    "mode": "read"}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result": 2}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methoddeletetrans"></a>19.17.3.&nbsp;Method delete_trans</h3></div></div></div><p>Deletes a transaction created by <span class="emphasis"><em>new_trans</em></span> or <span class="emphasis"><em>new_webui_trans</em></span></p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoddeletetrans.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methoddeletetrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsettranscomment"></a>19.17.4.&nbsp;Method set_trans_comment</h3></div></div></div><p>Adds a comment to the active read-write transaction. This comment will be stored in rollback files and can be seen with a call to <span class="emphasis"><em>get_rollbacks</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsettranscomment.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsettranscomment.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodsettranslabel"></a>19.17.5.&nbsp;Method set_trans_label</h3></div></div></div><p>Adds a label to the active read-write transaction. This label will be stored in rollback files and can be seen with a call to <span class="emphasis"><em>get_rollbacks</em></span>.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsettranslabel.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodsettranslabel.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodstransactionchanges"></a>19.18.&nbsp;Methods - transaction - changes</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodistransmodified"></a>19.18.1.&nbsp;Method is_trans_modified</h3></div></div></div><p>Checks if any modifications has been done to a transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodistransmodified.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodistransmodified.result"></a>Result</h4></div></div></div><pre class="programlisting">{"modified": &lt;boolean&gt;}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgettranschanges"></a>19.18.2.&nbsp;Method get_trans_changes</h3></div></div></div><p>Extracts modifications done to a transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettranschanges.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "leaf_list_as_leaf": &lt;boolean&gt;, default: false} (DEPRECATED),
+ "output": &lt;"compact" | "legacy", default: "legacy"&gt;</pre><p>The <span class="emphasis"><em>leaf_list_as_leaf</em></span> parameter is deprecated and
+                    will be removed in future versions. It can be used to preserve backwards
+                    compatibility for leaf-list. If this parameter is not set (or <span class="emphasis"><em>false</em></span>)
+                    the result for leaf-list changes will be represented as <span class="emphasis"><em>created</em></span>
+                    or <span class="emphasis"><em>deleted</em></span> operations. With this parameter set to
+                    <span class="emphasis"><em>true</em></span> the result will be represented as a
+                    <span class="emphasis"><em>value_set</em></span> operation.
+                </p><p>
+                  The <span class="emphasis"><em>output</em></span> parameter controls
+                  the result content.
+
+                  <span class="emphasis"><em>legacy</em></span> format include old and
+                  value for all operation types even if their value is
+                  undefined. undefined values are represented by an
+                  empty string.
+
+                  <span class="emphasis"><em>compact</em></span> format excludes old and
+                  value if their value is undefined.
+                </p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettranschanges.result"></a>Result</h4></div></div></div><pre class="programlisting">{"changes": &lt;array of change&gt;}
+
+change =
+ {"keypath": &lt;string&gt;,
+  "op": &lt;"created" | "deleted" | "modified" | "value_set"&gt;,
+  "value": &lt;string,&gt;,
+  "old": &lt;string&gt;
+ }</pre><p>The <span class="emphasis"><em>value</em></span> param is only interesting if <span class="emphasis"><em>op</em></span> is set to one of <span class="emphasis"><em>created</em></span>, <span class="emphasis"><em>modified</em></span> or <span class="emphasis"><em>value_set</em></span>.</p><p>The <span class="emphasis"><em>old</em></span> param is only interesting if <span class="emphasis"><em>op</em></span> is set to <span class="emphasis"><em>modified</em></span>.</p></div><div class="sect3"><div class="titlepage"></div><div class="example"><a name="d5e11238"></a><p class="title"><b>Example&nbsp;19.16.&nbsp;Method get_trans_changes</b></p><div class="example-contents"><pre class="programlisting">curl \
+    --cookie 'sessionid=sess12541119146799620192;' \
+    -X POST \
+    -H 'Content-Type: application/json' \
+    -d '{"jsonrpc": "2.0", "id": 1, \
+        "method": "changes", \
+        "params": {"th": 2}}' \
+    http://127.0.0.1:8008/jsonrpc</pre><pre class="programlisting">{"jsonrpc": "2.0",
+ "id": 1,
+ "result":
+ [{"keypath":"/dhcp:dhcp/default-lease-time",
+   "op": "value_set",
+   "value": "100",
+   "old": ""}]}</pre></div></div><br class="example-break"></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodvalidatetrans"></a>19.18.3.&nbsp;Method validate_trans</h3></div></div></div><p>Validates a transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatetrans.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatetrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre><p>or</p><pre class="programlisting">{"warnings": &lt;array of warning&gt;}
+
+warning = {"paths": &lt;array of string&gt;, "message": &lt;string&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatetrans.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "trans.resolve_needed", "data": {"users": &lt;array string&gt;}}</pre><p>The `data.users` param is an array of conflicting usernames.</p><pre class="programlisting">{"type": "trans.validation_failed", "data": {"errors": &lt;array of error&gt;}}
+
+error = {"paths": &lt;array of string&gt;, "message": &lt;string&gt;}</pre><p>The `data.errors` param points to a keypath that is invalid.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgettransconflicts"></a>19.18.4.&nbsp;Method get_trans_conflicts</h3></div></div></div><p>Gets the conflicts registered in a transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettransconflicts.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgettransconflicts.result"></a>Result</h4></div></div></div><pre class="programlisting">{"conflicts:" &lt;array of conflicts&gt;}
+
+conflict =
+ {"keypath": &lt;string&gt;,
+  "op": &lt;"created" | "deleted" | "modified" | "value_set"&gt;,
+  "value": &lt;string&gt;,
+  "old": &lt;string&gt;}</pre><p>The <span class="emphasis"><em>value</em></span> param is only interesting if <span class="emphasis"><em>op</em></span> is set to one of <span class="emphasis"><em>created</em></span>, <span class="emphasis"><em>modified</em></span> or <span class="emphasis"><em>value_set</em></span>.</p><p>The <span class="emphasis"><em>old</em></span> param is only interesting if <span class="emphasis"><em>op</em></span> is set to <span class="emphasis"><em>modified</em></span>.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodresolvetrans"></a>19.18.5.&nbsp;Method resolve_trans</h3></div></div></div><p>Tells the server that the conflicts have been resolved</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresolvetrans.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodresolvetrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodstransactioncommitchanges"></a>19.19.&nbsp;Methods - transaction - commit changes</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodvalidatecommit"></a>19.19.1.&nbsp;Method validate_commit</h3></div></div></div><p>Validates a transaction before calling <span class="emphasis"><em>commit</em></span>. If this method succeeds (with or without warnings) then the next operation <span class="emphasis"><em>must</em></span> be all call to either <span class="emphasis"><em>commit</em></span> or <span class="emphasis"><em>clear_validate_lock</em></span>. The configuration will be locked for access by other users until one of these methods are called.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatecommit.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatecommit.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre><p>or</p><pre class="programlisting">{"warnings": &lt;array of warning&gt;}
+
+warning = {"paths": &lt;array of string&gt;, "message": &lt;string&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodvalidatecommit.errorsspecific"></a>Errors (specific)</h4></div></div></div><p>Same as for the <span class="emphasis"><em>validate_trans</em></span> method.</p></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodclearvalidatelock"></a>19.19.2.&nbsp;Method clear_validate_lock</h3></div></div></div><p>Releases validate lock taken by <span class="emphasis"><em>validate_commit</em></span></p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodclearvalidatelock.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodclearvalidatelock.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodcommit"></a>19.19.3.&nbsp;Method commit</h3></div></div></div><p>Copies the configuration into the running datastore.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcommit.params"></a>Params</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;,
+ "timeout": &lt;integer, default: 0&gt;,
+ "release_locks" &lt;boolean, default: true&gt;}</pre><p>The <span class="emphasis"><em>timeout</em></span> param represents the confirmed commit timeout, i.e. set it to zero (0) to commit without timeout.</p><p>For backwards compatibility, the <span class="emphasis"><em>flags</em></span> param can also be a bit mask with the following limit values:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>`1 &lt;&lt; 0` - Do not release locks, overridden by the <span class="emphasis"><em>release_locks</em></span> if set</p></li><li class="listitem"><p>`1 &lt;&lt; 2` - Do not drop revision</p></li></ul></div><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>If a call to <span class="emphasis"><em>confirm_commit</em></span> is not done within <span class="emphasis"><em>timeout</em></span> seconds an automatic rollback is performed. This method can also be used to "extend" a confirmed commit that is already in progress, i.e. set a new timeout or add changes.</p></li><li class="listitem"><p>A call to <span class="emphasis"><em>abort_commit</em></span> can be made to abort the confirmed commit.</p></li></ul></div><p><span class="emphasis"><em>NOTE</em></span>: Must be preceded by a call to <span class="emphasis"><em>validate_commit</em></span></p><p><span class="emphasis"><em>NOTE</em></span>: The transaction handler is deallocated as a side effect of this method</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcommit.result"></a>Result</h4></div></div></div><pre class="programlisting">{"commit_queue_id": &lt;integer&gt;}</pre><p>The <span class="emphasis"><em>commit_queue_id</em></span> is only returned if the method is run with the <span class="emphasis"><em>async_commit_queue</em></span> flag, or with the <span class="emphasis"><em>sync_commit_queue</em></span> flag and a timeout occurs.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodcommit.errorsspecific"></a>Errors (specific)</h4></div></div></div><pre class="programlisting">{"type": "trans.confirmed_commit_in_progress"}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodabortcommit"></a>19.19.4.&nbsp;Method abort_commit</h3></div></div></div><p>Aborts the active read-write transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodabortcommit.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodconfirmcommit"></a>19.19.5.&nbsp;Method confirm_commit</h3></div></div></div><p>Confirms the currently pending confirmed commit</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodconfirmcommit.result"></a>Result</h4></div></div></div><pre class="programlisting">{}</pre></div></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.jsonrpc.methodstransactionwebui"></a>19.20.&nbsp;Methods - transaction - webui</h2></div></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodgetwebuitrans"></a>19.20.1.&nbsp;Method get_webui_trans</h3></div></div></div><p>Gets the webui read-write transaction</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodgetwebuitrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{"trans": &lt;array of trans&gt;}
+
+trans =
+ {"db": &lt;"startup" | "running" | "candidate", default: "running"&gt;,
+  "conf_mode": &lt;"private" | "shared" | "exclusive", default: "private"&gt;,
+  "th": &lt;integer&gt;
+ }</pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="ug.jsonrpc.methodnewwebuitrans"></a>19.20.2.&nbsp;Method new_webui_trans</h3></div></div></div><p>Creates a read-write transaction that can be retrieved by 'get_webui_trans'.</p><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodnewwebuitrans.params"></a>Params</h4></div></div></div><pre class="programlisting">{"db": &lt;"startup" | "running" | "candidate", default: "running"&gt;,
+ "conf_mode": &lt;"private" | "shared" | "exclusive", default: "private"&gt;
+ "on_pending_changes": &lt;"reuse" | "reject" | "discard", default: "reuse"&gt;}</pre><p>See 'new_trans' for semantics of the parameters and specific errors.</p><p>The <span class="emphasis"><em>on_pending_changes</em></span> param decides what to do if the candidate already has been written to, e.g. a CLI user has started a shared configuration session and changed a value in the configuration (without committing it). If this parameter is omitted the default behavior is to silently reuse the candidate. If "reject" is specified the call to the "new_webui_trans" method will fail if the candidate is non-empty. If "discard" is specified the candidate is silently cleared if it is non-empty.</p></div><div class="sect3"><div class="titlepage"><div><div><h4 class="title"><a name="ug.jsonrpc.methodnewwebuitrans.result"></a>Result</h4></div></div></div><pre class="programlisting">{"th": &lt;integer&gt;}</pre><p>A new transaction handler id</p></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch18.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch20.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;18.&nbsp;Web UI Development&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;20.&nbsp;The web server</td></tr></table></div></body></html>

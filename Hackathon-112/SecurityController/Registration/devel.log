@@ -1,0 +1,16 @@
+<INFO> 5-Mar-2021::05:06:23.075 security-controller confd[24498]: confd embedded apps in early_phase0:
+	[]
+<INFO> 5-Mar-2021::05:06:23.292 security-controller confd[24498]: confd mmap_schema handle_info got msg: timeout
+<INFO> 5-Mar-2021::05:06:23.321 security-controller confd[24498]: confd embedded apps in phase0:
+	[]
+<INFO> 5-Mar-2021::05:06:23.572 security-controller confd[24498]: devel-cdb init files found in ./confd-cdb: aaa_init.xml
+<INFO> 5-Mar-2021::05:06:23.665 security-controller confd[24498]: devel-cdb Compacted CDB journal file: 23 ms (93 nodes in memory, disk size 1.44 KiB -> 1.39 KiB)
+<INFO> 5-Mar-2021::05:06:23.679 security-controller confd[24498]: confd embedded apps in phase1:
+	[]
+<ERR> 5-Mar-2021::05:06:23.724 security-controller confd[24498]: devel-aaa Module "tailf-webui" in access rule "any-group/tailf-webui-user" does not exist - ignoring rule
+<INFO> 5-Mar-2021::05:06:23.734 security-controller confd[24498]: confd embedded apps in phase1_delayed:
+	[]
+<INFO> 5-Mar-2021::05:06:23.740 security-controller confd[24498]: confd embedded apps in phase2:
+	[]
+<INFO> 5-Mar-2021::05:06:28.524 security-controller confd[24498]: devel-cdb Compacted CDB journal file: 23 ms (159 nodes in memory, disk size 2.16 KiB -> 2.06 KiB)
+<INFO> 5-Mar-2021::05:06:30.041 security-controller confd[24498]: devel-cdb Compacted CDB journal file: 24 ms (241 nodes in memory, disk size 3.03 KiB -> 2.87 KiB)

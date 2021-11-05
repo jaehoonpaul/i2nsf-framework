@@ -1,0 +1,26 @@
+
+Example showing a CDB client. This code configures yaws through ConfD
+A simplified version of yaws.conf is found in yaws.yang
+To build and run, first install yaws in /usr/local (or edit the Makefile
+if yaws is installed elsewhere)
+
+
+
+To compile and run
+
+# make all
+# make start
+
+The above builds everything and starts confd with the right stuff loaded
+Once compiled and started, do in another xterm - 
+
+# make estart
+
+The above starts the erlang based cdb client found in yconf.erl
+
+In yet another xterm, start the confd cli and edit some yaws 
+settings and see how the cdb client reacts
+
+
+
+

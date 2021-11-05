@@ -1,0 +1,31 @@
+<INFO> 5-Mar-2021::05:06:23.056 security-controller confd[24498]: - Writing daemon log to /home/ubuntu/Registration/confd.log
+<INFO> 5-Mar-2021::05:06:23.061 security-controller confd[24498]: - Writing NETCONF log to /home/ubuntu/Registration/netconf.log
+<INFO> 5-Mar-2021::05:06:23.061 security-controller confd[24498]: - Writing audit log to /home/ubuntu/Registration/audit.log
+<INFO> 5-Mar-2021::05:06:23.061 security-controller confd[24498]: - Writing developer log to /home/ubuntu/Registration/devel.log
+<INFO> 5-Mar-2021::05:06:23.062 security-controller confd[24498]: - Daemon logging started
+<DEBUG> 5-Mar-2021::05:06:23.081 security-controller confd[24498]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 5-Mar-2021::05:06:23.083 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:06:23.085 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:06:23.086 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 5-Mar-2021::05:06:23.088 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 5-Mar-2021::05:06:23.089 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/ietf-yang-library.fxs
+<DEBUG> 5-Mar-2021::05:06:23.090 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 5-Mar-2021::05:06:23.091 security-controller confd[24498]: - Loading file ./ietf-i2nsf-reg-interface.fxs
+<DEBUG> 5-Mar-2021::05:06:23.093 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 5-Mar-2021::05:06:23.094 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:06:23.095 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 5-Mar-2021::05:06:23.099 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-common.fxs
+<DEBUG> 5-Mar-2021::05:06:23.104 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-acm.fxs
+<DEBUG> 5-Mar-2021::05:06:23.105 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-rollback.fxs
+<DEBUG> 5-Mar-2021::05:06:23.107 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-kicker.fxs
+<DEBUG> 5-Mar-2021::05:06:23.108 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-common-query.fxs
+<DEBUG> 5-Mar-2021::05:06:23.109 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/tailf-aaa.fxs
+<DEBUG> 5-Mar-2021::05:06:23.123 security-controller confd[24498]: - Loading file ./commands-c.ccl
+<DEBUG> 5-Mar-2021::05:06:23.132 security-controller confd[24498]: - Loading file ./commands-j.ccl
+<DEBUG> 5-Mar-2021::05:06:23.143 security-controller confd[24498]: - Loading file ../confd-6.6/etc/confd/confd.ccl
+<INFO> 5-Mar-2021::05:06:23.254 security-controller confd[24498]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 5-Mar-2021::05:06:23.573 security-controller confd[24498]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 5-Mar-2021::05:06:23.750 security-controller confd[24498]: - Starting to listen for NETCONF SSH on 0.0.0.0:2022
+<INFO> 5-Mar-2021::05:06:23.771 security-controller confd[24498]: - Starting to listen for NETCONF TCP on 127.0.0.1:2023
+<INFO> 5-Mar-2021::05:06:23.813 security-controller confd[24498]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 5-Mar-2021::05:06:23.917 security-controller confd[24498]: - ConfD started vsn: 6.6

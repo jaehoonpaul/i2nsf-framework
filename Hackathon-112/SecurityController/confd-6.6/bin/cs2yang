@@ -1,0 +1,145 @@
+#! /bin/sh
+
+progname="`basename $0`"
+progdir="`dirname $0`"
+
+if [ x"$CONFD_DIR" = x ]; then
+    CONFD_DIR=/usr/local
+fi
+
+CS2YANG_XSL=$CONFD_DIR/lib/cs2yang/cs2yang.xsl
+if [ ! -r "$CS2YANG_XSL" ]; then
+    if [ -r "$progdir"/../lib/cs2yang/cs2yang.xsl ]; then
+	CS2YANG_XSL="$progdir"/../lib/cs2yang/cs2yang.xsl
+    else
+	if [ -r "$progdir"/cs2yang.xsl ]; then
+	    CS2YANG_XSL="$progdir"/cs2yang.xsl
+	else
+	    echo "Couldn't find cs2yang.xsl check installation"
+	    exit 1
+	fi
+    fi
+fi
+
+usage() {
+    cat <<EOF
+Usage:
+
+  $progname [options] [filename]
+
+Convert a confspec into Yang. By default input is read from stdin,
+unless filename is given on command line, and output is written to
+stdout. Valid options are:
+
+ --module|-m <module>       Use <module> as Yang module name (default:
+                            filename witout suffix)
+ --prefix|-p <prefix>       Use <prefix> as Yang prefix (default: taken
+                            from prefix attribute or namespace)
+ --namespace|-n <namespace> Use <namespace> as Yang namepsace
+                            (default: taken from the targetNamespace
+                            attribute, otherwise a made up URL starting
+                            with www.example.com)
+ -o <filename>              Write output to <filename>
+ --wrap|-w                  Wrap input in a tag with an xmlns declration
+                            stating that the input is confspec (useful
+                            for translating confspec snippets to Yang)
+ --help|-h|-?               Display this text
+
+Comments are preserved in the process. Any constructs not (yet)
+supported by cs2yang are copied into the resulting output as
+comments. The conversion is meant to be a "run once" process, and
+manual editing of the resulting Yang file might be necessary.
+
+Note: the conversion is done in xslt, using xsltproc as the xslt
+processor - xsltproc must be in your path.
+
+EOF
+}
+
+file="-"
+mode="yang"
+while [ $# -gt 0 ]; do
+    case "$1" in
+	--module|-m)
+	    module="$2"
+	    shift
+	    ;;
+	--prefix|-p)
+	    prefix="$2"
+	    shift
+	    ;;
+	--namespace|-n)
+	    namespace="$2"
+	    shift
+	    ;;
+	-o)
+	    output="$2"
+	    shift
+	    ;;
+	--test)
+	    mode=test
+	    ;;
+	--wrap|-w)
+	    mode=wrap
+	    ;;
+	-h|--help|-\?)
+	    usage
+	    exit 0
+	    ;;
+	-*)
+	    echo "$progname: Unknown option: $1 (use -h to get usage info)"
+	    exit 1
+	    ;;
+	*)
+	    if [ x"$file" != "x-" ]; then
+		echo "$progname: Only supply one input file (use -h to get usage info)"
+		exit 1
+	    fi
+	    file="$1"
+	    ;;
+    esac
+    shift
+done
+
+
+args=""
+if [ x"$module" != x ]; then
+    args="$args --param gModule \"$module\""
+fi
+if [ x"$prefix" != x ]; then
+    args="$args --param gPrefix \"$prefix\""
+fi
+if [ x"$namespace" != x ]; then
+    args="$args --param gNamespace \"$namespace\""
+fi
+if [ x"$file" = x"-" ]; then
+    filename=stdin
+else
+    filename=`basename ${file} | sed -e 's/.cs$//' -e 's/.csa$//'`
+fi
+args="$args --param gFilename \"$filename\""
+
+if [ x"$output" = x ]; then
+    :
+else
+    args="$args -o $output"
+fi
+
+case "$mode" in
+    test)
+	TEST=/tmp/`basename ${file}`.TEST
+	xsltproc $args "${CS2YANG_XSL}" "${file}" | pyang -f cs /dev/stdin | \
+	    xmllint --format - > $TEST
+	xmllint --format "${file}" | diff - $TEST
+	;;
+    wrap)
+	( echo '<elem xmlns="http://tail-f.com/ns/confspec/1.0">' ; \
+	    cat "${file}" ; echo '</elem>' ) | \
+	    xsltproc $args  $out "${CS2YANG_XSL}" -
+	exit $?
+	;;
+    *)
+	xsltproc $args  $out "${CS2YANG_XSL}" "${file}"
+	exit $?
+	;;
+esac

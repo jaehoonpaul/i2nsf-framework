@@ -1,0 +1,7 @@
+A general purpose MAAPI tool which can be used to get/set/delete
+values in a running ConfD
+
+Also a general purpose CDB listener which listens to changes
+in the CDB and prints the changes.
+
+

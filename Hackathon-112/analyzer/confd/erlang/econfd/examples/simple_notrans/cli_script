@@ -1,0 +1,72 @@
+#!/bin/sh
+
+errexit () {
+    cat out.log
+    echo "FAILED: $@" >&2
+    ${MAKE:-make} stop
+    exit 1
+}
+
+echo TEST1
+
+## first check that we have smtp servers
+confd_cli << EOF >out.log 2>&1
+show configuration servers
+exit
+EOF
+egrep "smtp +3" out.log || errexit "no smtp server found"
+
+
+echo TEST2
+## make sure the server to create is gone
+confd_cli << EOF >out.log 2>&1
+configure
+delete servers server foo 33
+commit
+EOF
+
+echo TEST3
+confd_cli << EOF >out.log 2>&1
+configure
+set servers server foo 33 ip 3.4.5.6 port 4 obj /servers/server[name='ssh'][number='2']/obj
+commit
+EOF
+egrep "complete" out.log || errexit "missing 'Commit complete' output"
+
+echo TEST4
+##  Now we should have the foo server
+confd_cli << EOF >out.log 2>&1
+show configuration servers
+exit
+EOF
+egrep "foo.*33" out.log || errexit "server foo 33 not found"
+
+echo TEST5
+confd_cli << EOF >out.log 2>&1
+configure
+delete servers server foo 33
+commit
+EOF
+egrep "complete" out.log || errexit "missing 'Commit complete' output"
+
+echo TEST6
+confd_cli << EOF >out.log 2>&1
+show configuration servers
+exit
+EOF
+grep foo out.log && errexit "server foo still present"
+
+
+echo TEST7
+# try netconf requests (RT:541)
+netconf-console-tcp set-objref.xml >out.log 2>&1 && \
+    grep '<ok/>' out.log || errexit "NETCONF <edit-config> failed"
+
+netconf-console-tcp --get > out.log 2>&1 && \
+    grep "obj.*name='frobozz'.*number='42'" out.log && \
+    grep "refs.*name='foo'.*number='1'" out.log && \
+    grep "refs.*name='bar'.*number='17'" out.log || \
+    errexit "NETCONF <get> failed"
+
+
+exit 0

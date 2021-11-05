@@ -1,0 +1,71 @@
+Simple C Validation Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example is an extended version of the test in
+examples.confd/validate/c.  It shows how dependency information can be
+specified in the YANG file to optimize the execution time of
+validation code.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+This example uses a configuration of four integers, a, b, c, and d.
+The validation point on a_number is the same as in the previous
+example, but in the YANG model there is a dependency to b_number
+specified.  This means that the validation code will be called only if
+a_number or b_number has been modified.
+
+There is also a validation point on c_number, which does not declare
+any dependencies.  It will be called for every change in the
+database.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+ 2. In a different shell, start the CLI and display the configuration
+
+        $ make cli
+        ...
+
+        (J) admin@localhost> show configuration mtest | details
+	
+	    a_number 42;
+	    b_number 7;
+        c_number 10;
+        d_number 20;
+	
+        (C) localhost# show running-config mtest | details
+    
+        a_number 42;
+        b_number 7;
+        c_number 10;
+        d_number 20;
+
+
+ 3. Make different configuration changes and watch the printouts from
+    the validation code.
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Semantic Validation
+

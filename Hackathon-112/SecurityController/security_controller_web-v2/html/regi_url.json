@@ -1,0 +1,12 @@
+{
+    "ietf-i2nsf-cfi-policy:policy": {
+        "threat-prevention": {
+	    "payload-content":[
+                {
+                    "name": "sns",
+		    "content": ["www.facebook.com,www.instagram.com"]
+                }
+            	]
+        }
+    }
+}

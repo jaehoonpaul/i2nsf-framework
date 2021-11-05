@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module econfd_schema</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module econfd_schema</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>Support for using schema information in the Erlang API.
+<p>Copyright © 2012 Tail-F Systems AB</p>
+
+<p><b>Version:</b> {$Id$}</p>
+<p><b>Behaviours:</b> <a href="gen_server.html"><tt>gen_server</tt></a>.</p>
+
+<h2><a name="description">Description</a></h2><p>Support for using schema information in the Erlang API.</p>
+  
+   Keeps schema info in a set of ets tables named by the toplevel namespace.
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#choice_children-1">choice_children/1</a></td><td>Get a flat list of children for a #confd_cs_node{},
+  with any choice/case structure(s) removed.</td></tr>
+<tr><td valign="top"><a href="#get_cs-2">get_cs/2</a></td><td>Find schema node by namespace and tagpath.</td></tr>
+<tr><td valign="top"><a href="#get_nslist-0">get_nslist/0</a></td><td>Get a list of loaded namespaces with info.</td></tr>
+<tr><td valign="top"><a href="#get_type-1">get_type/1</a></td><td>Get schema type definition identifier for built-in type.</td></tr>
+<tr><td valign="top"><a href="#get_type-2">get_type/2</a></td><td>Get schema type definition identifier for type defined in namespace.</td></tr>
+<tr><td valign="top"><a href="#ikeypath2cs-1">ikeypath2cs/1</a></td><td>Find schema node by ikeypath.</td></tr>
+<tr><td valign="top"><a href="#load-2">load/2</a></td><td>Load schema info from ConfD.</td></tr>
+<tr><td valign="top"><a href="#register_type_cbs-1">register_type_cbs/1</a></td><td>Register callbacks for a user-defined type.</td></tr>
+<tr><td valign="top"><a href="#str2val-2">str2val/2</a></td><td>Convert string to value based on schema type.</td></tr>
+<tr><td valign="top"><a href="#val2str-2">val2str/2</a></td><td>Convert value to string based on schema type.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="choice_children-1">choice_children/1</a></h3>
+<div class="spec">
+<p><tt>choice_children(Confd_cs_node::C) -&gt; [<a href="econfd.html#type-qtag">econfd:qtag()</a>]</tt>
+<ul class="definitions"><li><tt>C = #confd_cs_node{} | [<a href="econfd.html#type-qtag">econfd:qtag()</a> | #confd_cs_choice{}]</tt></li></ul></p>
+</div><p>Get a flat list of children for a #confd_cs_node{},
+  with any choice/case structure(s) removed.</p>
+
+<h3 class="function"><a name="get_cs-2">get_cs/2</a></h3>
+<div class="spec">
+<p><tt>get_cs(Ns::<a href="econfd.html#type-namespace">econfd:namespace()</a>, Tagpath::<a href="econfd.html#type-tagpath">econfd:tagpath()</a>) -&gt; #confd_cs_node{} | not_found</tt><br></p>
+</div><p>Find schema node by namespace and tagpath.</p>
+
+<h3 class="function"><a name="get_nslist-0">get_nslist/0</a></h3>
+<div class="spec">
+<p><tt>get_nslist() -&gt; [#confd_nsinfo{}]</tt><br></p>
+</div><p>Get a list of loaded namespaces with info</p>
+
+<h3 class="function"><a name="get_type-1">get_type/1</a></h3>
+<div class="spec">
+<p><tt>get_type(TypeName::atom()) -&gt; <a href="econfd.html#type-type">econfd:type()</a> | not_found</tt><br></p>
+</div><p>Get schema type definition identifier for built-in type.</p>
+
+<h3 class="function"><a name="get_type-2">get_type/2</a></h3>
+<div class="spec">
+<p><tt>get_type(Ns::<a href="econfd.html#type-namespace">econfd:namespace()</a>, TypeName::atom()) -&gt; <a href="econfd.html#type-type">econfd:type()</a></tt><br></p>
+</div><p>Get schema type definition identifier for type defined in namespace.</p>
+
+<h3 class="function"><a name="ikeypath2cs-1">ikeypath2cs/1</a></h3>
+<div class="spec">
+<p><tt>ikeypath2cs(IKeypath::<a href="econfd.html#type-ikeypath">econfd:ikeypath()</a>) -&gt; #confd_cs_node{} | not_found</tt><br></p>
+</div><p>Find schema node by ikeypath</p>
+
+<h3 class="function"><a name="load-2">load/2</a></h3>
+<div class="spec">
+<p><tt>load(Address::<a href="#type-ip">ip()</a>, Port::integer()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Load schema info from ConfD</p>
+
+<h3 class="function"><a name="register_type_cbs-1">register_type_cbs/1</a></h3>
+<div class="spec">
+<p><tt>register_type_cbs(TypeCbs::#confd_type_cbs{}) -&gt; ok</tt><br></p>
+</div><p>Register callbacks for a user-defined type. For an application
+  running in its own Erlang VM, this function registers the callbacks
+  in the loaded schema information, similar to confd_register_node_type()
+  in the C API. For an application running inside ConfD, this function
+  registers the callbacks in ConfD's internal schema information, similar
+  to using a shared object with confd_type_cb_init() in the C API.</p>
+
+<h3 class="function"><a name="str2val-2">str2val/2</a></h3>
+<div class="spec">
+<p><tt>str2val(Confd_cs_node::TypeId, Lexical) -&gt; {ok, Value} | {error, term()}</tt>
+<ul class="definitions"><li><tt>TypeId = #confd_cs_node{} | <a href="econfd.html#type-type">econfd:type()</a></tt></li><li><tt>Lexical = binary()</tt></li><li><tt>Value = <a href="econfd.html#type-value">econfd:value()</a></tt></li></ul></p>
+</div><p>Convert string to value based on schema type.</p>
+
+<h3 class="function"><a name="val2str-2">val2str/2</a></h3>
+<div class="spec">
+<p><tt>val2str(Confd_cs_node::TypeId, Value) -&gt; {ok, Lexical} | {error, term()}</tt>
+<ul class="definitions"><li><tt>TypeId = #confd_cs_node{} | <a href="econfd.html#type-type">econfd:type()</a></tt></li><li><tt>Value = <a href="econfd.html#type-value">econfd:value()</a></tt></li><li><tt>Lexical = binary()</tt></li></ul></p>
+</div><p>Convert value to string based on schema type.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Mar 2 2018, 14:41:25.</i></p>
+</body>
+</html>

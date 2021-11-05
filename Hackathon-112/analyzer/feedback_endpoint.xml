@@ -1,0 +1,8 @@
+<i2nsf-cfi-policy:policy>
+	<endpoint-group>
+		<user-group>
+			<name>ddos-attacker</name>
+			<ipv4>10.0.0.37</ipv4>
+		</user-group>
+	</endpoint-group>
+</ietf-i2nsf-cfi-policy:policy>

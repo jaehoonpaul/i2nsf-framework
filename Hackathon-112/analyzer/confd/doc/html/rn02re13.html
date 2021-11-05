@@ -1,0 +1,771 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd_lib_lib</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn02.html" title="ConfD man-pages, Volume 3"><link rel="prev" href="rn02re12.html" title="confd_lib_ha"><link rel="next" href="rn02re14.html" title="confd_lib_maapi"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">confd_lib_lib</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn02re12.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 3</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn02re14.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.3.confd_lib_lib"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.3.confd_lib_lib.name"></a><h2>Name</h2><p>confd_lib_lib &#8212; common library functions for applications connecting to ConfD</p></div><div class="refsynopsisdiv"><a name="man.3.confd_lib_lib.synopsis"></a><h2>Synopsis</h2><div class="funcsynopsis"><pre class="funcsynopsisinfo">#include &lt;confd_lib.h&gt;
+      </pre><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_init</b>(</code></td><td>const char *<var class="pdparam">name</var>, </td></tr><tr><td>&nbsp;</td><td>FILE *<var class="pdparam">estream</var>, </td></tr><tr><td>&nbsp;</td><td>const enum confd_debug_level <var class="pdparam">debug</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_set_debug</b>(</code></td><td>enum confd_debug_level <var class="pdparam">debug</var>, </td></tr><tr><td>&nbsp;</td><td>FILE *<var class="pdparam">estream</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_fatal</b>(</code></td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_load_schemas</b>(</code></td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_load_schemas_list</b>(</code></td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var>, </td></tr><tr><td>&nbsp;</td><td>const u_int32_t *<var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const int *<var class="pdparam">nsflags</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">num_ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_mmap_schemas_setup</b>(</code></td><td>void *<var class="pdparam">addr</var>, </td></tr><tr><td>&nbsp;</td><td>size_t <var class="pdparam">size</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">filename</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_mmap_schemas</b>(</code></td><td>const char *<var class="pdparam">filename</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_schemas</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_svcmp</b>(</code></td><td>const char *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_value</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ns_pp_value</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_kpath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_kpath_len</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_xmltag2str</b>(</code></td><td>u_int32_t <var class="pdparam">ns</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">xmltag</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_xpath_pp_kpath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">ns</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_format_keypath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_vformat_keypath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>va_list <var class="pdparam">ap</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_nslist</b>(</code></td><td>struct confd_nsinfo **<var class="pdparam">listp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_ns2prefix</b>(</code></td><td>u_int32_t <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_hash2str</b>(</code></td><td>u_int32_t <var class="pdparam">hash</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">u_int32_t <b class="fsfunc">confd_str2hash</b>(</code></td><td>const char *<var class="pdparam">str</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_root</b>(</code></td><td>int <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_node</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_node_child</b>(</code></td><td>const struct confd_cs_node *<var class="pdparam">parent</var>, </td></tr><tr><td>&nbsp;</td><td>struct xml_tag <var class="pdparam">xmltag</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_cs_node_cd</b>(</code></td><td>const struct confd_cs_node *<var class="pdparam">start</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_max_object_size</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">object</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_next_object_node</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">object</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_cs_node *<var class="pdparam">cur</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">value</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_type *<b class="fsfunc">confd_find_ns_type</b>(</code></td><td>u_int32_t <var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">name</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_type *<b class="fsfunc">confd_get_leaf_list_type</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">node</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_val2str</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">val</var>, </td></tr><tr><td>&nbsp;</td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_str2val</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">str</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">val</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_val2str_ptr</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">val</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_decimal64_fraction_digits</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_bitbig_size</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_hkp_tagmatch</b>(</code></td><td>struct xml_tag <var class="pdparam">tags[]</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">tagslen</var>, </td></tr><tr><td>&nbsp;</td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_hkp_prefix_tagmatch</b>(</code></td><td>struct xml_tag <var class="pdparam">tags[]</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">tagslen</var>, </td></tr><tr><td>&nbsp;</td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_val_eq</b>(</code></td><td>const confd_value_t *<var class="pdparam">v1</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v2</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_value_t *<b class="fsfunc">confd_value_dup_to</b>(</code></td><td>const confd_value_t *<var class="pdparam">v</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">newv</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_dup_to_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_value_t *<b class="fsfunc">confd_value_dup</b>(</code></td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_dup_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_hkeypath_t *<b class="fsfunc">confd_hkeypath_dup</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">src</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_hkeypath_t *<b class="fsfunc">confd_hkeypath_dup_len</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">src</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_hkeypath</b>(</code></td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_authorization_info</b>(</code></td><td>struct confd_authorization_info *<var class="pdparam">ainfo</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_lasterr</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_strerror</b>(</code></td><td>int <var class="pdparam">code</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct xml_tag *<b class="fsfunc">confd_last_error_apptag</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_ns_type</b>(</code></td><td>u_int32_t <var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">name</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_node_type</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">node</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_type_cb_init</b>(</code></td><td>struct confd_type_cbs **<var class="pdparam">cbs</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_decrypt</b>(</code></td><td>const char *<var class="pdparam">ciphertext</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var>, </td></tr><tr><td>&nbsp;</td><td>char *<var class="pdparam">output</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_stream_connect</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">id</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_deserialize</b>(</code></td><td>struct confd_deserializable *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char *<var class="pdparam">buf</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_serialize</b>(</code></td><td>struct confd_serializable *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsz</var>, </td></tr><tr><td>&nbsp;</td><td>int *<var class="pdparam">bytes_written</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char **<var class="pdparam">allocated</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_deserialized_free</b>(</code></td><td>struct confd_deserializable *<var class="pdparam">s</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.library"></a><h2>LIBRARY</h2><p>ConfD Library, (<code class="filename">libconfd</code>, <code class="option">-lconfd</code>)</p></div><div class="refsect1"><a name="man.3.confd_lib_lib.description"></a><h2>DESCRIPTION</h2><p>The <code class="filename">libconfd</code> shared library is used to
+    connect to ConfD. This manual page describes functions and data
+    structures that are not specific to any one of the APIs that are
+    described in the other confd_lib_xxx(3) manual pages.</p></div><div class="refsect1"><a name="man.3.confd_lib_lib.functions"></a><h2>FUNCTIONS</h2><div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_init</b>(</code></td><td>const char *<var class="pdparam">name</var>, </td></tr><tr><td>&nbsp;</td><td>FILE *<var class="pdparam">estream</var>, </td></tr><tr><td>&nbsp;</td><td>const enum confd_debug_level <var class="pdparam">debug</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Initializes the ConfD library. Must be called before
+    any other ConfD API functions are called.</p><p>The <em class="parameter"><code>debug</code></em> parameter is used to control
+    the debug level. The following levels are available:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">CONFD_SILENT</code></span></dt><dd><p> No printouts whatsoever are produced by
+          the library.</p></dd><dt><span class="term"><code class="constant">CONFD_DEBUG</code></span></dt><dd><p>Various printouts will occur for various error
+          conditions. This is a decent value to have as default. If
+          syslog is enabled for the library, these printouts will be
+          logged at syslog level <code class="constant">LOG_ERR</code>, except
+          for errors where <code class="varname">confd_errno</code> is
+          <code class="constant">CONFD_ERR_INTERNAL</code>, which are logged at
+          syslog level <code class="constant">LOG_CRIT</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_TRACE</code></span></dt><dd><p>The execution of callback functions and CDB/MAAPI API
+          calls will be traced. This is very verbose and very useful
+          during debugging. If syslog is enabled for the library, these
+          printouts will be logged at syslog level
+          <code class="constant">LOG_DEBUG</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_PROTO_TRACE</code></span></dt><dd><p>The low-level protocol exchange between the application
+          and ConfD will be traced. This is even more verbose than
+          <code class="constant">CONFD_TRACE</code>, and normally only of
+          interest to Tail-f support. These printouts will not be logged
+          via syslog, i.e. a non-NULL value for the
+          <em class="parameter"><code>estream</code></em> parameter must be
+          provided.</p></dd></dl></div><p>The <em class="parameter"><code>estream</code></em> parameter is used by all
+    printouts from the library.  The <em class="parameter"><code>name</code></em>
+    parameter is typically included in most of the debug printouts. If
+    the <em class="parameter"><code>estream</code></em> parameter is NULL, no printouts
+    to a file will occur.  Independent of the
+    <em class="parameter"><code>estream</code></em> parameter, syslog can be enabled for
+    the library by setting the global variable
+    <code class="varname">confd_lib_use_syslog</code> to <code class="constant">1</code>.
+    See <a class="link" href="rn02re13.html#man.3.confd_lib_lib.syslog_and_debug" title="SYSLOG AND DEBUG">SYSLOG AND
+    DEBUG</a> in this man page.</p><div class="funcsynopsis"><a name="fn.confd_set_debug"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_set_debug</b>(</code></td><td>enum confd_debug_level <var class="pdparam">debug</var>, </td></tr><tr><td>&nbsp;</td><td>FILE *<var class="pdparam">estream</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function can be used to change the
+    <em class="parameter"><code>estream</code></em> and <em class="parameter"><code>debug</code></em>
+    parameters for the library.</p><div class="funcsynopsis"><a name="fn.confd_load_schemas"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_load_schemas</b>(</code></td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function that uses
+  <code class="function">maapi_load_schemas()</code> (see
+  <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>)
+  to load schema information
+  from ConfD.  This function connects to ConfD and loads all the
+  schema information in ConfD for all loaded "fxs" files into the
+  library. This is necessary in order to get proper printouts of
+  e.g. confd_hkeypaths which otherwise just contains arrays of
+  integers.  This function should typically always be called when we
+  initialize the library.  See <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_load_schemas_list"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_load_schemas_list</b>(</code></td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var>, </td></tr><tr><td>&nbsp;</td><td>const u_int32_t *<var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const int *<var class="pdparam">nsflags</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">num_ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function that uses
+  <code class="function">maapi_load_schemas_list()</code> to load a subset of the
+  schema information from ConfD. See the description of
+  <code class="function">maapi_load_schemas_list()</code> in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a> for the
+  details of how to use the <em class="parameter"><code>flags</code></em>,
+  <em class="parameter"><code>nshash</code></em>, <em class="parameter"><code>nsflags</code></em>, and
+  <em class="parameter"><code>num_ns</code></em> parameters.</p><div class="funcsynopsis"><a name="fn.confd_mmap_schemas_setup"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_mmap_schemas_setup</b>(</code></td><td>void *<var class="pdparam">addr</var>, </td></tr><tr><td>&nbsp;</td><td>size_t <var class="pdparam">size</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">filename</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function sets up for a subsequent call of one of the
+  schema-loading functions (<code class="function">confd_load_schemas()</code>
+  etc) to load the schema information into a shared memory segment
+  instead of into the process' heap. See the section <a class="link" href="ch28.html#ug.advanced.shared_memory_schema" title="28.16.&nbsp;Using shared memory for schema information">Using shared memory for
+  schema information</a> in the Advanced Topics chapter in the User
+  Guide for usage discussion. The <em class="parameter"><code>addr</code></em> and
+  (potentially) <em class="parameter"><code>size</code></em> arguments are passed to
+  <code class="function">mmap(2)</code>, and <em class="parameter"><code>filename</code></em>
+  specifies the pathname of a file to use as backing store. The
+  <em class="parameter"><code>flags</code></em> parameter can be given as
+  <code class="constant">CONFD_MMAP_SCHEMAS_KEEP_SIZE</code> to request that the
+  shared memory segment should be exactly the size given by the
+  (non-zero) <em class="parameter"><code>size</code></em> argument - if this size is
+  insufficient to hold the schema information, the schema-loading
+  function will fail.</p><div class="funcsynopsis"><a name="fn.confd_mmap_schemas"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_mmap_schemas</b>(</code></td><td>const char *<var class="pdparam">filename</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Map a shared memory segment, previously created by
+  <code class="function">confd_mmap_schemas_setup()</code> and subsequent schema
+  loading, into the current process' address space, and make it ready
+  for use. The <em class="parameter"><code>filename</code></em> argument specifies the
+  pathname of the file that is used as backing store. See also <span class="phrase"><code class="sgmltag-element">/confdConfig/enableSharedMemorySchema</code> in
+  <a class="link" href="rn03re17.html" title="confd.conf">confd.conf(5)</a></span> and
+  <code class="function">maapi_get_schema_file_path()</code> in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_free_schemas"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_schemas</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Free or unmap the memory allocated or mapped by schema loading,
+  undoing the result of loading - i.e. schema information will no longer
+  be available. There is normally no need to call this function, since
+  the memory will be automatically freed/unmapped if a new schema
+  loading is done, or when the process terminates, but it may be useful
+  in some cases.</p><div class="funcsynopsis"><a name="fn.confd_svcmp"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_svcmp</b>(</code></td><td>const char *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function with similar semantics to
+  <code class="function">strcmp()</code> which compares a
+  <span class="type">confd_value_t</span> to a <span class="type">char*</span>.</p><div class="funcsynopsis"><a name="fn.confd_pp_value"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_value</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which pretty prints up to
+  <em class="parameter"><code>bufsiz</code></em> characters into
+  <em class="parameter"><code>buf</code></em>, giving a string representation of the
+  value <em class="parameter"><code>v</code></em>. Since only the "primitive" type as
+  defined by the <span class="type">enum confd_vtype</span> is available,
+  <code class="function">confd_pp_value()</code> can not produce a true string
+  representation in all cases, see the list below. If this is a problem,
+  use <code class="function">confd_val2str()</code> instead.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">C_ENUM_VALUE</code></span></dt><dd><p>The value is printed as
+    "enum&lt;N&gt;", where N is the integer value.</p></dd><dt><span class="term"><code class="constant">C_BIT32</code></span></dt><dd><p>The value is printed as "bits&lt;X&gt;", where X is
+    an unsigned integer in hexadecimal format.</p></dd><dt><span class="term"><code class="constant">C_BIT64</code></span></dt><dd><p>The value is printed as "bits&lt;X&gt;", where X is
+    an unsigned integer in hexadecimal format.</p></dd><dt><span class="term"><code class="constant">C_BITBIG</code></span></dt><dd><p>The value is printed as "bits&lt;X&gt;", where X is
+    an unsigned integer (possibly very large) in hexadecimal
+    format.</p></dd><dt><span class="term"><code class="constant">C_BINARY</code></span></dt><dd><p>The string representation for
+    <span class="type">xs:hexBinary</span> is used, i.e. a sequence of hexadecimal
+    characters.</p></dd><dt><span class="term"><code class="constant">C_DECIMAL64</code></span></dt><dd><p>If the value of the
+    <code class="varname">fraction_digits</code> element is within the possible
+    range (1..18), it is assumed to be correct for the type and used for
+    the string representation. Otherwise the value is printed as
+    "invalid64&lt;N&gt;", where N is the value of the
+    <code class="varname">value</code> element.</p></dd><dt><span class="term"><code class="constant">C_XMLTAG</code></span></dt><dd><p>The string representation is printed if schema
+    information has been loaded into the library. Otherwise the value is
+    printed as "tag&lt;N&gt;", where N is the integer
+    value.</p></dd><dt><span class="term"><code class="constant">C_IDENTITYREF</code></span></dt><dd><p>The string representation is printed if schema
+    information has been loaded into the library. Otherwise the value is
+    printed as "idref&lt;N&gt;", where N is the integer
+    value.</p></dd></dl></div><p>All the <code class="code">pp</code> pretty print functions,
+  i.e. <code class="function">confd_pp_value()</code>
+  <code class="function">confd_ns_pp_value()</code>,
+  <code class="function">confd_pp_kpath()</code> and
+  <code class="function">confd_xpath_pp_kpath()</code>, as well as the
+  <code class="function">confd_format_keypath()</code> and
+  <code class="function">confd_val2str()</code> functions, return the number of
+  characters printed (not including the trailing NUL used to end
+  output to strings) if there is enough space.</p><p>The formatting functions do not write more than
+  <em class="parameter"><code>bufsiz</code></em> bytes (including the trailing NUL).  If
+  the output was truncated due to this limit then the return value is
+  the number of characters (not including the trailing NUL) which
+  would have been written to the final string if enough space had been
+  available.  Thus, a return value of <em class="parameter"><code>bufsiz</code></em> or
+  more means that the output was truncated.</p><p>Except for <code class="function">confd_val2str()</code>, these functions
+  will never return CONFD_ERR or any other negative value.</p><div class="funcsynopsis"><a name="fn.confd_ns_pp_value"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ns_pp_value</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function is deprecated, but will remain for backward
+  compatibility. It just calls <code class="function">confd_pp_value()</code> -
+  use <code class="function">confd_pp_value()</code> directly, or
+  <code class="function">confd_val2str()</code> (see below), instead.</p><div class="funcsynopsis"><a name="fn.confd_pp_kpath"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_kpath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which pretty prints up to
+  <em class="parameter"><code>bufsiz</code></em> characters into
+  <em class="parameter"><code>buf</code></em>, giving a string representation of the path
+  <em class="parameter"><code>hkeypath</code></em>.  This will use the ConfD curly brace
+  notation, i.e.
+  <code class="sgmltag-element">"/servers/server{www}/ip"</code>. Requires that schema
+  information is available to the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.  Same return value as
+  <code class="function">confd_pp_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_pp_kpath_len"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_pp_kpath_len</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>A variant of <code class="function">confd_pp_kpath()</code> that prints
+  only the first <em class="parameter"><code>len</code></em> elements of
+  <em class="parameter"><code>hkeypath</code></em>.</p><div class="funcsynopsis"><a name="fn.confd_format_keypath"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_format_keypath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Several of the functions in
+  <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a> and
+  <a class="link" href="rn02re09.html" title="confd_lib_cdb">confd_lib_cdb(3)</a> take a
+  variable number of arguments which are then, similar to printf, used to
+  generate the path passed to ConfD - see the <a class="link" href="rn02re09.html#man.3.confd_lib_cdb.paths" title="PATHS">PATHS</a> section of
+  confd_lib_cdb(3).
+  This function takes the same arguments, but only formats the path as a
+  string, writing at most <em class="parameter"><code>bufsiz</code></em> characters into
+  <em class="parameter"><code>buf</code></em>. If the path is absolute and schema
+  information is available to the library, key values referenced by a
+  "%x" modifier will be printed according to their specific type,
+  i.e. effectively using <code class="function">confd_val2str()</code>, otherwise
+  <code class="function">confd_pp_value()</code> is used. Same return value as
+  <code class="function">confd_pp_value()</code>.
+  </p><div class="funcsynopsis"><a name="fn.confd_vformat_keypath"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_vformat_keypath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>va_list <var class="pdparam">ap</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Does the same as <code class="function">confd_format_keypath()</code>,
+  but takes a single va_list argument instead of a variable number of
+  arguments - i.e. similar to vprintf.  Same return value as
+  <code class="function">confd_pp_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_xmltag2str"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_xmltag2str</b>(</code></td><td>u_int32_t <var class="pdparam">ns</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">xmltag</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function is deprecated, but will remain for backward
+  compatibility. It just calls <code class="function">confd_hash2str()</code> -
+  use <code class="function">confd_hash2str()</code> directly instead, see
+  below.</p><div class="funcsynopsis"><a name="fn.confd_xpath_pp_kpath"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_xpath_pp_kpath</b>(</code></td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">ns</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Similar to <code class="function">confd_pp_kpath()</code> except that
+  the path is formatted as an XPath path,
+  i.e. <code class="sgmltag-element">"/servers:servers/server[name="www"]/ip"</code>.
+  This function can also take the namespace integer as an argument. If
+  <code class="constant">0</code> is passed as <em class="parameter"><code>ns</code></em>, the
+  namespace is derived from the hkeypath.
+  Requires that schema information is available to the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.  Same return value as
+  <code class="function">confd_pp_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_get_nslist"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_nslist</b>(</code></td><td>struct confd_nsinfo **<var class="pdparam">listp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Provides a list of the namespaces known to the library as an
+  array of <span class="type">struct confd_nsinfo</span> structures:</p><div class="informalexample"><a name="struct.confd_nsinfo"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_nsinfo {
+    <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *uri;
+    <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *prefix;
+    u_int32_t hash;
+    <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *revision;
+    <strong class="hl-keyword">const</strong> <strong class="hl-keyword">char</strong> *module;
+};</pre></div><p>A pointer to the array is stored in
+  <em class="parameter"><code>*listp</code></em>, and the function returns the number of
+  elements in the array.  The <code class="varname">module</code> element in
+  <span class="type">struct confd_nsinfo</span> will give the module name for
+  namespaces defined by YANG modules, otherwise it is NULL.  The
+  <code class="varname">revision</code> element will give the revision for YANG
+  modules that have a <code class="code">revision</code> statement, otherwise it is
+  NULL.</p><div class="funcsynopsis"><a name="fn.confd_ns2prefix"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_ns2prefix</b>(</code></td><td>u_int32_t <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Returns a NUL-terminated string giving the namespace prefix
+  for the namespace <em class="parameter"><code>ns</code></em>, if the namespace is known
+  to the library - otherwise it returns NULL.</p><div class="funcsynopsis"><a name="fn.confd_hash2str"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_hash2str</b>(</code></td><td>u_int32_t <var class="pdparam">hash</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Returns a NUL-terminated string representing the node name
+  given by <em class="parameter"><code>hash</code></em>, or NULL if the
+  hash value is not found.  Requires that schema information has been
+  loaded from the ConfD daemon into the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a> - otherwise it always returns
+  NULL.</p><div class="funcsynopsis"><a name="fn.confd_str2hash"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">u_int32_t <b class="fsfunc">confd_str2hash</b>(</code></td><td>const char *<var class="pdparam">str</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Returns the hash value representing the node name
+  given by <em class="parameter"><code>str</code></em>, or 0 if the string is
+  not found.  Requires that schema information has been
+  loaded from the ConfD daemon into the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>
+  - otherwise it always returns 0.</p><div class="funcsynopsis"><a name="fn.confd_find_cs_root"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_root</b>(</code></td><td>int <var class="pdparam">ns</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>When schema information is available to the library, this
+  function returns the root of the tree representaton of the namespace
+  given by <em class="parameter"><code>ns</code></em>, i.e. a pointer to the
+  <span class="type">struct confd_cs_node</span> for the (first) toplevel
+  node. For namespaces that are augmented into other namespaces
+  such that they do not have
+  a toplevel node, this function returns NULL - the nodes of
+  such a namespace are found below the <code class="code">augment</code> target
+  node(s) in other
+  tree(s). See <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_find_cs_node"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_node</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">hkeypath</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which finds the <span class="type">struct
+  confd_cs_node</span> corresponding to the
+  <em class="parameter"><code>len</code></em> first elements of the hashed keypath.  To
+  make the search consider the full keypath, pass the
+  <em class="parameter"><code>len</code></em> element from the
+  <span class="type">confd_hkeypath_t</span> structure
+  (i.e. <code class="code">mykeypath-&gt;len</code>).  See
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_find_cs_node_child"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_find_cs_node_child</b>(</code></td><td>const struct confd_cs_node *<var class="pdparam">parent</var>, </td></tr><tr><td>&nbsp;</td><td>struct xml_tag <var class="pdparam">xmltag</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which finds the <span class="type">struct
+  confd_cs_node</span> corresponding to the child node given as
+  <em class="parameter"><code>xmltag</code></em>. See
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_cs_node_cd"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_cs_node_cd</b>(</code></td><td>const struct confd_cs_node *<var class="pdparam">start</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which finds the resulting <span class="type">struct
+  confd_cs_node</span> given an (optional) starting node and a
+  (relative or absolute) string keypath.  I.e. this function navigates
+  the tree in a manner corresponding to
+  <code class="function">cdb_cd()</code>/<code class="function">maapi_cd()</code>.  Note
+  however that the <span class="type">confd_cs_node</span> tree does not have a
+  node corresponding to "/". It is possible to pass
+  <em class="parameter"><code>start</code></em> as <code class="constant">NULL</code>, in which
+  case the path must be absolute (i.e. start with a "/").</p><p>Since the key values are not relevant for the tree navigation,
+  the key elements can be omitted, i.e. a "tagpath" can be used - if
+  present, key elements are ignored, whether given in the {...} form
+  or the CDB-only [N] form. See <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><p>If the path can not be found, <code class="constant">NULL</code> is
+  returned, <code class="varname">confd_errno</code> is set to
+  <code class="constant">CONFD_ERR_BADPATH</code>, and
+  <code class="function">confd_lasterr()</code> can be used to retrieve a string
+  that describes the reason for the failure.</p><div class="funcsynopsis"><a name="fn.confd_max_object_size"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_max_object_size</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">object</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which returns the maximum size (i.e. the needed
+  length of the <span class="type">confd_value_t</span> array) for an "object"
+  retrieved by <code class="function">cdb_get_object()</code>,
+  <code class="function">maapi_get_object()</code>, and corresponding
+  multi-object functions. The <em class="parameter"><code>object</code></em> parameter is
+  a pointer to the list or container <span class="type">confd_cs_node</span> node for
+  which we want to find the maximum size. See the description of
+  <code class="function">cdb_get_object()</code> in <a class="link" href="rn02re09.html" title="confd_lib_cdb">confd_lib_cdb(3)</a> for usage
+  examples.</p><div class="funcsynopsis"><a name="fn.confd_next_object_node"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_cs_node *<b class="fsfunc">confd_next_object_node</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">object</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_cs_node *<var class="pdparam">cur</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">value</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function to allow navigation of the
+  <span class="type">confd_cs_node</span> schema tree in parallel with the
+  <span class="type">confd_value_t</span> array populated by
+  <code class="function">cdb_get_object()</code>,
+  <code class="function">maapi_get_object()</code>, and corresponding
+  multi-object functions. The <em class="parameter"><code>object</code></em> parameter is
+  a pointer to the list or container node as for
+  <code class="function">confd_max_object_size()</code>, the
+  <em class="parameter"><code>cur</code></em> parameter is a pointer to the
+  <span class="type">confd_cs_node</span> node for the current value, and the
+  <em class="parameter"><code>value</code></em> parameter is a pointer to the current
+  value in the array. The function returns a pointer to the
+  <span class="type">confd_cs_node</span> node for the next value in the array, or
+  NULL when the complete object has been traversed. In the initial call
+  for a given traversal, we must pass <code class="code">object-&gt;children</code> for
+  the <em class="parameter"><code>cur</code></em> parameter - this always points to the
+  <span class="type">confd_cs_node</span> node for the first value in the array. See
+  the description of <code class="function">cdb_get_object()</code> in <a class="link" href="rn02re09.html" title="confd_lib_cdb">confd_lib_cdb(3)</a> for usage
+  examples.</p><div class="funcsynopsis"><a name="fn.confd_find_ns_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_type *<b class="fsfunc">confd_find_ns_type</b>(</code></td><td>u_int32_t <var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">name</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Returns a pointer to a type definition for the type named
+  <em class="parameter"><code>name</code></em>, which is defined in the namespace
+  identified by <em class="parameter"><code>nshash</code></em>, or NULL if the type
+  could not be found.  If <em class="parameter"><code>nshash</code></em> is 0, the type
+  name will be looked up among the ConfD built-in types (i.e. the YANG
+  built-in types, the types defined in the YANG "tailf-common" module,
+  and the types defined in the "confd" and "xs" namespaces).
+  The type definition pointer can be used with the
+  <code class="function">confd_val2str()</code> and
+  <code class="function">confd_str2val()</code> functions, see below.  If
+  <em class="parameter"><code>nshash</code></em> is not 0, the function requires that
+  schema information has been loaded from the ConfD daemon
+  into the library, see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a> -
+  otherwise it returns NULL.
+  </p><div class="funcsynopsis"><a name="fn.confd_get_leaf_list_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct confd_type *<b class="fsfunc">confd_get_leaf_list_type</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">node</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>For a leaf-list node, the <code class="varname">type</code> field in the
+  <span class="type">struct confd_cs_node_info</span> (see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>) identifies a
+  "list type" for the leaf-list "itself". This function takes a pointer
+  to the <span class="type">struct confd_cs_node</span> for a leaf-list node as
+  argument, and returns the type of the elements in the leaf-list, i.e.
+  corresponding to the <code class="code">type</code> substatement for the leaf-list
+  in the YANG module. If called for a node that is not a leaf-list, it
+  returns NULL and sets <code class="varname">confd_errno</code> to
+  <code class="constant">CONFD_ERR_PROTOUSAGE</code>. Requires that schema
+  information has been loaded from the ConfD daemon into the
+  library, see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a> - otherwise it
+  returns NULL and sets <code class="varname">confd_errno</code> to
+  <code class="constant">CONFD_ERR_UNAVAILABLE</code>.</p><div class="funcsynopsis"><a name="fn.confd_val2str"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_val2str</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">val</var>, </td></tr><tr><td>&nbsp;</td><td>char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsiz</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Prints the string representation of <em class="parameter"><code>val</code></em>
+  into <em class="parameter"><code>buf</code></em>, which has the length
+  <em class="parameter"><code>bufsiz</code></em>, using type information from the data
+  model. Returns the length of the string as described for
+  <code class="function">confd_pp_value()</code>, or
+  CONFD_ERR if the value could not be converted (e.g. wrong type). The
+  <em class="parameter"><code>type</code></em> pointer can be obtained either from the
+  <span class="type">struct confd_cs_node</span> corresponding to the leaf
+  that <em class="parameter"><code>val</code></em> pertains to, or via the
+  <code class="function">confd_find_ns_type()</code> function above. The
+  <span class="type">struct confd_cs_node</span> can in turn be obtained by
+  various combinations of the functions that operate on the
+  <span class="type">confd_cs_node</span> trees (see above), or by
+  user-defined functions for navigating those trees. Requires that
+  schema information has been loaded from the ConfD daemon
+  into the library, see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.
+  </p><div class="funcsynopsis"><a name="fn.confd_str2val"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_str2val</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">str</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">val</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Stores the value corresponding to the NUL-terminated string
+  <em class="parameter"><code>str</code></em> in <em class="parameter"><code>val</code></em>, using type
+  information from the data model.  Returns CONFD_OK, or CONFD_ERR if
+  the string could not be converted.  See
+  <code class="function">confd_val2str()</code> for a description of the
+  <em class="parameter"><code>type</code></em> argument.  Requires that schema
+  information has been loaded from the ConfD daemon into
+  the library, see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.
+  </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>When the resulting value is of one of the C_BUF, C_BINARY,
+  C_LIST, C_OBJECTREF, C_OID, C_QNAME, C_HEXSTR, or C_BITBIG
+  <span class="type">confd_value_t</span> types, the library has allocated memory to
+  hold the value. It is up to the user of this function to free the
+  memory using <code class="function">confd_free_value()</code>.</p></div><div class="funcsynopsis"><a name="fn.confd_val2str_ptr"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_val2str_ptr</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">val</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>A variant of <code class="function">confd_val2str()</code> that can be
+  used only when the string representation is a constant,
+  i.e. C_ENUM_VALUE values.  In this case it returns a pointer to the
+  string, otherwise NULL.  See <code class="function">confd_val2str()</code>
+  for a description of the <em class="parameter"><code>type</code></em> argument.
+  Requires that schema information has been loaded from
+  the ConfD daemon into the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_get_decimal64_fraction_digits"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_decimal64_fraction_digits</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function to obtain the value of the argument to the
+  <code class="code">fraction-digits</code> statement for a YANG
+  <span class="type">decimal64</span> type. This is useful when we want to create a
+  <span class="type">confd_value_t</span> for such a type, since the
+  <code class="varname">value</code> element must be scaled according to the
+  fraction-digits value. The function returns the fraction-digits value,
+  or 0 if the <em class="parameter"><code>type</code></em> argument does not refer to a
+  <span class="type">decimal64</span> type.
+  Requires that schema information has been loaded from
+  the ConfD daemon into the library, see
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_get_bitbig_size"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_get_bitbig_size</b>(</code></td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function to obtain the maximum size needed for the byte
+  array for the C_BITBIG <span class="type">confd_value_t</span> representation used
+  when a YANG <span class="type">bits</span> type has a highest bit position above
+  63. This is useful when we want to create a <span class="type">confd_value_t</span>
+  for such a type, since an array of this size can hold the values for
+  all the bits defined for the type.  Applications may however provide a
+  confd_value_t with a shorter (but not longer) array to ConfD. The
+  file generated by <span class="command"><strong>confdc --emit-h</strong></span>
+   also includes a
+  <code class="code">#define</code> symbol for this size. The function returns 0 if
+  the <em class="parameter"><code>type</code></em> argument does not refer to a
+  <span class="type">bits</span> type with a highest bit position above 63. Requires
+  that schema information has been loaded from the ConfD daemon into
+  the library, see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_hkp_tagmatch"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_hkp_tagmatch</b>(</code></td><td>struct xml_tag <var class="pdparam">tags[]</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">tagslen</var>, </td></tr><tr><td>&nbsp;</td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>When checking the hkeypaths that get passed into each iteration
+  in e.g. <code class="function">cdb_diff_iterate()</code> we can either
+  explicitly check the paths, or use this function to do the job. The
+  <em class="parameter"><code>tags</code></em> array (typically statically initialized)
+  specifies a tagpath to match against the hkeypath. See
+  <code class="function">cdb_diff_match()</code>. The function returns one of
+  these values:</p><div class="informalexample"><pre class="programlisting">#define CONFD_HKP_MATCH_NONE 0
+#define CONFD_HKP_MATCH_TAGS (1 &lt;&lt; 0)
+#define CONFD_HKP_MATCH_HKP  (1 &lt;&lt; 1)
+#define CONFD_HKP_MATCH_FULL (CONFD_HKP_MATCH_TAGS|CONFD_HKP_MATCH_HKP)
+
+    </pre></div><p><code class="constant">CONFD_HKP_MATCH_TAGS</code> means that the whole
+  tagpath was matched by the hkeypath, and
+  <code class="constant">CONFD_HKP_MATCH_HKP</code> means that the whole hkeypath
+  was matched by the tagpath.</p><div class="funcsynopsis"><a name="fn.confd_hkp_prefix_tagmatch"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_hkp_prefix_tagmatch</b>(</code></td><td>struct xml_tag <var class="pdparam">tags[]</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">tagslen</var>, </td></tr><tr><td>&nbsp;</td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>A simplified version of
+  <code class="function">confd_hkp_tagmatch()</code> - it returns 1 if the
+  tagpath matches a prefix of the hkeypath, i.e. it is equivalent to
+  calling <code class="function">confd_hkp_tagmatch()</code> and checking if the
+  return value includes <code class="constant">CONFD_HKP_MATCH_TAGS</code>.</p><div class="funcsynopsis"><a name="fn.confd_val_eq"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_val_eq</b>(</code></td><td>const confd_value_t *<var class="pdparam">v1</var>, </td></tr><tr><td>&nbsp;</td><td>const confd_value_t *<var class="pdparam">v2</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which compares two values. Returns positive
+  value if equal, 0 otherwise.</p><div class="funcsynopsis"><a name="fn.confd_fatal"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_fatal</b>(</code></td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Utility function which formats a string, prints it to stderr
+  and exits with exit code 1.</p><div class="funcsynopsis"><a name="fn.confd_free_value"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>When we retrieve values via the CDB or MAAPI interfaces, or
+  convert strings to values via <code class="function">confd_str2val()</code>,
+  and these values are of either of the types C_BUF, C_BINARY, C_QNAME,
+  C_OBJECTREF, C_OID, C_LIST, C_HEXSTR, or C_BITBIG,
+  the library has allocated memory to
+  hold the values.  This memory must be freed by the application when
+  it is done with the value.  This function frees memory for all
+  <span class="type">confd_value_t</span> types. Note that this function does not
+  free the structure itself, only possible internal pointers inside
+  the struct. Typically we use <span class="type">confd_value_t</span> variables as
+  automatic variables allocated on the stack. If the held value is of
+  fixed size, e.g.  integers, xmltags etc, the
+  <code class="function">confd_free_value()</code> function does
+  nothing.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>Memory for values received as parameters to callback
+  functions is always managed by the library - the application must
+  <span class="emphasis"><em>not</em></span> call
+  <code class="function">confd_free_value()</code> for those (on the other hand
+  values of the types listed above that are received as parameters to a
+  callback function must be copied if they are to
+  persist beyond the callback invocation).</p></div><div class="funcsynopsis"><a name="fn.confd_value_dup_to"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_value_t *<b class="fsfunc">confd_value_dup_to</b>(</code></td><td>const confd_value_t *<var class="pdparam">v</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">newv</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function copies the contents of <em class="parameter"><code>*v</code></em>
+  to <em class="parameter"><code>*newv</code></em>, allocating memory for the actual
+  value for the types that need it.  It returns
+  <em class="parameter"><code>newv</code></em>, or NULL if allocation failed. The
+  allocated memory (if any) can be freed with
+  <code class="function">confd_free_dup_to_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_free_dup_to_value"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_dup_to_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Frees memory allocated by
+  <code class="function">confd_value_dup_to()</code>. Note this is not the same as
+  <code class="function">confd_free_value()</code>, since
+  <code class="function">confd_value_dup_to()</code> also allocates memory for
+  values of type C_STR - such values are not freed by
+  <code class="function">confd_free_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_value_dup"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_value_t *<b class="fsfunc">confd_value_dup</b>(</code></td><td>const confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function allocates memory and duplicates
+  <em class="parameter"><code>*v</code></em>, i.e. a <span class="type">confd_value_t</span> struct is
+  always allocated, memory for the actual value is also allocated for
+  the types that need it.  Returns a pointer to the new
+  <span class="type">confd_value_t</span>, or NULL if allocation failed.  The
+  allocated memory can be freed with
+  <code class="function">confd_free_dup_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_free_dup_value"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_dup_value</b>(</code></td><td>confd_value_t *<var class="pdparam">v</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Frees memory allocated by
+  <code class="function">confd_value_dup()</code>. Note this is not the same as
+  <code class="function">confd_free_value()</code>, since
+  <code class="function">confd_value_dup()</code> also allocates the actual
+  <span class="type">confd_value_t</span> struct, and allocates memory for
+  values of type C_STR - such values are not freed by
+  <code class="function">confd_free_value()</code>.</p><div class="funcsynopsis"><a name="fn.confd_hkeypath_dup"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_hkeypath_t *<b class="fsfunc">confd_hkeypath_dup</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">src</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function allocates memory and duplicates a
+  <span class="type">confd_hkeypath_t</span>.</p><div class="funcsynopsis"><a name="fn.confd_hkeypath_dup_len"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">confd_hkeypath_t *<b class="fsfunc">confd_hkeypath_dup_len</b>(</code></td><td>const confd_hkeypath_t *<var class="pdparam">src</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Like <code class="function">confd_hkeypath_dup()</code>, but duplicates
+  only the first <em class="parameter"><code>len</code></em> elements of the
+  <span class="type">confd_hkeypath_t</span>. I.e. the elements are shifted such that
+  <code class="varname">v[0][0]</code> still refers to the last element.</p><div class="funcsynopsis"><a name="fn.confd_free_hkeypath"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_hkeypath</b>(</code></td><td>confd_hkeypath_t *<var class="pdparam">hkp</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function will free memory allocated by e.g.
+  <code class="function">confd_hkeypath_dup()</code>.</p><div class="funcsynopsis"><a name="fn.confd_free_authorization_info"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_free_authorization_info</b>(</code></td><td>struct confd_authorization_info *<var class="pdparam">ainfo</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function will free memory allocated by
+  <code class="function">maapi_get_authorization_info()</code>.</p><div class="funcsynopsis"><a name="fn.confd_decrypt"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_decrypt</b>(</code></td><td>const char *<var class="pdparam">ciphertext</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">len</var>, </td></tr><tr><td>&nbsp;</td><td>char *<var class="pdparam">output</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>When data is read over the CDB interface, the MAAPI interface
+  or received in event notifications, the data for the two builtin types
+  <span class="type">tailf:des3-cbc-encrypted-string</span> or
+  <span class="type">tailf:aes-cfb-128-encrypted-string</span> is
+  encrypted.</p><p>This function decrypts <em class="parameter"><code>len</code></em> bytes of data
+  from <em class="parameter"><code>ciphertext</code></em> and writes the clear text to the
+  <em class="parameter"><code>output</code></em> pointer.  The
+  <em class="parameter"><code>output</code></em> pointer must point to an area that is at
+  least <em class="parameter"><code>len</code></em> bytes long.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>One of the functions
+  <code class="function">confd_install_crypto_keys()</code> and
+  <code class="function">maapi_install_crypto_keys()</code> must have been called
+  before <code class="function">confd_decrypt()</code> can be used.</p></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.userdefined_types"></a><h2>USER-DEFINED TYPES</h2><p>It is possible to define new types, i.e. mappings between a
+  textual representation and a <span class="type">confd_value_t</span>
+  representation that are not pre-defined in the ConfD daemon. Read
+  more about this in the <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a> manual
+  page.</p><div class="funcsynopsis"><a name="fn.confd_type_cb_init"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_type_cb_init</b>(</code></td><td>struct confd_type_cbs **<var class="pdparam">cbs</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This is the prototype for the function that a shared object
+  implementing one or more user-defined types must provide. See
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_register_ns_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_ns_type</b>(</code></td><td>u_int32_t <var class="pdparam">nshash</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">name</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function can be used to register a user-defined type
+  with the libconfd library, to make it possible for
+  <code class="function">confd_str2val()</code> and
+  <code class="function">confd_val2str()</code> to provide local
+  string&lt;-&gt;value translation in the application. See
+  <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p><div class="funcsynopsis"><a name="fn.confd_register_node_type"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_register_node_type</b>(</code></td><td>struct confd_cs_node *<var class="pdparam">node</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_type *<var class="pdparam">type</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function provides an alternate way to register a
+  user-defined type with the libconfd library, in particular when the
+  user-defined type is specified "inline" in a <code class="code">leaf</code> or
+  <code class="code">leaf-list</code> statement. See <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>.</p></div><div class="refsect1"><a name="man.3.confd_lib_lib.confd_streams"></a><h2>CONFD STREAMS</h2><p>Some functions in the ConfD lib stream data. Either from ConfD
+  to the application of from the application to ConfD. The individual
+  functions that use this feature will explicitly indicate that the
+  data is passed over a <code class="code">stream socket</code>.</p><div class="funcsynopsis"><a name="fn.confd_stream_connect"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_stream_connect</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">id</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">flags</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>Connects a stream socket to ConfD. The <em class="parameter"><code>id</code></em>
+  and the <em class="parameter"><code>flags</code></em> take different values depending
+  on the usage scenario. This is indicated for each individual
+  function that makes use of a stream socket.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p> If this call fails (i.e. does not return CONFD_OK), the
+  socket descriptor must be closed and a new socket created before the
+  call is re-attempted.</p></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.marshalling"></a><h2>MARSHALLING</h2><p>In various distributed scenarios we may want to send confd_lib
+  datatypes over the network. We have support to marshall and
+  unmarshall some key datatypes.</p><div class="funcsynopsis"><a name="fn.confd_serialize"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_serialize</b>(</code></td><td>struct confd_serializable *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char *<var class="pdparam">buf</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">bufsz</var>, </td></tr><tr><td>&nbsp;</td><td>int *<var class="pdparam">bytes_written</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char **<var class="pdparam">allocated</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function takes a <span class="type">confd_serializable</span>
+  struct as parameter.  We have:</p><div class="informalexample"><a name="enum.confd_serializable_type"></a><pre class="programlisting"><strong class="hl-keyword">enum</strong> confd_serializable_type {
+    CONFD_SERIAL_NONE      = <span class="hl-number">0</span>,
+    CONFD_SERIAL_VALUE_T   = <span class="hl-number">1</span>,
+    CONFD_SERIAL_HKEYPATH  = <span class="hl-number">2</span>,
+    CONFD_SERIAL_TAG_VALUE = <span class="hl-number">3</span>
+};</pre><a name="struct.confd_serializable"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_serializable {
+    <strong class="hl-keyword">enum</strong> confd_serializable_type type;
+    <strong class="hl-keyword">union</strong> {
+        confd_value_t *value;
+        confd_hkeypath_t *hkp;
+        confd_tag_value_t *tval;
+    } u;
+};</pre></div><p>The structure must be populated with a valid type and also a
+  value to be serialized. The serialized data will be written into the
+  provided buffer. If the size of the buffer is insufficient, the
+  function returns the required size as a positive integer. If the
+  provided buffer is NULL, the function will allocate a buffer and it
+  is the responsibility of the caller to free the buffer. The
+  optionally allocated buffer is then returned in the output char **
+  parameter <em class="parameter"><code>allocated</code></em>.  The function returns 0 on
+  success and -1 on failures.</p><div class="funcsynopsis"><a name="fn.confd_deserialize"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_deserialize</b>(</code></td><td>struct confd_deserializable *<var class="pdparam">s</var>, </td></tr><tr><td>&nbsp;</td><td>unsigned char *<var class="pdparam">buf</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function takes a
+  <span class="type">confd_deserializable</span> struct as parameter.  We
+  have:</p><div class="informalexample"><a name="struct.confd_deserializable"></a><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_deserializable {
+    <strong class="hl-keyword">enum</strong> confd_serializable_type type;
+    <strong class="hl-keyword">union</strong> {
+        confd_value_t value;
+        confd_hkeypath_t hkp;
+        confd_tag_value_t tval;
+    } u;
+    <strong class="hl-keyword">void</strong> *internal;  <em class="hl-comment" style="color: silver">// internal structure containing memory</em>
+                     <em class="hl-comment" style="color: silver">// for the above datatypes to point _into_</em>
+                     <em class="hl-comment" style="color: silver">// freed by a call to confd_deserialize_free()</em>
+};</pre></div><p>This function is the reverse of
+  <code class="function">confd_serialize()</code>. It populates the provided
+  <span class="type">confd_deserializable</span> structure with a type
+  indicator and a reproduced value of the correct type.  The structure
+  contains allocated memory that must subsequently be freed with
+  <code class="function">confd_deserialiaze()</code>.</p><div class="funcsynopsis"><a name="fn.confd_deserialized_free"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_deserialized_free</b>(</code></td><td>struct confd_deserializable *<var class="pdparam">s</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>A populated <span class="type">confd_deserializable</span> struct
+  contains allocated memory that must be freed. This function
+  traverses a <span class="type">confd_deserializable</span> struct as
+  populated by the <code class="function">confd_deserialize()</code> function
+  and frees all allocated memory.</p></div><div class="refsect1"><a name="man.3.confd_lib_lib.extended_error_reporting"></a><h2>EXTENDED ERROR REPORTING</h2><p>The data provider callback functions described in <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a> can pass error
+  information back to ConfD either as a simple string using
+  <code class="function">confd_xxx_seterr()</code>, or in a more
+  structured/detailed form using the corresponding
+  <code class="function">confd_xxx_seterr_extended()</code> function. This form
+  is also used when a CDB subscriber wishes to abort the current
+  transaction with <code class="function">cdb_sub_abort_trans()</code>, see <a class="link" href="rn02re09.html" title="confd_lib_cdb">confd_lib_cdb(3)</a>. There is
+  also a set of <code class="function">confd_xxx_seterr_extended_info()</code>
+  functions and a <code class="function">cdb_sub_abort_trans_info()</code>
+  function, that can alternatively be used if we want to provide
+  contents for the NETCONF &lt;error-info&gt; element. The description
+  below uses the functions for transaction callbacks as an example, but
+  the other functions follow the same pattern:</p><div class="funcsynopsis"><a name="fn.confd_trans_seterr_extended"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">void <b class="fsfunc">confd_trans_seterr_extended</b>(</code></td><td>struct confd_trans_ctx *<var class="pdparam">tctx</var>, </td></tr><tr><td>&nbsp;</td><td>enum confd_errcode <var class="pdparam">code</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">apptag_ns</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">apptag_tag</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>The function can be used also after a data provider callback has
+  returned CONFD_DELAYED_RESPONSE, but in that case it must be followed
+  by a call of <code class="function">confd_delayed_reply_error()</code> (see
+  <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>) with
+  NULL for the <em class="parameter"><code>errstr</code></em> pointer.</p><p>One of the following values can be given for the
+  <em class="parameter"><code>code</code></em> argument:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">CONFD_ERRCODE_IN_USE</code></span></dt><dd><p>Locking a data store was not possible because it was
+        already locked.</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_RESOURCE_DENIED</code></span></dt><dd><p>General resource unavailability, e.g. insufficient memory
+        to carry out an operation.</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_INCONSISTENT_VALUE</code></span></dt><dd><p>A request parameter had an unacceptable/invalid value</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_ACCESS_DENIED</code></span></dt><dd><p>The request could not be fulfilled because authorization
+        did not allow it. (No additional error information will be
+        reported by the northbound agent, to avoid any security
+        breach.)</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_APPLICATION</code></span></dt><dd><p>Unspecified error.</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_APPLICATION_INTERNAL</code></span></dt><dd><p>As CONFD_ERRCODE_APPLICATION, but the additional error
+        information is only for logging/debugging, and should not be
+        reported by northbound agents.</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_DATA_MISSING</code></span></dt><dd><p>A request could not be completed because the relevant data
+        model content does not exist.</p></dd><dt><span class="term"><code class="constant">CONFD_ERRCODE_INTERRUPT</code></span></dt><dd><p>Processing of a request was terminated due to user
+        interrupt - see the description of the
+        <code class="function">interrupt()</code> transaction callback in <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>.</p></dd></dl></div><p>There is currently limited support for specifying one of a set
+  of fixed error tags via <em class="parameter"><code>apptag_ns</code></em> and
+  <em class="parameter"><code>apptag_tag</code></em>: <em class="parameter"><code>apptag_ns</code></em>
+  should be 0, and <em class="parameter"><code>apptag_tag</code></em> can be either 0 or
+  the hash value for a data model node.</p><p>The <em class="parameter"><code>fmt</code></em> and remaining arguments can
+  specify an arbitrary string as for
+  <code class="function">confd_trans_seterr()</code>, but when used with one of
+  the <em class="parameter"><code>code</code></em> values that has a specific meaning, it
+  should only be given if it has some additional information -
+  e.g. passing "In use" with CONFD_ERRCODE_IN_USE is not meaningful,
+  and will typically result in duplicated information being reported
+  by the northbound agent. If there is no additional information, just
+  pass an empty string ("") for <em class="parameter"><code>fmt</code></em>.</p><p>A call of confd_trans_seterr(tctx, "string") is equivalent to
+  confd_trans_seterr_extended(tctx, CONFD_ERRCODE_APPLICATION, 0, 0,
+  "string").</p><p>When the extended error reporting is used, the northbound agents
+  will, where possible, use the extended error information to give
+  protocol-specific error reports to the managers, as described in the
+  following tables. (The CONFD_ERRCODE_INTERRUPT code does not have a
+  mapping here, since these interfaces do not provide the possibility to
+  interrupt a transaction.)</p><p>For SNMP, the <em class="parameter"><code>code</code></em> argument is mapped
+  to SNMP ErrorStatus</p><div class="informaltable"><table border="0"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th align="left"><em class="parameter"><code>code</code></em></th><th align="left">SNMP ErrorStatus</th></tr></thead><tbody><tr><td align="left"><code class="constant">CONFD_ERRCODE_IN_USE</code></td><td align="left"><code class="constant">resourceUnavailable</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_RESOURCE_DENIED</code></td><td align="left"><code class="constant">resourceUnavailable</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_INCONSISTENT_VALUE</code></td><td align="left"><code class="constant">inconsistentValue</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_ACCESS_DENIED</code></td><td align="left"><code class="constant">noAccess</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION</code></td><td align="left"><code class="constant">genErr</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION_INTERNAL</code></td><td align="left"><code class="constant">genErr</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_DATA_MISSING</code></td><td align="left"><code class="constant">inconsistentValue</code></td></tr></tbody></table></div><p>For NETCONF the <em class="parameter"><code>code</code></em> argument is mapped
+  to &lt;error-tag&gt;:</p><div class="informaltable"><table border="0"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th align="left"><em class="parameter"><code>code</code></em></th><th align="left">NETCONF error-tag</th></tr></thead><tbody><tr><td align="left"><code class="constant">CONFD_ERRCODE_IN_USE</code></td><td align="left"><code class="code">in-use</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_RESOURCE_DENIED</code></td><td align="left"><code class="code">resource-denied</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_INCONSISTENT_VALUE</code></td><td align="left"><code class="code">invalid-value</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_ACCESS_DENIED</code></td><td align="left"><code class="code">access-denied</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION_</code></td><td align="left"><code class="code">operation-failed</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION_INTERNAL</code></td><td align="left"><code class="code">operation-failed</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_DATA_MISSING</code></td><td align="left"><code class="code">data-missing</code></td></tr></tbody></table></div><p>The tag specified by
+  <em class="parameter"><code>apptag_ns</code></em>/<em class="parameter"><code>apptag_tag</code></em> will
+  be reported as &lt;error-app-tag&gt;.</p><p>For MAAPI the <em class="parameter"><code>code</code></em> argument is mapped to
+  <code class="varname">confd_errno</code>:</p><div class="informaltable"><table border="0"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th align="left"><em class="parameter"><code>code</code></em></th><th align="left"><code class="varname">confd_errno</code></th></tr></thead><tbody><tr><td align="left"><code class="constant">CONFD_ERRCODE_IN_USE</code></td><td align="left"><code class="constant">CONFD_ERR_INUSE</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_RESOURCE_DENIED</code></td><td align="left"><code class="constant">CONFD_ERR_RESOURCE_DENIED</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_INCONSISTENT_VALUE</code></td><td align="left"><code class="constant">CONFD_ERR_INCONSISTENT_VALUE</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_ACCESS_DENIED</code></td><td align="left"><code class="constant">CONFD_ERR_ACCESS_DENIED</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION</code></td><td align="left"><code class="constant">CONFD_ERR_EXTERNAL</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_APPLICATION_INTERNAL</code></td><td align="left"><code class="constant">CONFD_ERR_APPLICATION_INTERNAL</code></td></tr><tr><td align="left"><code class="constant">CONFD_ERRCODE_DATA_MISSING</code></td><td align="left"><code class="constant">CONFD_ERR_DATA_MISSING</code></td></tr></tbody></table></div><p>The tag (if any) can be retrieved by calling</p><div class="funcsynopsis"><a name="fn.confd_last_error_apptag"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">struct xml_tag *<b class="fsfunc">confd_last_error_apptag</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>If no tag was provided by the callback (e.g. plain
+  <code class="function">confd_trans_seterr()</code> was used, or the error
+  did not originate from a data provider callback at all), this
+  function returns a pointer to a <span class="type">struct xml_tag</span>
+  with both the <code class="varname">ns</code> and the
+  <code class="varname">tag</code> element set to 0.</p><p>In the CLI and Web UI a text string is produced through some
+  combination of the <em class="parameter"><code>code</code></em> and the string given by
+  <em class="parameter"><code>fmt, ...</code></em>.</p><div class="funcsynopsis"><a name="fn.confd_trans_seterr_extended_info"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_trans_seterr_extended_info</b>(</code></td><td>struct confd_trans_ctx *<var class="pdparam">tctx</var>, </td></tr><tr><td>&nbsp;</td><td>enum confd_errcode <var class="pdparam">code</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">apptag_ns</var>, </td></tr><tr><td>&nbsp;</td><td>u_int32_t <var class="pdparam">apptag_tag</var>, </td></tr><tr><td>&nbsp;</td><td>confd_tag_value_t *<var class="pdparam">error_info</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">n</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">fmt</var>, </td></tr><tr><td>&nbsp;</td><td>...<code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>This function can be used to provide structured error
+  information in the same way as
+  <code class="function">confd_trans_seterr_extended()</code>, and additionally
+  provide contents for the NETCONF &lt;error-info&gt; element. The
+  <em class="parameter"><code>error_info</code></em> argument is an array of length
+  <em class="parameter"><code>n</code></em>, populated as described for the Tagged Value
+  Array format in the <a class="link" href="rn02re15.html#man.3.confd_types.xml_structures" title="XML STRUCTURES">XML STRUCTURES</a>
+  section of the <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a> manual
+  page. The <em class="parameter"><code>error_info</code></em> information is discarded
+  for other northbound agents than NETCONF.</p><p>The <code class="code">tailf:error-info</code> statement (see <a class="link" href="rn03re20.html" title="tailf_yang_extensions">tailf_yang_extensions(5)</a>)
+  must have been used in one or more YANG modules to declare the data
+  nodes for &lt;error-info&gt;. As an example, we could have this
+  <code class="code">error-info</code> declaration:</p><div class="informalexample"><pre class="programlisting">module mod {
+  namespace "http://tail-f.com/test/mod";
+  prefix mod;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  ...
+
+  tailf:error-info {
+    leaf severity {
+      type enumeration {
+        enum info;
+        enum error;
+        enum critical;
+      }
+    }
+    container detail {
+      leaf class {
+        type uint8;
+      }
+      leaf code {
+        type uint8;
+      }
+    }
+  }
+
+  ...
+
+}</pre></div><p>A call of
+  <code class="function">confd_trans_seterr_extended_info()</code> to populate
+  the &lt;error-info&gt; could then look like this:</p><div class="informalexample"><pre class="programlisting">confd_tag_value_t error_info[10];
+int i = 0;
+
+CONFD_SET_TAG_ENUM_VALUE(&amp;error_info[i],
+                         mod_severity, mod_error);
+CONFD_SET_TAG_NS(&amp;error_info[i], mod__ns);          i++;
+CONFD_SET_TAG_XMLBEGIN(&amp;error_info[i],
+                       mod_detail, mod__ns);        i++;
+CONFD_SET_TAG_UINT8(&amp;error_info[i], mod_class, 42); i++;
+CONFD_SET_TAG_UINT8(&amp;error_info[i], mod_code, 17);  i++;
+CONFD_SET_TAG_XMLEND(&amp;error_info[i],
+                     mod_detail, mod__ns);          i++;
+OK(confd_trans_seterr_extended_info(tctx, CONFD_ERRCODE_APPLICATION,
+                                    0, 0, error_info, i,
+                                    "Operation failed"));</pre></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The toplevel elements in the <span class="type">confd_tag_value_t</span>
+  array <span class="emphasis"><em>must</em></span> have the <code class="varname">ns</code> element
+  of the <span class="type">struct xml_tag</span> set. The
+  <code class="function">CONFD_SET_TAG_XMLBEGIN()</code> macro will set this
+  element, but for toplevel leaf elements the
+  <code class="function">CONFD_SET_TAG_NS()</code> macro needs to be used, as
+  shown above.</p></div><p>The &lt;error-info&gt; section resulting from the above would
+  look like this:</p><div class="informalexample"><pre class="programlisting">    &lt;error-info&gt;
+      ...
+      &lt;severity xmlns="http://tail-f.com/test/mod"&gt;error&lt;/severity&gt;
+      &lt;detail xmlns="http://tail-f.com/test/mod"&gt;
+        &lt;class&gt;42&lt;/class&gt;
+        &lt;code&gt;17&lt;/code&gt;
+      &lt;/detail&gt;
+    &lt;/error-info&gt;</pre></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.errors"></a><h2>ERRORS</h2><p>All functions in <code class="filename">libconfd</code> signal
+  errors through the return of the #defined CONFD_ERR - which has the
+  value -1 - or alternatively CONFD_EOF (-2) which means that ConfD closed
+  its end of the socket.</p><p>
+     Data provider callbacks (see <a class="link" href="rn02re10.html" title="confd_lib_dp">confd_lib_dp(3)</a>) can also
+     signal errors by returning CONFD_ERR from the callback. This can be
+     done for all different kinds of callbacks.
+     It is possible to to provide additional error information from
+     one of these callbacks by using one of the functions:
+     </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+           <code class="function">confd_trans_seterr(),
+           confd_trans_seterr_extended(),
+           confd_trans_seterr_extended_info()</code>
+         </span></dt><dd><p>For transaction callbacks</p></dd><dt><span class="term">
+           <code class="function">confd_db_seterr(),
+           confd_db_seterr_extended(),
+           confd_db_seterr_extended_info()</code>
+         </span></dt><dd><p>For db callbacks</p></dd><dt><span class="term">
+           <code class="function">confd_action_seterr(),
+           confd_action_seterr_extended(),
+           confd_action_seterr_extended_info()</code>
+         </span></dt><dd><p>For action callbacks</p></dd><dt><span class="term">
+           <code class="function">confd_notification_seterr(),
+           confd_notification_seterr_extended(),
+           confd_notification_seterr_extended_info()</code>
+         </span></dt><dd><p>For notification callbacks</p></dd></dl></div><p>
+  </p><p>CDB two phase subscribers (see <a class="link" href="rn02re09.html" title="confd_lib_cdb">confd_lib_cdb(3)</a>) can also
+  provide error information when
+  <code class="function">cdb_read_subscription_socket2()</code> has returned with
+  type set to <code class="constant">CDB_SUB_PREPARE</code>, using one of the
+  functions <code class="function">cdb_sub_abort_trans()</code> and
+  <code class="function">cdb_sub_abort_trans_info()</code>.</p><p>Whenever CONFD_ERR is returned from any API function in
+  <code class="filename">libconfd</code> it is possible to obtain additional
+  information on the error through the symbol
+  <code class="varname">confd_errno</code>. Additionally there may be an
+  error text associated with the error. A call to the
+  function</p><div class="funcsynopsis"><a name="fn.confd_lasterr"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_lasterr</b>(</code></td><td><var class="pdparam">void</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>returns a
+  string which contains additional textual information on the
+  error. Furthermore, the function </p><div class="funcsynopsis"><a name="fn.confd_strerror"></a><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">char *<b class="fsfunc">confd_strerror</b>(</code></td><td>int <var class="pdparam">code</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div><p>returns a string which describes a particular error code.
+  When one of the
+
+
+
+ The
+  following error codes are available:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="constant">CONFD_ERR_NOEXISTS</code> (1)</span></dt><dd><p>Typically we tried to read a value through CDB or MAAPI
+        which does not exist.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_ALREADY_EXISTS</code> (2)</span></dt><dd><p>We tried to create something which already exists.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_ACCESS_DENIED</code> (3)</span></dt><dd><p>Access to an object was denied due to AAA authorization
+        rules.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOT_WRITABLE</code> (4)</span></dt><dd><p>We tried to write an object which is not writable.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_BADTYPE</code> (5)</span></dt><dd><p>We tried to create or write an object which is specified
+        to have another type (see <a class="link" href="rn02re15.html" title="confd_types">confd_types(3)</a>)
+        than the one we provided.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOTCREATABLE</code> (6)</span></dt><dd><p>We tried to create an object which is not possible to
+        create.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOTDELETABLE</code> (7)</span></dt><dd><p>We tried to delete an object which is not possible to
+        delete.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_BADPATH</code> (8)</span></dt><dd><p>We provided a bad path in any of the printf style
+        functions which take a variable number of arguments.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOSTACK</code> (9)</span></dt><dd><p>We tried to pop without a preceding push.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_LOCKED</code> (10)</span></dt><dd><p>We tried to lock something which is already locked.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_INUSE</code> (11)</span></dt><dd><p>We tried to commit while someone else holds a lock.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOTSET</code> (12)</span></dt><dd><p>A mandatory leaf does not have a value, either because
+        it has been deleted, or not set after a create.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NON_UNIQUE</code> (13)</span></dt><dd><p>A group of leafs specified with the <code class="code">unique</code>
+        statement are not unique.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_BAD_KEYREF</code> (14)</span></dt><dd><p>Dangling pointer.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_TOO_FEW_ELEMS</code> (15)</span></dt><dd><p>A <code class="code">min-elements</code>
+        violation. A node has fewer elements or
+        entries than specified with <code class="code">min-elements</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_TOO_MANY_ELEMS</code> (16)</span></dt><dd><p>A <code class="code">max-elements</code>
+        violation. A node has fewer elements or
+        entries than specified with <code class="code">max-elements</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_BADSTATE</code> (17)</span></dt><dd><p>Some function, such as the MAAPI commit functions that
+        require several functions to be called in a specific order,
+        was called out of order.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_INTERNAL</code> (18)</span></dt><dd><p>An internal error. This normally indicates a bug in ConfD
+        or libconfd (if nothing else the lack of a better error code),
+        please report it to Tail-f support.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_EXTERNAL</code> (19)</span></dt><dd><p>All errors that originate in user code.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_MALLOC</code> (20)</span></dt><dd><p>Failed to allocate memory.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_PROTOUSAGE</code> (21)</span></dt><dd><p>Usage of API functions or callbacks was wrong.  It
+        typically means that we invoke a function when we
+        shouldn't. For example if we invoke the
+        <code class="function">confd_data_reply_next_key()</code> in a
+        <code class="function">get_elem()</code> callback we get this error.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOSESSION</code> (22)</span></dt><dd><p>A session must be established prior to executing the
+        function.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_TOOMANYTRANS</code> (23)</span></dt><dd><p>A new MAAPI transaction was rejected since the
+        transaction limit threshold was reached.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_OS</code> (24)</span></dt><dd><p>An error occurred in a call to some operating system
+        function, such as <code class="function">write()</code>. The proper
+        errno from libc should then be read and used as failure
+        indicator.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_CONNECT</code> (25)</span></dt><dd><p>Failed to connect to a remote HA node.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_CLOSED</code> (26)</span></dt><dd><p>A remote HA node closed its connection to us, or there
+        was a timeout waiting for a sync response from the master
+        during a call of <code class="function">confd_ha_beslave()</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_BADFXS</code> (27)</span></dt><dd><p>A remote HA node had a different set of fxs files
+        compared to us. It could also be that the set is the same, but
+        the version of some fxs file is different.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_BADTOKEN</code> (28)</span></dt><dd><p>A remote HA node has a different token than us.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_BADNAME</code> (29)</span></dt><dd><p>A remote ha node has a different name than the name we
+        think it has.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_BIND</code> (30)</span></dt><dd><p>Failed to bind the ha socket for incoming HA connects.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_NOTICK</code> (31)</span></dt><dd><p>A remote HA node failed to produce the interval live
+        ticks.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_VALIDATION_WARNING</code> (32)</span></dt><dd><p><code class="function">maapi_validate()</code> returned warnings.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_SUBAGENT_DOWN</code> (33)</span></dt><dd><p>An operation towards a mounted NETCONF subagent failed
+        due to the subagent not being up.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_LIB_NOT_INITIALIZED</code> (34)</span></dt><dd><p>The confd library has not been properly initialized by
+        a call to <code class="function">confd_init()</code>.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_TOO_MANY_SESSIONS</code> (35)</span></dt><dd><p>Maximum number of sessions reached.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_BAD_CONFIG</code> (36)</span></dt><dd><p>An error in a configuration.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_RESOURCE_DENIED</code> (37)</span></dt><dd><p>A data provider callback returned
+        CONFD_ERRCODE_RESOURCE_DENIED (see EXTENDED ERROR REPORTING
+        above).</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_INCONSISTENT_VALUE</code> (38)</span></dt><dd><p>A data provider callback returned
+        CONFD_ERRCODE_INCONSISTENT_VALUE (see EXTENDED ERROR REPORTING
+        above).</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_APPLICATION_INTERNAL</code> (39)</span></dt><dd><p>A data provider callback returned
+        CONFD_ERRCODE_APPLICATION_INTERNAL (see EXTENDED ERROR
+        REPORTING above).</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_UNSET_CHOICE</code> (40)</span></dt><dd><p>No <code class="code">case</code> has been selected for a mandatory
+        <code class="code">choice</code> statement.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_MUST_FAILED</code> (41)</span></dt><dd><p>A <code class="code">must</code> constraint is not satisfied.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_MISSING_INSTANCE</code> (42)</span></dt><dd><p>The value of an <code class="code">instance-identifier</code> leaf with
+        <code class="code">require-instance true</code> does not specify an existing
+        instance.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_INVALID_INSTANCE</code> (43)</span></dt><dd><p>The value of an <code class="code">instance-identifier</code> leaf does
+        not conform to the specified path filters.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_UNAVAILABLE</code> (44)</span></dt><dd><p>We tried to use some unavailable functionality, e.g.
+        get/set attributes on an operational data element.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_EOF</code> (45)</span></dt><dd><p>This value is used when a function returns CONFD_EOF. Thus
+        it is not strictly necessary to check whether the return value
+        is CONFD_ERR or CONFD_EOF - if the function should return
+        CONFD_OK on success, but the return value is something else, the
+        reason can always be found via confd_errno.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOTMOVABLE</code> (46)</span></dt><dd><p>We tried to move an object which is not possible to
+        move.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_WITH_UPGRADE</code> (47)</span></dt><dd><p>We tried to perform an in-service data model upgrade on a
+        HA node that was either a master or a slave, or we tried to make
+        the node a HA master or slave while an in-service data model
+        upgrade was in progress.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_TIMEOUT</code> (48)</span></dt><dd><p>An operation did not complete within the specified
+        timeout.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_ABORTED</code> (49)</span></dt><dd><p>An operation was aborted.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_XPATH</code> (50)</span></dt><dd><p>Compilation or evaluation of an XPath expression failed.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOT_IMPLEMENTED</code> (51)</span></dt><dd><p>A request was made for an operation that wasn't
+        implemented. This will typically occur if an application uses a
+        version of <code class="filename">libconfd</code> that is more recent
+        than the version of the ConfD daemon, and a CDB or MAAPI
+        function is used that is only implemented in the library
+        version.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_HA_BADVSN</code> (52)</span></dt><dd><p>A remote HA node had an incompatible protocol version.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_POLICY_FAILED</code> (53)</span></dt><dd><p>A user-defined policy expression evaluated to false.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_POLICY_COMPILATION_FAILED</code> (54)</span></dt><dd><p>A user-defined policy XPath expression could not be
+        compiled.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_POLICY_EVALUATION_FAILED</code> (55)</span></dt><dd><p>A user-defined policy expression failed XPath evaluation.</p></dd><dt><span class="term"><code class="constant">NCS_ERR_CONNECTION_REFUSED</code> (56)</span></dt><dd><p>NCS failed to connect to a device.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_START_FAILED</code> (57)</span></dt><dd><p>ConfD daemon failed to proceed to next start-phase.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_DATA_MISSING</code> (58)</span></dt><dd><p>A data provider callback returned
+        CONFD_ERRCODE_DATA_MISSING (see EXTENDED ERROR REPORTING
+        above).</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_CLI_CMD</code> (59)</span></dt><dd><p>Execution of a CLI command failed.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_UPGRADE_IN_PROGRESS</code> (60)</span></dt><dd><p>A request was made for an operation that is not allowed
+        when in-service data model upgrade is in progress.</p></dd><dt><span class="term"><code class="constant">CONFD_ERR_NOTRANS</code> (61)</span></dt><dd><p>An invalid transaction handle was passed to a MAAPI
+        function - i.e. the handle did not refer to a transaction that
+        was either started on, or attached to, the MAAPI socket.</p></dd><dt><span class="term"><code class="constant">NCS_ERR_SERVICE_CONFLICT</code> (62)</span></dt><dd><p>An NCS service invocation running outside the transaction
+        lock modified data that was also modified by a service
+        invocation in another transaction.</p></dd></dl></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.miscellaneous"></a><h2>MISCELLANEOUS</h2><p>The library will always set the default signal handler for
+  SIGPIPE to be SIG_IGN. All libconfd APIs are socket based and the
+  library must be able to detect failed write operations in a
+  controlled manner.</p><p>The include file <code class="filename">confd_lib.h</code> includes
+  <code class="filename">assert.h</code> and uses assert macros in the
+  specialized <code class="function">CONFD_GET_XXX()</code> macros. If the
+  behavior of assert is not wanted in a production environment, we can
+  define NDEBUG before including <code class="filename">confd_lib.h</code> (or
+  <code class="filename">confd.h</code>), see assert(3). Alternatively we can
+  define a <code class="function">CONFD_ASSERT()</code> macro before including
+  <code class="filename">confd_lib.h</code>.  The assert macros are invoked via
+  <code class="function">CONFD_ASSERT()</code>, which is defined by:</p><div class="informalexample"><pre class="programlisting">#ifndef CONFD_ASSERT
+#define CONFD_ASSERT(E) assert(E)
+#endif
+</pre></div><p>I.e. by defining a different version of
+  <code class="function">CONFD_ASSERT()</code>, we can get our own error
+  handler invoked instead of assert(3), for example:</p><div class="informalexample"><pre class="programlisting">void log_error(char *file, int line, char *expr);
+
+#define CONFD_ASSERT(E) \
+            ((E) ? (void)0 : log_error(__FILE__, __LINE__, #E))
+
+#include &lt;confd_lib.h&gt;
+    </pre></div></div><div class="refsect1"><a name="man.3.confd_lib_lib.syslog_and_debug"></a><h2>SYSLOG AND DEBUG</h2><p>When developing applications with <code class="filename">libconfd</code>
+  we always need to
+  indicate to the library which verbosity level should be used by the
+  library. There are three different levels to choose
+  from: CONFD_SILENT where the library never writes anything,
+  never, CONFD_DEBUG where the library reports all errors and finally
+  CONFD_TRACE where the library traces the execution and invocations
+  of all the various callback functions.</p><p>There are two different destinations for all library
+  printouts.  When we call <code class="function">confd_init()</code>, we
+  always need to supply a <span class="type">FILE*</span> stream which
+  should be used for all printouts. This parameter can be set to NULL
+  if we never want any <span class="type">FILE*</span> printouts to
+  occur.</p><p>The second destination is syslog, i.e. the library will syslog
+  if told to.  This is controlled by the global integer variable
+  <code class="varname">confd_lib_use_syslog</code>.  If we set this variable
+  to <code class="constant">1</code>, <code class="filename">libconfd</code> will syslog
+  all output.  If we
+  set it to <code class="constant">0</code> the library will not syslog. It is
+  the responsibility of the application to (optionally) call
+  <code class="function">openlog()</code> before initializing the ConfD
+  library. The default value is <code class="constant">0</code>.</p><p>There also exists a hook point at which a library user can
+  install their own printer. This done by assigning to a global variable
+  <code class="varname">confd_user_log_hook</code>, as in:</p><div class="informalexample"><pre class="programlisting">void mylogger(int syslogprio, const char *fmt, va_list ap) {
+    char buf[BUFSIZ];
+    sprintf(buf, "MYLOG:(%d) ", syslogprio); strcat(buf, fmt);
+    vfprintf(stderr, buf, ap);
+}
+
+confd_user_log_hook = mylogger;</pre></div><p>The <em class="parameter"><code>syslogprio</code></em> is LOG_ERR or LOG_CRIT for
+  error messages, and LOG_DEBUG for trace messages, see the description
+  of <code class="function">confd_init()</code>.</p><p>Thus a good combination of values in a target environment is
+  to set the <span class="type">FILE*</span> handle to NULL and
+  <code class="varname">confd_lib_use_syslog</code> to <code class="constant">1</code>.
+  This way we do not get the overhead of file logging and at the same
+  time get all errors reported to syslog.</p></div><div class="refsect1"><a name="man.3.confd_lib_lib.see_also"></a><h2>SEE ALSO</h2><p><span class="citerefentry"><span class="refentrytitle">confd</span>(5)</span> - ConfD daemon configuration file format</p><p>The ConfD User Guide</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn02re12.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn02.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn02re14.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">confd_lib_ha&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;confd_lib_maapi</td></tr></table></div></body></html>

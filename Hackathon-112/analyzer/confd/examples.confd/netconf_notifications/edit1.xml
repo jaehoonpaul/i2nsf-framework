@@ -1,0 +1,11 @@
+<interfaces xmlns="http://tail-f.com/ns/test/notif"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <interface nc:operation="create">
+    <ifIndex>11</ifIndex>
+    <desc>Iinterface 11</desc>
+  </interface>
+  <interface nc:operation="create">
+    <ifIndex>12</ifIndex>
+    <desc>Interface 12</desc>
+  </interface>
+</interfaces>

@@ -1,0 +1,108 @@
+Example #8: Configuration Instrumentation in C with external candidate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example does precisely the same thing as example
+intro/6-c_config with the exception that here the external database
+owns the candidate. I.e. the external database has a copy of the
+configuration, which is called the "candidate". We must then implement
+the five candidate-related callbacks which are not necessary in
+intro/6-c_config.
+
+This must be considered a "non-recommended" way of using ConfD since
+everything becomes so much easier if ConfD owns the candidate data.
+Note that although your external database may have candidate support,
+it may not be precisely mapped towards a NETCONF candidate.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+This example, hosts.c, is intended to look like a legacy system
+configurator. It has its own simple database, database file format and
+even a trivial command line interface (CLI). Be sure not to confuse
+this example CLI with the ConfD CLI.
+
+The configurator has then been augmented with calls to the ConfD
+read-write database API, to enable NETCONF and the ConfD CLI access,
+on top of the old files and native CLI.
+
+The configuration is not tied to any real services, so you can
+fearlessly try any configuration operations you like.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+    This will start ConfD and the 'hosts' daemon. The hosts program
+    prints some TRACE messages, then starts the 'hosts' daemon's
+    native CLI (this is not the same as the ConfD CLI!).
+
+ 2. To see what's happening inside ConfD, optionally tail the ConfD
+    log file. Unless you have changed the default configuration for
+    this example (see confd.conf) the command would be
+
+        $ tail -f ./confd.log
+
+ 3. In the native CLI, type 'help' to see a list of available
+    commands. At this point the database is empty, so nothing will be
+    displayed by
+
+        > show
+
+    To add some default data to play with, type 'default'.
+
+ 4. Open up a separate terminal window and start the CLI with 'make
+    cli' and try some commands
+
+        (J) > show configuration hosts
+
+        (C) # show running-config hosts
+
+    The two CLIs (the native CLI and the ConfD CLI) now operate
+    against the data in parallel. You can also use the netconf-console
+    to operate on the configuration. Try, for example,
+
+        netconf-console cmd-create-woody.xml
+        netconf-console cmd-delete-woody.xml
+        netconf-console cmd-get-buzz-eth0-ip.xml
+        netconf-console cmd-set-buzz-eth0-net1.xml
+        netconf-console cmd-set-buzz-eth0-net2.xml
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Using ConfD with external Data
++ man 3 confd_lib
++ man 3 confd_types
+
+
+Exercises
+~~~~~~~~~~
+
+X1. Make your own Netconf commands. Use the cmd-*.xml files as
+    templates.
+
+X2. Add a new field (e.g. max_load to limit the bandwidth) to the
+    database and data model.
+
+X3. Run the ConfD cli as 'configure exclusive' try out confirmed
+    commit.
+
+ 

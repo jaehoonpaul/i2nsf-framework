@@ -1,0 +1,729 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;27.&nbsp;Plug-and-play scripting</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch26.html" title="Chapter&nbsp;26.&nbsp;Subagents and Proxies"><link rel="next" href="ch28.html" title="Chapter&nbsp;28.&nbsp;Advanced Topics"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;27.&nbsp;Plug-and-play scripting</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch26.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch28.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.scripting_using"></a>Chapter&nbsp;27.&nbsp;Plug-and-play scripting</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch27.html#d5e13633">27.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13653">27.2. Script storage</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13660">27.3. Script interface</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13683">27.4. Loading of scripts</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13714">27.5. Command scripts</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13843">27.6. Policy scripts</a></span></dt><dt><span class="sect1"><a href="ch27.html#d5e13930">27.7. Post-commit scripts</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13633"></a>27.1.&nbsp;Introduction</h2></div></div></div><p>
+          This chapter defines a scripting mechanism to be used
+          together with the CLI (scripting is not available for any
+          other northbound interfaces). The chapter is intended for
+          users that are familiar with UNIX shell scripting and/or
+          programming. With the scripting mechanism it is possible for
+          an end-user to add new functionality to ConfD in a
+          plug-and-play like
+          manner. No special tools are needed.  There are three
+          categories of scripts:
+
+         </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">command scripts</code></span></dt><dd><p>used to add new commands to the CLI.</p></dd><dt><span class="term"><code class="code">policy scripts</code></span></dt><dd><p>invoked at validation time and may control the
+                 outcome of a transaction. Policy scripts have the
+                 mandate to cause a transaction to abort.
+                 </p></dd><dt><span class="term"><code class="code">post-commit scripts</code></span></dt><dd><p>invoked when a transaction has been
+                committed. Post-commit scripts can for example be used
+                for logging, sending external events etc.</p></dd></dl></div><p>
+        </p><p>
+          The terms "script" and "scripting" used throughout this
+          description refer to how functionality can be added without
+          a requirement for integration using the ConfD
+          programming APIs. ConfD will only run the scripts as
+          UNIX executables. Thus they may be written as shell scripts,
+          or using some other scripting language that is supported by
+          the OS, or even be compiled code. The scripts are run with
+          the same user id as ConfD.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13653"></a>27.2.&nbsp;Script storage</h2></div></div></div><p>
+        Scripts are stored in a directory tree with a predefined
+        structure where there is a sub-directory for each script
+        category:
+
+        </p><div class="informalexample"><pre class="programlisting">
+scripts/
+        command/
+        policy/
+        post-commit/
+        </pre></div><p>
+
+        For all script categories it suffices to just add a valid
+        script in the correct sub-directory in order to enable the
+        script. See the details for each script category for how a
+        valid script of that category is defined. Scripts with a name
+        beginning with a dot character ('.') are ignored.
+      </p><p>
+        The directory path to the location of the scripts is
+        configured with the
+
+        <em class="parameter"><code>/confdConf/scripts/dir</code></em>
+        
+        configuration parameter. It is possible to have several scripts
+        directories.
+
+        
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13660"></a>27.3.&nbsp;Script interface</h2></div></div></div><p>
+        All scripts are required to provide a formal description of
+        their interface. When the scripts are loaded,
+        ConfD
+        will invoke the scripts with (one of)
+
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">--command</code></span></dt><dd><p></p></dd><dt><span class="term"><code class="code">--policy</code></span></dt><dd><p></p></dd><dt><span class="term"><code class="code">--post-commit</code></span></dt><dd><p></p></dd></dl></div><p>
+        as argument depending of the script category.
+      </p><p>
+        The script must respond by writing its formal interface
+        description on <code class="code">stdout</code> and exit normally. Such a
+        description consists of one or more sections. Which sections
+        that are required depends on the category of the script.
+      </p><p>
+        The sections do however have a common syntax. Each section
+        begins with the keyword "begin" followed by the type of
+        section. After that one or more lines of settings follows.
+        Each such setting begins with a name, followed by a colon
+        character (':') and after that the value is stated. The
+        section ends with the keyword "end". Empty lines and spaces
+        may be used to improve the readability.
+      </p><p>
+        For examples see each corresponding section below.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13683"></a>27.4.&nbsp;Loading of scripts</h2></div></div></div><p>
+       Scripts are automatically loaded at startup and may also be
+       manually reloaded with the CLI command <span class="command"><strong>script
+       reload</strong></span>. The command takes an optional
+       <em class="parameter"><code>verbosity</code></em> parameter which may have one
+       of the following values:
+
+       </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">diff</code></span></dt><dd><p>Shows info about those scripts that have
+            been changed since the latest (re)load. This is the
+            default.</p></dd><dt><span class="term"><code class="code">all</code></span></dt><dd><p>Shows info about all scripts regardless of
+            whether they have been changed or not.</p></dd><dt><span class="term"><code class="code">errors</code></span></dt><dd><p>Shows info about those scripts that are
+           erroneous, regardless of whether they have been changed or
+           not. Typical errors are invalid file permissions and syntax
+           errors in the interface description.</p></dd></dl></div><p>
+        Yet another parameter may be useful when debugging reload of scripts:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">debug</code></span></dt><dd><p>Shows additional debug info about the
+            scripts.</p></dd></dl></div><p>
+     </p><p>An example session reloading scripts:
+     </p><div class="informalexample"><pre class="screen">
+admin@ncs#<strong class="userinput"><code> script reload all</code></strong>
+$NCS_DIR/examples.ncs/getting-started/using-ncs/7-scripting/scripts:
+ok
+command:
+    add_user.sh: unchanged
+    echo.sh: unchanged
+policy:
+    check_dir.sh: unchanged
+post-commit:
+    show_diff.sh: unchanged
+/opt/ncs/scripts: ok
+command:
+    device_brief.sh: unchanged
+    device_brief_c.sh: unchanged
+    device_list.sh: unchanged
+    device_list_c.sh: unchanged
+    device_save.sh: unchanged
+       </pre></div><p>
+     </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13714"></a>27.5.&nbsp;Command scripts</h2></div></div></div><p>
+        Command scripts are used to add new commands to the CLI.  The
+        scripts are executed in the context of a transaction.
+        When the script is run in <code class="code">oper</code> mode, this is a
+        read-only transaction, when it is run in <code class="code">config</code>
+        mode, it is a read-write transaction.
+        In that context the script may make use of the
+        environment variables <span class="phrase"><code class="envar">CONFD_MAAPI_USID</code> and
+        <code class="envar">CONFD_MAAPI_THANDLE</code></span> in order to attach
+        to the active transaction. This makes it simple to make use of
+        the <span class="command"><strong>maapi</strong></span> command (see the
+        <span class="olink">????</span> manual page)
+        for various purposes.
+      </p><p>
+        Each command script must be able to handle the argument
+        <code class="option">--command</code> and, when invoked, write a
+        <code class="code">command</code> section to <code class="code">stdout</code>.
+        If the CLI command is intended to take parameters, one
+        <code class="code">param</code> section per CLI parameter must also be
+        emitted.
+      </p><p>The command is not paginated by default in the CLI and
+      will only do so if it is piped to more.</p><div class="informalexample"><pre class="programlisting">
+          joe@io&gt; example_command_script | more
+        </pre></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13732"></a>27.5.1.&nbsp;Command section</h3></div></div></div><p>
+          The following settings can be used to define a command:
+
+          </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">modes</code></span></dt><dd><p>
+                Defines in which CLI mode(s) that the command should
+                be available. The value can be <code class="code">oper</code>,
+                <code class="code">config</code> or both (separated with space).
+              </p></dd><dt><span class="term"><code class="code">styles</code></span></dt><dd><p>
+                Defines in which CLI styles that the command should be
+                available. The value can be one or more of
+                <code class="code">c</code>, <code class="code">i</code> and <code class="code">j</code>
+                (separated with space). <code class="code">c</code> means Cisco
+                style, <code class="code">i</code>, means Cisco IOS and
+                <code class="code">j</code> for J-style.
+              </p></dd><dt><span class="term"><code class="code">cmdpath</code></span></dt><dd><p>
+                Is the full CLI command path. For example the command
+                path <code class="code">my script echo</code> implies that the
+                command will be called <code class="code">my script echo</code> in
+                the CLI.
+              </p></dd><dt><span class="term"><code class="code">help</code></span></dt><dd><p>
+                Command help text.
+              </p></dd></dl></div><p>
+        </p><p>
+          An example of a command section is:
+          </p><div class="informalexample"><pre class="programlisting">
+begin command
+  modes: oper
+  styles: c i j
+  cmdpath: my script echo
+  help: Display a line of text
+end
+         </pre></div><p>
+         </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13769"></a>27.5.2.&nbsp;Param section</h3></div></div></div><p>
+          In this section various aspects of a parameter is
+          specified. This may both affect the parameter syntax for
+          the end-user in the CLI as well as what the command script
+          will get as arguments. The following settings can be used to
+          customize each CLI parameter:
+        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">name</code></span></dt><dd><p>
+
+                Optional name of the parameter. If provided, the CLI
+                will prompt for this name before the value. By default
+                the name is not forwarded to the script. See
+                <code class="code">flag</code> and <code class="code">prefix</code>.
+
+              </p></dd><dt><span class="term"><code class="code">type</code></span></dt><dd><p>
+
+                The type of the parameter. By default each parameter
+                has a value, but by setting the type to
+                <code class="code">void</code> the CLI will not prompt for a
+                value. In order to be useful the <code class="code">void</code> type
+                must be combined with <code class="code">name</code> and either
+                <code class="code">flag</code> or <code class="code">prefix</code>.
+
+              </p></dd><dt><span class="term"><code class="code">presence</code></span></dt><dd><p>
+
+                Controls whether the parameter must be present in the
+                CLI input or not. Can be set to <code class="code">optional</code>
+                or <code class="code">mandatory</code>.
+
+              </p></dd><dt><span class="term"><code class="code">words</code></span></dt><dd><p>
+
+                Controls the number of words that the parameter value
+                may consist of. By default the value must consist of
+                just one word (possibly quoted if it contains
+                spaces). If set to <code class="code">any</code>, the parameter may
+                consist of any number of words. This setting is only
+                valid for the last parameter.
+
+              </p></dd><dt><span class="term"><code class="code">flag</code></span></dt><dd><p>
+
+                Extra word added before the parameter value. For
+                example if set to <code class="option">-f</code> and the user
+                enters <code class="option">logfile</code>, the script will get
+                <code class="option">-f logfile</code> as arguments.
+
+              </p></dd><dt><span class="term"><code class="code">prefix</code></span></dt><dd><p>
+
+                Extra string prepended to the parameter value (as a
+                single word). For example if set to
+                <code class="option">--file=</code> and the user enters
+                <code class="option">logfile</code>, the script will get
+                <code class="option">--file=logfile</code> as argument.
+
+              </p></dd><dt><span class="term"><code class="code">help</code></span></dt><dd><p>
+                Parameter help text.
+              </p></dd></dl></div><p>
+            If the command takes a parameter to redirect the output to
+            a file, a param section might look like this:
+          </p><div class="informalexample"><pre class="programlisting">
+begin param
+ name: file
+ presence: optional
+ flag: -f
+ help: Redirect output to file
+end
+        </pre></div></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13827"></a>27.5.3.&nbsp;Full command example</h3></div></div></div><p>A command denying changes the configured trace-dir for a
+      set of devices it can use the <code class="code">check_dir.sh</code> script.
+      </p><div class="informalexample"><pre class="programlisting">
+<em class="hl-comment" style="color: silver">#!/bin/bash</em>
+
+<strong class="hl-keyword">set</strong> -e
+
+<strong class="hl-keyword">while</strong> [ $<em class="hl-comment" style="color: silver"># -gt 0 ]; do</em>
+    <strong class="hl-keyword">case</strong> <strong class="hl-string"><em style="color:red">"$1"</em></strong> in
+        --command)
+            <em class="hl-comment" style="color: silver"># Configuration of the command</em>
+            <em class="hl-comment" style="color: silver">#</em>
+            <em class="hl-comment" style="color: silver"># modes   - CLI mode (oper config)</em>
+            <em class="hl-comment" style="color: silver"># styles  - CLI style (c i j)</em>
+            <em class="hl-comment" style="color: silver"># cmdpath - Full CLI command path</em>
+            <em class="hl-comment" style="color: silver"># help    - Command help text</em>
+            <em class="hl-comment" style="color: silver">#</em>
+            <em class="hl-comment" style="color: silver"># Configuration of each parameter</em>
+            <em class="hl-comment" style="color: silver">#</em>
+            <em class="hl-comment" style="color: silver"># name     - (optional) name of the parameter</em>
+            <em class="hl-comment" style="color: silver"># more     - (optional) true or false</em>
+            <em class="hl-comment" style="color: silver"># presence - optional or mandatory</em>
+            <em class="hl-comment" style="color: silver"># type     - void - A parameter without a value</em>
+            <em class="hl-comment" style="color: silver"># words    - any - Multi word param. Only valid for the last param</em>
+            <em class="hl-comment" style="color: silver"># flag     - Extra word added before the parameter value</em>
+            <em class="hl-comment" style="color: silver"># prefix   - Extra string prepended to the parameter value</em>
+            <em class="hl-comment" style="color: silver"># help     - Command help text</em>
+            cat &lt;&lt; EOF
+
+begin command
+  modes: config
+  styles: c i j
+  cmdpath: user-wizard
+  help: Add a new user
+end
+EOF
+            <strong class="hl-keyword">exit</strong>
+            ;;
+        *)
+            <strong class="hl-keyword">break</strong>
+            ;;
+    <strong class="hl-keyword">esac</strong>
+    <strong class="hl-keyword">shift</strong>
+<strong class="hl-keyword">done</strong>
+
+<em class="hl-comment" style="color: silver">## Ask for user name</em>
+<strong class="hl-keyword">while</strong> true; <strong class="hl-keyword">do</strong>
+    <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"Enter user name: "</em></strong>
+    <strong class="hl-keyword">read</strong> user
+
+    <strong class="hl-keyword">if</strong> [ ! -n <strong class="hl-string"><em style="color:red">"${user}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+        <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"You failed to supply a user name."</em></strong>
+    <strong class="hl-keyword">elif</strong> ncs-maapi --exists <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}"</em></strong>; <strong class="hl-keyword">then</strong>
+        <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"The user already exists."</em></strong>
+    <strong class="hl-keyword">else</strong>
+        <strong class="hl-keyword">break</strong>
+    <strong class="hl-keyword">fi</strong>
+<strong class="hl-keyword">done</strong>
+
+<em class="hl-comment" style="color: silver">## Ask for password</em>
+<strong class="hl-keyword">while</strong> true; <strong class="hl-keyword">do</strong>
+    <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"Enter password: "</em></strong>
+    <strong class="hl-keyword">read</strong> -s pass1
+    <strong class="hl-keyword">echo</strong>
+
+    <strong class="hl-keyword">if</strong> [ <strong class="hl-string"><em style="color:red">"${pass1:0:1}"</em></strong> == <strong class="hl-string"><em style="color:red">"$"</em></strong> ]; <strong class="hl-keyword">then</strong>
+        <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"The password must not start with $. Please choose a "</em></strong>
+        <strong class="hl-keyword">echo</strong>    <strong class="hl-string"><em style="color:red">"different password."</em></strong>
+    <strong class="hl-keyword">else</strong>
+        <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"Confirm password: "</em></strong>
+        <strong class="hl-keyword">read</strong> -s pass2
+        <strong class="hl-keyword">echo</strong>
+
+        <strong class="hl-keyword">if</strong> [ <strong class="hl-string"><em style="color:red">"${pass1}"</em></strong> != <strong class="hl-string"><em style="color:red">"${pass2}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+            <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Passwords do not match."</em></strong>
+        <strong class="hl-keyword">else</strong>
+            <strong class="hl-keyword">break</strong>
+        <strong class="hl-keyword">fi</strong>
+    <strong class="hl-keyword">fi</strong>
+<strong class="hl-keyword">done</strong>
+
+groups=`ncs-maapi --keys <strong class="hl-string"><em style="color:red">"/nacm/groups/group"</em></strong>`
+<strong class="hl-keyword">while</strong> true; <strong class="hl-keyword">do</strong>
+    <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Choose a group for the user."</em></strong>
+    <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"Available groups are: "</em></strong>
+    <strong class="hl-keyword">for</strong> i in ${groups}; <strong class="hl-keyword">do</strong> <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"${i} "</em></strong>; <strong class="hl-keyword">done</strong>
+    <strong class="hl-keyword">echo</strong>
+    <strong class="hl-keyword">echo</strong> -n <strong class="hl-string"><em style="color:red">"Enter group for user: "</em></strong>
+    <strong class="hl-keyword">read</strong> group
+
+    <strong class="hl-keyword">if</strong> [ ! -n <strong class="hl-string"><em style="color:red">"${group}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+        <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"You must enter a valid group."</em></strong>
+    <strong class="hl-keyword">else</strong>
+        <strong class="hl-keyword">for</strong> i in ${groups}; <strong class="hl-keyword">do</strong>
+            <strong class="hl-keyword">if</strong> [ <strong class="hl-string"><em style="color:red">"${i}"</em></strong> == <strong class="hl-string"><em style="color:red">"${group}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+                <em class="hl-comment" style="color: silver"># valid group found</em>
+                <strong class="hl-keyword">break</strong> <span class="hl-number">2</span>;
+            <strong class="hl-keyword">fi</strong>
+        <strong class="hl-keyword">done</strong>
+        <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"You entered an invalid group."</em></strong>
+    <strong class="hl-keyword">fi</strong>
+    <strong class="hl-keyword">echo</strong>
+<strong class="hl-keyword">done</strong>
+
+<strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Creating user"</em></strong>
+
+ncs-maapi --create <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}"</em></strong>
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}/password"</em></strong> \
+                <strong class="hl-string"><em style="color:red">"${pass1}"</em></strong>
+
+<strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Setting home directory to: /homes/${user}"</em></strong>
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}/homedir"</em></strong> \
+            <strong class="hl-string"><em style="color:red">"/homes/${user}"</em></strong>
+
+<strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Setting ssh key directory to: /homes/${user}/ssh_keydir"</em></strong>
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}/ssh_keydir"</em></strong> \
+            <strong class="hl-string"><em style="color:red">"/homes/${user}/ssh_keydir"</em></strong>
+
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}/uid"</em></strong> <strong class="hl-string"><em style="color:red">"1000"</em></strong>
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/aaa:aaa/authentication/users/user{${user}}/gid"</em></strong> <strong class="hl-string"><em style="color:red">"100"</em></strong>
+
+<strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Adding user to the ${group} group."</em></strong>
+gusers=`ncs-maapi --get <strong class="hl-string"><em style="color:red">"/nacm/groups/group{${group}}/user-name"</em></strong>`
+
+<strong class="hl-keyword">for</strong> i in ${gusers}; <strong class="hl-keyword">do</strong>
+    <strong class="hl-keyword">if</strong> [ <strong class="hl-string"><em style="color:red">"${i}"</em></strong> == <strong class="hl-string"><em style="color:red">"${user}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+        <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"User already in group"</em></strong>
+        <strong class="hl-keyword">exit</strong> <span class="hl-number">0</span>
+    <strong class="hl-keyword">fi</strong>
+<strong class="hl-keyword">done</strong>
+
+ncs-maapi --<strong class="hl-keyword">set</strong> <strong class="hl-string"><em style="color:red">"/nacm/groups/group{${group}}/user-name"</em></strong> <strong class="hl-string"><em style="color:red">"${gusers} ${user}"</em></strong>
+
+
+        </pre></div><p>
+       </p><p>Calling 
+        <code class="filename">examples.confd/scripting/scripts/command/echo.sh</code>
+        with the argument <code class="code">--command</code> argument produces a
+        command section and a couple of param sections:
+        </p><div class="informalexample"><pre class="screen">
+<strong class="userinput"><code>$ ./echo.sh --command</code></strong>
+begin command
+  modes: oper
+  styles: c i j
+  cmdpath: my script echo
+  help: Display a line of text
+end
+
+begin param
+ name: nolf
+ type: void
+ presence: optional
+ flag: -n
+ help: Do not output the trailing newline
+end
+
+begin param
+ name: file
+ presence: optional
+ flag: -f
+ help: Redirect output to file
+end
+
+begin param
+ presence: mandatory
+ words: any
+ help: String to be displayed
+end
+</pre></div><p>
+        </p><p>
+          In the complete example
+          <code class="filename">examples.confd/scripting</code>
+          
+          there is a <code class="filename">README</code> file and a simple
+          command script
+          <code class="filename">scripts/command/echo.sh</code>.
+        </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13843"></a>27.6.&nbsp;Policy scripts</h2></div></div></div><p>
+        Policy scripts are invoked at validation time, before a change
+        is committed. <span class="phrase">They provide a
+        simplified way of defining validation points with
+        callbacks.</span> A policy script can reject the data,
+        accept it, or accept it with a warning. If a warning is
+        produced, it will be displayed for interactive users
+        (e.g. through the CLI or Web UI). The user may choose to abort
+        or continue to commit the transaction.
+      </p><p>
+        Policy scripts are typically assigned to individual leafs or
+        containers. In some cases it may be feasible to use a single
+        policy script, e.g. on the top level node of the
+        configuration. In such a case, this script is responsible for
+        the validation of all values and their relationships
+        throughout the configuration.
+      </p><p>
+        All policy scripts are invoked on every configuration
+        change. The policy scripts can be configured to depend on
+        certain subtrees of the configuration, which can save time but
+        it is very important that all dependencies are stated and also
+        updated when the validation logic of the policy script is
+        updated. Otherwise an update may be accepted even though a
+        dependency should have denied it.
+      </p><p>
+        There can be multiple dependency declarations for a policy
+        script. Each declaration consists of a dependency element
+        specifying a configuration subtree that the validation code is
+        dependent upon. If any element in any of the subtrees is
+        modified, the policy script is invoked. A subtree is specified
+        as an absolute path.
+       </p><p>
+         If there are no declared dependencies, the root of the
+         configuration tree (/) is used, which means that the
+         validation code is executed when any configuration element is
+         modified. If dependencies are declared on a leaf element, an
+         implicit dependency on the leaf itself is added.
+      </p><p>
+        Each policy script must handle the argument
+        <code class="option">--policy</code> and, when invoked, write a
+        <code class="code">policy</code> section to <code class="code">stdout</code>. The script
+        must also perform the actual validation when invoked with the
+        argument <code class="option">--keypath</code>.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13856"></a>27.6.1.&nbsp;Policy section</h3></div></div></div><p>
+          The following settings can be used to configure a policy script:
+
+          </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">keypath</code></span></dt><dd><p>Mandatory. Keypath is a path to a node
+              in the configuration data tree. The policy script
+              <span class="phrase">(and the automatically created
+              validation point)</span> will be associated with this
+              node. The path must be absolute. A keypath can for
+              example be <code class="code">/devices/device/c0</code>.
+
+              The script will be invoked if the configuration node,
+              referred to by by the keypath, is changed or if any node
+              in the subtree under the node (if the node is a container
+              or list) is changed.</p></dd><dt><span class="term"><code class="code">dependency</code></span></dt><dd><p>
+                Declaration of a dependency. The dependency must be an
+                absolute keypath. Multiple dependency settings can be
+                declared. Default is <code class="option">/</code>.
+              </p></dd><dt><span class="term"><code class="code">priority</code></span></dt><dd><p>
+                An optional integer parameter specifying the order
+                policy scripts <span class="phrase">and other
+                validation callbacks </span> will be evaluated, in
+                order of increasing priority, where lower value is
+                higher priority. The default priority is
+                <code class="option">0</code>.
+              </p></dd><dt><span class="term"><code class="code">call</code></span></dt><dd><p>
+                This optional setting can only be used if the
+                associated node, declared as <code class="code">keypath</code>, is
+                a list. If set to <code class="code">once</code>, the policy script
+                is only called once even though there exists many list
+                entries in the data store. This is useful if we have a
+                huge amount of instances or if values assigned to each
+                instance have to be validated in comparison with its
+                siblings. Default is <code class="option">each</code>.
+              </p></dd></dl></div><p>
+        </p><p>
+          A policy that will be run for every change on or under
+          /devices/device.
+        </p><div class="informalexample"><pre class="programlisting">
+begin policy
+ keypath: /devices/device
+ dependency: /devices/global-settings
+ priority: 4
+ call: each
+end
+        </pre></div><p>
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13891"></a>27.6.2.&nbsp;Validation</h3></div></div></div><p>
+          When ConfD has come to the conclusion that
+          the policy script should be invoked to perform its validation
+          logic, the script is invoked with the option
+          <code class="option">--keypath</code>. If the registered node is a leaf,
+          its value will be given with the <code class="option">--value</code> option.
+          For example <code class="code">--keypath /devices/device/c0</code> or if
+          the node is a leaf <code class="code">--keypath
+          /devices/device/c0/address --value 127.0.0.1</code>.
+        </p><p>
+          Once the script has performed its validation logic it must
+          exit with a proper status. The following exit statuses are
+          valid:
+          </p><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="code">0</code></span></dt><dd><p>
+                Validation ok. Vote for commit.
+              </p></dd><dt><span class="term"><code class="code">1</code></span></dt><dd><p>
+                When the outcome of the validation is dubious it
+                is possible for the script to issue a warning
+                message. The message is extracted from the script
+                output on stdout. An interactive user has the
+                possibility to choose to abort or continue to
+                commit the transaction. Non-interactive users
+                automatically vote for commit.
+              </p></dd><dt><span class="term"><code class="code">2</code></span></dt><dd><p>
+                When the validation fails it is possible for the
+                script to issue an error message. The message is
+                extracted from the script output on stdout. The
+                transaction will be aborted.
+              </p></dd></dl></div><p>
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13915"></a>27.6.3.&nbsp;Full policy example</h3></div></div></div><p>A policy denying changes the configured trace-dir for a
+      set of devices it can use the <code class="code">check_dir.sh</code> script.
+      </p><div class="informalexample"><pre class="programlisting">
+<em class="hl-comment" style="color: silver">#!/bin/sh</em>
+
+usage_and_exit() {
+    cat &lt;&lt; EOF
+Usage: $<span class="hl-number">0</span> -h
+       $<span class="hl-number">0</span> --policy
+       $<span class="hl-number">0</span> --keypath &lt;keypath&gt; [--value &lt;value&gt;]
+
+  -h                    display this help and <strong class="hl-keyword">exit</strong>
+  --policy              display policy configuration and <strong class="hl-keyword">exit</strong>
+  --keypath &lt;keypath&gt;   path to node
+  --value &lt;value&gt;       value of leaf
+
+Return codes:
+
+  <span class="hl-number">0</span> - ok
+  <span class="hl-number">1</span> - warning message is printed on stdout
+  <span class="hl-number">2</span> - error message   is printed on stdout
+EOF
+    <strong class="hl-keyword">exit</strong> <span class="hl-number">1</span>
+}
+
+<strong class="hl-keyword">while</strong> [ $<em class="hl-comment" style="color: silver"># -gt 0 ]; do</em>
+    <strong class="hl-keyword">case</strong> <strong class="hl-string"><em style="color:red">"$1"</em></strong> in
+        -h)
+            usage_and_exit
+            ;;
+        --policy)
+            cat &lt;&lt; EOF
+begin policy
+  keypath: /devices/global-settings/trace-dir
+  dependency: /devices/global-settings
+  priority: <span class="hl-number">2</span>
+  call: each
+end
+EOF
+            <strong class="hl-keyword">exit</strong> <span class="hl-number">0</span>
+            ;;
+        --keypath)
+            <strong class="hl-keyword">if</strong> [ $<em class="hl-comment" style="color: silver"># -lt 2 ]; then</em>
+                <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"&lt;ERROR&gt; --keypath &lt;keypath&gt; - path omitted"</em></strong>
+                usage_and_exit
+            <strong class="hl-keyword">else</strong>
+                keypath=$<span class="hl-number">2</span>
+                <strong class="hl-keyword">shift</strong>
+            <strong class="hl-keyword">fi</strong>
+            ;;
+        --value)
+            <strong class="hl-keyword">if</strong> [ $<em class="hl-comment" style="color: silver"># -lt 2 ]; then</em>
+                <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"&lt;ERROR&gt; --value &lt;value&gt; - leaf value omitted"</em></strong>
+                usage_and_exit
+            <strong class="hl-keyword">else</strong>
+                value=$<span class="hl-number">2</span>
+                <strong class="hl-keyword">shift</strong>
+            <strong class="hl-keyword">fi</strong>
+            ;;
+        *)
+            usage_and_exit
+            ;;
+    <strong class="hl-keyword">esac</strong>
+    <strong class="hl-keyword">shift</strong>
+<strong class="hl-keyword">done</strong>
+
+<strong class="hl-keyword">if</strong> [ -z <strong class="hl-string"><em style="color:red">"${keypath}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+    <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"&lt;ERROR&gt; --keypath &lt;keypath&gt; is mandatory"</em></strong>
+    usage_and_exit
+<strong class="hl-keyword">fi</strong>
+
+<strong class="hl-keyword">if</strong> [ -z <strong class="hl-string"><em style="color:red">"${value}"</em></strong> ]; <strong class="hl-keyword">then</strong>
+    <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"&lt;ERROR&gt; --value &lt;value&gt; is mandatory"</em></strong>
+    usage_and_exit
+<strong class="hl-keyword">fi</strong>
+
+orig=<strong class="hl-string"><em style="color:red">"./logs"</em></strong>
+dir=${value}
+<em class="hl-comment" style="color: silver"># dir=`ncs-maapi --get /devices/global-settings/trace-dir`</em>
+<strong class="hl-keyword">if</strong> [ <strong class="hl-string"><em style="color:red">"${dir}"</em></strong> != <strong class="hl-string"><em style="color:red">"${orig}"</em></strong> ] ; <strong class="hl-keyword">then</strong>
+    <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"/devices/global-settings/trace-dir: must retain it original value (${orig})"</em></strong>
+    <strong class="hl-keyword">exit</strong> <span class="hl-number">2</span>
+<strong class="hl-keyword">fi</strong>
+       </pre></div><p>
+        Trying to change that parameter would result in an aborted
+        transaction
+      </p><div class="informalexample"><pre class="screen">
+admin@ncs(config)# <strong class="userinput"><code>devices global-settings trace-dir ./testing</code></strong>
+admin@ncs(config)# <strong class="userinput"><code>commit</code></strong>
+Aborted: /devices/global-settings/trace-dir: must retain it original
+value (./logs)
+       </pre></div><p>
+        In the complete example
+        <code class="filename">examples.confd/scripting</code>
+        
+        there is a <code class="filename">README</code> file and a simple
+        policy script
+        <code class="filename">scripts/policy/check_number_of_hosts.sh</code>
+        .
+        </p></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13930"></a>27.7.&nbsp;Post-commit scripts</h2></div></div></div><p>
+        Post-commit scripts are run when a transaction has been
+        committed, but before any locks have been released. The
+        transaction hangs until the script has returned. The script
+        cannot change the outcome of the transaction. Post-commit
+        scripts can for example be used for logging, sending external
+        events etc. The scripts run as the same user id as
+        ConfD.
+      </p><p>
+        The script is invoked with <em class="parameter"><code>--post-commit</code></em>
+        at script (re)load. In future releases it is possible that the
+        <code class="code">post-commit</code> section will be used for control of
+        post-commit scripts behavior.
+      </p><p>
+        At post-commit, the script is invoked without parameters. In
+        that context the script may make use of the environment
+        variables <span class="phrase"><code class="envar">CONFD_MAAPI_USID</code> and
+        <code class="envar">CONFD_MAAPI_THANDLE</code></span> in order to attach
+        to the active (read-only) transaction.
+      </p><p>
+        This makes it simple to make use of the <span class="command"><strong>maapi</strong></span> command.
+        Especially the command <span class="command"><strong>maapi --keypath-diff /</strong></span>
+        may turn out to be useful, as it provides a listing of all
+        updates within the transaction on a format that is easy to
+        parse.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13943"></a>27.7.1.&nbsp;Post-commit section</h3></div></div></div><p>
+          All post-commit scripts must be able to handle the argument
+          <code class="option">--post-commit</code> and, when invoked, write
+          an empty <code class="code">post-commit</code> section to <code class="code">stdout</code>:
+          </p><div class="informalexample"><pre class="programlisting">
+begin post-commit
+end
+          </pre></div><p>
+        </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e13951"></a>27.7.2.&nbsp;Full post-commit example</h3></div></div></div><p>
+        Assume the administrator of a system would want to have a mail
+        each time a change is performed on the system, a script such
+        as <code class="code">mail_admin.sh</code>:
+      </p><div class="informalexample"><pre class="programlisting">
+<em class="hl-comment" style="color: silver">#!/bin/bash</em>
+
+<strong class="hl-keyword">set</strong> -e
+
+<strong class="hl-keyword">if</strong> [ $<em class="hl-comment" style="color: silver"># -gt 0 ]; then</em>
+    <strong class="hl-keyword">case</strong> <strong class="hl-string"><em style="color:red">"$1"</em></strong> in
+        --post-commit)
+            cat &amp;lt;&amp;lt; EOF
+begin post-commit
+end
+EOF
+            <strong class="hl-keyword">exit</strong> <span class="hl-number">0</span>
+            ;;
+        *)
+            <strong class="hl-keyword">echo</strong>
+            <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"Usage: $0 [--post-commit]"</em></strong>
+            <strong class="hl-keyword">echo</strong>
+            <strong class="hl-keyword">echo</strong> <strong class="hl-string"><em style="color:red">"  --post-commit Mandatory for post-commit scripts"</em></strong>
+            <strong class="hl-keyword">exit</strong> <span class="hl-number">1</span>
+            ;;
+    <strong class="hl-keyword">esac</strong>
+<strong class="hl-keyword">else</strong>
+    file=<strong class="hl-string"><em style="color:red">"mail_admin.log"</em></strong>
+    NCS_DIFF=$(ncs-maapi --keypath-diff /)
+    mail -s <strong class="hl-string"><em style="color:red">"NCS Mailer"</em></strong> admin@example.com &amp;lt;&amp;lt;EOF
+AutoGenerated mail from NCS
+
+$NCS_DIFF
+EOF
+<strong class="hl-keyword">fi</strong>
+
+       </pre></div><p>
+        If the admin then loads this script
+      </p><div class="informalexample"><pre class="screen">
+admin@ncs#<strong class="userinput"><code> script reload debug</code></strong>
+$NCS_DIR/examples.ncs/getting-started/using-ncs/1-simulated-cisco-ios/scripts:
+ok
+    post-commit:
+        mail_admin.sh: new
+--- Output from
+$NCS_DIR/examples.ncs/getting-started/using-ncs/1-simulated-cisco-ios/scripts/post-commit/mail_admin.sh
+--post-commit ---
+1: begin post-commit
+2: end
+3:
+---
+admin@ncs# <strong class="userinput"><code>config</code></strong>
+Entering configuration mode terminal
+admin@ncs(config)#<strong class="userinput"><code> devices global-settings trace-dir ./again</code></strong>
+admin@ncs(config)# <strong class="userinput"><code>commit</code></strong>
+Commit complete.
+        </pre></div><p>
+      This configuration change will produce an email to admin@example.com
+      with subject <code class="code">NCS Mailer</code> and body
+      </p><div class="informalexample"><pre class="programlisting">
+AutoGenerated mail from NCS
+value set  : /devices/global-settings/trace-dir
+        </pre></div><p>
+        In the complete example
+        <code class="filename">examples.confd/scripting</code>
+        
+        there is a <code class="filename">README</code> file and a simple
+        post-commit script
+        <code class="filename">scripts/post-commit/show_diff.sh</code>.
+        </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch26.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch28.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;26.&nbsp;Subagents and Proxies&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;28.&nbsp;Advanced Topics</td></tr></table></div></body></html>

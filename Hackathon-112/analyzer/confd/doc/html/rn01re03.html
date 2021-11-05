@@ -1,0 +1,171 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>confd_cli</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="rn01.html" title="ConfD man-pages, Volume 1"><link rel="prev" href="rn01re02.html" title="confd_aaa_bridge"><link rel="next" href="rn01re04.html" title="confd_cmd"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center"><span class="phrase">confd</span>_cli</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rn01re02.html">Prev</a>&nbsp;</td><th width="60%" align="center">ConfD man-pages, Volume 1</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="rn01re04.html">Next</a></td></tr></table><hr></div><div class="refentry"><a name="man.1.confd_cli"></a><div class="titlepage"></div><div class="refnamediv"><a name="man.1.ncs_cli.name"></a><h2>Name</h2><p><span class="phrase">confd</span>_cli &#8212; Frontend to the ConfD CLI engine</p></div><div class="refsynopsisdiv"><a name="man.1.confd_cli.synopsis"></a><h2>Synopsis</h2><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_cli</code>  [<em class="replaceable"><code>options</code></em>] [<em class="replaceable"><code>File</code></em>]</p></div><div class="cmdsynopsis"><p><code class="command"><span class="phrase">confd</span>_cli</code>  [
+         --help 
+      ] [
+         --host 
+          <em class="replaceable"><code>Host</code></em> 
+      ] [
+         --ip 
+          
+            <em class="replaceable"><code>IpAddress</code></em>  |   <em class="replaceable"><code>IpAddress/Port</code></em>  
+         
+      ] [
+         --address 
+          <em class="replaceable"><code>Address</code></em> 
+      ] [
+         --port 
+          <em class="replaceable"><code>PortNumber</code></em> 
+      ] [
+         --cwd 
+          <em class="replaceable"><code>Directory</code></em> 
+      ] [
+         --proto 
+          
+            tcp&gt;  |   ssh  |   console  
+         
+      ] [
+         --interactive 
+      ] [
+         --noninteractive 
+      ] [ -J  |   -C  |   -I ] [
+         --user 
+          <em class="replaceable"><code>Username</code></em> 
+      ] [
+         --uid 
+          <em class="replaceable"><code>UidInt</code></em> 
+      ] [
+         --groups 
+          <em class="replaceable"><code>Groups</code></em> 
+      ] [
+         --gids 
+          <em class="replaceable"><code>GidList</code></em> 
+      ] [
+         --gid 
+          <em class="replaceable"><code>Gid</code></em> 
+      ] [
+         --opaque 
+          <em class="replaceable"><code>Opaque</code></em> 
+      ] [
+         --noaaa 
+      ]</p></div></div><div class="refsect1"><a name="man.1.confd_cli.description"></a><h2>DESCRIPTION</h2><p>The <span class="phrase">confd</span>_cli program is a C frontend to the ConfD CLI
+    engine. The <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span> program connects to ConfD
+    and basically passes data back and forth from the user to
+    ConfD.</p><p><span class="phrase">confd</span>_cli can be invoked from the command line. If so, no
+    authentication is done. The archetypical usage of <span class="phrase">confd</span>_cli is to
+    use it as a login shell in /etc/passwd, in which case
+    authentication is done by the login program.</p><p>The source code for <span class="command"><strong>confd_cli</strong></span>
+    resides in
+    <code class="filename">$CONFD_DIR/src/confd/cli</code> and can be modified
+    if required.</p></div><div class="refsect1"><a name="man.1.confd_cli.options"></a><h2>OPTIONS</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><code class="option">-h</code>, </span><span class="term"><code class="option">--help</code></span></dt><dd><p>Display help text.</p></dd><dt><span class="term"><code class="option">-H</code>, </span><span class="term"><code class="option">--host</code> <em class="replaceable"><code>HostName</code></em></span></dt><dd><p>Gives the name of the current host.  The
+          <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span> program will use the value of
+          the system call <code class="function">gethostbyname()</code> by
+          default. The host name is used in the CLI prompt.</p></dd><dt><span class="term"><code class="option">-i</code>, </span><span class="term"><code class="option">--ip</code>
+        <em class="replaceable"><code>IpAddress</code></em> |
+        <em class="replaceable"><code>IpAddress/Port</code></em></span></dt><dd><p>Set the IP (or IP address and port) which ConfD reports that the user is coming
+          from.  The <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span> program by default
+          tries to determine this automatically by reading the
+          <code class="envar">SSH_CONNECTION</code> environment variable.</p></dd><dt><span class="term"><code class="option">-A</code>, </span><span class="term"><code class="option">--address</code> <em class="replaceable"><code>Address</code></em></span></dt><dd><p>CLI address to connect to. The default is
+          127.0.0.1. This can be controlled by either this flag, or
+          the UNIX environment variable
+          <code class="envar"><span class="phrase">CONFD</span>_IPC_ADDR</code>. The <code class="option">-A</code> flag
+          takes precedence.</p></dd><dt><span class="term"><code class="option">-P</code>, </span><span class="term"><code class="option">--port</code> <em class="replaceable"><code>PortNumber</code></em></span></dt><dd><p>CLI port to connect to. The default is the ConfD IPC
+          port, which is
+          <span class="phrase">4565</span>
+          
+          This can be controlled by either this
+          flag, or the UNIX environment variable
+          <code class="envar"><span class="phrase">CONFD</span>_IPC_PORT</code>. The <code class="option">-P</code> flag
+          takes precedence.</p></dd><dt><span class="term"><code class="option">-c</code>, </span><span class="term"><code class="option">--cwd</code> <em class="replaceable"><code>Directory</code></em></span></dt><dd><p>The current working directory for the user once in the
+          CLI.  All file references from the CLI will be relative to
+          the cwd. By default the value will be the actual cwd where
+          <span class="phrase">confd</span>_cli is invoked.</p></dd><dt><span class="term"><code class="option">-p</code>, </span><span class="term">
+          <code class="option">--proto</code>
+          <code class="literal">ssh</code> |
+          <code class="literal">tcp</code> |
+          <code class="literal">console</code>
+        </span></dt><dd><p>The protocol the user is using. If
+          <code class="envar">SSH_CONNECTION</code> is set, this defaults to
+          "ssh", otherwise "console".</p></dd><dt><span class="term"><code class="option">-n</code>, </span><span class="term"><code class="option">--interactive</code></span></dt><dd><p>This forces the CLI to run in interactive mode. In non
+          interactive mode, the CLI never prompts the user for any
+          input. This flag can sometimes be useful in certain CLI
+          scripting scenarios.</p></dd><dt><span class="term"><code class="option">-N</code>, </span><span class="term"><code class="option">--noninteractive</code></span></dt><dd><p>This forces the CLI to run in non interactive mode.
+          See <a class="xref" href="ch16.html#ug.cli.starting" title="16.4.1.&nbsp;Starting the CLI">Section&nbsp;16.4.1, &#8220;Starting the CLI&#8221;</a> for further info.
+          </p></dd><dt><span class="term"><code class="option">-J</code>, </span><span class="term"><code class="option">-C</code>, </span><span class="term"><code class="option">-I</code></span></dt><dd><p>This flag sets the mode of the
+          CLI. <code class="option">-J</code> is Juniper style CLI,
+          <code class="option">-C</code> is Cisco XR style CLI and
+          <code class="option">-I</code> is Cisco IOS style CLI.
+          </p></dd><dt><span class="term"><code class="option">-u</code>, </span><span class="term"><code class="option">--user</code> <em class="replaceable"><code>User</code></em></span></dt><dd><p>Indicates to ConfD which username the user has. This
+          defaults to the username of the invoker.</p></dd><dt><span class="term"><code class="option">-U</code>, </span><span class="term"><code class="option">--uid</code> <em class="replaceable"><code>Uid</code></em></span></dt><dd><p>Indicates to ConfD which uid the user has.</p></dd><dt><span class="term"><code class="option">-g</code>, </span><span class="term"><code class="option">--groups</code> <em class="replaceable"><code>GroupList</code></em></span></dt><dd><p>Indicates to ConfD which groups the user are a member
+          of.  The parameter is a comma separated string. This
+          defaults to the actual UNIX groups the user is a member
+          of. The group names are used by the AAA system in ConfD to
+          authorize data and command access.</p></dd><dt><span class="term"><code class="option">-D</code>, </span><span class="term"><code class="option">--gids</code> <em class="replaceable"><code>GidList</code></em></span></dt><dd><p>Indicates to ConfD which secondary group ids the user
+          shall have.  The parameter is a comma separated string of
+          integers.  This defaults to the actual secondary UNIX group
+          ids the user has. The gids are used by ConfD when ConfD
+          executes commands on behalf of the user.</p></dd><dt><span class="term"><code class="option">-G</code>, </span><span class="term"><code class="option">--gid</code> <em class="replaceable"><code>Gid</code></em></span></dt><dd><p>Indicates to ConfD which group id the user shall have.
+          This defaults to the actual UNIX group id the user has. The
+          gid is used by ConfD when ConfD executes commands on behalf
+          of the user.</p></dd><dt><span class="term"><code class="option">-O</code>, </span><span class="term"><code class="option">--opaque</code> <em class="replaceable"><code>Opaque</code></em></span></dt><dd><p>Pass an opaque string to <span class="phrase">ConfD</span>. The string is not interpreted by
+          <span class="phrase">ConfD</span>, only made available to
+          application code. See "built-in variables" in <a class="link" href="rn03re16.html" title="clispec">clispec(5)</a> and
+          <code class="function">maapi_get_user_session_opaque()</code> in <a class="link" href="rn02re14.html" title="confd_lib_maapi">confd_lib_maapi(3)</a>.
+          The string can be given either via this flag, or via the UNIX
+          environment variable <code class="envar"><span class="phrase">CONFD</span>_CLI_OPAQUE</code>. The
+          <code class="option">-O</code> flag takes precedence.</p></dd><dt><span class="term"><code class="option">--noaaa</code></span></dt><dd><p>Completely disables all AAA checks for this CLI. This
+          can be used as a disaster recovery mechanism if the AAA
+          rules in ConfD have somehow become corrupted.</p></dd></dl></div></div><div class="refsect1"><a name="man.1.confd_cli.environment_variables"></a><h2>ENVIRONMENT VARIABLES</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term"><span class="phrase">CONFD</span>_IPC_ADDR</span></dt><dd><p>Which IP address to connect to.</p></dd><dt><span class="term"><span class="phrase">CONFD</span>_IPC_PORT</span></dt><dd><p>
+            Which TCP port to connect to.
+          </p></dd><dt><span class="term">SSH_CONNECTION</span></dt><dd><p>
+            Set by openssh and used by <span class="emphasis"><em><span class="phrase">confd</span>_cli</em></span>
+            to determine client IP address etc.
+          </p></dd><dt><span class="term">TERM</span></dt><dd><p>
+            Passed on to terminal aware programs invoked by ConfD.
+          </p></dd></dl></div></div><div class="refsect1"><a name="man.1.confd_cli.exit_codes"></a><h2>EXIT CODES</h2><div class="variablelist"><dl class="variablelist"><dt><span class="term">0</span></dt><dd><p>
+            Normal exit
+          </p></dd><dt><span class="term">1</span></dt><dd><p>
+            Failed to read user data for initial handshake.
+          </p></dd><dt><span class="term">2</span></dt><dd><p>
+            Close timeout, client side closed, session inactive.
+          </p></dd><dt><span class="term">3</span></dt><dd><p>
+            Idle timeout triggered.
+          </p></dd><dt><span class="term">4</span></dt><dd><p>
+            Tcp level error detected on daemon side.
+          </p></dd><dt><span class="term">5</span></dt><dd><p>
+            Internal error occurred in daemon.
+          </p></dd><dt><span class="term">5</span></dt><dd><p>
+            User interrupted clistart using special escape char.
+          </p></dd><dt><span class="term">6</span></dt><dd><p>
+            User interrupted clistart using special escape char.
+          </p></dd><dt><span class="term">7</span></dt><dd><p>
+            Daemon abruptly closed socket.
+          </p></dd></dl></div></div><div class="refsect1"><a name="man.1.confd_cli.scripting"></a><h2>SCRIPTING</h2><p>It is very easy to use <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span> from
+    <span class="command"><strong>/bin/sh</strong></span> scripts. <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span>
+    reads stdin and can then also be run in non interactive mode. This
+    is the default if stdin is not a tty (as reported by
+    <code class="function">isatty()</code>)</p><p>Here is example of invoking <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span> from
+    a shell script.</p><div class="informalexample"><pre class="programlisting">#!/bin/sh
+
+<span class="phrase">confd</span>_cli &lt;&lt; EOF
+configure
+set foo bar 13
+set funky stuff 44
+commit
+exit no-confirm
+exit
+EOF</pre></div><p>And here is en example capturing the output of
+    <span class="command"><strong><span class="phrase">confd</span>_cli</strong></span>:</p><div class="informalexample"><pre class="programlisting">#!/bin/sh
+{ <span class="phrase">confd</span>_cli &lt;&lt; EOF;
+configure
+set trap-manager t2 ip-address 10.0.0.1 port 162 snmp-version 2
+commit
+exit no-confirm
+exit
+EOF
+} | grep 'Aborted:.*not unique.*'
+if [ $? != 0 ]; then
+  echo 'test2: commit did not fail'; exit 1;
+fi</pre></div><p>The above type of CLI scripting is a very efficient and easy
+    way to test various aspects of the CLI.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rn01re02.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="rn01.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="rn01re04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">confd_aaa_bridge&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;
+      <span class="phrase">confd</span>_cmd</td></tr></table></div></body></html>

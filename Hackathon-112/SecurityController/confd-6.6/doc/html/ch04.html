@@ -1,0 +1,424 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;4.&nbsp;Rendering Agents</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language"><link rel="next" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;4.&nbsp;Rendering Agents</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.render_agents"></a>Chapter&nbsp;4.&nbsp;Rendering Agents</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch04.html#d5e955">4.1. Introduction</a></span></dt><dt><span class="sect1"><a href="ch04.html#d5e960">4.2. Data Model</a></span></dt><dt><span class="sect1"><a href="ch04.html#d5e986">4.3. Using the CLIs</a></span></dt><dt><span class="sect1"><a href="ch04.html#d5e1015">4.4. Using NETCONF</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e955"></a>4.1.&nbsp;Introduction</h2></div></div></div><p>
+        In this chapter we reintroduce the <code class="filename">links.yang</code>
+        model from the Yang chapter and see how we can use that
+        model to render all northbound interfaces.
+      </p><p>
+        This chapter is an overview, and all concepts
+        touched upon in this chapter are thoroughly described
+        in later chapters.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e960"></a>4.2.&nbsp;Data Model</h2></div></div></div><p>
+        The <code class="filename">links.yang</code> data model introduced in the "Yang"
+        chapter defines a set of interfaces.  Compiling
+        the <code class="filename">links.yang</code> file into an .fxs file is the
+        first required step.
+      </p><div class="informalexample"><pre class="programlisting">module links {
+    namespace "http://example.com/ns/link";
+    prefix link;
+
+    import ietf-yang-types {
+        prefix yang;
+    }
+
+
+    grouping LinkFlagsType {
+        leaf UP {
+            type empty;
+        }
+        leaf NOARP {
+            type empty;
+        }
+        leaf BROADCAST {
+            type empty;
+        }
+        leaf MULTICAST {
+            type empty;
+        }
+        leaf LOOPBACK {
+            type empty;
+      }
+        leaf NOTRAILERS {
+            type empty;
+        }
+    }
+
+    typedef QueueDisciplineType {
+        type enumeration {
+            enum pfifo_fast;
+            enum noqueue;
+            enum noop;
+            enum htb;
+        }
+    }
+    container config {
+        container links {
+            list link {
+                key name;
+                unique addr;
+                max-elements 1024;
+                leaf name {
+                    type string;
+                }
+                container flags {
+                    uses LinkFlagsType;
+                }
+                leaf addr {
+                    type yang:mac-address;
+                    mandatory true;
+                }
+                leaf brd {
+                    type yang:mac-address;
+                    mandatory true;
+                }
+                leaf mtu {
+                    type uint32;
+                    default 1500;
+                }
+            }
+        }
+        container queueDisciplines {
+            list queueDiscipline {
+                key linkName;
+                max-elements 1024;
+                leaf linkName {
+                    type leafref {
+                        path "/config/links/link/name";
+                    }
+                }
+                leaf type {
+                    type QueueDisciplineType;
+                    mandatory true;
+                }
+                leaf length {
+                    type uint32;
+                }
+            }
+        }
+        container linkLimitations {
+            list linkLimitation {
+                key linkName;
+                leaf linkName {
+                    type leafref {
+                        path "/config/links/link/name";
+                    }
+                }
+                container limitations {
+                    leaf only10Mbps {
+                        type boolean;
+                        default false;
+                    }
+                    leaf onlyHalfDuplex {
+                        type boolean;
+                        default false;
+                    }
+                }
+            }
+        }
+        container defaultLink {
+            leaf linkName {
+                type leafref {
+                    path "/config/links/link/name";
+                }
+            }
+        }
+    }
+}
+
+</pre></div><p>
+        The command to compile the YANG file is
+        <span class="command"><strong>confdc -c links.yang</strong></span>
+        Thus in our Makefile we have:
+      </p><div class="informalexample"><pre class="programlisting">
+      all:   links.fxs
+
+      %.fxs:  %.yang
+        $(CONFD_DIR)/bin/confdc -c $*.yang
+        </pre></div><p>
+        The Makefile requires the UNIX environment variable
+        <code class="code">CONFD_DIR</code> to be set to the directory where
+        ConfD is installed.
+      </p><p>
+        Once we have the .fxs file, it's time to start ConfD.
+        To do that we have some initial steps that must be
+        taken care of first.
+      </p><p>
+        We must have a configuration file for ConfD it self.
+        This file is usually referred to as <code class="filename">confd.conf</code>.
+        There is a multitude of things we can configure in
+        <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>
+        but for this initial example we'll just focus on the
+        things we need to get the <code class="filename">links.yang</code> example to
+        work. We can copy the <code class="filename">confd.conf</code> file from
+        <code class="filename">etc/confd/confd.conf</code> relative to the installation
+        directory of ConfD and add "." to the <code class="code">loadPath</code>
+      </p><p>
+        Now with our newly compiled <code class="filename">links.yang</code> file
+        we can start ConfD as:
+      </p><div class="informalexample"><pre class="screen">
+# source /path/to/installed_confd/confdrc
+# confd --foreground --verbose -c ./confd.conf
+      </pre></div><p>
+        This starts ConfD in the foreground with all log messages
+        displayed on stdout. This is a convenient way of running
+        ConfD during development.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e986"></a>4.3.&nbsp;Using the CLIs</h2></div></div></div><p>
+        The first thing we can try out is how a Juniper
+        style CLI looks and feels on our data model. The ConfD
+        CLI(s) are entirely rendered from the data model. It's
+        possible to extend and tweak the looks of the CLI in
+        several ways, but for now, we try just what we get from
+        the plain data model. The ConfD CLI is run through
+        a small C program called <span class="command"><strong>confd_cli</strong></span> which is
+        typically used as a login shell on the target host.
+        During development, it's usually more convenient to just
+        invoke that program directly from the UNIX prompt. The
+        <span class="command"><strong>confd_cli</strong></span> program communicates with the ConfD daemon
+        over the loopback socket.
+      </p><p>
+        Here is an actual session:
+      </p><div class="informalexample"><pre class="screen">
+# confd_cli
+Welcome to the ConfD CLI
+admin connected from 127.0.0.1 using console on buzz
+admin@buzz 17:37:17&gt; configure
+Entering configuration mode private
+[ok][2009-03-17 17:37:26]
+
+[edit]
+admin@buzz 17:37:26% set config links link eth0 addr 00:12:3f:7d:b0:32 brd 00:1
+2:3f:7d:b0:32
+[ok][2009-03-17 17:37:48]
+
+[edit]
+admin@buzz 17:37:48% set config links link eth0 flags BROADCAST
+[ok][2009-03-17 17:38:05]
+
+[edit]
+admin@buzz 17:38:05% set config links link eth0 flags
+Possible completions:
+  BROADCAST  LOOPBACK  MULTICAST  NOARP  NOTRAILERS  UP
+admin@buzz 17:38:05% set config links link eth0 flags LOOPBACK
+[ok][2009-03-17 17:38:25]
+
+[edit]
+admin@buzz 17:38:25% commit
+Commit complete.
+[ok][2009-03-17 17:38:31]
+
+[edit]
+admin@buzz 17:38:31% exit
+[ok][2009-03-17 17:38:34]
+admin@buzz 17:38:34&gt; show configuration config
+links {
+    link eth0 {
+        flags {
+            UP;
+            BROADCAST;
+            LOOPBACK;
+        }
+        addr 00:12:3f:7d:b0:32;
+        brd  00:12:3f:7d:b0:32;
+    }
+}
+[ok][2009-03-17 17:38:44]
+admin@buzz 17:38:44&gt; exit
+#
+</pre></div><p>
+        Thus from the data model we got a fully functional Juniper
+        like CLI.
+      </p><p>
+        We can also get a Cisco like CLI towards the same data model:
+      </p><div class="informalexample"><pre class="screen">
+# confd_cli -C
+Welcome to the ConfD CLI
+admin connected from 127.0.0.1 using console on buzz
+buzz# show running-config config
+config links link eth0
+ flags UP
+ flags BROADCAST
+ flags LOOPBACK
+ addr 00:12:3f:7d:b0:32
+ brd  00:12:3f:7d:b0:32
+!
+buzz# config
+Entering configuration mode terminal
+buzz(config)# config links link &lt;TAB&gt;
+Possible completions:
+  &lt;name:string&gt;  eth0
+buzz(config)# config links link eth0 &lt;TAB&gt;
+Possible completions:
+  addr  brd  flags  mtu  &lt;cr&gt;
+buzz(config)# config links link eth0 mtu 1200
+buzz(config-link-eth0)# commit
+Commit complete.
+buzz(config-link-eth0)#
+buzz(config)# config &lt;TAB&gt;
+Possible completions:
+  defaultLink  linkLimitations  links  queueDisciplines
+buzz(config)# config defaultLink linkName eth0
+buzz(config)# commit
+Commit complete.
+      </pre></div><p>
+        The rendered CLIs are highly capable containing all
+        features expected by a modern CLI.
+      </p><p>
+        The data model contains a top level <code class="code">config</code> container.
+        This makes sense from a data modeling perspective since it
+        wraps all configuration items inside a container. However,
+        we may wish to do away with the container in the CLI. We want to
+        issue the command <code class="code">defaultLink linkName eth0</code> as
+        opposed to the command <code class="code">config defaultLink linkName eth0</code>.
+      </p><p>
+        The ConfD CLI can be tweaked in a myriad different ways. The typical
+        development cycle is to define the data model to be as
+        succinct and understandable as possible. This makes life easier
+        for the application programmers who write C/C++ code that
+        access the data model. Once the YANG model is good, we tweak
+        the CLI to become what we want.
+      </p><p>
+        In this tiny example we write a really small CLI modification
+        file:
+      </p><div class="informalexample"><pre class="programlisting">
+&lt;clispec xmlns="http://tail-f.com/ns/clispec/1.0" style="c"&gt;
+  &lt;operationalMode&gt;
+  &lt;/operationalMode&gt;
+  &lt;configureMode&gt;
+    &lt;modifications&gt;
+      &lt;dropElem src="config"/&gt;
+    &lt;/modifications&gt;
+  &lt;/configureMode&gt;
+&lt;/clispec&gt;
+      </pre></div><p>
+        Save that file as <code class="filename">mods.cli</code> and compile that
+        file as:
+      </p><div class="informalexample"><pre class="screen">
+# confdc -c mods.cli
+      </pre></div><p>
+        This results in a file called <code class="filename">mods.ccl</code> that
+        needs to be put in the load path of ConfD. We then re-launch the
+        Cisco CLI:
+      </p><div class="informalexample"><pre class="screen">
+# confd_cli -C
+Welcome to the ConfD CLI
+admin connected from 127.0.0.1 using console on buzz
+buzz# config
+Entering configuration mode terminal
+buzz(config)# links link eth0 &lt;TAB&gt;
+Possible completions:
+  addr  brd  flags  mtu  &lt;cr&gt;
+buzz(config)# links link eth0 mtu ?
+Possible completions:
+  &lt;unsignedInt&gt;[1200]
+buzz(config)# links link eth0 mtu 1400
+buzz(config-link-eth0)# commit
+Commit complete.
+buzz(config-link-eth0)#
+      </pre></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e1015"></a>4.4.&nbsp;Using NETCONF</h2></div></div></div><p>
+        NETCONF is a powerful protocol that can be used
+        to programmatically reconfigure a device. We're still
+        running ConfD with the <code class="filename">links.yang</code> data model.
+      </p><p>
+        The easiest way to interact with the NETCONF agent
+        in ConfD is to use a small python based program called
+        <span class="command"><strong>netconf-console</strong></span> that ships with ConfD. Let's just
+        run it from the UNIX prompt and see what we get:
+      </p><div class="informalexample"><pre class="screen">
+# netconf-console --user=admin --password=admin --get-config -x '/config'
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;data&gt;
+    &lt;config xmlns="http://example.com/ns/link"&gt;
+      &lt;links&gt;
+        &lt;link&gt;
+          &lt;name&gt;eth0&lt;/name&gt;
+          &lt;flags&gt;
+            &lt;UP/&gt;
+            &lt;BROADCAST/&gt;
+            &lt;LOOPBACK/&gt;
+          &lt;/flags&gt;
+          &lt;addr&gt;00:12:3f:7d:b0:32&lt;/addr&gt;
+          &lt;brd&gt;00:12:3f:7d:b0:32&lt;/brd&gt;
+          &lt;mtu&gt;1400&lt;/mtu&gt;
+        &lt;/link&gt;
+      &lt;/links&gt;
+      &lt;queueDisciplines/&gt;
+      &lt;linkLimitations&gt;
+        &lt;linkLimitation&gt;
+          &lt;linkName&gt;eth0&lt;/linkName&gt;
+          &lt;limitations&gt;
+            &lt;only10Mbps&gt;true&lt;/only10Mbps&gt;
+          &lt;/limitations&gt;
+        &lt;/linkLimitation&gt;
+      &lt;/linkLimitations&gt;
+      &lt;defaultLink&gt;
+        &lt;linkName&gt;eth0&lt;/linkName&gt;
+      &lt;/defaultLink&gt;
+    &lt;/config&gt;
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;</pre></div><p>
+        The above command uses the python paramiko ssh client to
+        establish an SSH session to ConfD. It then issues a
+        NETCONF <span class="command"><strong>get-config</strong></span> RPC to retrieve all configuration
+        data found below the XPath <code class="code">/config</code>, i.e. this is
+        precisely the data we have just entered in the CLI. The command
+        <span class="command"><strong>netconf-console --get-config</strong></span> is a great way
+        to extract a backup of the entire configuration of the device.
+      </p><p>
+        If we want to manipulate the configuration with the
+        <span class="command"><strong>netconf-console</strong></span>program , we must prepare some
+        XML data that can be sent as an <span class="command"><strong>edit-config</strong></span> and
+        feed it to <span class="command"><strong>netconf-console</strong></span>.
+      </p><p>
+        Here is an example, save the following to a file,
+        <code class="filename">set-mtu.xml</code>.
+      </p><div class="informalexample"><pre class="programlisting">
+  &lt;edit-config&gt;
+    &lt;target&gt;
+      &lt;running/&gt;
+    &lt;/target&gt;
+    &lt;config xmlns="http://example.com/ns/link"&gt;
+      &lt;config&gt;
+        &lt;links&gt;
+          &lt;link&gt;
+            &lt;name&gt;eth0&lt;/name&gt;
+            &lt;mtu&gt;1100&lt;/mtu&gt;
+          &lt;/link&gt;
+        &lt;/links&gt;
+      &lt;/config&gt;
+    &lt;/config&gt;
+  &lt;/edit-config&gt;</pre></div><p>
+        Then run this with:
+      </p><div class="informalexample"><pre class="screen"># netconf-console --user=admin --password=admin --rpc set-mtu.xml
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"&gt;
+  &lt;ok/&gt;
+&lt;/rpc-reply&gt;</pre></div><p>
+        It's also fairly instructive to directly connect to the agent
+        using OpenSSH as in:
+      </p><div class="informalexample"><pre class="screen"># ssh -s -p 2022 admin@localhost netconf
+admin@localhost's password:
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+&lt;capabilities&gt;
+&lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:writable-running:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:candidate:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:confirmed-commit:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:xpath:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:url:1.0?scheme=ftp,file&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:validate:1.0&lt;/capability&gt;
+&lt;capability&gt;urn:ietf:params:netconf:capability:rollback-on-error:1.0&lt;/capability&gt;
+&lt;capability&gt;http://example.com/ns/link&lt;/capability&gt;
+&lt;capability&gt;http://tail-f.com/ns/aaa/1.1&lt;/capability&gt;
+&lt;/capabilities&gt;
+&lt;session-id&gt;14&lt;/session-id&gt;&lt;/hello&gt;</pre></div><p>
+        The agent replies with the capabilities it supports.
+      </p><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a name="d5e1042"></a>4.4.1.&nbsp;Generating Java classes for JNC</h3></div></div></div><p>
+        It is of course entirely possible to use the
+        <span class="command"><strong>netconf-console</strong></span>
+        program to XML script towards a NETCONF agent. An alternative is
+        to use a Java library such as JNC to interact with the NETCONF
+        agent. JNC is in the Open SOurce and can by found on github at
+        <code class="uri">https://github.com/tail-f-systems/JNC/</code>.
+      </p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;3.&nbsp;The YANG Data Modeling Language&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database</td></tr></table></div></body></html>

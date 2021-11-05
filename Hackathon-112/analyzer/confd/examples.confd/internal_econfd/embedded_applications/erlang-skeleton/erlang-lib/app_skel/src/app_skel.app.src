@@ -1,0 +1,12 @@
+%% This is an -*- erlang -*- file
+
+{application, app_skel,
+ [
+  {description, "Application skeleton"},
+  {vsn, "%VSN%"},
+  {modules, [%MODULES%]},
+  {mod, {app_skel, []}},
+  {registered, [app_skel_server]},
+  {applications, [stdlib, kernel]},
+  {env, []}
+ ]}.

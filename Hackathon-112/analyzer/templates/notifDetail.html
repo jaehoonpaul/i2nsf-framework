@@ -1,0 +1,127 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    .circular--square {
+      border-radius: 50%;
+    }
+    h1 {text-align: center;}
+    p {text-align: center;}
+    div {text-align: center;}
+    .border1 {
+      border-style:solid;
+      border-color:#FFFFFF;
+    }
+    .column {
+      float: left;
+      width: 33.33%;
+    }
+    .navbar-custom {
+      background-color: #B90238
+    }
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}
+
+		td, th {
+			border: 1px solid #000000;
+			text-align: left;
+			padding: 8px;
+		}
+
+		tr:nth-child(even) {
+			background-color: #dddddd;
+		}
+
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
+  </head>
+
+  <body>
+<nav class="navbar navbar-expand-md navbar-custom navbar-dark">
+  <div class="container-fluid">
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
+      <span id="toolbar" class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/search/" style="font-family: 'Hachi Maru Pop', cursive;">
+	I2NSF
+    </a>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/search"><span class="ml-5" style="font-family:'Courier New', cursive; color:#FFFFFF; font-size:150%">HOME</span></a>  </li>
+	<li><a href="#"><span class="ml-5" style="font-family:'Courier New', cursive; color:#FFFFFF; font-size:150%">TEST1</span></a>  </li>
+        <li><a href="#"><span class="ml-5" style="font-family:'Courier New', cursive; color:#FFFFFF; font-size:150%">TEST2</span></a>  </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<table class="notificationTable">
+  <tr>
+		<th>Event Time</th>
+    <th>Alarm Category</th>
+    <th>Acquisition Method</th>
+    <th>Emission Type</th>
+    <th>Usage</th>
+    <th>Threshold</th>
+    <th>NSF Name</th>
+    <th>Severity</th>
+  </tr>
+<!--
+	<tr>
+		<th>{{ eventTime }}</th>
+    <th>{{ alarmCategory }}</th>
+    <th>{{ acquisitionMethod }}</th>
+    <th>{{ emissionType }}</th>
+    <th>{{ usage }}</th>
+    <th>{{ threshold }}</th>
+    <th>{{ nsfName }}</th>
+    <th>{{ severity }}</th>
+	</tr>
+
+</table>
+    <p>Event Time		: {{ eventTime }}</p>
+    <p>Alarm Category		: {{ alarmCategory }}</p>
+    <p>Acquisition Method	: {{ acquisitionMethod }}</p>
+    <p>Emission Type		: {{ emissionType }}</p>
+    <p>Usage			: {{ usage }}</p>
+    <p>Threshold		: {{ threshold }}</p>
+    <p>NSF Name			: {{ nsfName }}</p>
+    <p>Severity			: {{ severity }}</p>
+  </body>
+-->
+<script>
+	eventTime = {{ eventTime|safe }};
+	alarmCategory = {{ alarmCategory|safe }};
+	acquisitionMethod = {{ acquisitionMethod|safe }};
+	emissionType = {{ emissionType|safe }};
+	usage = {{ usage|safe }};
+	threshold = {{ threshold|safe }};
+	nsfName = {{ nsfName|safe }};
+	severity = {{ severity|safe }};
+	$(document).ready(function(){
+		var list ="";
+		for (i = 0; i < eventTime.length; i++){
+			list += "<tr>";
+			list += "<th>"+eventTime[i]+"</th>";
+			list += "<th>"+alarmCategory[i]+"</th>";
+			list += "<th>"+acquisitionMethod[i]+"</th>";
+			list += "<th>"+emissionType[i]+"</th>";
+			list += "<th>"+usage[i]+"</th>";
+			list += "<th>"+threshold[i]+"</th>";
+			list += "<th>"+nsfName[i]+"</th>";
+			list += "<th>"+severity[i]+"</th>";
+			list += "</tr>"
+		}
+		$(".notificationTable").append(list);
+	});
+</script>
+</html>

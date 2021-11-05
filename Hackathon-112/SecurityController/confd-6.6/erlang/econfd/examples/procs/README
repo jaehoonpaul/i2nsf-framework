@@ -1,0 +1,12 @@
+This example exemplifies "config false" data
+We have a YANG module procs.yang which models an erlang process listing
+To compile and run
+
+% make all     ## compiles everything
+% make start   ## starts confd
+% make estart  ## starts our code, the code which produces statistics
+
+
+And in another xterm, run either confd_cli and type "show status" or
+
+% netconf-console -u admin --xpath "/procs" --get

@@ -1,0 +1,326 @@
+'\" t
+.\"     Title: confd_lib_ha
+.\"    Author:  <support@tail-f.com>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 03/02/2018
+.\"    Manual: ConfD Manual
+.\"    Source: Tail-f Systems
+.\"  Language: English
+.\"
+.TH "CONFD_LIB_HA" "3" "03/02/2018" "Tail-f Systems" "ConfD Manual"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+confd_lib_ha \- library for connecting to ConfD HA subsystem
+.SH "SYNOPSIS"
+.sp
+.ft B
+.nf
+#include <confd_lib\&.h>
+#include <confd_ha\&.h>
+      
+.fi
+.ft
+.nr wf \w'int\ confd_ha_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *token);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", const\ char\ *" "token" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", const\ char\ *" "token" ");" \}
+.nr wf \w'int\ confd_ha_bemaster('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *mynodeid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_bemaster("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "mynodeid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_bemaster(int\ " "sock" ", confd_value_t\ *" "mynodeid" ");" \}
+.nr wf \w'int\ confd_ha_beslave('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *mynodeid,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_ha_node\ *master,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ waitreply);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_beslave("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "mynodeid" ", struct\ confd_ha_node\ *" "master" ", int\ " "waitreply" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_beslave(int\ " "sock" ", confd_value_t\ *" "mynodeid" ", struct\ confd_ha_node\ *" "master" ", int\ " "waitreply" ");" \}
+.nr wf \w'int\ confd_ha_berelay('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_berelay("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_berelay(int\ " "sock" ");" \}
+.nr wf \w'int\ confd_ha_benone('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_benone("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_benone(int\ " "sock" ");" \}
+.nr wf \w'int\ confd_ha_get_status('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_ha_status\ *stat);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_get_status("
+.br
+.BI "int\ " "sock" ", struct\ confd_ha_status\ *" "stat" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_get_status(int\ " "sock" ", struct\ confd_ha_status\ *" "stat" ");" \}
+.nr wf \w'int\ confd_ha_slave_dead('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *nodeid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_slave_dead("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "nodeid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_slave_dead(int\ " "sock" ", confd_value_t\ *" "nodeid" ");" \}
+.SH "LIBRARY"
+.PP
+ConfD Library, (libconfd,
+\fB\-lconfd\fR)
+.SH "DESCRIPTION"
+.PP
+The
+libconfd
+shared library is used to connect to the ConfD High Availability (HA) subsystem\&. ConfD can replicate the configuration data on several nodes in a cluster\&. The purpose of this API is to manage the HA functionality\&. The details on usage of the HA API are described in the chapter
+\m[blue]\fBHigh availability\fR\m[]
+in the User Guide\&.
+.SH "FUNCTIONS"
+.nr wf \w'int\ confd_ha_connect('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ struct\ sockaddr*\ srv,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ srv_sz,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'const\ char\ *token);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_connect("
+.br
+.BI "int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", const\ char\ *" "token" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_connect(int\ " "sock" ", const\ struct\ sockaddr*\ " "srv" ", int\ " "srv_sz" ", const\ char\ *" "token" ");" \}
+.PP
+Connect a HA socket which can be used to control a ConfD HA node\&. The token is a secret string that must be shared by all participants in the cluster\&. There can only be one HA socket towards ConfD, a new call to
+\fBconfd_ha_connect()\fR
+makes ConfD close the previous connection and reset the token to the new value\&. Returns CONFD_OK or CONFD_ERR\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+If this call fails (i\&.e\&. does not return CONFD_OK), the socket descriptor must be closed and a new socket created before the call is re\-attempted\&.
+.sp .5v
+.RE
+.nr wf \w'int\ confd_ha_bemaster('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *mynodeid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_bemaster("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "mynodeid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_bemaster(int\ " "sock" ", confd_value_t\ *" "mynodeid" ");" \}
+.PP
+Instruct a HA node to be master and also give the node a name\&. Returns CONFD_OK or CONFD_ERR\&.
+.PP
+\fIErrors:\fR
+CONFD_ERR_HA_BIND if we cannot bind the TCP socket, CONFD_ERR_BADSTATE if ConfD is still in start phase 0\&.
+.nr wf \w'int\ confd_ha_beslave('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *mynodeid,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_ha_node\ *master,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'int\ waitreply);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_beslave("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "mynodeid" ", struct\ confd_ha_node\ *" "master" ", int\ " "waitreply" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_beslave(int\ " "sock" ", confd_value_t\ *" "mynodeid" ", struct\ confd_ha_node\ *" "master" ", int\ " "waitreply" ");" \}
+.PP
+Instruct a ConfD HA node to be slave with a named master\&. The
+\fIwaitreply\fR
+is a boolean int\&. If 1, the function is synchronous and it will hang until the node has initialized its CDB database\&. This may mean that the CDB database is copied in its entirety from the master\&. If 0, we do not wait for the reply, but it is possible to use a notifications socket and get notified asynchronously via a HA_INFO_BESLAVE_RESULT notification\&. In both cases, it is also possible to use a notifications socket and get notified asynchronously when CDB at the slave is initialized\&.
+.PP
+If the call of this function fails with
+\fIconfd_errno\fR
+CONFD_ERR_HA_CLOSED, it means that the initial synchronization with the master failed, either due to the socket being closed or due to a timeout while waiting for a response from the master\&. The function will fail with error CONFD_ERR_BADSTATE if ConfD is still in start phase 0\&.
+.PP
+\fIErrors:\fR
+CONFD_ERR_HA_CONNECT, CONFD_ERR_HA_BADNAME, CONFD_ERR_HA_BADTOKEN, CONFD_ERR_HA_BADFXS, CONFD_ERR_HA_BADVSN, CONFD_ERR_HA_CLOSED, CONFD_ERR_BADSTATE
+.nr wf \w'int\ confd_ha_berelay('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_berelay("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_berelay(int\ " "sock" ");" \}
+.PP
+Instruct an established HA slave node to be a relay for other slaves\&. This can be useful in certain deployment scenarios, but makes the management of the cluster more complex\&. Read more about this in the
+\m[blue]\fBRelay slaves\fR\m[]
+section of the High availability chapter in the User Guide\&. Returns CONFD_OK or CONFD_ERR\&.
+.PP
+\fIErrors:\fR
+CONFD_ERR_HA_BIND if we cannot bind the TCP socket, CONFD_ERR_BADSTATE if the node is not already a slave\&.
+.nr wf \w'int\ confd_ha_benone('
+.nr wm 0
+.nr wp \w'int\ sock);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_benone("
+.br
+.BI "int\ " "sock" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_benone(int\ " "sock" ");" \}
+.PP
+Instruct a node to resume the initial state, i\&.e\&. neither master nor slave\&.
+.PP
+\fIErrors:\fR
+CONFD_ERR_BADSTATE if ConfD is still in start phase 0\&.
+.nr wf \w'int\ confd_ha_get_status('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'struct\ confd_ha_status\ *stat);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_get_status("
+.br
+.BI "int\ " "sock" ", struct\ confd_ha_status\ *" "stat" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_get_status(int\ " "sock" ", struct\ confd_ha_status\ *" "stat" ");" \}
+.PP
+Query a ConfD HA node for its status\&. If successful, the function populates the confd_ha_status structure\&. This is the only HA related function which is possible to call while the ConfD daemon is still in start phase 0\&.
+.nr wf \w'int\ confd_ha_slave_dead('
+.nr wm 0
+.nr wp \w'int\ sock,'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.nr wp \w'confd_value_t\ *nodeid);'
+.if \n(wp>\n(wm 'nr wm \n(wp
+.ie \n(IN+\n(wf+\n(wm-\n(LL \{\
+.HP \n(LLu-\n(INu-\n(wmu
+.BI "int confd_ha_slave_dead("
+.br
+.BI "int\ " "sock" ", confd_value_t\ *" "nodeid" ");" \}
+.el \{\
+.HP \n(wfu
+.BI "int confd_ha_slave_dead(int\ " "sock" ", confd_value_t\ *" "nodeid" ");" \}
+.PP
+This function must be used by the application to inform ConfD HA subsystem that another node which is possibly connected to ConfD is dead\&.
+.PP
+\fIErrors:\fR
+CONFD_ERR_BADSTATE if ConfD is still in start phase 0\&.
+.SH "SEE ALSO"
+.PP
+\fBconfd.conf\fR(5)
+\- ConfD daemon configuration file format
+.PP
+The ConfD User Guide
+.SH "AUTHOR"
+.PP
+ <\&support@tail\-f\&.com\&>
+.RS 4
+.RE
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2018 Tail-f Systems AB
+.br

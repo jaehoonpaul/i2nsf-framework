@@ -1,0 +1,36 @@
+
+import mysql.connector
+from datetime import date, datetime, timedelta
+
+connection = mysql.connector.connect(
+                host="10.0.0.17",
+                port="3306",
+                user="root",
+                password="secu",
+                database="monitoring",
+            )
+
+cursor = connection.cursor(prepared=True)
+
+#date
+
+#show all data table 
+#cursor.execute("SHOW TABLES")
+#insert data example
+
+insertData = ("INSERT INTO `i2nsf-system-res-util-log` "
+							"(eventTime)"
+							"VALUES(%s)")
+
+
+current_Date = datetime.now()
+
+format = current_Date.strftime('%Y-%m-%d %H:%M:%S')
+print(format)
+
+cursor.execute(insertData,format);
+connection.commit()
+
+
+print(cursor.recount,"record insert")
+print(datetime.datetime.today())

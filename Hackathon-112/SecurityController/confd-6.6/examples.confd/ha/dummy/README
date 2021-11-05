@@ -1,0 +1,97 @@
+
+ConfD clustering "dummy" example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example is designed to show the setup of multiple ConfD nodes,
+how to cluster them (using a "dummy" High Availability framework) and
+how a configuration is replicated within that cluster. By default it
+will start three ConfD instances on the same host.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Running the example
+~~~~~~~~~~~~~~~~~~~
+
+Use "make test", to setup, build and run the example. The "test"
+target will setup 3 nodes (we will refer to them as node0, node1, and
+node2) and make node0 the master and the others slaves to it. This
+means that any configuration changes on node0 will be replicated to
+the others.
+
+The example then proceeds to run a NETCONF <edit-config> operation
+towards the master, and then query the slaves (to show the
+replications).
+
+Use "make stop" to stop all three ConfD instances.
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+More things to try
+~~~~~~~~~~~~~~~~~~
+
+After running "make test" there is three ConfD daemons running. Here
+are some things to try after "make test".
+
+1) Try using "make cli" to start a CLI towards the master, and after
+   committing changes try "make query1" and "make query2" to see that
+   the changes committed were replicated to the other nodes.
+
+2) Setting a node to state "none" removes it from participating in the
+   cluster, try the following sequence:
+
+    # Instruct node1 to go to "none" state (confirm by using "make status1")
+    ./ctrl -p 4575 none
+
+    # Now use the cli to make changes in the master
+    make cli
+    admin connected from 127.0.0.1 using console on venus.tail-f.com
+    
+    (J) admin@venus> configure
+    (J) Entering configuration mode private
+    (J) admin@venus% set servers server ssh-server ip 1.2.3.4        
+    (J) Value for 'port' (<inetPortNumber>): 22
+    (J) [ok]
+    (J) [edit]
+    (J) admin@venus% commit
+    (J) Commit complete.
+    (J) admin@venus% exit
+    (J) admin@venus> exit
+
+    (C) venus# config
+    (C) Entering configuration mode terminal
+    (C) venus(config# servers server ssh-server ip 1.2.3.4
+    (C) Value for 'port' (<inetPortNumber>): 22
+    (C) venus(config-server-ssh-server)# top
+    (C) venus(config)# commit
+    (C) Commit complete.
+    (C) venus(config)# exit
+    (C) venus# exit
+
+    # Use "make query1" and "make query2" to see that configuration
+    # was only replicated to node2 and not node1
+    make query1
+    make query2
+
+    # Re-join node1 to the cluster by telling it to be slave again
+    ./ctrl -p 4575 slave node1 node0 127.0.0.1
+
+    # When becoming slave, node1 fetches the latest config from the
+    # master to get back into sync. Check this by "make query1"
+    make query1
+ 
+3) Try figuring out how to switch the master to node2 by first setting
+   the current master to the "none" state (using the "ctrl" command)
+   and then telling node2 to be the master.
+
+4) More nodes than three can be started by changing the NNODES
+   variable in the makefile.
+

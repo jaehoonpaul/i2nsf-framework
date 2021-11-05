@@ -1,0 +1,3 @@
+#!/bin/bash
+source /home/ubuntu/confd/confdrc
+python3 /home/ubuntu/subscribe.py

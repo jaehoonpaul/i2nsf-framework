@@ -1,0 +1,19 @@
+Known issues in ConfD-6.5
+=========================
+
+- confd_str2val() (see confd_lib_lib(3)) and the corresponding functionality
+  in the Java API does not enforce the 'pattern' restriction for string
+  types.
+
+- Two-phase CDB subscriptions are not available in the Java API.
+
+- There are some limitations in the support of tab completion for
+  instance identifiers in the CLI. The following is currently not
+  supported:
+
+    - quotes such as /service[address="192.168.0.1"][port="5000"]
+    - help and info texts
+    - path-filters
+
+- Symmetric Multiprocessing is not supported on NetBSD, due to problems
+  with the pthreads support on this OS.

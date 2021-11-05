@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notification xmlns="urn:ietf:params:xml:ns:netconf:notification:1.0"><eventTime>2021-11-01T06:35:52.265004+00:00</eventTime>
+<i2nsf-log xmlns='urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring'>
+  <i2nsf-system-res-util-log>
+    <system-status>Running</system-status>
+    <cpu-usage>0</cpu-usage>
+    <memory-usage>13</memory-usage>
+    <disk-usage>74</disk-usage>
+    <disk-left>25</disk-left>
+    <in-traffic-speed>1741987</in-traffic-speed>
+    <out-traffic-speed>452885</out-traffic-speed>
+    <acquisition-method xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:subscription</acquisition-method>
+    <emission-type xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:periodical</emission-type>
+    <dampening-type xmlns:nsfmi="urn:ietf:params:xml:ns:yang:ietf-i2nsf-nsf-monitoring">nsfmi:on-repetition</dampening-type>
+    <nsf-name>url_filtering</nsf-name>
+  </i2nsf-system-res-util-log>
+</i2nsf-log>
+</notification>

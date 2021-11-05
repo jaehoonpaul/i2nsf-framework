@@ -1,0 +1,73 @@
+module mtest {
+  namespace "http://tail-f.com/ns/example/mtest";
+  prefix mtest;
+
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container mtest {
+    leaf a_number {
+      type int64;
+      default 42;
+      tailf:validate vp1 {
+        tailf:dependency '../b_number';
+       /*  we need to be called if b_number changes.
+           since the validation point is under a_number, we will be
+           called if a_number changes also.  */
+
+      }
+    }
+    leaf b_number {
+      type int64;
+      default 7;
+    }
+    leaf c_number {
+      type int64;
+      default 10;
+      /*  this validation code will be called for every change  */
+      tailf:validate vp2 {
+      }
+    }
+    leaf d_number {
+      type int64;
+      default 20;
+    }
+  }
+  container container {
+    list x {
+      key name;
+      tailf:validate vp3 {
+        tailf:dependency '.';
+      }
+      leaf name {
+        type string;
+      }
+      leaf i {
+        type int32;
+        default 5;
+      }
+    }
+  }
+  container foo {
+    tailf:validate vp3 {
+        tailf:dependency '/container/x';
+    }
+  }
+  container dummy {
+    tailf:validate vp4 {
+        tailf:dependency '/vrf';
+    }
+  }
+  list vrf {
+    key id;
+    leaf id {
+      type int32;
+    }
+    leaf name {
+      type string;
+      mandatory true;
+    }
+  }
+}

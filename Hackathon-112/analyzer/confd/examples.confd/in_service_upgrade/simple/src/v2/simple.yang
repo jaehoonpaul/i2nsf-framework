@@ -1,0 +1,115 @@
+module simple {
+  namespace "http://tail-f.com/ns/example/simple";
+  prefix simple;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  revision 2009-09-01 {
+    description
+       "Updated version.";
+  }
+  revision 2009-04-01 {
+    description
+       "Initial version.";
+  }
+
+  typedef myType2 {
+    type int32 {
+      range "0 .. 50000";
+    }
+  }
+  typedef colorType {
+    type enumeration {
+      enum none;
+      enum blue;
+      enum yellow;
+      enum red;
+      enum green;
+      enum white;
+      enum black;
+      enum purple;
+      enum pink;
+    }
+  }
+
+  typedef ipv4AddressMask {
+    type string;
+    tailf:info "IPv4-address/mask-length";
+    tailf:typepoint ipv4_mask;
+  }
+  typedef ipv6AddressMask {
+    type string;
+    tailf:info "IPv6-address/mask-length";
+    tailf:typepoint ipv6_mask;
+  }
+
+  container simple {
+    leaf color {
+      type colorType;
+      default none;
+    }
+    leaf ip {
+      type ipv4AddressMask;
+    }
+    leaf ip6 {
+      type ipv6AddressMask;
+    }
+    leaf value1 {
+      type int32;
+      mandatory true;
+    }
+    leaf value2 {
+      type myType2;
+      mandatory true;
+    }
+    leaf value3 {
+      type int32;
+      mandatory true;
+    }
+/*  value4 and value5 deleted  */
+/*  new element  */
+    container foo {
+      leaf bar {
+        type int32;
+        default 42;
+      }
+    }
+    leaf value6 {
+      type uint16;
+      default 12345;
+    }
+/*  no longer optional  */
+    leaf value7 {
+      type int32;
+      default 7;
+    }
+    leaf value8 {
+      type int32;
+      default 8;
+    }
+    container p {
+      presence true;
+/* added mandatory leaf */
+      leaf m {
+        type string;
+        mandatory true;
+      }
+    }
+  }
+
+  container stats {
+    config false;
+    tailf:cdb-oper {
+      tailf:persistent true;
+    }
+    leaf version {
+      type string;
+    }
+    leaf hardware {
+      type string;
+    }
+  }
+}
+

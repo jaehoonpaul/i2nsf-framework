@@ -1,0 +1,194 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_TX\-CHANGES\-COMMIT" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_tx\-changes\-commit\fR
+.
+.SH "METHOD validate_commit"
+Validates a transaction before calling \fBcommit\fR\. If this method succeeds (with or without warnings) then the next operation \fImust\fR be all call to either \fBcommit\fR or \fBclear_validate_lock\fR\. The configuration will be locked for access by other users until one of these methods are called\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.P
+or
+.
+.IP "" 4
+.
+.nf
+
+{"warnings": <array of warning>}
+
+warning = {"paths": <array of string>, "message": <string>}
+.
+.fi
+.
+.IP "" 0
+.
+.SS "ERRORS (SPECIFIC)"
+Same as for the \fBvalidate_trans\fR method\.
+.
+.SH "METHOD clear_validate_lock"
+Releases validate lock taken by \fBvalidate_commit\fR
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>}
+.
+.fi
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD commit"
+Copies the configuration into the running datastore\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "timeout": <number, default: 0>,
+ "release_locks" <boolean, default: true>}
+.
+.fi
+.
+.P
+The \fBtimeout\fR param represents the confirmed commit timeout, i\.e\. set it to zero (0) to commit without timeout\.
+.
+.P
+.
+.P
+Commit behaviour can be changed via an extra \fBflags\fR param:
+.
+.IP "" 4
+.
+.nf
+
+{"flags": <flags, default: []>}
+
+flags = <array of string or bitmask>
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The \fBflags\fR param is a list of flags that can change the commit behavior:
+.
+.IP "\(bu" 4
+no\-revision\-drop \- do not drop revision
+.
+.IP "\(bu" 4
+async\-commit\-queue \- if some device is non\-operational or has data waiting in the commit queue, the data in this transaction will be placed in the commit queue; a \fBcommit_queue_id\fR will be found in the response
+.
+.IP "\(bu" 4
+no\-networking \- do not send data to the devices; this is a way to manipulate CDB in &product; without generating any southbound traffic
+.
+.IP "\(bu" 4
+dry\-run=XXX \- where XXX is the desired output format: xml, cli or native\. Do not send data to the devices; this is a way to see the effects that would have taken place as a diff
+.
+.IP "\(bu" 4
+no\-out\-of\-sync\-check \- continue with the transaction even if &product; detects that a device\'s configuration is out of sync
+.
+.IP "\(bu" 4
+no\-overwrite \- &product; will check that the data that should be modified has not changed on the device compared to &product;\'s view of the data
+.
+.IP "\(bu" 4
+sync\-commit\-queue \- if some device is non\-operational or has data waiting in the commit queue, the data in this transaction will be placed in the commit queue; that flag will cause the operation to not return until the transaction has been sent to all devices, or a timeout occurs; a \fBcommit_queue_id\fR will be found in the response if the timeout occurs
+.
+.IP "\(bu" 4
+sync\-commit\-timeout=XXX \- where XXX is a timeout in seconds; only allowed after sync\-commit\-queue
+.
+.IP "" 0
+.
+.P
+For backwards compatibility, the \fBflags\fR param can also be a bit mask with the following limit values:
+.
+.IP "\(bu" 4
+\fB1 << 0\fR \- Do not release locks, overridden by the \fBrelease_locks\fR if set
+.
+.IP "\(bu" 4
+\fB1 << 2\fR \- Do not drop revision
+.
+.IP "" 0
+.
+.P
+.
+.IP "\(bu" 4
+If a call to \fBconfirm_commit\fR is not done within \fBtimeout\fR seconds an automatic rollback is performed\. This method can also be used to "extend" a confirmed commit that is already in progress, i\.e\. set a new timeout or add changes\.
+.
+.IP "\(bu" 4
+A call to \fBabort_commit\fR can be made to abort the confirmed commit\.
+.
+.IP "" 0
+.
+.P
+\fBNOTE\fR: Must be preceded by a call to \fBvalidate_commit\fR
+.
+.P
+\fBNOTE\fR: The transaction handler is deallocated as a side effect of this method
+.
+.SS "RESULT"
+.
+.nf
+
+{"commit_queue_id": <integer>}
+.
+.fi
+.
+.P
+The \fBcommit_queue_id\fR is only returned if the method is run with the \fBasync_commit_queue\fR flag, or with the \fBsync_commit_queue\fR flag and a timeout occurs\.
+.
+.SS "ERRORS (SPECIFIC)"
+.
+.nf
+
+{"type": "trans\.confirmed_commit_in_progress"}
+.
+.fi
+.
+.SH "METHOD abort_commit"
+Aborts the active read\-write transaction
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SH "METHOD confirm_commit"
+Confirms the currently pending confirmed commit
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+

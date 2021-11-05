@@ -1,0 +1,624 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module econfd</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module econfd</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#types">Data Types</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>An Erlang interface equivalent to the confd_lib_dp C-API   
+(documented in confd_lib_dp(3)).
+<p>Copyright © 2006 Tail-F Systems AB</p>
+
+<p><b>Version:</b> {$Id$}</p>
+
+<h2><a name="description">Description</a></h2><p>An Erlang interface equivalent to the confd_lib_dp C-API   
+(documented in confd_lib_dp(3)).</p>
+  
+   This module is used to connect to ConfD and provide callback
+   functions so that ConfD can populate its northbound agent
+   interfaces with external data.  Thus the library consists of a
+   number of API functions whose purpose is to install different
+   callback functions at different points in the XML tree which is
+   the representation of the device configuration. Read more about
+   callpoints in the ConfD User Guide.
+<h2><a name="types">Data Types</a></h2>
+
+<h3 class="typedecl"><a name="type-cb_action">cb_action()</a></h3>
+<p><tt>cb_action() = <a href="#type-cb_action_act">cb_action_act()</a> | <a href="#type-cb_action_cmd">cb_action_cmd()</a></tt></p>
+<p>It is the callback for #confd_action_cb.action</p>
+
+<h3 class="typedecl"><a name="type-cb_action_act">cb_action_act()</a></h3>
+<p><tt>cb_action_act() = fun((U::#confd_user_info{}, Name::<a href="#type-qtag">qtag()</a>, KP::<a href="#type-ikeypath">ikeypath()</a>, [Param::<a href="#type-tagval">tagval()</a>]) -&gt; ok) | {ok, [Result::<a href="#type-tagval">tagval()</a>]} | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>It is the callback for #confd_action_cb.action when invoked as an
+  action request.</p>
+
+<h3 class="typedecl"><a name="type-cb_action_cmd">cb_action_cmd()</a></h3>
+<p><tt>cb_action_cmd() = fun((U::#confd_user_info{}, Name::binary(), Path::binary(), [Arg::binary()]) -&gt; ok) | {ok, [Result::binary()]} | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>It is the callback for #confd_action_cb.action when invoked as a
+  CLI command callback.</p>
+
+<h3 class="typedecl"><a name="type-cb_authentication">cb_authentication()</a></h3>
+<p><tt>cb_authentication() = fun((#confd_authentication_ctx{}) -&gt; ok) | error | {error, binary()}</tt></p>
+<p>The callback for #confd_authentication_cb.auth</p>
+
+<h3 class="typedecl"><a name="type-cb_candidate_commit">cb_candidate_commit()</a></h3>
+<p><tt>cb_candidate_commit() = fun((#confd_db_ctx{}, Timeout::integer()) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_db_cbs.candidate_commit</p>
+
+<h3 class="typedecl"><a name="type-cb_create">cb_create()</a></h3>
+<p><tt>cb_create() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>It is the callback for #confd_data_cbs.create. Only used
+  when we use external database config data, e.g. not for statistics.</p>
+
+<h3 class="typedecl"><a name="type-cb_ctx">cb_ctx()</a></h3>
+<p><tt>cb_ctx() = fun((#confd_trans_ctx{}) -&gt; ok) | {ok, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_trans_validate_cbs.init and
+  #confd_trans_cbs.init as well as
+  several other callbacks in #confd_trans_cbs{}</p>
+
+<h3 class="typedecl"><a name="type-cb_db">cb_db()</a></h3>
+<p><tt>cb_db() = fun((#confd_db_ctx{}, DbName::integer()) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_db_cbs.lock, #confd_db_cbs.unlock, and
+  #confd_db_cbs.delete_config</p>
+
+<h3 class="typedecl"><a name="type-cb_exists_optional">cb_exists_optional()</a></h3>
+<p><tt>cb_exists_optional() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = bool()</tt></li></ul></p>
+<p>This is the callback for #confd_data_cbs.exists_optional.
+  The exists_optional callback must be present
+  if our YANG model has presence containers or leafs of type empty.</p>
+
+<h3 class="typedecl"><a name="type-cb_find_next">cb_find_next()</a></h3>
+<p><tt>cb_find_next() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, FindNextType::integer(), PrevKey::<a href="#type-key">key()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = {Key::<a href="#type-key">key()</a>, Next::term()} | {false, undefined}</tt></li></ul></p>
+<p>This is the callback for #confd_data_cbs.find_next.</p>
+
+<h3 class="typedecl"><a name="type-cb_find_next_object">cb_find_next_object()</a></h3>
+<p><tt>cb_find_next_object() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, FindNextType::integer(), PrevKey::<a href="#type-key">key()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {ok, Objects, TimeoutMillisecs::integer()} | {ok, Objects, TimeoutMillisecs::integer(), #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = ValObject | TagValObject | {false, undefined}</tt></li><li><tt>Objects = [ValObject | TagValObject | false]</tt></li><li><tt>ValObject = {[V::<a href="#type-value">value()</a>], Next::term()}</tt></li><li><tt>TagValObject = {{exml, [TV::<a href="#type-tagval">tagval()</a>]}, Next::term()}</tt></li></ul></p>
+<p>Optional callback which combines the functionality of
+  find_next() and get_object(), and adds the possibility
+  to return multiple objects.
+  It is the callback for #confd_data_cbs.find_next_object.
+  For a detailed description of the two forms of the value list,
+  please refer to the "Value Array" and "Tag Value Array" specifications,
+  respectively, in the XML STRUCTURES section of the confd_types(3)
+  manual page.</p>
+
+<h3 class="typedecl"><a name="type-cb_get_attrs">cb_get_attrs()</a></h3>
+<p><tt>cb_get_attrs() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, [Attr::integer()]) -&gt; {ok, [{Attr::integer(), V::<a href="#type-value">value()</a>}]}) | {ok, not_found} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>This is the callback for #confd_data_cbs.get_attrs.</p>
+
+<h3 class="typedecl"><a name="type-cb_get_elem">cb_get_elem()</a></h3>
+<p><tt>cb_get_elem() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = <a href="#type-value">value()</a> | not_found</tt></li></ul></p>
+<p>This is the callback for #confd_data_cbs.get_elem.</p>
+
+<h3 class="typedecl"><a name="type-cb_get_log_times">cb_get_log_times()</a></h3>
+<p><tt>cb_get_log_times() = fun((#confd_notification_ctx{}) -&gt; {ok, {Created::<a href="#type-datetime">datetime()</a>, Aged::<a href="#type-datetime">datetime()</a> | not_found}}) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_notification_stream_cbs.get_log_times</p>
+
+<h3 class="typedecl"><a name="type-cb_get_next">cb_get_next()</a></h3>
+<p><tt>cb_get_next() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, Prev::term()) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = {Key::<a href="#type-key">key()</a>, Next::term()} | {false, undefined}</tt></li></ul></p>
+<p>This is the callback for #confd_data_cbs.get_next.  Prev is
+  the integer -1 on the first call.</p>
+
+<h3 class="typedecl"><a name="type-cb_get_next_object">cb_get_next_object()</a></h3>
+<p><tt>cb_get_next_object() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, Prev::term()) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {ok, Objects, TimeoutMillisecs::integer()} | {ok, Objects, TimeoutMillisecs::integer(), #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = ValObject | TagValObject | {false, undefined}</tt></li><li><tt>Objects = [ValObject | TagValObject | false]</tt></li><li><tt>ValObject = {[V::<a href="#type-value">value()</a>], Next::term()}</tt></li><li><tt>TagValObject = {{exml, [TV::<a href="#type-tagval">tagval()</a>]}, Next::term()}</tt></li></ul></p>
+<p>Optional callback which combines the functionality of
+  get_next() and get_object(), and adds the possibility
+  to return multiple objects.
+  It is the callback for #confd_data_cbs.get_next_object.
+  For a detailed description of the two forms of the value list,
+  please refer to the "Value Array" and "Tag Value Array" specifications,
+  respectively, in the XML STRUCTURES section of the confd_types(3)
+  manual page.</p>
+
+<h3 class="typedecl"><a name="type-cb_get_object">cb_get_object()</a></h3>
+<p><tt>cb_get_object() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = [V::<a href="#type-value">value()</a>] | {exml, [TV::<a href="#type-tagval">tagval()</a>]} | not_found</tt></li></ul></p>
+<p>Optional callback which is used to return an entire object.
+  It is the callback for #confd_data_cbs.get_object.
+  For a detailed description of the two forms of the value list,
+  please refer to the "Value Array" and "Tag Value Array" specifications,
+  respectively, in the XML STRUCTURES section of the confd_types(3)
+  manual page.</p>
+
+<h3 class="typedecl"><a name="type-cb_lock_partial">cb_lock_partial()</a></h3>
+<p><tt>cb_lock_partial() = fun((#confd_db_ctx{}, DbName::integer(), LockId::integer(), [<a href="#type-ikeypath">ikeypath()</a>]) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_db_cbs.lock_partial</p>
+
+<h3 class="typedecl"><a name="type-cb_move_after">cb_move_after()</a></h3>
+<p><tt>cb_move_after() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, PrevKeys::{<a href="#type-value">value()</a>}) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>This is the callback for #confd_data_cbs.move_after. PrevKeys == {}
+  means that the list entry should become the first one.</p>
+
+<h3 class="typedecl"><a name="type-cb_num_instances">cb_num_instances()</a></h3>
+<p><tt>cb_num_instances() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; {ok, Reply}) | {ok, Reply, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Reply = integer()</tt></li></ul></p>
+<p>Optional callback, if it doesn't exist it will be emulated
+  by consecutive calls to get_next().
+  It is the callback for #confd_data_cbs.num_instances.</p>
+
+<h3 class="typedecl"><a name="type-cb_ok">cb_ok()</a></h3>
+<p><tt>cb_ok() = fun((#confd_trans_ctx{}) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_trans_cbs.finish and
+  #confd_trans_validate_cbs.stop</p>
+
+<h3 class="typedecl"><a name="type-cb_ok_db">cb_ok_db()</a></h3>
+<p><tt>cb_ok_db() = fun((#confd_db_ctx{}) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_db_cbs.candidate_confirming_commit
+  and several other callbacks in #confd_db_cbs{}</p>
+
+<h3 class="typedecl"><a name="type-cb_remove">cb_remove()</a></h3>
+<p><tt>cb_remove() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>It is the callback for #confd_data_cbs.remove. Only used
+  when we use external database config data, e.g. not for statistics.</p>
+
+<h3 class="typedecl"><a name="type-cb_replay">cb_replay()</a></h3>
+<p><tt>cb_replay() = fun((#confd_notification_ctx{}, Start::<a href="#type-datetime">datetime()</a>, Stop::<a href="#type-datetime">datetime()</a> | undefined) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_notification_stream_cbs.replay</p>
+
+<h3 class="typedecl"><a name="type-cb_set_attr">cb_set_attr()</a></h3>
+<p><tt>cb_set_attr() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, Attr::integer(), Value) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt>
+<ul class="definitions"><li><tt>Value = <a href="#type-value">value()</a> | undefined</tt></li></ul></p>
+<p>This is the callback for #confd_data_cbs.set_attr. Value == undefined
+  means that the attribute should be deleted.</p>
+
+<h3 class="typedecl"><a name="type-cb_set_elem">cb_set_elem()</a></h3>
+<p><tt>cb_set_elem() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, Value::<a href="#type-value">value()</a>) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>It is the callback for #confd_data_cbs.set_elem. Only used
+  when we use external database config data, e.g. not for statistics.</p>
+
+<h3 class="typedecl"><a name="type-cb_str_to_val">cb_str_to_val()</a></h3>
+<p><tt>cb_str_to_val() = fun((TypeCtx::term(), String::string()) -&gt; {ok, Value::<a href="#type-value">value()</a>}) | error | {error, Reason::binary()} | none()</tt></p>
+<p>The callback for #confd_type_cbs.str_to_val. The TypeCtx argument is
+  currently unused (passed as 'undefined'). The function may fail - this
+  is equivalent to returning 'error'.</p>
+
+<h3 class="typedecl"><a name="type-cb_trans_lock">cb_trans_lock()</a></h3>
+<p><tt>cb_trans_lock() = fun((#confd_trans_ctx{}) -&gt; ok) | {ok, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | confd_already_locked</tt></p>
+<p>The callback for #confd_trans_cbs.trans_lock. The confd_already_locked
+  return value is equivalent to {error, #confd_error{ code = in_use }}.</p>
+
+<h3 class="typedecl"><a name="type-cb_unlock_partial">cb_unlock_partial()</a></h3>
+<p><tt>cb_unlock_partial() = fun((#confd_db_ctx{}, DbName::integer(), LockId::integer()) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>}</tt></p>
+<p>The callback for #confd_db_cbs.unlock_partial</p>
+
+<h3 class="typedecl"><a name="type-cb_val_to_str">cb_val_to_str()</a></h3>
+<p><tt>cb_val_to_str() = fun((TypeCtx::term(), Value::<a href="#type-value">value()</a>) -&gt; {ok, String::string()}) | error | {error, Reason::binary()} | none()</tt></p>
+<p>The callback for #confd_type_cbs.val_to_str. The TypeCtx argument is
+  currently unused (passed as 'undefined'). The function may fail - this
+  is equivalent to returning 'error'.</p>
+
+<h3 class="typedecl"><a name="type-cb_validate">cb_validate()</a></h3>
+<p><tt>cb_validate() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>, Newval::<a href="#type-value">value()</a>) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | {validation_warn, Reason::binary()}</tt></p>
+<p>It is the callback for #confd_valpoint_cb.validate.</p>
+
+<h3 class="typedecl"><a name="type-cb_validate_value">cb_validate_value()</a></h3>
+<p><tt>cb_validate_value() = fun((TypeCtx::term(), Value::<a href="#type-value">value()</a>) -&gt; ok) | error | {error, Reason::binary()} | none()</tt></p>
+<p>The callback for #confd_type_cbs.validate. The TypeCtx argument is
+  currently unused (passed as 'undefined'). The function may fail - this
+  is equivalent to returning 'error'.</p>
+
+<h3 class="typedecl"><a name="type-cb_write">cb_write()</a></h3>
+<p><tt>cb_write() = fun((#confd_trans_ctx{}) -&gt; ok) | {ok, #confd_trans_ctx{}} | {error, <a href="#type-error_reason">error_reason()</a>} | confd_in_use</tt></p>
+<p>The callback for #confd_trans_cbs.write_start and #confd_trans_cbs.prepare.
+  The confd_in_use return value is equivalent to
+  {error, #confd_error{ code = in_use }}.</p>
+
+<h3 class="typedecl"><a name="type-cb_write_all">cb_write_all()</a></h3>
+<p><tt>cb_write_all() = fun((T::#confd_trans_ctx{}, KP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; ok) | {error, <a href="#type-error_reason">error_reason()</a>} | delayed_response</tt></p>
+<p>This is the callback for #confd_data_cbs.write_all. The KP argument
+  is currently always [], since the callback does not pertain to any
+  particular data node.</p>
+
+<h3 class="typedecl"><a name="type-completion_action">completion_action()</a></h3>
+<p><tt>completion_action() = fun((U::#confd_user_info{}, CliStyle::<a href="#type-int">int()</a>, Token::binary(), CompletionChar::<a href="#type-int">int()</a>, IKP::<a href="#type-ikeypath">ikeypath()</a>, CmdPath::binary(), Id::binary(), TP::term(), Extra::term()) -&gt; [string() | {info, string()} | {desc, string()} | default])</tt></p>
+
+
+<h3 class="typedecl"><a name="type-datetime">datetime()</a></h3>
+<p><tt>datetime() = {C_DATETIME::integer(), DateAndTime}</tt>
+<ul class="definitions"><li><tt>DateAndTime = {Year::integer(), Month::integer(), Day::integer(), Hour::integer(), Minute::integer(), Second::integer(), MicroSecond::integer(), TZ::integer(), TZMinutes::integer()}</tt></li></ul></p>
+<p>The value representation for yang:date-and-time, also used in the
+  API functions for notification streams.</p>
+
+<h3 class="typedecl"><a name="type-namespace">namespace()</a></h3>
+<p><tt>namespace() = atom()</tt></p>
+
+
+<h3 class="typedecl"><a name="type-socket">socket()</a></h3>
+<p><tt>socket() = port() | <a href="int_ipc.html#type-sock">int_ipc:sock()</a></tt></p>
+
+
+<h3 class="typedecl"><a name="type-tagpath">tagpath()</a></h3>
+<p><tt>tagpath() = [<a href="#type-qtag">qtag()</a>]</tt></p>
+<p>A tagpath() is a list describing a path down into the schema tree.
+  I.e. as opposed to an ikeypath(), it has no instance information.
+  Additionally the last (top) element is not <code>[NS|XmlTag]</code> as in
+  ikeypath(), but only <code>XmlTag</code> - i.e. it needs to be combined with
+  a namespace to uniquely identify a schema node. The other elements
+  in the path are qualified - or not - exactly as for ikeypath().</p>
+
+<h3 class="typedecl"><a name="type-tagval">tagval()</a></h3>
+<p><tt>tagval() = {<a href="#type-qtag">qtag()</a>, <a href="#type-value">value()</a> | start | stop | leaf | {start, Index::integer()}}</tt></p>
+<p>This is used to represent XML elements together with their values,
+  typically in a list representing an XML subtree as in the arguments
+  and result of the 'action' callback. Typeless elements have the
+  special "values" 'start' (opening container or list element), 'stop'
+  (closing container or list element), 'leaf' (leaf with type "empty"),
+  or {start, Index} (opening list element with CDB Index instead of key
+  value(s) - only valid for CDB access). The qtag() tuple element may
+  have the namespace()-less form (i.e. tag()) for XML elements in the
+  "current" namespace. For a detailed description of how to represent
+  XML as a list of tagval() elements, please refer to the "Tagged Value
+  Array" specification in the XML STRUCTURES section of the
+  confd_types(3) manual page.</p>
+
+<h3 class="typedecl"><a name="type-type">type()</a></h3>
+<p><tt>type() = term()</tt></p>
+<p>Identifies a type definition in the schema.</p>
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#action_set_timeout-2">action_set_timeout/2</a></td><td>Extend (or shorten) the timeout for the current action callback
+  invocation.</td></tr>
+<tr><td valign="top"><a href="#bitbig_bit_is_set-2">bitbig_bit_is_set/2</a></td><td>Test a bit in a C_BITBIG binary.</td></tr>
+<tr><td valign="top"><a href="#bitbig_clr_bit-2">bitbig_clr_bit/2</a></td><td>Clear a bit in a C_BITBIG binary.</td></tr>
+<tr><td valign="top"><a href="#bitbig_set_bit-2">bitbig_set_bit/2</a></td><td>Set a bit in a C_BITBIG binary.</td></tr>
+<tr><td valign="top"><a href="#controlling_process-2">controlling_process/2</a></td><td>Assigns a new controlling process Pid to Socket.</td></tr>
+<tr><td valign="top"><a href="#data_reply_error-2">data_reply_error/2</a></td><td>Reply an error for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_found-1">data_reply_found/1</a></td><td>Reply 'found' for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_next_key-3">data_reply_next_key/3</a></td><td>Reply with next key for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_next_object_tag_value_array-3">data_reply_next_object_tag_value_array/3</a></td><td>Reply with tagged values and next key for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_next_object_value_array-3">data_reply_next_object_value_array/3</a></td><td>Reply with values and next key for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_next_object_value_arrays-3">data_reply_next_object_value_arrays/3</a></td><td>Reply with multiple objects, each with values and next key, plus
+  cache timeout, for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_not_found-1">data_reply_not_found/1</a></td><td>Reply 'not found' for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_ok-1">data_reply_ok/1</a></td><td>Reply 'ok' for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_tag_value_array-2">data_reply_tag_value_array/2</a></td><td>Reply a list of tagged values for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_value-2">data_reply_value/2</a></td><td>Reply a value for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_reply_value_array-2">data_reply_value_array/2</a></td><td>Reply a list of values for delayed_response.</td></tr>
+<tr><td valign="top"><a href="#data_set_timeout-2">data_set_timeout/2</a></td><td>Extend (or shorten) the timeout for the current callback invocation.</td></tr>
+<tr><td valign="top"><a href="#decrypt-1">decrypt/1</a></td><td>Decrypts a value of type tailf:des3-cbc-encrypted-string
+  or tailf:aes-cfb-128-encrypted-string.</td></tr>
+<tr><td valign="top"><a href="#init_daemon-6">init_daemon/6</a></td><td>Starts and links to a gen_server which connects to ConfD.</td></tr>
+<tr><td valign="top"><a href="#log-2">log/2</a></td><td>Logs Fmt to devel.log if running internal, otherwise to
+  standard out.</td></tr>
+<tr><td valign="top"><a href="#log-3">log/3</a></td><td>Logs Fmt with Args to devel.log if running internal,
+  otherwise to standard out.</td></tr>
+<tr><td valign="top"><a href="#log-4">log/4</a></td><td>Logs Fmt with Args to devel.log if running internal,
+  otherwise to IoDevice.</td></tr>
+<tr><td valign="top"><a href="#notification_replay_complete-1">notification_replay_complete/1</a></td><td>Call this function when replay is done.</td></tr>
+<tr><td valign="top"><a href="#notification_replay_failed-2">notification_replay_failed/2</a></td><td>Call this function when replay has failed for some reason.</td></tr>
+<tr><td valign="top"><a href="#notification_send-3">notification_send/3</a></td><td>Send an XML notification.</td></tr>
+<tr><td valign="top"><a href="#pp_kpath-1">pp_kpath/1</a></td><td>Pretty print an ikeypath.</td></tr>
+<tr><td valign="top"><a href="#pp_value-1">pp_value/1</a></td><td>Pretty print a value.</td></tr>
+<tr><td valign="top"><a href="#register_action_cb-2">register_action_cb/2</a></td><td>Register action callback on an actionpoint.</td></tr>
+<tr><td valign="top"><a href="#register_authentication_cb-2">register_authentication_cb/2</a></td><td>Register authentication callback.</td></tr>
+<tr><td valign="top"><a href="#register_data_cb-2">register_data_cb/2</a></td><td>Register the data callbacks.</td></tr>
+<tr><td valign="top"><a href="#register_db_cbs-2">register_db_cbs/2</a></td><td>Register extern db callbacks.</td></tr>
+<tr><td valign="top"><a href="#register_done-1">register_done/1</a></td><td>This function must be called when all callback registrations are done.</td></tr>
+<tr><td valign="top"><a href="#register_notification_stream-2">register_notification_stream/2</a></td><td>Register notif callbacks on an streamname.</td></tr>
+<tr><td valign="top"><a href="#register_range_data_cb-5">register_range_data_cb/5</a></td><td>Register data callbacks for a range of keys.</td></tr>
+<tr><td valign="top"><a href="#register_trans_cb-2">register_trans_cb/2</a></td><td>Register transaction phase callbacks.</td></tr>
+<tr><td valign="top"><a href="#register_trans_validate_cb-2">register_trans_validate_cb/2</a></td><td>Register validation transaction callback.</td></tr>
+<tr><td valign="top"><a href="#register_valpoint_cb-2">register_valpoint_cb/2</a></td><td>Register validation callback on a valpoint.</td></tr>
+<tr><td valign="top"><a href="#set_daemon_d_opaque-2">set_daemon_d_opaque/2</a></td><td>Set the d_opaque field in the daemon which is typically used by
+  the callbacks.</td></tr>
+<tr><td valign="top"><a href="#set_daemon_flags-2">set_daemon_flags/2</a></td><td>Change the flag settings for a daemon.</td></tr>
+<tr><td valign="top"><a href="#set_debug-3">set_debug/3</a></td><td>Change the DebugLevel and/or Estream for a running daemon.</td></tr>
+<tr><td valign="top"><a href="#start-0">start/0</a></td><td>Starts the econfd application.</td></tr>
+<tr><td valign="top"><a href="#stop_daemon-1">stop_daemon/1</a></td><td>Silently stop a daemon.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="action_set_timeout-2">action_set_timeout/2</a></h3>
+<div class="spec">
+<p><tt>action_set_timeout(Uinfo::#confd_user_info{}, Seconds::integer()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Extend (or shorten) the timeout for the current action callback
+  invocation. The timeout is given in seconds from the point in time when
+  the function is called.</p>
+
+<h3 class="function"><a name="bitbig_bit_is_set-2">bitbig_bit_is_set/2</a></h3>
+<div class="spec">
+<p><tt>bitbig_bit_is_set(Binary::binary(), Position::integer()) -&gt; boolean()</tt><br></p>
+</div><p>Test a bit in a C_BITBIG binary.</p>
+
+<h3 class="function"><a name="bitbig_clr_bit-2">bitbig_clr_bit/2</a></h3>
+<div class="spec">
+<p><tt>bitbig_clr_bit(Binary::binary(), Position::integer()) -&gt; binary()</tt><br></p>
+</div><p>Clear a bit in a C_BITBIG binary.</p>
+
+<h3 class="function"><a name="bitbig_set_bit-2">bitbig_set_bit/2</a></h3>
+<div class="spec">
+<p><tt>bitbig_set_bit(Binary::binary(), Position::integer()) -&gt; binary()</tt><br></p>
+</div><p>Set a bit in a C_BITBIG binary.</p>
+
+<h3 class="function"><a name="controlling_process-2">controlling_process/2</a></h3>
+<div class="spec">
+<p><tt>controlling_process(Socket::term(), Pid::pid()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Assigns a new controlling process Pid to Socket</p>
+
+<h3 class="function"><a name="data_reply_error-2">data_reply_error/2</a></h3>
+<div class="spec">
+<p><tt>data_reply_error(Tctx::#confd_trans_ctx{}, Error::<a href="#type-error_reason">error_reason()</a>) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply an error for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response.</p>
+
+<h3 class="function"><a name="data_reply_found-1">data_reply_found/1</a></h3>
+<div class="spec">
+<p><tt>data_reply_found(Tctx::#confd_trans_ctx{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply 'found' for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response.</p>
+
+<h3 class="function"><a name="data_reply_next_key-3">data_reply_next_key/3</a></h3>
+<div class="spec">
+<p><tt>data_reply_next_key(Tctx::#confd_trans_ctx{}, Key, Next::term()) -&gt; ok | {error, Reason::term()}</tt>
+<ul class="definitions"><li><tt>Key = <a href="#type-key">key()</a> | false</tt></li></ul></p>
+</div><p>Reply with next key for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response.</p>
+
+<h3 class="function"><a name="data_reply_next_object_tag_value_array-3">data_reply_next_object_tag_value_array/3</a></h3>
+<div class="spec">
+<p><tt>data_reply_next_object_tag_value_array(Tctx::#confd_trans_ctx{}, Values::[TV::<a href="#type-tagval">tagval()</a>], Next::term()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply with tagged values and next key for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response,
+  and get_next_object() callback.</p>
+
+<h3 class="function"><a name="data_reply_next_object_value_array-3">data_reply_next_object_value_array/3</a></h3>
+<div class="spec">
+<p><tt>data_reply_next_object_value_array(Tctx::#confd_trans_ctx{}, Values, Next::term()) -&gt; ok | {error, Reason::term()}</tt>
+<ul class="definitions"><li><tt>Values = [V::<a href="#type-value">value()</a>] | {exml, [TV::<a href="#type-tagval">tagval()</a>]} | false</tt></li></ul></p>
+</div><p>Reply with values and next key for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response,
+  and get_next_object() callback.</p>
+
+<h3 class="function"><a name="data_reply_next_object_value_arrays-3">data_reply_next_object_value_arrays/3</a></h3>
+<div class="spec">
+<p><tt>data_reply_next_object_value_arrays(Tctx::#confd_trans_ctx{}, Objects, TimeoutMillisecs::integer()) -&gt; ok | {error, Reason::term()}</tt>
+<ul class="definitions"><li><tt>Objects = [ValObject | TagValObject | false]</tt></li><li><tt>ValObject = {[V::value], Next::term()}</tt></li><li><tt>TagValObject = {{exml, [TV::<a href="#type-tagval">tagval()</a>]}, Next::term()}</tt></li></ul></p>
+</div><p>Reply with multiple objects, each with values and next key, plus
+  cache timeout, for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response,
+  and get_next_object() callback.</p>
+
+<h3 class="function"><a name="data_reply_not_found-1">data_reply_not_found/1</a></h3>
+<div class="spec">
+<p><tt>data_reply_not_found(Tctx::#confd_trans_ctx{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply 'not found' for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response.</p>
+
+<h3 class="function"><a name="data_reply_ok-1">data_reply_ok/1</a></h3>
+<div class="spec">
+<p><tt>data_reply_ok(Tctx::#confd_trans_ctx{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply 'ok' for delayed_response.
+  This function can be used explicitly by the erlang application
+  if a data callback returns the atom delayed_response. In that
+  case it is the responsibility of the application to later
+  invoke one of the data_reply_xxx() functions. If delayed_response is
+  not used, none of the explicit data replying functions need to be used.</p>
+
+<h3 class="function"><a name="data_reply_tag_value_array-2">data_reply_tag_value_array/2</a></h3>
+<div class="spec">
+<p><tt>data_reply_tag_value_array(Tctx::#confd_trans_ctx{}, TagVals::[<a href="#type-tagval">tagval()</a>]) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply a list of tagged values for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response,
+  and get_object() callback.</p>
+
+<h3 class="function"><a name="data_reply_value-2">data_reply_value/2</a></h3>
+<div class="spec">
+<p><tt>data_reply_value(Tctx::#confd_trans_ctx{}, V::<a href="#type-value">value()</a>) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Reply a value for delayed_response.
+  This function can be used explicitly by the erlang application
+  if a data callback returns the atom delayed_response. In that
+  case it is the responsibility of the application to later
+  invoke one of the data_reply_xxx() functions. If delayed_response is
+  not used, none of the explicit data replying functions need to be used.</p>
+
+<h3 class="function"><a name="data_reply_value_array-2">data_reply_value_array/2</a></h3>
+<div class="spec">
+<p><tt>data_reply_value_array(Tctx::#confd_trans_ctx{}, Values) -&gt; ok | {error, Reason::term()}</tt>
+<ul class="definitions"><li><tt>Values = [V::<a href="#type-value">value()</a>] | {exml, [TV::<a href="#type-tagval">tagval()</a>]}</tt></li></ul></p>
+</div><p>Reply a list of values for delayed_response.
+  Like data_reply_value() - only used in combination with delayed_response,
+  and get_object() callback.</p>
+
+<h3 class="function"><a name="data_set_timeout-2">data_set_timeout/2</a></h3>
+<div class="spec">
+<p><tt>data_set_timeout(Tctx::#confd_trans_ctx{}, Seconds::integer()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Extend (or shorten) the timeout for the current callback invocation.
+  The timeout is given in seconds from the point in time when the function
+  is called.</p>
+
+<h3 class="function"><a name="decrypt-1">decrypt/1</a></h3>
+<div class="spec">
+<p><tt>decrypt(X1::binary()) -&gt; {ok, binary()} | {error, {Ecode::integer(), Reason::binary()}}</tt><br></p>
+</div><p>Decrypts a value of type tailf:des3-cbc-encrypted-string
+  or tailf:aes-cfb-128-encrypted-string. Requires that
+  econfd_maapi:install_crypto_keys/1 has been called in the node.</p>
+
+<h3 class="function"><a name="init_daemon-6">init_daemon/6</a></h3>
+<div class="spec">
+<p><tt>init_daemon(Name::atom(), DebugLevel::integer(), Estream::<a href="#type-io_device">io_device()</a>, Dopaque::term(), Ip::<a href="#type-ip">ip()</a>, Port::integer()) -&gt; {ok, Pid::pid()} | {error, Reason::term()}</tt><br></p>
+</div><p><p>Starts and links to a gen_server which connects to ConfD.  
+This gen_server holds two sockets to ConfD, one so called control  
+socket and one worker socket (See confd_lib_dp(3) for an explanation  
+of those sockets.)</p>
+ 
+  <p>The gen_server is used to install sets of callback Funs.  The  
+gen_server state is a #confd_daemon_ctx{}. This structure is passed  
+to all the callback functions.</p>
+ 
+  <p>The daemon context includes a d_opaque element holding the Dopaque  
+term - this can be used by the application to pass application  
+specific data into the callback functions.</p>
+ 
+  <p>The Name::atom() parameter is used in various debug printouts and  
+is also used to uniquely identify the daemon.</p>
+ 
+  <p>The  DebugLevel parameter is used to control the  
+debug level. The following levels are available:</p>
+ 
+  <ul><li>?CONFD_SILENT
+         No debug printouts whatsoever are produced by the library.
+ </li><li>
+ ?CONFD_DEBUG
+        Various printouts will occur for various error conditions.
+ </li><li>
+ ?CONFD_TRACE
+        The execution of callback functions will be traced.
+ </li></ul>
+        The Estream parameter is used by all printouts from the
+        library.</p>
+
+<h3 class="function"><a name="log-2">log/2</a></h3>
+<div class="spec">
+<p><tt>log(Level::integer(), Fmt::string()) -&gt; ok</tt><br></p>
+</div><p>Logs Fmt to devel.log if running internal, otherwise to
+  standard out. Level can be one of ?CONFD_LEVEL_ERROR |
+  ?CONFD_LEVEL_INFO | ?CONFD_LEVEL_TRACE</p>
+
+<h3 class="function"><a name="log-3">log/3</a></h3>
+<div class="spec">
+<p><tt>log(Level::integer(), Fmt::string(), Args::list()) -&gt; ok</tt><br></p>
+</div><p>Logs Fmt with Args to devel.log if running internal,
+  otherwise to standard out. Level can be one of
+  ?CONFD_LEVEL_ERROR | ?CONFD_LEVEL_INFO | ?CONFD_LEVEL_TRACE</p>
+
+<h3 class="function"><a name="log-4">log/4</a></h3>
+<div class="spec">
+<p><tt>log(IoDevice::<a href="io.html#type-device">io:device()</a>, Level::integer(), Fmt::string(), Args::list()) -&gt; ok</tt><br></p>
+</div><p>Logs Fmt with Args to devel.log if running internal,
+  otherwise to IoDevice. Level can be one of
+  ?CONFD_LEVEL_ERROR | ?CONFD_LEVEL_INFO | ?CONFD_LEVEL_TRACE</p>
+
+<h3 class="function"><a name="notification_replay_complete-1">notification_replay_complete/1</a></h3>
+<div class="spec">
+<p><tt>notification_replay_complete(Nctx::#confd_notification_ctx{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Call this function when replay is done</p>
+
+<h3 class="function"><a name="notification_replay_failed-2">notification_replay_failed/2</a></h3>
+<div class="spec">
+<p><tt>notification_replay_failed(Nctx::#confd_notification_ctx{}, ErrorString::binary()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Call this function when replay has failed for some reason</p>
+
+<h3 class="function"><a name="notification_send-3">notification_send/3</a></h3>
+<div class="spec">
+<p><tt>notification_send(Nctx::#confd_notification_ctx{}, DateTime::<a href="#type-datetime">datetime()</a>, TagVals::[<a href="#type-tagval">tagval()</a>]) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Send an XML notification.</p>
+
+<h3 class="function"><a name="pp_kpath-1">pp_kpath/1</a></h3>
+<div class="spec">
+<p><tt>pp_kpath(IKP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; <a href="#type-io_list">io_list()</a></tt><br></p>
+</div><p>Pretty print an ikeypath.</p>
+
+<h3 class="function"><a name="pp_value-1">pp_value/1</a></h3>
+<div class="spec">
+<p><tt>pp_value(V::<a href="#type-value">value()</a>) -&gt; <a href="#type-io_list">io_list()</a></tt><br></p>
+</div><p>Pretty print a value.</p>
+
+<h3 class="function"><a name="register_action_cb-2">register_action_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_action_cb(Daemon::pid(), ActionCbs::#confd_action_cb{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register action callback on an actionpoint</p>
+
+<h3 class="function"><a name="register_authentication_cb-2">register_authentication_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_authentication_cb(Daemon::pid(), AuthenticationCb::#confd_authentication_cb{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register authentication callback.
+  Note, this can not be used to *perform* the authentication.</p>
+
+<h3 class="function"><a name="register_data_cb-2">register_data_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_data_cb(Daemon::pid(), DbCbs::#confd_data_cbs{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register the data callbacks.</p>
+
+<h3 class="function"><a name="register_db_cbs-2">register_db_cbs/2</a></h3>
+<div class="spec">
+<p><tt>register_db_cbs(Daemon::pid(), DbCbs::#confd_db_cbs{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register extern db callbacks.</p>
+
+<h3 class="function"><a name="register_done-1">register_done/1</a></h3>
+<div class="spec">
+<p><tt>register_done(Daemon::pid()) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>This function must be called when all callback registrations are done</p>
+
+<h3 class="function"><a name="register_notification_stream-2">register_notification_stream/2</a></h3>
+<div class="spec">
+<p><tt>register_notification_stream(Daemon::pid(), NotifCbs::#confd_notification_stream_cbs{}) -&gt; {ok, #confd_notification_ctx{}} | {error, Reason::term()}</tt><br></p>
+</div><p>Register notif callbacks on an streamname</p>
+
+<h3 class="function"><a name="register_range_data_cb-5">register_range_data_cb/5</a></h3>
+<div class="spec">
+<p><tt>register_range_data_cb(Daemon::pid(), DataCbs::#confd_data_cbs{}, Lower::[Lower::<a href="#type-value">value()</a>], Higher::[Higher::<a href="#type-value">value()</a>], IKP::<a href="#type-ikeypath">ikeypath()</a>) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register data callbacks for a range of keys.</p>
+
+<h3 class="function"><a name="register_trans_cb-2">register_trans_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_trans_cb(Daemon::pid(), TransCbs::#confd_trans_cbs{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register transaction phase callbacks.
+  See confd_lib_dp(3) for a thorough description of the transaction phases.
+  The record #confd_trans_cbs{} contains callbacks for all of the
+  phases for a transaction. If we use this external data api only for
+  statistics data only the init() and the finish() callbacks should be
+  used.  The init() callback must return 'ok', {error, String}, or {ok, Tctx}
+  where Tctx is the same #confd_trans_ctx that was supplied to the
+  init callback but possibly with the opaque field filled in. This field
+  is meant to be used by the user to manage user data.</p>
+
+<h3 class="function"><a name="register_trans_validate_cb-2">register_trans_validate_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_trans_validate_cb(Daemon::pid(), ValidateCbs::#confd_trans_validate_cbs{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register validation transaction callback.
+  This function maps an init and a finish function for validations.
+  See seme function in confd_lib_dp(3)
+  The init() callback must return 'ok', {error, String}, or {ok, Tctx}
+  where Tctx is the same #confd_trans_ctx that was supplied to the
+  init callback but possibly with the opaque field filled in.</p>
+
+<h3 class="function"><a name="register_valpoint_cb-2">register_valpoint_cb/2</a></h3>
+<div class="spec">
+<p><tt>register_valpoint_cb(Daemon::pid(), ValpointCbs::#confd_valpoint_cb{}) -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Register validation callback on a valpoint</p>
+
+<h3 class="function"><a name="set_daemon_d_opaque-2">set_daemon_d_opaque/2</a></h3>
+<div class="spec">
+<p><tt>set_daemon_d_opaque(Daemon::pid(), Dopaque::term()) -&gt; ok</tt><br></p>
+</div><p>Set the d_opaque field in the daemon which is typically used by
+  the callbacks</p>
+
+<h3 class="function"><a name="set_daemon_flags-2">set_daemon_flags/2</a></h3>
+<div class="spec">
+<p><tt>set_daemon_flags(Daemon::pid(), Flags::integer()) -&gt; ok</tt><br></p>
+</div><p>Change the flag settings for a daemon. See ?CONFD_DAEMON_FLAG_XXX
+  in econfd.hrl for the available flags. This function should be called
+  immediately after creating the daemon context with init_daemon/6.</p>
+
+<h3 class="function"><a name="set_debug-3">set_debug/3</a></h3>
+<div class="spec">
+<p><tt>set_debug(Daemon::pid(), DebugLevel::integer(), Estream::<a href="#type-io_device">io_device()</a>) -&gt; ok</tt><br></p>
+</div><p>Change the DebugLevel and/or Estream for a running daemon</p>
+
+<h3 class="function"><a name="start-0">start/0</a></h3>
+<div class="spec">
+<p><tt>start() -&gt; ok | {error, Reason::term()}</tt><br></p>
+</div><p>Starts the econfd application.</p>
+
+<h3 class="function"><a name="stop_daemon-1">stop_daemon/1</a></h3>
+<div class="spec">
+<p><tt>stop_daemon(Daemon::pid()) -&gt; ok</tt><br></p>
+</div><p>Silently stop a daemon</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Mar 2 2018, 14:41:25.</i></p>
+</body>
+</html>
