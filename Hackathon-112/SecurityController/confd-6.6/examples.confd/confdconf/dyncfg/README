@@ -1,0 +1,62 @@
+Example: Configuring ConfD itself
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example shows how you can use ConfD to configure ConfD itself
+using a YANG data model (confd_dyncfg.yang) that is bundled with the ConfD
+release.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp'.
+
+When you compile and start ConfD with this example you will notice
+that there is a confdConfig configurable. Play around with it and see
+what you can do. For example, first changing the prompt in edit-mode
+in the J-style CLI can be done like this (not supported in ConfD Free):
+
+  > make clean
+  > make all
+  > make start
+  > make cli
+
+  > configure
+  % set confdConfig cli prompt1 "Command: "
+  % commit
+  Commit complete
+  % exit
+  Command: exit
+
+And for C-style CLI:
+
+  # config
+  (config)# confdConfig cli cPrompt1 "Command: "
+  (config)# commit
+  (config)# exit
+  Command: exit
+
+
+Further you can disable the CLI using
+
+  % set confdConfig cli disabled
+  % commit
+
+Which drops you back to the shell-prompt, and "make cli" will not help
+you here. Try netconf-console to enable it again, like this
+
+  > $CONFD_DIR/bin/netconf-console enable-cli.xml
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
+  + The "Storing ConfD configuration parameters in CDB" section in the
+    "Advanced Topics" chapter of the Users Guide.
+  + The confd.conf.5 man-page
+  + The example snmpa/6-dyncfg
+

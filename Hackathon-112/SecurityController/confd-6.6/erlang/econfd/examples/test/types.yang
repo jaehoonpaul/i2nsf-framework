@@ -1,0 +1,212 @@
+module types {
+  namespace "http://tail-f.com/ns/example/types";
+  prefix types;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-xsd-types {
+    prefix xs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  identity crypto-alg;
+  identity des {
+    base crypto-alg;
+  }
+  identity aes {
+    base crypto-alg;
+  }
+
+  typedef collection-interval-type {
+    type enumeration {
+      enum 15-mins;
+      enum 30-mins;
+      enum 60-mins;
+      enum 24-hrs;
+    }
+  }
+  typedef reliability-type {
+    type enumeration {
+      enum complete;
+      enum incomplete;
+      enum unavailable;
+      enum invalid;
+    }
+  }
+  grouping register-info-type {
+    leaf group-set {
+      type string;
+    }
+    leaf group-name {
+      type string;
+    }
+    leaf group-reliability {
+      type reliability-type;
+      mandatory true;
+    }
+    leaf register-name {
+      type string;
+      mandatory true;
+    }
+    leaf register-value {
+      type uint32;
+      mandatory true;
+    }
+    leaf reliability {
+      type reliability-type;
+      mandatory true;
+    }
+  }
+  typedef myFlags64 {
+    type bits {
+      bit turboMode { position 0; }
+      bit enableQOS { position 1; }
+      bit strongEncryption { position 7; }
+      bit makeit64 { position 40; }
+    }
+  }
+  typedef myFlags32 {
+    type bits {
+      bit turboMode { position 0; }
+      bit enableQOS { position 1; }
+      bit strongEncryption { position 7; }
+    }
+  }
+  typedef myFlagsBig {
+    type bits {
+      bit turboMode { position 0; }
+      bit enableQOS { position 1; }
+      bit strongEncryption { position 7; }
+      bit makeitbig { position 72; }
+    }
+  }
+  typedef miffoType {
+    type uint32 {
+      range "min .. 1999";
+    }
+  }
+  grouping struct {
+    leaf int {
+      type int32;
+      mandatory true;
+    }
+    leaf string {
+      type string;
+      mandatory true;
+    }
+  }
+  container root {
+    container x {
+      presence "";
+      container foo {
+        container bar {
+          leaf-list baz {
+            type miffoType;
+          }
+        }
+      }
+      leaf-list strlst {
+        type string;
+      }
+      leaf c_int8 {
+        type int8;
+        mandatory true;
+      }
+      leaf c_int16 {
+        type int16;
+        mandatory true;
+      }
+      leaf c_int32 {
+        type int32;
+        mandatory true;
+      }
+      leaf c_int64 {
+        type int64;
+        mandatory true;
+      }
+      leaf c_uint8 {
+        type uint8;
+        mandatory true;
+      }
+      leaf c_uint16 {
+        type uint16;
+        mandatory true;
+      }
+      leaf c_uint32 {
+        type uint32;
+        mandatory true;
+      }
+      leaf c_uint64 {
+        type uint64;
+        mandatory true;
+      }
+      leaf b {
+        type boolean;
+        mandatory true;
+      }
+      leaf f {
+        type xs:float;
+        mandatory true;
+      }
+      leaf datetime {
+        type yang:date-and-time;
+        mandatory true;
+      }
+      leaf date {
+        type xs:date;
+        mandatory true;
+      }
+      leaf time {
+        type xs:time;
+        mandatory true;
+      }
+      leaf duration {
+        type xs:duration;
+        mandatory true;
+      }
+      leaf b32 {
+        type myFlags32;
+        mandatory true;
+      }
+      leaf b64 {
+        type myFlags64;
+        mandatory true;
+      }
+      leaf bbig {
+        type myFlagsBig;
+        mandatory true;
+      }
+      leaf c_ipv4 {
+        type inet:ipv4-address;
+        mandatory true;
+      }
+      leaf c_ipv6 {
+        type inet:ipv6-address;
+        mandatory true;
+      }
+      leaf c_dns {
+        type inet:domain-name;
+        mandatory true;
+      }
+      leaf oref {
+        type instance-identifier;
+        mandatory true;
+      }
+      leaf idref {
+        type identityref {
+          base crypto-alg;
+        }
+      }
+      leaf port {
+        type string;
+        tailf:typepoint port_type;
+      }
+    }
+  }
+}

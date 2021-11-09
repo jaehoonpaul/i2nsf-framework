@@ -1,0 +1,87 @@
+module sys {
+  namespace "urn:sys";
+  prefix sys;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  typedef interface-name {
+    type string {
+      length "min .. 30";
+      pattern "[A-Za-z][^/:.]*";
+    }
+  }
+
+
+  container sys {
+
+    container numbers {
+      leaf odd {
+        type int32;
+        default 1;
+        must "(. mod 2) = 1" {
+          error-message "can only be an odd number";
+        }
+      }
+    }
+
+    list ifc {
+      key name;
+      max-elements 1024;
+
+      leaf name {
+        type interface-name;
+      }
+
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+
+      leaf-list ipv4addr {
+        type inet:ipv4-address;
+        max-elements 8;
+        // This expression ensures that an address is unique over all interfaces
+        must "count(/sys/ifc/ipv4addr[. = current()]) = 1" {
+          error-message "Address has to be unique";
+        }
+      }
+
+      list labels {
+        key string;
+        max-elements 16;
+        description "A label is an alphanumeric string assigned to an
+                     interface. Each interface can have many labels. The
+                     purpose here is simply to show a must validation that
+                     requires the labels to be unique for all interfaces.";
+        leaf string {
+          type string {
+            length "1..31";
+            pattern "[a-zA-Z][a-zA-Z0-9_-]*";
+          }
+          must "not(/sys:sys/sys:ifc[name = current()])" {
+            error-message
+              "A label can not be the same as an interface name";
+          }
+          must "count(/sys/ifc/labels[string = current()]) = 1" {
+            error-message "All labels must be unique";
+          }
+        }
+      }
+
+      leaf weight {
+        type uint32 {
+          range "0..1000";
+        }
+        default 100;
+        description "The weight of the interface, used to demonstrate a
+                     validation where the total sum of the weight can not
+                     exceed a constant for all enabled interface";
+        must "sum(/sys/ifc[enabled = 'true']/weight) < 1000" {
+          error-message "The total weight must not exceed 1000";
+        }
+      }
+    }
+  }
+}

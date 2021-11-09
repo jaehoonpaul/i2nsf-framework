@@ -1,0 +1,36 @@
+module scli {
+  namespace "http://tail-f.com/ns/example/scli";
+  prefix scli;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  container root {
+    leaf foo {
+      type string;
+      default fooo;
+    }
+    leaf bar {
+      type int32;
+      default 66;
+    }
+    container servers {
+      list server {
+        key name;
+        max-elements 64;
+        leaf name {
+          type string;
+        }
+        leaf ip {
+          type inet:ip-address;
+          mandatory true;
+        }
+        leaf port {
+          type inet:port-number;
+          mandatory true;
+        }
+      }
+    }
+  }
+}

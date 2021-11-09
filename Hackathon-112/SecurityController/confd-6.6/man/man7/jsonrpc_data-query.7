@@ -1,0 +1,374 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "JSONRPC_DATA\-QUERY" "" "February 2016" "" ""
+.
+.SH "NAME"
+\fBjsonrpc_data\-query\fR
+.
+.SH "METHOD query"
+Starts a new query attached to a transaction handle, retrieves the results, and stops the query immediately\. This is a convenience method for calling \fBstart_query\fR, \fBrun_query\fR and \fBstop_query\fR in a one\-time sequence\.
+.
+.P
+This method should not be used for paginated results, as it results in performance degradation \- use \fBstart_query\fR, multiple \fBrun_query\fR, and \fBstop_query\fR instead\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess11635875109111642;"
+    \-X POST
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "query", \e
+         "params": {"th": 1, \e
+                    "xpath_expr": "/dhcp:dhcp/dhcp:foo", \e
+                    "result_as": "keypath\-value"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ {"current_position": 2,
+  "total_number_of_results": 4,
+  "number_of_results": 2,
+  "number_of_elements_per_result": 2,
+  "results": ["foo", "bar"]}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD start_query"
+Starts a new query attached to a transaction handle\. On success a query handle is returned to be in subsequent calls to \fBrun_query\fR\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"th": <number>,
+ "xpath_expr": <string, optional if path is given>,
+ "path": <string, keypath, optional if xpath_expr is given>,
+ "selection": <array of xpath expressions, optional>
+ "chunk_size": <number, optional>
+ "initial_offset": <number, optional>,
+ "sort", <array of xpath expressions, optional>,
+ "sort_order": <"ascending" | "descending", optional>,
+ "include_total": <boolean, default: true>,
+ "context_node": <string, keypath, optional>,
+ "result_as": <"string" | "keypath\-value", default: "string">}
+.
+.fi
+.
+.P
+The \fBxpath_expr\fR param is the primary XPath expression to base the query on\.  Alternatively, one can give a keypath as the \fBpath\fR param, and internally the keypath will be translated into an XPath expression\.
+.
+.P
+A query is a way of evaluating an XPath expression and returning the results in chunks\. The primary XPath expression must evaluate to a node\-set, i\.e\. the result\. For each node in the result a \fBselection\fR Xpath expression is evaluated with the result node as its context node\.
+.
+.P
+\fBNote\fR: The terminology used here is as defined in http://en\.wikipedia\.org/wiki/XPath\.
+.
+.P
+For example, given this YANG snippet:
+.
+.IP "" 4
+.
+.nf
+
+list interface {
+  key name;
+  unique number;
+  leaf name {
+    type string;
+  }
+  leaf number {
+    type uint32;
+    mandatory true;
+  }
+  leaf enabled {
+    type boolean;
+    default true;
+  }
+}
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The \fBxpath_expr\fR could be \fB/interface[enabled=\'true\']\fR and \fBselection\fR could be \fB{ "name", "number" }\fR\.
+.
+.P
+Note that the \fBselection\fR expressions must be valid XPath expressions, e\.g\. to figure out the name of an interface and whether its number is even or not, the expressions must look like: \fB{ "name", "(number mod 2) == 0" }\fR\.
+.
+.P
+The result are then fetched using \fBrun_query\fR, which returns the result on the format specified by \fBresult_as\fR param\.
+.
+.P
+There are two different types of result:
+.
+.IP "\(bu" 4
+\fBstring\fR result is just an array with resulting strings of evaluating the \fBselection\fR XPath expressions
+.
+.IP "\(bu" 4
+\fBkeypath\-value\fR result is an array the keypaths or values of the node that the \fBselection\fR XPath expression evaluates to\.
+.
+.IP "" 0
+.
+.P
+This means that care must be taken so that the combination of \fBselection\fR expressions and return types actually yield sensible results (for example \fB1 + 2\fR is a valid \fBselection\fR XPath expression, and would result in the string \fB3\fR when setting the result type to \fBstring\fR \- but it is not a node, and thus have no keypath\-value\.
+.
+.P
+It is possible to sort the result using the built\-in XPath function \fBsort\-by()\fR but it is also also possible to sort the result using expressions specified by the \fBsort\fR param\. These expressions will be used to construct a temporary index which will live as long as the query is active\. For example to start a query sorting first on the enabled leaf, and then on number one would call:
+.
+.IP "" 4
+.
+.nf
+
+$\.post("/jsonrpc", {
+  jsonrpc: "2\.0",
+  id: 1,
+  method: "start_query",
+  params:  {
+    th: 1,
+    xpath_expr: "/interface[enabled=\'true\']",
+    selection: ["name", "number", "enabled"],
+    sort: ["enabled", "number"]
+  }
+})
+    \.done(\.\.\.);
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The \fBcontext_node\fR param is a keypath pointing out the node to apply the query on; only taken into account when the \fBxpath_expr\fR uses relatives paths\. Lack of a \fBcontext_node\fR, turns relatives paths into absolute paths\.
+.
+.P
+The \fBchunk_size\fR param specifies how many result entries to return at a time\. If set to 0 a default number will be used\.
+.
+.P
+The \fBinitial_offset\fR param is the result entry to begin with (1 means to start from the beginning)\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"qh": <number>}
+.
+.fi
+.
+.P
+A new query handler handler id to be used when calling \fBrun_query\fR etc
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess11635875109111642;"
+    \-X POST
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "start_query", \e
+         "params": {"th": 1, \e
+                    "xpath_expr": "/dhcp:dhcp/dhcp:foo", \e
+                    "result_as": "keypath\-value"}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": 47}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD run_query"
+Retrieves the result to a query (as chunks)\. For more details on queries please read the description of "start_query"\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"qh": <number>}
+.
+.fi
+.
+.P
+The \fBqh\fR param is as returned from a call to "start_query"\.
+.
+.SS "RESULT"
+.
+.nf
+
+{"position": <number>,
+ "total_number_of_results": <number>,
+ "number_of_results": <number>,
+ "chunk_size": <number>,
+ "result_as": <"string" | "keypath\-value">,
+ "results": <array of result>}
+
+result = <string> |
+         {"keypath": <string>, "value": <string>}
+.
+.fi
+.
+.P
+The \fBposition\fR param is the number of the first result entry in this chunk, i\.e\. for the first chunk it will be 1\.
+.
+.P
+How many result entries there are in this chunk is indicated by the \fBnumber_of_results\fR param\. It will be 0 for the last chunk\.
+.
+.P
+The \fBchunk_size\fR and the \fBresult_as\fR properties are as given in the call to \fBstart_query\fR\.
+.
+.P
+The \fBtotal_number_of_results\fR param is total number of result entries retrieved so far\.
+.
+.P
+The \fBresult\fR param is as described in the description of \fBstart_query\fR\.
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie "sessionid=sess11635875109111642;" \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "run_query", \e
+         "params": {"qh": 22}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result":
+ {"current_position": 2,
+  "total_number_of_results": 4,
+  "number_of_results": 2,
+  "number_of_elements_per_result": 2,
+  "results": ["foo", "bar"]}}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD reset_query"
+Reset/rewind a running query so that it starts from the beginning again\. Next call to "run_query" will then return the first chunk of result entries\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"qh": <number>}
+.
+.fi
+.
+.P
+The \fBqh\fR param is as returned from a call to \fBstart_query\fR\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "reset_query", \e
+         "params": {"qh": 67}}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": true}
+.
+.fi
+.
+.IP "" 0
+.
+.SH "METHOD stop_query"
+Stops the running query identified by query handler\. If a query is not explicitly closed using this call it will be cleaned up when the transaction the query is linked to ends\.
+.
+.SS "PARAMS"
+.
+.nf
+
+{"qh": <number>}
+.
+.fi
+.
+.P
+The \fBqh\fR param is as returned from a call to "start_query"\.
+.
+.SS "RESULT"
+.
+.nf
+
+{}
+.
+.fi
+.
+.SS "EXAMPLE"
+.
+.nf
+
+curl \e
+    \-\-cookie \'sessionid=sess12541119146799620192;\' \e
+    \-X POST \e
+    \-H \'Content\-Type: application/json\' \e
+    \-d \'{"jsonrpc": "2\.0", "id": 1, \e
+         "method": "stop_query", \e
+         "params": {"qh": 67}\' \e
+    http://127\.0\.0\.1:8008/jsonrpc
+.
+.fi
+.
+.IP "" 4
+.
+.nf
+
+{"jsonrpc": "2\.0",
+ "id": 1,
+ "result": true}
+.
+.fi
+.
+.IP "" 0
+

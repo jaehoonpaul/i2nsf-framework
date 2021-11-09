@@ -1,0 +1,16 @@
+
+This example demonstrated how to use the built in ConfD crypto types.
+We have an application (called crypto_cdb) which reads the encrypted
+data from CDB and then use the DES3 and the AES keys defined in confd.conf
+to decrypt the data.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+

@@ -1,0 +1,34 @@
+module types {
+  namespace "http://tail-f.com/ns/example/types";
+  prefix types;
+
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  typedef port-type {
+    type string;
+    tailf:info "shelf/slot/port";
+    tailf:typepoint port_type;
+  }
+  container system {
+    list port {
+      key name;
+      leaf name {
+        type port-type;
+      }
+      leaf ip {
+        type inet:ip-address;
+      }
+    }
+    leaf mgmt-port {
+      type port-type;
+      default "0/0/0";
+    }
+  }
+}

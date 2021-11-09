@@ -1,0 +1,24 @@
+Example to show how we can run a transform internally in the ConfD
+daemon. The logic of the transform is the same as in the
+misc/aaa_transform example, but here implemented in Erlang and using the
+"econfd" API to ConfD. The compiled .beam file is placed in the load
+path (as specified by /confdConfig/loadPath/dir in confd.conf), and then
+loaded by ConfD at startup.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+NOTE: To run this example, you need to either use $CONFD_DIR/bin/erlc
+or have an Erlang/OTP installation with a version that is not newer
+than the one listed in the $CONFD_DIR/VERSION file, and the 'erlc'
+compiler from that installation in your $PATH.
+
+For more information, read the section "Running application code inside
+ConfD" in the "Advanced Topics" chapter of the User Guide.

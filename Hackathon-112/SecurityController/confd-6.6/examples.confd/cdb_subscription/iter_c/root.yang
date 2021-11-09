@@ -1,0 +1,31 @@
+module root {
+  namespace "http://tail-f.com/ns/example/root";
+  prefix root;
+
+  container root {
+    container NodeB {
+      list RFHead {
+        key dn;
+        max-elements 3;
+        leaf dn {
+          type int64;
+        }
+        leaf SECTORID_ID {
+          type string;
+          default "N/A";
+        }
+        list Child {
+          key cdn;
+          max-elements 2;
+          leaf cdn {
+            type int64;
+          }
+          leaf childAttr {
+            type string;
+            default "N/A";
+          }
+        }
+      }
+    }
+  }
+}

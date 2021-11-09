@@ -1,0 +1,28 @@
+{
+    "ietf-i2nsf-cfi-policy:policy": {
+        "endpoint-group": {
+            "user-group": [
+                {
+                    "name": "Test",
+                    "range-ip-address": [
+                        {
+                            "start-ip-address": "115.145.178.185",
+                            "end-ip-address": "115.145.178.190"
+                        }
+                    ]
+                }
+            ],
+            "device-group": [
+                {
+                    "name": null,
+                    "range-ip-address": [
+                        {
+                            "start-ip-address": null,
+                            "end-ip-address": null
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

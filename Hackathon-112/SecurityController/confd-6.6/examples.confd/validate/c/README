@@ -1,0 +1,116 @@
+Simple C Validation Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example demonstrates how a simple validation function may be
+attached to an element in the YANG model. The validation function is
+called during validation (the first stage of a transaction), and
+either approves or fails the validation.
+
+In many cases there is no need for a validation function at all since
+many common constraints on valid configurations can be expressed
+directly in the YANG model.
+
+If this is not enough, more complex validations can be expressed
+programatically. A typical example would be when the validity of an
+element depends on the values of other elements.
+
+Another reason for having a validation function could be to present a
+warning to the user. This could be useful to warn about non-standard
+or non-supported configurations, or configurations that would have
+severe consequences, such as disconnecting current users.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+What the Example does
+~~~~~~~~~~~~~~~~~~~~~
+
+This example uses a configuration of two integers, a and b. A
+validation function validates that a is always larger than b.
+
+The name of the validation function is in principle specified in the
+YANG file. In this example we have chosen to use a YANG
+annotation file to name the validation function. This allows us to add
+or remove validation functions without modifying the data model. 
+
+For Juniper CLI see line that begins with (J). Not available in ConfD Free.
+For Cisco XR CLI see line that begins with (C). 
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing 
+
+        $ make all start
+
+ 2. In a different shell, start the CLI and display the configuration
+
+        $ make cli
+        ...
+
+        (J) admin@localhost> show configuration mtest | details
+
+        (C) localhost# show running-config mtest | details
+
+	mtest a_number 42;
+	mtest b_number 7;
+	[ok][...]
+
+ 3. Configure the values so that a_number is larger than b_number
+
+        (J) admin@localhost> configure
+        (J) admin@localhost% edit mtest
+        (J) admin@localhost% set a_number 15
+        (J) admin@localhost% set b_number 8
+        (J) admin@localhost% commit
+
+        (C) localhost# config
+        (C) localhost(config)# mtest a_number 15
+        (C) localhost(config)# mtest b_number 8
+        (C) localhost(config)# commit
+
+ 4. Attempt to mis-configure by changing a_number
+
+        (J) admin@localhost% set a_number 8
+
+        (C) localhost(config)# mtest a_number 8
+
+        (J/C) admin@localhost% commit
+	
+        Aborted: 'mtest a_number': a_number is <= b_number
+	[error][...]
+        
+        (J/C) admin@localhost% revert
+        
+        All configuration changes will be lost. Proceed? [yes,no] yes
+        [ok][...]
+
+ 5. Attempt to mis-configure by changing b_number
+
+        (J) admin@localhost% edit mtest
+        (J) admin@localhost% set b_number 99
+        (J) admin@localhost% commit
+
+        (C) localhost(config)# mtest b_number 99
+        (C) localhost(config)# commit
+        	
+        Aborted: 'mtest a_number': a_number is <= b_number
+	[error][...]
+        
+        (J/C) admin@localhost% revert
+        
+        All configuration changes will be lost. Proceed? [yes,no] yes
+        [ok][...]
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: Semantic Validation
+

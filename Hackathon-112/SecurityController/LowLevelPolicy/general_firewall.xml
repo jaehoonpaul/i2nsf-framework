@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<capabilities>
+<capability>urn:ietf:params:netconf:base:1.0</capability>
+</capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="1" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<edit-config>
+ <target>
+<running />
+</target>
+<config>
+<i2nsf-security-policy xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-policy-rule-for-nsf" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"><system-policy>
+  <system-policy-name>security_policy_for_ddos_attacks</system-policy-name>
+  <rules>
+    <rule-name>100_packets_per_second</rule-name>
+    <condition-clause-container>
+      <packet-security-ipv4-condition>
+        <pkt-sec-ipv4-dest>
+          <ipv4-address>
+            <ipv4>221.159.112.95</ipv4>
+          </ipv4-address>
+        </pkt-sec-ipv4-dest>
+      </packet-security-ipv4-condition>
+      <packet-security-tcp-condition>
+        <pkt-sec-tcp-dest-port-num>
+          <port-num>80</port-num>
+          <port-num>443</port-num>
+        </pkt-sec-tcp-dest-port-num>
+      </packet-security-tcp-condition>
+      <packet-security-ddos-condition>
+        <pkt-sec-alert-rate>100</pkt-sec-alert-rate>
+      </packet-security-ddos-condition>
+    </condition-clause-container>
+    <action-clause-container>
+      <packet-action>
+        <ingress-action>pass</ingress-action>
+        <egress-action>pass</egress-action>
+      </packet-action>
+      <advanced-action>
+        <attack-mitigation-control>http_and_https_flood</attack-mitigation-control>
+      </advanced-action>
+    </action-clause-container>
+  </rules>
+</system-policy></i2nsf-security-policy>
+</config>
+</edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc message-id="2" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<close-session />
+</rpc>
+]]>]]>

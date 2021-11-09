@@ -1,0 +1,896 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;7.&nbsp;The external database API</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Operational Data"><link rel="next" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Configuration Meta-Data"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;7.&nbsp;The external database API</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch06.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch08.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.ext_data"></a>Chapter&nbsp;7.&nbsp;The external database API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch07.html#d5e2084">7.1. Introduction to external data</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2091">7.2. Scenario - The database is a file</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2098">7.3. Callpoints and callbacks</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2110">7.4. Data Callbacks</a></span></dt><dt><span class="sect1"><a href="ch07.html#ug.ext_data.user_sessions">7.5. User sessions and ConfD Transactions</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2220">7.6. External configuration data</a></span></dt><dt><span class="sect1"><a href="ch07.html#ug.ext_data.conf_trans">7.7. External configuration data with transactions</a></span></dt><dt><span class="sect1"><a href="ch07.html#ug.ext_data.writable_operational">7.8. Writable operational data</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2397">7.9. Supporting candidate commit</a></span></dt><dt><span class="sect1"><a href="ch07.html#d5e2465">7.10. Discussion - CDB versus external DB</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2084"></a>7.1.&nbsp;Introduction to external data</h2></div></div></div><p>
+          In the previous chapter we showed how to use ConfD with
+          read-only operational data. In this chapter we will use the
+          same APIs from <code class="filename">libconfd.so</code> to implement
+          externally stored configuration data. This is the opposite
+          of CDB, if CDB is used to store the configuration data, this
+          section can be skipped.
+        </p><p>
+          We show how ConfD can
+          use an external database as data source. The external data
+          base can either be a full-fledged real data base or
+          something as simple as a text file.
+        </p><p>
+          The configuration of the network device is modeled by a
+          YANG module. It describes the data model of the
+          device and ConfD needs to populate the XML data tree with
+          actual data.
+        </p><p>
+          If the ConfD built-in XML database (CDB) is used to hold all
+          configuration data, ConfD will automatically read and write
+          into that database.  If, on the other hand, the actual
+          configuration data is kept outside of ConfD we need user
+          supplied code to provide ConfD with the actual data of the
+          configuration.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2091"></a>7.2.&nbsp;Scenario - The database is a file</h2></div></div></div><p>
+          Many standard UNIX applications read their configuration
+          from a static file. If we want to integrate such an
+          application into our network device, it may not be feasible
+          to rewrite the application so that it reads its
+          configuration from the device configuration database. In
+          general we want to change the code of the application as
+          little as possible.
+        </p><p>
+          Examples of such applications are abundant. In general this
+          applies to all open source applications generally found on
+          UNIX machines.
+        </p><p>
+          In order to integrate such an application into ConfD we must
+          first write a YANG module which models the part of the
+          application (the part of the application's configuration
+          file) which we wish to be able to configure. Following that
+          we must write C code which can read, parse, manipulate and
+          write the configuration file in question and finally we must
+          connect that C code to ConfD.
+        </p><p>
+          We did precisely this exercise in <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;CDB - The ConfD XML Database">Chapter&nbsp;5, <i>CDB - The ConfD XML Database</i></a>,
+          however the solution from that chapter
+          had the actual configuration data in CDB, and the
+          configuration file was generated. Thus, if the file was
+          edited or otherwise changed externally, those changes would
+          be overwritten the next time we regenerated the file. In
+          this chapter we will show how to use the actual file as a
+          database.  I.e. no configuration data is ever kept inside
+          ConfD, the data resides outside ConfD.
+        </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2098"></a>7.3.&nbsp;Callpoints and callbacks</h2></div></div></div><p>
+         Similar to how we managed operational data, we need
+         to define a data model and annotate the model with a
+         callpoint.
+       </p><p>
+         Assume that we wish to model a set of 'server' structures
+         as in the following YANG module:
+       </p><div class="example"><a name="d5e2102"></a><p class="title"><b>Example&nbsp;7.1.&nbsp;A list of server structures</b></p><div class="example-contents"><pre class="programlisting">module smp {
+  namespace "http://tail-f.com/ns/example/smp";
+  prefix smp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  /* A set of server structures */
+  container servers {
+    tailf:callpoint simplecp;
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ipv4-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+    }
+  }
+}</pre></div></div><br class="example-break"><p>The callpoint called <code class="code">simplecp</code> instructs ConfD that
+      whenever it needs to populate the XML tree below
+      <code class="code">simplecp</code>, it must invoke callbacks in an external
+      program which has registered itself with the name
+      <code class="code">simplecp</code>.  The external programs use the API in
+      <code class="filename">libconfd.so</code> to register themselves under different
+      callpoints.
+      </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2110"></a>7.4.&nbsp;Data Callbacks</h2></div></div></div><p>When we implemented the operational data callbacks
+           we had to implement a set of callbacks for each
+           callpoint. With external data we must do the same, but
+           some additional callbacks must also be implemented.
+           The data callbacks
+           <code class="function">get_next()</code>, <code class="function">get_elem()</code>,
+           <code class="function">get_object()</code>,
+           <code class="function">get_next_object()</code>,
+           <code class="function">find_next()</code>,
+           <code class="function">find_next_object()</code>,
+           <code class="function">num_instances()</code>, and finally
+           <code class="function">exists_optional()</code> work precisely the same
+           for external data as they do for operational data. Those callbacks
+           are thus described in the previous chapter.
+           </p><p>
+           Additionally the following data callback functions
+           are required for external data:
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="function">create()</code> - This callback creates a
+             new list
+             entry. In the case of the <code class="filename">smp.yang</code> module
+             above, this function needs to create a new empty "server"
+             entry. Once the entry is created, it will be
+             populated with values through a series of calls to
+             <code class="function">set_elem()</code>.
+             </p></li><li class="listitem"><p><code class="function">remove()</code> - This  callback needs to
+             remove an entire list entry and all its subelements.
+             </p></li><li class="listitem"><p><code class="function">set_elem()</code> - This callback
+           sets the value of a leaf.</p></li></ul></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.ext_data.user_sessions"></a>7.5.&nbsp;User sessions and ConfD Transactions</h2></div></div></div><p>Again, similar to the chapter on operational data
+        user sessions are created when a user logs in, and new
+        transactions are created when an agent initiates an activity.
+        </p><p> If we deal with operational data, the different phases
+        are not interesting, thus then we only had to implement
+        the <code class="function">init()</code> and a <code class="function">finish()</code>
+        callback.
+        This section describes the states of a ConfD transaction
+        and also which user callbacks that need to be implemented in order
+        to participate in the transaction.
+        </p><p>
+          In a device where ConfD is used to manage the
+          configuration data there can be multiple sources
+          of data. To use ConfD terminology: there can be several
+          different daemons that connect to ConfD under different
+          callpoints. Some callpoints may also be served by CDB.
+        </p><p>
+          Furthermore, a set of write operations may involve
+          several of these daemons as well as CDB.
+          In order to ensure that all
+          participants perform the operations, ConfD orchestrates
+          a two-phase commit protocol towards the different
+          participants. Each NETCONF operation, such as
+          <code class="sgmltag-element">edit-config</code> or each call to <span class="command"><strong>commit</strong></span>
+          in the CLI will be clumped into a
+          ConfD transaction. If we store our data outside of ConfD
+          - as will be described in this chapter - we must implement
+          a number of callback functions in order to participate
+          in the various states of the transaction.
+         </p><p>An individual daemon may (or may not) implement the
+         callbacks for the two-phase commit protocol. If there is only
+         one daemon and CDB is not used at all,
+         the two-phase commit protocol may  be skipped. The reason for this
+         is that when there is only one participant, the two-phase commit
+         protocol is irrelevant.
+         </p><p>
+           Each NETCONF operation, i.e. each
+           <code class="sgmltag-element">edit-config</code> and so forth, will execute as one
+           transaction.
+           Thus transactions originating from NETCONF will be fairly
+           short-lived entities whereas transactions originating from
+           the CLI or the Web UI will be longer.
+         </p><p>A daemon that wishes to participate in the two-phase commit
+         transaction must implement a number of callback functions.
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="function">init()</code> - As for operational
+           data, from the daemon's point of view the
+           <code class="function">init()</code> callback is invoked when a
+           transaction starts, but ConfD delays the actual invocation as
+           an optimization. For a daemon providing configuration data,
+           <code class="function">init()</code> is invoked just before the first
+           data-reading callback, or just before the
+           <code class="function">trans_lock()</code> callback (see
+           below), whichever comes first.
+           When a transaction has started, it is in a state we refer to as
+           <code class="constant">READ</code>.
+           ConfD will, while the transaction is in the
+           <code class="constant">READ</code> state,
+           execute a series of read operations towards (possibly) different
+           callpoints in the daemon. </p><p>Any write operations performed by the management station
+           are accumulated by ConfD and the daemon doesn't see them
+           while in the <code class="constant">READ</code> state.
+           </p></li><li class="listitem"><p><code class="function">trans_lock()</code> - This callback
+           gets invoked by ConfD at the end of the transaction. ConfD
+           has accumulated a number of write operations and will now
+           initiate the final write phases.
+           Once the <code class="function">trans_lock()</code>
+           callback has returned, the transaction is in the
+           <code class="constant">VALIDATE</code>
+           state. In the <code class="constant">VALIDATE</code> state,
+           ConfD will (possibly) execute
+           a number of read operations in order to validate the new
+           configuration. Following the read operations for validations
+           comes the invocation of one of the
+           <code class="function">write_start()</code> or
+           <code class="function">trans_unlock()</code> callbacks.
+         </p></li><li class="listitem"><p><code class="function">trans_unlock()</code> - This callback
+           gets
+           invoked by ConfD if the validation failed or if the
+           validation was done separate from the commit (e.g. by
+           giving a <span class="command"><strong>validate</strong></span> command in the CLI). Depending
+           on where the transaction originated, the behavior after
+           a call to <code class="function">trans_unlock()</code> differs. If the
+           transaction originated from the CLI, the CLI reports to the
+           user that the configuration is invalid and the transaction
+           remains in the <code class="constant">READ</code> state whereas if the
+           transaction originated from a NETCONF client, the NETCONF operation
+           fails and a NETCONF <code class="sgmltag-element">rpc</code> error is reported to the
+           NETCONF client/manager.
+         </p></li><li class="listitem"><p><code class="function">write_start()</code> - If the validation
+              succeeded, the <code class="function">write_start()</code> callback will
+              be called and the transaction enters the
+              <code class="constant">WRITE</code> state. While in
+              <code class="constant">WRITE</code> state, a number of
+              calls to the write callbacks <code class="function">set_elem()</code>,
+              <code class="function">create()</code> and
+              <code class="function">remove()</code> will be performed.
+              </p><p>If the underlying
+              database supports real atomic transactions, this is a good place
+              to start such a transaction.
+              </p><p>The application should not modify the real running data
+              here. If, later, the <code class="function">abort()</code> callback is called,
+              all write operations performed in this state must be undone.
+              </p></li><li class="listitem"><p><code class="function">prepare()</code> -  Once all write operations are
+           executed, the <code class="function">prepare()</code> callback is executed. This
+           callback ensures that all participants have succeeded in writing
+           all elements.  The purpose of the callback is merely to indicate
+           to ConfD that the daemon is ok, and has not yet encountered
+           any errors.
+           </p></li><li class="listitem"><p><code class="function">abort()</code> - If any of the participants return an error
+           or fail to reply in the <code class="function">prepare()</code>  callback, the remaining
+           participants all get invoked in the <code class="function">abort()</code>
+           callback. All data written so far in this transaction should be
+           disposed of.
+           </p></li><li class="listitem"><p><code class="function">commit()</code> - If all participants successfully
+           replied in their respective <code class="function">prepare()</code>  callbacks, all
+           participants get invoked in their respective <code class="function">commit()</code>
+           callbacks. This is the place to make all data written by
+           the write callbacks in <code class="constant">WRITE</code> state permanent.
+         </p></li><li class="listitem"><p><code class="function">finish()</code> - And finally, the <code class="function">finish()</code>
+           callback gets invoked at the end. This is a good place to
+           deallocate any local resources for the transaction.</p><p>The <code class="function">finish()</code> callback can be called from several
+           different states.
+           </p></li></ul></div><p>The following picture illustrates the conceptual
+         state machine a ConfD transaction goes through.</p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="425"><tr><td align="center"><img src="pics/trans_state.png" align="middle" width="425"></td></tr></table><div class="caption"><p>ConfD transaction state machine</p></div></div><p>All callbacks except the <code class="function">init()</code> callback
+         are optional. If a callback is not implemented, it is
+         the same as a succeeding empty implementation such as:</p><div class="informalexample"><pre class="programlisting">int mycallback(struct confd_trans_ctx *tctx)
+{
+    return CONFD_OK;
+}</pre></div><p>In the following examples, we will initially not use
+         these transactions at all. We will implement the <code class="function">init()</code>
+         callback only and let the other transaction callbacks
+         be <code class="constant">NULL</code>.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2220"></a>7.6.&nbsp;External configuration data</h2></div></div></div><p>In this section we provide a commented example which
+        manages actual configuration data. The idea is that ConfD
+        runs the NETCONF agent and is entirely responsible for the
+        candidate configuration and possibly runs the CLI and the Web UI.
+        The application is responsible for maintaining and storing
+        the configuration data. </p><p>
+          An actual running version of this example can be found in
+          the examples directory of a ConfD release under
+          <code class="filename">user_guide_examples/simple_no_trans</code>.
+        </p><p>The example system stores "servers" with
+        name, ip, and port on a file.
+        Our YANG module will be very simple; we have:</p><div class="example"><a name="d5e2226"></a><p class="title"><b>Example&nbsp;7.2.&nbsp;The smp.yang module</b></p><div class="example-contents"><pre class="programlisting">module smp {
+  namespace "http://tail-f.com/ns/example/smp";
+  prefix smp;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  /* A set of server structures */
+  container servers {
+    tailf:callpoint simplecp;
+    list server {
+      key name;
+      max-elements 64;
+      leaf name {
+        type string;
+      }
+      leaf ip {
+        type inet:ipv4-address;
+        mandatory true;
+      }
+      leaf port {
+        type inet:port-number;
+        mandatory true;
+      }
+    }
+  }
+}</pre></div></div><br class="example-break"><p>To implement this we first need a small database. We
+        choose to use a simple array of "server" structures, as in:
+        </p><div class="informalexample"><pre class="programlisting">struct server {
+    char name[256];
+    struct in_addr ip;
+    unsigned int port;
+};
+
+static struct server running_db[64];
+static int num_servers = 0;</pre></div><p>To create a new "server" in the database we
+        add a new server structure to the array, as in:
+        </p><div class="informalexample"><pre class="programlisting">static struct server *add_server(char *name)
+{
+    int i, j;
+
+    for (i=0; i &lt; num_servers; i++) {
+        if (strcmp(running_db[i].name, name) &gt; 0) {
+            /* found the position to add at, now shuffle the */
+            /* remaining elems in the array one step */
+            for (j = num_servers; j &gt; i; j--) {
+                running_db[j] = running_db[j-1];
+            }
+            break;
+        }
+    }
+    num_servers++;
+    memset(&amp;running_db[i], 0, sizeof(struct server));
+    strcpy(running_db[i].name, name);
+    return &amp;running_db[i];
+}
+
+static struct server *new_server(char *name, char *ip, char *port)
+{
+    struct server *sp = add_server(name);
+    sp-&gt;ip.s_addr = inet_addr(ip);
+    sp-&gt;port = atoi(port);
+    return sp;
+}
+</pre></div><p>We keep the array ordered according to the key (server
+        name), since ConfD expects us to return entries in that order
+        when traversing the list.</p><p>
+          Note that at first glance this code looks like we may write
+          off the end of the <code class="varname">running_db</code> array.  But this is
+          not the case, since the <code class="sgmltag-element">server</code> list in the
+          data model is defined with <code class="code">max-elements 64;</code>.  This means
+          that ConfD will guarantee that there are never more than 64
+          servers.
+        </p><p>To search the database for a specific server
+        we have:</p><div class="informalexample"><pre class="programlisting">/* Find a specific server */
+static struct server *find_server(confd_value_t *v)
+{
+    int i;
+    for (i=0; i &lt; num_servers; i++) {
+        if (confd_svcmp(running_db[i].name, v) == 0)
+            return &amp;running_db[i];
+    }
+    return NULL;
+}</pre></div><p> Our <code class="function">find_server()</code> function utilizes a <code class="function">strcmp()</code>-like
+      function from <code class="filename">libconfd.so</code> - the function
+      <code class="function">confd_svcmp()</code> compares a string <span class="type">char*</span> value to
+      a <span class="type">confd_value_t</span> value. The type of the <span class="type">confd_value_t</span>
+      must obviously be either a string or a buffer.
+      </p><p>The initialization code is very similar to the
+      ARP example in the chapter on operational data,
+      with the exception that we must also here
+      register functions to write new data. We need to register
+      callbacks to <code class="function">set_elem()</code> which set the value of a leaf
+      element such as <code class="sgmltag-element">/servers/server{www}/ip</code>.
+      We also need to register callback functions that can create
+      a new "server" entry and delete old "server" entries. Thus
+      we initialize our data callback structure
+      <span class="type">struct confd_data_cbs</span> as:</p><div class="informalexample"><pre class="programlisting">data.get_elem = get_elem;
+data.get_next = get_next;
+data.set_elem = set_elem;
+data.create   = create;
+data.remove   = doremove;</pre></div><p> The <code class="function">get_elem()</code> and <code class="function">get_next()</code> callbacks can be
+      implemented in a manner similar to how we implemented the corresponding
+      callbacks for the ARP example. For example:</p><div class="example"><a name="d5e2260"></a><p class="title"><b>Example&nbsp;7.3.&nbsp;get_next() callback for smp.yang</b></p><div class="example-contents"><pre class="programlisting">static int get_next(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath,
+                    long next)
+{
+    confd_value_t v;
+
+    if (next == -1) { /* Get first key */
+        if (num_servers == 0) {  /* Db is empty */
+            confd_data_reply_next_key(tctx, NULL, -1, -1);
+            return CONFD_OK;
+        }
+        CONFD_SET_STR(&amp;v, running_db[0].name);
+        confd_data_reply_next_key(tctx, &amp;v, 1, 1);
+        return CONFD_OK;
+    }
+    if (next == num_servers) {  /* Last elem */
+        confd_data_reply_next_key(tctx, NULL, -1, -1);
+        return CONFD_OK;
+    }
+    CONFD_SET_STR(&amp;v, running_db[next].name);
+    confd_data_reply_next_key(tctx, &amp;v, 1, next+1);
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>The create callback is easy. The keypath passed to the
+      <code class="function">create()</code> callback will have the new key (last in the string)
+      as first element (in the array). Recall that the keypaths are passed in reversed
+      order. For example when ConfD wants to create
+      a new server entry, named to for example "smtp", the keypath
+      will look like <code class="sgmltag-element">/servers/server{smtp}</code>.
+      </p><p>The data model can optionally specify default values. In <code class="filename">smp.yang</code> we didn't use that feature.
+      For example the "port" leaf was specified as:</p><div class="informalexample"><pre class="programlisting">leaf port {
+  type inet:port-number;
+  mandatory true;
+}</pre></div><p>and not as </p><div class="informalexample"><pre class="programlisting">leaf port {
+  type inet:port-number;
+  default 0;
+}</pre></div><p>Our C code needs to be able to create list entries in the database
+      without any of the actual values of the leafs given. All
+      keys will be given but none of the actual values of the other leafs (except
+      for the key leafs).
+      ConfD will set all the missing values using the <code class="function">set_elem()</code>
+      callback. Our <code class="function">create()</code> callback looks like:</p><div class="example"><a name="d5e2276"></a><p class="title"><b>Example&nbsp;7.4.&nbsp;create() callback for smp.yang</b></p><div class="example-contents"><pre class="programlisting">static int create(struct confd_trans_ctx *tctx,
+                  confd_hkeypath_t *keypath)
+{
+    confd_value_t *key = &amp;keypath-&gt;v[0][0];
+    add_server((char *)CONFD_GET_BUFPTR(key));
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>In a similar manner, the <code class="function">remove()</code> callback
+      deletes a server entry.</p><div class="example"><a name="d5e2281"></a><p class="title"><b>Example&nbsp;7.5.&nbsp;remove() callback for smp.yang</b></p><div class="example-contents"><pre class="programlisting">static int doremove(struct confd_trans_ctx *tctx,
+                  confd_hkeypath_t *keypath)
+{
+    int i, j;
+    confd_value_t *key = &amp;keypath-&gt;v[0][0];
+
+    for (i=0; i &lt; num_servers; i++) {
+        if (confd_svcmp(running_db[i].name, key) == 0) {
+            /* found the elem to remove, now shift the */
+            /* remaining elems in the array one step */
+            for (j=i+1; j &lt; num_servers; j++) {
+                running_db[j-1] = running_db[j];
+            }
+            num_servers--;
+            return CONFD_OK;
+        }
+    }
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>Finally here is the <code class="function">set_elem()</code> callback which is responsible
+      for setting a leaf value. The code is:</p><div class="example"><a name="d5e2286"></a><p class="title"><b>Example&nbsp;7.6.&nbsp;set_elem() callback for smp.yang</b></p><div class="example-contents"><pre class="programlisting">static int set_elem(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath,
+                    confd_value_t *newval)
+{
+    confd_value_t *tag = &amp;(keypath-&gt;v[0][0]);
+    struct server* s = find_server(&amp;(keypath-&gt;v[1][0]));
+    if (s == NULL) {
+        confd_trans_seterr(tctx, "no such server found");
+        return CONFD_ERR;
+    }
+
+    switch (CONFD_GET_XMLTAG(tag)) {
+    case smp_ip:
+        s-&gt;ip = CONFD_GET_IPV4(newval);
+        break;
+    case smp_port:
+        s-&gt;port = CONFD_GET_INT32(newval);
+        break;
+    default:
+        return CONFD_ERR;
+    }
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>Note that there is no <code class="code">switch</code> clause for
+      <code class="code">smp_name</code> - ConfD will never change key values by
+      invoking <code class="function">set_elem()</code> for key leafs. Changing
+      keys can only be done by a combination of
+      <code class="function">remove()</code> and <code class="function">create()</code>
+      invocations, followed by <code class="function">set_elem()</code>
+      invocations for the non-leaf keys in the created list entry.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.ext_data.conf_trans"></a>7.7.&nbsp;External configuration data with transactions</h2></div></div></div><p>In this section we introduce and use the
+         transaction callbacks.
+         </p><p>
+          An actual running version of this example can be found in
+          the examples directory of a ConfD release under
+          <code class="filename">user_guide_examples/simple_trans</code>.
+        </p><p>
+          An application is invoked in <code class="function">trans_lock()</code> when a
+          transaction is committed or when a transaction is
+          validated (e.g. by doing <span class="command"><strong>validate</strong></span> in the CLI), and the
+          transaction enters the <code class="constant">VALIDATE</code> state.
+        </p><p>
+          When the application is invoked
+         in the <code class="function">trans_lock()</code> callback, the following
+         is guaranteed.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
+             A sequence of callbacks will be invoked without
+             delays. ConfD has accumulated a number of <code class="function">write()</code>
+             operations and will execute them in a sequence without
+             delays.
+           </p></li><li class="listitem"><p>
+             No callbacks to any other transactions towards the same
+             data store will be
+             executed between the invocation of <code class="function">trans_lock()</code>
+             and the invocation of <code class="function">finish()</code> (or
+             <code class="function">trans_unlock()</code>). Thus all transactions
+             towards a given data store
+             are serialized once they reach the <code class="constant">VALIDATE</code> state.
+           </p></li></ul></div><p>
+           After validation, either <code class="function">trans_unlock()</code> or
+           <code class="function">write_start()</code> is invoked.  <code class="function">trans_unlock()</code> is
+           called when the transaction is validated only, and
+           <code class="function">write_start()</code> is called when the validation was done
+           as the first part of the commit, and validation succeeded.
+         </p><p>If the underlying database is a real database with real
+         support for transactions, it is a very good idea to
+         start such a native transaction in the call to
+         <code class="function">write_start()</code>. If that is not the case the
+         <code class="filename">libconfd.so</code> library provides support which makes it possible
+         to accumulate the write operations without actually
+         writing them.
+         </p><p>In this example we save the database to a file for
+         persistence</p><div class="example"><a name="d5e2326"></a><p class="title"><b>Example&nbsp;7.7.&nbsp;save() utility function</b></p><div class="example-contents"><pre class="programlisting">static int save(char *filename) {
+    FILE *fp;
+    int i;
+    if ((fp = fopen(filename, "w")) == NULL)
+        return CONFD_ERR;
+    for (i=0; i &lt; num_servers; i++) {
+        fprintf(fp, "%s %s %d\n",
+                running_db[i].name,
+                inet_ntoa(running_db[i].ip),
+                running_db[i].port);
+    }
+    fclose(fp);
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>We instantiate all the transaction callbacks and do the
+         appropriate thing in each callback.  Since the database is
+         just a simple array, the variable <code class="varname">running_db</code>, we
+         choose to let the library <code class="filename">libconfd.so</code> accumulate the
+         individual write operations by returning
+         <code class="constant">CONFD_ACCUMULATE</code> from the write callbacks
+         <code class="function">set_elem()</code>, <code class="function">create()</code> and <code class="function">remove()</code>.
+         The data will be copied into data structures in the library.
+         </p><p>The purpose of doing this is that we do not
+         want to explicitly write into our local data structures in the
+         write routines - rather we wish to delay this and perform the
+         actual write operations in the <code class="function">prepare()</code> callback.
+         </p><div class="example"><a name="d5e2338"></a><p class="title"><b>Example&nbsp;7.8.&nbsp;write callbacks using accumulate</b></p><div class="example-contents"><pre class="programlisting">static int set_elem(struct confd_trans_ctx *tctx,
+                    confd_hkeypath_t *keypath,
+                    confd_value_t *newval)
+{
+    return CONFD_ACCUMULATE;
+}
+static int create(struct confd_trans_ctx *tctx,
+                  confd_hkeypath_t *keypath)
+{
+    return CONFD_ACCUMULATE;
+}
+
+static int doremove(struct confd_trans_ctx *tctx,
+                  confd_hkeypath_t *keypath)
+{
+    return CONFD_ACCUMULATE;
+}</pre></div></div><br class="example-break"><p>We are thus not doing anything at all in the
+         write callbacks, except returning the value
+         <code class="constant">CONFD_ACCUMULATE</code>. Note that this will store
+         a complete copy of the keypath and also of the new value
+         if the operation is <code class="function">set_elem()</code>.
+         </p><p>All the operations will be copied and kept in a linked
+         list in the transaction context (<span class="type">struct confd_trans_ctx</span>).
+         In the <code class="constant">PREPARED</code> state we will loop through
+         all the operations and perform them.</p><p>Remember the reason for implementing the two-phase
+         commit protocol. There may be multiple <code class="literal">daemons</code>
+         connected to ConfD and a series of write operations, i.e a transaction
+         may
+         span several <code class="literal">daemons</code>. ConfD ensures that e.g. a
+         <span class="command"><strong>commit</strong></span> from the CLI is either written in all of the connected
+         <code class="literal">daemons</code> or none - thus ensuring a consistent database.
+         </p><p>Recall the picture depicting the state transitions:</p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="425"><tr><td align="center"><img src="pics/trans_state.png" align="middle" width="425"></td></tr></table><div class="caption"><p>ConfD transaction state machine</p></div></div><p>The most complicated callback is
+         <code class="function">prepare()</code>:</p><div class="example"><a name="d5e2360"></a><p class="title"><b>Example&nbsp;7.9.&nbsp;prepare() callback using the accumulated write ops</b></p><div class="example-contents"><pre class="programlisting">static int t_prepare(struct confd_trans_ctx *tctx)
+{
+    struct server *s;
+    struct confd_tr_item *item = tctx-&gt;accumulated;
+    while (item) {
+        confd_hkeypath_t *keypath = item-&gt;hkp;
+        confd_value_t *leaf = &amp;(keypath-&gt;v[0][0]);
+        switch(item-&gt;op) {
+        case C_SET_ELEM:
+            s = find_server(&amp;(keypath-&gt;v[1][0]));
+            if (s == NULL)
+                break;
+            switch (CONFD_GET_XMLTAG(leaf)) {
+            case smp_ip:
+                s-&gt;ip = CONFD_GET_IPV4(item-&gt;val);
+                break;
+            case smp_port:
+                s-&gt;port = CONFD_GET_INT32(item-&gt;val);
+                break;
+
+            }
+            break;
+        case C_CREATE:
+            add_server((char *)CONFD_GET_BUFPTR(leaf));
+            break;
+        case C_REMOVE:
+            remove_server(leaf);
+            break;
+        default:
+            return CONFD_ERR;
+        }
+        item = item-&gt;next;
+    }
+    return save("running.prep");
+}</pre></div></div><br class="example-break"><p>The above code loops through all the
+         <span class="type">struct confd_tr_item</span> structs accumulated by the
+         library in the <code class="varname">accumulated</code> field for the transaction
+         context.
+         </p><p>The accumulated write structs are defined as: </p><div class="informalexample"><pre class="programlisting"><strong class="hl-keyword">enum</strong> confd_tr_op {
+    C_SET_ELEM = <span class="hl-number">1</span>,
+    C_CREATE= <span class="hl-number">2</span>,
+    C_REMOVE = <span class="hl-number">3</span>,
+    C_SET_CASE = <span class="hl-number">4</span>,
+    C_SET_ATTR = <span class="hl-number">5</span>,
+    C_MOVE_AFTER = <span class="hl-number">6</span>
+};</pre><pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_tr_item {
+    <strong class="hl-keyword">char</strong> *callpoint;
+    <strong class="hl-keyword">enum</strong> confd_tr_op op;
+    confd_hkeypath_t *hkp;
+    confd_value_t *val;
+    confd_value_t *choice;  <em class="hl-comment" style="color: silver">/* only for set_case */</em>
+    u_int32_t attr;         <em class="hl-comment" style="color: silver">/* only for set_attr */</em>
+    <strong class="hl-keyword">struct</strong> confd_tr_item *next;
+};</pre></div><p>
+           If we had a real native database with real transaction
+           support, we wouldn't have used the accumulation
+           feature of the library at all - rather we would have
+           started a native transaction in the <code class="function">write_start()</code>
+           callback.
+         </p><p>Our example database is just an array and a file; thus
+         we use the accumulation feature of the library.</p><p>In the <code class="function">prepare()</code> callback we finally save the
+         database to a file called <code class="filename">running.prep</code> - thus preparing
+         to commit the changes we have made.
+         </p><p>
+         The corresponding
+         <code class="function">abort()</code> and <code class="function">commit()</code> callbacks are easy:</p><div class="example"><a name="d5e2379"></a><p class="title"><b>Example&nbsp;7.10.&nbsp;commit() and abort()</b></p><div class="example-contents"><pre class="programlisting">static int t_commit(struct confd_trans_ctx *tctx)
+{
+    if (rename("running.prep", "running.DB") == 0)
+        return CONFD_OK;
+    else
+        return CONFD_ERR;
+}
+
+static int t_abort(struct confd_trans_ctx *tctx)
+{
+    restore("running.DB");
+    unlink("running.prep");
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"><p>The <code class="function">restore()</code> reads a file and initializes
+         the database (our array) from that file:</p><div class="example"><a name="d5e2384"></a><p class="title"><b>Example&nbsp;7.11.&nbsp;Code to restore our array from a file</b></p><div class="example-contents"><pre class="programlisting">
+static int restore(char *filename)
+{
+    char buf[BUFSIZ];
+    FILE *fp;
+
+    if ((fp = fopen(filename, "r")) == NULL)
+        return CONFD_ERR;
+    num_servers = 0;
+    while (fgets(&amp;buf[0], BUFSIZ, fp) != NULL) {
+        char *name, *ip, *port;
+        if ((name = strtok(buf, " \t\r\n")) != NULL &amp;&amp;
+            ((ip = strtok(NULL, " \t\r\n")) != NULL) &amp;&amp;
+            ((port = strtok(NULL, " \t\r\n")) != NULL)) {
+            printf("Loaded %s\n", name);
+            new_server(name, ip, port);
+        }
+    }
+    return CONFD_OK;
+}</pre></div></div><br class="example-break"></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.ext_data.writable_operational"></a>7.8.&nbsp;Writable operational data</h2></div></div></div><p>
+         Writable operational data is indicated in the YANG model as
+         <code class="code">config false</code> marked with
+         <code class="code">tailf:writable true</code>.  This is typically used when an
+         SNMP MIB has data that models an operation, like "reboot".
+         For other interfaces than SNMP, such an operation should be
+         modeled as an rpc or action.
+       </p><p>
+         Writable operational data must be implemented by callback
+         functions, just like external configuration data, as
+         described in <a class="xref" href="ch07.html#ug.ext_data.conf_trans" title="7.7.&nbsp;External configuration data with transactions">Section&nbsp;7.7, &#8220;External configuration data with transactions&#8221;</a>.
+         When a transaction is started for operational data, the
+         <code class="varname">dbname</code> field in <code class="varname">struct
+         confd_trans_ctx</code> is
+         <code class="literal">CONFD_OPERATIONAL</code>.
+       </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2397"></a>7.9.&nbsp;Supporting candidate commit</h2></div></div></div><p>
+           The NETCONF protocol has as one of its major features the
+           concept of candidate commit with a timeout.  The manager
+           manipulates the candidate configuration and finally commits
+           the candidate. This means that the candidate configuration
+           is copied into the <code class="literal">running</code> data base and
+           thus is active.
+         </p><p>
+           If the <code class="sgmltag-element">commit</code> operation is accompanied by a
+           timeout then the semantics is that if the application has
+           not received a confirming commit before the timeout, the
+           previous running configuration should be copied back into
+           <code class="literal">running</code>. The idea here is that if a
+           configuration is somehow bad, an automatic rollback will
+           occur.
+         </p><p>
+           There are several different usage scenarios whereby this
+           feature is supported with ConfD.
+         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The by far easiest case is when the database is
+             kept in the ConfD built-in XML database, CDB. When that is the
+             case, candidate commit is supported directly by ConfD natively.
+             </p></li><li class="listitem"><p>
+               The next case is when the candidate configuration is
+               managed by ConfD but the <code class="literal">running</code>
+               configuration is kept outside ConfD. This is described
+               here. The application needs to register three
+               <code class="literal">checkpoint</code> callbacks in the database
+               callback struct <span class="type">confd_db_cbs</span> by means of
+               the API call
+               <code class="function">confd_register_db_cb()</code>.
+             </p></li><li class="listitem"><p>
+               The final case is when both the <code class="literal">running</code> and
+               the <code class="literal">candidate</code> configuration are kept entirely
+               outside of ConfD. Remember the ConfD transactions that
+               get executed. When a new transaction is started, one of
+               the fields in the transaction context, the
+               <code class="varname">dbname</code> field indicates which database the
+               transaction is started for.
+             </p><p>
+               If ConfD owns the <code class="literal">candidate</code>, no
+               transactions will ever be created towards the
+               <code class="literal">candidate</code>. If the application owns
+               both <code class="literal">running</code> and the
+               <code class="literal">candidate</code> (as configured in
+               <code class="filename">confd.conf</code>) then transaction may
+               be directed towards either <code class="literal">running</code>
+               or <code class="literal">candidate</code>.
+             </p><p>
+               In the case where the candidate is owned by the
+               application, the application needs to register six
+               candidate callbacks in the database callback struct
+               <span class="type">struct confd_db_cbs</span> by means of the API
+               call <code class="function">confd_register_db_cb()</code>.
+               This mode of operations only make sense if the external database
+               can truly support the candidate callbacks. If that is not the case
+               it i better to let ConfD manage the candidate.
+             </p></li></ul></div><p>In this section we provide an example where ConfD owns
+         the candidate datastore. The application needs to register the
+         following callbacks.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+               <code class="function">add_checkpoint_running()</code> - This callback must create a
+               checkpoint of the current running configuration and
+               store it in non-volatile memory.  When the system
+               restarts, it is the responsibility of the external
+               application to check if there is a checkpoint
+               available, and use the checkpoint instead of running.
+             </p></li><li class="listitem"><p>
+               <code class="function">del_checkpoint_running()</code> -
+               This function must delete a checkpoint created by
+               <code class="function">add_checkpoint_running()</code>.
+               It is called by ConfD when a confirming
+               commit is received.
+             </p></li><li class="listitem"><p>
+               <code class="function">activate_checkpoint_running()</code> -
+
+               This function should rollback running to the
+               checkpoint created by
+               <code class="function">add_checkpoint_running()</code>.
+               It is called by ConfD when the timer
+               expires or if the user session expires. There can be at most
+               one checkpoint live at a time.
+             </p></li></ol></div><p>Using our previous <code class="function">save()</code> and
+         <code class="function">restore()</code> functions the implementation
+         of the checkpoint callbacks becomes very simple.</p><div class="example"><a name="d5e2446"></a><p class="title"><b>Example&nbsp;7.12.&nbsp;checkpoint db callbacks</b></p><div class="example-contents"><pre class="programlisting">add_checkpoint_running(struct confd_db_ctx *db)
+{
+    return save("running.checkpoint");
+}
+
+del_checkpoint_running(struct confd_db_ctx *db)
+{
+    unlink("running.checkpoint");
+    return CONFD_OK;
+}
+
+activate_checkpoint_running(struct confd_db_ctx *db)
+{
+    return restore("running.checkpoint");
+}</pre></div></div><br class="example-break"><p>Two things remain to be done. First we need to
+         register the checkpoint callbacks. Second we need to
+         look for the existence of a saved checkpoint when we
+         initialize our database and if it exists, <code class="literal">running</code> should
+         be initialized from the checkpoint instead.
+         Thus:</p><div class="informalexample"><pre class="programlisting">/* global variable */
+static struct confd_db_cbs dbcbs;
+
+...
+
+int main()
+{
+     ...
+
+     if ((restore("running.checkpoint")) != CONFD_OK)
+         restore("running.DB");
+
+
+
+    dbcbs.add_checkpoint_running = add_checkpoint_running;
+    dbcbs.del_checkpoint_running = del_checkpoint_running;
+    dbcbs.activate_checkpoint_running = activate_checkpoint_running;
+
+    /* register the callbacks */
+    confd_register_db_cb(dctx, &amp;dbcbs);
+    confd_register_done(dctx);</pre></div><p>
+           If the underlying database is a real database
+           we would install database checkpoints instead of
+           copying entire files back and forth.
+         </p><p>If we choose to implement the checkpoint callbacks as
+         above, we must obviously also configure ConfD accordingly.
+         The relevant sections in <code class="filename">confd.conf</code> from the
+         <code class="sgmltag-element">datastores</code> section are:</p><div class="informalexample"><pre class="programlisting">&lt;candidate&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;implementation&gt;confd&lt;/implementation&gt;
+&lt;/candidate&gt;</pre></div><p>And from the NETCONF section:</p><div class="informalexample"><pre class="programlisting">&lt;capabilities&gt;
+  &lt;candidate&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/candidate&gt;
+
+  &lt;confirmed-commit&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/confirmed-commit&gt;
+&lt;/capabilities&gt;</pre></div><p>Finally, if we implement the database outside ConfD we
+         may optionally choose to implement the <code class="function">lock()</code> and
+         <code class="function">unlock()</code> callbacks.
+         This  is  only  interesting  if there exists additional
+         locking mechanisms towards the database - such as  an  external  CLI
+         which  can  lock  the database, of if the external database owns the
+         candidate.
+         </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e2465"></a>7.10.&nbsp;Discussion - CDB versus external DB</h2></div></div></div><p>
+        In this section we discuss some of the requirements that an
+        external database must be able to fulfill in order for ConfD
+        to work properly.  The reasons for choosing an external
+        database as opposed to CDB may vary between projects.  Some
+        projects already have a database and the managed object code
+        is already tightly coupled to that database. Other projects
+        may feel that the underlying database must have
+        characteristics that CDB doesn't have. It is certainly the
+        case that CDB is not the best choice for, for example
+        distributed replication of large amounts of state data. CDB is
+        not a check-pointing database for application state
+        replication.
+      </p><p>
+        The first and most important requirement ConfD has on an
+        external database is that it can execute transactions. The
+        transaction manager inside ConfD will collect all data for a
+        transaction and once the data has been validated, it will send
+        the data as a series of write operations to the data provider.
+        It is the responsibility of the database to execute this
+        series of write operations atomically. Either they all get
+        written or none. External databases that do not support
+        transactions can still be used of course, but that then comes
+        with the possibility of getting a corrupt configuration.
+        Corruption will occur if:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            Another data provider rejects the transaction - in this case ConfD will
+            tell all data providers to abort. If there are no other data providers than
+            the external database - this cannot happen.
+          </p></li><li class="listitem"><p>
+            ConfD dies while sending the write operations to the data provider, alternatively
+            the network connectivity between ConfD and the data provider breaks.
+            If this happens, the data provider never gets the whole transaction.
+            One way of partially addressing this problem may be to make use of
+            CONFD_ACCUMULATE feature whereby all writes are accumulated inside the
+            library. That way the data provider at least can be certain that it has
+            the entire transaction prior to starting its own write session.
+          </p></li></ol></div><p>
+        Furthermore, CDB has two important features, schema upgrade
+        and subscriptions.  An external database must at least address
+        this functionality.
+      </p><p>
+        Schema upgrade. When the YANG data model files are changed,
+        CDB has the old schema - and its associated data - stored. On
+        upgrade, CDB transforms all the old data so that it adheres to
+        the new schema. If CDB is not used, the equivalent
+        functionality must be performed by the external database.
+      </p><p>
+        Subscriptions - when the configuration is changed - the
+        applications, the consumers of configuration data, must
+        somehow be notified of the configuration changes. If CDB is
+        not used, this is now the task of the external database.
+      </p><p>
+        Finally, if an external database is used, we must provide a
+        mapping in the code of the data provider between ConfD
+        keypaths and values to entries in the external database.  For
+        example, if we use a simple key/value database it's possible
+        to write general code that works for all possible
+        keypaths. The key is a confd_hkeypath_t and the value is
+        obviously a confd_value_t.  The only problem is how to handle
+        <code class="function">create()</code> and
+        <code class="function">delete()</code> operations for a key/value
+        database. In the case of a delete operation, all children must
+        also be deleted. It is easy to find the children since the
+        schema is loaded in a data provider (through
+        <code class="function">confd_load_schemas()</code>) and a key/value data
+        provider would then have to follow the schema, and delete all
+        children.
+      </p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch06.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch08.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Operational Data&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Configuration Meta-Data</td></tr></table></div></body></html>

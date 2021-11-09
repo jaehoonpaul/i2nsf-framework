@@ -1,0 +1,46 @@
+Example: Notifications
+~~~~~~~~~~~~~~~~~~~~~~
+
+This is an example application which shows how to use the MAAPI API in
+conjunction with the notifications API. We subscribe to diff
+notifications, attach to the current transaction using maapi_attach()
+and iterate over the diff from the transaction.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Starting the Example
+~~~~~~~~~~~~~~~~~~~~
+
+ 1. Build the necessary files and start ConfD by typing
+
+        $ make all start
+
+ 2. Run the CLI in another window and make some changes
+
+        $ make cli
+
+
+The program confd_notifications can be used standalone in a development
+environment to monitor confd events.
+
+# ./confd_notifications
+
+Gives a usage message - one or more event types must be specified.
+
+# ./confd_notifications -i
+
+Sets up a notification socket and gets commit diff messages, iterating
+over the diff.
+
+# ./confd_notifications -A
+
+Subscribes to all events except heartbeat, health check, and commit
+simple (the information is a subset of commit diff).

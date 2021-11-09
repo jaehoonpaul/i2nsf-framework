@@ -1,0 +1,140 @@
+#!/bin/bash
+
+script=change-file-names
+
+function usage()
+{
+    cat <<EOF
+NAME
+    ${script} - Renames files and/or change their contents
+
+USAGE
+    ${script} [OPTIONS] FROM TO [DIR]
+    ${script} -h | --help
+
+OPTIONS
+    -v | --verbose
+    -n | --dryrun
+
+DESCRIPTION
+    FROM and TO are strings. All located FROM strings are replaced
+    with the TO string. This applies to both file names and file
+    contents. All files in DIR and its subdirectories are potentially
+    affected. DIR defaults to . (current directory).
+
+EXAMPLE
+    mkdir -p my_apps/erlang-lib
+    cp -a erlang-skeleton/erlang-lib/app_skel my_apps/erlang-lib/my_app
+    change-file-names app_skel my_app my_apps/erlang-lib/my_app
+EOF
+}
+
+function error()
+{
+    if [ ! -z "$1" ]; then
+        echo >&2 "${script}: error: $1"
+        echo >&2
+    fi
+    echo >&2 "Try ${script} --help to get usage text"
+    exit 1
+}
+
+function verbose() {
+    if [ "$verbose" = true ]; then
+        echo "$1"
+    fi
+}
+
+function smkdir()
+{
+    mkdir -p "$1" 2>&1 > /dev/null || true
+}
+
+function assert {
+    if [ "$?" != "0" ]; then
+        echo "error $1"
+        rm -f tmp.$$
+        exit 2
+    fi
+}
+
+function rename_and_change_files {
+    substitute="s=${from}=${to}=g"
+
+    for f in `find $dir -type f` ; do
+        t=`echo $f | sed s=${from}=${to}=g`
+
+        # change
+        sed "${substitute}" "${f}" > tmp.$$
+        assert "${t}"
+
+        if [ "${verbose}" = true ]; then
+            cmp --silent ${f} tmp.$$
+            [ "$?" != "0" ] && echo "change ${t}"
+        fi
+
+        # rename
+        [ "${f}" != "${t}" ] && verbose "rename ${t}"
+        if [ "${dryrun}" = true ]; then
+            rm -f tmp.$$
+            assert "error ${t}"
+        else
+            rm -f ${f}
+            assert "error ${f}"
+            mv -f tmp.$$ ${t}
+            assert "error ${t}"
+        fi
+    done
+}
+
+function parse_args {
+    while [ $# -gt 0 ]; do
+        arg="$1"
+        shift
+        case "$arg" in
+            -h | --help)
+                usage
+                exit 0
+                ;;
+            -v | --verbose)
+                verbose=true
+                ;;
+            -n | --dryrun)
+                dryrun=true
+                ;;
+            -*)
+                error "no such option $arg"
+                ;;
+            *)
+                if [ -z "${from}" ]; then
+                    from=${arg};
+                else
+                    if [ -z "${to}" ]; then
+                        to=${arg};
+                    else
+                        if [ -z "${dir}" ]; then
+                            dir=${arg};
+                        else
+                            error "unexpected argument ${arg}";
+                        fi
+                    fi
+                fi
+        esac
+    done
+
+    [ -z "${to}" ]   && error "expected TO string"
+    [ -z "${from}" ] && error "expected FROM string"
+    [ -z "${dir}" ]  && dir="."
+
+    verbose "top    ${dir}"
+    verbose "from   ${from}"
+    verbose "to     ${to}"
+}
+
+### MAIN ###
+
+parse_args $*
+
+rename_and_change_files
+
+exit 0

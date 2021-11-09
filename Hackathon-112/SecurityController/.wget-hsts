@@ -1,0 +1,5 @@
+# HSTS 1.0 Known Hosts database for GNU Wget.
+# Edit at your own risk.
+# <hostname>[:<port>]	<incl. subdomains>	<created>	<max-age>
+curl.se	0	0	1618447866	31536000
+curl.haxx.se	0	0	1618447865	31536000

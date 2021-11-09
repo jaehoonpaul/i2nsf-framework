@@ -1,0 +1,55 @@
+module config {
+  namespace "http://tail-f.com/ns/example/config";
+  prefix cfg;
+
+  description
+    "This is a simple, incomplete data model, tailor-made for
+     demoing tailf-configuration-policy.  It is not useful for
+     other purposes.  Please see the README file for information
+     on how this data model can be used.";
+
+  list interface {
+    key name;
+
+    leaf name {
+      type string;
+    }
+
+    leaf disabled {
+      type empty;
+    }
+
+    leaf type {
+      type enumeration {
+        enum "ethernet";
+        enum "sonet";
+        enum "atm";
+      }
+      mandatory true;
+    }
+
+    leaf mtu {
+      type uint32;
+    }
+
+    list unit {
+      key id;
+      leaf id {
+        type int32;
+      }
+      leaf vlan-id {
+        type uint16 {
+          range "1..4094";
+        }
+      }
+    }
+  }
+
+  container protocols {
+    container bgp {
+      presence "enables bgp";
+    }
+
+  }
+
+}

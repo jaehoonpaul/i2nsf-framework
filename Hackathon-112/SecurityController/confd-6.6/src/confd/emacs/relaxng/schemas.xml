@@ -1,0 +1,15 @@
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <transformURI fromPattern="*.xml" toPattern="*.rnc"/>
+
+  <uri pattern="*.cli" typeId="CLISPEC"/>
+  <uri pattern="*.conf" typeId="CONFD_CFG"/>
+
+  <namespace ns="http://tail-f.com/ns/clispec/1.0" typeId="CLISPEC"/>
+  <namespace ns="http://tail-f.com/ns/confd_cfg/1.0" typeId="CONFD_CFG"/>
+
+  <documentElement localName="clispec" typeId="CLISPEC"/>
+  <documentElement localName="confdConfig" typeId="CONFD_CFG"/>
+
+  <typeId id="CLISPEC" uri="clispec.rnc"/>
+  <typeId id="CONFD_CFG" uri="confd_cfg.rnc"/>
+</locatingRules>

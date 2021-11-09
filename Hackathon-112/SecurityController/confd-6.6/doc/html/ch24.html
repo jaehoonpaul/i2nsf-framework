@@ -1,0 +1,424 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;24.&nbsp;High Availability</title><link rel="stylesheet" type="text/css" href="docbook.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="ConfD User Guide"><link rel="up" href="index.html" title="ConfD User Guide"><link rel="prev" href="ch23.html" title="Chapter&nbsp;23.&nbsp;The Management Agent API"><link rel="next" href="ch25.html" title="Chapter&nbsp;25.&nbsp;The SNMP Gateway"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;24.&nbsp;High Availability</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch23.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch25.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="ug.ha"></a>Chapter&nbsp;24.&nbsp;High Availability</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl class="toc"><dt><span class="sect1"><a href="ch24.html#d5e13066">24.1. Introduction to ConfD High Availability</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13094">24.2. HA framework requirements</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13098">24.3. Mode of operation</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13129">24.4. Security aspects</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13144">24.5. API</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13248">24.6. Ticks</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13258">24.7. Joining a cluster</a></span></dt><dt><span class="sect1"><a href="ch24.html#ug.ha.relay_slaves">24.8. Relay slaves</a></span></dt><dt><span class="sect1"><a href="ch24.html#d5e13320">24.9. CDB replication</a></span></dt></dl></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13066"></a>24.1.&nbsp;Introduction to ConfD High Availability</h2></div></div></div><p>
+      ConfD
+    support replication of the CDB configuration as well
+    as of the operational data kept in CDB. The replication
+    architecture is that of one active master and a number of passive
+    slaves.
+    </p><p>All configuration write operations must occur at the master and
+    ConfD
+    will automatically distribute the configuration updates to the set
+    of live slaves. Operational data in CDB may be replicated or not
+    based on the <code class="code">tailf:persistent</code> statement in the data
+    model<span class="phrase"> and the ConfD configuration</span>.
+    All write operations for replicated operational data must also occur
+    at the master, with the updates distributed to the live slaves,
+    whereas non-replicated operational data can also be written on the
+    slaves.</p><p>The <span class="emphasis"><em>only</em></span> thing
+    ConfD
+    does is to
+    replicate the CDB data amongst the members in the HA group. It
+    doesn't perform any of the otherwise High-Availability related
+    tasks such as running election protocols in order to elect a new
+    master. This is the task of a High-Availability Framework (HAFW)
+    which must be in place.  The HAFW must instruct
+    ConfD
+    which nodes
+    are up and down using
+    <span class="phrase">
+      API functions from <a class="xref" href="rn02re12.html" title="confd_lib_ha"><span class="refentrytitle">confd_lib_ha</span>(3)</a>. Thus in order to use ConfD
+    configuration replication we must first have a HAFW.
+    </span>
+    
+    </p><p>Replication is supported in several different
+    architectural setups. For example two-node active/standby designs
+    as well as multi-node clusters with runtime software upgrade.</p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="461"><tr><td align="center"><img src="pics/master_slave.png" align="middle" width="461"></td></tr></table><div class="caption"><p>Master - Slave configuration</p></div></div><p>
+      <span class="phrase">
+        In a chassis solution there are (at least two) but a fixed
+        number of management blades. We wish that all configuration data
+        is replicated and if the active dies the standby will takeover and
+        the configuration data is not lost.
+      </span>
+    </p><div class="mediaobject" align="center"><table border="0" summary="manufactured viewport for HTML img" style="cellpadding: 0; cellspacing: 0;" width="461"><tr><td align="center"><img src="pics/host_n.png" align="middle" width="461"></td></tr></table><div class="caption"><p>One master - several slaves</p></div></div><p>Furthermore it is assumed that the entire cluster
+    configuration is equal on all hosts in the cluster. This means
+    that node specific configuration must be kept in different node
+    specific subtrees, for example as in <a class="xref" href="ch24.html#ug.ha.ex.cfg_yang" title="Example&nbsp;24.1.&nbsp;A data model divided into common and node specific subtrees">Example&nbsp;24.1, &#8220;A data model divided into common and node specific
+      subtrees&#8221;</a>.</p><div class="example"><a name="ug.ha.ex.cfg_yang"></a><p class="title"><b>Example&nbsp;24.1.&nbsp;A data model divided into common and node specific
+      subtrees</b></p><div class="example-contents"><pre class="programlisting">container cfg {
+  container shared {
+    leaf dnsserver {
+      type inet:ipv4-address;
+    }
+    leaf defgw {
+      type inet:ipv4-address;
+    }
+    leaf token {
+      type AESCFB128EncryptedString;
+    }
+    ...
+  }
+  container cluster {
+    list host {
+      key ip;
+      max-elements 8;
+      leaf ip {
+        type inet:ipv4-address;
+      }
+     ...
+    }
+  }
+}</pre></div></div><br class="example-break"></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13094"></a>24.2.&nbsp;HA framework requirements</h2></div></div></div><p>ConfD only replicates the CDB data. ConfD must be told by
+    the HAFW which node should be master and which nodes should be
+    slaves.</p><p>The HA framework must also detect when nodes fail and
+    instruct ConfD accordingly. If the master node fails, the HAFW
+    must elect one of the remaining slaves and appoint it the new
+    master.  The remaining slaves must also be informed by the HAFW
+    about the new master situation. ConfD will never take any actions
+    regarding master/slave-ness by itself.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13098"></a>24.3.&nbsp;Mode of operation</h2></div></div></div><p>ConfD must be instructed through the
+    <code class="filename"><span class="phrase">confd.conf</span></code> configuration file that it should
+    run in HA mode. The following configuration snippet enables HA
+    mode:</p><div class="informalexample"><pre class="programlisting">&lt;ha&gt;
+  &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;ip&gt;0.0.0.0&lt;/ip&gt;
+  &lt;port&gt;4569&lt;/port&gt;
+  &lt;tickTimeout&gt;PT20S&lt;/tickTimeout&gt;
+&lt;/ha&gt;</pre></div><p>The IP address and the port above indicates which IP and
+    which port should be used for the communication between the HA
+    nodes.  The <code class="sgmltag-element">tickTimeout</code> is a duration indicating how
+    often each slave must send a tick message to the master indicating
+    liveness. If the master has not received a tick from a slave
+    within 3 times the configured tick time, the slave is considered
+    to be dead. Similarly, the master sends tick messages to all the
+    slaves. If a slave has not received any tick messages from the
+    master within the 3 times the timeout, the slave will consider the
+    master dead and report accordingly.</p><p>A HA node can be in one of three states:
+    <code class="sgmltag-element">NONE</code>, <code class="sgmltag-element">SLAVE</code> or
+    <code class="sgmltag-element">MASTER</code>.  Initially a node is in the
+    <code class="sgmltag-element">NONE</code> state. This implies that the node
+    will read its configuration from CDB, stored locally on file.
+    Once the HA framework has decided whether the node should be a
+    slave or a master the HAFW must invoke either the
+    <span class="phrase">
+    function
+    <code class="function">confd_ha_beslave(master)</code> or
+    <code class="function">confd_ha_bemaster()</code>.
+    </span>
+    
+    </p><p>When a ConfD HA node starts, it always starts up in mode
+    <code class="sgmltag-element">NONE</code>. This is consistent with how ConfD
+    works without HA enabled.  At this point there are no other nodes
+    connected.  Each ConfD node reads its configuration data from the
+    locally stored CDB and applications on or off the node may connect
+    to ConfD and read the data they need.</p><p>At some point, the HAFW will command some nodes to become
+    slave nodes of a named master node. When this happens, each slave
+    node tracks changes and (logically or physically) copies all the
+    data from the master. Previous data at the slave node is
+    overwritten.</p><p>Note that the HAFW, by using ConfD's start phases, can make
+    sure that ConfD does not start its northbound interfaces (NETCONF,
+    CLI, ...)  until the HAFW has decided what type of node it
+    is. Furthermore once a node has been set to the SLAVE state, it is
+    not possible to initiate new write transactions towards the node.
+    It is thus never possible for an agent to write directly into a
+    slave node. Once a node is returned either to the NONE state or to
+    the MASTER state, write transactions can once again be initiated
+    towards the node.</p><p>The HAFW may command a slave node to become master at any
+    time. The slave node already has up-to-date data, so it simply
+    stops receiving updates from the previous master. Presumably, the
+    HAFW also commands the master node to become a slave node, or
+    takes it down or handles the situation somehow. If it has crashed,
+    the HAFW tells the slave to become master, restarts the necessary
+    services on the previous master node and gives it an appropriate
+    role, such as slave. This is outside the scope of ConfD.</p><p>Each of the master and slave nodes have the same set of all
+    callpoints and validation points locally on each node. The start
+    sequence has to make sure the corresponding daemons are started
+    before the HAFW starts directing slave nodes to the master, and
+    before replication starts. The associated callbacks will however
+    only be executed at the master. If e.g. the validation executing
+    at the master needs to read data which is not stored in the
+    configuration and only available on another node, the validation
+    code must perform any needed RPC calls.</p><p>If the order from the HAFW is to become master, the node
+    will start to listen for incoming slaves at the <code class="sgmltag-element">ip:port</code>
+    configured under <code class="sgmltag-element">/confdCfg/ha</code>. The slaves TCP connect
+    to the master and this socket is used by ConfD to distribute the
+    replicated data.</p><p>If the order is to be a slave, the node will contact the
+    master and possibly copy the entire configuration from the
+    master. This copy is not performed if the master and slave decide
+    that they have the same version of the CDB database loaded, in
+    which case nothing needs to be copied. This mechanism is
+    implemented by use of a unique token, the "transaction id" - it
+    contains the node id of the node that generated it and and a time
+    stamp, but is effectively "opaque".</p><p>This transaction id is generated by the cluster master each
+    time a configuration change is committed, and all nodes write the
+    same transaction id into their copy of the committed
+    configuration.  If the master dies, and one of the remaining
+    slaves is appointed new master, the other slaves must be told to
+    connect to the new master. They will compare their last
+    transaction id to the one from the newly appointed master. If they
+    are the same, no CDB copy occurs.  This will be the case unless a
+    configuration change has sneaked in, since both the new master and
+    the remaining slaves will still have the last transaction id
+    generated by the old master - the new master will not generate a
+    new transaction id until a new configuration change is committed.
+    The same mechanism works if a slave node is simply restarted. In
+    fact no cluster reconfiguration will lead to a CDB copy unless the
+    configuration has been changed in between.</p><p>Northbound agents should run on the master, it is not
+    possible for an agent to commit write operations at a slave
+    node.</p><p>When an agent commits its CDB data, CDB will stream the
+    committed data out to all registered slaves. If a slave dies
+    during the commit, nothing will happen, the commit will succeed
+    anyway.  When and if the slave reconnects to the cluster, the
+    slave will have to copy the entire configuration.  All data on the
+    HA sockets between ConfD nodes only go in the direction from the
+    master to the slaves. A slave which isn't reading its data will
+    eventually lead to a situation with full TCP buffers at the
+    master. In principle it is the responsibility of HAFW to discover
+    this situation and notify the master ConfD about the hanging
+    slave. However if 3 times the tick timeout is exceeded, ConfD will
+    itself consider the node dead and notify the HAFW.  The default
+    value for tick timeout is 20 seconds.</p><p>The master node holds the active copy of the entire
+    configuration data in CDB. All configuration data has to be stored
+    in CDB for replication to work. At a slave node, any request to
+    read will be serviced while write requests will be refused.  Thus,
+    CDB subscription code works the same regardless of whether the CDB
+    client is running at the master or at any of the slaves.  Once a
+    slave has received the updates associated to a commit at the
+    master, all CDB subscribers at the slave will be duly notified
+    about any changes using the normal CDB subscription
+    mechanism.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13129"></a>24.4.&nbsp;Security aspects</h2></div></div></div><p>We specify in <code class="filename"><span class="phrase">confd.conf</span></code> which IP
+    address the master should bind for incoming slaves. If we choose
+    the default value <code class="sgmltag-element">0.0.0.0</code> it is the responsibility of
+    the application to ensure that connection requests only arrive
+    from acceptable trusted sources through some means of
+    firewalling.</p><p>A cluster is also protected by a token, a secret string only
+    known to the application. The <span class="phrase">API function
+    <code class="function">confd_ha_connect()</code></span>
+    must be given the token.
+    A slave node that connects to a master node negotiates with the
+    master using a CHAP-2 like protocol, thus both the master and the
+    slave are ensured that the other end has the same token without
+    ever revealing their own token. The token is never sent in clear
+    text over the network. This mechanism ensures that a connection
+    from a ConfD slave to a master can only succeed if they both have
+    the same token.</p><p>It is indeed possible to store the token itself in CDB, thus
+    an application can initially read the token from the local CDB
+    data, and then use that token in
+    <code class="function">confd_ha_connect()</code>.
+    
+    In this case it may very
+    well be a good idea to have the token stored in CDB be of type
+    <span class="type">tailf:aes-cfb-128-encrypted-string</span>.</p><p>If the actual CDB data that is sent on the wire between
+    cluster nodes is sensitive, and the network is untrusted, the
+    recommendation is to use IPSec between the nodes. An alternative
+    option is to decide exactly which configuration data is sensitive
+    and then use the <span class="type">tailf:aes-cfb-128-encrypted-string</span> type for
+    that data. If the configuration data is of type
+    <span class="type">tailf:aes-cfb-128-encrypted-string</span> the encrypted data will be
+    sent on the wire in update messages from the master to the
+    slaves.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13144"></a>24.5.&nbsp;API</h2></div></div></div><p>There are two APIs used by the HA framework to control the
+    replication aspects of CDB. First there exists a synchronous API
+    used to tell ConfD what to do, secondly the application may create
+    a notifications socket and subscribe to HA related events where
+    ConfD notifies the application on certain HA related events such
+    as the loss of the master etc. This notifications API is described
+    in <span class="olink">????</span>.
+    The HA related
+    notifications sent by ConfD are crucial to how to program the
+    HA framework.</p><p>The following functions are used from the HAFW to instruct
+    ConfD about the cluster.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_connect</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>const struct sockaddr* <var class="pdparam">srv</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">srv_sz</var>, </td></tr><tr><td>&nbsp;</td><td>const char *<var class="pdparam">token</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Connects a HA socket to ConfD and also provides the
+          secret token to be used in later negotiations with other
+          nodes.</p></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_bemaster</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">mynodeid</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Instructs the local node to become master. The
+          function also provides a node identifier for the node. The
+          node id is of type <span class="type">confd_value_t</span>. Thus if we in
+          our configuration have trees with different branches for
+          node local data, it is highly recommended to use the same
+          type there as for the type of the node id.</p></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_beslave</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">mynodeid</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_ha_node *<var class="pdparam">master</var>, </td></tr><tr><td>&nbsp;</td><td>int <var class="pdparam">waitreply</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Instructs a node to be slave. The definition of the
+          <span class="type">struct confd_ha_node</span> is:</p><div class="informalexample"><pre class="programlisting">
+                  <pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ha_node {
+    confd_value_t nodeid;
+    <strong class="hl-keyword">int</strong> af;               <em class="hl-comment" style="color: silver">/* AF_INET | AF_INET6 | AF_UNSPEC */</em>
+    <strong class="hl-keyword">union</strong> {               <em class="hl-comment" style="color: silver">/* address of remote note */</em>
+        <strong class="hl-keyword">struct</strong> in_addr ip4;
+        <strong class="hl-keyword">struct</strong> in6_addr ip6;
+        <strong class="hl-keyword">char</strong> *str;
+    } addr;
+    <strong class="hl-keyword">char</strong> buf[<span class="hl-number">128</span>];        <em class="hl-comment" style="color: silver">/* when confd_read_notification() and            */</em>
+                          <em class="hl-comment" style="color: silver">/* confd_ha_get_status() populate these structs, */</em>
+                          <em class="hl-comment" style="color: silver">/* if type of nodeid is C_BUF, the pointer       */</em>
+                          <em class="hl-comment" style="color: silver">/* will be set to point into this buffer         */</em>
+    <strong class="hl-keyword">char</strong> addr_buf[<span class="hl-number">128</span>];   <em class="hl-comment" style="color: silver">/* similar to the above, but for the address     */</em>
+                          <em class="hl-comment" style="color: silver">/* of remote node when using external IPC        */</em>
+                          <em class="hl-comment" style="color: silver">/* (from getpeeraddr() callback for slaves)      */</em>
+};</pre>
+                </pre></div></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_benone</b>(</code></td><td>int <var class="pdparam">sock</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Resets a node to the initial state.</p></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_berelay</b>(</code></td><td>int <var class="pdparam">sock</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Instructs a slave node to be a relay for other slaves.
+          This is discussed in <a class="xref" href="ch24.html#ug.ha.relay_slaves" title="24.8.&nbsp;Relay slaves">Section&nbsp;24.8, &#8220;Relay slaves&#8221;</a>.</p></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_get_status</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>struct confd_ha_status *<var class="pdparam">stat</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>Returns the status of the current node in the user
+          provided <span class="type">struct confd_ha_status</span> structure.  The
+          definition is:</p><div class="informalexample"><pre class="programlisting">
+              <pre class="programlisting"><strong class="hl-keyword">struct</strong> confd_ha_status {
+    <strong class="hl-keyword">enum</strong> confd_ha_status_state state;
+    <em class="hl-comment" style="color: silver">/* if state is MASTER, we also have a list of slaves */</em>
+    <em class="hl-comment" style="color: silver">/* if state is SLAVE, then nodes[0] contains the master */</em>
+    <em class="hl-comment" style="color: silver">/* if state is RELAY_SLAVE, then nodes[0] contains the master,
+       and following entries contain the "sub-slaves" */</em>
+    <em class="hl-comment" style="color: silver">/* if state is NONE, we have no nodes at all */</em>
+    <strong class="hl-keyword">struct</strong> confd_ha_node nodes[<span class="hl-number">255</span>];
+    <strong class="hl-keyword">int</strong> num_nodes;
+};</pre>
+            </pre></div></dd><dt><span class="term">
+          <div class="funcsynopsis"><table border="0" class="funcprototype-table" summary="Function synopsis" style="cellspacing: 0; cellpadding: 0;"><tr><td><code class="funcdef">int <b class="fsfunc">confd_ha_slave_dead</b>(</code></td><td>int <var class="pdparam">sock</var>, </td></tr><tr><td>&nbsp;</td><td>confd_value_t *<var class="pdparam">nodeid</var><code>)</code>;</td></tr></table><div class="funcprototype-spacer">&nbsp;</div></div>
+        </span></dt><dd><p>This function must be used by the HAFW to tell ConfD
+          that a slave node is dead. It is vital that this is indeed
+          executed.  ConfD will notice that a slave is dead
+          automatically if the socket to the slave is closed, however
+          the slave can die without closing its socket.  If
+          configured, ConfD will periodically send alive tick messages
+          from the slaves to the master. If a tick message isn't
+          received by the master within the pre configured time the
+          master will consider the slave dead, close the socket and
+          report to the application through a notifications
+          socket.</p></dd></dl></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13248"></a>24.6.&nbsp;Ticks</h2></div></div></div><p>The configuration parameter
+    <code class="sgmltag-element">/confdCfg/ha/tickTimeout</code> is by default set to 20
+    seconds. This means that every 20 seconds each slave will send a
+    tick message on the socket leading to the master. Similarly, the
+    master will send a tick message every 20 seconds on every slave
+    socket.</p><p>This aliveness detection mechanism is necessary for ConfD.
+    If a socket gets closed all is well, ConfD will cleanup and notify
+    the application accordingly using the notifications API.  However,
+    if a remote node freezes, the socket will not get properly closed
+    at the other end. ConfD will distribute update data from the
+    master to the slaves. If a remote node is not reading the data,
+    TCP buffer will get full and ConfD will have to start to buffer
+    the data. ConfD will buffer data for at most <code class="sgmltag-element">tickTime</code>
+    times 3 time units. If a <code class="sgmltag-element">tick</code> has not been received
+    from a remote node within that time, the node will be considered
+    dead. ConfD will report accordingly over the notifications socket
+    and either remove the hanging slave or, if it is a slave that
+    loose contact with the master, go into the initial <code class="sgmltag-element">NONE</code>
+    state.</p><p>If the HAFW can be really trusted, it is possible to set
+    this timeout to <code class="constant">PT0S</code>, i.e zero, in which case
+    the entire dead-node-detection mechanism in ConfD is
+    disabled.</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13258"></a>24.7.&nbsp;Joining a cluster</h2></div></div></div><p>Some applications consist of several machines and also have
+    an architecture where it is possible to dynamically add more
+    machines to the cluster.  The procedure to add a machine to the
+    cluster is called <span class="quote">&#8220;<span class="quote">joining the cluster</span>&#8221;</span>.</p><p>Assume a situation where the cluster is running, we know
+    that the master is running at IP address <code class="sgmltag-element">master_ip</code>.  A
+    common technique is to bring up a virtual IP address (VIP) on the
+    master and then use gratuitous ARP to inform the other hosts on
+    the same L2 network about the new MAC/IP mapping.</p><p>The code to join a cluster is always going to be application
+    specific. Typically we would do something like the
+    following:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Start the new machine with an initial simple CLI which
+        gathers the following information from the user or from the
+        network.</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>The VIP. We need to know where the master is.  This
+            can be entered manually. Another technique would be to use
+            UDP broadcast at the new machine and let code running at
+            the master reply. Regardless, we need an IP address to
+            connect to.</p></li><li class="listitem"><p>The admin password.</p></li></ul></div></li><li class="listitem"><p>Connect to a server at the VIP and send the admin
+        password. This server code must then:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Use <code class="function">maapi_authenticate()</code> to
+            check that the remote user indeed knows the admin password
+            (or whichever user we choose in our application).</p></li><li class="listitem"><p>Assume a data model similar to the one in <a class="xref" href="ch24.html#ug.ha.ex.cfg_yang" title="Example&nbsp;24.1.&nbsp;A data model divided into common and node specific subtrees">Example&nbsp;24.1, &#8220;A data model divided into common and node specific
+      subtrees&#8221;</a>. The server code running
+            at the master would then use MAAPI to populate the new
+            <code class="sgmltag-element">/cfg/cluster/host</code> tree for the joining slave.
+            Finally the master code replies with the secret cluster
+            token found in the master config at
+            <code class="sgmltag-element">/cfg/shared/token</code>. It is not necessary to have
+            the token in CDB, it could also be stored somewhere else
+            or even hard coded if the network for cluster communication
+            is considered trusted.</p></li><li class="listitem"><p>The join code at the new machine now has the token.
+            It can start ConfD with its default configuration.  Once
+            ConfD is started the join code invokes
+            <code class="function">confd_ha_beslave()</code> and we are
+            done.</p></li></ul></div></li></ol></div></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ug.ha.relay_slaves"></a>24.8.&nbsp;Relay slaves</h2></div></div></div><p>The normal setup of a ConfD
+    HA cluster is to have all slaves connected directly to the
+    master. This is a configuration that is both conceptually simple and
+    reasonably straightforward to manage for the HAFW. In some
+    scenarios, in particular a cluster with multiple slaves at a
+    location that is network-wise distant from the master, it can
+    however be sub-optimal, since the replicated data will be sent to
+    each remote slave individually over a potentially low-bandwidth
+    network connection.</p><p>To make this case more efficient, we can instruct a slave to
+    be a relay for other slaves, by invoking the <span class="phrase"><code class="function">confd_ha_berelay()</code> API
+    function</span>.
+    This will make the slave start listening on the IP address and port
+    configured for HA in <code class="filename"><span class="phrase">confd.conf</span></code>, and handle connections
+    from other slaves in the same manner as the cluster master does. The
+    initial CDB copy (if needed) to a new slave will be done from the
+    relay slave, and when the relay slave receives CDB data for
+    replication from its master, it will distribute the data to all its
+    connected slaves in addition to updating its own CDB copy.</p><p>To instruct a node to become a slave connected to a relay
+    slave, we use the <span class="phrase">
+    <code class="function">confd_ha_beslave()</code> function</span>  as
+    usual, but pass the node information for the relay slave instead of
+    the node information for the master. I.e. the "sub-slave" will in
+    effect consider the relay slave as its master. To instruct a relay
+    slave to stop being a relay, we can invoke the <span class="phrase"> <code class="function">confd_ha_beslave()</code>
+    function</span>  with the same parameters as in the original
+    call. This is a no-op for a "normal" slave, but it will cause a
+    relay slave to stop listening for slave connections, and disconnect
+    any already connected "sub-slaves".</p><p>This setup requires special consideration by the HAFW. Instead
+    of just telling each slave to connect to the master independently,
+    it must setup the slaves that are intended to be relays, and tell
+    them to become relays, before telling the "sub-slaves" to connect
+    to the relay slaves. Consider the case of a master M and a slave S0
+    in one location, and two slaves S1 and S2 in a remote location,
+    where we want S1 to act as relay for S2. The setup of the cluster
+    then needs to follow this procedure:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Tell M to be master.</p></li><li class="listitem"><p>Tell S0 and S1 to be slave with M as master.</p></li><li class="listitem"><p>Tell S1 to be relay.</p></li><li class="listitem"><p>Tell S2 to be slave with S1 as master.</p></li></ol></div><p>Conversely, the handling of network outages and node failures
+    must also take the relay slave setup into account. For example, if a
+    relay slave loses contact with its master, it will transition to the
+    <code class="sgmltag-element">NONE</code> state just like any other slave, and it will then
+    disconnect its "sub-slaves" which will cause those to transition to
+    <code class="sgmltag-element">NONE</code> too, since they lost contact with "their" master. Or
+    if a relay slave dies in a way that is detected by its "sub-slaves",
+    they will also transition to <code class="sgmltag-element">NONE</code>. Thus in the example
+    above, S1 and S2 needs to be handled differently. E.g. if S2 dies,
+    the HAFW probably won't take any action, but if S1 dies, it makes
+    sense to instruct S2 to be a slave of M instead (and when S1 comes
+    back, perhaps tell S2 to be a relay and S1 to be a slave of
+    S2).</p><p>Besides the use of <code class="function"><span class="phrase">confd_ha_berelay()</span></code>, the API is mostly
+    unchanged when using relay slaves. The HA event notifications
+    reporting the arrival or the death of a slave are still generated
+    only by the "real" cluster master. If the <span class="phrase"><code class="function">confd_ha_get_status()</code> API
+    function</span>
+    is used towards a relay slave, it will report the node state as
+    <span class="phrase">CONFD_HA_STATE_SLAVE_RELAY rather than
+    just CONFD_HA_STATE_SLAVE</span>, and the
+    array of nodes will have its master as the first element (same as
+    for a "normal" slave), followed by its "sub-slaves" (if any).</p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d5e13320"></a>24.9.&nbsp;CDB replication</h2></div></div></div><p>When HA is enabled in <code class="filename"><span class="phrase">confd.conf</span></code> CDB
+    automatically replicates data written on the master to the
+    connected slave nodes. Replication is done on a per-transaction
+    basis to all the slaves in parallel. It can be configured to be
+    done asynchronously (best performance) or synchronously in step
+    with the transaction (most secure). When ConfD is in slave mode
+    the northbound APIs are in read-only mode, that is the
+    configuration can not be changed on a slave other than through
+    replication updates from the master. It is still possible to read
+    from for example NETCONF or CLI (if they are enabled) on a
+    slave. CDB subscriptions works as usual. When ConfD is in the NONE
+    state CDB is unlocked and it behaves as when ConfD is not in HA
+    mode at all.</p><p>The <a class="xref" href="ch06.html#ug.opdata.cdb" title="6.8.&nbsp;Operational data in CDB">Section&nbsp;6.8, &#8220;Operational data in CDB&#8221;</a> describes how
+    operational data can be stored in CDB. If this is used it is also
+    possible to replicate operational data in HA mode. Since
+    replication comes at a cost ConfD makes it configurable whether to
+    replicate all operational data, or just the persistent data (the
+    default). See the
+    <a class="xref" href="rn03re17.html" title="confd.conf"><span class="refentrytitle">confd.conf</span>(5)</a>
+    man-page
+    for the <code class="sgmltag-element">/confdConfig/cdb/operational/replication</code>
+    configurable. Replication of operational data can also be configured
+    to be done asynchronously or synchronously, via the
+    <code class="sgmltag-element">/confdConfig/cdb/operational/replicationMode</code>
+    configurable, but since there are no transactions for the writing of
+    operational data, this pertains to a given API call writing
+    operational data.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch23.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch25.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;23.&nbsp;The Management Agent API&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;25.&nbsp;The SNMP Gateway</td></tr></table></div></body></html>

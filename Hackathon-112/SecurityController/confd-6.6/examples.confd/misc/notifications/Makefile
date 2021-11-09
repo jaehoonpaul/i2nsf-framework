@@ -1,0 +1,84 @@
+######################################################################
+# ConfD Notifications example
+# (C) 2006-2009 Tail-f Systems
+#
+# See the README file for more information
+######################################################################
+
+usage:
+	@echo "See README file for more instructions"
+	@echo "make all      Build all example files"
+	@echo "make clean    Remove all built and intermediary files"
+	@echo "make start    Start ConfD daemon and example agent"
+	@echo "make stop     Stop any ConfD daemon and example agent"
+	@echo "make query    Run NETCONF query against ConfD"
+	@echo "make cli      Start the ConfD Command Line Interface"
+
+######################################################################
+# Where is ConfD installed? Make sure CONFD_DIR points it out
+CONFD_DIR ?= ../../..
+
+# Include standard ConfD build definitions and rules
+include $(CONFD_DIR)/src/confd/build/include.mk
+
+# In case CONFD_DIR is not set (correctly), this rule will trigger
+$(CONFD_DIR)/src/confd/build/include.mk:
+	@echo 'Where is ConfD installed? Set $$CONFD_DIR to point it out!'
+	@echo ''
+
+######################################################################
+# Example specific definitions and rules
+
+CONFD_FXS_DIR = $(CONFD_DIR)/etc/confd
+
+CONFD_FLAGS = --addloadpath $(CONFD_FXS_DIR)
+
+START_FLAGS ?= -i
+
+SRC       = confd_notifications.c
+OBJS      = $(SRC:.c=.o)
+
+######################################################################
+
+all:	noti.fxs $(CDB_DIR) ssh-keydir confd_notifications
+	@echo "Build complete"
+
+confd_notifications: $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LIBS)
+
+######################################################################
+clean:	iclean
+	-rm -rf confd_notifications 2> /dev/null || true
+
+start:  stop
+	$(CONFD) -c ./confd.conf $(CONFD_FLAGS)
+	### To see confd log events, run: tail -f ./confd.log
+	### In a separate window, start the CLI and make some changes
+	./confd_notifications $(START_FLAGS)
+
+######################################################################
+stop:
+	### Stopping any confd daemon
+	$(CONFD) --stop    || true
+	$(KILLALL) confd_notifications || true
+
+######################################################################
+cli:
+	$(CONFD_DIR)/bin/confd_cli --user=admin --groups=admin \
+		--interactive || echo Exit
+
+######################################################################
+cli-c:
+	$(CONFD_DIR)/bin/confd_cli -C --user=admin --groups=admin \
+		--interactive || echo Exit
+
+######################################################################
+query:
+	$(CONFD_DIR)/bin/netconf-console -snoaaa --get-config
+
+######################################################################
+
+
+.PRECIOUS:	%.xso
+.PRECIOUS:	%.h
+

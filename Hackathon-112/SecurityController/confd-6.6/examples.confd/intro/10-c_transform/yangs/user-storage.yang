@@ -1,0 +1,128 @@
+module user-storage {
+
+  namespace "https://example.com/user-storage";
+  prefix "storage";
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  container user-storage {
+    description "User storage entities related configuration.";
+
+    list storage {
+      description "List of all the deployed storages.";
+
+      key "name";
+
+      leaf name {
+        description "Identifier of the storage.";
+        type string;
+      }
+
+      leaf mountpoint {
+        description "Full file system path to the storage location.";
+        mandatory true;
+        type string;
+      }
+
+      leaf maxsize {
+        description "Maximum file size to be occupied by the storage [MB].";
+        default 256;
+        type int32 {
+          range "32 .. 2048";
+        }
+      }
+
+      leaf descrip {
+        description "Optional brief description/designation of the storage.";
+        type string;
+      }
+    }
+
+    list user {
+      description "List of all the storage users.";
+
+      key "user-id";
+      unique "username";
+
+      leaf user-id {
+        description "Unique user identifier.";
+        type int32;
+      }
+
+      leaf username {
+        description "Usename used for storage login.";
+        type string;
+      }
+
+      container auth-info {
+        description "Authentication related data.";
+
+        leaf auth-type {
+          description "Type of authentication used for the user.";
+          mandatory true;
+          type enumeration {
+            enum none {
+              tailf:code-name "at_none";
+              description "None - plain username sufficient to authenticate.";
+            }
+            enum password {
+              tailf:code-name "at_password";
+              description "Password - plain string.";
+            }
+            enum key {
+              tailf:code-name "at_key";
+              description "Key - binary representation.";
+            }
+          }
+        }
+
+        leaf password {
+          description "String password.";
+          type tailf:aes-cfb-128-encrypted-string;
+        }
+
+        leaf auth-key {
+          description "Binary auth key representation.";
+          type yang:hex-string {
+            tailf:value-length "4 .. 16384";
+          }
+        }
+      }
+    }
+
+    list ownership {
+      description "Binding of users and their managed storages.";
+
+      key "user-id storage-id";
+
+      leaf user-id {
+        description "User ID of the storage manager.";
+        type leafref {
+          path "../../user/user-id";
+        }
+      }
+
+      leaf storage-id {
+        description "Name of the managed storage.";
+        type leafref {
+          path "../../storage/name";
+        }
+      }
+
+      leaf content-type {
+        description "Restrict the stored data to the types set.";
+        type bits {
+          bit media;
+          bit document;
+          bit archive;
+        }
+      }
+    }
+  }
+}
