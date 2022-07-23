@@ -92,7 +92,7 @@ function Locationgroupsform() {
       }
 
       if (checkForm){
-          const response = await fetch('http://115.145.178.185:5000/location/put', {
+          const response = await fetch('http://localhost:5000/location/put', {
               method: 'PUT',
               body: JSON.stringify(form),
               headers: {
