@@ -110,7 +110,7 @@ function Usergroupsform() {
         }
 
         if (checkForm){
-            const response = await fetch('http://115.145.178.185:5000/user/put', {
+            const response = await fetch('http://localhost:5000/user/put', {
                 method: 'PUT',
                 body: JSON.stringify(form),
                 headers: {
