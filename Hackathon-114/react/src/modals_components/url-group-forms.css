@@ -1,0 +1,51 @@
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    /* Other styling... */
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    float: left;
+   }
+
+#name {
+    margin-left: 1rem;
+}
+
+
+.isHidden {
+    display: none;
+}
+
+.isShown {
+    display: block;
+}
+
+.url {
+    display: flex;
+    margin-left: 5rem;
+    gap: 1rem;
+}
+
+
+
+#addIcon:hover, #subIcon:hover {
+    box-shadow: 10px 10px 5px #888888;
+}
+
+#addIcon, #subIcon {
+    border-radius: 50%;
+    height: 2rem;
+    width: 1.5rem;
+   
+}

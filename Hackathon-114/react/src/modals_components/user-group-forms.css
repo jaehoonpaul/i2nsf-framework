@@ -1,0 +1,35 @@
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    /* Other styling... */
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    float: left;
+}
+
+
+form .footer {
+    flex: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.isHidden {
+    display: none;
+}
+
+.isShown {
+    display: block;
+}

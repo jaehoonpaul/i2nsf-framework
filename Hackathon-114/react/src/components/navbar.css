@@ -1,0 +1,24 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10rem;
+}
+
+.site-title {
+    font-size: 5rem;
+    color: #000;
+    text-decoration: none;
+}
+
+.navbar-items {
+    display: flex;
+    gap: 5rem;
+    list-style: none;
+}
+
+.navbar-items a, .navbar-items a:active {
+    list-style: none;
+    text-decoration: none;
+    font-size: 2rem;
+    color: #000;
+}
