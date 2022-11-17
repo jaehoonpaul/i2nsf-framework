@@ -1,0 +1,21 @@
+<i2nsf-cfi-policy>
+    <name>block_icmp_type_8</name>
+    <rules>
+        <name>icmp_echo_message</name>
+        <condition>
+            <firewall>
+                <source>
+                    employeesv6
+                </source>
+                <icmp>
+                    <message>echo</message>
+                </icmp>
+            </firewall>
+        </condition>
+        <action>
+            <primary-action>
+                <action>drop</action>
+            </primary-action>
+        </action>
+    </rules>
+</i2nsf-cfi-policy>

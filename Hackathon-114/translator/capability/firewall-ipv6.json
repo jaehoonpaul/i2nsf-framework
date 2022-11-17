@@ -1,0 +1,69 @@
+{    
+    "nsf-name": "firewall-ipv6",
+    "nsf-capability-info": {
+        "security-capability": {
+            "condition-capabilities": {
+                "generic-nsf-capabilities": {
+                    "ipv6-capability": [
+                        "next-header",
+                        "source-address",
+                        "destination-address"
+                    ],
+                    "tcp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "udp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "sctp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "dccp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ]
+                }
+            },
+            "action-capabilities": {
+                "ingress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "egress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ]
+            },
+            "default-action-capabilities": [
+                "pass",
+                "drop",
+                "mirror"
+            ]
+        },
+        "performance-capability": {
+            "processing": {
+                "processing-average": 1000,
+                "processing-peak": 5000
+            },
+            "bandwidth": {
+                "outbound": {
+                    "outbound-average": 1000,
+                    "outbound-peak": 5000
+                },
+                "inbound": {
+                    "inbound-average": 1000,
+                    "inbound-peak": 5000
+                }
+            }
+        }
+    },
+    "nsf-access-info": {
+        "ip": "192.0.2.4",
+        "port": 49152
+    }
+}

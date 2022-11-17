@@ -1,0 +1,23 @@
+<i2nsf-cfi-policy>
+    <name>allow_geolocation</name>
+    <rules>
+        <name>geolocation_source</name>
+        <condition>
+            <context>
+                <geographic-location>
+                    <source>South_Korea</source>
+                    <source>Japan</source>
+                    <source>USA</source>
+                    <source>Canada</source>
+                    <source>UK</source>
+                    <source>France</source>
+                </geographic-location>
+            </context>
+        </condition>
+        <action>
+            <primary-action>
+                <action>pass</action>
+            </primary-action>
+        </action>
+    </rules>
+</i2nsf-cfi-policy>

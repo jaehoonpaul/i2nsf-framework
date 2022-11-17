@@ -1,0 +1,518 @@
+namespace local = ""
+default namespace confd = "http://tail-f.com/ns/clispec/1.0"
+
+cmdpathType =
+   list {xsd:Name*}
+
+argsType =
+   list {xsd:token*}
+
+pipeFlagsType =
+   list {xsd:token*}
+
+uidType =
+   (xsd:positiveInteger | idType)
+
+idType =
+   (xsd:Name "confd" | xsd:Name "user" | xsd:Name "root")
+
+alignType =
+   (xsd:Name "left" | xsd:Name "right" | xsd:Name "center")
+
+confirmOptionType =
+   (xsd:string "yes" | xsd:string "no"| xsd:string "none")
+
+enumsType =
+   list {xsd:NMTOKEN*}
+
+keypathType =
+   (xsd:Name "new" | xsd:Name "exist")
+
+patternType =
+   (xsd:Name "config" | xsd:Name "stats" | xsd:Name "all")
+
+styleType =
+   (xsd:Name "c" | xsd:Name "i" | xsd:Name "j")
+
+datastoreType =
+   (xsd:Name "private" | xsd:Name "shared" | xsd:Name "exclusive")
+
+keymapActionType =
+   (xsd:Name "unset" | xsd:Name "new" | xsd:Name "exist" | xsd:Name "start_of_line" | xsd:Name "back" | xsd:Name "abort" | xsd:Name "delete_forward" | xsd:Name "delete_forward_no_eof" | xsd:Name "end_of_line" | xsd:Name "forward" | xsd:Name "kill_rest" | xsd:Name "redraw" | xsd:Name "redraw_clear" | xsd:Name "history_next" | xsd:Name "history_prev" | xsd:Name "isearch_back" | xsd:Name "transpose" | xsd:Name "kill_line" | xsd:Name "quote" | xsd:Name "word_delete_back" | xsd:Name "yank" | xsd:Name "newline" | xsd:Name "end_mode" | xsd:Name "delete" | xsd:Name "word_delete_forward" | xsd:Name "beginning_of_line" | xsd:Name "delete" | xsd:Name "end_of_line" | xsd:Name "word_forward" | xsd:Name "word_back" | xsd:Name "end_of_line" | xsd:Name "beginning_of_line" | xsd:Name "word_back" | xsd:Name "word_forward" | xsd:Name "word_capitalize" | xsd:Name "word_lowercase" | xsd:Name "word_uppercase" | xsd:Name "word_delete_back" | xsd:Name "word_delete_forward" | xsd:Name "multiline_mode" | xsd:Name "yank_killring" | xsd:Name "quot" | xsd:Name { pattern = "insert\(.+\)" } )
+
+paramsModeType =
+   (xsd:Name "choice" | xsd:Name "list")
+
+timeoutType = 
+   (xsd:duration | infinityType)
+
+choiceMaxType = 
+   (xsd:nonNegativeInteger | unlimitedType)
+
+unlimitedType = (xsd:string "unlimited")
+
+infinityType = (xsd:string "infinity")
+
+start =
+   element clispec {
+      element operationalMode {modeType}*,
+      element configureMode {modeType}*,
+      element pipeCmds {modeType}*,
+      attribute style {styleType}?
+   }
+
+modeType =
+   element modifications {modificationsType}?,
+   element show {showType}*,
+   element start {startType}*,
+   element cmd {cmdType}*
+  
+modificationsType =
+   element paginate {
+      attribute path {cmdpathType},
+      attribute value {xsd:boolean}
+   }* &
+   element displayWhen {
+      attribute path {cmdpathType},
+      attribute expr {xsd:string},
+      attribute ctx {xsd:string}
+   }* &
+   element move {
+      attribute src {cmdpathType},
+      attribute dest {cmdpathType},
+      attribute inclSubCmds {xsd:boolean}?
+   }* &
+   element copy {
+      attribute src {cmdpathType},
+      attribute dest {cmdpathType},
+      attribute inclSubCmds {xsd:boolean}?
+   }* &
+   element keymap {
+      attribute key {xsd:string},
+      attribute action {keymapActionType}
+   }* &
+   element defaultConfirmOption {
+      confirmOptionType
+   }* &
+   element delete {
+      attribute src {cmdpathType}
+   }* &
+   element submodeCommand {
+      attribute src {cmdpathType}
+   }* &
+   element supressMode {
+      attribute src {cmdpathType}
+   }* &
+   element suppressMode {
+      attribute src {cmdpathType}
+   }* &
+   element displayEmptyConfig {
+      attribute path {cmdpathType}
+   }* &
+   element suppressKeySort {
+      attribute path {cmdpathType}
+   }* &
+   element preformatted {
+      attribute src {cmdpathType}
+   }* &
+   element exposeKeyName {
+      attribute path {cmdpathType}
+   }* &
+   element suppressTable {
+      attribute src {cmdpathType}
+   }* &
+   element suppressValidationWarningPrompt {
+      attribute path {cmdpathType}
+   }* &
+   element enforceTable {
+      attribute src {cmdpathType}
+   }* &
+   element suppressKeyAbbrev {
+      attribute src {cmdpathType}
+   }* &
+   element allowKeyAbbrev {
+      attribute src {cmdpathType}
+   }* &
+   element dropElem {
+      attribute src {cmdpathType}
+   }* &
+   element incompleteShowPath {
+      attribute path {cmdpathType},
+      attribute minKeys {xsd:positiveInteger}?
+   }* &
+   element multiLinePrompt {
+      attribute namespace {xsd:string},
+      attribute name {xsd:string}
+   }* &
+   element suppressShowPath {
+      attribute path {cmdpathType}
+   }* &
+   element suppressShowMatch {
+      attribute path {cmdpathType}
+   }* &
+   element incompleteCommand {
+      attribute path {cmdpathType}
+   }* &
+   element sequenceCommands {
+      attribute path {cmdpathType}
+   }* &
+   element fullCommand {
+      attribute path {cmdpathType}
+   }* &
+   element hasRange {
+      attribute path {cmdpathType}
+   }* &
+   element suppressRange {
+      attribute path {cmdpathType}
+   }* &
+   element allowWildcard {
+      attribute path {cmdpathType}
+   }* &
+   element suppressWildcard {
+      attribute path {cmdpathType}
+   }* &
+   element fullShowPath {
+      attribute path {cmdpathType},
+      attribute maxKeys {xsd:positiveInteger}?
+   }* &
+   element compactElem {
+      attribute src {cmdpathType}
+   }* &
+   element customRange {
+      ( element callback { rangeCallbackType } &
+        element rangeType { rangeTypeType }* ),
+      attribute path {cmdpathType}
+   }* &
+   element showPathRewrite {
+      ( element callback { showPathRewriteCallbackType } )
+   }* &
+   element errorMessageRewrite {
+      ( element callback { showPathRewriteCallbackType } )
+   }* &
+   element compactStatsElem {
+      attribute src {cmdpathType},
+      attribute wrap {xsd:boolean}?,
+      attribute delimiter {xsd:string}?,
+      attribute prettify {xsd:boolean}?,
+      attribute spacer {xsd:string}?,
+      attribute width {xsd:positiveInteger}?
+   }* &
+   element columnWidth {
+      attribute path {cmdpathType},
+      attribute width {xsd:positiveInteger}
+   }* &
+   element minColumnWidth {
+      attribute path {cmdpathType},
+      attribute width {xsd:positiveInteger}
+   }* &
+   element columnAlign {
+      attribute path {cmdpathType},
+      attribute align {alignType}
+   }* &
+   element defaultColumnAlign {
+      attribute namespace {xsd:string},
+      attribute name {xsd:string},
+      attribute align {alignType}
+   }* &
+   element columnStats {
+      attribute src {cmdpathType}
+   }* &
+   element multiValue {
+      attribute src {cmdpathType}
+   }* &
+   element addMode {
+      attribute src {cmdpathType}
+   }* &
+   element autocommitDelay {
+      attribute path {cmdpathType}
+   }* &
+   element noKeyCompletion {
+      attribute src {cmdpathType}
+   }* &
+   element noMatchCompletion {
+      attribute path {cmdpathType}
+   }* &
+   element modeName {
+      ( element fixed {xsd:string} |
+        element capi {capiType} ),
+      attribute src {cmdpathType}
+   }* &
+   element hide {
+      attribute src {cmdpathType}
+   }* &
+   element hideGroup {
+      attribute src {cmdpathType},
+      attribute name {xsd:string}
+   }* &
+   element simpleType {
+      element callback {simpleTypeCallbackType},
+      attribute namespace {xsd:string},
+      attribute disallowValue {xsd:string},
+      attribute name {xsd:string}?
+   }* &
+   element completion {
+      element callback {completionCallbackType},
+      attribute path {cmdpathType}
+   }* &
+   element legend {modificationLegendType}* &
+   element footer {modificationLegendType}* &
+   element help {modificationTextType}* &
+   element pipeFlags {pipeFlagsModType}* &
+   element addPipeFlags {pipeFlagsModType}* &
+   element negPipeFlags {pipeFlagsModType}* &
+   element info {modificationTextType}* &
+   element paramhelp {modificationParamTextType}* &
+   element showTemplate {modificationLegendType}* &
+   element showTemplateLegend {modificationLegendType}* &
+   element showTemplateEnter {modificationLegendType}* &
+   element showTemplateFooter {modificationLegendType}* &
+   element runTemplate {modificationLegendType}* &
+   element runTemplateLegend {modificationLegendType}* &
+   element runTemplateEnter {modificationLegendType}* &
+   element runTemplateFooter {modificationLegendType}* &
+   element paraminfo {modificationParamTextType}* &
+   element typehelp {modificationTypeHelpType}* &
+   element confirmText {
+       modificationTextType,
+       attribute defaultOption {
+           confirmOptionType
+       }
+   }* &
+   element timeout {
+	timeoutType,
+	attribute src {cmdpathType}
+   }*
+
+modificationTextType =
+   xsd:string,
+   attribute src {cmdpathType}
+
+pipeFlagsModType =
+   pipeFlagsType,
+   attribute src {cmdpathType}
+
+modificationLegendType =
+   xsd:string,
+   attribute path {cmdpathType}
+
+modificationParamTextType =
+   xsd:string,
+   attribute src {cmdpathType},
+   attribute nr {xsd:positiveInteger}
+
+modificationTypeHelpType =
+   xsd:string,
+   attribute type {xsd:Name}
+
+cmdType =
+   (element info {xsd:string} &
+      element help {xsd:string} &
+      element callback {callbackType}? &
+      element params {paramsType}? &
+      element options {cmdOptionsType}? &
+      element confirmText {
+          xsd:string,
+          attribute defaultOption {
+          confirmOptionType
+        }
+      }? &
+      element timeout {xsd:positiveInteger}? &
+      element cmd {cmdType}*),
+   attribute name {xsd:Name},
+   attribute mode {cmdpathType}?,
+   attribute mount {cmdpathType}?
+
+enterModeType =
+   element name {xsd:string} &
+   element datastore {datastoreType}?
+
+showType =
+   (  element callback {callbackType}? &
+      element options {cmdOptionsType}? ),
+   attribute path {cmdpathType}?
+
+startType =
+   element callback {callbackType}? &
+   element options {cmdOptionsType}?
+
+rangeTypeType = 
+   attribute key { xsd:string },
+   attribute namespace { xsd:string },
+   attribute name { xsd:string }
+
+rangeCallbackType = 
+   element capi { rangeCapiType }
+
+rangeCapiType = 
+   xsd:string,
+   attribute id { xsd:string }?
+   
+showPathRewriteCallbackType = 
+   element capi { xsd:Name }
+
+callbackType =
+   element mode {enterModeType} | 
+   element js {jsType} |
+   element exec {execType} |
+   element execStop {execStopType} |
+   element table {tableType} |
+   element source {sourceType} |
+   element capi {capiCmdType}
+
+capiType =
+   element cmdpoint {xsd:Name}
+
+capiCmdType =
+   element cmdpoint {xsd:Name},
+   element args {argsType}?
+
+completionCallbackType =
+   element capi {completionCapiType}
+
+completionCapiType =
+   element completionpoint {
+     xsd:Name,
+     attribute id { xsd:string }?
+   }
+
+simpleTypeCallbackType =
+   element capi {completionpointCapiType}
+
+completionpointCapiType =
+   element completionpoint {xsd:Name}
+
+tableType =
+   element root {xsd:string},
+   element legend {xsd:string}?,
+   element item {
+      element width {xsd:positiveInteger}?,
+      element align {alignType}?,
+      element header {xsd:string},
+      element path {xsd:string}
+   }+,
+   element footer {xsd:string}?
+
+sourceType =
+   element from {xsd:string}?
+
+jsType =
+   element function {xsd:Name},
+   element args {argsType}?
+
+execType =
+   element osCommand {xsd:token},
+   element args {argsType}?,
+   element options {execOptionsType}?
+
+interruptType = (xsd:Name "ctrlc" | xsd:Name "sigkill" |
+   xsd:Name "sigint" | xsd:Name "sigterm")
+
+execOptionsType =
+   element uid {uidType}? &
+   element gid {uidType}? &
+   element wd {xsd:token}? &
+   element pty {xsd:boolean}? &
+   element globalNoDuplicate {xsd:token}? &
+   element noInput {empty}? &
+   element batch {batchType}? &
+   element ignoreExitValue {empty}? &
+   element interrupt {interruptType}?
+
+batchType =
+   element group {xsd:Name}? &
+   element prefix {xsd:Name}? &
+   element noDuplicate {empty}?
+
+execStopType =
+   attribute batchGroup {xsd:Name}
+
+paramsType =
+   element param {paramType}*,
+   element any {anyType}?,
+   attribute mode {paramsModeType}?,
+   attribute min {xsd:nonNegativeInteger}?,
+   attribute max {choiceMaxType}?,
+   attribute multi {xsd:boolean}?
+   
+
+paramType =
+   element type {typeType}? &
+   element info {xsd:string}? &
+   element help {xsd:string}? &
+   element name {xsd:token}? &
+   element auditLogHide {empty}? &
+   element mapTo {xsd:string}? &
+   element prefix {xsd:string}? &
+   element hideGroup {xsd:string}? &
+   element id {xsd:string}? &
+   element argFlag {xsd:string}? &
+   element flag {xsd:string}? &
+   element params {paramsType}? &
+   element callback {simpleTypeCallbackType}? &
+   element optional {optionalType}? &
+   element mandatory {empty}? &
+   element completionId {xsd:string}?
+
+typeType =
+   element enums {enumsType} |
+   element void {empty} |
+   element displayGroups {empty} |
+   element enumerate {enumerateType} |
+   element keypath {keypathType} |
+   element pattern {patternType} |
+   element key {
+           xsd:string,
+           attribute mode {keypathType}} |
+   element simpleType {
+      attribute namespace {xsd:string} &
+      attribute name {xsd:string}
+   } |
+   element xpath {
+      attribute expr {xsd:string} &
+      attribute ctx {xsd:string}
+   } |
+   element file {
+      attribute wd {xsd:token}?
+   } |
+   element directory {
+      attribute wd {xsd:token}?
+   } |
+   element url_file {
+      attribute wd {xsd:token}?
+   } |
+   element url_directory {
+      attribute wd {xsd:token}?
+   } |
+   element url_directory_file {empty} |
+   element directory_file {empty}
+
+enumerateType =
+   element enum {enumType}*
+
+enumType = 
+   element name {xsd:token} &
+   element hideGroup {xsd:string} &
+   element info {xsd:string}?
+
+optionalType =
+   element default {xsd:string}?
+
+anyType =
+   element info {xsd:string} &
+   element help {xsd:string}
+
+cmdOptionsType =
+   element hidden {empty}?,
+   element submodeCommand {empty}?,
+   element topModeCommand {empty}?,
+   element hideGroup {xsd:string}?,
+   element denyRunAccess {empty}?,
+   element notInterruptible {empty}?,
+   element paginate {empty}?,
+   element displayWhen {
+      attribute expr {xsd:string},
+      attribute ctx {xsd:string}
+   }?,
+   element pipeFlags {pipeFlagsType}?,
+   element negPipeFlags {pipeFlagsType}?
+

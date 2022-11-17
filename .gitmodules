@@ -1,0 +1,6 @@
+[submodule "Hackathon-115/i2nsf-ipsec"]
+	path = Hackathon-115/i2nsf-ipsec
+	url = https://github.com/patrick8link/i2nsf-ipsec.git
+[submodule "Hackathon-115/docker-i2nsf-ipsec"]
+	path = Hackathon-115/docker-i2nsf-ipsec
+	url = https://github.com/patrick8link/docker-i2nsf-ipsec.git

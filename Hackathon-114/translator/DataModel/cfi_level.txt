@@ -1,0 +1,46 @@
+module: ietf-i2nsf-cfi-policy
+  +--rw i2nsf-cfi-policy* [policy-name]
+     +--rw policy-name            string
+     +--rw resolution-strategy?   identityref
+     +--rw rules* [rule-name]
+     |  +--rw rule-name    string
+     |  +--rw priority?    uint8
+     |  +--rw event
+     |  |  +--rw security-event?   identityref
+     |  +--rw condition
+     |  |  +--rw firewall-condition
+     |  |  |  +--rw source*          union
+     |  |  |  +--rw destination*     union
+     |  |  |  +--rw type-and-code*   identityref
+     |  |  +--rw ddos-condition
+     |  |  |  +--rw rate-limit
+     |  |  |     +--rw packet-rate-threshold?   uint32
+     |  |  |     +--rw byte-rate-threshold?     uint32
+     |  |  |     +--rw flow-rate-threshold?     uint32
+     |  |  +--rw payload-condition
+     |  |  |  +--rw content*   -> /i2nsf-cfi-policy/threat-preventions/payload-content/name
+     |  |  +--rw url-condition
+     |  |  |  +--rw url-name?   -> /i2nsf-cfi-policy/url-group/name
+     |  |  +--rw voice-condition
+     |  |  |  +--rw source-id*        string
+     |  |  |  +--rw destination-id*   string
+     |  |  |  +--rw user-agent*       string
+     |  |  +--rw context-condition
+     |  |     +--rw geography-location-condition
+     |  |     |  +--rw source*        -> /i2nsf-cfi-policy/endpoint-groups/location-group/name
+     |  |     |  +--rw destination*   -> /i2nsf-cfi-policy/endpoint-groups/location-group/name
+     |  |     +--rw time-condition
+     |  |        +--rw start-date-time?   yang:date-and-time
+     |  |        +--rw end-date-time?     yang:date-and-time
+     |  |        +--rw period
+     |  |        |  +--rw start-time?   time
+     |  |        |  +--rw end-time?     time
+     |  |        |  +--rw day*          identityref
+     |  |        |  +--rw date*         int32
+     |  |        |  +--rw month*        string
+     |  |        +--rw frequency?         enumeration
+     |  +--rw actions
+     |     +--rw primary-action
+     |     |  +--rw action?   identityref
+     |     +--rw secondary-action
+     |        +--rw log-action?   identityref

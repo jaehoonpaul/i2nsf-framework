@@ -1,0 +1,18 @@
+<i2nsf-cfi-policy>
+  <name>security_policy_for_ddos_attacks</name>
+  <rules>
+    <name>1000_packets_per_second</name>
+    <condition>
+      <ddos>
+        <rate-limit>
+          <packet-rate-threshold>1000</packet-rate-threshold>
+        </rate-limit>
+      </ddos>
+    </condition>
+    <action>
+      <primary-action>
+        <action>drop</action>
+      </primary-action>
+    </action>
+  </rules>
+</i2nsf-cfi-policy>

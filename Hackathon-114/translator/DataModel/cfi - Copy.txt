@@ -1,0 +1,95 @@
+module: ietf-i2nsf-cfi-policy
+    +--rw i2nsf-cfi-policy* [policy-name]
+       +--rw policy-name           string
+       +--rw rules
+       |  +--rw rule* [rule-name]
+       |     +--rw rule-name       string
+       |     +--rw event
+       |     |  +--rw security-event?     identityref
+       |     |  +--rw time-information
+       |     |  |  +--rw start-date-time?   yang:date-and-time
+       |     |  |  +--rw end-date-time?     yang:date-and-time
+       |     |  |  +--rw period
+       |     |  |     +--rw start-time?   time
+       |     |  |     +--rw end-time?     time
+       |     |  |     +--rw day*          identityref
+       |     |  |     +--rw date*         int32
+       |     |  |     +--rw month*        string
+       |     |  +--rw frequency?          enumeration
+       |     +--rw condition
+       |     |  +--rw firewall-condition
+       |     |  |  +--rw source?        -> /i2nsf-cfi-policy/endpoint-groups/user-group/name
+       |     |  |  +--rw destination*   -> /i2nsf-cfi-policy/endpoint-groups/user-group/name
+       |     |  +--rw ddos-condition
+       |     |  |  +--rw source*        -> /i2nsf-cfi-policy/endpoint-groups/device-group/name
+       |     |  |  +--rw destination*   -> /i2nsf-cfi-policy/endpoint-groups/device-group/name
+       |     |  |  +--rw rate-limit
+       |     |  |     +--rw packet-threshold-per-second?   uint32
+       |     |  +--rw location-condition
+       |     |  |  +--rw source*        -> /i2nsf-cfi-policy/endpoint-groups/location-group/name
+       |     |  |  +--rw destination*   -> /i2nsf-cfi-policy/endpoint-groups/location-group/name
+       |     |  +--rw custom-condition
+       |     |  |  +--rw source*        -> /i2nsf-cfi-policy/threat-preventions/payload-content/name
+       |     |  |  +--rw destination?   -> /i2nsf-cfi-policy/threat-preventions/payload-content/name
+       |     |  +--rw threat-feed-condition
+       |     |     +--rw source*        -> /i2nsf-cfi-policy/threat-preventions/threat-feed-list/name
+       |     |     +--rw destination?   -> /i2nsf-cfi-policy/threat-preventions/threat-feed-list/name
+       |     +--rw actions
+       |     |  +--rw primary-action?     identityref
+       |     |  +--rw secondary-action?   identityref
+       |     +--rw ipsec-method
+       |        +--rw method?   identityref
+       +--rw endpoint-groups
+       |  +--rw user-group* [name]
+       |  |  +--rw name                  string
+       |  |  +--rw (match-type)
+       |  |     +--:(exact-match-ipv4)
+       |  |     |  +--rw ipv4?                 inet:ipv4-address
+       |  |     +--:(exact-match-ipv6)
+       |  |     |  +--rw ipv6?                 inet:ipv6-address
+       |  |     +--:(range-match-ipv4)
+       |  |     |  +--rw range-ipv4-address
+       |  |     |     +--rw start-ipv4-address    inet:ipv4-address
+       |  |     |     +--rw end-ipv4-address      inet:ipv4-address
+       |  |     +--:(range-match-ipv6)
+       |  |        +--rw range-ipv6-address
+       |  |           +--rw start-ipv6-address    inet:ipv6-address
+       |  |           +--rw end-ipv6-address      inet:ipv6-address
+       |  +--rw device-group* [name]
+       |  |  +--rw name                  string
+       |  |  +--rw (match-type)
+       |  |  |  +--:(exact-match-ipv4)
+       |  |  |  |  +--rw ipv4?                 inet:ipv4-address
+       |  |  |  +--:(exact-match-ipv6)
+       |  |  |  |  +--rw ipv6?                 inet:ipv6-address
+       |  |  |  +--:(range-match-ipv4)
+       |  |  |  |  +--rw range-ipv4-address
+       |  |  |  |     +--rw start-ipv4-address    inet:ipv4-address
+       |  |  |  |     +--rw end-ipv4-address      inet:ipv4-address
+       |  |  |  +--:(range-match-ipv6)
+       |  |  |     +--rw range-ipv6-address
+       |  |  |        +--rw start-ipv6-address    inet:ipv6-address
+       |  |  |        +--rw end-ipv6-address      inet:ipv6-address
+       |  |  +--rw protocol*             identityref
+       |  +--rw location-group* [name]
+       |     +--rw name           string
+       |     +--rw geo-ip-ipv4* [ipv4-address]
+       |     |  +--rw ipv4-address    inet:ipv4-address
+       |     |  +--rw ipv4-prefix?    inet:ipv4-prefix
+       |     +--rw geo-ip-ipv6* [ipv6-address]
+       |     |  +--rw ipv6-address    inet:ipv6-address
+       |     |  +--rw ipv6-prefix?    inet:ipv6-prefix
+       |     +--rw continent?     identityref
+       +--rw threat-preventions
+          +--rw threat-feed-list* [name]
+          |  +--rw name                 string
+          |  +--rw threat-type?         identityref
+          |  +--rw server-ipv4?         inet:ipv4-address
+          |  +--rw server-ipv6?         inet:ipv6-address
+          |  +--rw description?         string
+          |  +--rw threat-file-types*   identityref
+          |  +--rw signatures*          identityref
+          +--rw payload-content* [name]
+             +--rw name           string
+             +--rw description?   string
+             +--rw content*       string
