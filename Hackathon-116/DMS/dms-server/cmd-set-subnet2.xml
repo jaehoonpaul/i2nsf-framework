@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"  message-id="1">
+ <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <dhcp xmlns="http://tail-f.com/ns/example/dhcpd"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <subnets>
+          <subnet nc:operation="replace">
+            <net>192.168.128.0</net>
+            <mask>255.255.255.0</mask>
+            <range>
+              <low-addr>192.168.128.100</low-addr>
+              <hi-addr>192.168.128.199</hi-addr>
+            </range>
+          </subnet>
+        </subnets>
+      </dhcp>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>

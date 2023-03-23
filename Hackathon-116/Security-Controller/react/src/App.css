@@ -1,0 +1,42 @@
+:root {
+    --background-color: #fff;
+    --text-color: #000;
+}
+  
+/* Light mode */
+.App {
+    background-color: #fff;
+    color: #333;
+    min-height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+    /* Dark mode */
+.App.dark {
+    background-color: #333;
+    color: #fff;
+    min-height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.dark-toggle {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #333;
+    color: #fff;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 999;
+    margin: 20px;
+}
+
+.light-toggle {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 999;
+    margin: 20px;
+}

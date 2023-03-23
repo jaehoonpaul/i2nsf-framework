@@ -1,0 +1,1615 @@
+<INFO> 15-Mar-2023::05:30:04.871 dms confd[181024]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 15-Mar-2023::05:30:04.750 dms confd[181024]: - Enabling daemon log
+<INFO> 15-Mar-2023::05:30:04.755 dms confd[181024]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 15-Mar-2023::05:30:04.772 dms confd[181024]: - Loading file confd.fxs
+<DEBUG> 15-Mar-2023::05:30:04.785 dms confd[181024]: - Loading file ietf-yang-types.fxs
+<DEBUG> 15-Mar-2023::05:30:04.786 dms confd[181024]: - Loading file ietf-inet-types.fxs
+<DEBUG> 15-Mar-2023::05:30:04.786 dms confd[181024]: - Loading file ietf-datastores.fxs
+<DEBUG> 15-Mar-2023::05:30:04.795 dms confd[181024]: - Loading file ietf-yang-library.fxs
+<DEBUG> 15-Mar-2023::05:30:04.797 dms confd[181024]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:04.797 dms confd[181024]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:04.798 dms confd[181024]: - Loading file tailf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:04.802 dms confd[181024]: - Loading file ietf-netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:04.803 dms confd[181024]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 15-Mar-2023::05:30:04.803 dms confd[181024]: - Loading file netconf_netmod.fxs
+<DEBUG> 15-Mar-2023::05:30:04.804 dms confd[181024]: - Loading file ietf-restconf.fxs
+<DEBUG> 15-Mar-2023::05:30:04.804 dms confd[181024]: - Loading file confd_cfg.fxs
+<DEBUG> 15-Mar-2023::05:30:04.824 dms confd[181024]: - Loading file config.fxs
+<DEBUG> 15-Mar-2023::05:30:04.824 dms confd[181024]: - Loading file netconf_notification.fxs
+<DEBUG> 15-Mar-2023::05:30:04.824 dms confd[181024]: - Loading file netconf_actions.fxs
+<DEBUG> 15-Mar-2023::05:30:04.825 dms confd[181024]: - Loading file yang.fxs
+<DEBUG> 15-Mar-2023::05:30:04.825 dms confd[181024]: - Loading file tailf_netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:04.825 dms confd[181024]: - Loading file cli-builtin.fxs
+<DEBUG> 15-Mar-2023::05:30:04.826 dms confd[181024]: - Loading file confd.conf
+<INFO> 15-Mar-2023::05:30:04.827 dms confd[181024]: - Consulting daemon configuration file confd.conf
+<INFO> 15-Mar-2023::05:30:04.863 dms confd[181024]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 15-Mar-2023::05:30:04.863 dms confd[181024]: - Enabling audit log
+<INFO> 15-Mar-2023::05:30:04.866 dms confd[181024]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 15-Mar-2023::05:30:04.866 dms confd[181024]: - Enabling NETCONF log
+<INFO> 15-Mar-2023::05:30:04.867 dms confd[181024]: - Enabling SNMP log
+<INFO> 15-Mar-2023::05:30:04.868 dms confd[181024]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 15-Mar-2023::05:30:04.868 dms confd[181024]: - Enabling developer log
+<INFO> 15-Mar-2023::05:30:04.869 dms confd[181024]: - Enabling JSONRPC log
+<INFO> 15-Mar-2023::05:30:04.871 dms confd[181024]: - Enabling WebUI log log
+<INFO> 15-Mar-2023::05:30:04.878 dms confd[181024]: - Enabling error log
+<INFO> 15-Mar-2023::05:30:04.878 dms confd[181024]: - Writing error log to ./confderr.log
+<INFO> 15-Mar-2023::05:30:04.884 dms confd[181024]: - Daemon logging started
+<DEBUG> 15-Mar-2023::05:30:04.894 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:04.896 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 15-Mar-2023::05:30:04.896 dms confd[181024]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 15-Mar-2023::05:30:04.897 dms confd[181024]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 15-Mar-2023::05:30:04.898 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:04.899 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:04.900 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:04.900 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:04.901 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 15-Mar-2023::05:30:04.901 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 15-Mar-2023::05:30:04.902 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 15-Mar-2023::05:30:04.902 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:04.903 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 15-Mar-2023::05:30:04.904 dms confd[181024]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 15-Mar-2023::05:30:04.904 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:04.907 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 15-Mar-2023::05:30:04.910 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 15-Mar-2023::05:30:04.912 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 15-Mar-2023::05:30:04.913 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 15-Mar-2023::05:30:04.913 dms confd[181024]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 15-Mar-2023::05:30:04.913 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:04.914 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 15-Mar-2023::05:30:04.916 dms confd[181024]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 15-Mar-2023::05:30:04.919 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 15-Mar-2023::05:30:04.920 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 15-Mar-2023::05:30:04.920 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:04.921 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 15-Mar-2023::05:30:04.922 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:04.925 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:04.929 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 15-Mar-2023::05:30:04.929 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 15-Mar-2023::05:30:04.930 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:04.931 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 15-Mar-2023::05:30:04.932 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 15-Mar-2023::05:30:04.932 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 15-Mar-2023::05:30:04.933 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 15-Mar-2023::05:30:04.933 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 15-Mar-2023::05:30:04.934 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:04.934 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:04.935 dms confd[181024]: - Loading file ./dhcpd.fxs
+<DEBUG> 15-Mar-2023::05:30:04.935 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:04.936 dms confd[181024]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 15-Mar-2023::05:30:04.964 dms confd[181024]: - Loading file ./commands-c.ccl
+<DEBUG> 15-Mar-2023::05:30:04.967 dms confd[181024]: - Loading file ./commands-j.ccl
+<INFO> 15-Mar-2023::05:30:05.042 dms confd[181024]: - Reading state file failed: ./local.data: file not found ((re)creating)
+<INFO> 15-Mar-2023::05:30:05.064 dms confd[181024]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:30:05.295 dms confd[181024]: - CDB load: processing file: ./confd-cdb/aaa_init.xml
+<INFO> 15-Mar-2023::05:30:05.439 dms confd[181024]: - Starting to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:30:05.533 dms confd[181024]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:30:05.634 dms confd[181024]: - ConfD started vsn: 8.0.2
+<INFO> 15-Mar-2023::05:30:18.532 dms confd[181024]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 15-Mar-2023::05:30:18.541 dms confd[181024]: - Stopping to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:30:18.554 dms confd[181024]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:30:18.568 dms confd[181024]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:30:18.569 dms confd[181024]: - Daemon logging terminating, reason: shutdown
+<INFO> 15-Mar-2023::05:30:18.853 dms confd[181135]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 15-Mar-2023::05:30:18.734 dms confd[181135]: - Enabling daemon log
+<INFO> 15-Mar-2023::05:30:18.739 dms confd[181135]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 15-Mar-2023::05:30:18.755 dms confd[181135]: - Loading file confd.fxs
+<DEBUG> 15-Mar-2023::05:30:18.767 dms confd[181135]: - Loading file ietf-yang-types.fxs
+<DEBUG> 15-Mar-2023::05:30:18.767 dms confd[181135]: - Loading file ietf-inet-types.fxs
+<DEBUG> 15-Mar-2023::05:30:18.768 dms confd[181135]: - Loading file ietf-datastores.fxs
+<DEBUG> 15-Mar-2023::05:30:18.775 dms confd[181135]: - Loading file ietf-yang-library.fxs
+<DEBUG> 15-Mar-2023::05:30:18.778 dms confd[181135]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:18.778 dms confd[181135]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:18.779 dms confd[181135]: - Loading file tailf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:18.783 dms confd[181135]: - Loading file ietf-netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:18.784 dms confd[181135]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 15-Mar-2023::05:30:18.785 dms confd[181135]: - Loading file netconf_netmod.fxs
+<DEBUG> 15-Mar-2023::05:30:18.785 dms confd[181135]: - Loading file ietf-restconf.fxs
+<DEBUG> 15-Mar-2023::05:30:18.786 dms confd[181135]: - Loading file confd_cfg.fxs
+<DEBUG> 15-Mar-2023::05:30:18.803 dms confd[181135]: - Loading file config.fxs
+<DEBUG> 15-Mar-2023::05:30:18.804 dms confd[181135]: - Loading file netconf_notification.fxs
+<DEBUG> 15-Mar-2023::05:30:18.804 dms confd[181135]: - Loading file netconf_actions.fxs
+<DEBUG> 15-Mar-2023::05:30:18.804 dms confd[181135]: - Loading file yang.fxs
+<DEBUG> 15-Mar-2023::05:30:18.805 dms confd[181135]: - Loading file tailf_netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:18.805 dms confd[181135]: - Loading file cli-builtin.fxs
+<DEBUG> 15-Mar-2023::05:30:18.806 dms confd[181135]: - Loading file confd.conf
+<INFO> 15-Mar-2023::05:30:18.807 dms confd[181135]: - Consulting daemon configuration file confd.conf
+<INFO> 15-Mar-2023::05:30:18.843 dms confd[181135]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 15-Mar-2023::05:30:18.844 dms confd[181135]: - Enabling audit log
+<INFO> 15-Mar-2023::05:30:18.848 dms confd[181135]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 15-Mar-2023::05:30:18.848 dms confd[181135]: - Enabling NETCONF log
+<INFO> 15-Mar-2023::05:30:18.849 dms confd[181135]: - Enabling SNMP log
+<INFO> 15-Mar-2023::05:30:18.850 dms confd[181135]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 15-Mar-2023::05:30:18.850 dms confd[181135]: - Enabling developer log
+<INFO> 15-Mar-2023::05:30:18.851 dms confd[181135]: - Enabling JSONRPC log
+<INFO> 15-Mar-2023::05:30:18.853 dms confd[181135]: - Enabling WebUI log log
+<INFO> 15-Mar-2023::05:30:18.861 dms confd[181135]: - Enabling error log
+<INFO> 15-Mar-2023::05:30:18.861 dms confd[181135]: - Writing error log to ./confderr.log
+<INFO> 15-Mar-2023::05:30:18.868 dms confd[181135]: - Daemon logging started
+<DEBUG> 15-Mar-2023::05:30:18.878 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:18.879 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 15-Mar-2023::05:30:18.880 dms confd[181135]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 15-Mar-2023::05:30:18.880 dms confd[181135]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 15-Mar-2023::05:30:18.882 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:18.883 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:18.883 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:18.884 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:18.884 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 15-Mar-2023::05:30:18.885 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 15-Mar-2023::05:30:18.885 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 15-Mar-2023::05:30:18.885 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:18.887 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 15-Mar-2023::05:30:18.887 dms confd[181135]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 15-Mar-2023::05:30:18.888 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:18.891 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 15-Mar-2023::05:30:18.891 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 15-Mar-2023::05:30:18.893 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 15-Mar-2023::05:30:18.893 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 15-Mar-2023::05:30:18.894 dms confd[181135]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 15-Mar-2023::05:30:18.894 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:18.895 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 15-Mar-2023::05:30:18.897 dms confd[181135]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 15-Mar-2023::05:30:18.900 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 15-Mar-2023::05:30:18.900 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 15-Mar-2023::05:30:18.901 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:18.902 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 15-Mar-2023::05:30:18.902 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:18.905 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:18.912 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 15-Mar-2023::05:30:18.913 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 15-Mar-2023::05:30:18.914 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:18.915 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 15-Mar-2023::05:30:18.916 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 15-Mar-2023::05:30:18.916 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 15-Mar-2023::05:30:18.917 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 15-Mar-2023::05:30:18.917 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 15-Mar-2023::05:30:18.918 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:18.920 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:18.920 dms confd[181135]: - Loading file ./dhcpd.fxs
+<DEBUG> 15-Mar-2023::05:30:18.921 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:18.921 dms confd[181135]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 15-Mar-2023::05:30:18.949 dms confd[181135]: - Loading file ./commands-c.ccl
+<DEBUG> 15-Mar-2023::05:30:18.953 dms confd[181135]: - Loading file ./commands-j.ccl
+<INFO> 15-Mar-2023::05:30:19.050 dms confd[181135]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:30:19.350 dms confd[181135]: - Starting to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:30:19.436 dms confd[181135]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:30:19.537 dms confd[181135]: - ConfD started vsn: 8.0.2
+<CRIT> 15-Mar-2023::05:30:30.007 dms confd[181135]: - Daemon actions_daemon died
+<INFO> 15-Mar-2023::05:30:30.728 dms confd[181135]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 15-Mar-2023::05:30:30.736 dms confd[181135]: - Stopping to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:30:30.749 dms confd[181135]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:30:30.764 dms confd[181135]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:30:30.765 dms confd[181135]: - Daemon logging terminating, reason: shutdown
+<INFO> 15-Mar-2023::05:30:31.061 dms confd[181305]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 15-Mar-2023::05:30:30.938 dms confd[181305]: - Enabling daemon log
+<INFO> 15-Mar-2023::05:30:30.943 dms confd[181305]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 15-Mar-2023::05:30:30.960 dms confd[181305]: - Loading file confd.fxs
+<DEBUG> 15-Mar-2023::05:30:30.972 dms confd[181305]: - Loading file ietf-yang-types.fxs
+<DEBUG> 15-Mar-2023::05:30:30.973 dms confd[181305]: - Loading file ietf-inet-types.fxs
+<DEBUG> 15-Mar-2023::05:30:30.973 dms confd[181305]: - Loading file ietf-datastores.fxs
+<DEBUG> 15-Mar-2023::05:30:30.982 dms confd[181305]: - Loading file ietf-yang-library.fxs
+<DEBUG> 15-Mar-2023::05:30:30.984 dms confd[181305]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:30.984 dms confd[181305]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:30:30.985 dms confd[181305]: - Loading file tailf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:30.989 dms confd[181305]: - Loading file ietf-netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:30.990 dms confd[181305]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 15-Mar-2023::05:30:30.991 dms confd[181305]: - Loading file netconf_netmod.fxs
+<DEBUG> 15-Mar-2023::05:30:30.992 dms confd[181305]: - Loading file ietf-restconf.fxs
+<DEBUG> 15-Mar-2023::05:30:30.992 dms confd[181305]: - Loading file confd_cfg.fxs
+<DEBUG> 15-Mar-2023::05:30:31.010 dms confd[181305]: - Loading file config.fxs
+<DEBUG> 15-Mar-2023::05:30:31.010 dms confd[181305]: - Loading file netconf_notification.fxs
+<DEBUG> 15-Mar-2023::05:30:31.010 dms confd[181305]: - Loading file netconf_actions.fxs
+<DEBUG> 15-Mar-2023::05:30:31.011 dms confd[181305]: - Loading file yang.fxs
+<DEBUG> 15-Mar-2023::05:30:31.011 dms confd[181305]: - Loading file tailf_netconf.fxs
+<DEBUG> 15-Mar-2023::05:30:31.011 dms confd[181305]: - Loading file cli-builtin.fxs
+<DEBUG> 15-Mar-2023::05:30:31.013 dms confd[181305]: - Loading file confd.conf
+<INFO> 15-Mar-2023::05:30:31.014 dms confd[181305]: - Consulting daemon configuration file confd.conf
+<INFO> 15-Mar-2023::05:30:31.053 dms confd[181305]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 15-Mar-2023::05:30:31.054 dms confd[181305]: - Enabling audit log
+<INFO> 15-Mar-2023::05:30:31.055 dms confd[181305]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 15-Mar-2023::05:30:31.056 dms confd[181305]: - Enabling NETCONF log
+<INFO> 15-Mar-2023::05:30:31.056 dms confd[181305]: - Enabling SNMP log
+<INFO> 15-Mar-2023::05:30:31.058 dms confd[181305]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 15-Mar-2023::05:30:31.058 dms confd[181305]: - Enabling developer log
+<INFO> 15-Mar-2023::05:30:31.059 dms confd[181305]: - Enabling JSONRPC log
+<INFO> 15-Mar-2023::05:30:31.060 dms confd[181305]: - Enabling WebUI log log
+<INFO> 15-Mar-2023::05:30:31.069 dms confd[181305]: - Enabling error log
+<INFO> 15-Mar-2023::05:30:31.069 dms confd[181305]: - Writing error log to ./confderr.log
+<INFO> 15-Mar-2023::05:30:31.077 dms confd[181305]: - Daemon logging started
+<DEBUG> 15-Mar-2023::05:30:31.088 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:31.091 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 15-Mar-2023::05:30:31.092 dms confd[181305]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 15-Mar-2023::05:30:31.092 dms confd[181305]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 15-Mar-2023::05:30:31.094 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:31.095 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:31.095 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:31.096 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:31.097 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 15-Mar-2023::05:30:31.098 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 15-Mar-2023::05:30:31.098 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 15-Mar-2023::05:30:31.099 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:31.100 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 15-Mar-2023::05:30:31.100 dms confd[181305]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 15-Mar-2023::05:30:31.101 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:31.104 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 15-Mar-2023::05:30:31.104 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 15-Mar-2023::05:30:31.106 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 15-Mar-2023::05:30:31.106 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 15-Mar-2023::05:30:31.107 dms confd[181305]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 15-Mar-2023::05:30:31.107 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 15-Mar-2023::05:30:31.109 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 15-Mar-2023::05:30:31.113 dms confd[181305]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 15-Mar-2023::05:30:31.115 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 15-Mar-2023::05:30:31.115 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 15-Mar-2023::05:30:31.116 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:30:31.117 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 15-Mar-2023::05:30:31.117 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:30:31.123 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 15-Mar-2023::05:30:31.127 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 15-Mar-2023::05:30:31.128 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 15-Mar-2023::05:30:31.130 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:30:31.130 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 15-Mar-2023::05:30:31.131 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 15-Mar-2023::05:30:31.132 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 15-Mar-2023::05:30:31.132 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 15-Mar-2023::05:30:31.133 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 15-Mar-2023::05:30:31.134 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:31.134 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 15-Mar-2023::05:30:31.135 dms confd[181305]: - Loading file ./dhcpd.fxs
+<DEBUG> 15-Mar-2023::05:30:31.135 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 15-Mar-2023::05:30:31.136 dms confd[181305]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 15-Mar-2023::05:30:31.166 dms confd[181305]: - Loading file ./commands-c.ccl
+<DEBUG> 15-Mar-2023::05:30:31.169 dms confd[181305]: - Loading file ./commands-j.ccl
+<INFO> 15-Mar-2023::05:30:31.270 dms confd[181305]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:30:31.568 dms confd[181305]: - Starting to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:30:31.658 dms confd[181305]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:30:31.761 dms confd[181305]: - ConfD started vsn: 8.0.2
+<CRIT> 15-Mar-2023::05:31:13.641 dms confd[181305]: - Daemon actions_daemon died
+<INFO> 15-Mar-2023::05:31:14.258 dms confd[181305]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 15-Mar-2023::05:31:14.266 dms confd[181305]: - Stopping to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:31:14.279 dms confd[181305]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:31:14.297 dms confd[181305]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:31:14.298 dms confd[181305]: - Daemon logging terminating, reason: shutdown
+<INFO> 15-Mar-2023::05:31:14.581 dms confd[181509]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 15-Mar-2023::05:31:14.462 dms confd[181509]: - Enabling daemon log
+<INFO> 15-Mar-2023::05:31:14.467 dms confd[181509]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 15-Mar-2023::05:31:14.484 dms confd[181509]: - Loading file confd.fxs
+<DEBUG> 15-Mar-2023::05:31:14.496 dms confd[181509]: - Loading file ietf-yang-types.fxs
+<DEBUG> 15-Mar-2023::05:31:14.496 dms confd[181509]: - Loading file ietf-inet-types.fxs
+<DEBUG> 15-Mar-2023::05:31:14.497 dms confd[181509]: - Loading file ietf-datastores.fxs
+<DEBUG> 15-Mar-2023::05:31:14.505 dms confd[181509]: - Loading file ietf-yang-library.fxs
+<DEBUG> 15-Mar-2023::05:31:14.507 dms confd[181509]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:31:14.507 dms confd[181509]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 15-Mar-2023::05:31:14.508 dms confd[181509]: - Loading file tailf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:31:14.512 dms confd[181509]: - Loading file ietf-netconf.fxs
+<DEBUG> 15-Mar-2023::05:31:14.513 dms confd[181509]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 15-Mar-2023::05:31:14.514 dms confd[181509]: - Loading file netconf_netmod.fxs
+<DEBUG> 15-Mar-2023::05:31:14.514 dms confd[181509]: - Loading file ietf-restconf.fxs
+<DEBUG> 15-Mar-2023::05:31:14.514 dms confd[181509]: - Loading file confd_cfg.fxs
+<DEBUG> 15-Mar-2023::05:31:14.533 dms confd[181509]: - Loading file config.fxs
+<DEBUG> 15-Mar-2023::05:31:14.533 dms confd[181509]: - Loading file netconf_notification.fxs
+<DEBUG> 15-Mar-2023::05:31:14.534 dms confd[181509]: - Loading file netconf_actions.fxs
+<DEBUG> 15-Mar-2023::05:31:14.534 dms confd[181509]: - Loading file yang.fxs
+<DEBUG> 15-Mar-2023::05:31:14.534 dms confd[181509]: - Loading file tailf_netconf.fxs
+<DEBUG> 15-Mar-2023::05:31:14.535 dms confd[181509]: - Loading file cli-builtin.fxs
+<DEBUG> 15-Mar-2023::05:31:14.535 dms confd[181509]: - Loading file confd.conf
+<INFO> 15-Mar-2023::05:31:14.536 dms confd[181509]: - Consulting daemon configuration file confd.conf
+<INFO> 15-Mar-2023::05:31:14.574 dms confd[181509]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 15-Mar-2023::05:31:14.575 dms confd[181509]: - Enabling audit log
+<INFO> 15-Mar-2023::05:31:14.576 dms confd[181509]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 15-Mar-2023::05:31:14.576 dms confd[181509]: - Enabling NETCONF log
+<INFO> 15-Mar-2023::05:31:14.577 dms confd[181509]: - Enabling SNMP log
+<INFO> 15-Mar-2023::05:31:14.578 dms confd[181509]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 15-Mar-2023::05:31:14.578 dms confd[181509]: - Enabling developer log
+<INFO> 15-Mar-2023::05:31:14.579 dms confd[181509]: - Enabling JSONRPC log
+<INFO> 15-Mar-2023::05:31:14.581 dms confd[181509]: - Enabling WebUI log log
+<INFO> 15-Mar-2023::05:31:14.590 dms confd[181509]: - Enabling error log
+<INFO> 15-Mar-2023::05:31:14.590 dms confd[181509]: - Writing error log to ./confderr.log
+<INFO> 15-Mar-2023::05:31:14.597 dms confd[181509]: - Daemon logging started
+<DEBUG> 15-Mar-2023::05:31:14.606 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 15-Mar-2023::05:31:14.608 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 15-Mar-2023::05:31:14.608 dms confd[181509]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 15-Mar-2023::05:31:14.609 dms confd[181509]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 15-Mar-2023::05:31:14.610 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:31:14.611 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:31:14.612 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:31:14.612 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 15-Mar-2023::05:31:14.613 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 15-Mar-2023::05:31:14.613 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 15-Mar-2023::05:31:14.614 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 15-Mar-2023::05:31:14.614 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 15-Mar-2023::05:31:14.615 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 15-Mar-2023::05:31:14.616 dms confd[181509]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 15-Mar-2023::05:31:14.618 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:31:14.621 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 15-Mar-2023::05:31:14.622 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 15-Mar-2023::05:31:14.623 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 15-Mar-2023::05:31:14.624 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 15-Mar-2023::05:31:14.624 dms confd[181509]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 15-Mar-2023::05:31:14.625 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 15-Mar-2023::05:31:14.625 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 15-Mar-2023::05:31:14.629 dms confd[181509]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 15-Mar-2023::05:31:14.631 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 15-Mar-2023::05:31:14.631 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 15-Mar-2023::05:31:14.632 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 15-Mar-2023::05:31:14.633 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 15-Mar-2023::05:31:14.633 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 15-Mar-2023::05:31:14.636 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 15-Mar-2023::05:31:14.641 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 15-Mar-2023::05:31:14.642 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 15-Mar-2023::05:31:14.642 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 15-Mar-2023::05:31:14.643 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 15-Mar-2023::05:31:14.644 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 15-Mar-2023::05:31:14.644 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 15-Mar-2023::05:31:14.645 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 15-Mar-2023::05:31:14.645 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 15-Mar-2023::05:31:14.646 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 15-Mar-2023::05:31:14.647 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 15-Mar-2023::05:31:14.647 dms confd[181509]: - Loading file ./dhcpd.fxs
+<DEBUG> 15-Mar-2023::05:31:14.647 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 15-Mar-2023::05:31:14.648 dms confd[181509]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 15-Mar-2023::05:31:14.677 dms confd[181509]: - Loading file ./commands-c.ccl
+<DEBUG> 15-Mar-2023::05:31:14.681 dms confd[181509]: - Loading file ./commands-j.ccl
+<INFO> 15-Mar-2023::05:31:14.776 dms confd[181509]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 15-Mar-2023::05:31:15.054 dms confd[181509]: - Starting to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 15-Mar-2023::05:31:15.218 dms confd[181509]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 15-Mar-2023::05:31:15.320 dms confd[181509]: - ConfD started vsn: 8.0.2
+<CRIT> 16-Mar-2023::02:50:04.470 dms confd[181509]: - Daemon actions_daemon died
+<INFO> 16-Mar-2023::02:50:17.079 dms confd[181509]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 16-Mar-2023::02:50:17.090 dms confd[181509]: - Stopping to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 16-Mar-2023::02:50:17.104 dms confd[181509]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 16-Mar-2023::02:50:17.125 dms confd[181509]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 16-Mar-2023::02:50:17.127 dms confd[181509]: - Daemon logging terminating, reason: shutdown
+<INFO> 16-Mar-2023::02:50:25.514 dms confd[188685]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 16-Mar-2023::02:50:25.380 dms confd[188685]: - Enabling daemon log
+<INFO> 16-Mar-2023::02:50:25.386 dms confd[188685]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 16-Mar-2023::02:50:25.405 dms confd[188685]: - Loading file confd.fxs
+<DEBUG> 16-Mar-2023::02:50:25.419 dms confd[188685]: - Loading file ietf-yang-types.fxs
+<DEBUG> 16-Mar-2023::02:50:25.419 dms confd[188685]: - Loading file ietf-inet-types.fxs
+<DEBUG> 16-Mar-2023::02:50:25.420 dms confd[188685]: - Loading file ietf-datastores.fxs
+<DEBUG> 16-Mar-2023::02:50:25.427 dms confd[188685]: - Loading file ietf-yang-library.fxs
+<DEBUG> 16-Mar-2023::02:50:25.431 dms confd[188685]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 16-Mar-2023::02:50:25.431 dms confd[188685]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 16-Mar-2023::02:50:25.434 dms confd[188685]: - Loading file tailf-rollback.fxs
+<DEBUG> 16-Mar-2023::02:50:25.439 dms confd[188685]: - Loading file ietf-netconf.fxs
+<DEBUG> 16-Mar-2023::02:50:25.440 dms confd[188685]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 16-Mar-2023::02:50:25.440 dms confd[188685]: - Loading file netconf_netmod.fxs
+<DEBUG> 16-Mar-2023::02:50:25.441 dms confd[188685]: - Loading file ietf-restconf.fxs
+<DEBUG> 16-Mar-2023::02:50:25.441 dms confd[188685]: - Loading file confd_cfg.fxs
+<DEBUG> 16-Mar-2023::02:50:25.464 dms confd[188685]: - Loading file config.fxs
+<DEBUG> 16-Mar-2023::02:50:25.465 dms confd[188685]: - Loading file netconf_notification.fxs
+<DEBUG> 16-Mar-2023::02:50:25.465 dms confd[188685]: - Loading file netconf_actions.fxs
+<DEBUG> 16-Mar-2023::02:50:25.465 dms confd[188685]: - Loading file yang.fxs
+<DEBUG> 16-Mar-2023::02:50:25.465 dms confd[188685]: - Loading file tailf_netconf.fxs
+<DEBUG> 16-Mar-2023::02:50:25.466 dms confd[188685]: - Loading file cli-builtin.fxs
+<DEBUG> 16-Mar-2023::02:50:25.466 dms confd[188685]: - Loading file confd.conf
+<INFO> 16-Mar-2023::02:50:25.468 dms confd[188685]: - Consulting daemon configuration file confd.conf
+<INFO> 16-Mar-2023::02:50:25.506 dms confd[188685]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 16-Mar-2023::02:50:25.506 dms confd[188685]: - Enabling audit log
+<INFO> 16-Mar-2023::02:50:25.508 dms confd[188685]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 16-Mar-2023::02:50:25.508 dms confd[188685]: - Enabling NETCONF log
+<INFO> 16-Mar-2023::02:50:25.510 dms confd[188685]: - Enabling SNMP log
+<INFO> 16-Mar-2023::02:50:25.511 dms confd[188685]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 16-Mar-2023::02:50:25.511 dms confd[188685]: - Enabling developer log
+<INFO> 16-Mar-2023::02:50:25.513 dms confd[188685]: - Enabling JSONRPC log
+<INFO> 16-Mar-2023::02:50:25.514 dms confd[188685]: - Enabling WebUI log log
+<INFO> 16-Mar-2023::02:50:25.522 dms confd[188685]: - Enabling error log
+<INFO> 16-Mar-2023::02:50:25.522 dms confd[188685]: - Writing error log to ./confderr.log
+<INFO> 16-Mar-2023::02:50:25.535 dms confd[188685]: - Daemon logging started
+<DEBUG> 16-Mar-2023::02:50:25.546 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 16-Mar-2023::02:50:25.548 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 16-Mar-2023::02:50:25.548 dms confd[188685]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 16-Mar-2023::02:50:25.549 dms confd[188685]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 16-Mar-2023::02:50:25.551 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 16-Mar-2023::02:50:25.552 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 16-Mar-2023::02:50:25.552 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 16-Mar-2023::02:50:25.553 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 16-Mar-2023::02:50:25.553 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 16-Mar-2023::02:50:25.554 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 16-Mar-2023::02:50:25.554 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 16-Mar-2023::02:50:25.554 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 16-Mar-2023::02:50:25.555 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 16-Mar-2023::02:50:25.556 dms confd[188685]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 16-Mar-2023::02:50:25.556 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 16-Mar-2023::02:50:25.561 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 16-Mar-2023::02:50:25.562 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 16-Mar-2023::02:50:25.564 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 16-Mar-2023::02:50:25.565 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 16-Mar-2023::02:50:25.565 dms confd[188685]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 16-Mar-2023::02:50:25.566 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 16-Mar-2023::02:50:25.567 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 16-Mar-2023::02:50:25.569 dms confd[188685]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 16-Mar-2023::02:50:25.571 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 16-Mar-2023::02:50:25.571 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 16-Mar-2023::02:50:25.572 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 16-Mar-2023::02:50:25.573 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 16-Mar-2023::02:50:25.573 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 16-Mar-2023::02:50:25.576 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 16-Mar-2023::02:50:25.580 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 16-Mar-2023::02:50:25.581 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 16-Mar-2023::02:50:25.583 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 16-Mar-2023::02:50:25.583 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 16-Mar-2023::02:50:25.584 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 16-Mar-2023::02:50:25.585 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 16-Mar-2023::02:50:25.585 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 16-Mar-2023::02:50:25.586 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 16-Mar-2023::02:50:25.586 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 16-Mar-2023::02:50:25.587 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 16-Mar-2023::02:50:25.587 dms confd[188685]: - Loading file ./dhcpd.fxs
+<DEBUG> 16-Mar-2023::02:50:25.588 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 16-Mar-2023::02:50:25.589 dms confd[188685]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 16-Mar-2023::02:50:25.616 dms confd[188685]: - Loading file ./commands-c.ccl
+<DEBUG> 16-Mar-2023::02:50:25.622 dms confd[188685]: - Loading file ./commands-j.ccl
+<INFO> 16-Mar-2023::02:50:25.728 dms confd[188685]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 16-Mar-2023::02:50:26.003 dms confd[188685]: - Starting to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 16-Mar-2023::02:50:26.086 dms confd[188685]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 16-Mar-2023::02:50:26.187 dms confd[188685]: - ConfD started vsn: 8.0.2
+<CRIT> 16-Mar-2023::05:09:25.807 dms confd[188685]: - Daemon actions_daemon died
+<INFO> 16-Mar-2023::05:10:06.977 dms confd[188685]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 16-Mar-2023::05:10:06.986 dms confd[188685]: - Stopping to listen for NETCONF SSH on 127.0.0.1:2022
+<INFO> 16-Mar-2023::05:10:06.999 dms confd[188685]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 16-Mar-2023::05:10:07.014 dms confd[188685]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 16-Mar-2023::05:10:07.016 dms confd[188685]: - Daemon logging terminating, reason: shutdown
+<INFO> 16-Mar-2023::05:10:07.283 dms confd[191698]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 16-Mar-2023::05:10:07.165 dms confd[191698]: - Enabling daemon log
+<INFO> 16-Mar-2023::05:10:07.168 dms confd[191698]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 16-Mar-2023::05:10:07.186 dms confd[191698]: - Loading file confd.fxs
+<DEBUG> 16-Mar-2023::05:10:07.197 dms confd[191698]: - Loading file ietf-yang-types.fxs
+<DEBUG> 16-Mar-2023::05:10:07.198 dms confd[191698]: - Loading file ietf-inet-types.fxs
+<DEBUG> 16-Mar-2023::05:10:07.198 dms confd[191698]: - Loading file ietf-datastores.fxs
+<DEBUG> 16-Mar-2023::05:10:07.205 dms confd[191698]: - Loading file ietf-yang-library.fxs
+<DEBUG> 16-Mar-2023::05:10:07.208 dms confd[191698]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 16-Mar-2023::05:10:07.208 dms confd[191698]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 16-Mar-2023::05:10:07.209 dms confd[191698]: - Loading file tailf-rollback.fxs
+<DEBUG> 16-Mar-2023::05:10:07.212 dms confd[191698]: - Loading file ietf-netconf.fxs
+<DEBUG> 16-Mar-2023::05:10:07.213 dms confd[191698]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 16-Mar-2023::05:10:07.214 dms confd[191698]: - Loading file netconf_netmod.fxs
+<DEBUG> 16-Mar-2023::05:10:07.214 dms confd[191698]: - Loading file ietf-restconf.fxs
+<DEBUG> 16-Mar-2023::05:10:07.214 dms confd[191698]: - Loading file confd_cfg.fxs
+<DEBUG> 16-Mar-2023::05:10:07.232 dms confd[191698]: - Loading file config.fxs
+<DEBUG> 16-Mar-2023::05:10:07.232 dms confd[191698]: - Loading file netconf_notification.fxs
+<DEBUG> 16-Mar-2023::05:10:07.233 dms confd[191698]: - Loading file netconf_actions.fxs
+<DEBUG> 16-Mar-2023::05:10:07.233 dms confd[191698]: - Loading file yang.fxs
+<DEBUG> 16-Mar-2023::05:10:07.233 dms confd[191698]: - Loading file tailf_netconf.fxs
+<DEBUG> 16-Mar-2023::05:10:07.234 dms confd[191698]: - Loading file cli-builtin.fxs
+<DEBUG> 16-Mar-2023::05:10:07.234 dms confd[191698]: - Loading file confd.conf
+<INFO> 16-Mar-2023::05:10:07.236 dms confd[191698]: - Consulting daemon configuration file confd.conf
+<INFO> 16-Mar-2023::05:10:07.274 dms confd[191698]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 16-Mar-2023::05:10:07.274 dms confd[191698]: - Enabling audit log
+<INFO> 16-Mar-2023::05:10:07.275 dms confd[191698]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 16-Mar-2023::05:10:07.275 dms confd[191698]: - Enabling NETCONF log
+<INFO> 16-Mar-2023::05:10:07.276 dms confd[191698]: - Enabling SNMP log
+<INFO> 16-Mar-2023::05:10:07.278 dms confd[191698]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 16-Mar-2023::05:10:07.278 dms confd[191698]: - Enabling developer log
+<INFO> 16-Mar-2023::05:10:07.279 dms confd[191698]: - Enabling JSONRPC log
+<INFO> 16-Mar-2023::05:10:07.282 dms confd[191698]: - Enabling WebUI log log
+<INFO> 16-Mar-2023::05:10:07.292 dms confd[191698]: - Enabling error log
+<INFO> 16-Mar-2023::05:10:07.293 dms confd[191698]: - Writing error log to ./confderr.log
+<INFO> 16-Mar-2023::05:10:07.301 dms confd[191698]: - Daemon logging started
+<DEBUG> 16-Mar-2023::05:10:07.310 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 16-Mar-2023::05:10:07.312 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 16-Mar-2023::05:10:07.313 dms confd[191698]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 16-Mar-2023::05:10:07.313 dms confd[191698]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 16-Mar-2023::05:10:07.314 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 16-Mar-2023::05:10:07.315 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 16-Mar-2023::05:10:07.315 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 16-Mar-2023::05:10:07.316 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 16-Mar-2023::05:10:07.316 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 16-Mar-2023::05:10:07.317 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 16-Mar-2023::05:10:07.317 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 16-Mar-2023::05:10:07.318 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 16-Mar-2023::05:10:07.319 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 16-Mar-2023::05:10:07.319 dms confd[191698]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 16-Mar-2023::05:10:07.320 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 16-Mar-2023::05:10:07.323 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 16-Mar-2023::05:10:07.323 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 16-Mar-2023::05:10:07.325 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 16-Mar-2023::05:10:07.325 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 16-Mar-2023::05:10:07.325 dms confd[191698]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 16-Mar-2023::05:10:07.326 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 16-Mar-2023::05:10:07.327 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 16-Mar-2023::05:10:07.329 dms confd[191698]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 16-Mar-2023::05:10:07.330 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 16-Mar-2023::05:10:07.331 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 16-Mar-2023::05:10:07.331 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 16-Mar-2023::05:10:07.332 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 16-Mar-2023::05:10:07.333 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 16-Mar-2023::05:10:07.336 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 16-Mar-2023::05:10:07.340 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 16-Mar-2023::05:10:07.341 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 16-Mar-2023::05:10:07.342 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 16-Mar-2023::05:10:07.342 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 16-Mar-2023::05:10:07.343 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 16-Mar-2023::05:10:07.344 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 16-Mar-2023::05:10:07.345 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 16-Mar-2023::05:10:07.345 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 16-Mar-2023::05:10:07.346 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 16-Mar-2023::05:10:07.346 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 16-Mar-2023::05:10:07.347 dms confd[191698]: - Loading file ./dhcpd.fxs
+<DEBUG> 16-Mar-2023::05:10:07.347 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 16-Mar-2023::05:10:07.348 dms confd[191698]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 16-Mar-2023::05:10:07.374 dms confd[191698]: - Loading file ./commands-c.ccl
+<DEBUG> 16-Mar-2023::05:10:07.378 dms confd[191698]: - Loading file ./commands-j.ccl
+<INFO> 16-Mar-2023::05:10:07.465 dms confd[191698]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 16-Mar-2023::05:10:07.759 dms confd[191698]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 16-Mar-2023::05:10:07.828 dms confd[191698]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 16-Mar-2023::05:10:07.929 dms confd[191698]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:27:12.980 dms confd[191698]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:27:14.315 dms confd[191698]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:27:14.336 dms confd[191698]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:27:14.370 dms confd[191698]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:27:14.408 dms confd[191698]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:27:14.434 dms confd[191698]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:27:15.483 dms confd[229591]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:27:15.251 dms confd[229591]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:27:15.266 dms confd[229591]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:27:15.302 dms confd[229591]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:27:15.328 dms confd[229591]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:27:15.329 dms confd[229591]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:27:15.332 dms confd[229591]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:27:15.361 dms confd[229591]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:27:15.364 dms confd[229591]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:27:15.365 dms confd[229591]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:27:15.366 dms confd[229591]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:27:15.371 dms confd[229591]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:27:15.372 dms confd[229591]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:27:15.373 dms confd[229591]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:27:15.374 dms confd[229591]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:27:15.375 dms confd[229591]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:27:15.398 dms confd[229591]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:27:15.399 dms confd[229591]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:27:15.400 dms confd[229591]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:27:15.400 dms confd[229591]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:27:15.401 dms confd[229591]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:27:15.402 dms confd[229591]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:27:15.403 dms confd[229591]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:27:15.404 dms confd[229591]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:27:15.467 dms confd[229591]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:27:15.468 dms confd[229591]: - Enabling audit log
+<INFO> 21-Mar-2023::05:27:15.471 dms confd[229591]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:27:15.471 dms confd[229591]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:27:15.473 dms confd[229591]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:27:15.475 dms confd[229591]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:27:15.476 dms confd[229591]: - Enabling developer log
+<INFO> 21-Mar-2023::05:27:15.479 dms confd[229591]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:27:15.481 dms confd[229591]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:27:15.500 dms confd[229591]: - Enabling error log
+<INFO> 21-Mar-2023::05:27:15.500 dms confd[229591]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:27:15.511 dms confd[229591]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:27:15.525 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:27:15.528 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:27:15.528 dms confd[229591]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:27:15.529 dms confd[229591]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:27:15.533 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:27:15.533 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:27:15.534 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:27:15.535 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:27:15.536 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:27:15.536 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:27:15.537 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:27:15.537 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:27:15.538 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:27:15.539 dms confd[229591]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:27:15.539 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:27:15.544 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:27:15.545 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:27:15.548 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:27:15.549 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:27:15.549 dms confd[229591]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:27:15.550 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:27:15.552 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:27:15.555 dms confd[229591]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:27:15.557 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:27:15.558 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:27:15.558 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:27:15.560 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:27:15.562 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:27:15.566 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:27:15.571 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:27:15.572 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:27:15.573 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:27:15.574 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:27:15.576 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:27:15.576 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:27:15.577 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:27:15.578 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:27:15.579 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:27:15.579 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:27:15.580 dms confd[229591]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:27:15.581 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:27:15.582 dms confd[229591]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:27:15.611 dms confd[229591]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:27:15.616 dms confd[229591]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:27:15.796 dms confd[229591]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:27:16.202 dms confd[229591]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:27:16.310 dms confd[229591]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:27:16.413 dms confd[229591]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:30:54.506 dms confd[229591]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:30:55.396 dms confd[229591]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:30:55.404 dms confd[229591]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:30:55.419 dms confd[229591]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:30:55.436 dms confd[229591]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:30:55.437 dms confd[229591]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:30:55.727 dms confd[229751]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:30:55.590 dms confd[229751]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:30:55.595 dms confd[229751]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:30:55.612 dms confd[229751]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:30:55.623 dms confd[229751]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:30:55.623 dms confd[229751]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:30:55.624 dms confd[229751]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:30:55.630 dms confd[229751]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:30:55.634 dms confd[229751]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:30:55.634 dms confd[229751]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:30:55.635 dms confd[229751]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:30:55.639 dms confd[229751]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:30:55.640 dms confd[229751]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:30:55.641 dms confd[229751]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:30:55.641 dms confd[229751]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:30:55.641 dms confd[229751]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:30:55.662 dms confd[229751]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:30:55.663 dms confd[229751]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:30:55.665 dms confd[229751]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:30:55.666 dms confd[229751]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:30:55.666 dms confd[229751]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:30:55.666 dms confd[229751]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:30:55.679 dms confd[229751]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:30:55.680 dms confd[229751]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:30:55.719 dms confd[229751]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:30:55.719 dms confd[229751]: - Enabling audit log
+<INFO> 21-Mar-2023::05:30:55.720 dms confd[229751]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:30:55.720 dms confd[229751]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:30:55.722 dms confd[229751]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:30:55.724 dms confd[229751]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:30:55.724 dms confd[229751]: - Enabling developer log
+<INFO> 21-Mar-2023::05:30:55.725 dms confd[229751]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:30:55.726 dms confd[229751]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:30:55.738 dms confd[229751]: - Enabling error log
+<INFO> 21-Mar-2023::05:30:55.739 dms confd[229751]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:30:55.748 dms confd[229751]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:30:55.758 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:30:55.762 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:30:55.762 dms confd[229751]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:30:55.763 dms confd[229751]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:30:55.766 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:30:55.767 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:30:55.767 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:30:55.768 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:30:55.771 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:30:55.772 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:30:55.772 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:30:55.773 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:30:55.774 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:30:55.774 dms confd[229751]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:30:55.775 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:30:55.778 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:30:55.782 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:30:55.784 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:30:55.785 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:30:55.786 dms confd[229751]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:30:55.786 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:30:55.787 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:30:55.789 dms confd[229751]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:30:55.791 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:30:55.792 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:30:55.792 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:30:55.794 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:30:55.794 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:30:55.797 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:30:55.801 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:30:55.802 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:30:55.803 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:30:55.804 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:30:55.805 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:30:55.806 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:30:55.806 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:30:55.807 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:30:55.808 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:30:55.808 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:30:55.808 dms confd[229751]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:30:55.809 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:30:55.809 dms confd[229751]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:30:55.841 dms confd[229751]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:30:55.845 dms confd[229751]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:30:55.977 dms confd[229751]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:30:56.330 dms confd[229751]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:30:56.410 dms confd[229751]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:30:56.511 dms confd[229751]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:31:42.349 dms confd[229751]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:31:43.412 dms confd[229751]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:31:43.422 dms confd[229751]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:31:43.437 dms confd[229751]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:31:43.453 dms confd[229751]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:31:43.454 dms confd[229751]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:31:43.748 dms confd[229867]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:31:43.611 dms confd[229867]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:31:43.616 dms confd[229867]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:31:43.636 dms confd[229867]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:31:43.650 dms confd[229867]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:31:43.651 dms confd[229867]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:31:43.651 dms confd[229867]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:31:43.658 dms confd[229867]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:31:43.661 dms confd[229867]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:31:43.662 dms confd[229867]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:31:43.662 dms confd[229867]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:31:43.666 dms confd[229867]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:31:43.667 dms confd[229867]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:31:43.668 dms confd[229867]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:31:43.669 dms confd[229867]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:31:43.669 dms confd[229867]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:31:43.688 dms confd[229867]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:31:43.689 dms confd[229867]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:31:43.689 dms confd[229867]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:31:43.689 dms confd[229867]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:31:43.690 dms confd[229867]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:31:43.690 dms confd[229867]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:31:43.690 dms confd[229867]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:31:43.693 dms confd[229867]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:31:43.737 dms confd[229867]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:31:43.737 dms confd[229867]: - Enabling audit log
+<INFO> 21-Mar-2023::05:31:43.739 dms confd[229867]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:31:43.739 dms confd[229867]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:31:43.741 dms confd[229867]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:31:43.744 dms confd[229867]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:31:43.744 dms confd[229867]: - Enabling developer log
+<INFO> 21-Mar-2023::05:31:43.745 dms confd[229867]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:31:43.747 dms confd[229867]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:31:43.758 dms confd[229867]: - Enabling error log
+<INFO> 21-Mar-2023::05:31:43.758 dms confd[229867]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:31:43.767 dms confd[229867]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:31:43.777 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:31:43.779 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:31:43.780 dms confd[229867]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:31:43.780 dms confd[229867]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:31:43.782 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:31:43.783 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:31:43.784 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:31:43.785 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:31:43.786 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:31:43.787 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:31:43.787 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:31:43.789 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:31:43.789 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:31:43.790 dms confd[229867]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:31:43.790 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:31:43.794 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:31:43.795 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:31:43.797 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:31:43.798 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:31:43.799 dms confd[229867]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:31:43.800 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:31:43.800 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:31:43.803 dms confd[229867]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:31:43.805 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:31:43.806 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:31:43.806 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:31:43.808 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:31:43.808 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:31:43.812 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:31:43.817 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:31:43.818 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:31:43.820 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:31:43.821 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:31:43.821 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:31:43.822 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:31:43.823 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:31:43.823 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:31:43.824 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:31:43.824 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:31:43.825 dms confd[229867]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:31:43.825 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:31:43.826 dms confd[229867]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:31:43.853 dms confd[229867]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:31:43.857 dms confd[229867]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:31:43.983 dms confd[229867]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:31:44.316 dms confd[229867]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:31:44.413 dms confd[229867]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:31:44.516 dms confd[229867]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:31:59.157 dms confd[229867]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:32:00.052 dms confd[229867]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:32:00.060 dms confd[229867]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:32:00.076 dms confd[229867]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:32:00.095 dms confd[229867]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:32:00.096 dms confd[229867]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:32:00.428 dms confd[229983]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:32:00.285 dms confd[229983]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:32:00.291 dms confd[229983]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:32:00.310 dms confd[229983]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:32:00.324 dms confd[229983]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:32:00.325 dms confd[229983]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:32:00.328 dms confd[229983]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:32:00.335 dms confd[229983]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:32:00.338 dms confd[229983]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:32:00.339 dms confd[229983]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:32:00.340 dms confd[229983]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:32:00.344 dms confd[229983]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:32:00.345 dms confd[229983]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:32:00.347 dms confd[229983]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:32:00.349 dms confd[229983]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:32:00.349 dms confd[229983]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:32:00.371 dms confd[229983]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:32:00.371 dms confd[229983]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:32:00.373 dms confd[229983]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:32:00.373 dms confd[229983]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:32:00.373 dms confd[229983]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:32:00.374 dms confd[229983]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:32:00.374 dms confd[229983]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:32:00.376 dms confd[229983]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:32:00.417 dms confd[229983]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:32:00.417 dms confd[229983]: - Enabling audit log
+<INFO> 21-Mar-2023::05:32:00.419 dms confd[229983]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:32:00.419 dms confd[229983]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:32:00.422 dms confd[229983]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:32:00.424 dms confd[229983]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:32:00.424 dms confd[229983]: - Enabling developer log
+<INFO> 21-Mar-2023::05:32:00.426 dms confd[229983]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:32:00.428 dms confd[229983]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:32:00.438 dms confd[229983]: - Enabling error log
+<INFO> 21-Mar-2023::05:32:00.438 dms confd[229983]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:32:00.449 dms confd[229983]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:32:00.460 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:32:00.462 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:32:00.463 dms confd[229983]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:32:00.463 dms confd[229983]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:32:00.465 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:00.466 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:32:00.467 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:00.467 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:32:00.468 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:32:00.469 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:32:00.470 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:32:00.471 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:32:00.472 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:32:00.472 dms confd[229983]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:32:00.473 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:00.477 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:32:00.477 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:32:00.479 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:32:00.480 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:32:00.480 dms confd[229983]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:32:00.481 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:32:00.482 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:32:00.484 dms confd[229983]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:32:00.486 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:32:00.487 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:32:00.488 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:00.489 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:32:00.489 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:32:00.493 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:32:00.497 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:32:00.498 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:32:00.501 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:32:00.502 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:32:00.502 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:32:00.503 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:32:00.504 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:32:00.505 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:32:00.505 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:32:00.506 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:32:00.506 dms confd[229983]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:32:00.507 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:32:00.509 dms confd[229983]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:32:00.536 dms confd[229983]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:32:00.541 dms confd[229983]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:32:00.652 dms confd[229983]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:32:01.044 dms confd[229983]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:32:01.111 dms confd[229983]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:32:01.213 dms confd[229983]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:32:22.823 dms confd[229983]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:32:23.666 dms confd[229983]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:32:23.675 dms confd[229983]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:32:23.690 dms confd[229983]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:32:23.708 dms confd[229983]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:32:23.709 dms confd[229983]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:32:24.053 dms confd[230105]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:32:23.877 dms confd[230105]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:32:23.883 dms confd[230105]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:32:23.916 dms confd[230105]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:32:23.933 dms confd[230105]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:32:23.934 dms confd[230105]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:32:23.935 dms confd[230105]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:32:23.943 dms confd[230105]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:32:23.946 dms confd[230105]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:32:23.947 dms confd[230105]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:32:23.947 dms confd[230105]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:32:23.953 dms confd[230105]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:32:23.954 dms confd[230105]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:32:23.955 dms confd[230105]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:32:23.956 dms confd[230105]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:32:23.956 dms confd[230105]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:32:23.978 dms confd[230105]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:32:23.979 dms confd[230105]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:32:23.980 dms confd[230105]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:32:23.980 dms confd[230105]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:32:23.980 dms confd[230105]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:32:23.981 dms confd[230105]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:32:23.981 dms confd[230105]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:32:23.983 dms confd[230105]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:32:24.040 dms confd[230105]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:32:24.041 dms confd[230105]: - Enabling audit log
+<INFO> 21-Mar-2023::05:32:24.042 dms confd[230105]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:32:24.043 dms confd[230105]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:32:24.045 dms confd[230105]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:32:24.046 dms confd[230105]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:32:24.046 dms confd[230105]: - Enabling developer log
+<INFO> 21-Mar-2023::05:32:24.051 dms confd[230105]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:32:24.053 dms confd[230105]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:32:24.065 dms confd[230105]: - Enabling error log
+<INFO> 21-Mar-2023::05:32:24.065 dms confd[230105]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:32:24.073 dms confd[230105]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:32:24.087 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:32:24.089 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:32:24.089 dms confd[230105]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:32:24.090 dms confd[230105]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:32:24.093 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:24.094 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:32:24.095 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:24.095 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:32:24.096 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:32:24.096 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:32:24.097 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:32:24.098 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:32:24.099 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:32:24.099 dms confd[230105]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:32:24.100 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:24.105 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:32:24.105 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:32:24.108 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:32:24.108 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:32:24.109 dms confd[230105]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:32:24.110 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:32:24.111 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:32:24.113 dms confd[230105]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:32:24.115 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:32:24.117 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:32:24.118 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:32:24.119 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:32:24.119 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:32:24.124 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:32:24.128 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:32:24.130 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:32:24.131 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:32:24.132 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:32:24.133 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:32:24.134 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:32:24.135 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:32:24.135 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:32:24.136 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:32:24.137 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:32:24.137 dms confd[230105]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:32:24.138 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:32:24.138 dms confd[230105]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:32:24.170 dms confd[230105]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:32:24.174 dms confd[230105]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:32:24.279 dms confd[230105]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:32:24.643 dms confd[230105]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:32:24.724 dms confd[230105]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:32:24.826 dms confd[230105]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:37:42.128 dms confd[230105]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:37:43.169 dms confd[230105]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:37:43.178 dms confd[230105]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:37:43.192 dms confd[230105]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:37:43.210 dms confd[230105]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:37:43.211 dms confd[230105]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:37:43.542 dms confd[230259]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:37:43.379 dms confd[230259]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:37:43.386 dms confd[230259]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:37:43.404 dms confd[230259]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:37:43.417 dms confd[230259]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:37:43.418 dms confd[230259]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:37:43.419 dms confd[230259]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:37:43.427 dms confd[230259]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:37:43.430 dms confd[230259]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:37:43.431 dms confd[230259]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:37:43.432 dms confd[230259]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:37:43.438 dms confd[230259]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:37:43.439 dms confd[230259]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:37:43.440 dms confd[230259]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:37:43.440 dms confd[230259]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:37:43.441 dms confd[230259]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:37:43.473 dms confd[230259]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:37:43.474 dms confd[230259]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:37:43.474 dms confd[230259]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:37:43.474 dms confd[230259]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:37:43.475 dms confd[230259]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:37:43.475 dms confd[230259]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:37:43.476 dms confd[230259]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:37:43.479 dms confd[230259]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:37:43.530 dms confd[230259]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:37:43.531 dms confd[230259]: - Enabling audit log
+<INFO> 21-Mar-2023::05:37:43.533 dms confd[230259]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:37:43.533 dms confd[230259]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:37:43.535 dms confd[230259]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:37:43.536 dms confd[230259]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:37:43.537 dms confd[230259]: - Enabling developer log
+<INFO> 21-Mar-2023::05:37:43.538 dms confd[230259]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:37:43.541 dms confd[230259]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:37:43.555 dms confd[230259]: - Enabling error log
+<INFO> 21-Mar-2023::05:37:43.555 dms confd[230259]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:37:43.566 dms confd[230259]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:37:43.579 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:37:43.581 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:37:43.581 dms confd[230259]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:37:43.582 dms confd[230259]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:37:43.584 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:37:43.585 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:37:43.585 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:37:43.586 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:37:43.587 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:37:43.588 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:37:43.588 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:37:43.589 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:37:43.590 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:37:43.590 dms confd[230259]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:37:43.591 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:37:43.594 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:37:43.595 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:37:43.597 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:37:43.597 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:37:43.598 dms confd[230259]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:37:43.599 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:37:43.600 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:37:43.602 dms confd[230259]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:37:43.605 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:37:43.606 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:37:43.607 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:37:43.608 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:37:43.608 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:37:43.614 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:37:43.619 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:37:43.622 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:37:43.623 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:37:43.624 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:37:43.625 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:37:43.626 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:37:43.627 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:37:43.627 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:37:43.628 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:37:43.629 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:37:43.629 dms confd[230259]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:37:43.630 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:37:43.631 dms confd[230259]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:37:43.664 dms confd[230259]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:37:43.671 dms confd[230259]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:37:43.791 dms confd[230259]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:37:44.159 dms confd[230259]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:37:44.243 dms confd[230259]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:37:44.345 dms confd[230259]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:40:39.175 dms confd[230259]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:40:39.990 dms confd[230259]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:40:39.999 dms confd[230259]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:40:40.014 dms confd[230259]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:40:40.032 dms confd[230259]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:40:40.033 dms confd[230259]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:40:40.432 dms confd[230379]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:40:40.269 dms confd[230379]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:40:40.275 dms confd[230379]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:40:40.297 dms confd[230379]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:40:40.311 dms confd[230379]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:40:40.312 dms confd[230379]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:40:40.312 dms confd[230379]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:40:40.322 dms confd[230379]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:40:40.328 dms confd[230379]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:40:40.330 dms confd[230379]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:40:40.333 dms confd[230379]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:40:40.339 dms confd[230379]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:40:40.340 dms confd[230379]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:40:40.341 dms confd[230379]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:40:40.341 dms confd[230379]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:40:40.342 dms confd[230379]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:40:40.369 dms confd[230379]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:40:40.370 dms confd[230379]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:40:40.371 dms confd[230379]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:40:40.371 dms confd[230379]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:40:40.372 dms confd[230379]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:40:40.372 dms confd[230379]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:40:40.373 dms confd[230379]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:40:40.375 dms confd[230379]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:40:40.420 dms confd[230379]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:40:40.420 dms confd[230379]: - Enabling audit log
+<INFO> 21-Mar-2023::05:40:40.424 dms confd[230379]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:40:40.424 dms confd[230379]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:40:40.426 dms confd[230379]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:40:40.427 dms confd[230379]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:40:40.428 dms confd[230379]: - Enabling developer log
+<INFO> 21-Mar-2023::05:40:40.430 dms confd[230379]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:40:40.432 dms confd[230379]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:40:40.446 dms confd[230379]: - Enabling error log
+<INFO> 21-Mar-2023::05:40:40.446 dms confd[230379]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:40:40.454 dms confd[230379]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:40:40.468 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:40:40.470 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:40:40.471 dms confd[230379]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:40:40.472 dms confd[230379]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:40:40.474 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:40.475 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:40:40.475 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:40.476 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:40:40.478 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:40:40.479 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:40:40.479 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:40:40.480 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:40:40.481 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:40:40.482 dms confd[230379]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:40:40.482 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:40.486 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:40:40.486 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:40:40.489 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:40:40.489 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:40:40.490 dms confd[230379]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:40:40.490 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:40:40.491 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:40:40.493 dms confd[230379]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:40:40.495 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:40:40.496 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:40:40.497 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:40.498 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:40:40.499 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:40:40.502 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:40:40.507 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:40:40.508 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:40:40.510 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:40:40.510 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:40:40.511 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:40:40.512 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:40:40.513 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:40:40.513 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:40:40.514 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:40:40.515 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:40:40.515 dms confd[230379]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:40:40.516 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:40:40.516 dms confd[230379]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:40:40.546 dms confd[230379]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:40:40.550 dms confd[230379]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:40:40.658 dms confd[230379]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:40:40.997 dms confd[230379]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:40:41.077 dms confd[230379]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:40:41.178 dms confd[230379]: - ConfD started vsn: 8.0.2
+<CRIT> 21-Mar-2023::05:40:41.856 dms confd[230379]: - Daemon actions_daemon died
+<INFO> 21-Mar-2023::05:40:58.001 dms confd[230379]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 21-Mar-2023::05:40:58.012 dms confd[230379]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:40:58.028 dms confd[230379]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:40:58.046 dms confd[230379]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:40:58.047 dms confd[230379]: - Daemon logging terminating, reason: shutdown
+<INFO> 21-Mar-2023::05:40:58.377 dms confd[230488]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 21-Mar-2023::05:40:58.220 dms confd[230488]: - Enabling daemon log
+<INFO> 21-Mar-2023::05:40:58.226 dms confd[230488]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 21-Mar-2023::05:40:58.241 dms confd[230488]: - Loading file confd.fxs
+<DEBUG> 21-Mar-2023::05:40:58.253 dms confd[230488]: - Loading file ietf-yang-types.fxs
+<DEBUG> 21-Mar-2023::05:40:58.254 dms confd[230488]: - Loading file ietf-inet-types.fxs
+<DEBUG> 21-Mar-2023::05:40:58.254 dms confd[230488]: - Loading file ietf-datastores.fxs
+<DEBUG> 21-Mar-2023::05:40:58.261 dms confd[230488]: - Loading file ietf-yang-library.fxs
+<DEBUG> 21-Mar-2023::05:40:58.267 dms confd[230488]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:40:58.268 dms confd[230488]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 21-Mar-2023::05:40:58.269 dms confd[230488]: - Loading file tailf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:40:58.277 dms confd[230488]: - Loading file ietf-netconf.fxs
+<DEBUG> 21-Mar-2023::05:40:58.279 dms confd[230488]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 21-Mar-2023::05:40:58.279 dms confd[230488]: - Loading file netconf_netmod.fxs
+<DEBUG> 21-Mar-2023::05:40:58.280 dms confd[230488]: - Loading file ietf-restconf.fxs
+<DEBUG> 21-Mar-2023::05:40:58.280 dms confd[230488]: - Loading file confd_cfg.fxs
+<DEBUG> 21-Mar-2023::05:40:58.305 dms confd[230488]: - Loading file config.fxs
+<DEBUG> 21-Mar-2023::05:40:58.306 dms confd[230488]: - Loading file netconf_notification.fxs
+<DEBUG> 21-Mar-2023::05:40:58.307 dms confd[230488]: - Loading file netconf_actions.fxs
+<DEBUG> 21-Mar-2023::05:40:58.308 dms confd[230488]: - Loading file yang.fxs
+<DEBUG> 21-Mar-2023::05:40:58.308 dms confd[230488]: - Loading file tailf_netconf.fxs
+<DEBUG> 21-Mar-2023::05:40:58.309 dms confd[230488]: - Loading file cli-builtin.fxs
+<DEBUG> 21-Mar-2023::05:40:58.309 dms confd[230488]: - Loading file confd.conf
+<INFO> 21-Mar-2023::05:40:58.311 dms confd[230488]: - Consulting daemon configuration file confd.conf
+<INFO> 21-Mar-2023::05:40:58.359 dms confd[230488]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 21-Mar-2023::05:40:58.360 dms confd[230488]: - Enabling audit log
+<INFO> 21-Mar-2023::05:40:58.363 dms confd[230488]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 21-Mar-2023::05:40:58.365 dms confd[230488]: - Enabling NETCONF log
+<INFO> 21-Mar-2023::05:40:58.369 dms confd[230488]: - Enabling SNMP log
+<INFO> 21-Mar-2023::05:40:58.371 dms confd[230488]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 21-Mar-2023::05:40:58.372 dms confd[230488]: - Enabling developer log
+<INFO> 21-Mar-2023::05:40:58.374 dms confd[230488]: - Enabling JSONRPC log
+<INFO> 21-Mar-2023::05:40:58.376 dms confd[230488]: - Enabling WebUI log log
+<INFO> 21-Mar-2023::05:40:58.389 dms confd[230488]: - Enabling error log
+<INFO> 21-Mar-2023::05:40:58.389 dms confd[230488]: - Writing error log to ./confderr.log
+<INFO> 21-Mar-2023::05:40:58.397 dms confd[230488]: - Daemon logging started
+<DEBUG> 21-Mar-2023::05:40:58.409 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 21-Mar-2023::05:40:58.414 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 21-Mar-2023::05:40:58.415 dms confd[230488]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 21-Mar-2023::05:40:58.415 dms confd[230488]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 21-Mar-2023::05:40:58.417 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:58.418 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:40:58.419 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:58.419 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 21-Mar-2023::05:40:58.420 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 21-Mar-2023::05:40:58.420 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 21-Mar-2023::05:40:58.421 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 21-Mar-2023::05:40:58.421 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 21-Mar-2023::05:40:58.424 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 21-Mar-2023::05:40:58.424 dms confd[230488]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 21-Mar-2023::05:40:58.425 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:58.428 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 21-Mar-2023::05:40:58.429 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 21-Mar-2023::05:40:58.431 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 21-Mar-2023::05:40:58.432 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 21-Mar-2023::05:40:58.432 dms confd[230488]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 21-Mar-2023::05:40:58.433 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 21-Mar-2023::05:40:58.434 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 21-Mar-2023::05:40:58.437 dms confd[230488]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 21-Mar-2023::05:40:58.438 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 21-Mar-2023::05:40:58.439 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 21-Mar-2023::05:40:58.440 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 21-Mar-2023::05:40:58.441 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 21-Mar-2023::05:40:58.442 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 21-Mar-2023::05:40:58.446 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 21-Mar-2023::05:40:58.450 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 21-Mar-2023::05:40:58.450 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 21-Mar-2023::05:40:58.451 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 21-Mar-2023::05:40:58.452 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 21-Mar-2023::05:40:58.453 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 21-Mar-2023::05:40:58.454 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 21-Mar-2023::05:40:58.456 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 21-Mar-2023::05:40:58.456 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 21-Mar-2023::05:40:58.457 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 21-Mar-2023::05:40:58.457 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 21-Mar-2023::05:40:58.458 dms confd[230488]: - Loading file ./dhcpd.fxs
+<DEBUG> 21-Mar-2023::05:40:58.459 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 21-Mar-2023::05:40:58.459 dms confd[230488]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 21-Mar-2023::05:40:58.491 dms confd[230488]: - Loading file ./commands-c.ccl
+<DEBUG> 21-Mar-2023::05:40:58.495 dms confd[230488]: - Loading file ./commands-j.ccl
+<INFO> 21-Mar-2023::05:40:58.605 dms confd[230488]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 21-Mar-2023::05:40:58.937 dms confd[230488]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 21-Mar-2023::05:40:59.039 dms confd[230488]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 21-Mar-2023::05:40:59.142 dms confd[230488]: - ConfD started vsn: 8.0.2
+<CRIT> 23-Mar-2023::05:37:04.141 dms confd[230488]: - Daemon actions_daemon died
+<INFO> 23-Mar-2023::05:37:59.735 dms confd[230488]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 23-Mar-2023::05:37:59.764 dms confd[230488]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:37:59.788 dms confd[230488]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:37:59.810 dms confd[230488]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:37:59.814 dms confd[230488]: - Daemon logging terminating, reason: shutdown
+<INFO> 23-Mar-2023::05:38:00.149 dms confd[249207]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 23-Mar-2023::05:38:00.006 dms confd[249207]: - Enabling daemon log
+<INFO> 23-Mar-2023::05:38:00.011 dms confd[249207]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 23-Mar-2023::05:38:00.029 dms confd[249207]: - Loading file confd.fxs
+<DEBUG> 23-Mar-2023::05:38:00.043 dms confd[249207]: - Loading file ietf-yang-types.fxs
+<DEBUG> 23-Mar-2023::05:38:00.044 dms confd[249207]: - Loading file ietf-inet-types.fxs
+<DEBUG> 23-Mar-2023::05:38:00.044 dms confd[249207]: - Loading file ietf-datastores.fxs
+<DEBUG> 23-Mar-2023::05:38:00.054 dms confd[249207]: - Loading file ietf-yang-library.fxs
+<DEBUG> 23-Mar-2023::05:38:00.057 dms confd[249207]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:38:00.057 dms confd[249207]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:38:00.058 dms confd[249207]: - Loading file tailf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:38:00.062 dms confd[249207]: - Loading file ietf-netconf.fxs
+<DEBUG> 23-Mar-2023::05:38:00.064 dms confd[249207]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 23-Mar-2023::05:38:00.065 dms confd[249207]: - Loading file netconf_netmod.fxs
+<DEBUG> 23-Mar-2023::05:38:00.066 dms confd[249207]: - Loading file ietf-restconf.fxs
+<DEBUG> 23-Mar-2023::05:38:00.066 dms confd[249207]: - Loading file confd_cfg.fxs
+<DEBUG> 23-Mar-2023::05:38:00.087 dms confd[249207]: - Loading file config.fxs
+<DEBUG> 23-Mar-2023::05:38:00.088 dms confd[249207]: - Loading file netconf_notification.fxs
+<DEBUG> 23-Mar-2023::05:38:00.089 dms confd[249207]: - Loading file netconf_actions.fxs
+<DEBUG> 23-Mar-2023::05:38:00.089 dms confd[249207]: - Loading file yang.fxs
+<DEBUG> 23-Mar-2023::05:38:00.090 dms confd[249207]: - Loading file tailf_netconf.fxs
+<DEBUG> 23-Mar-2023::05:38:00.091 dms confd[249207]: - Loading file cli-builtin.fxs
+<DEBUG> 23-Mar-2023::05:38:00.092 dms confd[249207]: - Loading file confd.conf
+<INFO> 23-Mar-2023::05:38:00.093 dms confd[249207]: - Consulting daemon configuration file confd.conf
+<INFO> 23-Mar-2023::05:38:00.137 dms confd[249207]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 23-Mar-2023::05:38:00.137 dms confd[249207]: - Enabling audit log
+<INFO> 23-Mar-2023::05:38:00.139 dms confd[249207]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 23-Mar-2023::05:38:00.141 dms confd[249207]: - Enabling NETCONF log
+<INFO> 23-Mar-2023::05:38:00.142 dms confd[249207]: - Enabling SNMP log
+<INFO> 23-Mar-2023::05:38:00.145 dms confd[249207]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 23-Mar-2023::05:38:00.146 dms confd[249207]: - Enabling developer log
+<INFO> 23-Mar-2023::05:38:00.147 dms confd[249207]: - Enabling JSONRPC log
+<INFO> 23-Mar-2023::05:38:00.149 dms confd[249207]: - Enabling WebUI log log
+<INFO> 23-Mar-2023::05:38:00.163 dms confd[249207]: - Enabling error log
+<INFO> 23-Mar-2023::05:38:00.163 dms confd[249207]: - Writing error log to ./confderr.log
+<INFO> 23-Mar-2023::05:38:00.171 dms confd[249207]: - Daemon logging started
+<DEBUG> 23-Mar-2023::05:38:00.186 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 23-Mar-2023::05:38:00.189 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 23-Mar-2023::05:38:00.190 dms confd[249207]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 23-Mar-2023::05:38:00.190 dms confd[249207]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 23-Mar-2023::05:38:00.194 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:38:00.195 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:38:00.195 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:38:00.196 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 23-Mar-2023::05:38:00.196 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 23-Mar-2023::05:38:00.197 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 23-Mar-2023::05:38:00.197 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 23-Mar-2023::05:38:00.198 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 23-Mar-2023::05:38:00.199 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 23-Mar-2023::05:38:00.200 dms confd[249207]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 23-Mar-2023::05:38:00.200 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:38:00.206 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 23-Mar-2023::05:38:00.209 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 23-Mar-2023::05:38:00.212 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 23-Mar-2023::05:38:00.213 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 23-Mar-2023::05:38:00.214 dms confd[249207]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 23-Mar-2023::05:38:00.215 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 23-Mar-2023::05:38:00.216 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 23-Mar-2023::05:38:00.219 dms confd[249207]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 23-Mar-2023::05:38:00.221 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 23-Mar-2023::05:38:00.221 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 23-Mar-2023::05:38:00.222 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:38:00.223 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 23-Mar-2023::05:38:00.223 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:38:00.230 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 23-Mar-2023::05:38:00.238 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 23-Mar-2023::05:38:00.239 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 23-Mar-2023::05:38:00.240 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:38:00.240 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 23-Mar-2023::05:38:00.241 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 23-Mar-2023::05:38:00.242 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 23-Mar-2023::05:38:00.242 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 23-Mar-2023::05:38:00.243 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 23-Mar-2023::05:38:00.244 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 23-Mar-2023::05:38:00.246 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 23-Mar-2023::05:38:00.246 dms confd[249207]: - Loading file ./dhcpd.fxs
+<DEBUG> 23-Mar-2023::05:38:00.247 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 23-Mar-2023::05:38:00.247 dms confd[249207]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 23-Mar-2023::05:38:00.275 dms confd[249207]: - Loading file ./commands-c.ccl
+<DEBUG> 23-Mar-2023::05:38:00.280 dms confd[249207]: - Loading file ./commands-j.ccl
+<INFO> 23-Mar-2023::05:38:00.398 dms confd[249207]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:38:00.723 dms confd[249207]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:38:00.805 dms confd[249207]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:38:00.909 dms confd[249207]: - ConfD started vsn: 8.0.2
+<CRIT> 23-Mar-2023::05:44:36.225 dms confd[249207]: - Daemon actions_daemon died
+<INFO> 23-Mar-2023::05:44:38.079 dms confd[249207]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 23-Mar-2023::05:44:38.094 dms confd[249207]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:44:38.121 dms confd[249207]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:44:38.137 dms confd[249207]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:44:38.138 dms confd[249207]: - Daemon logging terminating, reason: shutdown
+<INFO> 23-Mar-2023::05:44:38.461 dms confd[249307]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 23-Mar-2023::05:44:38.326 dms confd[249307]: - Enabling daemon log
+<INFO> 23-Mar-2023::05:44:38.332 dms confd[249307]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 23-Mar-2023::05:44:38.352 dms confd[249307]: - Loading file confd.fxs
+<DEBUG> 23-Mar-2023::05:44:38.364 dms confd[249307]: - Loading file ietf-yang-types.fxs
+<DEBUG> 23-Mar-2023::05:44:38.365 dms confd[249307]: - Loading file ietf-inet-types.fxs
+<DEBUG> 23-Mar-2023::05:44:38.365 dms confd[249307]: - Loading file ietf-datastores.fxs
+<DEBUG> 23-Mar-2023::05:44:38.373 dms confd[249307]: - Loading file ietf-yang-library.fxs
+<DEBUG> 23-Mar-2023::05:44:38.375 dms confd[249307]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:44:38.376 dms confd[249307]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:44:38.376 dms confd[249307]: - Loading file tailf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:44:38.381 dms confd[249307]: - Loading file ietf-netconf.fxs
+<DEBUG> 23-Mar-2023::05:44:38.381 dms confd[249307]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 23-Mar-2023::05:44:38.383 dms confd[249307]: - Loading file netconf_netmod.fxs
+<DEBUG> 23-Mar-2023::05:44:38.383 dms confd[249307]: - Loading file ietf-restconf.fxs
+<DEBUG> 23-Mar-2023::05:44:38.383 dms confd[249307]: - Loading file confd_cfg.fxs
+<DEBUG> 23-Mar-2023::05:44:38.401 dms confd[249307]: - Loading file config.fxs
+<DEBUG> 23-Mar-2023::05:44:38.402 dms confd[249307]: - Loading file netconf_notification.fxs
+<DEBUG> 23-Mar-2023::05:44:38.402 dms confd[249307]: - Loading file netconf_actions.fxs
+<DEBUG> 23-Mar-2023::05:44:38.403 dms confd[249307]: - Loading file yang.fxs
+<DEBUG> 23-Mar-2023::05:44:38.403 dms confd[249307]: - Loading file tailf_netconf.fxs
+<DEBUG> 23-Mar-2023::05:44:38.404 dms confd[249307]: - Loading file cli-builtin.fxs
+<DEBUG> 23-Mar-2023::05:44:38.404 dms confd[249307]: - Loading file confd.conf
+<INFO> 23-Mar-2023::05:44:38.406 dms confd[249307]: - Consulting daemon configuration file confd.conf
+<INFO> 23-Mar-2023::05:44:38.452 dms confd[249307]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 23-Mar-2023::05:44:38.452 dms confd[249307]: - Enabling audit log
+<INFO> 23-Mar-2023::05:44:38.453 dms confd[249307]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 23-Mar-2023::05:44:38.454 dms confd[249307]: - Enabling NETCONF log
+<INFO> 23-Mar-2023::05:44:38.455 dms confd[249307]: - Enabling SNMP log
+<INFO> 23-Mar-2023::05:44:38.457 dms confd[249307]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 23-Mar-2023::05:44:38.457 dms confd[249307]: - Enabling developer log
+<INFO> 23-Mar-2023::05:44:38.458 dms confd[249307]: - Enabling JSONRPC log
+<INFO> 23-Mar-2023::05:44:38.459 dms confd[249307]: - Enabling WebUI log log
+<INFO> 23-Mar-2023::05:44:38.471 dms confd[249307]: - Enabling error log
+<INFO> 23-Mar-2023::05:44:38.471 dms confd[249307]: - Writing error log to ./confderr.log
+<INFO> 23-Mar-2023::05:44:38.477 dms confd[249307]: - Daemon logging started
+<DEBUG> 23-Mar-2023::05:44:38.488 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 23-Mar-2023::05:44:38.489 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 23-Mar-2023::05:44:38.490 dms confd[249307]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 23-Mar-2023::05:44:38.490 dms confd[249307]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 23-Mar-2023::05:44:38.492 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:44:38.493 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:44:38.493 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:44:38.495 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 23-Mar-2023::05:44:38.496 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 23-Mar-2023::05:44:38.497 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 23-Mar-2023::05:44:38.498 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 23-Mar-2023::05:44:38.498 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 23-Mar-2023::05:44:38.499 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 23-Mar-2023::05:44:38.500 dms confd[249307]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 23-Mar-2023::05:44:38.500 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:44:38.503 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 23-Mar-2023::05:44:38.503 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 23-Mar-2023::05:44:38.505 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 23-Mar-2023::05:44:38.506 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 23-Mar-2023::05:44:38.507 dms confd[249307]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 23-Mar-2023::05:44:38.507 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 23-Mar-2023::05:44:38.508 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 23-Mar-2023::05:44:38.510 dms confd[249307]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 23-Mar-2023::05:44:38.513 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 23-Mar-2023::05:44:38.513 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 23-Mar-2023::05:44:38.515 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:44:38.515 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 23-Mar-2023::05:44:38.516 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:44:38.520 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 23-Mar-2023::05:44:38.524 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 23-Mar-2023::05:44:38.524 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 23-Mar-2023::05:44:38.525 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:44:38.526 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 23-Mar-2023::05:44:38.527 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 23-Mar-2023::05:44:38.528 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 23-Mar-2023::05:44:38.531 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 23-Mar-2023::05:44:38.531 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 23-Mar-2023::05:44:38.532 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 23-Mar-2023::05:44:38.533 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 23-Mar-2023::05:44:38.534 dms confd[249307]: - Loading file ./dhcpd.fxs
+<DEBUG> 23-Mar-2023::05:44:38.534 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 23-Mar-2023::05:44:38.535 dms confd[249307]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 23-Mar-2023::05:44:38.565 dms confd[249307]: - Loading file ./commands-c.ccl
+<DEBUG> 23-Mar-2023::05:44:38.569 dms confd[249307]: - Loading file ./commands-j.ccl
+<INFO> 23-Mar-2023::05:44:38.670 dms confd[249307]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:44:38.977 dms confd[249307]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:44:39.049 dms confd[249307]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:44:39.150 dms confd[249307]: - ConfD started vsn: 8.0.2
+<CRIT> 23-Mar-2023::05:52:43.757 dms confd[249307]: - Daemon actions_daemon died
+<INFO> 23-Mar-2023::05:54:26.652 dms confd[249307]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 23-Mar-2023::05:54:26.667 dms confd[249307]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:54:26.685 dms confd[249307]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:54:26.703 dms confd[249307]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:54:26.704 dms confd[249307]: - Daemon logging terminating, reason: shutdown
+<INFO> 23-Mar-2023::05:54:27.004 dms confd[249410]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 23-Mar-2023::05:54:26.866 dms confd[249410]: - Enabling daemon log
+<INFO> 23-Mar-2023::05:54:26.872 dms confd[249410]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 23-Mar-2023::05:54:26.890 dms confd[249410]: - Loading file confd.fxs
+<DEBUG> 23-Mar-2023::05:54:26.904 dms confd[249410]: - Loading file ietf-yang-types.fxs
+<DEBUG> 23-Mar-2023::05:54:26.904 dms confd[249410]: - Loading file ietf-inet-types.fxs
+<DEBUG> 23-Mar-2023::05:54:26.905 dms confd[249410]: - Loading file ietf-datastores.fxs
+<DEBUG> 23-Mar-2023::05:54:26.911 dms confd[249410]: - Loading file ietf-yang-library.fxs
+<DEBUG> 23-Mar-2023::05:54:26.915 dms confd[249410]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:54:26.915 dms confd[249410]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::05:54:26.916 dms confd[249410]: - Loading file tailf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:54:26.920 dms confd[249410]: - Loading file ietf-netconf.fxs
+<DEBUG> 23-Mar-2023::05:54:26.921 dms confd[249410]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 23-Mar-2023::05:54:26.922 dms confd[249410]: - Loading file netconf_netmod.fxs
+<DEBUG> 23-Mar-2023::05:54:26.922 dms confd[249410]: - Loading file ietf-restconf.fxs
+<DEBUG> 23-Mar-2023::05:54:26.923 dms confd[249410]: - Loading file confd_cfg.fxs
+<DEBUG> 23-Mar-2023::05:54:26.942 dms confd[249410]: - Loading file config.fxs
+<DEBUG> 23-Mar-2023::05:54:26.943 dms confd[249410]: - Loading file netconf_notification.fxs
+<DEBUG> 23-Mar-2023::05:54:26.943 dms confd[249410]: - Loading file netconf_actions.fxs
+<DEBUG> 23-Mar-2023::05:54:26.943 dms confd[249410]: - Loading file yang.fxs
+<DEBUG> 23-Mar-2023::05:54:26.944 dms confd[249410]: - Loading file tailf_netconf.fxs
+<DEBUG> 23-Mar-2023::05:54:26.944 dms confd[249410]: - Loading file cli-builtin.fxs
+<DEBUG> 23-Mar-2023::05:54:26.944 dms confd[249410]: - Loading file confd.conf
+<INFO> 23-Mar-2023::05:54:26.946 dms confd[249410]: - Consulting daemon configuration file confd.conf
+<INFO> 23-Mar-2023::05:54:26.995 dms confd[249410]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 23-Mar-2023::05:54:26.997 dms confd[249410]: - Enabling audit log
+<INFO> 23-Mar-2023::05:54:26.998 dms confd[249410]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 23-Mar-2023::05:54:26.999 dms confd[249410]: - Enabling NETCONF log
+<INFO> 23-Mar-2023::05:54:27.000 dms confd[249410]: - Enabling SNMP log
+<INFO> 23-Mar-2023::05:54:27.001 dms confd[249410]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 23-Mar-2023::05:54:27.001 dms confd[249410]: - Enabling developer log
+<INFO> 23-Mar-2023::05:54:27.003 dms confd[249410]: - Enabling JSONRPC log
+<INFO> 23-Mar-2023::05:54:27.004 dms confd[249410]: - Enabling WebUI log log
+<INFO> 23-Mar-2023::05:54:27.013 dms confd[249410]: - Enabling error log
+<INFO> 23-Mar-2023::05:54:27.013 dms confd[249410]: - Writing error log to ./confderr.log
+<INFO> 23-Mar-2023::05:54:27.020 dms confd[249410]: - Daemon logging started
+<DEBUG> 23-Mar-2023::05:54:27.031 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 23-Mar-2023::05:54:27.033 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 23-Mar-2023::05:54:27.033 dms confd[249410]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 23-Mar-2023::05:54:27.033 dms confd[249410]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 23-Mar-2023::05:54:27.035 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:54:27.036 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:54:27.037 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:54:27.037 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 23-Mar-2023::05:54:27.038 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 23-Mar-2023::05:54:27.041 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 23-Mar-2023::05:54:27.041 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 23-Mar-2023::05:54:27.042 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 23-Mar-2023::05:54:27.043 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 23-Mar-2023::05:54:27.043 dms confd[249410]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 23-Mar-2023::05:54:27.044 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:54:27.048 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 23-Mar-2023::05:54:27.049 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 23-Mar-2023::05:54:27.051 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 23-Mar-2023::05:54:27.051 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 23-Mar-2023::05:54:27.052 dms confd[249410]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 23-Mar-2023::05:54:27.052 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 23-Mar-2023::05:54:27.053 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 23-Mar-2023::05:54:27.055 dms confd[249410]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 23-Mar-2023::05:54:27.057 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 23-Mar-2023::05:54:27.057 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 23-Mar-2023::05:54:27.058 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::05:54:27.060 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 23-Mar-2023::05:54:27.061 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 23-Mar-2023::05:54:27.064 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 23-Mar-2023::05:54:27.068 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 23-Mar-2023::05:54:27.068 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 23-Mar-2023::05:54:27.069 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 23-Mar-2023::05:54:27.071 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 23-Mar-2023::05:54:27.072 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 23-Mar-2023::05:54:27.072 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 23-Mar-2023::05:54:27.074 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 23-Mar-2023::05:54:27.075 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 23-Mar-2023::05:54:27.075 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 23-Mar-2023::05:54:27.076 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 23-Mar-2023::05:54:27.076 dms confd[249410]: - Loading file ./dhcpd.fxs
+<DEBUG> 23-Mar-2023::05:54:27.077 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 23-Mar-2023::05:54:27.077 dms confd[249410]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 23-Mar-2023::05:54:27.105 dms confd[249410]: - Loading file ./commands-c.ccl
+<DEBUG> 23-Mar-2023::05:54:27.109 dms confd[249410]: - Loading file ./commands-j.ccl
+<INFO> 23-Mar-2023::05:54:27.214 dms confd[249410]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::05:54:27.511 dms confd[249410]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::05:54:27.580 dms confd[249410]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::05:54:27.682 dms confd[249410]: - ConfD started vsn: 8.0.2
+<CRIT> 23-Mar-2023::05:59:32.850 dms confd[249410]: - Daemon actions_daemon died
+<INFO> 23-Mar-2023::06:01:31.936 dms confd[249410]: - ConfD stopping (confd --stop called by dms in /home/dms/dms-server)
+<INFO> 23-Mar-2023::06:01:31.955 dms confd[249410]: - Stopping to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::06:01:31.971 dms confd[249410]: - Stopping to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::06:01:31.987 dms confd[249410]: - Stopping to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::06:01:31.988 dms confd[249410]: - Daemon logging terminating, reason: shutdown
+<INFO> 23-Mar-2023::06:01:32.321 dms confd[249513]: - Writing daemon log to /home/dms/dms-server/confd.log
+<INFO> 23-Mar-2023::06:01:32.188 dms confd[249513]: - Enabling daemon log
+<INFO> 23-Mar-2023::06:01:32.194 dms confd[249513]: - Starting ConfD vsn: 8.0.2
+<DEBUG> 23-Mar-2023::06:01:32.211 dms confd[249513]: - Loading file confd.fxs
+<DEBUG> 23-Mar-2023::06:01:32.223 dms confd[249513]: - Loading file ietf-yang-types.fxs
+<DEBUG> 23-Mar-2023::06:01:32.224 dms confd[249513]: - Loading file ietf-inet-types.fxs
+<DEBUG> 23-Mar-2023::06:01:32.225 dms confd[249513]: - Loading file ietf-datastores.fxs
+<DEBUG> 23-Mar-2023::06:01:32.233 dms confd[249513]: - Loading file ietf-yang-library.fxs
+<DEBUG> 23-Mar-2023::06:01:32.235 dms confd[249513]: - Loading file ietf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::06:01:32.236 dms confd[249513]: - Loading file tailf-yang-patch.fxs
+<DEBUG> 23-Mar-2023::06:01:32.236 dms confd[249513]: - Loading file tailf-rollback.fxs
+<DEBUG> 23-Mar-2023::06:01:32.241 dms confd[249513]: - Loading file ietf-netconf.fxs
+<DEBUG> 23-Mar-2023::06:01:32.242 dms confd[249513]: - Loading file ietf-netconf-with-defaults.fxs
+<DEBUG> 23-Mar-2023::06:01:32.242 dms confd[249513]: - Loading file netconf_netmod.fxs
+<DEBUG> 23-Mar-2023::06:01:32.243 dms confd[249513]: - Loading file ietf-restconf.fxs
+<DEBUG> 23-Mar-2023::06:01:32.243 dms confd[249513]: - Loading file confd_cfg.fxs
+<DEBUG> 23-Mar-2023::06:01:32.262 dms confd[249513]: - Loading file config.fxs
+<DEBUG> 23-Mar-2023::06:01:32.263 dms confd[249513]: - Loading file netconf_notification.fxs
+<DEBUG> 23-Mar-2023::06:01:32.263 dms confd[249513]: - Loading file netconf_actions.fxs
+<DEBUG> 23-Mar-2023::06:01:32.263 dms confd[249513]: - Loading file yang.fxs
+<DEBUG> 23-Mar-2023::06:01:32.264 dms confd[249513]: - Loading file tailf_netconf.fxs
+<DEBUG> 23-Mar-2023::06:01:32.264 dms confd[249513]: - Loading file cli-builtin.fxs
+<DEBUG> 23-Mar-2023::06:01:32.264 dms confd[249513]: - Loading file confd.conf
+<INFO> 23-Mar-2023::06:01:32.266 dms confd[249513]: - Consulting daemon configuration file confd.conf
+<INFO> 23-Mar-2023::06:01:32.310 dms confd[249513]: - Writing audit log to /home/dms/dms-server/audit.log
+<INFO> 23-Mar-2023::06:01:32.310 dms confd[249513]: - Enabling audit log
+<INFO> 23-Mar-2023::06:01:32.314 dms confd[249513]: - Writing NETCONF log to /home/dms/dms-server/netconf.log
+<INFO> 23-Mar-2023::06:01:32.315 dms confd[249513]: - Enabling NETCONF log
+<INFO> 23-Mar-2023::06:01:32.316 dms confd[249513]: - Enabling SNMP log
+<INFO> 23-Mar-2023::06:01:32.317 dms confd[249513]: - Writing developer log to /home/dms/dms-server/devel.log
+<INFO> 23-Mar-2023::06:01:32.318 dms confd[249513]: - Enabling developer log
+<INFO> 23-Mar-2023::06:01:32.319 dms confd[249513]: - Enabling JSONRPC log
+<INFO> 23-Mar-2023::06:01:32.320 dms confd[249513]: - Enabling WebUI log log
+<INFO> 23-Mar-2023::06:01:32.335 dms confd[249513]: - Enabling error log
+<INFO> 23-Mar-2023::06:01:32.335 dms confd[249513]: - Writing error log to ./confderr.log
+<INFO> 23-Mar-2023::06:01:32.343 dms confd[249513]: - Daemon logging started
+<DEBUG> 23-Mar-2023::06:01:32.352 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications.fxs
+<DEBUG> 23-Mar-2023::06:01:32.353 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-origin.fxs
+<DEBUG> 23-Mar-2023::06:01:32.354 dms confd[249513]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-interfaces.fxs
+<DEBUG> 23-Mar-2023::06:01:32.354 dms confd[249513]: - Loading file ./ietf-i2nsf-capability.fxs
+<DEBUG> 23-Mar-2023::06:01:32.356 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::06:01:32.357 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring2.fxs
+<DEBUG> 23-Mar-2023::06:01:32.357 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-common-monitoring.fxs
+<DEBUG> 23-Mar-2023::06:01:32.358 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-acm.fxs
+<DEBUG> 23-Mar-2023::06:01:32.358 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-common-query.fxs
+<DEBUG> 23-Mar-2023::06:01:32.359 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-transactions.fxs
+<DEBUG> 23-Mar-2023::06:01:32.359 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-common.fxs
+<DEBUG> 23-Mar-2023::06:01:32.360 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-progress.fxs
+<DEBUG> 23-Mar-2023::06:01:32.361 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/iana-crypt-hash.fxs
+<DEBUG> 23-Mar-2023::06:01:32.361 dms confd[249513]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-ip.fxs
+<DEBUG> 23-Mar-2023::06:01:32.361 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring.fxs
+<DEBUG> 23-Mar-2023::06:01:32.364 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-yang-schema-mount.fxs
+<DEBUG> 23-Mar-2023::06:01:32.365 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push.fxs
+<DEBUG> 23-Mar-2023::06:01:32.367 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-yang-metadata.fxs
+<DEBUG> 23-Mar-2023::06:01:32.367 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-x509-cert-to-name.fxs
+<DEBUG> 23-Mar-2023::06:01:32.369 dms confd[249513]: - Loading file /home/dms/confd/lib/confd/lib/core/confd/priv/ietf-network-instance.fxs
+<DEBUG> 23-Mar-2023::06:01:32.369 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-notifications.fxs
+<DEBUG> 23-Mar-2023::06:01:32.370 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-nmda.fxs
+<DEBUG> 23-Mar-2023::06:01:32.372 dms confd[249513]: - Loading file ./ietf-i2nsf-registration-interface.fxs
+<DEBUG> 23-Mar-2023::06:01:32.374 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-netconf-partial-lock.fxs
+<DEBUG> 23-Mar-2023::06:01:32.374 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-xsd-types.fxs
+<DEBUG> 23-Mar-2023::06:01:32.376 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-monitoring.fxs
+<DEBUG> 23-Mar-2023::06:01:32.376 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-last-login.fxs
+<DEBUG> 23-Mar-2023::06:01:32.377 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-confd-monitoring2.fxs
+<DEBUG> 23-Mar-2023::06:01:32.380 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-acm.fxs
+<DEBUG> 23-Mar-2023::06:01:32.384 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-transaction-id.fxs
+<DEBUG> 23-Mar-2023::06:01:32.385 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-with-rollback-id.fxs
+<DEBUG> 23-Mar-2023::06:01:32.386 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-rollback.fxs
+<DEBUG> 23-Mar-2023::06:01:32.387 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-query.fxs
+<DEBUG> 23-Mar-2023::06:01:32.387 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-inactive.fxs
+<DEBUG> 23-Mar-2023::06:01:32.388 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-forward.fxs
+<DEBUG> 23-Mar-2023::06:01:32.389 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-netconf-extensions.fxs
+<DEBUG> 23-Mar-2023::06:01:32.389 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-kicker.fxs
+<DEBUG> 23-Mar-2023::06:01:32.390 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-yang-push-deviation.fxs
+<DEBUG> 23-Mar-2023::06:01:32.390 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/ietf-subscribed-notifications-deviation.fxs
+<DEBUG> 23-Mar-2023::06:01:32.391 dms confd[249513]: - Loading file ./dhcpd.fxs
+<DEBUG> 23-Mar-2023::06:01:32.391 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-confd-progress.fxs
+<DEBUG> 23-Mar-2023::06:01:32.392 dms confd[249513]: - Loading file /home/dms/confd/etc/confd/tailf-aaa.fxs
+<DEBUG> 23-Mar-2023::06:01:32.419 dms confd[249513]: - Loading file ./commands-c.ccl
+<DEBUG> 23-Mar-2023::06:01:32.423 dms confd[249513]: - Loading file ./commands-j.ccl
+<INFO> 23-Mar-2023::06:01:32.533 dms confd[249513]: - Starting to listen for Internal IPC on 127.0.0.1:4565
+<INFO> 23-Mar-2023::06:01:32.877 dms confd[249513]: - Starting to listen for NETCONF SSH on 192.168.56.104:2022
+<INFO> 23-Mar-2023::06:01:32.965 dms confd[249513]: - Starting to listen for CLI SSH on 0.0.0.0:2024
+<INFO> 23-Mar-2023::06:01:33.066 dms confd[249513]: - ConfD started vsn: 8.0.2

@@ -1,0 +1,1311 @@
+<INFO> 15-Mar-2023::05:30:20.618 dms confd[181135]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:48672 with ssh, member of groups: admin
+<INFO> 15-Mar-2023::05:30:20.619 dms confd[181135]: audit user: admin/0 logged in via netconf from 127.0.0.1:48672 with ssh using local authentication
+<INFO> 15-Mar-2023::05:30:20.629 dms confd[181135]: audit user: admin/14 assigned to groups: admin
+<INFO> 15-Mar-2023::05:30:20.630 dms confd[181135]: audit user: admin/14 created new session via netconf from 127.0.0.1:48672 with ssh
+<INFO> 15-Mar-2023::05:30:20.717 dms confd[181135]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 15-Mar-2023::05:30:25.735 dms confd[181135]: audit user: admin/0 logged out <local> user
+<INFO> 15-Mar-2023::05:30:32.315 dms confd[181305]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:42254 with ssh, member of groups: admin
+<INFO> 15-Mar-2023::05:30:32.316 dms confd[181305]: audit user: admin/0 logged in via netconf from 127.0.0.1:42254 with ssh using local authentication
+<INFO> 15-Mar-2023::05:30:32.326 dms confd[181305]: audit user: admin/14 assigned to groups: admin
+<INFO> 15-Mar-2023::05:30:32.327 dms confd[181305]: audit user: admin/14 created new session via netconf from 127.0.0.1:42254 with ssh
+<INFO> 15-Mar-2023::05:30:32.423 dms confd[181305]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 15-Mar-2023::05:30:37.442 dms confd[181305]: audit user: admin/0 logged out <local> user
+<INFO> 15-Mar-2023::05:31:16.168 dms confd[181509]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:46612 with ssh, member of groups: admin
+<INFO> 15-Mar-2023::05:31:16.169 dms confd[181509]: audit user: admin/0 logged in via netconf from 127.0.0.1:46612 with ssh using local authentication
+<INFO> 15-Mar-2023::05:31:16.180 dms confd[181509]: audit user: admin/14 assigned to groups: admin
+<INFO> 15-Mar-2023::05:31:16.180 dms confd[181509]: audit user: admin/14 created new session via netconf from 127.0.0.1:46612 with ssh
+<INFO> 15-Mar-2023::05:31:16.322 dms confd[181509]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 15-Mar-2023::05:31:21.337 dms confd[181509]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::02:49:14.271 dms confd[181509]: audit user: admin/16 assigned to groups: admin
+<INFO> 16-Mar-2023::02:49:14.273 dms confd[181509]: audit user: admin/16 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:49:19.482 dms confd[181509]: audit user: admin/16 CLI 'exit'
+<INFO> 16-Mar-2023::02:49:19.688 dms confd[181509]: audit user: admin/16 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:51:57.644 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 192.168.56.103:48680 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::02:51:57.645 dms confd[188685]: audit user: admin/0 logged in via cli from 192.168.56.103:48680 with ssh using local authentication
+<INFO> 16-Mar-2023::02:51:57.648 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::02:53:09.606 dms confd[188685]: audit user: admin/14 assigned to groups: admin
+<INFO> 16-Mar-2023::02:53:09.607 dms confd[188685]: audit user: admin/14 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:53:23.131 dms confd[188685]: audit user: admin/14 CLI 'show configuration commit changes'
+<INFO> 16-Mar-2023::02:53:23.137 dms confd[188685]: audit user: admin/14 CLI done
+<INFO> 16-Mar-2023::02:53:29.606 dms confd[188685]: audit user: admin/14 CLI 'show running-config'
+<INFO> 16-Mar-2023::02:53:34.833 dms confd[188685]: audit user: admin/14 CLI aborted
+<INFO> 16-Mar-2023::02:53:48.690 dms confd[188685]: audit user: admin/14 CLI 'exit'
+<INFO> 16-Mar-2023::02:53:48.894 dms confd[188685]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:54:27.987 dms confd[188685]: audit user: admin/17 assigned to groups: admin,adm,cdrom,sudo,dip,plugdev,lxd,dms
+<INFO> 16-Mar-2023::02:54:27.988 dms confd[188685]: audit user: admin/17 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:54:29.691 dms confd[188685]: audit user: admin/17 CLI 'exit'
+<INFO> 16-Mar-2023::02:54:29.893 dms confd[188685]: audit user: admin/17 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:54:31.871 dms confd[188685]: audit user: dms/20 assigned to groups: adm,cdrom,sudo,dip,plugdev,lxd,dms
+<INFO> 16-Mar-2023::02:54:31.871 dms confd[188685]: audit user: dms/20 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:54:33.812 dms confd[188685]: audit user: dms/20 CLI 'exit'
+<INFO> 16-Mar-2023::02:54:34.014 dms confd[188685]: audit user: dms/20 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:56:07.842 dms confd[188685]: audit user: oper/23 assigned to groups: oper,adm,cdrom,sudo,dip,plugdev,lxd,dms
+<INFO> 16-Mar-2023::02:56:07.842 dms confd[188685]: audit user: oper/23 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:56:16.686 dms confd[188685]: audit user: oper/23 CLI 'exit'
+<INFO> 16-Mar-2023::02:56:16.888 dms confd[188685]: audit user: oper/23 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:56:19.300 dms confd[188685]: audit user: admin/26 assigned to groups: admin,adm,cdrom,sudo,dip,plugdev,lxd,dms
+<INFO> 16-Mar-2023::02:56:19.300 dms confd[188685]: audit user: admin/26 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:56:28.221 dms confd[188685]: audit user: admin/26 CLI 'exit'
+<INFO> 16-Mar-2023::02:56:28.423 dms confd[188685]: audit user: admin/26 terminated session (reason: normal)
+<INFO> 16-Mar-2023::02:57:24.286 dms confd[188685]: audit user: admin/29 assigned to groups: admin,adm,cdrom,sudo,dip,plugdev,lxd,dms
+<INFO> 16-Mar-2023::02:57:24.287 dms confd[188685]: audit user: admin/29 created new session via cli from 192.168.56.1:54160 with ssh
+<INFO> 16-Mar-2023::02:57:26.778 dms confd[188685]: audit user: admin/29 CLI 'exit'
+<INFO> 16-Mar-2023::02:57:26.979 dms confd[188685]: audit user: admin/29 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:02:57.640 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:58142 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:02:57.641 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:58142 with ssh using local authentication
+<INFO> 16-Mar-2023::05:02:57.646 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:04:17.866 dms confd[188685]: audit user: [withheld]/0 local authentication failed via cli from 127.0.0.1:40628 with ssh: no such local user
+<INFO> 16-Mar-2023::05:04:17.867 dms confd[188685]: audit user: [withheld]/0 login failed via cli from 127.0.0.1:40628 with ssh: No such local user
+<INFO> 16-Mar-2023::05:04:21.628 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:40642 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:04:21.629 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:40642 with ssh using local authentication
+<INFO> 16-Mar-2023::05:04:21.632 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:04:24.599 dms confd[188685]: audit user: admin/0 local authentication failed via cli from 127.0.0.1:40658 with ssh: provided bad password
+<INFO> 16-Mar-2023::05:04:24.600 dms confd[188685]: audit user: admin/0 login failed via cli from 127.0.0.1:40658 with ssh: Bad password
+<INFO> 16-Mar-2023::05:04:28.212 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:48210 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:04:28.213 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:48210 with ssh using local authentication
+<INFO> 16-Mar-2023::05:04:28.217 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:05:32.751 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:53838 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:05:32.753 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:53838 with ssh using local authentication
+<INFO> 16-Mar-2023::05:05:32.756 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:06:12.790 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 192.168.56.104:51054 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:06:12.792 dms confd[188685]: audit user: admin/0 logged in via cli from 192.168.56.104:51054 with ssh using local authentication
+<INFO> 16-Mar-2023::05:06:12.860 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:06:24.621 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:53978 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:06:24.621 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:53978 with ssh using local authentication
+<INFO> 16-Mar-2023::05:06:24.686 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:06:29.096 dms confd[188685]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:54852 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:06:29.097 dms confd[188685]: audit user: admin/0 logged in via netconf from 127.0.0.1:54852 with ssh using local authentication
+<INFO> 16-Mar-2023::05:06:29.111 dms confd[188685]: audit user: admin/33 assigned to groups: admin
+<INFO> 16-Mar-2023::05:06:29.112 dms confd[188685]: audit user: admin/33 created new session via netconf from 127.0.0.1:54852 with ssh
+<INFO> 16-Mar-2023::05:06:29.223 dms confd[188685]: audit user: admin/33 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:06:34.240 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:06:37.648 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:43204 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:06:37.649 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:43204 with ssh using local authentication
+<INFO> 16-Mar-2023::05:06:37.716 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:06:55.091 dms confd[188685]: audit user: admin/0 local authentication succeeded via cli from 127.0.0.1:35764 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:06:55.092 dms confd[188685]: audit user: admin/0 logged in via cli from 127.0.0.1:35764 with ssh using local authentication
+<INFO> 16-Mar-2023::05:06:55.155 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:07:20.822 dms confd[188685]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:58216 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:07:20.823 dms confd[188685]: audit user: admin/0 logged in via netconf from 127.0.0.1:58216 with ssh using local authentication
+<INFO> 16-Mar-2023::05:07:20.824 dms confd[188685]: audit user: admin/35 assigned to groups: admin
+<INFO> 16-Mar-2023::05:07:20.824 dms confd[188685]: audit user: admin/35 created new session via netconf from 127.0.0.1:58216 with ssh
+<INFO> 16-Mar-2023::05:07:20.886 dms confd[188685]: audit user: admin/35 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:07:25.898 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:07:38.479 dms confd[188685]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:54330 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:07:38.480 dms confd[188685]: audit user: admin/0 logged in via netconf from 127.0.0.1:54330 with ssh using local authentication
+<INFO> 16-Mar-2023::05:07:38.481 dms confd[188685]: audit user: admin/37 assigned to groups: admin
+<INFO> 16-Mar-2023::05:07:38.481 dms confd[188685]: audit user: admin/37 created new session via netconf from 127.0.0.1:54330 with ssh
+<INFO> 16-Mar-2023::05:07:38.703 dms confd[188685]: audit user: admin/37 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:07:38.719 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:07:48.764 dms confd[188685]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:45270 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:07:48.764 dms confd[188685]: audit user: admin/0 logged in via netconf from 127.0.0.1:45270 with ssh using local authentication
+<INFO> 16-Mar-2023::05:07:48.766 dms confd[188685]: audit user: admin/39 assigned to groups: admin
+<INFO> 16-Mar-2023::05:07:48.767 dms confd[188685]: audit user: admin/39 created new session via netconf from 127.0.0.1:45270 with ssh
+<INFO> 16-Mar-2023::05:07:48.980 dms confd[188685]: audit user: admin/39 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:07:48.985 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:07:59.611 dms confd[188685]: audit user: admin/0 local authentication succeeded via netconf from 127.0.0.1:44038 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:07:59.612 dms confd[188685]: audit user: admin/0 logged in via netconf from 127.0.0.1:44038 with ssh using local authentication
+<INFO> 16-Mar-2023::05:07:59.614 dms confd[188685]: audit user: admin/41 assigned to groups: admin
+<INFO> 16-Mar-2023::05:07:59.614 dms confd[188685]: audit user: admin/41 created new session via netconf from 127.0.0.1:44038 with ssh
+<INFO> 16-Mar-2023::05:07:59.828 dms confd[188685]: audit user: admin/41 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:07:59.833 dms confd[188685]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:10:10.737 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:46310 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:10:10.737 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.104:46310 with ssh using local authentication
+<INFO> 16-Mar-2023::05:10:10.751 dms confd[191698]: audit user: admin/14 assigned to groups: admin
+<INFO> 16-Mar-2023::05:10:10.752 dms confd[191698]: audit user: admin/14 created new session via netconf from 192.168.56.104:46310 with ssh
+<INFO> 16-Mar-2023::05:10:10.989 dms confd[191698]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:10:10.998 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:10:20.052 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46406 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:10:20.053 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46406 with ssh using local authentication
+<INFO> 16-Mar-2023::05:10:20.055 dms confd[191698]: audit user: admin/16 assigned to groups: admin
+<INFO> 16-Mar-2023::05:10:20.056 dms confd[191698]: audit user: admin/16 created new session via netconf from 192.168.56.103:46406 with ssh
+<INFO> 16-Mar-2023::05:10:20.267 dms confd[191698]: audit user: admin/16 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:10:20.282 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:10:27.819 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46410 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:10:27.820 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46410 with ssh using local authentication
+<INFO> 16-Mar-2023::05:10:27.823 dms confd[191698]: audit user: admin/18 assigned to groups: admin
+<INFO> 16-Mar-2023::05:10:27.823 dms confd[191698]: audit user: admin/18 created new session via netconf from 192.168.56.103:46410 with ssh
+<INFO> 16-Mar-2023::05:10:28.037 dms confd[191698]: audit user: admin/18 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:10:28.049 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:11:05.692 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46412 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:11:05.693 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46412 with ssh using local authentication
+<INFO> 16-Mar-2023::05:11:05.696 dms confd[191698]: audit user: admin/20 assigned to groups: admin
+<INFO> 16-Mar-2023::05:11:05.696 dms confd[191698]: audit user: admin/20 created new session via netconf from 192.168.56.103:46412 with ssh
+<INFO> 16-Mar-2023::05:11:05.910 dms confd[191698]: audit user: admin/20 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:11:05.923 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:11:33.902 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46414 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:11:33.904 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46414 with ssh using local authentication
+<INFO> 16-Mar-2023::05:11:33.906 dms confd[191698]: audit user: admin/22 assigned to groups: admin
+<INFO> 16-Mar-2023::05:11:33.906 dms confd[191698]: audit user: admin/22 created new session via netconf from 192.168.56.103:46414 with ssh
+<INFO> 16-Mar-2023::05:11:34.119 dms confd[191698]: audit user: admin/22 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:11:34.138 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:12:16.832 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46416 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:12:16.833 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46416 with ssh using local authentication
+<INFO> 16-Mar-2023::05:12:16.836 dms confd[191698]: audit user: admin/24 assigned to groups: admin
+<INFO> 16-Mar-2023::05:12:16.837 dms confd[191698]: audit user: admin/24 created new session via netconf from 192.168.56.103:46416 with ssh
+<INFO> 16-Mar-2023::05:12:17.051 dms confd[191698]: audit user: admin/24 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:12:17.068 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:12:49.911 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46418 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:12:49.912 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46418 with ssh using local authentication
+<INFO> 16-Mar-2023::05:12:49.914 dms confd[191698]: audit user: admin/26 assigned to groups: admin
+<INFO> 16-Mar-2023::05:12:49.914 dms confd[191698]: audit user: admin/26 created new session via netconf from 192.168.56.103:46418 with ssh
+<INFO> 16-Mar-2023::05:12:50.125 dms confd[191698]: audit user: admin/26 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:12:50.140 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:12:57.848 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46420 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:12:57.849 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46420 with ssh using local authentication
+<INFO> 16-Mar-2023::05:12:57.852 dms confd[191698]: audit user: admin/28 assigned to groups: admin
+<INFO> 16-Mar-2023::05:12:57.853 dms confd[191698]: audit user: admin/28 created new session via netconf from 192.168.56.103:46420 with ssh
+<INFO> 16-Mar-2023::05:12:58.064 dms confd[191698]: audit user: admin/28 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:12:58.090 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:13:23.877 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46422 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:13:23.877 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46422 with ssh using local authentication
+<INFO> 16-Mar-2023::05:13:23.880 dms confd[191698]: audit user: admin/30 assigned to groups: admin
+<INFO> 16-Mar-2023::05:13:23.880 dms confd[191698]: audit user: admin/30 created new session via netconf from 192.168.56.103:46422 with ssh
+<INFO> 16-Mar-2023::05:13:24.102 dms confd[191698]: audit user: admin/30 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:13:24.119 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:13:33.648 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46424 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:13:33.650 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46424 with ssh using local authentication
+<INFO> 16-Mar-2023::05:13:33.652 dms confd[191698]: audit user: admin/32 assigned to groups: admin
+<INFO> 16-Mar-2023::05:13:33.652 dms confd[191698]: audit user: admin/32 created new session via netconf from 192.168.56.103:46424 with ssh
+<INFO> 16-Mar-2023::05:13:33.871 dms confd[191698]: audit user: admin/32 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:13:33.874 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:23:51.706 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46426 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:23:51.707 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46426 with ssh using local authentication
+<INFO> 16-Mar-2023::05:23:51.710 dms confd[191698]: audit user: admin/34 assigned to groups: admin
+<INFO> 16-Mar-2023::05:23:51.711 dms confd[191698]: audit user: admin/34 created new session via netconf from 192.168.56.103:46426 with ssh
+<INFO> 16-Mar-2023::05:23:51.815 dms confd[191698]: audit user: admin/34 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:23:51.833 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:24:45.544 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46428 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:24:45.545 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46428 with ssh using local authentication
+<INFO> 16-Mar-2023::05:24:45.547 dms confd[191698]: audit user: admin/36 assigned to groups: admin
+<INFO> 16-Mar-2023::05:24:45.548 dms confd[191698]: audit user: admin/36 created new session via netconf from 192.168.56.103:46428 with ssh
+<INFO> 16-Mar-2023::05:24:45.652 dms confd[191698]: audit user: admin/36 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:24:45.670 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:25:50.894 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46430 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:25:50.895 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46430 with ssh using local authentication
+<INFO> 16-Mar-2023::05:25:50.898 dms confd[191698]: audit user: admin/38 assigned to groups: admin
+<INFO> 16-Mar-2023::05:25:50.898 dms confd[191698]: audit user: admin/38 created new session via netconf from 192.168.56.103:46430 with ssh
+<INFO> 16-Mar-2023::05:25:51.002 dms confd[191698]: audit user: admin/38 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:25:51.017 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:26:42.152 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46432 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:26:42.153 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46432 with ssh using local authentication
+<INFO> 16-Mar-2023::05:26:42.155 dms confd[191698]: audit user: admin/40 assigned to groups: admin
+<INFO> 16-Mar-2023::05:26:42.156 dms confd[191698]: audit user: admin/40 created new session via netconf from 192.168.56.103:46432 with ssh
+<INFO> 16-Mar-2023::05:26:42.262 dms confd[191698]: audit user: admin/40 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:26:42.278 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:27:04.447 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46434 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:27:04.448 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46434 with ssh using local authentication
+<INFO> 16-Mar-2023::05:27:04.450 dms confd[191698]: audit user: admin/42 assigned to groups: admin
+<INFO> 16-Mar-2023::05:27:04.451 dms confd[191698]: audit user: admin/42 created new session via netconf from 192.168.56.103:46434 with ssh
+<INFO> 16-Mar-2023::05:27:04.557 dms confd[191698]: audit user: admin/42 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:27:04.576 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:27:11.300 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46436 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:27:11.301 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46436 with ssh using local authentication
+<INFO> 16-Mar-2023::05:27:11.303 dms confd[191698]: audit user: admin/44 assigned to groups: admin
+<INFO> 16-Mar-2023::05:27:11.303 dms confd[191698]: audit user: admin/44 created new session via netconf from 192.168.56.103:46436 with ssh
+<INFO> 16-Mar-2023::05:27:11.408 dms confd[191698]: audit user: admin/44 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:27:11.423 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:28:06.172 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46438 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:28:06.174 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46438 with ssh using local authentication
+<INFO> 16-Mar-2023::05:28:06.176 dms confd[191698]: audit user: admin/46 assigned to groups: admin
+<INFO> 16-Mar-2023::05:28:06.177 dms confd[191698]: audit user: admin/46 created new session via netconf from 192.168.56.103:46438 with ssh
+<INFO> 16-Mar-2023::05:28:06.281 dms confd[191698]: audit user: admin/46 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:28:06.298 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:28:20.699 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46440 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:28:20.700 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46440 with ssh using local authentication
+<INFO> 16-Mar-2023::05:28:20.704 dms confd[191698]: audit user: admin/48 assigned to groups: admin
+<INFO> 16-Mar-2023::05:28:20.704 dms confd[191698]: audit user: admin/48 created new session via netconf from 192.168.56.103:46440 with ssh
+<INFO> 16-Mar-2023::05:28:20.809 dms confd[191698]: audit user: admin/48 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:28:20.825 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:28:24.099 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46442 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:28:24.100 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46442 with ssh using local authentication
+<INFO> 16-Mar-2023::05:28:24.102 dms confd[191698]: audit user: admin/50 assigned to groups: admin
+<INFO> 16-Mar-2023::05:28:24.103 dms confd[191698]: audit user: admin/50 created new session via netconf from 192.168.56.103:46442 with ssh
+<INFO> 16-Mar-2023::05:28:24.208 dms confd[191698]: audit user: admin/50 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:28:24.223 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:30:02.536 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46444 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:30:02.537 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46444 with ssh using local authentication
+<INFO> 16-Mar-2023::05:30:02.540 dms confd[191698]: audit user: admin/52 assigned to groups: admin
+<INFO> 16-Mar-2023::05:30:02.540 dms confd[191698]: audit user: admin/52 created new session via netconf from 192.168.56.103:46444 with ssh
+<INFO> 16-Mar-2023::05:30:02.645 dms confd[191698]: audit user: admin/52 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:30:02.661 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:30:07.516 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46446 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:30:07.517 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46446 with ssh using local authentication
+<INFO> 16-Mar-2023::05:30:07.519 dms confd[191698]: audit user: admin/54 assigned to groups: admin
+<INFO> 16-Mar-2023::05:30:07.520 dms confd[191698]: audit user: admin/54 created new session via netconf from 192.168.56.103:46446 with ssh
+<INFO> 16-Mar-2023::05:30:07.625 dms confd[191698]: audit user: admin/54 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:30:07.641 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:31:48.347 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46448 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:31:48.348 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46448 with ssh using local authentication
+<INFO> 16-Mar-2023::05:31:48.350 dms confd[191698]: audit user: admin/56 assigned to groups: admin
+<INFO> 16-Mar-2023::05:31:48.350 dms confd[191698]: audit user: admin/56 created new session via netconf from 192.168.56.103:46448 with ssh
+<INFO> 16-Mar-2023::05:31:48.455 dms confd[191698]: audit user: admin/56 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:31:48.471 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:31:55.061 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46450 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:31:55.062 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46450 with ssh using local authentication
+<INFO> 16-Mar-2023::05:31:55.064 dms confd[191698]: audit user: admin/58 assigned to groups: admin
+<INFO> 16-Mar-2023::05:31:55.065 dms confd[191698]: audit user: admin/58 created new session via netconf from 192.168.56.103:46450 with ssh
+<INFO> 16-Mar-2023::05:31:55.169 dms confd[191698]: audit user: admin/58 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:31:55.184 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:32:39.107 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46452 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:32:39.108 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46452 with ssh using local authentication
+<INFO> 16-Mar-2023::05:32:39.110 dms confd[191698]: audit user: admin/60 assigned to groups: admin
+<INFO> 16-Mar-2023::05:32:39.110 dms confd[191698]: audit user: admin/60 created new session via netconf from 192.168.56.103:46452 with ssh
+<INFO> 16-Mar-2023::05:32:39.214 dms confd[191698]: audit user: admin/60 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:32:39.230 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:32:47.377 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46454 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:32:47.378 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46454 with ssh using local authentication
+<INFO> 16-Mar-2023::05:32:47.380 dms confd[191698]: audit user: admin/62 assigned to groups: admin
+<INFO> 16-Mar-2023::05:32:47.381 dms confd[191698]: audit user: admin/62 created new session via netconf from 192.168.56.103:46454 with ssh
+<INFO> 16-Mar-2023::05:32:47.485 dms confd[191698]: audit user: admin/62 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:32:47.502 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:34:18.321 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46456 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:34:18.323 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46456 with ssh using local authentication
+<INFO> 16-Mar-2023::05:34:18.325 dms confd[191698]: audit user: admin/64 assigned to groups: admin
+<INFO> 16-Mar-2023::05:34:18.325 dms confd[191698]: audit user: admin/64 created new session via netconf from 192.168.56.103:46456 with ssh
+<INFO> 16-Mar-2023::05:34:18.430 dms confd[191698]: audit user: admin/64 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:34:18.447 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:34:34.037 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46458 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:34:34.037 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46458 with ssh using local authentication
+<INFO> 16-Mar-2023::05:34:34.039 dms confd[191698]: audit user: admin/66 assigned to groups: admin
+<INFO> 16-Mar-2023::05:34:34.040 dms confd[191698]: audit user: admin/66 created new session via netconf from 192.168.56.103:46458 with ssh
+<INFO> 16-Mar-2023::05:34:34.144 dms confd[191698]: audit user: admin/66 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:34:34.160 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:36:49.235 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46460 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:36:49.236 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46460 with ssh using local authentication
+<INFO> 16-Mar-2023::05:36:49.239 dms confd[191698]: audit user: admin/68 assigned to groups: admin
+<INFO> 16-Mar-2023::05:36:49.239 dms confd[191698]: audit user: admin/68 created new session via netconf from 192.168.56.103:46460 with ssh
+<INFO> 16-Mar-2023::05:36:49.447 dms confd[191698]: audit user: admin/68 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:36:49.449 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:37:14.415 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46462 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:37:14.416 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46462 with ssh using local authentication
+<INFO> 16-Mar-2023::05:37:14.418 dms confd[191698]: audit user: admin/70 assigned to groups: admin
+<INFO> 16-Mar-2023::05:37:14.419 dms confd[191698]: audit user: admin/70 created new session via netconf from 192.168.56.103:46462 with ssh
+<INFO> 16-Mar-2023::05:37:14.698 dms confd[191698]: audit user: admin/70 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:37:14.715 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:37:20.869 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46464 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:37:20.870 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46464 with ssh using local authentication
+<INFO> 16-Mar-2023::05:37:20.872 dms confd[191698]: audit user: admin/72 assigned to groups: admin
+<INFO> 16-Mar-2023::05:37:20.873 dms confd[191698]: audit user: admin/72 created new session via netconf from 192.168.56.103:46464 with ssh
+<INFO> 16-Mar-2023::05:37:21.124 dms confd[191698]: audit user: admin/72 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:37:21.126 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 16-Mar-2023::05:38:21.833 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.103:46468 with ssh, member of groups: admin
+<INFO> 16-Mar-2023::05:38:21.834 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.103:46468 with ssh using local authentication
+<INFO> 16-Mar-2023::05:38:21.836 dms confd[191698]: audit user: admin/74 assigned to groups: admin
+<INFO> 16-Mar-2023::05:38:21.837 dms confd[191698]: audit user: admin/74 created new session via netconf from 192.168.56.103:46468 with ssh
+<INFO> 16-Mar-2023::05:38:22.092 dms confd[191698]: audit user: admin/74 terminated session (reason: normal)
+<INFO> 16-Mar-2023::05:38:22.105 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 17-Mar-2023::01:35:40.353 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:36426 with ssh, member of groups: admin
+<INFO> 17-Mar-2023::01:35:40.355 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:36426 with ssh using local authentication
+<INFO> 17-Mar-2023::01:35:40.360 dms confd[191698]: audit user: admin/76 assigned to groups: admin
+<INFO> 17-Mar-2023::01:35:40.361 dms confd[191698]: audit user: admin/76 created new session via netconf from 192.168.56.105:36426 with ssh
+<INFO> 17-Mar-2023::01:35:40.626 dms confd[191698]: audit user: admin/76 terminated session (reason: normal)
+<INFO> 17-Mar-2023::01:35:40.639 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::01:55:10.070 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43818 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::01:55:10.090 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43818 with ssh using local authentication
+<INFO> 21-Mar-2023::01:55:10.114 dms confd[191698]: audit user: admin/78 assigned to groups: admin
+<INFO> 21-Mar-2023::01:55:10.119 dms confd[191698]: audit user: admin/78 created new session via netconf from 192.168.56.105:43818 with ssh
+<INFO> 21-Mar-2023::01:55:10.626 dms confd[191698]: audit user: admin/78 terminated session (reason: normal)
+<INFO> 21-Mar-2023::01:55:10.635 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:05:13.489 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43826 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:05:13.491 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43826 with ssh using local authentication
+<INFO> 21-Mar-2023::02:05:13.496 dms confd[191698]: audit user: admin/80 assigned to groups: admin
+<INFO> 21-Mar-2023::02:05:13.506 dms confd[191698]: audit user: admin/80 created new session via netconf from 192.168.56.105:43826 with ssh
+<INFO> 21-Mar-2023::02:05:13.826 dms confd[191698]: audit user: admin/80 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:05:13.830 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:05:27.060 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43828 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:05:27.062 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43828 with ssh using local authentication
+<INFO> 21-Mar-2023::02:05:27.065 dms confd[191698]: audit user: admin/82 assigned to groups: admin
+<INFO> 21-Mar-2023::02:05:27.066 dms confd[191698]: audit user: admin/82 created new session via netconf from 192.168.56.105:43828 with ssh
+<INFO> 21-Mar-2023::02:05:27.354 dms confd[191698]: audit user: admin/82 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:05:27.377 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:05:39.122 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43830 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:05:39.123 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43830 with ssh using local authentication
+<INFO> 21-Mar-2023::02:05:39.126 dms confd[191698]: audit user: admin/84 assigned to groups: admin
+<INFO> 21-Mar-2023::02:05:39.127 dms confd[191698]: audit user: admin/84 created new session via netconf from 192.168.56.105:43830 with ssh
+<INFO> 21-Mar-2023::02:05:39.383 dms confd[191698]: audit user: admin/84 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:05:39.405 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:05:53.847 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43832 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:05:53.850 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43832 with ssh using local authentication
+<INFO> 21-Mar-2023::02:05:53.852 dms confd[191698]: audit user: admin/86 assigned to groups: admin
+<INFO> 21-Mar-2023::02:05:53.853 dms confd[191698]: audit user: admin/86 created new session via netconf from 192.168.56.105:43832 with ssh
+<INFO> 21-Mar-2023::02:05:54.124 dms confd[191698]: audit user: admin/86 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:05:54.141 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:06:13.429 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43834 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:06:13.430 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43834 with ssh using local authentication
+<INFO> 21-Mar-2023::02:06:13.433 dms confd[191698]: audit user: admin/88 assigned to groups: admin
+<INFO> 21-Mar-2023::02:06:13.434 dms confd[191698]: audit user: admin/88 created new session via netconf from 192.168.56.105:43834 with ssh
+<INFO> 21-Mar-2023::02:06:13.695 dms confd[191698]: audit user: admin/88 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:06:13.712 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:06:22.779 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43836 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:06:22.780 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43836 with ssh using local authentication
+<INFO> 21-Mar-2023::02:06:22.783 dms confd[191698]: audit user: admin/90 assigned to groups: admin
+<INFO> 21-Mar-2023::02:06:22.784 dms confd[191698]: audit user: admin/90 created new session via netconf from 192.168.56.105:43836 with ssh
+<INFO> 21-Mar-2023::02:06:23.048 dms confd[191698]: audit user: admin/90 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:06:23.064 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:06:30.421 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43838 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:06:30.422 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43838 with ssh using local authentication
+<INFO> 21-Mar-2023::02:06:30.426 dms confd[191698]: audit user: admin/92 assigned to groups: admin
+<INFO> 21-Mar-2023::02:06:30.427 dms confd[191698]: audit user: admin/92 created new session via netconf from 192.168.56.105:43838 with ssh
+<INFO> 21-Mar-2023::02:06:30.681 dms confd[191698]: audit user: admin/92 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:06:30.696 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:06:47.120 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43840 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:06:47.122 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43840 with ssh using local authentication
+<INFO> 21-Mar-2023::02:06:47.127 dms confd[191698]: audit user: admin/94 assigned to groups: admin
+<INFO> 21-Mar-2023::02:06:47.128 dms confd[191698]: audit user: admin/94 created new session via netconf from 192.168.56.105:43840 with ssh
+<INFO> 21-Mar-2023::02:06:47.386 dms confd[191698]: audit user: admin/94 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:06:47.402 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:06:56.806 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43842 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:06:56.807 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43842 with ssh using local authentication
+<INFO> 21-Mar-2023::02:06:56.809 dms confd[191698]: audit user: admin/96 assigned to groups: admin
+<INFO> 21-Mar-2023::02:06:56.810 dms confd[191698]: audit user: admin/96 created new session via netconf from 192.168.56.105:43842 with ssh
+<INFO> 21-Mar-2023::02:06:57.068 dms confd[191698]: audit user: admin/96 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:06:57.087 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:07:33.530 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43844 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:07:33.531 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43844 with ssh using local authentication
+<INFO> 21-Mar-2023::02:07:33.535 dms confd[191698]: audit user: admin/98 assigned to groups: admin
+<INFO> 21-Mar-2023::02:07:33.536 dms confd[191698]: audit user: admin/98 created new session via netconf from 192.168.56.105:43844 with ssh
+<INFO> 21-Mar-2023::02:07:33.790 dms confd[191698]: audit user: admin/98 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:07:33.808 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:08:13.301 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43846 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:08:13.302 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43846 with ssh using local authentication
+<INFO> 21-Mar-2023::02:08:13.305 dms confd[191698]: audit user: admin/100 assigned to groups: admin
+<INFO> 21-Mar-2023::02:08:13.305 dms confd[191698]: audit user: admin/100 created new session via netconf from 192.168.56.105:43846 with ssh
+<INFO> 21-Mar-2023::02:08:13.565 dms confd[191698]: audit user: admin/100 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:08:13.590 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:08:27.262 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43848 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:08:27.262 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43848 with ssh using local authentication
+<INFO> 21-Mar-2023::02:08:27.265 dms confd[191698]: audit user: admin/102 assigned to groups: admin
+<INFO> 21-Mar-2023::02:08:27.266 dms confd[191698]: audit user: admin/102 created new session via netconf from 192.168.56.105:43848 with ssh
+<INFO> 21-Mar-2023::02:08:27.530 dms confd[191698]: audit user: admin/102 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:08:27.549 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:08:31.759 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43850 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:08:31.760 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43850 with ssh using local authentication
+<INFO> 21-Mar-2023::02:08:31.763 dms confd[191698]: audit user: admin/104 assigned to groups: admin
+<INFO> 21-Mar-2023::02:08:31.765 dms confd[191698]: audit user: admin/104 created new session via netconf from 192.168.56.105:43850 with ssh
+<INFO> 21-Mar-2023::02:08:32.020 dms confd[191698]: audit user: admin/104 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:08:32.022 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:08:57.416 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43852 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:08:57.418 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43852 with ssh using local authentication
+<INFO> 21-Mar-2023::02:08:57.421 dms confd[191698]: audit user: admin/106 assigned to groups: admin
+<INFO> 21-Mar-2023::02:08:57.422 dms confd[191698]: audit user: admin/106 created new session via netconf from 192.168.56.105:43852 with ssh
+<INFO> 21-Mar-2023::02:08:57.677 dms confd[191698]: audit user: admin/106 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:08:57.694 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:09:01.609 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43854 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:09:01.611 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43854 with ssh using local authentication
+<INFO> 21-Mar-2023::02:09:01.614 dms confd[191698]: audit user: admin/108 assigned to groups: admin
+<INFO> 21-Mar-2023::02:09:01.614 dms confd[191698]: audit user: admin/108 created new session via netconf from 192.168.56.105:43854 with ssh
+<INFO> 21-Mar-2023::02:09:01.862 dms confd[191698]: audit user: admin/108 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:09:01.891 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:09:08.884 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43856 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:09:08.885 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43856 with ssh using local authentication
+<INFO> 21-Mar-2023::02:09:08.888 dms confd[191698]: audit user: admin/110 assigned to groups: admin
+<INFO> 21-Mar-2023::02:09:08.889 dms confd[191698]: audit user: admin/110 created new session via netconf from 192.168.56.105:43856 with ssh
+<INFO> 21-Mar-2023::02:09:09.143 dms confd[191698]: audit user: admin/110 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:09:09.163 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:09:51.177 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43860 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:09:51.179 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43860 with ssh using local authentication
+<INFO> 21-Mar-2023::02:09:51.182 dms confd[191698]: audit user: admin/112 assigned to groups: admin
+<INFO> 21-Mar-2023::02:09:51.183 dms confd[191698]: audit user: admin/112 created new session via netconf from 192.168.56.105:43860 with ssh
+<INFO> 21-Mar-2023::02:09:51.450 dms confd[191698]: audit user: admin/112 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:09:51.467 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:16:39.569 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43862 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:16:39.570 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43862 with ssh using local authentication
+<INFO> 21-Mar-2023::02:16:39.572 dms confd[191698]: audit user: admin/114 assigned to groups: admin
+<INFO> 21-Mar-2023::02:16:39.572 dms confd[191698]: audit user: admin/114 created new session via netconf from 192.168.56.105:43862 with ssh
+<INFO> 21-Mar-2023::02:16:39.826 dms confd[191698]: audit user: admin/114 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:16:39.845 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:16:56.781 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43864 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:16:56.794 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43864 with ssh using local authentication
+<INFO> 21-Mar-2023::02:16:56.797 dms confd[191698]: audit user: admin/116 assigned to groups: admin
+<INFO> 21-Mar-2023::02:16:56.797 dms confd[191698]: audit user: admin/116 created new session via netconf from 192.168.56.105:43864 with ssh
+<INFO> 21-Mar-2023::02:16:57.059 dms confd[191698]: audit user: admin/116 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:16:57.077 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:17:05.668 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43866 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:17:05.670 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43866 with ssh using local authentication
+<INFO> 21-Mar-2023::02:17:05.672 dms confd[191698]: audit user: admin/118 assigned to groups: admin
+<INFO> 21-Mar-2023::02:17:05.673 dms confd[191698]: audit user: admin/118 created new session via netconf from 192.168.56.105:43866 with ssh
+<INFO> 21-Mar-2023::02:17:05.928 dms confd[191698]: audit user: admin/118 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:17:05.945 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:17:11.275 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43868 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:17:11.277 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43868 with ssh using local authentication
+<INFO> 21-Mar-2023::02:17:11.279 dms confd[191698]: audit user: admin/120 assigned to groups: admin
+<INFO> 21-Mar-2023::02:17:11.280 dms confd[191698]: audit user: admin/120 created new session via netconf from 192.168.56.105:43868 with ssh
+<INFO> 21-Mar-2023::02:17:11.527 dms confd[191698]: audit user: admin/120 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:17:11.542 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:18:03.713 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43870 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:18:03.714 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43870 with ssh using local authentication
+<INFO> 21-Mar-2023::02:18:03.717 dms confd[191698]: audit user: admin/122 assigned to groups: admin
+<INFO> 21-Mar-2023::02:18:03.718 dms confd[191698]: audit user: admin/122 created new session via netconf from 192.168.56.105:43870 with ssh
+<INFO> 21-Mar-2023::02:18:03.974 dms confd[191698]: audit user: admin/122 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:18:03.995 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:18:12.565 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43872 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:18:12.567 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43872 with ssh using local authentication
+<INFO> 21-Mar-2023::02:18:12.570 dms confd[191698]: audit user: admin/124 assigned to groups: admin
+<INFO> 21-Mar-2023::02:18:12.572 dms confd[191698]: audit user: admin/124 created new session via netconf from 192.168.56.105:43872 with ssh
+<INFO> 21-Mar-2023::02:18:12.830 dms confd[191698]: audit user: admin/124 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:18:12.849 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:18:55.091 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43874 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:18:55.092 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43874 with ssh using local authentication
+<INFO> 21-Mar-2023::02:18:55.106 dms confd[191698]: audit user: admin/126 assigned to groups: admin
+<INFO> 21-Mar-2023::02:18:55.107 dms confd[191698]: audit user: admin/126 created new session via netconf from 192.168.56.105:43874 with ssh
+<INFO> 21-Mar-2023::02:18:55.358 dms confd[191698]: audit user: admin/126 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:18:55.377 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:40:42.230 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43878 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:40:42.232 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43878 with ssh using local authentication
+<INFO> 21-Mar-2023::02:40:42.237 dms confd[191698]: audit user: admin/128 assigned to groups: admin
+<INFO> 21-Mar-2023::02:40:42.238 dms confd[191698]: audit user: admin/128 created new session via netconf from 192.168.56.105:43878 with ssh
+<INFO> 21-Mar-2023::02:40:42.498 dms confd[191698]: audit user: admin/128 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:40:42.523 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:40:50.912 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43880 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:40:50.915 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43880 with ssh using local authentication
+<INFO> 21-Mar-2023::02:40:50.917 dms confd[191698]: audit user: admin/130 assigned to groups: admin
+<INFO> 21-Mar-2023::02:40:50.919 dms confd[191698]: audit user: admin/130 created new session via netconf from 192.168.56.105:43880 with ssh
+<INFO> 21-Mar-2023::02:40:51.175 dms confd[191698]: audit user: admin/130 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:40:51.240 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:41:30.780 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43888 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:41:30.781 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43888 with ssh using local authentication
+<INFO> 21-Mar-2023::02:41:30.785 dms confd[191698]: audit user: admin/132 assigned to groups: admin
+<INFO> 21-Mar-2023::02:41:30.786 dms confd[191698]: audit user: admin/132 created new session via netconf from 192.168.56.105:43888 with ssh
+<INFO> 21-Mar-2023::02:41:31.045 dms confd[191698]: audit user: admin/132 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:41:31.104 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:41:44.048 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43896 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:41:44.049 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43896 with ssh using local authentication
+<INFO> 21-Mar-2023::02:41:44.053 dms confd[191698]: audit user: admin/134 assigned to groups: admin
+<INFO> 21-Mar-2023::02:41:44.055 dms confd[191698]: audit user: admin/134 created new session via netconf from 192.168.56.105:43896 with ssh
+<INFO> 21-Mar-2023::02:41:44.328 dms confd[191698]: audit user: admin/134 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:41:44.420 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:42:40.432 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43904 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:42:40.434 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43904 with ssh using local authentication
+<INFO> 21-Mar-2023::02:42:40.437 dms confd[191698]: audit user: admin/136 assigned to groups: admin
+<INFO> 21-Mar-2023::02:42:40.438 dms confd[191698]: audit user: admin/136 created new session via netconf from 192.168.56.105:43904 with ssh
+<INFO> 21-Mar-2023::02:42:40.692 dms confd[191698]: audit user: admin/136 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:42:40.789 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:43:07.080 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43912 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:43:07.081 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43912 with ssh using local authentication
+<INFO> 21-Mar-2023::02:43:07.084 dms confd[191698]: audit user: admin/138 assigned to groups: admin
+<INFO> 21-Mar-2023::02:43:07.085 dms confd[191698]: audit user: admin/138 created new session via netconf from 192.168.56.105:43912 with ssh
+<INFO> 21-Mar-2023::02:43:07.338 dms confd[191698]: audit user: admin/138 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:43:07.341 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:45:34.274 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43920 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:45:34.286 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43920 with ssh using local authentication
+<INFO> 21-Mar-2023::02:45:34.290 dms confd[191698]: audit user: admin/140 assigned to groups: admin
+<INFO> 21-Mar-2023::02:45:34.290 dms confd[191698]: audit user: admin/140 created new session via netconf from 192.168.56.105:43920 with ssh
+<INFO> 21-Mar-2023::02:45:34.552 dms confd[191698]: audit user: admin/140 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:45:34.662 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:45:52.609 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43928 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:45:52.621 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43928 with ssh using local authentication
+<INFO> 21-Mar-2023::02:45:52.625 dms confd[191698]: audit user: admin/142 assigned to groups: admin
+<INFO> 21-Mar-2023::02:45:52.626 dms confd[191698]: audit user: admin/142 created new session via netconf from 192.168.56.105:43928 with ssh
+<INFO> 21-Mar-2023::02:45:52.890 dms confd[191698]: audit user: admin/142 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:45:52.969 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:46:50.416 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43936 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:46:50.417 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43936 with ssh using local authentication
+<INFO> 21-Mar-2023::02:46:50.420 dms confd[191698]: audit user: admin/144 assigned to groups: admin
+<INFO> 21-Mar-2023::02:46:50.423 dms confd[191698]: audit user: admin/144 created new session via netconf from 192.168.56.105:43936 with ssh
+<INFO> 21-Mar-2023::02:46:50.686 dms confd[191698]: audit user: admin/144 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:46:50.772 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:47:07.317 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43944 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:47:07.319 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43944 with ssh using local authentication
+<INFO> 21-Mar-2023::02:47:07.323 dms confd[191698]: audit user: admin/146 assigned to groups: admin
+<INFO> 21-Mar-2023::02:47:07.324 dms confd[191698]: audit user: admin/146 created new session via netconf from 192.168.56.105:43944 with ssh
+<INFO> 21-Mar-2023::02:47:07.584 dms confd[191698]: audit user: admin/146 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:47:07.662 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:47:15.765 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43952 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:47:15.766 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43952 with ssh using local authentication
+<INFO> 21-Mar-2023::02:47:15.769 dms confd[191698]: audit user: admin/148 assigned to groups: admin
+<INFO> 21-Mar-2023::02:47:15.770 dms confd[191698]: audit user: admin/148 created new session via netconf from 192.168.56.105:43952 with ssh
+<INFO> 21-Mar-2023::02:47:16.030 dms confd[191698]: audit user: admin/148 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:47:16.131 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:47:47.922 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43960 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:47:47.924 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43960 with ssh using local authentication
+<INFO> 21-Mar-2023::02:47:47.927 dms confd[191698]: audit user: admin/150 assigned to groups: admin
+<INFO> 21-Mar-2023::02:47:47.927 dms confd[191698]: audit user: admin/150 created new session via netconf from 192.168.56.105:43960 with ssh
+<INFO> 21-Mar-2023::02:47:48.182 dms confd[191698]: audit user: admin/150 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:47:48.289 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:48:44.520 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43968 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:48:44.522 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43968 with ssh using local authentication
+<INFO> 21-Mar-2023::02:48:44.525 dms confd[191698]: audit user: admin/152 assigned to groups: admin
+<INFO> 21-Mar-2023::02:48:44.527 dms confd[191698]: audit user: admin/152 created new session via netconf from 192.168.56.105:43968 with ssh
+<INFO> 21-Mar-2023::02:48:44.778 dms confd[191698]: audit user: admin/152 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:48:44.782 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:49:53.885 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43976 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:49:53.886 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43976 with ssh using local authentication
+<INFO> 21-Mar-2023::02:49:53.889 dms confd[191698]: audit user: admin/154 assigned to groups: admin
+<INFO> 21-Mar-2023::02:49:53.889 dms confd[191698]: audit user: admin/154 created new session via netconf from 192.168.56.105:43976 with ssh
+<INFO> 21-Mar-2023::02:49:54.140 dms confd[191698]: audit user: admin/154 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:49:54.143 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:50:30.046 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43980 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:50:30.047 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43980 with ssh using local authentication
+<INFO> 21-Mar-2023::02:50:30.049 dms confd[191698]: audit user: admin/156 assigned to groups: admin
+<INFO> 21-Mar-2023::02:50:30.050 dms confd[191698]: audit user: admin/156 created new session via netconf from 192.168.56.105:43980 with ssh
+<INFO> 21-Mar-2023::02:50:30.317 dms confd[191698]: audit user: admin/156 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:50:30.464 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::02:52:48.822 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43984 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::02:52:48.823 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43984 with ssh using local authentication
+<INFO> 21-Mar-2023::02:52:48.825 dms confd[191698]: audit user: admin/158 assigned to groups: admin
+<INFO> 21-Mar-2023::02:52:48.826 dms confd[191698]: audit user: admin/158 created new session via netconf from 192.168.56.105:43984 with ssh
+<INFO> 21-Mar-2023::02:52:49.084 dms confd[191698]: audit user: admin/158 terminated session (reason: normal)
+<INFO> 21-Mar-2023::02:52:49.087 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:30:09.753 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43994 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:30:09.767 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43994 with ssh using local authentication
+<INFO> 21-Mar-2023::04:30:09.771 dms confd[191698]: audit user: admin/160 assigned to groups: admin
+<INFO> 21-Mar-2023::04:30:09.772 dms confd[191698]: audit user: admin/160 created new session via netconf from 192.168.56.105:43994 with ssh
+<INFO> 21-Mar-2023::04:30:10.026 dms confd[191698]: audit user: admin/160 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:30:10.131 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:35:39.687 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:43998 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:35:39.689 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:43998 with ssh using local authentication
+<INFO> 21-Mar-2023::04:35:39.692 dms confd[191698]: audit user: admin/162 assigned to groups: admin
+<INFO> 21-Mar-2023::04:35:39.692 dms confd[191698]: audit user: admin/162 created new session via netconf from 192.168.56.105:43998 with ssh
+<INFO> 21-Mar-2023::04:35:39.947 dms confd[191698]: audit user: admin/162 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:35:40.055 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:35:48.212 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44006 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:35:48.218 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44006 with ssh using local authentication
+<INFO> 21-Mar-2023::04:35:48.221 dms confd[191698]: audit user: admin/164 assigned to groups: admin
+<INFO> 21-Mar-2023::04:35:48.221 dms confd[191698]: audit user: admin/164 created new session via netconf from 192.168.56.105:44006 with ssh
+<INFO> 21-Mar-2023::04:35:48.477 dms confd[191698]: audit user: admin/164 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:35:48.526 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:36:36.885 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44010 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:36:36.887 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44010 with ssh using local authentication
+<INFO> 21-Mar-2023::04:36:36.890 dms confd[191698]: audit user: admin/166 assigned to groups: admin
+<INFO> 21-Mar-2023::04:36:36.892 dms confd[191698]: audit user: admin/166 created new session via netconf from 192.168.56.105:44010 with ssh
+<INFO> 21-Mar-2023::04:36:37.152 dms confd[191698]: audit user: admin/166 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:36:37.158 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:36:53.503 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44018 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:36:53.504 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44018 with ssh using local authentication
+<INFO> 21-Mar-2023::04:36:53.507 dms confd[191698]: audit user: admin/168 assigned to groups: admin
+<INFO> 21-Mar-2023::04:36:53.507 dms confd[191698]: audit user: admin/168 created new session via netconf from 192.168.56.105:44018 with ssh
+<INFO> 21-Mar-2023::04:36:53.763 dms confd[191698]: audit user: admin/168 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:36:53.863 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:37:26.449 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44026 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:37:26.450 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44026 with ssh using local authentication
+<INFO> 21-Mar-2023::04:37:26.453 dms confd[191698]: audit user: admin/170 assigned to groups: admin
+<INFO> 21-Mar-2023::04:37:26.454 dms confd[191698]: audit user: admin/170 created new session via netconf from 192.168.56.105:44026 with ssh
+<INFO> 21-Mar-2023::04:37:26.705 dms confd[191698]: audit user: admin/170 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:37:26.807 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:37:51.391 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44034 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:37:51.393 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44034 with ssh using local authentication
+<INFO> 21-Mar-2023::04:37:51.397 dms confd[191698]: audit user: admin/172 assigned to groups: admin
+<INFO> 21-Mar-2023::04:37:51.398 dms confd[191698]: audit user: admin/172 created new session via netconf from 192.168.56.105:44034 with ssh
+<INFO> 21-Mar-2023::04:37:51.648 dms confd[191698]: audit user: admin/172 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:37:51.736 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::04:38:24.206 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44042 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::04:38:24.219 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44042 with ssh using local authentication
+<INFO> 21-Mar-2023::04:38:24.222 dms confd[191698]: audit user: admin/174 assigned to groups: admin
+<INFO> 21-Mar-2023::04:38:24.222 dms confd[191698]: audit user: admin/174 created new session via netconf from 192.168.56.105:44042 with ssh
+<INFO> 21-Mar-2023::04:38:24.470 dms confd[191698]: audit user: admin/174 terminated session (reason: normal)
+<INFO> 21-Mar-2023::04:38:24.579 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:10:39.394 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44054 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:10:39.406 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44054 with ssh using local authentication
+<INFO> 21-Mar-2023::05:10:39.409 dms confd[191698]: audit user: admin/176 assigned to groups: admin
+<INFO> 21-Mar-2023::05:10:39.410 dms confd[191698]: audit user: admin/176 created new session via netconf from 192.168.56.105:44054 with ssh
+<INFO> 21-Mar-2023::05:10:39.794 dms confd[191698]: audit user: admin/176 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:10:39.816 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:10:50.986 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44056 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:10:50.987 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44056 with ssh using local authentication
+<INFO> 21-Mar-2023::05:10:50.991 dms confd[191698]: audit user: admin/178 assigned to groups: admin
+<INFO> 21-Mar-2023::05:10:50.991 dms confd[191698]: audit user: admin/178 created new session via netconf from 192.168.56.105:44056 with ssh
+<INFO> 21-Mar-2023::05:10:51.236 dms confd[191698]: audit user: admin/178 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:10:51.341 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:11:40.923 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44066 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:11:40.926 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44066 with ssh using local authentication
+<INFO> 21-Mar-2023::05:11:40.929 dms confd[191698]: audit user: admin/180 assigned to groups: admin
+<INFO> 21-Mar-2023::05:11:40.930 dms confd[191698]: audit user: admin/180 created new session via netconf from 192.168.56.105:44066 with ssh
+<INFO> 21-Mar-2023::05:11:41.151 dms confd[191698]: audit user: admin/180 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:11:41.154 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:11:54.811 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44082 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:11:54.812 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44082 with ssh using local authentication
+<INFO> 21-Mar-2023::05:11:54.814 dms confd[191698]: audit user: admin/182 assigned to groups: admin
+<INFO> 21-Mar-2023::05:11:54.815 dms confd[191698]: audit user: admin/182 created new session via netconf from 192.168.56.105:44082 with ssh
+<INFO> 21-Mar-2023::05:11:55.046 dms confd[191698]: audit user: admin/182 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:11:55.152 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:12:06.795 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44098 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:12:06.796 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44098 with ssh using local authentication
+<INFO> 21-Mar-2023::05:12:06.811 dms confd[191698]: audit user: admin/184 assigned to groups: admin
+<INFO> 21-Mar-2023::05:12:06.811 dms confd[191698]: audit user: admin/184 created new session via netconf from 192.168.56.105:44098 with ssh
+<INFO> 21-Mar-2023::05:12:07.063 dms confd[191698]: audit user: admin/184 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:12:07.065 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:12:28.131 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44108 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:12:28.132 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44108 with ssh using local authentication
+<INFO> 21-Mar-2023::05:12:28.135 dms confd[191698]: audit user: admin/186 assigned to groups: admin
+<INFO> 21-Mar-2023::05:12:28.136 dms confd[191698]: audit user: admin/186 created new session via netconf from 192.168.56.105:44108 with ssh
+<INFO> 21-Mar-2023::05:12:28.356 dms confd[191698]: audit user: admin/186 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:12:28.460 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:16:35.002 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:42674 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:16:35.003 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.104:42674 with ssh using local authentication
+<INFO> 21-Mar-2023::05:16:35.004 dms confd[191698]: audit user: admin/188 assigned to groups: admin
+<INFO> 21-Mar-2023::05:16:35.005 dms confd[191698]: audit user: admin/188 created new session via netconf from 192.168.56.104:42674 with ssh
+<INFO> 21-Mar-2023::05:16:35.067 dms confd[191698]: audit user: admin/188 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:16:40.082 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:17:43.713 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:58454 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:17:43.714 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.104:58454 with ssh using local authentication
+<INFO> 21-Mar-2023::05:17:43.716 dms confd[191698]: audit user: admin/190 assigned to groups: admin
+<INFO> 21-Mar-2023::05:17:43.717 dms confd[191698]: audit user: admin/190 created new session via netconf from 192.168.56.104:58454 with ssh
+<INFO> 21-Mar-2023::05:17:43.777 dms confd[191698]: audit user: admin/190 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:17:48.791 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:17:58.479 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:57744 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:17:58.493 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.104:57744 with ssh using local authentication
+<INFO> 21-Mar-2023::05:17:58.494 dms confd[191698]: audit user: admin/192 assigned to groups: admin
+<INFO> 21-Mar-2023::05:17:58.495 dms confd[191698]: audit user: admin/192 created new session via netconf from 192.168.56.104:57744 with ssh
+<INFO> 21-Mar-2023::05:17:58.521 dms confd[191698]: audit user: admin/192 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:18:03.541 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:18:25.362 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44124 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:18:25.365 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44124 with ssh using local authentication
+<INFO> 21-Mar-2023::05:18:25.367 dms confd[191698]: audit user: admin/194 assigned to groups: admin
+<INFO> 21-Mar-2023::05:18:25.368 dms confd[191698]: audit user: admin/194 created new session via netconf from 192.168.56.105:44124 with ssh
+<INFO> 21-Mar-2023::05:18:25.586 dms confd[191698]: audit user: admin/194 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:18:25.690 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:18:44.632 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44140 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:18:44.633 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44140 with ssh using local authentication
+<INFO> 21-Mar-2023::05:18:44.636 dms confd[191698]: audit user: admin/196 assigned to groups: admin
+<INFO> 21-Mar-2023::05:18:44.637 dms confd[191698]: audit user: admin/196 created new session via netconf from 192.168.56.105:44140 with ssh
+<INFO> 21-Mar-2023::05:18:44.856 dms confd[191698]: audit user: admin/196 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:18:44.972 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:20:19.129 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44156 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:20:19.131 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44156 with ssh using local authentication
+<INFO> 21-Mar-2023::05:20:19.134 dms confd[191698]: audit user: admin/198 assigned to groups: admin
+<INFO> 21-Mar-2023::05:20:19.135 dms confd[191698]: audit user: admin/198 created new session via netconf from 192.168.56.105:44156 with ssh
+<INFO> 21-Mar-2023::05:20:19.355 dms confd[191698]: audit user: admin/198 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:20:19.373 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:20:57.684 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44158 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:20:57.685 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44158 with ssh using local authentication
+<INFO> 21-Mar-2023::05:20:57.688 dms confd[191698]: audit user: admin/200 assigned to groups: admin
+<INFO> 21-Mar-2023::05:20:57.689 dms confd[191698]: audit user: admin/200 created new session via netconf from 192.168.56.105:44158 with ssh
+<INFO> 21-Mar-2023::05:20:57.908 dms confd[191698]: audit user: admin/200 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:20:57.955 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:21:54.306 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44162 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:21:54.319 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44162 with ssh using local authentication
+<INFO> 21-Mar-2023::05:21:54.321 dms confd[191698]: audit user: admin/202 assigned to groups: admin
+<INFO> 21-Mar-2023::05:21:54.322 dms confd[191698]: audit user: admin/202 created new session via netconf from 192.168.56.105:44162 with ssh
+<INFO> 21-Mar-2023::05:21:54.545 dms confd[191698]: audit user: admin/202 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:21:54.567 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:27:03.246 dms confd[191698]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44164 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:27:03.247 dms confd[191698]: audit user: admin/0 logged in via netconf from 192.168.56.105:44164 with ssh using local authentication
+<INFO> 21-Mar-2023::05:27:03.249 dms confd[191698]: audit user: admin/204 assigned to groups: admin
+<INFO> 21-Mar-2023::05:27:03.250 dms confd[191698]: audit user: admin/204 created new session via netconf from 192.168.56.105:44164 with ssh
+<INFO> 21-Mar-2023::05:27:03.476 dms confd[191698]: audit user: admin/204 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:27:03.497 dms confd[191698]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:27:18.104 dms confd[229591]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44166 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:27:18.105 dms confd[229591]: audit user: admin/0 logged in via netconf from 192.168.56.105:44166 with ssh using local authentication
+<INFO> 21-Mar-2023::05:27:18.121 dms confd[229591]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:27:18.122 dms confd[229591]: audit user: admin/14 created new session via netconf from 192.168.56.105:44166 with ssh
+<INFO> 21-Mar-2023::05:27:18.381 dms confd[229591]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:27:18.387 dms confd[229591]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:30:57.857 dms confd[229751]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44168 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:30:57.858 dms confd[229751]: audit user: admin/0 logged in via netconf from 192.168.56.105:44168 with ssh using local authentication
+<INFO> 21-Mar-2023::05:30:57.872 dms confd[229751]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:30:57.873 dms confd[229751]: audit user: admin/14 created new session via netconf from 192.168.56.105:44168 with ssh
+<INFO> 21-Mar-2023::05:30:58.121 dms confd[229751]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:30:58.128 dms confd[229751]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:31:45.144 dms confd[229867]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44170 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:31:45.145 dms confd[229867]: audit user: admin/0 logged in via netconf from 192.168.56.105:44170 with ssh using local authentication
+<INFO> 21-Mar-2023::05:31:45.160 dms confd[229867]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:31:45.161 dms confd[229867]: audit user: admin/14 created new session via netconf from 192.168.56.105:44170 with ssh
+<INFO> 21-Mar-2023::05:31:45.425 dms confd[229867]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:31:45.431 dms confd[229867]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:32:03.225 dms confd[229983]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44174 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:32:03.226 dms confd[229983]: audit user: admin/0 logged in via netconf from 192.168.56.105:44174 with ssh using local authentication
+<INFO> 21-Mar-2023::05:32:03.241 dms confd[229983]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:32:03.242 dms confd[229983]: audit user: admin/14 created new session via netconf from 192.168.56.105:44174 with ssh
+<INFO> 21-Mar-2023::05:32:03.500 dms confd[229983]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:32:03.505 dms confd[229983]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:32:25.596 dms confd[230105]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44176 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:32:25.597 dms confd[230105]: audit user: admin/0 logged in via netconf from 192.168.56.105:44176 with ssh using local authentication
+<INFO> 21-Mar-2023::05:32:25.613 dms confd[230105]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:32:25.613 dms confd[230105]: audit user: admin/14 created new session via netconf from 192.168.56.105:44176 with ssh
+<INFO> 21-Mar-2023::05:32:25.867 dms confd[230105]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:32:25.881 dms confd[230105]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:37:44.935 dms confd[230259]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44178 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:37:44.948 dms confd[230259]: audit user: admin/0 logged in via netconf from 192.168.56.105:44178 with ssh using local authentication
+<INFO> 21-Mar-2023::05:37:44.962 dms confd[230259]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:37:44.963 dms confd[230259]: audit user: admin/14 created new session via netconf from 192.168.56.105:44178 with ssh
+<INFO> 21-Mar-2023::05:37:45.226 dms confd[230259]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:37:45.233 dms confd[230259]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:40:41.679 dms confd[230379]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44182 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:40:41.691 dms confd[230379]: audit user: admin/0 logged in via netconf from 192.168.56.105:44182 with ssh using local authentication
+<INFO> 21-Mar-2023::05:40:41.708 dms confd[230379]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:40:41.709 dms confd[230379]: audit user: admin/14 created new session via netconf from 192.168.56.105:44182 with ssh
+<INFO> 21-Mar-2023::05:40:41.982 dms confd[230379]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:40:41.987 dms confd[230379]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:40:59.782 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44184 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:40:59.783 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44184 with ssh using local authentication
+<INFO> 21-Mar-2023::05:40:59.803 dms confd[230488]: audit user: admin/14 assigned to groups: admin
+<INFO> 21-Mar-2023::05:40:59.804 dms confd[230488]: audit user: admin/14 created new session via netconf from 192.168.56.105:44184 with ssh
+<INFO> 21-Mar-2023::05:41:00.068 dms confd[230488]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:41:00.084 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:41:05.305 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44186 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:41:05.317 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44186 with ssh using local authentication
+<INFO> 21-Mar-2023::05:41:05.321 dms confd[230488]: audit user: admin/16 assigned to groups: admin
+<INFO> 21-Mar-2023::05:41:05.321 dms confd[230488]: audit user: admin/16 created new session via netconf from 192.168.56.105:44186 with ssh
+<INFO> 21-Mar-2023::05:41:05.539 dms confd[230488]: audit user: admin/16 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:41:05.543 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:42:36.572 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:59372 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:42:36.574 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.104:59372 with ssh using local authentication
+<INFO> 21-Mar-2023::05:42:36.575 dms confd[230488]: audit user: admin/18 assigned to groups: admin
+<INFO> 21-Mar-2023::05:42:36.576 dms confd[230488]: audit user: admin/18 created new session via netconf from 192.168.56.104:59372 with ssh
+<INFO> 21-Mar-2023::05:42:36.599 dms confd[230488]: audit user: admin/18 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:42:41.614 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:42:55.633 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.104:59910 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:42:55.633 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.104:59910 with ssh using local authentication
+<INFO> 21-Mar-2023::05:42:55.635 dms confd[230488]: audit user: admin/20 assigned to groups: admin
+<INFO> 21-Mar-2023::05:42:55.636 dms confd[230488]: audit user: admin/20 created new session via netconf from 192.168.56.104:59910 with ssh
+<INFO> 21-Mar-2023::05:42:55.655 dms confd[230488]: audit user: admin/20 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:43:00.673 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:47:06.051 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44188 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:47:06.052 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44188 with ssh using local authentication
+<INFO> 21-Mar-2023::05:47:06.054 dms confd[230488]: audit user: admin/22 assigned to groups: admin
+<INFO> 21-Mar-2023::05:47:06.055 dms confd[230488]: audit user: admin/22 created new session via netconf from 192.168.56.105:44188 with ssh
+<INFO> 21-Mar-2023::05:47:06.302 dms confd[230488]: audit user: admin/22 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:47:06.305 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:48:38.191 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44190 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:48:38.192 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44190 with ssh using local authentication
+<INFO> 21-Mar-2023::05:48:38.194 dms confd[230488]: audit user: admin/24 assigned to groups: admin
+<INFO> 21-Mar-2023::05:48:38.195 dms confd[230488]: audit user: admin/24 created new session via netconf from 192.168.56.105:44190 with ssh
+<INFO> 21-Mar-2023::05:48:38.411 dms confd[230488]: audit user: admin/24 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:48:38.415 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:49:17.470 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44192 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:49:17.471 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44192 with ssh using local authentication
+<INFO> 21-Mar-2023::05:49:17.474 dms confd[230488]: audit user: admin/26 assigned to groups: admin
+<INFO> 21-Mar-2023::05:49:17.475 dms confd[230488]: audit user: admin/26 created new session via netconf from 192.168.56.105:44192 with ssh
+<INFO> 21-Mar-2023::05:49:17.692 dms confd[230488]: audit user: admin/26 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:49:17.696 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:49:34.538 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44194 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:49:34.539 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44194 with ssh using local authentication
+<INFO> 21-Mar-2023::05:49:34.541 dms confd[230488]: audit user: admin/28 assigned to groups: admin
+<INFO> 21-Mar-2023::05:49:34.554 dms confd[230488]: audit user: admin/28 created new session via netconf from 192.168.56.105:44194 with ssh
+<INFO> 21-Mar-2023::05:49:34.772 dms confd[230488]: audit user: admin/28 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:49:34.776 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:50:07.892 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44196 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:50:07.893 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44196 with ssh using local authentication
+<INFO> 21-Mar-2023::05:50:07.895 dms confd[230488]: audit user: admin/30 assigned to groups: admin
+<INFO> 21-Mar-2023::05:50:07.895 dms confd[230488]: audit user: admin/30 created new session via netconf from 192.168.56.105:44196 with ssh
+<INFO> 21-Mar-2023::05:50:08.112 dms confd[230488]: audit user: admin/30 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:50:08.136 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:50:20.665 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44198 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:50:20.666 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44198 with ssh using local authentication
+<INFO> 21-Mar-2023::05:50:20.669 dms confd[230488]: audit user: admin/32 assigned to groups: admin
+<INFO> 21-Mar-2023::05:50:20.670 dms confd[230488]: audit user: admin/32 created new session via netconf from 192.168.56.105:44198 with ssh
+<INFO> 21-Mar-2023::05:50:20.888 dms confd[230488]: audit user: admin/32 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:50:20.892 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:51:34.611 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44200 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:51:34.612 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44200 with ssh using local authentication
+<INFO> 21-Mar-2023::05:51:34.614 dms confd[230488]: audit user: admin/34 assigned to groups: admin
+<INFO> 21-Mar-2023::05:51:34.615 dms confd[230488]: audit user: admin/34 created new session via netconf from 192.168.56.105:44200 with ssh
+<INFO> 21-Mar-2023::05:51:34.834 dms confd[230488]: audit user: admin/34 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:51:34.868 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:51:56.396 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44202 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:51:56.397 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44202 with ssh using local authentication
+<INFO> 21-Mar-2023::05:51:56.399 dms confd[230488]: audit user: admin/36 assigned to groups: admin
+<INFO> 21-Mar-2023::05:51:56.400 dms confd[230488]: audit user: admin/36 created new session via netconf from 192.168.56.105:44202 with ssh
+<INFO> 21-Mar-2023::05:51:56.616 dms confd[230488]: audit user: admin/36 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:51:56.632 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:52:17.496 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44204 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:52:17.497 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44204 with ssh using local authentication
+<INFO> 21-Mar-2023::05:52:17.499 dms confd[230488]: audit user: admin/38 assigned to groups: admin
+<INFO> 21-Mar-2023::05:52:17.511 dms confd[230488]: audit user: admin/38 created new session via netconf from 192.168.56.105:44204 with ssh
+<INFO> 21-Mar-2023::05:52:17.731 dms confd[230488]: audit user: admin/38 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:52:17.734 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:52:26.513 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44206 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:52:26.514 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44206 with ssh using local authentication
+<INFO> 21-Mar-2023::05:52:26.518 dms confd[230488]: audit user: admin/40 assigned to groups: admin
+<INFO> 21-Mar-2023::05:52:26.519 dms confd[230488]: audit user: admin/40 created new session via netconf from 192.168.56.105:44206 with ssh
+<INFO> 21-Mar-2023::05:52:26.738 dms confd[230488]: audit user: admin/40 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:52:26.757 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:52:47.695 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44208 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:52:47.696 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44208 with ssh using local authentication
+<INFO> 21-Mar-2023::05:52:47.698 dms confd[230488]: audit user: admin/42 assigned to groups: admin
+<INFO> 21-Mar-2023::05:52:47.700 dms confd[230488]: audit user: admin/42 created new session via netconf from 192.168.56.105:44208 with ssh
+<INFO> 21-Mar-2023::05:52:47.916 dms confd[230488]: audit user: admin/42 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:52:47.920 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:52:54.622 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44210 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:52:54.623 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44210 with ssh using local authentication
+<INFO> 21-Mar-2023::05:52:54.639 dms confd[230488]: audit user: admin/44 assigned to groups: admin
+<INFO> 21-Mar-2023::05:52:54.640 dms confd[230488]: audit user: admin/44 created new session via netconf from 192.168.56.105:44210 with ssh
+<INFO> 21-Mar-2023::05:52:54.856 dms confd[230488]: audit user: admin/44 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:52:54.878 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:53:06.719 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44212 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:53:06.732 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44212 with ssh using local authentication
+<INFO> 21-Mar-2023::05:53:06.735 dms confd[230488]: audit user: admin/46 assigned to groups: admin
+<INFO> 21-Mar-2023::05:53:06.736 dms confd[230488]: audit user: admin/46 created new session via netconf from 192.168.56.105:44212 with ssh
+<INFO> 21-Mar-2023::05:53:06.953 dms confd[230488]: audit user: admin/46 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:53:06.958 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:53:39.552 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44214 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:53:39.554 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44214 with ssh using local authentication
+<INFO> 21-Mar-2023::05:53:39.557 dms confd[230488]: audit user: admin/48 assigned to groups: admin
+<INFO> 21-Mar-2023::05:53:39.558 dms confd[230488]: audit user: admin/48 created new session via netconf from 192.168.56.105:44214 with ssh
+<INFO> 21-Mar-2023::05:53:39.773 dms confd[230488]: audit user: admin/48 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:53:39.777 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:54:01.793 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44216 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:54:01.794 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44216 with ssh using local authentication
+<INFO> 21-Mar-2023::05:54:01.796 dms confd[230488]: audit user: admin/50 assigned to groups: admin
+<INFO> 21-Mar-2023::05:54:01.809 dms confd[230488]: audit user: admin/50 created new session via netconf from 192.168.56.105:44216 with ssh
+<INFO> 21-Mar-2023::05:54:02.029 dms confd[230488]: audit user: admin/50 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:54:02.046 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:54:52.590 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44218 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:54:52.591 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44218 with ssh using local authentication
+<INFO> 21-Mar-2023::05:54:52.594 dms confd[230488]: audit user: admin/52 assigned to groups: admin
+<INFO> 21-Mar-2023::05:54:52.595 dms confd[230488]: audit user: admin/52 created new session via netconf from 192.168.56.105:44218 with ssh
+<INFO> 21-Mar-2023::05:54:52.813 dms confd[230488]: audit user: admin/52 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:54:52.817 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:55:07.363 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44220 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:55:07.364 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44220 with ssh using local authentication
+<INFO> 21-Mar-2023::05:55:07.379 dms confd[230488]: audit user: admin/54 assigned to groups: admin
+<INFO> 21-Mar-2023::05:55:07.379 dms confd[230488]: audit user: admin/54 created new session via netconf from 192.168.56.105:44220 with ssh
+<INFO> 21-Mar-2023::05:55:07.595 dms confd[230488]: audit user: admin/54 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:55:07.637 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:55:27.349 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44222 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:55:27.350 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44222 with ssh using local authentication
+<INFO> 21-Mar-2023::05:55:27.353 dms confd[230488]: audit user: admin/56 assigned to groups: admin
+<INFO> 21-Mar-2023::05:55:27.354 dms confd[230488]: audit user: admin/56 created new session via netconf from 192.168.56.105:44222 with ssh
+<INFO> 21-Mar-2023::05:55:27.571 dms confd[230488]: audit user: admin/56 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:55:27.575 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:55:42.747 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44224 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:55:42.748 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44224 with ssh using local authentication
+<INFO> 21-Mar-2023::05:55:42.750 dms confd[230488]: audit user: admin/58 assigned to groups: admin
+<INFO> 21-Mar-2023::05:55:42.751 dms confd[230488]: audit user: admin/58 created new session via netconf from 192.168.56.105:44224 with ssh
+<INFO> 21-Mar-2023::05:55:42.967 dms confd[230488]: audit user: admin/58 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:55:42.971 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:56:00.571 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44226 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:56:00.572 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44226 with ssh using local authentication
+<INFO> 21-Mar-2023::05:56:00.575 dms confd[230488]: audit user: admin/60 assigned to groups: admin
+<INFO> 21-Mar-2023::05:56:00.576 dms confd[230488]: audit user: admin/60 created new session via netconf from 192.168.56.105:44226 with ssh
+<INFO> 21-Mar-2023::05:56:00.792 dms confd[230488]: audit user: admin/60 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:56:00.819 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:56:06.155 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44228 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:56:06.168 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44228 with ssh using local authentication
+<INFO> 21-Mar-2023::05:56:06.172 dms confd[230488]: audit user: admin/62 assigned to groups: admin
+<INFO> 21-Mar-2023::05:56:06.172 dms confd[230488]: audit user: admin/62 created new session via netconf from 192.168.56.105:44228 with ssh
+<INFO> 21-Mar-2023::05:56:06.390 dms confd[230488]: audit user: admin/62 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:56:06.395 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:56:24.416 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44230 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:56:24.417 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44230 with ssh using local authentication
+<INFO> 21-Mar-2023::05:56:24.420 dms confd[230488]: audit user: admin/64 assigned to groups: admin
+<INFO> 21-Mar-2023::05:56:24.432 dms confd[230488]: audit user: admin/64 created new session via netconf from 192.168.56.105:44230 with ssh
+<INFO> 21-Mar-2023::05:56:24.537 dms confd[230488]: audit user: admin/64 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:56:24.556 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:56:27.398 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44232 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:56:27.398 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44232 with ssh using local authentication
+<INFO> 21-Mar-2023::05:56:27.400 dms confd[230488]: audit user: admin/66 assigned to groups: admin
+<INFO> 21-Mar-2023::05:56:27.401 dms confd[230488]: audit user: admin/66 created new session via netconf from 192.168.56.105:44232 with ssh
+<INFO> 21-Mar-2023::05:56:27.648 dms confd[230488]: audit user: admin/66 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:56:27.671 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:56:48.376 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44234 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:56:48.377 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44234 with ssh using local authentication
+<INFO> 21-Mar-2023::05:56:48.393 dms confd[230488]: audit user: admin/68 assigned to groups: admin
+<INFO> 21-Mar-2023::05:56:48.393 dms confd[230488]: audit user: admin/68 created new session via netconf from 192.168.56.105:44234 with ssh
+<INFO> 21-Mar-2023::05:56:48.643 dms confd[230488]: audit user: admin/68 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:56:48.660 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:57:02.978 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44236 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:57:02.980 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44236 with ssh using local authentication
+<INFO> 21-Mar-2023::05:57:02.983 dms confd[230488]: audit user: admin/70 assigned to groups: admin
+<INFO> 21-Mar-2023::05:57:02.983 dms confd[230488]: audit user: admin/70 created new session via netconf from 192.168.56.105:44236 with ssh
+<INFO> 21-Mar-2023::05:57:03.241 dms confd[230488]: audit user: admin/70 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:57:03.257 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:57:36.631 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44238 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:57:36.632 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44238 with ssh using local authentication
+<INFO> 21-Mar-2023::05:57:36.634 dms confd[230488]: audit user: admin/72 assigned to groups: admin
+<INFO> 21-Mar-2023::05:57:36.635 dms confd[230488]: audit user: admin/72 created new session via netconf from 192.168.56.105:44238 with ssh
+<INFO> 21-Mar-2023::05:57:36.895 dms confd[230488]: audit user: admin/72 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:57:36.914 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:57:46.042 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44240 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:57:46.043 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44240 with ssh using local authentication
+<INFO> 21-Mar-2023::05:57:46.045 dms confd[230488]: audit user: admin/74 assigned to groups: admin
+<INFO> 21-Mar-2023::05:57:46.046 dms confd[230488]: audit user: admin/74 created new session via netconf from 192.168.56.105:44240 with ssh
+<INFO> 21-Mar-2023::05:57:46.295 dms confd[230488]: audit user: admin/74 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:57:46.316 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:57:50.284 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44242 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:57:50.285 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44242 with ssh using local authentication
+<INFO> 21-Mar-2023::05:57:50.287 dms confd[230488]: audit user: admin/76 assigned to groups: admin
+<INFO> 21-Mar-2023::05:57:50.299 dms confd[230488]: audit user: admin/76 created new session via netconf from 192.168.56.105:44242 with ssh
+<INFO> 21-Mar-2023::05:57:50.518 dms confd[230488]: audit user: admin/76 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:57:50.526 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:58:43.434 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44244 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:58:43.436 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44244 with ssh using local authentication
+<INFO> 21-Mar-2023::05:58:43.439 dms confd[230488]: audit user: admin/78 assigned to groups: admin
+<INFO> 21-Mar-2023::05:58:43.440 dms confd[230488]: audit user: admin/78 created new session via netconf from 192.168.56.105:44244 with ssh
+<INFO> 21-Mar-2023::05:58:43.657 dms confd[230488]: audit user: admin/78 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:58:43.661 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:58:56.210 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44246 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:58:56.222 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44246 with ssh using local authentication
+<INFO> 21-Mar-2023::05:58:56.225 dms confd[230488]: audit user: admin/80 assigned to groups: admin
+<INFO> 21-Mar-2023::05:58:56.226 dms confd[230488]: audit user: admin/80 created new session via netconf from 192.168.56.105:44246 with ssh
+<INFO> 21-Mar-2023::05:58:56.445 dms confd[230488]: audit user: admin/80 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:58:56.467 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:59:08.825 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44248 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:59:08.837 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44248 with ssh using local authentication
+<INFO> 21-Mar-2023::05:59:08.841 dms confd[230488]: audit user: admin/82 assigned to groups: admin
+<INFO> 21-Mar-2023::05:59:08.841 dms confd[230488]: audit user: admin/82 created new session via netconf from 192.168.56.105:44248 with ssh
+<INFO> 21-Mar-2023::05:59:09.058 dms confd[230488]: audit user: admin/82 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:59:09.062 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:59:32.027 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44250 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:59:32.039 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44250 with ssh using local authentication
+<INFO> 21-Mar-2023::05:59:32.042 dms confd[230488]: audit user: admin/84 assigned to groups: admin
+<INFO> 21-Mar-2023::05:59:32.042 dms confd[230488]: audit user: admin/84 created new session via netconf from 192.168.56.105:44250 with ssh
+<INFO> 21-Mar-2023::05:59:32.260 dms confd[230488]: audit user: admin/84 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:59:32.264 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:59:38.232 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44252 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:59:38.233 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44252 with ssh using local authentication
+<INFO> 21-Mar-2023::05:59:38.235 dms confd[230488]: audit user: admin/86 assigned to groups: admin
+<INFO> 21-Mar-2023::05:59:38.236 dms confd[230488]: audit user: admin/86 created new session via netconf from 192.168.56.105:44252 with ssh
+<INFO> 21-Mar-2023::05:59:38.455 dms confd[230488]: audit user: admin/86 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:59:38.471 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::05:59:43.359 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44254 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::05:59:43.360 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44254 with ssh using local authentication
+<INFO> 21-Mar-2023::05:59:43.374 dms confd[230488]: audit user: admin/88 assigned to groups: admin
+<INFO> 21-Mar-2023::05:59:43.375 dms confd[230488]: audit user: admin/88 created new session via netconf from 192.168.56.105:44254 with ssh
+<INFO> 21-Mar-2023::05:59:43.593 dms confd[230488]: audit user: admin/88 terminated session (reason: normal)
+<INFO> 21-Mar-2023::05:59:43.597 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:00:17.156 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44256 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:00:17.157 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44256 with ssh using local authentication
+<INFO> 21-Mar-2023::06:00:17.159 dms confd[230488]: audit user: admin/90 assigned to groups: admin
+<INFO> 21-Mar-2023::06:00:17.159 dms confd[230488]: audit user: admin/90 created new session via netconf from 192.168.56.105:44256 with ssh
+<INFO> 21-Mar-2023::06:00:17.377 dms confd[230488]: audit user: admin/90 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:00:17.381 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:01:40.215 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44258 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:01:40.217 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44258 with ssh using local authentication
+<INFO> 21-Mar-2023::06:01:40.219 dms confd[230488]: audit user: admin/92 assigned to groups: admin
+<INFO> 21-Mar-2023::06:01:40.220 dms confd[230488]: audit user: admin/92 created new session via netconf from 192.168.56.105:44258 with ssh
+<INFO> 21-Mar-2023::06:01:40.436 dms confd[230488]: audit user: admin/92 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:01:40.460 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:02:30.831 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44260 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:02:30.845 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44260 with ssh using local authentication
+<INFO> 21-Mar-2023::06:02:30.847 dms confd[230488]: audit user: admin/94 assigned to groups: admin
+<INFO> 21-Mar-2023::06:02:30.848 dms confd[230488]: audit user: admin/94 created new session via netconf from 192.168.56.105:44260 with ssh
+<INFO> 21-Mar-2023::06:02:31.064 dms confd[230488]: audit user: admin/94 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:02:31.068 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:05:15.392 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44262 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:05:15.393 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44262 with ssh using local authentication
+<INFO> 21-Mar-2023::06:05:15.395 dms confd[230488]: audit user: admin/96 assigned to groups: admin
+<INFO> 21-Mar-2023::06:05:15.395 dms confd[230488]: audit user: admin/96 created new session via netconf from 192.168.56.105:44262 with ssh
+<INFO> 21-Mar-2023::06:05:15.614 dms confd[230488]: audit user: admin/96 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:05:15.618 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:05:19.257 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44264 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:05:19.257 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44264 with ssh using local authentication
+<INFO> 21-Mar-2023::06:05:19.260 dms confd[230488]: audit user: admin/98 assigned to groups: admin
+<INFO> 21-Mar-2023::06:05:19.261 dms confd[230488]: audit user: admin/98 created new session via netconf from 192.168.56.105:44264 with ssh
+<INFO> 21-Mar-2023::06:05:19.509 dms confd[230488]: audit user: admin/98 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:05:19.613 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:05:43.107 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44274 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:05:43.108 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44274 with ssh using local authentication
+<INFO> 21-Mar-2023::06:05:43.110 dms confd[230488]: audit user: admin/100 assigned to groups: admin
+<INFO> 21-Mar-2023::06:05:43.110 dms confd[230488]: audit user: admin/100 created new session via netconf from 192.168.56.105:44274 with ssh
+<INFO> 21-Mar-2023::06:05:43.358 dms confd[230488]: audit user: admin/100 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:05:43.461 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:05:51.555 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44284 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:05:51.567 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44284 with ssh using local authentication
+<INFO> 21-Mar-2023::06:05:51.569 dms confd[230488]: audit user: admin/102 assigned to groups: admin
+<INFO> 21-Mar-2023::06:05:51.570 dms confd[230488]: audit user: admin/102 created new session via netconf from 192.168.56.105:44284 with ssh
+<INFO> 21-Mar-2023::06:05:51.791 dms confd[230488]: audit user: admin/102 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:05:51.826 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:06:06.951 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44288 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:06:06.951 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44288 with ssh using local authentication
+<INFO> 21-Mar-2023::06:06:06.954 dms confd[230488]: audit user: admin/104 assigned to groups: admin
+<INFO> 21-Mar-2023::06:06:06.954 dms confd[230488]: audit user: admin/104 created new session via netconf from 192.168.56.105:44288 with ssh
+<INFO> 21-Mar-2023::06:06:07.058 dms confd[230488]: audit user: admin/104 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:06:07.077 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:06:13.967 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44290 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:06:13.980 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44290 with ssh using local authentication
+<INFO> 21-Mar-2023::06:06:13.982 dms confd[230488]: audit user: admin/106 assigned to groups: admin
+<INFO> 21-Mar-2023::06:06:13.983 dms confd[230488]: audit user: admin/106 created new session via netconf from 192.168.56.105:44290 with ssh
+<INFO> 21-Mar-2023::06:06:14.200 dms confd[230488]: audit user: admin/106 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:06:14.204 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:07:59.548 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:53844 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:07:59.552 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:53844 with ssh using local authentication
+<INFO> 21-Mar-2023::06:07:59.555 dms confd[230488]: audit user: admin/108 assigned to groups: admin
+<INFO> 21-Mar-2023::06:07:59.556 dms confd[230488]: audit user: admin/108 created new session via netconf from 192.168.56.1:53844 with ssh
+<INFO> 21-Mar-2023::06:07:59.663 dms confd[230488]: audit user: admin/108 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:07:59.667 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:08:18.245 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:53864 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:08:18.246 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:53864 with ssh using local authentication
+<INFO> 21-Mar-2023::06:08:18.250 dms confd[230488]: audit user: admin/110 assigned to groups: admin
+<INFO> 21-Mar-2023::06:08:18.250 dms confd[230488]: audit user: admin/110 created new session via netconf from 192.168.56.1:53864 with ssh
+<INFO> 21-Mar-2023::06:08:18.468 dms confd[230488]: audit user: admin/110 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:08:18.472 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:15:36.155 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64916 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:15:36.168 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64916 with ssh using local authentication
+<INFO> 21-Mar-2023::06:15:36.171 dms confd[230488]: audit user: admin/112 assigned to groups: admin
+<INFO> 21-Mar-2023::06:15:36.172 dms confd[230488]: audit user: admin/112 created new session via netconf from 192.168.56.1:64916 with ssh
+<INFO> 21-Mar-2023::06:15:36.390 dms confd[230488]: audit user: admin/112 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:15:36.393 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:23:32.214 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:65389 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:23:32.216 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:65389 with ssh using local authentication
+<INFO> 21-Mar-2023::06:23:32.221 dms confd[230488]: audit user: admin/114 assigned to groups: admin
+<INFO> 21-Mar-2023::06:23:32.222 dms confd[230488]: audit user: admin/114 created new session via netconf from 192.168.56.1:65389 with ssh
+<INFO> 21-Mar-2023::06:23:32.439 dms confd[230488]: audit user: admin/114 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:23:32.444 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:23:42.391 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:65425 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:23:42.392 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:65425 with ssh using local authentication
+<INFO> 21-Mar-2023::06:23:42.394 dms confd[230488]: audit user: admin/116 assigned to groups: admin
+<INFO> 21-Mar-2023::06:23:42.395 dms confd[230488]: audit user: admin/116 created new session via netconf from 192.168.56.1:65425 with ssh
+<INFO> 21-Mar-2023::06:23:42.612 dms confd[230488]: audit user: admin/116 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:23:42.615 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:25:00.453 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:65501 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:25:00.454 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:65501 with ssh using local authentication
+<INFO> 21-Mar-2023::06:25:00.456 dms confd[230488]: audit user: admin/118 assigned to groups: admin
+<INFO> 21-Mar-2023::06:25:00.457 dms confd[230488]: audit user: admin/118 created new session via netconf from 192.168.56.1:65501 with ssh
+<INFO> 21-Mar-2023::06:25:00.685 dms confd[230488]: audit user: admin/118 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:25:00.688 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:25:03.600 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49152 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:25:03.601 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49152 with ssh using local authentication
+<INFO> 21-Mar-2023::06:25:03.604 dms confd[230488]: audit user: admin/120 assigned to groups: admin
+<INFO> 21-Mar-2023::06:25:03.605 dms confd[230488]: audit user: admin/120 created new session via netconf from 192.168.56.1:49152 with ssh
+<INFO> 21-Mar-2023::06:25:03.819 dms confd[230488]: audit user: admin/120 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:25:03.822 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:25:12.909 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49195 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:25:12.911 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49195 with ssh using local authentication
+<INFO> 21-Mar-2023::06:25:12.914 dms confd[230488]: audit user: admin/122 assigned to groups: admin
+<INFO> 21-Mar-2023::06:25:12.914 dms confd[230488]: audit user: admin/122 created new session via netconf from 192.168.56.1:49195 with ssh
+<INFO> 21-Mar-2023::06:25:13.133 dms confd[230488]: audit user: admin/122 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:25:13.142 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:26:27.619 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49254 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:26:27.621 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49254 with ssh using local authentication
+<INFO> 21-Mar-2023::06:26:27.623 dms confd[230488]: audit user: admin/124 assigned to groups: admin
+<INFO> 21-Mar-2023::06:26:27.624 dms confd[230488]: audit user: admin/124 created new session via netconf from 192.168.56.1:49254 with ssh
+<INFO> 21-Mar-2023::06:26:27.844 dms confd[230488]: audit user: admin/124 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:26:27.848 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:26:35.285 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49272 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:26:35.286 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49272 with ssh using local authentication
+<INFO> 21-Mar-2023::06:26:35.289 dms confd[230488]: audit user: admin/126 assigned to groups: admin
+<INFO> 21-Mar-2023::06:26:35.290 dms confd[230488]: audit user: admin/126 created new session via netconf from 192.168.56.1:49272 with ssh
+<INFO> 21-Mar-2023::06:26:35.510 dms confd[230488]: audit user: admin/126 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:26:35.513 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:26:39.676 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49309 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:26:39.677 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49309 with ssh using local authentication
+<INFO> 21-Mar-2023::06:26:39.679 dms confd[230488]: audit user: admin/128 assigned to groups: admin
+<INFO> 21-Mar-2023::06:26:39.680 dms confd[230488]: audit user: admin/128 created new session via netconf from 192.168.56.1:49309 with ssh
+<INFO> 21-Mar-2023::06:26:39.896 dms confd[230488]: audit user: admin/128 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:26:39.899 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:32:29.594 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:49587 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:32:29.596 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:49587 with ssh using local authentication
+<INFO> 21-Mar-2023::06:32:29.599 dms confd[230488]: audit user: admin/130 assigned to groups: admin
+<INFO> 21-Mar-2023::06:32:29.599 dms confd[230488]: audit user: admin/130 created new session via netconf from 192.168.56.1:49587 with ssh
+<INFO> 21-Mar-2023::06:32:29.818 dms confd[230488]: audit user: admin/130 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:32:29.822 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::06:36:26.631 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:50160 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::06:36:26.632 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:50160 with ssh using local authentication
+<INFO> 21-Mar-2023::06:36:26.635 dms confd[230488]: audit user: admin/132 assigned to groups: admin
+<INFO> 21-Mar-2023::06:36:26.636 dms confd[230488]: audit user: admin/132 created new session via netconf from 192.168.56.1:50160 with ssh
+<INFO> 21-Mar-2023::06:36:26.854 dms confd[230488]: audit user: admin/132 terminated session (reason: normal)
+<INFO> 21-Mar-2023::06:36:26.858 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:10:37.314 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44380 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:10:37.316 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44380 with ssh using local authentication
+<INFO> 21-Mar-2023::07:10:37.319 dms confd[230488]: audit user: admin/134 assigned to groups: admin
+<INFO> 21-Mar-2023::07:10:37.320 dms confd[230488]: audit user: admin/134 created new session via netconf from 192.168.56.105:44380 with ssh
+<INFO> 21-Mar-2023::07:10:37.541 dms confd[230488]: audit user: admin/134 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:10:37.563 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:11:25.756 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44382 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:11:25.757 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44382 with ssh using local authentication
+<INFO> 21-Mar-2023::07:11:25.760 dms confd[230488]: audit user: admin/136 assigned to groups: admin
+<INFO> 21-Mar-2023::07:11:25.760 dms confd[230488]: audit user: admin/136 created new session via netconf from 192.168.56.105:44382 with ssh
+<INFO> 21-Mar-2023::07:11:25.979 dms confd[230488]: audit user: admin/136 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:11:26.042 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:17:23.953 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44388 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:17:23.954 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44388 with ssh using local authentication
+<INFO> 21-Mar-2023::07:17:23.959 dms confd[230488]: audit user: admin/138 assigned to groups: admin
+<INFO> 21-Mar-2023::07:17:23.960 dms confd[230488]: audit user: admin/138 created new session via netconf from 192.168.56.105:44388 with ssh
+<INFO> 21-Mar-2023::07:17:24.167 dms confd[230488]: audit user: admin/138 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:17:24.186 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:17:29.913 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44390 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:17:29.914 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44390 with ssh using local authentication
+<INFO> 21-Mar-2023::07:17:29.916 dms confd[230488]: audit user: admin/140 assigned to groups: admin
+<INFO> 21-Mar-2023::07:17:29.917 dms confd[230488]: audit user: admin/140 created new session via netconf from 192.168.56.105:44390 with ssh
+<INFO> 21-Mar-2023::07:17:30.125 dms confd[230488]: audit user: admin/140 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:17:30.157 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:17:51.391 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44392 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:17:51.403 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44392 with ssh using local authentication
+<INFO> 21-Mar-2023::07:17:51.406 dms confd[230488]: audit user: admin/142 assigned to groups: admin
+<INFO> 21-Mar-2023::07:17:51.407 dms confd[230488]: audit user: admin/142 created new session via netconf from 192.168.56.105:44392 with ssh
+<INFO> 21-Mar-2023::07:17:51.636 dms confd[230488]: audit user: admin/142 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:17:51.698 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:18:01.853 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44398 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:18:01.854 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44398 with ssh using local authentication
+<INFO> 21-Mar-2023::07:18:01.857 dms confd[230488]: audit user: admin/144 assigned to groups: admin
+<INFO> 21-Mar-2023::07:18:01.857 dms confd[230488]: audit user: admin/144 created new session via netconf from 192.168.56.105:44398 with ssh
+<INFO> 21-Mar-2023::07:18:02.065 dms confd[230488]: audit user: admin/144 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:18:02.087 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:18:47.389 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.105:44400 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:18:47.390 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.105:44400 with ssh using local authentication
+<INFO> 21-Mar-2023::07:18:47.405 dms confd[230488]: audit user: admin/146 assigned to groups: admin
+<INFO> 21-Mar-2023::07:18:47.405 dms confd[230488]: audit user: admin/146 created new session via netconf from 192.168.56.105:44400 with ssh
+<INFO> 21-Mar-2023::07:18:47.635 dms confd[230488]: audit user: admin/146 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:18:47.708 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:51:51.104 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:61983 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:51:51.106 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:61983 with ssh using local authentication
+<INFO> 21-Mar-2023::07:51:51.110 dms confd[230488]: audit user: admin/148 assigned to groups: admin
+<INFO> 21-Mar-2023::07:51:51.111 dms confd[230488]: audit user: admin/148 created new session via netconf from 192.168.56.1:61983 with ssh
+<INFO> 21-Mar-2023::07:51:51.331 dms confd[230488]: audit user: admin/148 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:51:51.336 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:52:08.463 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62058 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:52:08.464 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62058 with ssh using local authentication
+<INFO> 21-Mar-2023::07:52:08.467 dms confd[230488]: audit user: admin/150 assigned to groups: admin
+<INFO> 21-Mar-2023::07:52:08.468 dms confd[230488]: audit user: admin/150 created new session via netconf from 192.168.56.1:62058 with ssh
+<INFO> 21-Mar-2023::07:52:08.574 dms confd[230488]: audit user: admin/150 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:52:08.578 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:53:26.893 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62129 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:53:26.894 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62129 with ssh using local authentication
+<INFO> 21-Mar-2023::07:53:26.896 dms confd[230488]: audit user: admin/152 assigned to groups: admin
+<INFO> 21-Mar-2023::07:53:26.897 dms confd[230488]: audit user: admin/152 created new session via netconf from 192.168.56.1:62129 with ssh
+<INFO> 21-Mar-2023::07:53:27.114 dms confd[230488]: audit user: admin/152 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:53:27.118 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:53:28.233 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62190 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:53:28.234 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62190 with ssh using local authentication
+<INFO> 21-Mar-2023::07:53:28.237 dms confd[230488]: audit user: admin/154 assigned to groups: admin
+<INFO> 21-Mar-2023::07:53:28.238 dms confd[230488]: audit user: admin/154 created new session via netconf from 192.168.56.1:62190 with ssh
+<INFO> 21-Mar-2023::07:53:28.342 dms confd[230488]: audit user: admin/154 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:53:28.346 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:54:19.693 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62240 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:54:19.694 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62240 with ssh using local authentication
+<INFO> 21-Mar-2023::07:54:19.697 dms confd[230488]: audit user: admin/156 assigned to groups: admin
+<INFO> 21-Mar-2023::07:54:19.698 dms confd[230488]: audit user: admin/156 created new session via netconf from 192.168.56.1:62240 with ssh
+<INFO> 21-Mar-2023::07:54:19.915 dms confd[230488]: audit user: admin/156 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:54:19.918 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:54:56.694 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62644 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:54:56.695 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62644 with ssh using local authentication
+<INFO> 21-Mar-2023::07:54:56.707 dms confd[230488]: audit user: admin/158 assigned to groups: admin
+<INFO> 21-Mar-2023::07:54:56.707 dms confd[230488]: audit user: admin/158 created new session via netconf from 192.168.56.1:62644 with ssh
+<INFO> 21-Mar-2023::07:54:56.925 dms confd[230488]: audit user: admin/158 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:54:56.929 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:54:57.504 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:62707 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:54:57.505 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:62707 with ssh using local authentication
+<INFO> 21-Mar-2023::07:54:57.507 dms confd[230488]: audit user: admin/160 assigned to groups: admin
+<INFO> 21-Mar-2023::07:54:57.508 dms confd[230488]: audit user: admin/160 created new session via netconf from 192.168.56.1:62707 with ssh
+<INFO> 21-Mar-2023::07:54:57.612 dms confd[230488]: audit user: admin/160 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:54:57.614 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:56:27.380 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:63719 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:56:27.381 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:63719 with ssh using local authentication
+<INFO> 21-Mar-2023::07:56:27.383 dms confd[230488]: audit user: admin/162 assigned to groups: admin
+<INFO> 21-Mar-2023::07:56:27.384 dms confd[230488]: audit user: admin/162 created new session via netconf from 192.168.56.1:63719 with ssh
+<INFO> 21-Mar-2023::07:56:27.599 dms confd[230488]: audit user: admin/162 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:56:27.605 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:57:50.767 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:63837 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:57:50.768 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:63837 with ssh using local authentication
+<INFO> 21-Mar-2023::07:57:50.772 dms confd[230488]: audit user: admin/164 assigned to groups: admin
+<INFO> 21-Mar-2023::07:57:50.774 dms confd[230488]: audit user: admin/164 created new session via netconf from 192.168.56.1:63837 with ssh
+<INFO> 21-Mar-2023::07:57:50.990 dms confd[230488]: audit user: admin/164 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:57:50.994 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:58:23.653 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:63894 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:58:23.654 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:63894 with ssh using local authentication
+<INFO> 21-Mar-2023::07:58:23.658 dms confd[230488]: audit user: admin/166 assigned to groups: admin
+<INFO> 21-Mar-2023::07:58:23.658 dms confd[230488]: audit user: admin/166 created new session via netconf from 192.168.56.1:63894 with ssh
+<INFO> 21-Mar-2023::07:58:23.875 dms confd[230488]: audit user: admin/166 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:58:23.878 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::07:59:47.774 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:63997 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::07:59:47.776 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:63997 with ssh using local authentication
+<INFO> 21-Mar-2023::07:59:47.779 dms confd[230488]: audit user: admin/168 assigned to groups: admin
+<INFO> 21-Mar-2023::07:59:47.780 dms confd[230488]: audit user: admin/168 created new session via netconf from 192.168.56.1:63997 with ssh
+<INFO> 21-Mar-2023::07:59:48.000 dms confd[230488]: audit user: admin/168 terminated session (reason: normal)
+<INFO> 21-Mar-2023::07:59:48.004 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:01:41.756 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64137 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:01:41.768 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64137 with ssh using local authentication
+<INFO> 21-Mar-2023::08:01:41.772 dms confd[230488]: audit user: admin/170 assigned to groups: admin
+<INFO> 21-Mar-2023::08:01:41.772 dms confd[230488]: audit user: admin/170 created new session via netconf from 192.168.56.1:64137 with ssh
+<INFO> 21-Mar-2023::08:01:41.992 dms confd[230488]: audit user: admin/170 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:01:41.996 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:02:30.996 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64214 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:02:30.997 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64214 with ssh using local authentication
+<INFO> 21-Mar-2023::08:02:31.001 dms confd[230488]: audit user: admin/172 assigned to groups: admin
+<INFO> 21-Mar-2023::08:02:31.001 dms confd[230488]: audit user: admin/172 created new session via netconf from 192.168.56.1:64214 with ssh
+<INFO> 21-Mar-2023::08:02:31.219 dms confd[230488]: audit user: admin/172 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:02:31.223 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:03:54.151 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64326 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:03:54.153 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64326 with ssh using local authentication
+<INFO> 21-Mar-2023::08:03:54.155 dms confd[230488]: audit user: admin/174 assigned to groups: admin
+<INFO> 21-Mar-2023::08:03:54.156 dms confd[230488]: audit user: admin/174 created new session via netconf from 192.168.56.1:64326 with ssh
+<INFO> 21-Mar-2023::08:03:54.374 dms confd[230488]: audit user: admin/174 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:03:54.379 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:03:54.999 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64353 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:03:55.000 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64353 with ssh using local authentication
+<INFO> 21-Mar-2023::08:03:55.002 dms confd[230488]: audit user: admin/176 assigned to groups: admin
+<INFO> 21-Mar-2023::08:03:55.003 dms confd[230488]: audit user: admin/176 created new session via netconf from 192.168.56.1:64353 with ssh
+<INFO> 21-Mar-2023::08:03:55.108 dms confd[230488]: audit user: admin/176 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:03:55.112 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:08:44.106 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64576 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:08:44.107 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64576 with ssh using local authentication
+<INFO> 21-Mar-2023::08:08:44.110 dms confd[230488]: audit user: admin/178 assigned to groups: admin
+<INFO> 21-Mar-2023::08:08:44.123 dms confd[230488]: audit user: admin/178 created new session via netconf from 192.168.56.1:64576 with ssh
+<INFO> 21-Mar-2023::08:08:44.228 dms confd[230488]: audit user: admin/178 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:08:44.231 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:09:05.768 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64631 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:09:05.770 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64631 with ssh using local authentication
+<INFO> 21-Mar-2023::08:09:05.773 dms confd[230488]: audit user: admin/180 assigned to groups: admin
+<INFO> 21-Mar-2023::08:09:05.774 dms confd[230488]: audit user: admin/180 created new session via netconf from 192.168.56.1:64631 with ssh
+<INFO> 21-Mar-2023::08:09:05.994 dms confd[230488]: audit user: admin/180 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:09:05.998 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:10:32.761 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64771 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:10:32.762 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64771 with ssh using local authentication
+<INFO> 21-Mar-2023::08:10:32.766 dms confd[230488]: audit user: admin/182 assigned to groups: admin
+<INFO> 21-Mar-2023::08:10:32.767 dms confd[230488]: audit user: admin/182 created new session via netconf from 192.168.56.1:64771 with ssh
+<INFO> 21-Mar-2023::08:10:32.988 dms confd[230488]: audit user: admin/182 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:10:32.991 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:13:14.503 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64952 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:13:14.504 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:64952 with ssh using local authentication
+<INFO> 21-Mar-2023::08:13:14.507 dms confd[230488]: audit user: admin/184 assigned to groups: admin
+<INFO> 21-Mar-2023::08:13:14.508 dms confd[230488]: audit user: admin/184 created new session via netconf from 192.168.56.1:64952 with ssh
+<INFO> 21-Mar-2023::08:13:14.731 dms confd[230488]: audit user: admin/184 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:13:14.735 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:15:01.022 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:65111 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:15:01.023 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:65111 with ssh using local authentication
+<INFO> 21-Mar-2023::08:15:01.026 dms confd[230488]: audit user: admin/186 assigned to groups: admin
+<INFO> 21-Mar-2023::08:15:01.027 dms confd[230488]: audit user: admin/186 created new session via netconf from 192.168.56.1:65111 with ssh
+<INFO> 21-Mar-2023::08:15:01.247 dms confd[230488]: audit user: admin/186 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:15:01.251 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:15:14.382 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:50655 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:15:14.383 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:50655 with ssh using local authentication
+<INFO> 21-Mar-2023::08:15:14.386 dms confd[230488]: audit user: admin/188 assigned to groups: admin
+<INFO> 21-Mar-2023::08:15:14.387 dms confd[230488]: audit user: admin/188 created new session via netconf from 192.168.56.1:50655 with ssh
+<INFO> 21-Mar-2023::08:15:14.607 dms confd[230488]: audit user: admin/188 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:15:14.611 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 21-Mar-2023::08:40:47.910 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:52522 with ssh, member of groups: admin
+<INFO> 21-Mar-2023::08:40:47.911 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:52522 with ssh using local authentication
+<INFO> 21-Mar-2023::08:40:47.915 dms confd[230488]: audit user: admin/190 assigned to groups: admin
+<INFO> 21-Mar-2023::08:40:47.916 dms confd[230488]: audit user: admin/190 created new session via netconf from 192.168.56.1:52522 with ssh
+<INFO> 21-Mar-2023::08:40:48.136 dms confd[230488]: audit user: admin/190 terminated session (reason: normal)
+<INFO> 21-Mar-2023::08:40:48.140 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 22-Mar-2023::07:10:43.353 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:55146 with ssh, member of groups: admin
+<INFO> 22-Mar-2023::07:10:43.354 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:55146 with ssh using local authentication
+<INFO> 22-Mar-2023::07:10:43.359 dms confd[230488]: audit user: admin/192 assigned to groups: admin
+<INFO> 22-Mar-2023::07:10:43.360 dms confd[230488]: audit user: admin/192 created new session via netconf from 192.168.56.1:55146 with ssh
+<INFO> 22-Mar-2023::07:10:43.620 dms confd[230488]: audit user: admin/192 terminated session (reason: normal)
+<INFO> 22-Mar-2023::07:10:43.624 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 22-Mar-2023::07:11:22.048 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:55259 with ssh, member of groups: admin
+<INFO> 22-Mar-2023::07:11:22.049 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:55259 with ssh using local authentication
+<INFO> 22-Mar-2023::07:11:22.052 dms confd[230488]: audit user: admin/194 assigned to groups: admin
+<INFO> 22-Mar-2023::07:11:22.053 dms confd[230488]: audit user: admin/194 created new session via netconf from 192.168.56.1:55259 with ssh
+<INFO> 22-Mar-2023::07:11:22.278 dms confd[230488]: audit user: admin/194 terminated session (reason: normal)
+<INFO> 22-Mar-2023::07:11:22.282 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::05:25:46.362 dms confd[230488]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:55542 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::05:25:46.364 dms confd[230488]: audit user: admin/0 logged in via netconf from 192.168.56.1:55542 with ssh using local authentication
+<INFO> 23-Mar-2023::05:25:46.369 dms confd[230488]: audit user: admin/196 assigned to groups: admin
+<INFO> 23-Mar-2023::05:25:46.370 dms confd[230488]: audit user: admin/196 created new session via netconf from 192.168.56.1:55542 with ssh
+<INFO> 23-Mar-2023::05:25:46.612 dms confd[230488]: audit user: admin/196 terminated session (reason: normal)
+<INFO> 23-Mar-2023::05:25:46.616 dms confd[230488]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::05:44:54.585 dms confd[249307]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:61909 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::05:44:54.586 dms confd[249307]: audit user: admin/0 logged in via netconf from 192.168.56.1:61909 with ssh using local authentication
+<INFO> 23-Mar-2023::05:44:54.603 dms confd[249307]: audit user: admin/14 assigned to groups: admin
+<INFO> 23-Mar-2023::05:44:54.604 dms confd[249307]: audit user: admin/14 created new session via netconf from 192.168.56.1:61909 with ssh
+<INFO> 23-Mar-2023::05:44:54.865 dms confd[249307]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 23-Mar-2023::05:44:54.868 dms confd[249307]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::05:55:27.109 dms confd[249410]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64358 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::05:55:27.111 dms confd[249410]: audit user: admin/0 logged in via netconf from 192.168.56.1:64358 with ssh using local authentication
+<INFO> 23-Mar-2023::05:55:27.133 dms confd[249410]: audit user: admin/14 assigned to groups: admin
+<INFO> 23-Mar-2023::05:55:27.134 dms confd[249410]: audit user: admin/14 created new session via netconf from 192.168.56.1:64358 with ssh
+<INFO> 23-Mar-2023::05:55:27.392 dms confd[249410]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 23-Mar-2023::05:55:27.396 dms confd[249410]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::05:56:33.542 dms confd[249410]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64463 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::05:56:33.543 dms confd[249410]: audit user: admin/0 logged in via netconf from 192.168.56.1:64463 with ssh using local authentication
+<INFO> 23-Mar-2023::05:56:33.546 dms confd[249410]: audit user: admin/16 assigned to groups: admin
+<INFO> 23-Mar-2023::05:56:33.547 dms confd[249410]: audit user: admin/16 created new session via netconf from 192.168.56.1:64463 with ssh
+<INFO> 23-Mar-2023::05:56:33.770 dms confd[249410]: audit user: admin/16 terminated session (reason: normal)
+<INFO> 23-Mar-2023::05:56:33.774 dms confd[249410]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::06:02:22.547 dms confd[249513]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64743 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::06:02:22.548 dms confd[249513]: audit user: admin/0 logged in via netconf from 192.168.56.1:64743 with ssh using local authentication
+<INFO> 23-Mar-2023::06:02:22.564 dms confd[249513]: audit user: admin/14 assigned to groups: admin
+<INFO> 23-Mar-2023::06:02:22.565 dms confd[249513]: audit user: admin/14 created new session via netconf from 192.168.56.1:64743 with ssh
+<INFO> 23-Mar-2023::06:02:22.827 dms confd[249513]: audit user: admin/14 terminated session (reason: normal)
+<INFO> 23-Mar-2023::06:02:22.831 dms confd[249513]: audit user: admin/0 logged out <local> user
+<INFO> 23-Mar-2023::06:02:23.069 dms confd[249513]: audit user: admin/0 local authentication succeeded via netconf from 192.168.56.1:64758 with ssh, member of groups: admin
+<INFO> 23-Mar-2023::06:02:23.070 dms confd[249513]: audit user: admin/0 logged in via netconf from 192.168.56.1:64758 with ssh using local authentication
+<INFO> 23-Mar-2023::06:02:23.074 dms confd[249513]: audit user: admin/16 assigned to groups: admin
+<INFO> 23-Mar-2023::06:02:23.075 dms confd[249513]: audit user: admin/16 created new session via netconf from 192.168.56.1:64758 with ssh
+<INFO> 23-Mar-2023::06:02:23.296 dms confd[249513]: audit user: admin/16 terminated session (reason: normal)
+<INFO> 23-Mar-2023::06:02:23.300 dms confd[249513]: audit user: admin/0 logged out <local> user

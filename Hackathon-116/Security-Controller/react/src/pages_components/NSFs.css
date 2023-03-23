@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+.NSFs {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Courier New", sans-serif;
+  position: relative;
+}
+
+.NSFs .openModalBtn {
+  width: 300px;
+  height: 60px;
+  font-size: x-large;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bolder;
+  border: none;
+  border-radius: 6px;
+  background-color: #4F76F6;
+  color: white;
+  cursor: pointer;
+}
+
+.nsf-table {
+  border-top: 1px solid black;
+  width: auto;
+  height: auto;
+  font-size: x-large;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.NSFs th {
+  border-bottom: 1px solid black;
+}
+  
+.NSFs td {
+  text-align: center;
+  
+}

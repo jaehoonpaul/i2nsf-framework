@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Audiowide');
+
+.configuration {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Courier New", sans-serif;
+
+  position: relative;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.config {
+    display:table-row
+}
+
+
+.configRadio {
+    display:table-row
+}
+
+p {
+    display:table-row
+}
+
+.configuration label {
+    display: inline-block;
+    clear: left;
+    width: 250px;
+    text-align: right; /*Change to right here if you want it close to the inputs*/
+}
+
+.labelLegend {
+    clear: right;
+    width: 100%; /*Change to right here if you want it close to the inputs*/
+    text-align: center;
+}
+
+input {
+    display: inline-block;
+    width: 400px;
+}
+
+input[type="checkbox"]{
+    width: 15px; /*Desired width*/
+    height: 15px; /*Desired height*/
+}
+
+input[type="radio"]{
+    width: 12px; /*Desired width*/
+    height: 12px; /*Desired height*/
+}
+
+/* label {
+    text-align: right;
+    color: #4F76F6;
+    font-family: 'Courier New', Courier, monospace;
+    font-size:x-large;
+    display: table-cell;
+}
+
+input {
+    display: table-cell;
+    width:"300px";
+    color: #4F76F6;
+    font-family: 'Courier New', Courier, monospace;
+    font-size:x-large;
+} */
+
+option {
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size:medium;
+}
+select {
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size:medium;
+}
+
+.configuration h3 {
+    align-items: left;
+}
+
+
+legend {
+    display: block;
+    top: 0;
+    left: 0;
+    font-size: x-large;
+}
+
+.isHidden {
+    display: none;
+}
+
+.isShown {
+    display: block;
+}
+
+.configuration form {
+    display: table;
+    /* margin-top: -80px;
+    margin-bottom: -50px; */
+}
+
+.configuration .openModalBtn {
+    width: 200px;
+    height: 40px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    border: none;
+    border-radius: 6px;
+    background-color: #4F76F6;
+    color: white;
+    cursor: pointer;
+}
+

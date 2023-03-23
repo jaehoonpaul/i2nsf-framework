@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <nsf-capability-registration
+  xmlns="urn:ietf:params:xml:ns:yang:ietf-i2nsf-registration-interface">
+    <query-nsf-capability>
+        <condition-capabilities>
+            <advanced-nsf-capabilities>
+                <ips-capability>signature-set</ips-capability>
+            </advanced-nsf-capabilities>
+        </condition-capabilities>
+    </query-nsf-capability>
+  </nsf-capability-registration>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>

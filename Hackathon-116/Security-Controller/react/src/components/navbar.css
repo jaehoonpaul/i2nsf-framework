@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css?family=Audiowide');
+
+.site-title {
+    font-size: 4rem;
+    color: #F9F9F9;
+    margin: 0 5rem;
+    text-decoration: none;
+}
+
+.navbar-items a, .navbar-items a:active {
+    list-style: none;
+    text-decoration: none;
+    font-size: 2rem;
+    color: #F9F9F9;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    background-color: #333;
+    z-index: 99999;
+    box-shadow: "0px 0px 5px";
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: inline;
+    margin: 0 5rem;
+    color: #F9F9F9;
+}

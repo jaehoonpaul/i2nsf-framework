@@ -1,0 +1,626 @@
+Example #2: Running a ConfD Query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The aim of the second example is to demonstrate some different ways to
+interact with ConfD like an operator would; to view the current
+configuration, alter it, show statistics, or test and control the
+system using commands such as ping.
+
+At this time, ConfD supports four main northbound access methods; the
+Command Line Interface (CLI), the NETCONF protocol, a Web User
+Interface (Web UI), and SNMP (Simple Network Management Protocol). The
+term 'northbound' means towards the operator/user/manager (since they
+are usually drawn at the top of architectural drawings).
+
+As you'll see, the CLI, NETCONF and Web interfaces are all generated
+automatically, simply from the ConfSpecs in the system. There is no
+need to write additional code to make it work. The SNMP interface can
+also be automatically generated, see examples.confd/snmpa for further
+details on this.
+
+A NETCONF client called 'netconf-console' is used in this example.
+The 'netconf-console' is part of the ConfD installation (found in
+the 'bin' directory). This client communicates with ConfD over SSH and
+requires Python Paramiko package (on Ubuntu you can install it by command
+'apt-get install python-paramiko').
+In case SSH cannot be used, there is 'netconf-console-tcp' variant. To
+use 'netconf-console-tcp', update 'confd.conf' to enable
+'netconf/transport/tcp' and change all 'netconf-console' calls
+to 'netconf-console-tcp' (in 'Makefile').
+
+Using the CLI
+~~~~~~~~~~~~~
+
+The Command Line Interface (CLI) in ConfD can run in two different
+modes, a Juniper JunOS-style CLI and a Cisco IOS XR-style CLI. It's
+designed to be used frequently and very quickly by operators and
+developers on a daily basis. It's rich in editing features like
+searchable command history, tab completion on both commands and
+content.
+
+The CLI is extensible so that new commands can be added at the top
+level or further down in the tree. The commands can be external
+commands (e.g. ping) or internal commands such as wizards that prompt
+the user and access the database easily.
+
+Before you start the CLI, make sure you've built and started ConfD and
+the DHCP subscriber program from Example #1. If not, type 'make all
+start'. Once ConfD is running, open up another window and start the
+CLI with 'confd_cli' (be sure to have the $CONFD_DIR/bin directory in
+your path). In the examples, you can also type 'make cli'.
+
+
+Using the JunOS-style CLI
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section shows the JunOS-style CLI. The next section demonstrates
+the same thing using the IOS XR-style CLI. The JunOS-style CLI is not
+available in ConfD Free.
+
+    $ make cli
+    ...
+
+    admin connected from 127.0.0.1 using console on machine
+    admin@machine>
+
+Now, hit the <TAB>-key
+
+    Possible completions:
+      commit    - Confirm a pending commit
+      configure - Manipulate software configuration information
+      exit      - Exit the management session
+      file      - Perform file operations
+      help      - Provide help information
+      id        - Show user id information
+      ping      - Ping a host
+      quit      - Exit the management session
+      request   - Make system-level requests
+      set       - Set CLI properties
+      show      - Show information about the system
+      ssh       - Open a secure shell on another host
+    admin@machine>
+
+You can always hit the <TAB>-key to fill in the rest of the command or
+show a list of available choices or give a hint about what should be
+filled in at this point. The same thing happens if you hit <SPACE>.
+
+    admin@machine> conf<TAB>
+
+gives
+
+    admin@machine> configure
+
+since 'configure' is the only command starting with 'conf'. Hitting
+<TAB> again gives
+
+    admin@machine> configure
+    Possible completions:
+    exclusive  private  shared
+    admin@machine> configure
+
+Typing p<TAB><ENTER> gives
+
+    admin@machine> configure private
+    Entering configuration mode "private"
+    [ok][...]
+
+    [edit]
+    admin@machine%
+
+You have now left the operational mode indicated by the '>' prompt and
+entered configuration mode indicated by '%'. As you can see, there are
+several configuration modes:
+
++ private mode
+    This is the default. In this case all changes are private to your
+    CLI and not visible to anyone else until you commit them. Others
+    can also start their own private transactions.
+
++ shared mode
+    This transaction is visible to everyone. Others can join in and
+    change elements in the same transaction.
+
++ exclusive mode
+    This mode prevents everyone else from starting shared or exclusive
+    transactions and prevents any terminal/private transactions from
+    committing anything until you have either committed or aborted
+    your transaction.
+
+You are now in private configuration mode. To see the list of available
+commands here, hit <TAB>:
+
+    admin@machine%
+    Possible completions:
+      commit   - Commit current set of changes
+      compare  - Show configuration differences
+      delete   - Delete a data element
+      edit     - Edit a sub-element
+      exit     - Exit from this level
+      help     - Provide help information
+      insert   - Insert a parameter
+      load     - Load configuration from an ASCII file
+      quit     - Exit from this level
+      rename   - Rename an identifier
+      resolved - Conflicts have been resolved
+      revert   - Copy configuration from running
+      rollback - Roll back database to last committed version
+      run      - Run an operational-mode command
+      save     - Save configuration to an ASCII file
+      set      - Set a parameter
+      show     - Show a parameter
+      status   - Display users currently editing the configuration
+      top      - Exit to top level of configuration
+      up       - Exit one level of configuration
+      validate - Validate current configuration
+
+To configure a the DHCP server's default lease time to eight hours,
+type:
+
+    admin@machine% set dhcp <TAB>
+    Possible completions:
+      shared-networks  subnets       default-lease-time
+      log-facility     max-lease-time
+    admin@machine% set dhcp d<TAB>
+    admin@machine% set dhcp default-lease-time<TAB>
+    <duration: 600S> [600s]
+    admin@machine% set dhcp default-lease-time 8h
+    [ok][...]
+
+    [edit]
+    admin@machine%
+
+This change will only take effect if/when you commit it.
+
+    admin@machine% commit
+    Commit complete.
+    [ok][...]
+
+    [edit]
+    admin@machine%
+
+If you want to change many items in a particular element, it may be
+convenient to use the 'edit' command to make that element current.
+
+    admin@machine% edit dhcp
+
+    [edit dhcp]
+    admin@machine% set max-lease-time 24h
+
+    [edit dhcp]
+    admin@machine% show
+    dhcp {
+        default-lease-time 4h;
+        max-lease-time 24h;
+        log-facility local7;
+    }
+
+    [edit dhcp]
+    admin@machine%
+
+You may think of 'edit' as the cd (change directory) command in a
+typical UNIX shell. Note that the current edit position is indicated
+above the prompt inside square brackets. To move up one level you can
+use 'up'. To go back to the root level, you can use 'top'.
+
+    [edit dhcp]
+    admin@machine% top
+    [ok][...]
+
+    [edit]
+    admin@machine%
+
+You can go back to operational using 'exit', 'quit' or Ctrl+D.
+
+    admin@machine>
+
+The 'show' command displays configuration and operational data. To
+display the DHCP configuration data, type
+
+    admin@machine> show configuration dhcp
+    dhcp {
+        default-lease-time 8h;
+    }
+
+Voila! There's the DHCP daemon configuration right from the database.
+Remember to use the <TAB>/<SPACE> key as you write to save some typing
+and to see all choices. And you could have abbreviated the above to
+simply 'sh co d <ENTER>'.
+
+You can arbitrarily display any part of the tree, down to single leaf
+nodes.
+
+    admin@machine> show configuration dhcp default-lease-time
+    default-lease-time 1h;
+
+Try arrow-up or ^P, arrow-down or ^N to browse your command history.
+^R starts a reverse-i-search like in the bash and most UNIX shells.
+Other line editing keys familiar from bash are: ^A, ^E, ^B, ^F,
+^K, ^T, ^W, ^C, M-F (Meta-F, ESC F), M-B (Meta-B, ESC B). Try them out
+or read the CLI user's guide (or bash man page) to see what they do.
+
+The help command can be used to find out more about a command.
+
+    admin@machine> help file list
+    Help for command: file list
+        Display content of directory
+
+You can also register external commands in the CLI. Either at the top
+level, or into some kind of command tree. 'ping' would be a trivial
+example, but you could invent commands like 'system info',
+'system load firmware' and 'system reboot'.
+
+You can also add interactive commands, even access to command shells
+through ssh or telnet for example.
+
+    admin@machine> ssh localhost
+
+Exit the shell to get back to the CLI.
+
+Using the 'file' command, you can list and display files.
+
+    admin@machine> file list /etc
+
+    admin@machine> file show confd.log
+
+
+Using the IOS XR-style CLI
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    $ make cli-c
+    ...
+
+    admin connected from 127.0.0.1 using console on machine
+    machine#
+
+Now, hit the <TAB>-key
+
+    Possible completions:
+      autowizard          Automatically query for mandatory elements
+      commit              Confirm a pending commit
+      complete-on-space   Enable/disable completion on space
+      config              Manipulate software configuration information
+      exit                Exit the management session
+      file                Perform file operations
+      help                Provide help information
+      history             Display CLI command history
+      id                  Show user id information
+      idle-timeout        Configure CLI idle timeout in seconds
+      job                 Job operations
+      message             Send message to terminal of one or all users
+      output-file         Copy output to file or terminal
+      paginate            Paginate output from CLI commands
+      quit                Exit the management session
+      screen-length       Configure screen length
+      screen-width        Configure screen width
+      show                Show information about the system
+      show-defaults       Show default values when showing the configuration
+      terminal            Set terminal type
+      who                 Display currently logged on users
+    machine#
+
+You can always hit the <TAB>-key to fill in the rest of the command or
+show a list of available choices or give a hint about what should be
+filled in at this point. The same thing happens if you hit <SPACE>.
+
+    machine# con<TAB>
+
+gives
+
+    machine# config
+
+since 'config' is the only command starting with 'con'. Hitting <TAB>
+again gives
+
+    machine# config
+    Possible completions:
+    exclusive  shared  terminal
+    machine# config
+
+Typing t<TAB><ENTER> gives
+
+    machine# config terminal
+    Entering configuration mode terminal
+    machine(config)#
+
+You have now left the operational mode and entered configuration mode
+indicated by the '(config)' mode indicator. As you can see, there are
+several configuration modes:
+
++ terminal mode
+    This is the default. In this case all changes are private to your
+    CLI and not visible to anyone else until you commit them. Others
+    can also start their own terminal transactions.
+
++ shared mode
+    This transaction is visible to everyone. Others can join in and
+    change elements in the same transaction.
+
++ exclusive mode
+    This mode prevents everyone else from starting shared or exclusive
+    transactions and prevents any terminal/private transactions from
+    committing anything until you have either committed or aborted
+    your transaction.
+
+We are now in terminal configuration mode. To see the list of
+available commands here, hit <TAB>:
+
+    machine(config)#
+    Possible completions:
+      aaa
+      abort      Abort configuration session
+      clear      Remove all configuration changes
+      commit     Commit current set of changes
+      dhcp
+      do         Run an operational-mode command
+      end        Terminate configuration session
+      exit       Exit from current mode mode
+      help       Provide help information
+      history    Display CLI command history
+      insert     Insert a parameter
+      load       Load configuration from an ASCII file
+      no         Negate a command or set its defaults
+      rename     Rename an identifier
+      resolved   Conflicts have been resolved
+      revert     Copy configuration from running
+      rollback
+      save       Save configuration to an ASCII file
+      show       Show a parameter
+      validate   Validate current configuration
+
+To configure a the DHCP server's default lease time to twelve hours,
+type:
+
+    machine(config)# dhcp <TAB>
+    Possible completions:
+      shared-networks  subnets       default-lease-time
+      log-facility     max-lease-time
+    machine(config)# dhcp d<TAB>
+    machine(config)# dhcp default-lease-time <TAB>
+    <duration: 600S> [600s]
+    machine(config)# dhcp default-lease-time 12h
+    machine(config)#
+
+This change will only take effect if/when you commit it. This is the
+way that Cisco's new line of products with the IOS XR Command Line
+Interface works.
+
+This transactional behavior enables more advanced configuration
+operations without going through periods of invalid or pointless
+configuration. Full and efficient validation of the configuration and
+rolling back to previous known-good configurations are features also
+enabled through the use of transactions.
+
+    machine(config)# commit
+    Commit complete.
+    machine(config)#
+
+If you want to visit a particular CLI mode, just type the name of the
+mode:
+
+    machine(config)# aaa authorization datarules datarule 101
+    machine(config-datarule-101)# show full-configuration
+    aaa authorization datarules datarule 101
+     namespace http://tail-f.com/ns/aaa/1.1
+     keypath   /
+     group     oper
+     ops       w
+     action    reject
+    !
+    machine(config-datarule-101)#
+
+You may think of this as the cd (change directory) command in a
+typical UNIX shell. Note that the current position is indicated inside
+brackets on the prompt. To return to the previous mode, type 'exit' or
+Ctrl+D.
+
+    machine(config-datarule-101)# exit
+    machine(config)#
+
+You can go back to operational using 'exit' or Ctrl+D.
+
+    machine#
+
+The 'show' command displays configuration and operational data. To
+display the DHCP configuration data, type
+
+    machine# show running-config dhcp
+    dhcp default-lease-time 12h
+    machine#
+
+Voila! There's the DHCP daemon configuration right from the database.
+Remember to use the <TAB>/<SPACE> key as you write to save some typing
+and to see all choices. And you could have abbreviated the above to
+simply 'sh co d <ENTER>'.
+
+You can arbitrarily display any part of the tree, down to single leaf
+nodes.
+
+    machine# show running-config dhcp default-lease-time
+    dhcp default-lease-time 12h
+    machine#
+
+Try arrow-up or ^P, arrow-down or ^N to browse your command history.
+^R starts a reverse-i-search like in the bash and most UNIX shells.
+Other line editing keys familiar from bash are: ^A, ^E, ^B, ^F,
+^K, ^T, ^W, ^C, M-F (Meta-F, ESC F), M-B (Meta-B, ESC B). Try them out
+or read the CLI user's guide (or bash man page) to see what they do.
+
+The help command can be used to find out more about a command.
+
+    machine# help file list
+    Help for command: file list
+        Display content of directory
+
+You can also register external commands in the CLI. Either at the top
+level, or into some kind of command tree. 'ping' would be a trivial
+example, but you could invent commands like 'system info',
+'system load firmware' and 'system reboot'.
+
+You can also add interactive commands, even access to command shells
+through ssh or telnet for example.
+
+    machine# ssh localhost
+
+Exit the shell to get back to the CLI.
+
+Using the 'file' command, you can list and display files.
+
+    machine# file list /etc
+
+    machine# file show confd.log
+
+
+Using NETCONF
+~~~~~~~~~~~~~
+
+While we think you'll be using the Web UI or CLI most of the time, the
+ConfD examples come with a trivial NETCONF manager called
+'netconf-console'.  This is useful for demonstrating and testing the
+ConfD NETCONF interface.
+
+Just as the CLI and Web UI are completely designed for human
+interaction (even though the CLI can be scripted), the NETCONF
+interface is meant for programmatic access. Here, both the commands
+and responses are encoded in XML.
+
+Contained in the example, there are a number of NETCONF command files.
+The command file that corresponds to the CLI command 'show
+configuration dhcp' is called 'cmd-get-dhcpd.xml'. Take a look at it
+
+    $ cat cmd-get-dhcpd.xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <capabilities>
+        <capability>urn:ietf:params:netconf:base:1.0</capability>
+      </capabilities>
+    </hello>
+    ]]>]]>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+      <get>
+        <filter xmlns="http://tail-f.com/ns/example/dhcpd">
+          <dhcp/>
+        </filter>
+      </get>
+    </rpc>
+    ]]>]]>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+      <close-session/>
+    </rpc>
+
+Here you see three XML messages separated by a ']]>]]>' sequence
+(which can never be part of a well-formed XML document). The first
+message is just a hello/capabilities negotiating message. The last
+message just closes the session. The middle part is the actual query.
+It does a NETCONF-get operation with a filter limiting the output to
+the subtree that matches '/dhcp/'. To send this command, and see the
+reply, type:
+
+    $ netconf-console cmd-get-dhcpd.xml
+    <?xml version="1.0"?>
+    <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+      <data>
+        <dhcpd:dhcp xmlns:dhcpd="http://tail-f.com/ns/example/dhcpd">
+          <dhcpd:default-lease-time>PT600S</dhcpd:default-lease-time>
+          <dhcpd:max-lease-time>PT7200S</dhcpd:max-lease-time>
+          <dhcpd:log-facility>local7</dhcpd:log-facility>
+          <dhcpd:subnets/>
+          <dhcpd:shared-networks/>
+        </dhcpd:dhcp>
+      </data>
+    </rpc-reply>
+
+Actually, there's one reply message to each of the three messages
+sent, but the default behavior of netconf-console is to omit the first
+and last response message. Try 'netconf-console -s raw
+cmd-get-dhcpd.xml' to see the actual, complete response without
+prettyprinting.
+
+The netconf-console program comes in two variants, the standard one
+that uses SSH as specified in the NETCONF standard. The alternate one
+is called netconf-console-tcp and uses plain TCP. This is the one we
+used in the example above. This access method is outside the NETCONF
+standard, but may nevertheless be useful.
+
+Many operating systems are missing an SSH client module needed by
+netconf-console called Paramiko. You can find out of this applies to
+you by running:
+
+    $ netconf-console cmd-get-dhcpd.xml
+
+This should give the same result as using netconf-console-tcp
+above. If you get an error message instead, please see the
+$CONFD_DIR/README file (Troubleshooting, Problem 3.1) for
+directions. Until you have Paramiko in place, you can use
+netconf-console-tcp.
+
+
+Subscriptions
+~~~~~~~~~~~~~
+
+The DHCP subscriber uses a CDB feature called subscription to get
+notified whenever a configuration change has occurred within the
+relevant DHCP subtree of the system configuration.
+
+The example dhcpd_conf.py subscribes to notifications for all changes
+mathing the expression '/dhcp/'. When it receives a notification, it
+re-reads it's entire configuration from CDB and generates a new
+dhcpd.conf file. A real implementation would also restart the DHCP
+daemon, since this is the only way to make it reread its
+configuration.
+
+The DHCP configuration is so small that there is no point in not
+re-reading the entire configuration when something has changed. Some
+other service with a larger data set would probably use multiple
+subscriptions and diff iterators instead, to only re-read relevant parts
+of the data tree. See examples.confd/cdb_subscription for an in-depth
+treatment of the subject.
+
+To see subscriptions in action, we need to do some changes to the DHCP
+configuration, using the CLI or the netconf-console.
+
+    $ netconf-console cmd-set-dhcpd-defaultLeaseTime-1h.xml
+    <?xml version="1.0"?>
+    <rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+      <ok/>
+    </rpc-reply>
+
+Open up a separate terminal window in the example directory and type
+
+    $ tail -F dhcpd.conf
+    default-lease-time 3600
+    max-lease-time 32
+    log-facility local7
+
+Note the capital F, it makes the tail command always look at the file
+called 'dhcpd.conf', even if/when it is renamed, deleted and
+recreated.
+
+Now, make a change to the configuration
+
+    $ netconf-console cmd-set-dhcp-defaultLeaseTime-30m.xml
+
+The tail -F command has now added
+
+    tail: `dhcpd.conf' has been replaced;  following end of new file
+    default-lease-time 1800
+    max-lease-time 32
+    log-facility local7
+
+Running a configuration command that in practice makes no change to
+the data, will not trigger any subscription notification. Try running
+the same command again
+
+    $ netconf-console cmd-set-dhcp-defaultLeaseTime-30m.xml
+
+No additional output is generated in the tail -F window.
+
+
+Further Reading
+~~~~~~~~~~~~~~~
+
++ ConfD Manual: CDB - The ConfD XML Database
++ man 3 confd_lib_cdb
++ man 3 confd_types
++ man 5 confd.conf
