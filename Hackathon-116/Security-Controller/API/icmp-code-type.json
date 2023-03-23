@@ -1,0 +1,158 @@
+{
+    "icmp-code-type": [
+        {
+            "keyword" : "echo",
+            "icmpv4" : {
+                    "type" : 8,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 128,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "echo-reply",
+            "icmpv4" : {
+                    "type" : 0,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 129,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "port-unreachable",
+            "icmpv4" : {
+                    "type" : 3,
+                    "code" : 3
+            },
+            "icmpv6" : {
+                    "type" : 1,
+                    "code" : 4
+            }
+        },
+        {
+            "keyword" : "redirect",
+            "icmpv4" : {
+                    "type" : 5,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 137,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "router-advertisement",
+            "icmpv4" : {
+                    "type" : 9,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 134,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "router-solicitation",
+            "icmpv4" : {
+                    "type" : 10,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 135,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "time-exceeded",
+            "icmpv4" : {
+                    "type" : 11,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 3,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "parameter-problem",
+            "icmpv4" : {
+                    "type" : 12,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 4,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "experimental-mobility-protocols",
+            "icmpv4" : {
+                    "type" : 41,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 150,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "request-no-error",
+            "icmpv4" : {
+                    "type" : 42,
+                    "code" : 0
+            },
+            "icmpv6" : {
+                    "type" : 160,
+                    "code" : 0
+            }
+        },
+        {
+            "keyword" : "reply-no-error",
+            "icmpv4" : {
+                    "type" : 43,
+                    "code" : 1
+            },
+            "icmpv6" : {
+                    "type" : 161,
+                    "code" : 1
+            }
+        },
+        {
+            "keyword" : "no-such-interface",
+            "icmpv4" : {
+                    "type" : 43,
+                    "code" : 2
+            },
+            "icmpv6" : {
+                    "type" : 161,
+                    "code" : 2
+            }
+        },
+        {
+            "keyword" : "no-such-table-entry",
+            "icmpv4" : {
+                    "type" : 43,
+                    "code" : 3
+            },
+            "icmpv6" : {
+                    "type" : 161,
+                    "code" : 3
+            }
+        },
+        {
+            "keyword" : "multiple-interfaces-satisfy-query",
+            "icmpv4" : {
+                    "type" : 43,
+                    "code" : 4
+            },
+            "icmpv6" : {
+                    "type" : 161,
+                    "code" : 4
+            }
+        }
+    ]
+}

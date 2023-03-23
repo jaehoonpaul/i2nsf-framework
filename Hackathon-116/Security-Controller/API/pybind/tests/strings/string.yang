@@ -1,0 +1,107 @@
+module string {
+    yang-version "1";
+    namespace "http://rob.sh/yang/test/string";
+    prefix "foo";
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    container string-container {
+        description
+            "A container";
+
+        leaf string-leaf {
+            type string;
+            description
+              "A test leaf for a string test";
+        }
+
+        leaf string-default-leaf {
+            type string;
+            default "string";
+            description
+              "A string that has a default value";
+        }
+
+        leaf restricted-string {
+            type string {
+                pattern "^a.*";
+            }
+            description
+                "A test leaf with a restriction that
+                the string can only start with an a";
+        }
+
+        leaf restricted-string-default {
+            type string {
+                pattern "b.*";
+            }
+            description
+                "A test leaf with a restriction that
+                the string can only start with a b
+                and a default value";
+            default "beep";
+        }
+
+        leaf restricted-length-string {
+            type string {
+                length 2;
+            }
+            description
+                "A test leaf that has a restricted
+                length";
+        }
+
+        leaf restricted-length-and-pattern-string {
+            type string {
+                length 2;
+                pattern "a.*";
+            }
+            description
+                "A test leaf that has a restricted
+                length and pattern";
+        }
+
+        leaf restricted-length-string-with-range {
+            type string {
+                length 10..max;
+            }
+            description
+                "A test leaf that has a restricted
+                length that is specified as a range";
+        }
+
+        leaf restricted-length-string-range-two {
+            type string {
+                length 10..20;
+            }
+            description
+                "A test leaf that has a restricted
+                length that is a range but not max";
+        }
+
+        leaf stringLeafWithComplexLength {
+            type string {
+                length "1 .. 20 | 30 .. 40";
+            }
+        }
+
+        leaf stringLeafWithPatternWithDollar {
+            type string {
+                pattern "fi$h.*";
+            }
+        }
+
+        leaf dollarAtEnd {
+            type string {
+                pattern "fi$h$";
+            }
+        }
+    }
+}

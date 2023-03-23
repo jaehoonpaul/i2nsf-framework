@@ -1,0 +1,80 @@
+module: ietf-i2nsf-cons-facing-interface
+  +--rw i2nsf-cfi-policy* [name]
+     +--rw name                   string
+     +--rw language?              string
+     +--rw resolution-strategy?   identityref
+     +--rw rules* [name]
+     |  +--rw name         string
+     |  +--rw priority?    uint8
+     |  +--rw event
+     |  |  +--rw system-event*   identityref
+     |  |  +--rw system-alarm*   identityref
+     |  +--rw condition
+     |  |  +--rw firewall
+     |  |  |  +--rw source*                     union
+     |  |  |  +--rw destination*                union
+     |  |  |  +--rw dscp?                       inet:dscp
+     |  |  |  +--rw ecn?                        uint8
+     |  |  |  +--rw length?                     uint16
+     |  |  |  +--rw ttl?                        uint8
+     |  |  |  +--rw transport-layer-protocol?   identityref
+     |  |  |  +--rw range-port-number
+     |  |  |  |  +--rw start-port-number?   inet:port-number
+     |  |  |  |  +--rw end-port-number?     inet:port-number
+     |  |  |  +--rw icmp
+     |  |  |     +--rw message*   identityref
+     |  |  +--rw ddos
+     |  |  |  +--rw rate-limit
+     |  |  |     +--rw packet-rate-threshold?   uint64
+     |  |  |     +--rw byte-rate-threshold?     uint64
+     |  |  |     +--rw flow-rate-threshold?     uint64
+     |  |  +--rw anti-virus
+     |  |  |  +--rw exception-files*   string
+     |  |  +--rw payload
+     |  |  |  +--rw content*   -> /i2nsf-cfi-policy/threat-prevention/payload-content/name
+     |  |  +--rw url-category
+     |  |  |  +--rw url-name?   -> /i2nsf-cfi-policy/endpoint-groups/url-group/name
+     |  |  +--rw voice
+     |  |  |  +--rw source-id*        string
+     |  |  |  +--rw destination-id*   string
+     |  |  |  +--rw user-agent*       string
+     |  |  +--rw context
+     |  |  |  +--rw time
+     |  |  |  |  +--rw start-date-time?   yang:date-and-time
+     |  |  |  |  +--rw end-date-time?     yang:date-and-time
+     |  |  |  |  +--rw period
+     |  |  |  |  |  +--rw start-time?   time
+     |  |  |  |  |  +--rw end-time?     time
+     |  |  |  |  |  +--rw day*          day
+     |  |  |  |  |  +--rw date*         int8
+     |  |  |  |  |  +--rw month*        string
+     |  |  |  |  +--rw frequency?         enumeration
+     |  |  |  +--rw application
+     |  |  |  |  +--rw protocol*   identityref
+     |  |  |  +--rw device-type
+     |  |  |  |  +--rw device*   identityref
+     |  |  |  +--rw users
+     |  |  |  |  +--rw user* [id]
+     |  |  |  |  |  +--rw id      uint32
+     |  |  |  |  |  +--rw name?   string
+     |  |  |  |  +--rw group* [id]
+     |  |  |  |     +--rw id      uint32
+     |  |  |  |     +--rw name?   string
+     |  |  |  +--rw geographic-location
+     |  |  |     +--rw source
+     |  |  |     |  +--rw country?   -> /endpoint-groups/location-group/country
+     |  |  |     |  +--rw region?    -> /endpoint-groups/location-group/region
+     |  |  |     |  +--rw city?      -> /endpoint-groups/location-group/city
+     |  |  |     +--rw destination
+     |  |  |        +--rw country?   -> /endpoint-groups/location-group/country
+     |  |  |        +--rw region?    -> /endpoint-groups/location-group/region
+     |  |  |        +--rw city?      -> /endpoint-groups/location-group/city
+     |  |  +--rw threat-feed
+     |  |     +--rw name*   -> /i2nsf-cfi-policy/threat-prevention/threat-feed-list/name
+     |  +--rw action
+     |     +--rw primary-action
+     |     |  +--rw ingress-action?   identityref
+     |     |  +--rw egress-action?    identityref
+     |     +--rw secondary-action
+     |     |  +--rw log-action?   identityref
+     |     +--rw limit?              decimal64

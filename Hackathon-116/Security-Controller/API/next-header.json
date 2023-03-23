@@ -1,0 +1,20 @@
+{
+    "next-header": [
+        {
+            "keyword" : "udp",
+            "protocol-number" : 17
+        },
+        {
+            "keyword" : "tcp",
+            "protocol-number" : 6
+        },
+        {
+            "keyword" : "sctp",
+            "protocol-number" : 132
+        },
+        {
+            "keyword" : "dccp",
+            "protocol-number" : 33
+        }
+    ]
+}

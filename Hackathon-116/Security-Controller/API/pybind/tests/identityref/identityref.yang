@@ -1,0 +1,150 @@
+module identityref {
+    yang-version "1";
+    namespace "http://rob.sh/yang/test/identityref";
+    prefix "foo";
+
+    import remote { prefix defn; }
+
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    identity base-identity {
+        description "an identity base";
+    }
+
+    identity option-one {
+        base "base-identity";
+        description "option one on the base";
+    }
+
+    identity option-two {
+        base "base-identity";
+        description "option two on the base";
+    }
+
+    identity grandfather;
+
+    identity father {
+        base grandfather;
+    }
+
+    identity son {
+        base father;
+    }
+
+    identity greatgrandmother;
+
+    identity grandmother {
+        base greatgrandmother;
+    }
+
+    identity mother {
+        base grandmother;
+    }
+
+    identity aunt {
+        base grandmother;
+    }
+
+    identity cousin {
+        base aunt;
+    }
+
+    identity daughter {
+        base mother;
+    }
+
+    identity local-base;
+
+    container test-container {
+        leaf id1 {
+            type identityref {
+                base base-identity;
+            }
+        }
+
+        leaf idr1 {
+            type identityref {
+                base defn:remote-base;
+            }
+        }
+
+        leaf id2 {
+            type identityref {
+                base grandfather;
+            }
+        }
+
+        leaf id3 {
+            type identityref {
+                base greatgrandmother;
+            }
+        }
+
+        leaf id4 {
+            type identityref {
+                base mother;
+            }
+        }
+
+        leaf id5 {
+            type identityref {
+                base grandmother;
+            }
+        }
+    }
+
+    // Example supplied by Ashish Kumar in issue #41
+    identity address-family {
+        description
+          "Base identity from which address
+           families are derived.";
+    }
+    identity lcaf {
+        base address-family;
+        description
+          "address family.";
+    }
+    identity source-dest {
+        base lcaf;
+        description
+          "Source/Dest LCAF type.";
+    }
+    typedef address-family-ref {
+        type identityref {
+          base address-family;
+        }
+        description
+          "address family reference.";
+    }
+
+    grouping address {
+        description
+          "Generic address.";
+        leaf address-type {
+          type address-family-ref;
+          mandatory true;
+          description
+            "Type of the address.";
+        }
+    }
+
+    container ak {
+        uses address;
+    }
+
+    container ietfint {
+        leaf ref {
+            type identityref {
+                base local-base;
+            }
+        }
+    }
+}

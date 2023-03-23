@@ -1,0 +1,136 @@
+module: ietf-i2nsf-cons-facing-interface
+  +--rw i2nsf-cfi-policy* [name]
+  |  +--rw name                   string
+  |  +--rw language?              string
+  |  +--rw resolution-strategy?   identityref
+  |  +--rw rules* [name]
+  |     +--rw name         string
+  |     +--rw priority?    uint8
+  |     +--rw event
+  |     |  +--rw system-event*   identityref
+  |     |  +--rw system-alarm*   identityref
+  |     +--rw condition
+  |     |  +--rw firewall
+  |     |  |  +--rw source*                     union
+  |     |  |  +--rw destination*                union
+  |     |  |  +--rw transport-layer-protocol?   identityref
+  |     |  |  +--rw range-port-number* [start end]
+  |     |  |  |  +--rw start    inet:port-number
+  |     |  |  |  +--rw end      inet:port-number
+  |     |  |  +--rw icmp
+  |     |  |     +--rw message*   identityref
+  |     |  +--rw ddos
+  |     |  |  +--rw rate-limit
+  |     |  |     +--rw packet-rate-threshold?   uint64
+  |     |  |     +--rw byte-rate-threshold?     uint64
+  |     |  |     +--rw flow-rate-threshold?     uint64
+  |     |  +--rw anti-virus
+  |     |  |  +--rw profile*           string
+  |     |  |  +--rw exception-files*   string
+  |     |  +--rw payload
+  |     |  |  +--rw content*   -> /threat-prevention/payload-content/name
+  |     |  +--rw url-category
+  |     |  |  +--rw url-name?   -> /endpoint-groups/url-group/name
+  |     |  +--rw voice
+  |     |  |  +--rw source-id*        -> /endpoint-groups/voice-group/name
+  |     |  |  +--rw destination-id*   -> /endpoint-groups/voice-group/name
+  |     |  |  +--rw user-agent*       string
+  |     |  +--rw context
+  |     |  |  +--rw time
+  |     |  |  |  +--rw start-date-time?   yang:date-and-time
+  |     |  |  |  +--rw end-date-time?     yang:date-and-time
+  |     |  |  |  +--rw period
+  |     |  |  |  |  +--rw start-time?   time
+  |     |  |  |  |  +--rw end-time?     time
+  |     |  |  |  |  +--rw day*          day
+  |     |  |  |  |  +--rw date*         int8
+  |     |  |  |  |  +--rw month*        string
+  |     |  |  |  +--rw frequency?         enumeration
+  |     |  |  +--rw application
+  |     |  |  |  +--rw protocol*   identityref
+  |     |  |  +--rw device-type
+  |     |  |  |  +--rw device*   identityref
+  |     |  |  +--rw users
+  |     |  |  |  +--rw user* [id]
+  |     |  |  |  |  +--rw id      uint32
+  |     |  |  |  |  +--rw name?   string
+  |     |  |  |  +--rw group* [id]
+  |     |  |  |     +--rw id      uint32
+  |     |  |  |     +--rw name?   string
+  |     |  |  +--rw geographic-location
+  |     |  |     +--rw source
+  |     |  |     |  +--rw country?   -> /endpoint-groups/location-group/country
+  |     |  |     |  +--rw region?    -> /endpoint-groups/location-group/region
+  |     |  |     |  +--rw city?      -> /endpoint-groups/location-group/city
+  |     |  |     +--rw destination
+  |     |  |        +--rw country?   -> /endpoint-groups/location-group/country
+  |     |  |        +--rw region?    -> /endpoint-groups/location-group/region
+  |     |  |        +--rw city?      -> /endpoint-groups/location-group/city
+  |     |  +--rw threat-feed
+  |     |     +--rw name*   -> /threat-prevention/threat-feed-list/name
+  |     +--rw action
+  |        +--rw primary-action
+  |        |  +--rw action    identityref
+  |        |  +--rw limit?    decimal64
+  |        +--rw secondary-action
+  |           +--rw log-action?   identityref
+  +--rw endpoint-groups
+  |  +--rw user-group* [name]
+  |  |  +--rw name                        string
+  |  |  +--rw mac-address*                yang:mac-address
+  |  |  +--rw (match-type)
+  |  |     +--:(range-match-ipv4)
+  |  |     |  +--rw range-ipv4-address* [start end]
+  |  |     |     +--rw start    inet:ipv4-address-no-zone
+  |  |     |     +--rw end      inet:ipv4-address-no-zone
+  |  |     +--:(range-match-ipv6)
+  |  |        +--rw range-ipv6-address* [start end]
+  |  |           +--rw start    inet:ipv6-address-no-zone
+  |  |           +--rw end      inet:ipv6-address-no-zone
+  |  +--rw device-group* [name]
+  |  |  +--rw name                        string
+  |  |  +--rw (match-type)
+  |  |  |  +--:(range-match-ipv4)
+  |  |  |  |  +--rw range-ipv4-address* [start end]
+  |  |  |  |     +--rw start    inet:ipv4-address-no-zone
+  |  |  |  |     +--rw end      inet:ipv4-address-no-zone
+  |  |  |  +--:(range-match-ipv6)
+  |  |  |     +--rw range-ipv6-address* [start end]
+  |  |  |        +--rw start    inet:ipv6-address-no-zone
+  |  |  |        +--rw end      inet:ipv6-address-no-zone
+  |  |  +--rw application-protocol*       identityref
+  |  +--rw location-group* [country region city]
+  |  |  +--rw country                     string
+  |  |  +--rw region                      string
+  |  |  +--rw city                        string
+  |  |  +--rw (match-type)
+  |  |     +--:(range-match-ipv4)
+  |  |     |  +--rw range-ipv4-address* [start end]
+  |  |     |     +--rw start    inet:ipv4-address-no-zone
+  |  |     |     +--rw end      inet:ipv4-address-no-zone
+  |  |     +--:(range-match-ipv6)
+  |  |        +--rw range-ipv6-address* [start end]
+  |  |           +--rw start    inet:ipv6-address-no-zone
+  |  |           +--rw end      inet:ipv6-address-no-zone
+  |  +--rw url-group* [name]
+  |  |  +--rw name    string
+  |  |  +--rw url*    inet:uri
+  |  +--rw voice-group* [name]
+  |     +--rw name      string
+  |     +--rw sip-id*   inet:uri
+  +--rw threat-prevention
+     +--rw threat-feed-list* [name]
+     |  +--rw name      string
+     |  +--rw ioc*      string
+     |  +--rw format    identityref
+     +--rw payload-content* [name]
+        +--rw name           string
+        +--rw description?   string
+        +--rw contents* [content]
+           +--rw content           binary
+           +--rw depth?            uint16
+           +--rw (starting-point)?
+              +--:(offset)
+              |  +--rw offset?     int32
+              +--:(distance)
+                 +--rw distance?   int32

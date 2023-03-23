@@ -1,0 +1,18 @@
+{
+   "configuration" : {
+      "bgp" : {
+         "global" : {
+            "confederation" : {
+               "config" : {
+                  "identifier" : "65517",
+                  "member-as" : [
+                     "65518",
+                     "65519",
+                     "65520"
+                  ]
+               }
+            }
+         }
+      }
+   }
+}

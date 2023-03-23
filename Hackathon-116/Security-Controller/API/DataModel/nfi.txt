@@ -1,0 +1,194 @@
+module: ietf-i2nsf-nsf-facing-interface
+  +--rw i2nsf-security-policy* [name]
+     +--rw name                   string
+     +--rw language?              string
+     +--rw priority-usage?        identityref
+     +--rw resolution-strategy?   identityref
+     +--rw default-action?        identityref
+     +--rw rules* [name]
+     |  +--rw name               string
+     |  +--rw priority?          uint8
+     |  +--rw enable?            boolean
+     |  +--rw long-connection
+     |  |  +--rw enable?     boolean
+     |  |  +--rw duration?   uint32
+     |  +--rw event
+     |  |  +--rw system-event*   identityref
+     |  |  +--rw system-alarm*   identityref
+     |  +--rw condition
+     |  |  +--rw threat-feed
+     |  |  |  +--rw name*   string
+     |  |  +--rw layer-2* [destination-mac-address source-mac-address ethertype]
+     |  |  |  +--rw destination-mac-address         yang:mac-address
+     |  |  |  +--rw destination-mac-address-mask?   yang:mac-address
+     |  |  |  +--rw source-mac-address              yang:mac-address
+     |  |  |  +--rw source-mac-address-mask?        yang:mac-address
+     |  |  |  +--rw ethertype                       eth:ethertype
+     |  |  +--rw (layer-3)?
+     |  |  |  +--:(ipv4)
+     |  |  |  |  +--rw ipv4
+     |  |  |  |     +--rw dscp?                             inet:dscp
+     |  |  |  |     +--rw ecn?                              uint8
+     |  |  |  |     +--rw length?                           uint16
+     |  |  |  |     +--rw ttl?                              uint8
+     |  |  |  |     +--rw protocol?                         uint8
+     |  |  |  |     +--rw ihl?                              uint8
+     |  |  |  |     +--rw flags?                            string
+     |  |  |  |     +--rw offset?                           uint16
+     |  |  |  |     +--rw identification?                   uint16
+     |  |  |  |     +--rw (destination-network)?
+     |  |  |  |     |  +--:(destination-ipv4-network)
+     |  |  |  |     |  |  +--rw destination-ipv4-network?   inet:ipv4-prefix
+     |  |  |  |     |  +--:(destination-ipv4-range)
+     |  |  |  |     |     +--rw destination-ipv4-range* [start end]
+     |  |  |  |     |        +--rw start    inet:ipv4-address-no-zone
+     |  |  |  |     |        +--rw end      inet:ipv4-address-no-zone
+     |  |  |  |     +--rw (source-network)?
+     |  |  |  |        +--:(source-ipv4-network)
+     |  |  |  |        |  +--rw source-ipv4-network?        inet:ipv4-prefix
+     |  |  |  |        +--:(source-ipv4-range)
+     |  |  |  |           +--rw source-ipv4-range* [start end]
+     |  |  |  |              +--rw start    inet:ipv4-address-no-zone
+     |  |  |  |              +--rw end      inet:ipv4-address-no-zone
+     |  |  |  +--:(ipv6)
+     |  |  |     +--rw ipv6
+     |  |  |        +--rw dscp?                             inet:dscp
+     |  |  |        +--rw ecn?                              uint8
+     |  |  |        +--rw length?                           uint16
+     |  |  |        +--rw ttl?                              uint8
+     |  |  |        +--rw protocol?                         uint8
+     |  |  |        +--rw (destination-network)?
+     |  |  |        |  +--:(destination-ipv6-network)
+     |  |  |        |  |  +--rw destination-ipv6-network?   inet:ipv6-prefix
+     |  |  |        |  +--:(destination-ipv6-range)
+     |  |  |        |     +--rw destination-ipv6-range* [start end]
+     |  |  |        |        +--rw start    inet:ipv6-address-no-zone
+     |  |  |        |        +--rw end      inet:ipv6-address-no-zone
+     |  |  |        +--rw (source-network)?
+     |  |  |        |  +--:(source-ipv6-network)
+     |  |  |        |  |  +--rw source-ipv6-network?        inet:ipv6-prefix
+     |  |  |        |  +--:(source-ipv6-range)
+     |  |  |        |     +--rw source-ipv6-range* [start end]
+     |  |  |        |        +--rw start    inet:ipv6-address-no-zone
+     |  |  |        |        +--rw end      inet:ipv6-address-no-zone
+     |  |  |        +--rw flow-label?                       inet:ipv6-flow-label
+     |  |  +--rw (layer-4)?
+     |  |  |  +--:(tcp)
+     |  |  |  |  +--rw tcp
+     |  |  |  |     +--rw source-port-number 
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw destination-port-number
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw sequence-number?           uint32
+     |  |  |  |     +--rw acknowledgement-number?    uint32
+     |  |  |  |     +--rw data-offset?               uint8
+     |  |  |  |     +--rw reserved?                  uint8
+     |  |  |  |     +--rw flags?                     string
+     |  |  |  |     +--rw window-size?               uint16
+     |  |  |  |     +--rw urgent-pointer?            uint16
+     |  |  |  |     +--rw options?                   binary
+     |  |  |  +--:(udp)
+     |  |  |  |  +--rw udp
+     |  |  |  |     +--rw source-port-number 
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw destination-port-number 
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw length?                    uint16
+     |  |  |  +--:(sctp)
+     |  |  |  |  +--rw sctp
+     |  |  |  |     +--rw source-port-number
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw destination-port-number
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw chunk-type*                uint8
+     |  |  |  |     +--rw chunk-length?              uint16
+     |  |  |  +--:(dccp)
+     |  |  |  |  +--rw dccp
+     |  |  |  |     +--rw source-port-number 
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw destination-port-number 
+     |  |  |  |     |        +--rw port-numbers* [start end]
+     |  |  |  |     |           +--rw start    inet:port-number
+     |  |  |  |     |           +--rw end      inet:port-number
+     |  |  |  |     +--rw service-code*              uint32
+     |  |  |  |     +--rw type*                      uint8
+     |  |  |  |     +--rw data-offset?               uint8
+     |  |  |  +--:(icmp)
+     |  |  |     +--rw icmp
+     |  |  |        +--rw version?          enumeration
+     |  |  |        +--rw type?             uint8
+     |  |  |        +--rw code?             uint8
+     |  |  |        +--rw rest-of-header?   binary
+     |  |  +--rw url-category
+     |  |  |  +--rw pre-defined*    string
+     |  |  |  +--rw user-defined*   string
+     |  |  +--rw voice
+     |  |  |  +--rw source-voice-id*        string
+     |  |  |  +--rw destination-voice-id*   string
+     |  |  |  +--rw user-agent*             string
+     |  |  +--rw ddos
+     |  |  |  +--rw alert-packet-rate?   uint32
+     |  |  |  +--rw alert-flow-rate?     uint32
+     |  |  |  +--rw alert-byte-rate?     uint32
+     |  |  +--rw anti-virus
+     |  |  |  +--rw profile*           string
+     |  |  |  +--rw exception-files*   string
+     |  |  +--rw payload
+     |  |  |  +--rw content*       binary
+     |  |  +--rw context
+     |  |     +--rw time
+     |  |     |  +--rw start-date-time?   yang:date-and-time
+     |  |     |  +--rw end-date-time?     yang:date-and-time
+     |  |     |  +--rw period
+     |  |     |  |  +--rw start-time?   time
+     |  |     |  |  +--rw end-time?     time
+     |  |     |  |  +--rw day*          day
+     |  |     |  |  +--rw date*         int8
+     |  |     |  |  +--rw month*        string
+     |  |     |  +--rw frequency?         enumeration
+     |  |     +--rw application
+     |  |     |  +--rw protocol*      identityref
+     |  |     +--rw device-type
+     |  |     |  +--rw device*        identityref
+     |  |     +--rw users
+     |  |     |  +--rw user* [id]
+     |  |     |  |  +--rw id      uint32
+     |  |     |  |  +--rw name?   string
+     |  |     |  +--rw group* [id]
+     |  |     |     +--rw id      uint32
+     |  |     |     +--rw name?   string
+     |  |     +--rw geographic-location
+     |  |        +--rw source*        string
+     |  |        +--rw destination*   string
+     |  +--rw action
+     |     +--rw packet-action
+     |     |  +--rw ingress-action?   identityref
+     |     |  +--rw egress-action?    identityref
+     |     |  +--rw log-action?       identityref
+     |     +--rw flow-action
+     |     |  +--rw ingress-action?   identityref
+     |     |  +--rw egress-action?    identityref
+     |     |  +--rw log-action?       identityref
+     |     +--rw advanced-action
+     |        +--rw content-security-control*    identityref
+     |        +--rw attack-mitigation-control*   identityref
+     +--rw rule-group
+        +--rw groups* [group-name]
+           +--rw group-name     string
+           +--rw rule-name*     -> ../../../rules/name
+           +--rw enable?        boolean
+           +--rw description?   string

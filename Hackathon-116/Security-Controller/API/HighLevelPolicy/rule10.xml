@@ -1,0 +1,16 @@
+<i2nsf-cfi-policy>
+    <name>block_malicious_voip</name>
+    <rules>
+        <name>voip_rule</name>
+        <condition>
+            <voice>
+                <source-id>malicious-id</source-id>
+            </voice>
+        </condition>
+        <action>
+            <primary-action>
+                <action>drop</action>
+            </primary-action>
+        </action>
+    </rules>
+</i2nsf-cfi-policy>

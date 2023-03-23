@@ -1,0 +1,80 @@
+{    
+    "nsf-name": "time-based-firewall",
+    "nsf-capability-info": {
+        "security-capability": {
+            "event-capabilities": {
+                "system-event-capability": [
+                    "access-violation",
+                    "configuration-change"
+                ],
+                "system-alarm-capability": [
+                    "memory-alarm",
+                    "cpu-alarm",
+                    "disk-alarm",
+                    "hardware-alarm",
+                    "interface-alarm"
+                ]
+            },
+            "condition-capabilities": {
+                "generic-nsf-capabilities": {
+                    "ipv4-capability": [
+                        "next-header",
+                        "source-address",
+                        "destination-address"
+                    ],
+                    "tcp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ]
+                },
+                "context-capabilities": {
+                    "time-capabilities": [
+                        "absolute-time",
+                        "periodic-time"
+                    ]
+                }
+            },
+            "action-capabilities": {
+                "ingress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "egress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "log-action-capability": [
+                    "rule-log",
+                    "session-log"
+                ]
+            },
+            "default-action-capabilities": [
+                "pass",
+                "drop",
+                "mirror"
+            ]
+        },
+        "performance-capability": {
+            "processing": {
+                "processing-average": 1000,
+                "processing-peak": 5000
+            },
+            "bandwidth": {
+                "outbound": {
+                    "outbound-average": 1000,
+                    "outbound-peak": 5000
+                },
+                "inbound": {
+                    "inbound-average": 1000,
+                    "inbound-peak": 5000
+                }
+            }
+        }
+    },
+    "nsf-access-info": {
+        "ip": "192.0.2.7",
+        "port": 49152
+    }
+}

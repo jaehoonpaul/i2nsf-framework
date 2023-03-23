@@ -1,0 +1,50 @@
+module leaflist {
+    yang-version "1";
+    namespace "http://rob.sh/yang/test/leaflist";
+    prefix "foo";
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    typedef union-key {
+        type union {
+            type string;
+            type int8;
+        }
+    }
+
+    typedef restricted-string {
+        type string {
+            pattern "^a.*";
+        }
+    }
+
+    container container {
+        description
+            "A container";
+
+        leaf-list leaflist {
+            type string;
+            description
+                "A leaf list";
+        }
+
+        leaf-list listtwo {
+            type restricted-string;
+            description
+                "A restricted leaflist";
+        }
+
+        leaf-list listthree {
+            type union-key;
+            description
+                "A leaflist with a union key";
+        }
+    }
+}

@@ -1,0 +1,203 @@
+module list {
+    yang-version "1";
+    namespace "http://rob.sh/yang/test/list";
+    prefix "foo";
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    typedef string-with-a-or-b-first {
+        type union {
+            type string {
+                pattern "^a.*";
+            }
+            type string {
+                pattern "^b.*";
+            }
+        }
+    }
+
+    container list-container {
+        description
+            "A container";
+
+        list list-element {
+            key "keyval";
+
+            leaf keyval {
+                type uint8;
+                description
+                    "a key value for the list";
+            }
+
+            leaf another-value {
+                type string;
+                description
+                    "a string value within the list";
+                default
+                    "defaultValue";
+            }
+
+            description
+                "A test list.";
+        }
+
+        list list-two {
+            key "keyval";
+
+            leaf keyval {
+                type string {
+                    pattern "^a.*";
+                }
+            }
+
+            leaf another-value {
+                type string;
+                description "another value";
+            }
+        }
+
+        list list-three {
+            key "keyval";
+
+            leaf keyval {
+                type string-with-a-or-b-first;
+            }
+
+            leaf another-value {
+                type string;
+            }
+        }
+
+        list list-four {
+            key "valone valtwo";
+
+            leaf valone {
+                type string-with-a-or-b-first;
+            }
+
+            leaf valtwo {
+                type uint8 {
+                    range 1..10;
+                }
+            }
+        }
+
+        list list-five {
+            key "val";
+            ordered-by user;
+
+            leaf val {
+                type uint8;
+            }
+
+            leaf adjunct {
+                type uint8;
+            }
+        }
+
+        list list-six {
+            config false;
+
+            leaf val {
+                type uint8;
+            }
+        }
+
+        list list-seven {
+            key val;
+            leaf val {
+                type int8;
+            }
+
+            container under {
+                leaf aval {
+                    type int8;
+                }
+            }
+        }
+
+        list list-eight {
+            key "val additional";
+
+            leaf val {
+                type string;
+            }
+
+            leaf additional {
+                type string;
+            }
+
+            leaf numeric {
+                type int8;
+            }
+        }
+    }
+
+    list list-nine {
+        key kv;
+
+        leaf kv {
+            type union {
+                type int8;
+                type string;
+            }
+        }
+
+        leaf lv {
+            type string;
+        }
+    }
+
+    list list-ten {
+        key "kv kvtwo";
+
+        leaf kv {
+            type int8;
+        }
+
+        leaf kvtwo {
+            type int16;
+        }
+
+        leaf lv {
+            type string;
+        }
+    }
+
+    identity NATURAL_NUMBERS;
+
+    identity ONE {
+        base NATURAL_NUMBERS;
+    }
+
+    identity TWO {
+        base NATURAL_NUMBERS;
+    }
+
+    identity THREE {
+        base NATURAL_NUMBERS;
+    }
+
+    list list-eleven {
+        key "kv";
+
+        leaf kv {
+            type int32;
+        }
+
+        leaf number {
+            type identityref {
+                base NATURAL_NUMBERS;
+            }
+        }
+    }
+
+
+}

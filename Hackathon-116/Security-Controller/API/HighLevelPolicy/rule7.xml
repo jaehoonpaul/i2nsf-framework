@@ -1,0 +1,17 @@
+<i2nsf-cfi-policy>
+    <name>block_tcp_port_80</name>
+    <rules>
+        <name>block_http_default_port</name>
+        <condition>
+            <anti-virus>
+                <exception-files>*.js</exception-files>
+                <exception-files>*.py</exception-files>
+            </anti-virus>
+        </condition>
+        <action>
+            <primary-action>
+                <action>drop</action>
+            </primary-action>
+        </action>
+    </rules>
+</i2nsf-cfi-policy>

@@ -1,0 +1,20 @@
+<i2nsf-cfi-policy>
+    <name>block_tcp_port_80</name>
+    <rules>
+        <name>block_http_default_port</name>
+        <condition>
+            <firewall>
+                <transport-layer-protocol>tcp</transport-layer-protocol>
+                <range-port-number>
+                    <start-port-number>80</start-port-number>
+                    <end-port-number>80</end-port-number>
+                </range-port-number>
+            </firewall>
+        </condition>
+        <action>
+            <primary-action>
+                <action>drop</action>
+            </primary-action>
+        </action>
+    </rules>
+</i2nsf-cfi-policy>

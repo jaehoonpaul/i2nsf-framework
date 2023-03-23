@@ -1,0 +1,113 @@
+{    
+    "nsf-name": "firewall-full",
+    "nsf-capability-info": {
+        "security-capability": {
+            "event-capabilities": {
+                "system-event-capability": [
+                    "access-violation",
+                    "configuration-change"
+                ],
+                "system-alarm-capability": [
+                    "memory-alarm",
+                    "cpu-alarm",
+                    "disk-alarm",
+                    "hardware-alarm",
+                    "interface-alarm"
+                ]
+            },
+            "condition-capabilities": {
+                "generic-nsf-capabilities": {
+                    "ethernet-capability": [
+                        "source-mac-address",
+                        "destination-mac-address"
+                    ],
+                    "ipv4-capability": [
+                        "next-header",
+                        "source-address",
+                        "destination-address"
+                    ],
+                    "ipv6-capability": [
+                        "next-header",
+                        "source-address",
+                        "destination-address"
+                    ],
+                    "tcp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "udp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "sctp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "dccp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ],
+                    "icmpv4-capability": [
+                        "type",
+                        "code"
+                    ],
+                    "icmpv6-capability": [
+                        "type",
+                        "code"
+                    ]
+                },
+                "context-capabilities": {
+                    "time-capabilities": [
+                        "absolute-time",
+                        "periodic-time"
+                    ],
+                    "geographic-capabilities": [
+                        "source-location",
+                        "destination-location"
+                    ]
+                }
+            },
+            "action-capabilities": {
+                "ingress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "egress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "log-action-capability": [
+                    "rule-log",
+                    "session-log"
+                ]
+            },
+            "default-action-capabilities": [
+                "pass",
+                "drop",
+                "mirror"
+            ]
+        },
+        "performance-capability": {
+            "processing": {
+                "processing-average": 1000,
+                "processing-peak": 5000
+            },
+            "bandwidth": {
+                "outbound": {
+                    "outbound-average": 1000,
+                    "outbound-peak": 5000
+                },
+                "inbound": {
+                    "inbound-average": 1000,
+                    "inbound-peak": 5000
+                }
+            }
+        }
+    },
+    "nsf-access-info": {
+        "ip": "192.0.2.25",
+        "port": 49152
+    }
+}

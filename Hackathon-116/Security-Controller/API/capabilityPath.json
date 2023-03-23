@@ -1,0 +1,112 @@
+{
+    "capabilityPath": [
+        {
+            "key": "directional-capabilities",
+            "path": "/query-nsf-capability/directional-capabilities" 
+        },
+        {
+            "key": "system-event-capability",
+            "path": "/query-nsf-capability/event-capabilities/system-event-capability" 
+        },
+        {
+            "key": "system-alarm-capability",
+            "path": "/query-nsf-capability/event-capabilities/system-alarm-capability" 
+        },
+        {
+            "key": "ethernet-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/ethernet-capability" 
+        },
+        {
+            "key": "ipv4-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/ipv4-capability" 
+        },
+        {
+            "key": "ipv6-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/ipv6-capability" 
+        },
+        {
+            "key": "icmpv4-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/icmpv4-capability" 
+        },
+        {
+            "key": "icmpv6-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/icmpv6-capability" 
+        },
+        {
+            "key": "tcp-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/tcp-capability" 
+        },
+        {
+            "key": "udp-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/udp-capability" 
+        },
+        {
+            "key": "sctp-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/sctp-capability" 
+        },
+        {
+            "key": "dccp-capability",
+            "path": "/query-nsf-capability/condition-capabilities/generic-nsf-capabilities/dccp-capability" 
+        },
+        {
+            "key": "anti-ddos-capability",
+            "path": "/query-nsf-capability/condition-capabilities/advanced-nsf-capabilities/anti-ddos-capability" 
+        },
+        {
+            "key": "ips-capability",
+            "path": "/query-nsf-capability/condition-capabilities/advanced-nsf-capabilities/ips-capability" 
+        },
+        {
+            "key": "anti-virus-capability",
+            "path": "/query-nsf-capability/condition-capabilities/advanced-nsf-capabilities/anti-virus-capability" 
+        },
+        {
+            "key": "url-filtering-capability",
+            "path": "/query-nsf-capability/condition-capabilities/advanced-nsf-capabilities/url-filtering-capability" 
+        },
+        {
+            "key": "voip-vocn-filtering-capability",
+            "path": "/query-nsf-capability/condition-capabilities/advanced-nsf-capabilities/voip-vocn-filtering-capability" 
+        },
+        {
+            "key": "time-capabilities",
+            "path": "/query-nsf-capability/condition-capabilities/context-nsf-capabilities/time-capabilities" 
+        },
+        {
+            "key": "applicaiton-filter-capabilities",
+            "path": "/query-nsf-capability/condition-capabilities/context-nsf-capabilities/application-filter-capabilities" 
+        },
+        {
+            "key": "device-type-capabilities",
+            "path": "/query-nsf-capability/condition-capabilities/context-nsf-capabilities/device-type-capabilities" 
+        },
+        {
+            "key": "user-condition-capabilities",
+            "path": "/query-nsf-capability/condition-capabilities/context-nsf-capabilities/user-condition-capabilities" 
+        },
+        {
+            "key": "geographic-capabilities",
+            "path": "/query-nsf-capability/condition-capabilities/context-nsf-capabilities/geographic-capabilities" 
+        },
+        {
+            "key": "ingress-action-capability",
+            "path": "/query-nsf-capability/action-capabilities/ingress-action-capability" 
+        },
+        {
+            "key": "egress-action-capability",
+            "path": "/query-nsf-capability/action-capabilities/egress-action-capability" 
+        },
+        {
+            "key": "log-action-capability",
+            "path": "/query-nsf-capability/action-capabilities/log-action-capability" 
+        },
+        {
+            "key": "resolution-strategy-capabilities",
+            "path": "/query-nsf-capability/resolution-strategy-capabilities" 
+        },
+        {
+            "key": "default-action-capabilities",
+            "path": "/query-nsf-capability/default-action-capabilities" 
+        }
+    ]
+}

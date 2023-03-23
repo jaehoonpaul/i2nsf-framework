@@ -1,0 +1,54 @@
+module choice {
+    yang-version "1";
+    namespace "http://rob.sh/yang/test/nested";
+    prefix "foo";
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    container container {
+        description
+            "A container";
+
+        choice choice-one {
+            case case-one {
+                container case-one-container {
+                    leaf case-one-leaf {
+                        type int8;
+                    }
+
+                    list user {
+                        key "username";
+
+                        leaf username {
+                            type string;
+                        }
+                    }
+
+                }
+            }
+
+            case case-two {
+                container case-two-container {
+                    leaf case-two-leaf {
+                        type int8;
+                    }
+
+                    list user {
+                        key "username";
+
+                        leaf username {
+                            type string;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

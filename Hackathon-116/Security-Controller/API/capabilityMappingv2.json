@@ -1,0 +1,258 @@
+{
+    "/i2nsf-security-policy/resolution-strategy": {
+        "resolution-strategy-capabilities": ["fmr","lmr","pmre","pmrn"]
+    },
+    "/i2nsf-security-policy/default-action": {
+        "default-action-capabilities": ["pass","drop","reject","rate-limit"]
+    },
+    "/i2nsf-security-policy/rules/event/system-event": {
+        "system-event-capability": ["access-violation","configuration-change"]
+    },
+    "/i2nsf-security-policy/rules/event/system-alarm": {
+        "system-alarm-capability": ["memory-alarm","cpu-alarm","disk-alarm","hardware-alarm","interface-alarm"]
+    },
+    "/i2nsf-security-policy/rules/condition/layer-2/destination-mac-address": {
+        "ethernet-capability": "destination-mac-address"
+    },
+    "/i2nsf-security-policy/rules/condition/layer-2/destination-mac-address-mask": {
+        "ethernet-capability": "destination-mac-address"
+    },
+    "/i2nsf-security-policy/rules/condition/layer-2/source-mac-address": {
+        "ethernet-capability": "source-mac-address"
+    },
+    "/i2nsf-security-policy/rules/condition/layer-2/source-mac-address-mask": {
+        "ethernet-capability": "source-mac-address"
+    },
+    "/i2nsf-security-policy/rules/condition/layer-2/ethertype": {
+        "ethernet-capability": "ether-type"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/dscp": {
+        "ipv4-capability": "dscp"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/ecn": {
+        "ipv4-capability": "ecn"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/length": {
+        "ipv4-capability": "total-length"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/ttl": {
+        "ipv4-capability": "ttl"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/protocol": {
+        "ipv4-capability": "next-header"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/ihl": {
+        "ipv4-capability": "ihl"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/flags": {
+        "ipv4-capability": "flags"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/offset": {
+        "ipv4-capability": "fragment-offset"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/identification": {
+        "ipv4-capability": "identification"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/source-ipv4-range": {
+        "ipv4-capability": "source-address"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv4/destination-ipv4-range": {
+        "ipv4-capability": "destination-address"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv6/dscp": {
+        "ipv6-capability": "dscp"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/ecn": {
+        "ipv6-capability": "ecn"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/length": {
+        "ipv6-capability": "total-length"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/ttl": {
+        "ipv6-capability": "ttl"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/protocol": {
+        "ipv6-capability": "next-header"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/destination-ipv6-range": {
+        "ipv6-capability": "destination-address"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv6/destination-ipv6-network": {
+        "ipv6-capability": "destination-address"
+    },
+    "/i2nsf-security-policy/rules/condition/ipv6/source-ipv6-range": {
+        "ipv6-capability": "source-address"
+    }            ,
+    "/i2nsf-security-policy/rules/condition/ipv6/source-ipv6-network": {
+        "ipv6-capability": "source-address"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/source-port-number/port-numbers": {
+        "tcp-capability": "source-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/destination-port-number/port-numbers": {
+        "tcp-capability": "destination-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/flags": {
+        "tcp-capability": "flags"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/options": {
+        "tcp-capability": "options"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/data-offset": {
+        "tcp-capability": "data-offset"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/reserved": {
+        "tcp-capability": "reserved"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/window-size": {
+        "tcp-capability": "window-size"
+    },
+    "/i2nsf-security-policy/rules/condition/tcp/urgent-pointer": {
+        "tcp-capability": "urgent-pointer"
+    },
+    "/i2nsf-security-policy/rules/condition/udp/source-port-number/port-numbers": {
+        "udp-capability": "source-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/udp/destination-port-number/port-numbers": {
+        "udp-capability": "destination-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/udp/length": {
+        "udp-capability": "length"
+    },
+    "/i2nsf-security-policy/rules/condition/sctp/source-port-number/port-numbers": {
+        "sctp-capability": "source-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/sctp/destination-port-number/port-numbers": {
+        "sctp-capability": "destination-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/sctp/chunk-type": {
+        "sctp-capability": "chunk-type"
+    },
+    "/i2nsf-security-policy/rules/condition/sctp/chunk-length": {
+        "sctp-capability": "length"
+    },
+    "/i2nsf-security-policy/rules/condition/dccp/source-port-number/port-numbers": {
+        "dccp-capability": "source-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/dccp/destination-port-number/port-numbers": {
+        "dccp-capability": "destination-port-number"
+    },
+    "/i2nsf-security-policy/rules/condition/dccp/service-code": {
+        "dccp-capability": "service-code"
+    },
+    "/i2nsf-security-policy/rules/condition/dccp/type": {
+        "dccp-capability": "type"
+    },
+    "/i2nsf-security-policy/rules/condition/dccp/data-offset": {
+        "dccp-capability": "data-offset"
+    },
+    "/i2nsf-security-policy/rules/condition/icmp/version": {
+        "icmpv4-capability": "type",
+        "icmpv6-capability": "type"
+    },
+    "/i2nsf-security-policy/rules/condition/icmp/type": {
+        "icmpv4-capability": "type",
+        "icmpv6-capability": "type"
+    },
+    "/i2nsf-security-policy/rules/condition/icmp/code": {
+        "icmpv4-capability": "code",
+        "icmpv6-capability": "code"
+    },
+    "/i2nsf-security-policy/rules/condition/url-category/pre-defined": {
+        "url-filtering-capability": "pre-defined"
+    },
+    "/i2nsf-security-policy/rules/condition/url-category/user-defined": {
+        "url-filtering-capability": "user-defined"
+    },
+    "/i2nsf-security-policy/rules/condition/voice/source-voice-id": {
+        "voip-vocn-filtering-capability": "call-id"
+    },
+    "/i2nsf-security-policy/rules/condition/voice/destination-voice-id": {
+        "voip-vocn-filtering-capability": "call-id"
+    },
+    "/i2nsf-security-policy/rules/condition/voice/user-agent": {
+        "voip-vocn-filtering-capability": "user-agent"
+    },
+    "/i2nsf-security-policy/rules/condition/ddos/alert-packet-rate": {
+        "anti-ddos-capability": "packet-rate"
+    },
+    "/i2nsf-security-policy/rules/condition/ddos/alert-flow-rate": {
+        "anti-ddos-capability": "flow-rate"
+    },
+    "/i2nsf-security-policy/rules/condition/ddos/alert-byte-rate": {
+        "anti-ddos-capability": "byte-rate"
+    },
+    "/i2nsf-security-policy/rules/condition/anti-virus/profile": {
+        "anti-virus-capability": "detect"
+    },
+    "/i2nsf-security-policy/rules/condition/anti-virus/exception-files": {
+        "anti-virus-capability": "exception-files"
+    },
+    "/i2nsf-security-policy/rules/condition/payload/content": {
+        "ips-capability": "signature-set"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/start-date-time": {
+        "time-capabilities": "absolute-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/end-date-time": {
+        "time-capabilities": "absolute-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/period/start-time": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/period/end-time": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/period/day": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/period/date": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/period/month": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/time/frequency": {
+        "time-capabilities": "periodic-time"
+    },
+    "/i2nsf-security-policy/rules/condition/context/application/protocol": {
+        "application-filter-capabilities": ["http","https","http2","https2","ftp","ssh","telnet","smtp","pop3","pop3s","imap","imaps"]
+    },
+    "/i2nsf-security-policy/rules/condition/context/users/user/id": {
+        "user-condition-capabilities": "user"
+    },
+    "/i2nsf-security-policy/rules/condition/context/users/user/name": {
+        "user-condition-capabilities": "user"
+    },
+    "/i2nsf-security-policy/rules/condition/context/users/group/id": {
+        "user-condition-capabilities": "group"
+    },
+    "/i2nsf-security-policy/rules/condition/context/users/group/name": {
+        "user-condition-capabilities": "group"
+    },
+    "/i2nsf-security-policy/rules/condition/context/geographic-location/source": {
+        "geographic-capabilities": "source-location"
+    },
+    "/i2nsf-security-policy/rules/condition/context/geographic-location/destination": {
+        "geographic-capabilities": "destination-location"
+    },
+    "/i2nsf-security-policy/rules/action/packet-action/ingress-action": {
+        "ingress-action-capability": ["pass","drop","mirror"]
+    },
+    "/i2nsf-security-policy/rules/action/packet-action/egress-action": {
+        "egress-action-capability": ["pass","drop","mirror"]
+    },
+    "/i2nsf-security-policy/rules/action/packet-action/log-action": {
+        "log-action-capability": ["rule-log","session-log"]
+    },
+    "/i2nsf-security-policy/rules/action/flow-action/ingress-action": {
+        "ingress-action-capability": ["pass","drop","mirror"]
+    },
+    "/i2nsf-security-policy/rules/action/flow-action/egress-action": {
+        "egress-action-capability": ["pass","drop","mirror"]
+    },
+    "/i2nsf-security-policy/rules/action/flow-action/log-action": {
+        "log-action-capability": ["rule-log","session-log"]
+    }
+    
+}

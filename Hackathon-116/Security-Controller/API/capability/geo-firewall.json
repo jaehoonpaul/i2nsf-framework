@@ -1,0 +1,62 @@
+{    
+    "nsf-name": "geo-firewall",
+    "nsf-capability-info": {
+        "security-capability": {
+            "condition-capabilities": {
+                "generic-nsf-capabilities": {
+                    "tcp-capability": [
+                        "source-port-number",
+                        "destination-port-number"
+                    ]
+                },
+                "context-capabilities": {
+                    "geographic-capabilities": [
+                        "source-location",
+                        "destination-location"
+                    ]
+                }
+            },
+            "action-capabilities": {
+                "ingress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "egress-action-capability": [
+                    "pass",
+                    "drop",
+                    "mirror"
+                ],
+                "log-action-capability": [
+                    "rule-log",
+                    "session-log"
+                ]
+            },
+            "default-action-capabilities": [
+                "pass",
+                "drop",
+                "mirror"
+            ]
+        },
+        "performance-capability": {
+            "processing": {
+                "processing-average": 1000,
+                "processing-peak": 5000
+            },
+            "bandwidth": {
+                "outbound": {
+                    "outbound-average": 1000,
+                    "outbound-peak": 5000
+                },
+                "inbound": {
+                    "inbound-average": 1000,
+                    "inbound-peak": 5000
+                }
+            }
+        }
+    },
+    "nsf-access-info": {
+        "ip": "192.0.2.5",
+        "port": 49152
+    }
+}

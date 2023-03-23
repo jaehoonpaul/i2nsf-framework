@@ -1,0 +1,125 @@
+module list-tc01 {
+    yang-version "1.1";
+    namespace "http://rob.sh/yang/xpathelper/tc01";
+    prefix "tc01";
+    organization "BugReports Inc";
+    contact "A bug reporter";
+
+    description
+        "A test module";
+    revision 2014-01-01 {
+        description "april-fools";
+        reference "fooled-you";
+    }
+
+    typedef derived-leafref-t5 {
+        type leafref {
+            path "/container/t5";
+            require-instance true;
+        }
+    }
+
+    typedef derived-leafref-t6 {
+        type leafref {
+            path "/container/t6/keyval";
+            require-instance true;
+        }
+    }
+
+    container container {
+        leaf-list t1 {
+            type string;
+        }
+
+        list t2 {
+            key "keyval";
+
+            leaf keyval {
+                type string;
+            }
+        }
+
+        leaf-list t3 {
+            type string;
+        }
+
+        list t4 {
+            key "keyval";
+            leaf keyval {
+                type string;
+            }
+        }
+
+        leaf-list t5 {
+            type string;
+        }
+
+        list t6 {
+            key "keyval";
+            leaf keyval {
+                type string;
+            }
+        }
+
+        leaf-list t7 {
+            type string;
+        }
+    }
+
+    container reference {
+        leaf t1-ptr {
+            type leafref {
+                path "/container/t1";
+                require-instance true;
+            }
+        }
+
+        leaf t1-ptr-noexist {
+            type leafref {
+                path "/container/t1";
+                require-instance false;
+            }
+        }
+
+        leaf t2-ptr {
+            type leafref {
+                path "/container/t2/keyval";
+                require-instance true;
+            }
+        }
+
+        leaf t5-ptr {
+            type derived-leafref-t5;
+        }
+
+        leaf t6-ptr {
+            type derived-leafref-t6;
+        }
+
+        leaf-list t7-ptr {
+            type leafref {
+                path "/container/t7";
+                require-instance true;
+            }
+        }
+    }
+
+    container standalone {
+        leaf-list ll {
+            type int8;
+        }
+
+        list l {
+            key x;
+            leaf x {
+                type int8;
+            }
+        }
+
+        leaf ref {
+            type leafref {
+                path "../l/x";
+            }
+        }
+    }
+}
