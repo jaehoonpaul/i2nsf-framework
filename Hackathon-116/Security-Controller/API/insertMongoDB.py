@@ -23,10 +23,10 @@ from pprint import pprint
 #     #print(capDict["capabilityPath"])
 #     i2nsfMongoDB.insertCapabilityPath(capDict["capabilityPath"])
 
-print(i2nsfMongoDB.getCapabilityPath("ipv4-capability"))
+# print(i2nsfMongoDB.getCapabilityPath("ipv4-capability"))
 
 # Attribute Mapping
-#i2nsfMongoDB.insertAttributesMap('DataModel/cfi_minus.txt','DataModel/nfi.txt')
+i2nsfMongoDB.insertAttributesMap('DataModel/cfi_minus.txt','DataModel/nfi.txt')
 
 #INSERT CAPABILITY
 # i = 0
