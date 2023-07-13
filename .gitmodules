@@ -13,3 +13,7 @@
 [submodule "Components/i2nsf-nsf"]
 	path = Components/i2nsf-nsf
 	url = https://github.com/patrick8link/i2nsf-nsf
+[submodule "Components/i2nsf-security-controller"]
+	path = Components/i2nsf-security-controller
+	url = https://github.com/patrick8link/i2nsf-security-controller.git
+	branch = 1.1
