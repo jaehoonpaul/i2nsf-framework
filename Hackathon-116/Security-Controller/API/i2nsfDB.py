@@ -6,7 +6,6 @@ Created on Wed May 18 15:51:58 2022
 """
 
 import MySQLdb
-import DFA as dfa
 import mapper
 
 #nsf_facing = cfg.cfg_construction('DataModel/nfi.txt')
