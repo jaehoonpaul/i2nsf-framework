@@ -4,3 +4,12 @@
 [submodule "Hackathon-115/docker-i2nsf-ipsec"]
 	path = Hackathon-115/docker-i2nsf-ipsec
 	url = https://github.com/patrick8link/docker-i2nsf-ipsec.git
+[submodule "Components/i2nsf-dms"]
+	path = Components/i2nsf-dms
+	url = https://github.com/patrick8link/i2nsf-dms
+[submodule "Components/i2nsf-analyzer"]
+	path = Components/i2nsf-analyzer
+	url = https://github.com/patrick8link/i2nsf-analyzer
+[submodule "Components/i2nsf-nsf"]
+	path = Components/i2nsf-nsf
+	url = https://github.com/patrick8link/i2nsf-nsf
